@@ -30,7 +30,7 @@ namespace ZonaiMath
 		return _deg * (PI / 180.f);
 	}
 
-#pragma region 변환행렬
+#pragma region Transform
 	Matrix4x4 ToTranslateMatrix(const Vector3D& _euler) noexcept;
 
 	Matrix4x4 ToScaleMatrix(const Vector3D& _scl) noexcept;
@@ -40,9 +40,9 @@ namespace ZonaiMath
 	Matrix4x4 ToTransformMatrix(const Vector3D& _pos, const Quaternion& _rot, const Vector3D& _scl) noexcept;
 
 	Matrix4x4 ToTransformMatrix(const Vector3D& _pos, const Quaternion& _rot, const float _scl) noexcept;
-#pragma endregion 변환행렬
+#pragma endregion Transform
 
-#pragma region 행렬분해
+#pragma region Decompose
 	Vector3D DecomposPosition(const Matrix4x4& _mat) noexcept;
 
 	Quaternion DecomposRotation(const Matrix4x4& _mat) noexcept;
@@ -50,13 +50,13 @@ namespace ZonaiMath
 	Vector3D DecomposScale(const Matrix4x4& _mat) noexcept;
 
 	void Decompose(const Matrix4x4& _matrix, Vector3D& _pos, Quaternion& _rot, Vector3D& _scl) noexcept;
-#pragma endregion 행렬분해
+#pragma endregion Decompose
 
-#pragma region 사원수보간
+#pragma region Quaternion
 	Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float t) noexcept;
 
 	Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t) noexcept;
-#pragma endregion 사원수보간
+#pragma endregion Quaternion
 
 
 	Vector3D VectorRotateFromQuaternion(const Vector3D& _vec, const Quaternion& _q) noexcept;
