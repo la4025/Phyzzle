@@ -5,13 +5,15 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PurahEngine", "PurahEngine\PurahEngine.vcxproj", "{E019C6BD-4430-4A5F-A34F-6A7EB07DAA07}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiMath", "..\ZonaiMath\ZonaiMath.vcxproj", "{B6A14AD2-1DAD-4144-9C53-2D8664F0A03F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiMath", "ZonaiMath\ZonaiMath.vcxproj", "{B6A14AD2-1DAD-4144-9C53-2D8664F0A03F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiPhysics", "..\ZonaiPhysics\ZonaiPhysics.vcxproj", "{B0F3B838-99DD-4BA4-B728-BD8958FBDACD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiPhysics", "ZonaiPhysics\ZonaiPhysics.vcxproj", "{B0F3B838-99DD-4BA4-B728-BD8958FBDACD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiSounds", "..\ZonaiSounds\ZonaiSounds.vcxproj", "{DB16270B-142F-4510-B13D-E7DA98F942D3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiSounds", "ZonaiSounds\ZonaiSounds.vcxproj", "{DB16270B-142F-4510-B13D-E7DA98F942D3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiUtility", "..\ZonaiUtility\ZonaiUtility.vcxproj", "{95645C1E-C693-42C4-8D1B-281AB31B6A14}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiUtility", "ZonaiUtility\ZonaiUtility.vcxproj", "{95645C1E-C693-42C4-8D1B-281AB31B6A14}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeldaClient", "ZeldaClient\ZeldaClient.vcxproj", "{524A9CA8-8478-44E7-9318-73A637BD2AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,14 @@ Global
 		{95645C1E-C693-42C4-8D1B-281AB31B6A14}.Release|x64.Build.0 = Release|x64
 		{95645C1E-C693-42C4-8D1B-281AB31B6A14}.Release|x86.ActiveCfg = Release|Win32
 		{95645C1E-C693-42C4-8D1B-281AB31B6A14}.Release|x86.Build.0 = Release|Win32
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Debug|x64.ActiveCfg = Debug|x64
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Debug|x64.Build.0 = Debug|x64
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Debug|x86.ActiveCfg = Debug|Win32
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Debug|x86.Build.0 = Debug|Win32
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Release|x64.ActiveCfg = Release|x64
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Release|x64.Build.0 = Release|x64
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Release|x86.ActiveCfg = Release|Win32
+		{524A9CA8-8478-44E7-9318-73A637BD2AA5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
