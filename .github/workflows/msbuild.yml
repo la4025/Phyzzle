@@ -49,4 +49,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build-artifacts
-        path: path_to_your_build_output_directory/*.*
+        path: ${{env.SOLUTION_FILE_PATH}}/Release/*.*
