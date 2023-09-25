@@ -20,11 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
-    <ClInclude Include="CoreCycle.h" />
+    <ClInclude Include="GameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="CoreCycle.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

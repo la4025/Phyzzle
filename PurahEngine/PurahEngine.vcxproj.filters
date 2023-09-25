@@ -12,7 +12,7 @@
     <ClCompile Include="Component.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="CoreCycle.cpp">
+    <ClCompile Include="GameLoop.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -20,7 +20,7 @@
     <ClInclude Include="Component.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="CoreCycle.h">
+    <ClInclude Include="GameLoop.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
