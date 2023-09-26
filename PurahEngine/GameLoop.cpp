@@ -1,6 +1,6 @@
 #include "GameLoop.h"
 
-void PurahEngine::GameLoop::Initialize()
+void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
 	// 내가 쓸 윈도우를 등록
 	WNDCLASSEXW wcex;
@@ -15,10 +15,16 @@ void PurahEngine::GameLoop::Initialize()
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = gamename;
+	wcex.lpszClassName = gameName;
 	wcex.hIconSm = NULL;
 
 	RegisterClassExW(&wcex);
+
+	// 그 윈도우를 생성
+	hWnd = CreateWindowW(gameName, gameName, WS_OVERLAPPEDWINDOW,
+		0, 0, width, height, nullptr, nullptr, hInstance, nullptr);
+
+	SetMenu(hWnd, NULL);
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -56,6 +62,11 @@ void PurahEngine::GameLoop::Finalize()
 }
 
 void PurahEngine::GameLoop::run()
+{
+
+}
+
+LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 }
