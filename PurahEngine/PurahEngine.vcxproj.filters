@@ -7,6 +7,15 @@
     <Filter Include="Core">
       <UniqueIdentifier>{e68248b4-d5ab-4270-8277-6845edee5683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{8943e751-dc73-4a19-bc01-0ed57e3b59da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Camera">
+      <UniqueIdentifier>{b029a29e-d767-4deb-a584-ef7958d355ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Transform">
+      <UniqueIdentifier>{40dd3d8c-ed88-4f11-87ab-a835fa5206b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -15,6 +24,15 @@
     <ClCompile Include="GameLoop.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Core\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Core\Transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -22,6 +40,15 @@
     </ClInclude>
     <ClInclude Include="GameLoop.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Core\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Core\Transform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
