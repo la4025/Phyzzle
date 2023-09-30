@@ -17,7 +17,7 @@ namespace PurahEngine
 		void run();
 
 		//
-		 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	};
 }
 
