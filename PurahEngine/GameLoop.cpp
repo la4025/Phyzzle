@@ -6,6 +6,8 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	WNDCLASSEXW wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
+	LRESULT (GameLoop::*f)(HWND, UINT, WPARAM, LPARAM) = &PurahEngine::GameLoop::WndProc;
+
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WndProc; // 프로시저
 	wcex.cbClsExtra = 0;
