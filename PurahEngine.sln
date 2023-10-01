@@ -14,6 +14,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiUtility", "ZonaiUtility\ZonaiUtility.vcxproj", "{95645C1E-C693-42C4-8D1B-281AB31B6A14}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeldaClient", "ZeldaClient\ZeldaClient.vcxproj", "{524A9CA8-8478-44E7-9318-73A637BD2AA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E019C6BD-4430-4A5F-A34F-6A7EB07DAA07} = {E019C6BD-4430-4A5F-A34F-6A7EB07DAA07}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
