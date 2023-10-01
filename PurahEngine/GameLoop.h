@@ -1,4 +1,5 @@
 #pragma once
+#include "PurahEngineAPI.h"
 #include <windows.h>
 
 namespace PurahEngine
@@ -6,10 +7,10 @@ namespace PurahEngine
 	class GameLoop
 	{
 	public:
-		void Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
+		PURAHENGINE_API void Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
 		// 외부에서 사용할 Run() 함수
-		void Run(_In_ int nCmdShow);
-		void Finalize();
+		PURAHENGINE_API void Run(_In_ int nCmdShow);
+		PURAHENGINE_API void Finalize();
 
 	private:
 		HWND hWnd;

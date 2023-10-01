@@ -16,6 +16,9 @@
     <Filter Include="Core\Transform">
       <UniqueIdentifier>{40dd3d8c-ed88-4f11-87ab-a835fa5206b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\dll">
+      <UniqueIdentifier>{2615fabf-51e8-4853-b558-ee689eada209}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -49,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Core\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PurahEngineAPI.h">
+      <Filter>Core\dll</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

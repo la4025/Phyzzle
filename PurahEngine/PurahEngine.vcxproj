@@ -23,6 +23,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="PurahEngineAPI.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
