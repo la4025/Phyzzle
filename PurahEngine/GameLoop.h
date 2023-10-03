@@ -7,17 +7,16 @@ namespace PurahEngine
 	class GameLoop
 	{
 	public:
-		PURAHENGINE_API void Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
+		void Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
 		// 외부에서 사용할 Run() 함수
-		PURAHENGINE_API void Run(_In_ int nCmdShow);
-		PURAHENGINE_API void Finalize();
+		void Run(_In_ int nCmdShow);
+		void Finalize();
 
 	private:
 		HWND hWnd;
 		// 내부적으로 Run()함수에서 돌아갈 함수
 		void run();
 
-		//
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	};
 }

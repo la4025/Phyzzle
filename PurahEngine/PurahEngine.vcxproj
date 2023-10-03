@@ -23,6 +23,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

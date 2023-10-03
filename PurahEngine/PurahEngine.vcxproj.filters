@@ -36,6 +36,7 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Core\Transform</Filter>
     </ClCompile>
+    <ClCompile Include="PurahEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -56,5 +57,6 @@
     <ClInclude Include="PurahEngineAPI.h">
       <Filter>Core\dll</Filter>
     </ClInclude>
+    <ClInclude Include="PurahEngine.h" />
   </ItemGroup>
 </Project>
