@@ -1,5 +1,15 @@
 #include "GameLoop.h"
 
+PurahEngine::GameLoop::GameLoop()
+{
+
+}
+
+PurahEngine::GameLoop::~GameLoop()
+{
+
+}
+
 void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
 	// 내가 쓸 윈도우를 등록
@@ -69,4 +79,10 @@ void PurahEngine::GameLoop::run()
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
+}
+
+PurahEngine::GameLoop& PurahEngine::GameLoop::GetInstance()
+{
+	static GameLoop instance;
+	return instance;
 }

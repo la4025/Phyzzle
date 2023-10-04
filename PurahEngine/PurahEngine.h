@@ -1,9 +1,7 @@
 #pragma once
 /// 외부에는 이부분만 보여지게 하기 위하도록 설계
-
 #include "PurahEngineAPI.h"
-
-#include "GameLoop.h"
+#include <Windows.h>
 
 namespace PurahEngine
 {
@@ -12,3 +10,4 @@ namespace PurahEngine
 	PURAHENGINE_API void Finalize();
 };
 
+	
