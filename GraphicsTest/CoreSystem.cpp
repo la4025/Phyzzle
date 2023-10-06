@@ -64,7 +64,9 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 
 	renderer = createZeldaRenderer();
 
-	renderer->Initialize(hWnd);
+	renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
+
+	renderer->CreateResources();
 }
 
 void CoreSystem::Finalize()
@@ -186,6 +188,8 @@ bool CoreSystem::IsRun()
 void CoreSystem::run()
 {
 	renderer->BeginDraw();
+
+	renderer->DrawCube();
 
 	renderer->EndDraw();
 }

@@ -6,5 +6,5 @@ class IZeldaRenderer;
 
 namespace ZeldaGraphics
 {
-	extern "C" ZELDAGRAPHICS_API IZeldaRenderer * CreateZeldaRenderer();
+	extern "C" ZELDAGRAPHICS_API IZeldaRenderer* CreateZeldaRenderer();
 }

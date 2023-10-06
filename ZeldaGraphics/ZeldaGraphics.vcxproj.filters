@@ -12,6 +12,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{5910aeff-8b7f-4494-8de2-7d0420d08030}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{01826fcd-ce0d-44e1-a5f7-664dcec2a941}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZeldaDX11Renderer.h">
@@ -26,6 +29,18 @@
     <ClInclude Include="header\IZeldaRenderer.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeldaShader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeldaModel.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeldaCamera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZeldaDX11Renderer.cpp">
@@ -34,5 +49,25 @@
     <ClCompile Include="ZeldaGraphics.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="ZeldaShader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ZeldaModel.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ZeldaCamera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="TestShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -35,6 +35,7 @@
 # 이 .gitignore 파일은 Microsoft(R) Visual Studio에서 자동으로 만들어졌습니다.
 ################################################################################
 
+
 /ZonaiMath/x64/Debug/ZonaiMath.tlog
 /ZonaiMath/x64/Debug
 /.vs

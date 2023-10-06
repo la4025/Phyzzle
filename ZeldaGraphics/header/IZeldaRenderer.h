@@ -7,8 +7,12 @@
 class ZELDAGRAPHICS_API IZeldaRenderer
 {
 public:
-	virtual bool Initialize(HWND hwnd) abstract;
+	virtual void CreateResources() abstract;
+
+	virtual bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float screenNear) abstract;
 
 	virtual void BeginDraw() abstract;
 	virtual void EndDraw() abstract;
+
+	virtual void DrawCube() abstract;
 };
