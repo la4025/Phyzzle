@@ -4,9 +4,9 @@
 _In_ int nCmdShow;
 
 
-void PurahEngine::Initialize()
+void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
-	PurahEngine::GameLoop::GetInstance().Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
+	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }
 
 void PurahEngine::Run()

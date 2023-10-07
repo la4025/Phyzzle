@@ -78,7 +78,7 @@ void PurahEngine::GameLoop::run()
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
+	return 0;
 }
 
 PurahEngine::GameLoop& PurahEngine::GameLoop::GetInstance()
