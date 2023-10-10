@@ -35,6 +35,8 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		0, 0, width, height, nullptr, nullptr, hInstance, nullptr);
 
 	SetMenu(hWnd, NULL);
+
+
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
