@@ -9,7 +9,7 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }
 
-void PurahEngine::Run()
+void PurahEngine::Run(_In_ int nCmdShow)
 {
 	PurahEngine::GameLoop::GetInstance().Run(nCmdShow);
 }

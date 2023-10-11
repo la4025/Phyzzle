@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <iostream>
 #include <cassert>
 
@@ -12,7 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 	std::wstring gameName = L"test";
 	
-	std::string path = "..//x64//Debug//PurahEngine.dll";
+	std::string path = "..//x64//Debug//DLL//PurahEngine.dll";
 	HMODULE PurahEngineDll = ::LoadLibraryA(path.c_str());
 
 	if (PurahEngineDll == nullptr)
@@ -20,16 +21,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		assert(0);
 	}
 
-	auto createPurahEngine = reinterpret_cast<PurahEngine* (*)()>(GetProcAddress(PurahEngineDll, "CreateZeldaRenderer"));
-	if (createPurahEngine == nullptr)
+	auto CreateInitialize = reinterpret_cast<void* (*)(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)>(GetProcAddress(PurahEngineDll, "Initialize"));
+	auto CreateRun = reinterpret_cast<void* (*)(_In_ int nCmdShow)>(GetProcAddress(PurahEngineDll, "Run"));
+	auto CreateFinalize = reinterpret_cast<void* (*)()>(GetProcAddress(PurahEngineDll, "Finalize"));
+	
+	if (CreateInitialize == nullptr || CreateRun == nullptr || CreateFinalize == nullptr)
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
 	}
 
-	PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080);
-	PurahEngine::Run();
-	PurahEngine::Finalize();
+
+	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
+	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
+	//PurahEngine::Run(); 역할
+	CreateRun(nCmdShow);
+	//PurahEngine::Finalize(); 역할
+	CreateFinalize();
+
+	::FreeLibrary(PurahEngineDll);
+
+	return 0;
 }
 
 //int main()

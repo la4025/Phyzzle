@@ -32,7 +32,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// 그 윈도우를 생성
 	hWnd = CreateWindowW(gameName, gameName, WS_OVERLAPPEDWINDOW,
-		0, 0, width, height, nullptr, nullptr, hInstance, nullptr);
+		0, 0, width, height, NULL, NULL, hInstance, NULL);
 
 	SetMenu(hWnd, NULL);
 
@@ -80,6 +80,13 @@ void PurahEngine::GameLoop::run()
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	switch (message)
+	{
+		default:
+		{
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
 	return 0;
 }
 
