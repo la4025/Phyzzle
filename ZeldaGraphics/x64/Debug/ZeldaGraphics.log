@@ -1,0 +1,11 @@
+﻿  compilation object save succeeded; see D:\Sheikah_Project\x64\Debug\PixelShader.cso
+  compilation object save succeeded; see D:\Sheikah_Project\x64\Debug\VertexShader.cso
+  compilation object save succeeded; see D:\Sheikah_Project\x64\Debug\TestShader.cso
+  ZeldaCamera.cpp
+  ZeldaDX11Renderer.cpp
+  ZeldaGraphics.cpp
+  ZeldaModel.cpp
+  ZeldaShader.cpp
+  코드를 생성하고 있습니다...
+     D:\Sheikah_Project\x64\Debug\ZeldaGraphics.lib 라이브러리 및 D:\Sheikah_Project\x64\Debug\ZeldaGraphics.exp 개체를 생성하고 있습니다.
+  ZeldaGraphics.vcxproj -> D:\Sheikah_Project\x64\Debug\ZeldaGraphics.dll
