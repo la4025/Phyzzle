@@ -31,6 +31,8 @@
 *.out
 *.app
 
+*.tlog
+
 ################################################################################
 # 이 .gitignore 파일은 Microsoft(R) Visual Studio에서 자동으로 만들어졌습니다.
 ################################################################################
@@ -44,5 +46,6 @@
 /PurahEngine/x64/Debug
 /ZonaiPhysics/x64/Debug
 /ZeldaGraphics/x64/Debug
+/ZeldaGraphics/x64/Debug/ZeldaGraphics.tlog
 /ZonaiSounds/x64/Debug
 /ZonaiUtility/x64/Debug
