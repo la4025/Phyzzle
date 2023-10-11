@@ -37,7 +37,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	SetMenu(hWnd, NULL);
 
-	// Graphics dll 초기화( 변경 가능성 농후)
+	// Graphics dll 초기화(변경 가능성 농후)
 	{
 		zeldaGraphicsDLL = LoadLibrary(L"..//x64//Debug//DLL//ZeldaGraphics.dll");
 		if (zeldaGraphicsDLL == nullptr)
@@ -102,6 +102,12 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 {
 	switch (message)
 	{
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			break;
+		}
+
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);
