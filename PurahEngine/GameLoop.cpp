@@ -1,5 +1,15 @@
 #include "GameLoop.h"
 
+PurahEngine::GameLoop::GameLoop()
+{
+
+}
+
+PurahEngine::GameLoop::~GameLoop()
+{
+
+}
+
 void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
 	// 내가 쓸 윈도우를 등록
@@ -22,9 +32,11 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// 그 윈도우를 생성
 	hWnd = CreateWindowW(gameName, gameName, WS_OVERLAPPEDWINDOW,
-		0, 0, width, height, nullptr, nullptr, hInstance, nullptr);
+		0, 0, width, height, NULL, NULL, hInstance, NULL);
 
 	SetMenu(hWnd, NULL);
+
+
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -68,5 +80,18 @@ void PurahEngine::GameLoop::run()
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	switch (message)
+	{
+		default:
+		{
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	return 0;
+}
 
+PurahEngine::GameLoop& PurahEngine::GameLoop::GetInstance()
+{
+	static GameLoop instance;
+	return instance;
 }

@@ -1,5 +1,14 @@
 #pragma once
-class Camera
+#include "Component.h"
+
+namespace PurahEngine
 {
-};
+	class Camera : public Component
+	{
+	public:
+
+	private:
+
+	};
+}
 

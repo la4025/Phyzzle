@@ -1,14 +1,13 @@
 #pragma once
 /// 외부에는 이부분만 보여지게 하기 위하도록 설계
-
 #include "PurahEngineAPI.h"
-
-#include "GameLoop.h"
+#include <Windows.h>
 
 namespace PurahEngine
 {
-	PURAHENGINE_API void Initialize();
-	PURAHENGINE_API void Run();
-	PURAHENGINE_API void Finalize();
+	extern "C" PURAHENGINE_API void Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height);
+	extern "C" PURAHENGINE_API void Run(_In_ int nCmdShow);
+	extern "C" PURAHENGINE_API void Finalize();
 };
 
+	

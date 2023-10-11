@@ -1,16 +1,20 @@
 #include "PurahEngine.h"
+#include "GameLoop.h"
 
-PURAHENGINE_API void PurahEngine::Initialize()
+_In_ int nCmdShow;
+
+
+void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
-
+	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }
 
-PURAHENGINE_API void PurahEngine::Run()
+void PurahEngine::Run(_In_ int nCmdShow)
 {
-
+	PurahEngine::GameLoop::GetInstance().Run(nCmdShow);
 }
 
-PURAHENGINE_API void PurahEngine::Finalize()
+void PurahEngine::Finalize()
 {
 
 }
