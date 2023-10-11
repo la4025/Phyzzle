@@ -2,18 +2,18 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Sheikah_Project\x64\Debug\ZeldaGraphics.dll</FullPath>
+      <FullPath>E:\final\Project\Sheikah_Project\x64\Debug\DLL\ZeldaGraphics.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>D:\Sheikah_Project\x64\Debug\PixelShader.cso</FullPath>
+      <FullPath>E:\final\Project\Sheikah_Project\x64\Debug\DLL\PixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Sheikah_Project\x64\Debug\VertexShader.cso</FullPath>
+      <FullPath>E:\final\Project\Sheikah_Project\x64\Debug\DLL\VertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Sheikah_Project\x64\Debug\TestShader.cso</FullPath>
+      <FullPath>E:\final\Project\Sheikah_Project\x64\Debug\DLL\TestShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

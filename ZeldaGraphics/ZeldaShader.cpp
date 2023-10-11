@@ -28,7 +28,7 @@ bool ZeldaShader::Initialize(ID3D11Device* device, HWND hwnd)
 	bool result;
 
 	// Initialize the vertex and pixel shaders.
-	result = InitializeShader(device, hwnd, L"D:\\Sheikah_Project\\x64\\Debug\\VertexShader.cso", L"D:\\Sheikah_Project\\x64\\Debug\\PixelShader.cso");
+	result = InitializeShader(device, hwnd, L"E:\\final\\Project\\Sheikah_Project\\x64\\Debug\\DLL\\VertexShader.cso", L"E:\\final\\Project\\Sheikah_Project\\x64\\Debug\\DLL\\PixelShader.cso");
 	if (!result) return false;
 
 	return true;
