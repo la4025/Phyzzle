@@ -1,4 +1,5 @@
 #include "GameLoop.h"
+#include <cassert>
 
 PurahEngine::GameLoop::GameLoop()
 {
@@ -36,7 +37,24 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	SetMenu(hWnd, NULL);
 
-
+	// Graphics dll 초기화(변경 가능성 농후)
+	{
+		zeldaGraphicsDLL = LoadLibrary(L"..//x64//Debug//DLL//ZeldaGraphics.dll");
+		if (zeldaGraphicsDLL == nullptr)
+		{
+			// DLL 로드 실패
+			assert(0);
+		}
+		auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
+		if (createZeldaRenderer == nullptr)
+		{
+			// DLL 함수를 찾을 수 없습니다.
+			assert(0);
+		}
+		renderer = createZeldaRenderer();
+		renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
+		renderer->CreateResources();
+	}
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -75,13 +93,21 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
-
+	renderer->BeginDraw();
+	renderer->DrawCube();
+	renderer->EndDraw();
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			break;
+		}
+
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);

@@ -2,6 +2,9 @@
 #include "PurahEngineAPI.h"
 #include <windows.h>
 
+#include "IZeldaRenderer.h"
+#include "ZeldaGraphics.h"
+
 namespace PurahEngine
 {
 	class GameLoop
@@ -26,6 +29,9 @@ namespace PurahEngine
 		void run();
 
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+		HMODULE zeldaGraphicsDLL;
+		IZeldaRenderer* renderer;
 
 		// Singleton
 	public:
