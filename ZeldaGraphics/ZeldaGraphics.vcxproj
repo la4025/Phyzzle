@@ -159,7 +159,7 @@
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)$(IntDir)$(ProjectName).dll</Command>
+      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -183,7 +183,7 @@
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)$(IntDir)$(ProjectName).dll</Command>
+      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

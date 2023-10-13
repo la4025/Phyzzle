@@ -13,7 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 	std::wstring gameName = L"test";
 	
-	std::string path = "..//x64//Debug//DLL//PurahEngine.dll";
+	std::string path = "PurahEngine.dll";
 	HMODULE PurahEngineDll = ::LoadLibraryA(path.c_str());
 
 	if (PurahEngineDll == nullptr)
