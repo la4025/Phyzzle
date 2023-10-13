@@ -39,7 +39,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// Graphics dll 초기화(변경 가능성 농후)
 	{
-		zeldaGraphicsDLL = LoadLibrary(L"..//x64//Debug//DLL//ZeldaGraphics.dll");
+		zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
 		if (zeldaGraphicsDLL == nullptr)
 		{
 			// DLL 로드 실패
@@ -55,6 +55,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
 		renderer->CreateResources();
 	}
+
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
