@@ -20,13 +20,11 @@ namespace PurahEngine
 		// Update를 돌며 키의 입력값을 계속 체크한다.
 		void Update();
 		// 키가 방금 눌렸는가?
-		bool IsKeyPressedNow(int keycode);
+		bool IsKeyDown(int keycode);
 		// 키를 눌리고 있는가?
 		bool IsKeyPressed(int keycode);
 		// 키를 방금 뗐는가?
-		bool IsKeyReleasedNow(int keycode);
-		// 키가 떨어져 있는가?
-		bool IskeyRelease(int keycode);
+		bool IsKeyUp(int keycode);
 
 	private:
 		int PrevKeyState[KEY_COUNT] = { 0, };

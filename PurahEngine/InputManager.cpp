@@ -19,25 +19,21 @@ void PurahEngine::InputManager::Update()
 	}
 }
 
-bool PurahEngine::InputManager::IsKeyPressedNow(int keycode)
+bool PurahEngine::InputManager::IsKeyDown(int keycode)
 {
-	return (PrevKeyState[keycode] & 0x0000) && (NowKeyState[keycode] & 0x8000);
+	return (PrevKeyState[keycode] == 0) && (NowKeyState[keycode] & 0x8001);
 }
 
 bool PurahEngine::InputManager::IsKeyPressed(int keycode)
 {
-	return (PrevKeyState[keycode] & 0x8000) && (NowKeyState[keycode] & 0x8001);
+	return (PrevKeyState[keycode] & 0x8001) && (NowKeyState[keycode] & 0x8001);
 }
 
-bool PurahEngine::InputManager::IsKeyReleasedNow(int keycode)
+bool PurahEngine::InputManager::IsKeyUp(int keycode)
 {
-	return (PrevKeyState[keycode] & 0x8001) && (NowKeyState[keycode] & 0x0000);
+	return (PrevKeyState[keycode] & 0x8001) && (NowKeyState[keycode] == 0);
 }
 
-bool PurahEngine::InputManager::IskeyRelease(int keycode)
-{
-	return (PrevKeyState[keycode] & 0x0000) && (NowKeyState[keycode] & 0x0000);
-}
 
 PurahEngine::InputManager& PurahEngine::InputManager::Getinstance()
 {
