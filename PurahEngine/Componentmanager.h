@@ -1,5 +1,9 @@
 #pragma once
-class Componentmanager
+
+namespace PurahEngine
 {
-};
+	class Componentmanager
+	{
+	};
+}
 
