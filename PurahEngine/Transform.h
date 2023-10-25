@@ -22,7 +22,7 @@ namespace PurahEngine
 		// 포지션 세팅
 		void SetLocalPosition(ZonaiMath::Vector3D setPosition);
 		// 로테이션 세팅
-		void SetLocalRotation(ZonaiMath::Quaternion serQuaternion);
+		void SetLocalRotation(ZonaiMath::Quaternion setRotation);
 		// 스케일 세팅
 		void SetLocalScale(ZonaiMath::Vector3D setScale);
 	private:

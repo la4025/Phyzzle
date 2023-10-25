@@ -33,9 +33,9 @@ void PurahEngine::Transform::SetLocalPosition(ZonaiMath::Vector3D setPosition)
 	position = setPosition;
 }
 
-void PurahEngine::Transform::SetLocalRotation(ZonaiMath::Quaternion serQuaternion)
+void PurahEngine::Transform::SetLocalRotation(ZonaiMath::Quaternion setRotation)
 {
-
+	rotation = setRotation;
 }
 
 void PurahEngine::Transform::SetLocalScale(ZonaiMath::Vector3D setScale)
