@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. ZonaiPhysicsX">
+      <UniqueIdentifier>{9314a595-cff3-47c3-9826-51d2f4a8efbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. World">
+      <UniqueIdentifier>{5da4d5d5-a0b5-44fd-92b2-625b53a5230f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ZonaiPhysicsX.h">
+      <Filter>00. ZonaiPhysicsX</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>01. World</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="World.cpp">
+      <Filter>01. World</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
