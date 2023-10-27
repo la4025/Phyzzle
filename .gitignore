@@ -14,7 +14,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+#*.dll
 
 # Fortran module files
 *.mod
@@ -24,12 +24,19 @@
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
+# 빌드 잔바리
+*.pdb
+*.exp
+*.map
+*.tlog
+*.log
 
 ################################################################################
 # 이 .gitignore 파일은 Microsoft(R) Visual Studio에서 자동으로 만들어졌습니다.
@@ -38,10 +45,12 @@
 /ZonaiMath/x64/Debug/ZonaiMath.tlog
 /ZonaiMath/x64/Debug
 /.vs
-/x64/Debug
+#/x64/Debug
 /ZeldaClient/x64/Debug
 /PurahEngine/x64/Debug
-/ZonaiPhysics/x64/Debug
+/ZonaiDemo/x64
+/ZonaiPhysics/x64
+/ZonaiPhysicsX/x64
 /ZonaiGraphics/x64/Debug
 /ZonaiSounds/x64/Debug
 /ZonaiUtility/x64/Debug

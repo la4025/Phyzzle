@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiPhysicsInterface", "Zo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiDemo", "ZonaiDemo\ZonaiDemo.vcxproj", "{B4025E7B-2256-444F-BD5A-CC5C378B9584}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiPhysics", "..\..\Documents\ZonaiEngine\ZonaiPhysics\ZonaiPhysics.vcxproj", "{B0F3B838-99DD-4BA4-B728-BD8958FBDACD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZonaiPhysics", "ZonaiPhysics\ZonaiPhysics.vcxproj", "{B0F3B838-99DD-4BA4-B728-BD8958FBDACD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -20,8 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
-    <ClInclude Include="ICollider.h" />
+    <ClInclude Include="IJoint.h" />
     <ClInclude Include="IRigidBody.h" />
+    <ClInclude Include="IShape.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ZonaiPhysicsBase.h" />
   </ItemGroup>

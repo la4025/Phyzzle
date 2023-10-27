@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

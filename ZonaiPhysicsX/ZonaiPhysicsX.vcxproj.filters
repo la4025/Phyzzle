@@ -7,6 +7,9 @@
     <Filter Include="01. World">
       <UniqueIdentifier>{5da4d5d5-a0b5-44fd-92b2-625b53a5230f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. RigidBody">
+      <UniqueIdentifier>{8aa7239d-2e33-4faa-8c45-44120e55505e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h">
@@ -15,10 +18,16 @@
     <ClInclude Include="World.h">
       <Filter>01. World</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>02. RigidBody</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
       <Filter>01. World</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>02. RigidBody</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -12,7 +12,12 @@
     <ClInclude Include="IRigidBody.h">
       <Filter>00. Interface</Filter>
     </ClInclude>
-    <ClInclude Include="ICollider.h">
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="IShape.h">
+      <Filter>00. Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IJoint.h">
       <Filter>00. Interface</Filter>
     </ClInclude>
   </ItemGroup>
