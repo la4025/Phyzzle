@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,7 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

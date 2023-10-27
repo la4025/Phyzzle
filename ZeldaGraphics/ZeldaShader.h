@@ -6,37 +6,29 @@
 #include <fstream>
 #include <Windows.h>
 
+class ZeldaMesh;
+class ZeldaTexture;
+
 class ZeldaShader
 {
-private:
-	struct MatrixBufferType
-	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX projection;
-	};
-
 public:
-	ZeldaShader();
-	ZeldaShader(const ZeldaShader& zeldaShader);
+	ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName);
+	ZeldaShader(const ZeldaShader& zeldaShader) = delete;
 	~ZeldaShader();
 
-	bool Initialize(ID3D11Device* device, HWND hwnd);
-	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix);
+	bool Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ZeldaTexture* texture, DirectX::XMFLOAT3 lightDirection, DirectX::XMFLOAT4 diffuse);
 
 private:
-	bool InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFileName, const WCHAR* psFileName);
-	void ShutdownShader();
-	void OutputShaderErrorMessage(ID3DBlob* errorMessage, HWND hwnd, const WCHAR* shaderFileName);
-
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix);
+	bool Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 lightDirection, DirectX::XMFLOAT4 diffuse);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 private:
-	ID3D11VertexShader* mVertexShader;
-	ID3D11PixelShader* mPixelShader;
-	ID3D11InputLayout* mLayout;
-	ID3D11Buffer* mMatrixBuffer;
+	ID3D11VertexShader* vertexShader;
+	ID3D11PixelShader* pixelShader;
+	ID3D11InputLayout* layout;
+	ID3D11Buffer* matrixBuffer;
+	ID3D11Buffer* lightBuffer;
+	ID3D11SamplerState* samplerState;
 };
 

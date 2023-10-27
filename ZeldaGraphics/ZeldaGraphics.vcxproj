@@ -19,21 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\GraphicsResourceID.h" />
     <ClInclude Include="header\IZeldaRenderer.h" />
     <ClInclude Include="header\ZeldaGraphics.h" />
+    <ClInclude Include="header\ZeldaGraphicsAPI.h" />
+    <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="MathConverter.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ZeldaCamera.h" />
     <ClInclude Include="ZeldaDX11Renderer.h" />
-    <ClInclude Include="ZeldaGraphicsAPI.h" />
+    <ClInclude Include="ZeldaGraphicsDefine.h" />
+    <ClInclude Include="ZeldaLight.h" />
+    <ClInclude Include="ZeldaMesh.h" />
     <ClInclude Include="ZeldaModel.h" />
     <ClInclude Include="ZeldaShader.h" />
+    <ClInclude Include="ZeldaTexture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IDGenerator.cpp" />
+    <ClCompile Include="MathConverter.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="ZeldaCamera.cpp" />
     <ClCompile Include="ZeldaDX11Renderer.cpp" />
     <ClCompile Include="ZeldaGraphics.cpp" />
+    <ClCompile Include="ZeldaLight.cpp" />
+    <ClCompile Include="ZeldaMesh.cpp" />
     <ClCompile Include="ZeldaModel.cpp" />
     <ClCompile Include="ZeldaShader.cpp" />
+    <ClCompile Include="ZeldaTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -144,14 +160,19 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)assimpInc;$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)assimpLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -163,7 +184,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)assimpInc;$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,8 +193,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)assimpLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
