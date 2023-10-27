@@ -7,6 +7,8 @@
 
 namespace PurahEngine
 {
+	class SceneManager;
+
 	class GameLoop
 	{
 	private:
