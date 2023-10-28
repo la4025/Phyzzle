@@ -32,7 +32,7 @@
 #include "foundation/PxPreprocessor.h"
 
 #if PX_SWITCH
-#include "../snippets/SnippetCommon/Switch/SwitchSnippetPrint.h"
+#include "../SnippetCommon/Switch/SwitchSnippetPrint.h"
 #endif
 
 #endif // PHYSX_SNIPPET_PRINT_H

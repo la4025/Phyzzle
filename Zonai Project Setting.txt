@@ -1,0 +1,177 @@
+#### 
+#### 
+#### Zonai Project Property
+#### Debug x64
+#### 
+#### 
+
+## C/C++
+
+# C++ 표준
+ISO C++ 20 표준
+ISO C17 표준
+
+# 추가 포함 디렉터리
+$(SolutionDir)physx;
+$(SolutionDir)physx\include;
+$(SolutionDir)physx\include\cudamanager;
+C:\packman-repo\chk\freeglut-windows\3.4_1.1\include;
+$(SolutionDir)physx\include\source\physxextensions\src;
+$(SolutionDir)physx\include\source\foundation\include;
+$(SolutionDir)physx\include\source\geomutils\include;
+$(SolutionDir)physx\snippets\graphics\include;
+$(SolutionDir)physx\snippets\compiler;
+%(AdditionalIncludeDirectories)
+
+# 경고 수준
+수준4
+
+# 경고를 오류로 처리
+예
+
+# 다중 프로세서 컴파일
+예
+
+# 최적화
+사용 안 함
+
+
+# 전처리기 정의
+%(PreprocessorDefinitions)
+_DEBUG
+WIN32
+WIN64
+_CRT_SECURE_NO_DEPRECATE
+_CRT_NONSTDC_NO_DEPRECATE
+_WINSOCK_DEPRECATED_NO_WARNINGS
+PX_PUBLIC_RELEASE=1
+RENDER_SNIPPET
+PX_PHYSX_STATIC_LIB
+PX_DEBUG=1
+PX_CHECKED=1
+PX_NVTX=0
+PX_SUPPORT_PVD=1
+PX_SUPPORT_OMNI_PVD=1
+CMAKE_INTDIR="debug"
+_SILENCE_CXX20_CISO646_REMOVED_WARNING	# 필수
+
+# 기본 런타임 검사
+초기화되지 않은 변수			# 안해도 됨
+
+# 런타임 라이브러리
+다중 스레드 디버그
+
+# 특정 경고 사용 안함
+4514;
+4820;
+4127;
+4710;
+4711;
+4577;
+4996;
+
+# 추가 라이브러리 디렉터리
+$(SolutionDir)\physx\release;
+%(AdditionalLibraryDirectories)
+
+# 추가 종속성
+PhysXExtensions_static_64.lib
+PhysXPvdSDK_static_64.lib
+PhysX_static_64.lib
+PhysXVehicle_static_64.lib
+PhysXVehicle2_static_64.lib
+PhysXCharacterKinematic_static_64.lib
+PhysXCooking_static_64.lib
+PhysXCommon_static_64.lib
+PhysXFoundation_static_64.lib
+SnippetUtils_static_64.lib
+PVDRuntime_64.lib
+SnippetRender_static_64.lib
+C:\packman-repo\chk\freeglut-windows\3.4_1.1\lib\win64\freeglutd.lib
+opengl32.lib
+glu32.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+winspool.lib
+shell32.lib
+ole32.lib
+oleaut32.lib
+uuid.lib
+comdlg32.lib
+advapi32.lib
+
+#### 
+#### 
+#### Zonai Project Property
+#### Release x64
+#### 
+#### 
+
+# C++ 표준
+ISO C++ 20 표준
+ISO C17 표준
+
+# 전처리기 정의
+%(PreprocessorDefinitions)
+_HAS_ITERATOR_DEBUGGING=0
+_ITERATOR_DEBUG_LEVEL=0
+NDEBUG
+WIN32
+WIN64
+_CRT_SECURE_NO_DEPRECATE
+_CRT_NONSTDC_NO_DEPRECATE
+_WINSOCK_DEPRECATED_NO_WARNINGS
+PX_PUBLIC_RELEASE=1
+RENDER_SNIPPET
+PX_PHYSX_STATIC_LIB
+PX_SUPPORT_PVD=0
+PX_SUPPORT_OMNI_PVD=0
+CMAKE_INTDIR="release"
+_SILENCE_CXX20_CISO646_REMOVED_WARNING
+
+# 추가 포함 디렉터리
+$(SolutionDir)physx;
+$(SolutionDir)physx\include;
+$(SolutionDir)physx\include\cudamanager;
+C:\packman-repo\chk\freeglut-windows\3.4_1.1\include;
+$(SolutionDir)physx\include\source\physxextensions\src;
+$(SolutionDir)physx\include\source\foundation\include;
+$(SolutionDir)physx\include\source\geomutils\include;
+$(SolutionDir)physx\snippets\graphics\include;
+$(SolutionDir)physx\snippets\compiler;
+%(AdditionalIncludeDirectories)
+
+# 런타임 라이브러리
+다중 스레드
+
+# 추가 라이브러리 디렉터리
+$(SolutionDir)\physx\release;
+%(AdditionalLibraryDirectories)
+
+# 추가 종속성
+PhysXExtensions_static_64.lib
+PhysXPvdSDK_static_64.lib
+PhysX_static_64.lib
+PhysXVehicle_static_64.lib
+PhysXVehicle2_static_64.lib
+PhysXCharacterKinematic_static_64.lib
+PhysXCooking_static_64.lib
+PhysXCommon_static_64.lib
+PhysXFoundation_static_64.lib
+SnippetUtils_static_64.lib
+PVDRuntime_64.lib
+SnippetRender_static_64.lib
+C:\packman-repo\chk\freeglut-windows\3.4_1.1\lib\win64\freeglutd.lib
+opengl32.lib
+glu32.lib
+kernel32.lib
+user32.lib
+gdi32.lib
+winspool.lib
+shell32.lib
+ole32.lib
+oleaut32.lib
+uuid.lib
+comdlg32.lib
+advapi32.lib

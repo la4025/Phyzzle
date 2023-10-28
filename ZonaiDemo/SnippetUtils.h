@@ -35,53 +35,53 @@ namespace physx
 
 		class BasicRandom
 		{
-			public:
-										BasicRandom(PxU32 seed=0)	: mRnd(seed)	{}
-										~BasicRandom()								{}
+		public:
+			BasicRandom(PxU32 seed = 0) : mRnd(seed) {}
+			~BasicRandom() {}
 
-			PX_FORCE_INLINE	void		setSeed(PxU32 seed)			{ mRnd = seed;											}
-			PX_FORCE_INLINE	PxU32		getCurrentValue()	const	{ return mRnd;											}
-							PxU32		randomize()					{ mRnd = mRnd * 2147001325 + 715136305; return mRnd;	}
+			PX_FORCE_INLINE	void		setSeed(PxU32 seed) { mRnd = seed; }
+			PX_FORCE_INLINE	PxU32		getCurrentValue()	const { return mRnd; }
+			PxU32		randomize() { mRnd = mRnd * 2147001325 + 715136305; return mRnd; }
 
-			PX_FORCE_INLINE	PxU32		rand()						{ return randomize() & 0xffff;							}
-			PX_FORCE_INLINE	PxU32		rand32()					{ return randomize() & 0xffffffff;						}
+			PX_FORCE_INLINE	PxU32		rand() { return randomize() & 0xffff; }
+			PX_FORCE_INLINE	PxU32		rand32() { return randomize() & 0xffffffff; }
 
-							PxF32		rand(PxF32 a, PxF32 b)
-										{
-											const PxF32 r = rand32()/(static_cast<PxF32>(0xffffffff));
-											return r*(b-a) + a;
-										}
+			PxF32		rand(PxF32 a, PxF32 b)
+			{
+				const PxF32 r = rand32() / (static_cast<PxF32>(0xffffffff));
+				return r * (b - a) + a;
+			}
 
-							PxI32		rand(PxI32 a, PxI32 b)
-										{
-											return a + static_cast<PxI32>(rand32()%(b-a));
-										}
+			PxI32		rand(PxI32 a, PxI32 b)
+			{
+				return a + static_cast<PxI32>(rand32() % (b - a));
+			}
 
-							PxF32		randomFloat()
-										{
-											return rand()/(static_cast<PxF32>(0xffff)) - 0.5f;
-										}									
-							PxF32		randomFloat32()
-										{
-											return rand32()/(static_cast<PxF32>(0xffffffff)) - 0.5f;
-										}
+			PxF32		randomFloat()
+			{
+				return rand() / (static_cast<PxF32>(0xffff)) - 0.5f;
+			}
+			PxF32		randomFloat32()
+			{
+				return rand32() / (static_cast<PxF32>(0xffffffff)) - 0.5f;
+			}
 
-							PxF32		randomFloat32(PxReal a, PxReal b) { return rand32()/PxF32(0xffffffff)*(b-a)+a; }
-							void		unitRandomPt(physx::PxVec3& v);	
-							void		unitRandomQuat(physx::PxQuat& v);
+			PxF32		randomFloat32(PxReal a, PxReal b) { return rand32() / PxF32(0xffffffff) * (b - a) + a; }
+			void		unitRandomPt(physx::PxVec3& v);
+			void		unitRandomQuat(physx::PxQuat& v);
 
-							PxVec3		unitRandomPt();
-							PxQuat		unitRandomQuat();
+			PxVec3		unitRandomPt();
+			PxQuat		unitRandomQuat();
 		private:
-							PxU32		mRnd;
+			PxU32		mRnd;
 		};
 
 		/////
 
 		PxU32			Bunny_getNbVerts();
 		PxU32			Bunny_getNbFaces();
-		const PxVec3*	Bunny_getVerts();
-		const PxU32*	Bunny_getFaces();
+		const PxVec3* Bunny_getVerts();
+		const PxU32* Bunny_getFaces();
 
 		/////
 
@@ -92,7 +92,7 @@ namespace physx
 		PxI32 atomicDecrement(volatile PxI32* val);
 
 		//******************************************************************************//
-		
+
 		/* Return the number of physical cores (does not include hyper-threaded cores), returns 0 on failure. */
 		PxU32 getNbPhysicalCores();
 
@@ -138,14 +138,14 @@ namespace physx
 		/* Prototype of callback passed to threadCreate. */
 		typedef void (*ThreadEntryPoint)(void*);
 
-		/* Create a thread object and return a unique handle to the thread object so that it may be addressed through threadStart etc. 
+		/* Create a thread object and return a unique handle to the thread object so that it may be addressed through threadStart etc.
 		entryPoint implements ThreadEntryPoint and data will be passed as a function argument, POSIX-style. */
 		Thread* threadCreate(ThreadEntryPoint entryPoint, void* data);
 
 		/* Cleanly shut down the specified thread. Called in the context of the spawned thread. */
 		void threadQuit(Thread* thread);
 
-		/* Stop the specified thread. Signals the spawned thread that it should stop, so the 
+		/* Stop the specified thread. Signals the spawned thread that it should stop, so the
 		thread should check regularly. */
 		void threadSignalQuit(Thread* thread);
 

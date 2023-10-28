@@ -17,7 +17,6 @@ namespace ZonaiPhysics
 
 	public:
 		virtual void Initialize() noexcept;
-		virtual 
 	};
 }
 

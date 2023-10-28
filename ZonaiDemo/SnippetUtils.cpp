@@ -42,208 +42,206 @@
 namespace physx
 {
 
-namespace
-{
-PxDefaultAllocator gUtilAllocator;
-
-struct UtilAllocator // since we're allocating internal classes here, make sure we align properly
-{
-	void* allocate(size_t size,const char* file,  PxU32 line) 	{ return gUtilAllocator.allocate(size, NULL, file, int(line));		}
-	void deallocate(void* ptr)									{ gUtilAllocator.deallocate(ptr);								}
-};
-}
-
-namespace SnippetUtils
-{
-	PxVec3 BasicRandom::unitRandomPt()
+	namespace
 	{
-		PxVec3 v;
-		do
+		PxDefaultAllocator gUtilAllocator;
+
+		struct UtilAllocator // since we're allocating internal classes here, make sure we align properly
 		{
-			v.x = randomFloat();
-			v.y = randomFloat();
-			v.z = randomFloat();
-		}
-		while(v.normalize()<1e-6f);
-		return v;
+			void* allocate(size_t size, const char* file, PxU32 line) { return gUtilAllocator.allocate(size, NULL, file, int(line)); }
+			void deallocate(void* ptr) { gUtilAllocator.deallocate(ptr); }
+		};
 	}
 
-	PxQuat BasicRandom::unitRandomQuat()
+	namespace SnippetUtils
 	{
-		PxQuat v;
-		do
+		PxVec3 BasicRandom::unitRandomPt()
 		{
-			v.x = randomFloat();
-			v.y = randomFloat();
-			v.z = randomFloat();
-			v.w = randomFloat();
+			PxVec3 v;
+			do
+			{
+				v.x = randomFloat();
+				v.y = randomFloat();
+				v.z = randomFloat();
+			} while (v.normalize() < 1e-6f);
+			return v;
 		}
-		while(v.normalize()<1e-6f);
 
-		return v;
-	}
-
-	void BasicRandom::unitRandomPt(PxVec3& v)
-	{
-		v = unitRandomPt();
-	}
-	void BasicRandom::unitRandomQuat(PxQuat& v)
-	{
-		v = unitRandomQuat();
-	}
-
-	PxI32 atomicIncrement(volatile PxI32* val)
-	{
-		return PxAtomicIncrement(val);
-	}
-
-	PxI32 atomicDecrement(volatile PxI32* val)
-	{
-		return PxAtomicDecrement(val);
-	}
-
-	//******************************************************************************//
-
-	PxU32 getNbPhysicalCores()
-	{
-		return PxThread::getNbPhysicalCores();
-	}
-
-	//******************************************************************************//
-
-	PxU32 getThreadId()
-	{
-		return static_cast<PxU32>(PxThread::getId());
-	}
-
-	//******************************************************************************//
-
-	PxU64 getCurrentTimeCounterValue()
-	{
-		return PxTime::getCurrentCounterValue();
-	}
-
-	PxReal getElapsedTimeInMilliseconds(const PxU64 elapsedTime)
-	{
-		return PxTime::getCounterFrequency().toTensOfNanos(elapsedTime)/(100.0f * 1000.0f);
-	}
-
-	PxReal getElapsedTimeInMicroSeconds(const PxU64 elapsedTime)
-	{
-		return PxTime::getCounterFrequency().toTensOfNanos(elapsedTime)/(100.0f);
-	}
-
-	//******************************************************************************//
-
-	struct Sync: public PxSyncT<UtilAllocator> {};
-
-	Sync* syncCreate()
-	{
-		return new(gUtilAllocator.allocate(sizeof(Sync), 0, 0, 0)) Sync();
-	}
-
-	void syncWait(Sync* sync)
-	{
-		sync->wait();
-	}
-
-	void syncSet(Sync* sync)
-	{
-		sync->set();
-	}
-
-	void syncReset(Sync* sync)
-	{
-		sync->reset();
-	}
-	
-	void syncRelease(Sync* sync)
-	{
-		sync->~Sync();
-		gUtilAllocator.deallocate(sync);
-	}
-
-	//******************************************************************************//
-
-	struct Thread: public PxThreadT<UtilAllocator>
-	{
-		Thread(ThreadEntryPoint entryPoint, void* data): 
-			PxThreadT<UtilAllocator>(),
-			mEntryPoint(entryPoint),
-			mData(data)
+		PxQuat BasicRandom::unitRandomQuat()
 		{
+			PxQuat v;
+			do
+			{
+				v.x = randomFloat();
+				v.y = randomFloat();
+				v.z = randomFloat();
+				v.w = randomFloat();
+			} while (v.normalize() < 1e-6f);
+
+			return v;
 		}
 
-		virtual void execute(void)											
-		{ 
-			mEntryPoint(mData);
+		void BasicRandom::unitRandomPt(PxVec3& v)
+		{
+			v = unitRandomPt();
+		}
+		void BasicRandom::unitRandomQuat(PxQuat& v)
+		{
+			v = unitRandomQuat();
 		}
 
-		ThreadEntryPoint mEntryPoint;
-		void* mData;
-	};
+		PxI32 atomicIncrement(volatile PxI32* val)
+		{
+			return PxAtomicIncrement(val);
+		}
 
-	Thread* threadCreate(ThreadEntryPoint entryPoint, void* data)
-	{
-		Thread* createThread = static_cast<Thread*>(gUtilAllocator.allocate(sizeof(Thread), 0, 0, 0));
-		PX_PLACEMENT_NEW(createThread, Thread(entryPoint, data));
-		createThread->start();
-		return createThread;
-	}
+		PxI32 atomicDecrement(volatile PxI32* val)
+		{
+			return PxAtomicDecrement(val);
+		}
 
-	void threadQuit(Thread* thread)
-	{
-		thread->quit();
-	}
+		//******************************************************************************//
 
-	void threadSignalQuit(Thread* thread)
-	{
-		thread->signalQuit();
-	}
+		PxU32 getNbPhysicalCores()
+		{
+			return PxThread::getNbPhysicalCores();
+		}
 
-	bool threadWaitForQuit(Thread* thread)
-	{
-		return thread->waitForQuit();
-	}
+		//******************************************************************************//
 
-	bool threadQuitIsSignalled(Thread* thread)
-	{
-		return thread->quitIsSignalled();
-	}
+		PxU32 getThreadId()
+		{
+			return static_cast<PxU32>(PxThread::getId());
+		}
 
-	void threadRelease(Thread* thread)
-	{
-		thread->~Thread();
-		gUtilAllocator.deallocate(thread);
-	}
+		//******************************************************************************//
 
-	//******************************************************************************//
+		PxU64 getCurrentTimeCounterValue()
+		{
+			return PxTime::getCurrentCounterValue();
+		}
 
-	struct Mutex: public PxMutexT<UtilAllocator> {};
+		PxReal getElapsedTimeInMilliseconds(const PxU64 elapsedTime)
+		{
+			return PxTime::getCounterFrequency().toTensOfNanos(elapsedTime) / (100.0f * 1000.0f);
+		}
 
-	Mutex* mutexCreate()
-	{
-		return new(gUtilAllocator.allocate(sizeof(Mutex), 0, 0, 0)) Mutex();
-	}
+		PxReal getElapsedTimeInMicroSeconds(const PxU64 elapsedTime)
+		{
+			return PxTime::getCounterFrequency().toTensOfNanos(elapsedTime) / (100.0f);
+		}
 
-	void mutexLock(Mutex* mutex)
-	{
-		mutex->lock();
-	}
+		//******************************************************************************//
 
-	void mutexUnlock(Mutex* mutex)
-	{
-		mutex->unlock();
-	}
+		struct Sync : public PxSyncT<UtilAllocator> {};
 
-	void mutexRelease(Mutex* mutex)
-	{
-		mutex->~Mutex();
-		gUtilAllocator.deallocate(mutex);
-	}
+		Sync* syncCreate()
+		{
+			return new(gUtilAllocator.allocate(sizeof(Sync), 0, 0, 0)) Sync();
+		}
+
+		void syncWait(Sync* sync)
+		{
+			sync->wait();
+		}
+
+		void syncSet(Sync* sync)
+		{
+			sync->set();
+		}
+
+		void syncReset(Sync* sync)
+		{
+			sync->reset();
+		}
+
+		void syncRelease(Sync* sync)
+		{
+			sync->~Sync();
+			gUtilAllocator.deallocate(sync);
+		}
+
+		//******************************************************************************//
+
+		struct Thread : public PxThreadT<UtilAllocator>
+		{
+			Thread(ThreadEntryPoint entryPoint, void* data) :
+				PxThreadT<UtilAllocator>(),
+				mEntryPoint(entryPoint),
+				mData(data)
+			{
+			}
+
+			virtual void execute(void)
+			{
+				mEntryPoint(mData);
+			}
+
+			ThreadEntryPoint mEntryPoint;
+			void* mData;
+		};
+
+		Thread* threadCreate(ThreadEntryPoint entryPoint, void* data)
+		{
+			Thread* createThread = static_cast<Thread*>(gUtilAllocator.allocate(sizeof(Thread), 0, 0, 0));
+			PX_PLACEMENT_NEW(createThread, Thread(entryPoint, data));
+			createThread->start();
+			return createThread;
+		}
+
+		void threadQuit(Thread* thread)
+		{
+			thread->quit();
+		}
+
+		void threadSignalQuit(Thread* thread)
+		{
+			thread->signalQuit();
+		}
+
+		bool threadWaitForQuit(Thread* thread)
+		{
+			return thread->waitForQuit();
+		}
+
+		bool threadQuitIsSignalled(Thread* thread)
+		{
+			return thread->quitIsSignalled();
+		}
+
+		void threadRelease(Thread* thread)
+		{
+			thread->~Thread();
+			gUtilAllocator.deallocate(thread);
+		}
+
+		//******************************************************************************//
+
+		struct Mutex : public PxMutexT<UtilAllocator> {};
+
+		Mutex* mutexCreate()
+		{
+			return new(gUtilAllocator.allocate(sizeof(Mutex), 0, 0, 0)) Mutex();
+		}
+
+		void mutexLock(Mutex* mutex)
+		{
+			mutex->lock();
+		}
+
+		void mutexUnlock(Mutex* mutex)
+		{
+			mutex->unlock();
+		}
+
+		void mutexRelease(Mutex* mutex)
+		{
+			mutex->~Mutex();
+			gUtilAllocator.deallocate(mutex);
+		}
 
 
-} // namespace physXUtils
+	} // namespace physXUtils
 } // namespace physx
 
 
@@ -252,7 +250,7 @@ using namespace physx;
 #define BUNNY_NBVERTICES	(453)
 #define BUNNY_NBFACES		(902)
 
-static float gBunnyVertices[BUNNY_NBVERTICES][3]={
+static float gBunnyVertices[BUNNY_NBVERTICES][3] = {
 	{-0.334392,0.133007,0.062259},
 	{-0.350189,0.150354,-0.147769},
 	{-0.234201,0.343811,-0.174307},
@@ -708,7 +706,7 @@ static float gBunnyVertices[BUNNY_NBVERTICES][3]={
 	{0.337656,0.131992,0.066374}
 };
 
-static unsigned int gBunnyTriangles[BUNNY_NBFACES][3]={
+static unsigned int gBunnyTriangles[BUNNY_NBFACES][3] = {
 	{126,134,133},
 	{342,138,134},
 	{133,134,138},
