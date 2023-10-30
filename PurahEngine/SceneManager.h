@@ -23,7 +23,7 @@ namespace PurahEngine
 		GameObject* CreateGameObject(std::wstring objectName);
 		Camera* GetMainCamera();
 
-	public:
+	private:
 		void Initialize();
 
 	private:
@@ -33,6 +33,8 @@ namespace PurahEngine
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
 
+		// GameLoop에 friend선언을 해줌으로써 private설정이 되있는 Initialize()를 GameLoop에서 쓸 수 있다.
+		friend GameLoop;
 	public:
 		static SceneManager& GetInstance();
 	};
