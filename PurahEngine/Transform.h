@@ -11,7 +11,11 @@ namespace PurahEngine
 		Transform();
 		virtual ~Transform();
 
+		// 회전 함수
+		void Rotate();
 
+		/// get
+		// Local
 		// 오브젝트의 포지션을 가져온다.
 		ZonaiMath::Vector3D GetLocalPosition() const;
 		// 오브젝트의 로테이션을 가져온다.
@@ -19,6 +23,15 @@ namespace PurahEngine
 		// 오브젝트의 스케일을 가져온다.
 		ZonaiMath::Vector3D GetLocalScale() const;
 
+		// World
+		// 오브젝트의 월드 포지션을 가져온다.
+		ZonaiMath::Vector3D GetWorldPosition() const;
+		// 오브젝트의 월드 로테이션을 가져온다.
+		ZonaiMath::Quaternion GetWorldRotation() const;
+		// 오브젝트의 월드 스케일을 가져온다.
+		ZonaiMath::Vector3D GetWorldScale() const;
+
+		/// set
 		// 포지션 세팅
 		void SetLocalPosition(ZonaiMath::Vector3D setPosition);
 		// 로테이션 세팅

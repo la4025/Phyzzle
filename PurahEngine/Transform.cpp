@@ -28,6 +28,21 @@ ZonaiMath::Vector3D PurahEngine::Transform::GetLocalScale() const
 	return scale;
 }
 
+ZonaiMath::Vector3D PurahEngine::Transform::GetWorldPosition() const
+{
+
+}
+
+ZonaiMath::Quaternion PurahEngine::Transform::GetWorldRotation() const
+{
+
+}
+
+ZonaiMath::Vector3D PurahEngine::Transform::GetWorldScale() const
+{
+
+}
+
 void PurahEngine::Transform::SetLocalPosition(ZonaiMath::Vector3D setPosition)
 {
 	position = setPosition;
