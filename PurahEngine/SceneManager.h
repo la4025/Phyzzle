@@ -35,7 +35,7 @@ namespace PurahEngine
 		Camera* mainCamera;
 
 		// GameLoop에 friend선언을 해줌으로써 private설정이 되있는 Initialize()를 GameLoop에서 쓸 수 있다.
-		friend class GameLoop;
+		friend GameLoop;
 	public:
 		static SceneManager& GetInstance();
 	};

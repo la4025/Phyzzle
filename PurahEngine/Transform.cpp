@@ -30,17 +30,17 @@ ZonaiMath::Vector3D PurahEngine::Transform::GetLocalScale() const
 
 ZonaiMath::Vector3D PurahEngine::Transform::GetWorldPosition() const
 {
-	return position;
+	
 }
 
 ZonaiMath::Quaternion PurahEngine::Transform::GetWorldRotation() const
 {
-	return rotation;
+	
 }
 
 ZonaiMath::Vector3D PurahEngine::Transform::GetWorldScale() const
 {
-	return scale;
+	
 }
 
 void PurahEngine::Transform::SetLocalPosition(ZonaiMath::Vector3D setPosition)
