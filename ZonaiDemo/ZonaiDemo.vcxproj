@@ -19,16 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SnippetImmUtils.cpp" />
     <ClCompile Include="SnippetJoint.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SnippetUtils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="SnippetImmUtils.h" />
-    <ClInclude Include="SnippetPrint.h" />
-    <ClInclude Include="SnippetPVD.h" />
-    <ClInclude Include="SnippetUtils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

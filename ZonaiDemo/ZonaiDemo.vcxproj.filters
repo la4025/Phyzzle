@@ -3,13 +3,5 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SnippetJoint.cpp" />
-    <ClCompile Include="SnippetImmUtils.cpp" />
-    <ClCompile Include="SnippetUtils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="SnippetPVD.h" />
-    <ClInclude Include="SnippetPrint.h" />
-    <ClInclude Include="SnippetImmUtils.h" />
-    <ClInclude Include="SnippetUtils.h" />
   </ItemGroup>
 </Project>

@@ -6,4 +6,20 @@ namespace ZonaiPhysics
 	{
 
 	}
+
+	IRigidBody* World::CreateRigidBody() noexcept
+	{
+
+	}
+
+	ICollider* World::CreatBoxCollider() noexcept
+	{
+
+	}
+
+	IJoint* World::CreatFixedJoint() noexcept
+	{
+
+	}
+
 }

@@ -58,7 +58,7 @@ static PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geo
 	return dynamic;
 }
 
-// spherical joint limited to an angle of at most pi/4 radians (45 degrees)
+// 각도가 제한된 구형 관절
 static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
 {
 	PxSphericalJoint* j = PxSphericalJointCreate(*gPhysics, a0, t0, a1, t1);
@@ -67,7 +67,7 @@ static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, 
 	return j;
 }
 
-// fixed, breakable joint
+// 파괴 가능한 고정 관절
 static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
 {
 	PxFixedJoint* j = PxFixedJointCreate(*gPhysics, a0, t0, a1, t1);
@@ -77,7 +77,7 @@ static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, Px
 	return j;
 }
 
-// D6 joint with a spring maintaining its position
+// 스프링으로 위치가 고정된 D6 관절
 static PxJoint* createDampedD6(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
 {
 	PxD6Joint* j = PxD6JointCreate(*gPhysics, a0, t0, a1, t1);
@@ -138,8 +138,13 @@ void initPhysics(bool /*interactive*/)
 	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
 	gScene->addActor(*groundPlane);
 
+	// 각도가 제한된 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, 0.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
+	
+	// 부숴지는 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, -10.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
+	
+	// 스프링으로 연결된 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
 }
 
