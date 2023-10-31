@@ -5,6 +5,7 @@
 
 namespace PurahEngine
 {
+	class GameLoop;
 	class GameObject;
 	class Camera;
 
