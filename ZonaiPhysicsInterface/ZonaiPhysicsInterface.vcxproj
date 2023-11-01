@@ -19,11 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="IJoint.h" />
-    <ClInclude Include="IRigidBody.h" />
-    <ClInclude Include="IShape.h" />
-    <ClInclude Include="Material.h" />
+    <ClInclude Include="ZnCollision.h" />
+    <ClInclude Include="ZnJoint.h" />
+    <ClInclude Include="ZnRigidBody.h" />
+    <ClInclude Include="ZnShape.h" />
+    <ClInclude Include="ZnMaterial.h" />
+    <ClInclude Include="ZnTransform.h" />
     <ClInclude Include="ZonaiPhysicsBase.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

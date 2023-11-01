@@ -105,21 +105,22 @@ PX_FLAGS_OPERATORS(PxMaterialFlag::Enum,PxU16)
 
 
 /**
-\brief Enumeration that determines the way in which two material properties will be combined to yield a friction or restitution coefficient for a collision.
+\brief 두 재질 속성이 충돌의 마찰 또는 반발력 계수를 생성하기 위해 결합되는 방식을 결정하는 열거형입니다.
 
-When two actors come in contact with each other, they each have materials with various coefficients, but we only need a single set of coefficients for the pair.
+두 개의 액터가 서로 접촉할 때, 각각은 다양한 계수를 가진 재질을 가지지만, 
+우리는 그 두 액터에 대한 하나의 계수 집합만 필요합니다.
 
-Physics doesn't have any inherent combinations because the coefficients are determined empirically on a case by case
-basis. However, simulating this with a pairwise lookup table is often impractical.
+물리학은 계수가 각각의 사례별로 경험적으로 결정되기 때문에 별도의 조합을 가지지 않습니다. 
+그러나 이를 쌍별 조회 테이블로 시뮬레이션하는 것은 종종 비현실적입니다.
 
-For this reason the following combine behaviors are available:
+이러한 이유로 다음과 같은 결합 동작이 제공됩니다:
 
 eAVERAGE
 eMIN
 eMULTIPLY
 eMAX
 
-The effective combine mode for the pair is maximum(material0.combineMode, material1.combineMode).
+쌍의 효과적인 결합 모드는 maximum(material0.combineMode, material1.combineMode)입니다.
 
 @see PxMaterial.setFrictionCombineMode() PxMaterial.getFrictionCombineMode() PxMaterial.setRestitutionCombineMode() PxMaterial.getFrictionCombineMode()
 */
@@ -217,57 +218,57 @@ public:
 	virtual		PxReal	getRestitution() const = 0;
 
 	/**
-	\brief Sets the coefficient of damping
+	\brief 댐핑 계수를 설정합니다.
 
-	This property only affects the simulation if PxMaterialFlag::eCOMPLIANT_CONTACT is raised.
-	Damping works together with spring stiffness (set through a negative restitution value). Spring stiffness corrects positional error while
-	damping resists relative velocity. Setting a high damping coefficient can produce spongy contacts.
+	이 속성은 오직 PxMaterialFlag::eCOMPLIANT_CONTACT가 활성화되어 있을 때 시뮬레이션에 영향을 미칩니다.
+	댐핑은 음의 복구 값을 통해 설정된 스프링 강도와 함께 작동합니다. 스프링 강도는 위치 오류를 보정하고,
+	댐핑은 상대 속도에 저항합니다. 높은 댐핑 계수를 설정하면 스펀지 상태의 접촉을 생성할 수 있습니다.
 
-	<b>Sleeping:</b> Does <b>NOT</b> wake any actors which may be affected.
+	<b>슬립:</b> 영향을 받을 수 있는 어떤 액터도 깨우지 <b>않습니다.</b>
 
-	\param[in] damping Coefficient of damping. <b>Range:</b> [0,INF]
+	\param[in] damping 댐핑 계수. <b>범위:</b> [0, 무한대]
 
 	@see getDamping()
 	*/
 	virtual		void	setDamping(PxReal damping) = 0;
 
 	/**
-	\brief Retrieves the coefficient of damping.
+	\brief 댐핑 계수를 검색합니다.
 
-	See #setDamping.
+	#setDamping을 참조하십시오.
 
-	\return The coefficient of damping.
+	\return 댐핑 계수.
 
 	@see setDamping()
 	*/
 	virtual		PxReal	getDamping() const = 0;
 
 	/**
-	\brief Raises or clears a particular material flag.
-	
-	See the list of flags #PxMaterialFlag
+	\brief 특정한 머티리얼 플래그를 설정하거나 해제합니다.
 
-	<b>Default:</b> eIMPROVED_PATCH_FRICTION
+	플래그 목록은 #PxMaterialFlag를 참조하십시오.
 
-	<b>Sleeping:</b> Does <b>NOT</b> wake any actors which may be affected.
+	<b>기본값:</b> eIMPROVED_PATCH_FRICTION
 
-	\param[in]	flag	The PxMaterial flag to raise(set) or clear.
-	\param[in]	b		New state of the flag
+	<b>슬립:</b> 영향을 받을 수 있는 어떤 액터도 깨우지 <b>않습니다.</b>
+
+	\param[in]	flag 설정(올리기) 또는 해제할 PxMaterial 플래그입니다.
+	\param[in]	b 플래그의 새로운 상태
 
 	@see getFlags() setFlags() PxMaterialFlag
 	*/
 	virtual		void	setFlag(PxMaterialFlag::Enum flag, bool b) = 0;
 
 	/**
-	\brief sets all the material flags.
-	
-	See the list of flags #PxMaterialFlag
+	\brief 모든 머티리얼 플래그를 설정합니다.
 
-	<b>Default:</b> eIMPROVED_PATCH_FRICTION
+	플래그 목록은 #PxMaterialFlag를 참조하십시오.
 
-	<b>Sleeping:</b> Does <b>NOT</b> wake any actors which may be affected.
+	<b>기본값:</b> eIMPROVED_PATCH_FRICTION
 
-	\param[in]	flags	All PxMaterial flags
+	<b>슬립:</b> 영향을 받을 수 있는 어떤 액터도 깨우지 <b>않습니다.</b>
+
+	\param[in]	flags 모든 PxMaterial 플래그
 
 	@see getFlags() setFlag() PxMaterialFlag
 	*/

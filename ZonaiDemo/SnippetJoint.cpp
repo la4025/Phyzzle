@@ -37,26 +37,29 @@
 #include "PxPhysicsAPI.h"
 #include "../snippets/snippetcommon/SnippetPrint.h"
 #include "../snippets/snippetcommon/SnippetPVD.h"
+#include <windows.h>
 
 using namespace physx;
 
 static PxDefaultAllocator		gAllocator;
 static PxDefaultErrorCallback	gErrorCallback;
-static PxFoundation* gFoundation = NULL;
-static PxPhysics* gPhysics = NULL;
-static PxDefaultCpuDispatcher* gDispatcher = NULL;
-static PxScene* gScene = NULL;
-static PxMaterial* gMaterial = NULL;
-static PxPvd* gPvd = NULL;
+static PxFoundation*			gFoundation = NULL;
+static PxPhysics*				gPhysics = NULL;
+static PxDefaultCpuDispatcher*	gDispatcher = NULL;
+static PxScene*					gScene = NULL;
+static PxMaterial*				gMaterial = NULL;
+static PxPvd*					gPvd = NULL;
+static PxRigidDynamic*			last = NULL;
+static PxJoint*					lastj = NULL;
 
-static PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
-{
-	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
-	dynamic->setAngularDamping(0.5f);
-	dynamic->setLinearVelocity(velocity);
-	gScene->addActor(*dynamic);
-	return dynamic;
-}
+// static PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
+// {
+// 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
+// 	dynamic->setAngularDamping(0.5f);
+// 	dynamic->setLinearVelocity(velocity);
+// 	gScene->addActor(*dynamic);
+// 	return dynamic;
+// }
 
 // 각도가 제한된 구형 관절
 static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
@@ -74,6 +77,7 @@ static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, Px
 	j->setBreakForce(1000, 100000);
 	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
 	j->setConstraintFlag(PxConstraintFlag::eDISABLE_PREPROCESSING, true);
+	lastj = j;
 	return j;
 }
 
@@ -105,10 +109,13 @@ static void createChain(const PxTransform& t, PxU32 length, const PxGeometry& g,
 		gScene->addActor(*current);
 		prev = current;
 		localTm.p.x += separation;
+
+		last = current;
 	}
 }
 
-void initPhysics(bool /*interactive*/)
+/*
+void initPhysics(bool interactive)
 {
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 	gPvd = PxCreatePvd(*gFoundation);
@@ -147,12 +154,15 @@ void initPhysics(bool /*interactive*/)
 	// 스프링으로 연결된 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
 }
+*/
 
-void stepPhysics(bool /*interactive*/)
+/*
+void stepPhysics()// interactive
 {
 	gScene->simulate(1.0f / 600.0f);
 	gScene->fetchResults(true);
 }
+*/
 
 void cleanupPhysics(bool /*interactive*/)
 {
@@ -171,24 +181,84 @@ void cleanupPhysics(bool /*interactive*/)
 	printf("SnippetJoint done.\n");
 }
 
-void keyPress(unsigned char key, const PxTransform& camera)
+// void keyPress(unsigned char key, const PxTransform& camera)
+// {
+// 	switch (toupper(key))
+// 	{
+// 	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0, 0, -1)) * 200);	break;
+// 	}
+// }
+
+bool keyPress(unsigned char key)
 {
-	switch (toupper(key))
-	{
-	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0, 0, -1)) * 200);	break;
-	}
+	return GetAsyncKeyState(key);
 }
 
 int snippetMain(int, const char* const*)
 {
-
 	static const PxU32 frameCount = 100;
-	initPhysics(false);
+
+	// initPhysics(false);
+
+	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
+	gPvd = PxCreatePvd(*gFoundation);
+	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
+	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+
+	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+	PxInitExtensions(*gPhysics, gPvd);
+
+	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
+	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+	gDispatcher = PxDefaultCpuDispatcherCreate(2);
+	sceneDesc.cpuDispatcher = gDispatcher;
+	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	gScene = gPhysics->createScene(sceneDesc);
+
+	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
+	if (pvdClient)
+	{
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	}
+
+	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+
+	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
+	gScene->addActor(*groundPlane);
+
+	// 각도가 제한된 관절
+	createChain(PxTransform(PxVec3(0.0f, 20.0f, 0.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
+
+	// 부숴지는 관절
+	createChain(PxTransform(PxVec3(0.0f, 20.0f, -10.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
+
+	// 스프링으로 연결된 관절
+	createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
+
 	while (1)
 	{
-		for (PxU32 i = 0; i < frameCount; i++)
-			stepPhysics(false);
+		// gScene->simulate(1.0f / 600.0f);
+		gScene->simulate(1.f/ 500.f);
+		gScene->fetchResults(true);
+
+		if (GetAsyncKeyState(0x4B))  // K
+		{
+			auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
+			last->attachShape(*shape);
+			shape->release();
+		}
+
+		static bool first = true;
+
+		if (GetAsyncKeyState(0x4C) && first)  // L
+		{
+			first = false;
+			lastj->setBreakForce(0.01f, 0.01f);
+		}
 	}
+
 	cleanupPhysics(false);
 
 	return 0;

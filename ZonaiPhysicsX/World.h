@@ -3,10 +3,11 @@
 
 namespace ZonaiPhysics
 {
-	class IRigidBody;
-	class ISoftBody;
-	class ICollider;
-	class IJoint;
+	class ZnRigidBody;
+	class ZnSoftBody;
+	class ZnCollider;
+	class ZnJoint;
+	class ZnTransform;
 
 
 	class World : public ZonaiPhysicsBase
@@ -23,26 +24,26 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
-		virtual IRigidBody* CreateRigidBody() noexcept;
+		virtual ZnRigidBody* CreateRigidBody() noexcept;
 		
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		virtual ICollider*	CreatBoxCollider() noexcept;
-		virtual ICollider*	CreatPlaneCollider() noexcept;
-		virtual ICollider*	CreatSphereCollider() noexcept;
-		virtual ICollider*	CreateCapsuleCollider() noexcept;
-		virtual ICollider*	CreateCustomCollider() noexcept;
+		virtual ZnCollider*	CreatBoxCollider() noexcept;
+		virtual ZnCollider*	CreatPlaneCollider() noexcept;
+		virtual ZnCollider*	CreatSphereCollider() noexcept;
+		virtual ZnCollider*	CreateCapsuleCollider() noexcept;
+		virtual ZnCollider*	CreateCustomCollider() noexcept;
 		
 		/// <summary>
 		/// Create Joint
 		/// </summary>
-		virtual IJoint*		CreatD6Joint() noexcept;
-		virtual IJoint*		CreatFixedJoint() noexcept;
-		virtual IJoint*		CreatDistanceJoint() noexcept;
-		virtual IJoint*		CreatSphericalJoint() noexcept;
-		virtual IJoint*		CreatRevoluteJoint() noexcept;
-		virtual IJoint*		CreatPrismaticJoint() noexcept;
+		virtual ZnJoint*		CreatD6Joint() noexcept;			// D6 조인트		*사실 뭔지 모름
+		virtual ZnJoint*		CreatFixedJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept;			// 고정 조인트
+		virtual ZnJoint*		CreatDistanceJoint() noexcept;		// 거리 조인트
+		virtual ZnJoint*		CreatSphericalJoint() noexcept;		// 구형 조인트
+		virtual ZnJoint*		CreatRevoluteJoint() noexcept;		// 회전 조인트
+		virtual ZnJoint*		CreatPrismaticJoint() noexcept;		// 프리즘 조인트
 	};
 }
 

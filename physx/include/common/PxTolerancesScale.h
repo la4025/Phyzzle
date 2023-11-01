@@ -41,48 +41,46 @@ namespace physx
 #endif
 
 /**
-\brief Class to define the scale at which simulation runs. Most simulation tolerances are
-calculated in terms of the values here. 
+\brief 시뮬레이션이 실행되는 스케일을 정의하는 클래스입니다.
+대부분의 시뮬레이션 허용 오차는 여기에 정의된 값에 따라 계산됩니다.
 
-\note if you change the simulation scale, you will probably also wish to change the scene's
-default value of gravity, and stable simulation will probably require changes to the scene's 
-bounceThreshold also.
+\note 시뮬레이션 스케일을 변경하는 경우, 장면의 중력의 기본값도 변경하려고 할 것이며,
+안정된 시뮬레이션을 위해서는 장면의 bounceThreshold를 변경해야 할 것입니다.
 */
 
 class PxTolerancesScale
 {
 public: 
 
-	/** 
-	\brief The approximate size of objects in the simulation. 
-	
-	For simulating roughly human-sized in metric units, 1 is a good choice.
-	If simulation is done in centimetres, use 100 instead. This is used to
-	estimate certain length-related tolerances.
+	/**
+	\brief 시뮬레이션 내의 물체의 대략적인 크기입니다.
+
+	미터 단위로 대략 인간 크기를 시뮬레이션하는 경우, 1이 좋은 선택입니다.
+	만약 센티미터 단위로 시뮬레이션을 수행하는 경우, 
+	대신 100을 사용하십시오. 이 값은 특정 길이 관련 허용 오차를 추정하는 데 사용됩니다.
 	*/
 	PxReal	length;
 
-	/** 
-	\brief The typical magnitude of velocities of objects in simulation. This is used to estimate 
-	whether a contact should be treated as bouncing or resting based on its impact velocity,
-	and a kinetic energy threshold below which the simulation may put objects to sleep.
+	/**
+	\brief 시뮬레이션 내의 물체의 일반적인 속도 크기입니다.
+	이 값은 충돌이 튕김 또는 정지로 처리되어야 하는지를 판단하고,
+	시뮬레이션에서 물체를 슬립 상태로 전환할 때 사용됩니다.
 
-	For normal physical environments, a good choice is the approximate speed of an object falling
-	under gravity for one second.
+	일반적인 물리적 환경에서 좋은 선택은 중력에 따라 1초 동안 떨어지는 물체의 근사 속도입니다.
 	*/
 	PxReal	speed;
 
 	/**
-	\brief constructor sets to default 
+	\brief 생성자, 기본값으로 설정합니다.
 
-	\param[in]	defaultLength	Default length
-	\param[in]	defaultSpeed	Default speed
+	\param[in]	defaultLength	기본 길이
+	\param[in]	defaultSpeed	기본 속도
 	*/
 	PX_INLINE explicit PxTolerancesScale(float defaultLength=1.0f, float defaultSpeed=10.0f);
 
 	/**
-	\brief Returns true if the descriptor is valid.
-	\return true if the current settings are valid (returns always true).
+	\brief 디스크립터가 유효한 경우 true를 반환합니다.
+	\return 현재 설정이 유효한 경우 true를 반환합니다 (항상 true를 반환합니다).
 	*/
 	PX_INLINE bool isValid() const;
 

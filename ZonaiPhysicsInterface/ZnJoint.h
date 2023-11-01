@@ -2,7 +2,7 @@
 
 namespace ZonaiPhysics
 {
-	class IJoint
+	class ZnJoint
 	{
 	public:
 
