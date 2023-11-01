@@ -3,6 +3,8 @@
 #include "../ZonaiMath/ZonaiMath.h"
 #pragma comment(lib, "../x64/Debug/ZonaiMath.lib")
 
+#include <vector>
+
 namespace PurahEngine
 {
 	class Transform : public Component
@@ -45,5 +47,9 @@ namespace PurahEngine
 		ZonaiMath::Quaternion rotation;
 		// 스케일
 		ZonaiMath::Vector3D scale;
+
+		// 부모 Transform
+		Transform* parentTransform;
+		std::vector<Transform*> children;
 	};
 }

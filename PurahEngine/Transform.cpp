@@ -3,7 +3,8 @@
 PurahEngine::Transform::Transform() :
 	position(ZonaiMath::Vector3D::Zero),
 	rotation(ZonaiMath::Quaternion::Identity),
-	scale(ZonaiMath::Vector3D(1.0f, 1.0f, 1.0f))
+	scale(ZonaiMath::Vector3D(1.0f, 1.0f, 1.0f)),
+	parentTransform(nullptr)
 {
 
 }
@@ -30,17 +31,40 @@ ZonaiMath::Vector3D PurahEngine::Transform::GetLocalScale() const
 
 ZonaiMath::Vector3D PurahEngine::Transform::GetWorldPosition() const
 {
-	
+	if (parentTransform != nullptr)
+	{
+
+	}
+	else
+	{
+		return position;
+	}
 }
 
 ZonaiMath::Quaternion PurahEngine::Transform::GetWorldRotation() const
 {
-	
+	if (parentTransform != nullptr)
+	{
+
+	}
+	else
+	{
+		return rotation;
+	}
 }
 
 ZonaiMath::Vector3D PurahEngine::Transform::GetWorldScale() const
 {
-	
+	if (parentTransform != nullptr)
+	{
+		ZonaiMath::Vector3D parentScale = parentTransform->GetWorldScale();
+
+		return ZonaiMath::Vector3D(parentScale.x * scale.x, parentScale.y * scale.y, parentScale.z * scale.z);
+	}
+	else
+	{
+		return scale;
+	}
 }
 
 void PurahEngine::Transform::SetLocalPosition(ZonaiMath::Vector3D setPosition)
