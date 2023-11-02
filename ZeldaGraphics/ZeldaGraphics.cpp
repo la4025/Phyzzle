@@ -8,4 +8,10 @@ namespace ZeldaGraphics
 	{
 		return new ZeldaDX11Renderer();
 	}
+
+	void ReleaseZeldaRenderer(IZeldaRenderer* renderer)
+	{
+		delete renderer;
+		renderer = nullptr;
+	}
 }

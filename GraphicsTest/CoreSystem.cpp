@@ -3,6 +3,8 @@
 #include <fstream>
 #include <cassert>
 
+#include "GraphicsResourceID.h"
+
 void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned int width, unsigned int height, bool screenresizeable, bool notitlebar, bool minimizable, bool maximizable)
 {
 	// 내가 쓸 윈도우를 등록
@@ -71,6 +73,17 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 
 void CoreSystem::Finalize()
 {
+	renderer->Finalize();
+
+	auto releaseZeldaRenderer = reinterpret_cast<void(*)(IZeldaRenderer*)>(GetProcAddress(zeldaGraphicsDLL, "ReleaseZeldaRenderer"));
+	if (releaseZeldaRenderer == nullptr)
+	{
+		// DLL 함수를 찾을 수 없습니다.
+		assert(0);
+	}
+
+	releaseZeldaRenderer(renderer);
+
 	FreeLibrary(zeldaGraphicsDLL);
 }
 
@@ -187,10 +200,81 @@ bool CoreSystem::IsRun()
  
 void CoreSystem::run()
 {
+	static bool firstRun = true;
+	if (firstRun)
+	{
+		firstRun = false;
+
+		scdTextureID = renderer->CreateTexture(L"scd.jpg");
+
+		mainCameraID = renderer->CreateCamera();
+
+		renderer->SetMainCamera(mainCameraID);
+
+		Eigen::Matrix4f cameraMatrix;
+		cameraMatrix <<
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, -10.0f,
+			0.0f, 0.0f, 0.0f, 0.0f;
+
+		renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 1000.0f);
+	}
+
 	renderer->BeginDraw();
 
-	renderer->DrawCube();
+	static float falling = 0.0f;
 
+	falling += -0.03f;
+
+	if (falling < -5.0f)
+	{
+		falling = 5.0f;
+	}
+
+	Eigen::Matrix4f fallingMatrix;
+	fallingMatrix <<
+		1, 0, 0, 0,
+		0, 1, 0, falling,
+		0, 0, 1, 0,
+		0, 0, 0, 1;
+
+	static float rotation = 0.0f;
+
+	rotation += 3.141592f * 0.01f;
+
+	if (rotation > 3.141592f * 2.0f)
+	{
+		rotation -= 3.141592f * 2.0f;
+	}
+
+	Eigen::Matrix4f worldMatrix;
+	worldMatrix <<
+		cos(rotation), 0, sin(rotation), 0,
+		0, 1, 0, 0,
+		-sin(rotation), 0, cos(rotation), 0,
+		0, 0, 0, 1;
+
+	static float rotation2 = 0.0f;
+
+	rotation2 += 3.141592f * 0.015f;
+
+	if (rotation2 > 3.141592f * 2.0f)
+	{
+		rotation2 -= 3.141592f * 2.0f;
+	}
+
+	Eigen::Matrix4f worldMatrix2;
+	worldMatrix2 <<
+		cos(rotation2), 0, -sin(rotation2), -3.0f,
+		0, 1, 0, 0,
+		sin(rotation2), 0, cos(rotation2), 0,
+		0.0f, 0, 0, 1;
+
+
+	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false);
+	renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false);
+	
 	renderer->EndDraw();
 }
 

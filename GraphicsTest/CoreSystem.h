@@ -71,6 +71,12 @@ private:
 
 	HCURSOR hCursor;
 
+
+	// graphics
+	ResourceID mainCameraID;
+	ResourceID scdTextureID;
+
+
 	//singleton
 public:
 	static CoreSystem& GetInstance();

@@ -14,7 +14,6 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -24,7 +23,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -41,7 +39,7 @@
 /ZonaiMath/x64/Debug/ZonaiMath.tlog
 /ZonaiMath/x64/Debug
 /.vs
-/x64/Debug
+*/x64
 /ZeldaClient/x64/Debug
 /PurahEngine/x64/Debug
 /ZonaiPhysics/x64/Debug

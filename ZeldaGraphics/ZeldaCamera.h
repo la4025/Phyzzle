@@ -5,20 +5,40 @@
 class ZeldaCamera
 {
 public:
-	ZeldaCamera();
-	ZeldaCamera(const ZeldaCamera& zeldaCamera);
 	~ZeldaCamera();
 
-	void SetPosition(float x, float y, float z);
-	void SetRotation(float x, float y, float z);
-	DirectX::XMFLOAT3 GetPosition();
-	DirectX::XMFLOAT3 GetRotation();
-	void Render();
-	void GetViewMatrix(DirectX::XMMATRIX& viewMatrix);
+	void SetTransformMatrix(DirectX::XMMATRIX matrix);
+	void SetOption(float fieldOfView, float cameraNear, float cameraFar);
+	void SetScreenSize(float screenWidth, float screenHeight);
+
+	DirectX::XMMATRIX GetViewMatrix();
+	DirectX::XMMATRIX GetProjMatrix();
+	DirectX::XMMATRIX GetOrthoMatrix();
 
 private:
-	float mPositionX, mPositionY, mPositionZ;
-	float mRotationX, mRotationY, mRotationZ;
-	DirectX::XMMATRIX mViewMatrix;
+	ZeldaCamera(float screenWidth, float screenHeight);
+	ZeldaCamera(const ZeldaCamera& zeldaCamera) = delete;
+
+	DirectX::XMMATRIX transformMatrix;
+	float fieldOfView;
+	float cameraNear;
+	float cameraFar;
+
+	float screenWidth;
+	float screenHeight;
+
+	bool isUpdatedViewMatrix;
+	bool isUpdatedProjMatrix;
+	bool isUpdatedOrthoMatrix;
+
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projMatrix;
+	DirectX::XMMATRIX orthoMatrix;
+
+	const static float DEFUALT_FOV;
+	const static float DEFUALT_NEAR;
+	const static float DEFUALT_FAR;
+
+	friend class ResourceManager;
 };
 

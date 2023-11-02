@@ -2,111 +2,115 @@
 
 using namespace DirectX;
 
-ZeldaCamera::ZeldaCamera() :
-	mPositionX(),
-	mPositionY(),
-	mPositionZ(),
-	mRotationX(),
-	mRotationY(),
-	mRotationZ(),
-	mViewMatrix(XMMatrixIdentity())
+const float ZeldaCamera::DEFUALT_FOV = 3.141592654f / 4.0f;
+const float ZeldaCamera::DEFUALT_NEAR = 1.0f;
+const float ZeldaCamera::DEFUALT_FAR = 1000.0f;
+
+ZeldaCamera::ZeldaCamera(float screenWidth, float screenHeight) :
+	fieldOfView(DEFUALT_FOV),
+	screenWidth(screenWidth),
+	screenHeight(screenHeight),
+	cameraNear(DEFUALT_NEAR),
+	cameraFar(DEFUALT_FAR),
+	transformMatrix(XMMatrixIdentity()),
+	viewMatrix(XMMatrixIdentity()),
+	projMatrix(XMMatrixIdentity()),
+	orthoMatrix(XMMatrixIdentity()),
+	isUpdatedViewMatrix(false),
+	isUpdatedProjMatrix(false),
+	isUpdatedOrthoMatrix(false)
 {
 
-}
-
-ZeldaCamera::ZeldaCamera(const ZeldaCamera& zeldaCamera)
-	:
-	mPositionX(zeldaCamera.mPositionX),
-	mPositionY(zeldaCamera.mPositionY),
-	mPositionZ(zeldaCamera.mPositionZ),
-	mRotationX(zeldaCamera.mRotationX),
-	mRotationY(zeldaCamera.mRotationY),
-	mRotationZ(zeldaCamera.mRotationZ),
-	mViewMatrix(zeldaCamera.mViewMatrix)
-{
 }
 
 ZeldaCamera::~ZeldaCamera()
 {
+
 }
 
-void ZeldaCamera::SetPosition(float x, float y, float z)
+void ZeldaCamera::SetTransformMatrix(DirectX::XMMATRIX matrix)
 {
-	mPositionX = x;
-	mPositionY = y;
-	mPositionZ = z;
-	return;
+	isUpdatedViewMatrix = false;
+
+	transformMatrix = matrix;
 }
 
-void ZeldaCamera::SetRotation(float x, float y, float z)
+void ZeldaCamera::SetOption(float fieldOfView, float cameraNear, float cameraFar)
 {
-	mRotationX = x;
-	mRotationY = y;
-	mRotationZ = z;
-	return;
+	isUpdatedProjMatrix = false;
+	isUpdatedOrthoMatrix = false;
+
+	this->fieldOfView = fieldOfView;
+	this->cameraNear = cameraNear;
+	this->cameraFar = cameraFar;
 }
 
-DirectX::XMFLOAT3 ZeldaCamera::GetPosition()
+void ZeldaCamera::SetScreenSize(float screenWidth, float screenHeight)
 {
-	return { mPositionX, mPositionY, mPositionZ };
+	isUpdatedOrthoMatrix = false;
+
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 }
 
-DirectX::XMFLOAT3 ZeldaCamera::GetRotation()
+DirectX::XMMATRIX ZeldaCamera::GetViewMatrix()
 {
-	return { mRotationX, mRotationY, mRotationZ };
-}
+	if (isUpdatedViewMatrix)
+	{
+		return viewMatrix;
+	}
 
-void ZeldaCamera::Render()
-{
-	XMFLOAT3 up, position, lookAt;
-	XMVECTOR upVector, positionVector, lookAtVector;
-	float yaw, pitch, roll;
+	isUpdatedViewMatrix = true;
+
+	XMFLOAT3 up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	XMFLOAT3 lookAt = XMFLOAT3(0.0f, 0.0f, 1.0f);
+
+	XMVECTOR upVector = XMLoadFloat3(&up);
+	XMVECTOR lookAtVector = XMLoadFloat3(&lookAt);
+
+	XMVECTOR scaleVector;
+	XMVECTOR positionVector;
+	XMVECTOR rotationQuater;
 	XMMATRIX rotationMatrix;
 
-	// Setup the vector that points upward.
-	up.x = 0.0f;
-	up.y = 1.0f;
-	up.z = 0.0f;
-	// Load it into a XMVECTOR structure.
-	upVector = XMLoadFloat3(&up);
-	// Setup the position of the camera in the world.
-	position.x = mPositionX;
-	position.y = mPositionY;
-	position.z = mPositionZ;
-	// Load it into a XMVECTOR structure.
-	positionVector = XMLoadFloat3(&position);
-	// Setup where the camera is looking by default.
-	lookAt.x = 0.0f;
-	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
-	// Load it into a XMVECTOR structure.
-	lookAtVector = XMLoadFloat3(&lookAt);
-	// Set the yaw (Y axis), pitch (X axis), roll (Z axis) rotations in radians.
-	pitch = mRotationX * 0.0174532925f;
-	yaw = mRotationY * 0.0174532925f;
-	roll = mRotationZ * 0.0174532925f;
-	// Create the rotation matrix from the yaw, pitch, and roll values.
-	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
-	// Transform the rotated camera position to the location of the viewer.
-	/* 여기서 positionVector를 더하는 이유는
-	lookAtVector에 이동변환을 적용한 것이다. 이동변환은 더하기. */
-	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
-	// Finally create the view matrix from the three updated vectors.
-	mViewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+	XMMatrixDecompose(&scaleVector, &rotationQuater, &positionVector, transformMatrix);
 
-	/*
-	XMMatrixLookAtLH()는 카메라의 위치, 바라보는 방향벡터, 업벡터를 파라미터로 요구
-	카메라의 위치는 월드 위치이고 SetPosition()에서 셋팅함. 기본은 (0, 0, 0)에 위치
-	바라보는 위치는 카메라가 회전할 수도 있으니까 회전한 각을 적용해주어야 한다.
-	0.0174532925는 파이/180임, 도에서 라디안으로 바꾸기 위해서다.
-	*/
-	return;
+	rotationMatrix = XMMatrixRotationQuaternion(rotationQuater);
+
+	XMVECTOR transformedLookAt = XMVector3TransformCoord(lookAtVector, rotationMatrix);
+	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
+
+	// Calculate the view matrix.
+	viewMatrix = XMMatrixLookAtLH(positionVector, transformedLookAt, upVector);
+
+	return viewMatrix;
 }
 
-void ZeldaCamera::GetViewMatrix(XMMATRIX& viewMatrix)
+DirectX::XMMATRIX ZeldaCamera::GetProjMatrix()
 {
-	viewMatrix = mViewMatrix;
-	return;
+	if (isUpdatedProjMatrix)
+	{
+		return projMatrix;
+	}
+
+	isUpdatedProjMatrix = true;
+
+	float screenAspect = screenWidth / screenHeight;
+	projMatrix = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, cameraNear, cameraFar);
+
+	return projMatrix;
+}
+
+DirectX::XMMATRIX ZeldaCamera::GetOrthoMatrix()
+{
+	if (isUpdatedOrthoMatrix)
+	{
+		return orthoMatrix;
+	}
+
+	isUpdatedOrthoMatrix = true;
+
+	orthoMatrix = DirectX::XMMatrixOrthographicLH(screenWidth, screenHeight, cameraNear, cameraFar);
+
+	return orthoMatrix;
 }

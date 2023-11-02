@@ -6,20 +6,29 @@
 #include <cmath>
 #include <wrl/client.h>
 
-using namespace DirectX;
+#include "ResourceManager.h"
+#include "ZeldaCamera.h"
+#include "ZeldaModel.h"
+#include "ZeldaLight.h"
+#include "ZeldaShader.h"
+#include "ZeldaMesh.h"
+#include "ZeldaTexture.h"
 
-void ZeldaDX11Renderer::CreateResources()
+#include "MathConverter.h"
+
+#include "ConstantBufferManager.h"
+
+bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear)
 {
+	hWnd = hwnd;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
-}
-
-bool ZeldaDX11Renderer::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float screenNear)
-{
 	HRESULT result;
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator;
+	unsigned int numModes, numerator, denominator;
 	unsigned long long stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
@@ -30,7 +39,8 @@ bool ZeldaDX11Renderer::Initialize(int screenWidth, int screenHeight, bool vsync
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-	D3D11_RASTERIZER_DESC rasterDesc;
+	D3D11_RASTERIZER_DESC defaultRasterDesc;
+	D3D11_RASTERIZER_DESC wireFrameRasterDesc;
 	D3D11_VIEWPORT viewport;
 	float fieldOfView, screenAspect;
 
@@ -65,11 +75,11 @@ bool ZeldaDX11Renderer::Initialize(int screenWidth, int screenHeight, bool vsync
 
 	// 이제 모든 디스플레이 모드를 살펴보고 화면 너비 및 높이와 일치하는 모드를 찾는다.
 	// 일치하는 항목을 찾으면 해당 모니터 주사율의 분모값과 분자값을 저장한다.
-	for (i = 0; i < numModes; i++)
+	for (unsigned int i = 0; i < numModes; i++)
 	{
-		if (displayModeList[i].Width == (unsigned int)screenWidth)
+		if (displayModeList[i].Width == screenWidth)
 		{
-			if (displayModeList[i].Height == (unsigned int)screenHeight)
+			if (displayModeList[i].Height == screenHeight)
 			{
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
@@ -222,23 +232,37 @@ bool ZeldaDX11Renderer::Initialize(int screenWidth, int screenHeight, bool vsync
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 
+
 	// Setup the raster description which will determine how and what polygons will be drawn.
-	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = false;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	defaultRasterDesc.AntialiasedLineEnable = false;
+	defaultRasterDesc.CullMode = D3D11_CULL_BACK;
+	defaultRasterDesc.DepthBias = 0;
+	defaultRasterDesc.DepthBiasClamp = 0.0f;
+	defaultRasterDesc.DepthClipEnable = true;
+	defaultRasterDesc.FillMode = D3D11_FILL_SOLID;
+	defaultRasterDesc.FrontCounterClockwise = false;
+	defaultRasterDesc.MultisampleEnable = false;
+	defaultRasterDesc.ScissorEnable = false;
+	defaultRasterDesc.SlopeScaledDepthBias = 0.0f;
 	// Create the rasterizer state from the description we just filled out.
-	result = mDevice->CreateRasterizerState(&rasterDesc, &mRasterState);
+	result = mDevice->CreateRasterizerState(&defaultRasterDesc, &defaultRasterState);
 	if (FAILED(result)) return false;
 
-	// Now set the rasterizer state.
-	mDeviceContext->RSSetState(mRasterState);
+	// Setup the raster description which will determine how and what polygons will be drawn.
+	wireFrameRasterDesc.AntialiasedLineEnable = false;
+	wireFrameRasterDesc.CullMode = D3D11_CULL_NONE;
+	wireFrameRasterDesc.DepthBias = 0;
+	wireFrameRasterDesc.DepthBiasClamp = 0.0f;
+	wireFrameRasterDesc.DepthClipEnable = true;
+	wireFrameRasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+	wireFrameRasterDesc.FrontCounterClockwise = false;
+	wireFrameRasterDesc.MultisampleEnable = false;
+	wireFrameRasterDesc.ScissorEnable = false;
+	wireFrameRasterDesc.SlopeScaledDepthBias = 0.0f;
+	// Create the rasterizer state from the description we just filled out.
+	result = mDevice->CreateRasterizerState(&wireFrameRasterDesc, &wireFrameRasterState);
+	if (FAILED(result)) return false;
+
 
 	// Set up the viewport for rendering.
 	viewport.Width = (float)screenWidth;
@@ -250,75 +274,35 @@ bool ZeldaDX11Renderer::Initialize(int screenWidth, int screenHeight, bool vsync
 	// Create the viewport.
 	mDeviceContext->RSSetViewports(1, &viewport);
 
+	HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+	if (FAILED(hr)) return false;
 
-	camera = new ZeldaCamera();
-	shader = new ZeldaShader();
-	model = new ZeldaModel();
+	
+	ResourceManager::GetInstance().Initialize(mDevice);
 
-	camera->SetPosition(0.0f, 0.0f, -10.0f);
-	shader->Initialize(mDevice, hwnd);
-	model->Initialize(mDevice);
+	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
+	matrixConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
+	lightConstBuffer = new ConstantBuffer<LightBufferType, ShaderType::PixelShader>(mDevice);
 
+	ConstantBufferManager::GetInstance().RegisterVSBuffer(matrixConstBuffer);
 
-	// Set up the projection matrix.
-	fieldOfView = 3.141592654f / 4.0f;
-	screenAspect = (float)screenWidth / (float)screenHeight;
-	// Create the projection matrix for 3D rendering.
-	mProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	mWorldMatrix = XMMatrixIdentity();
-
-	// Create an orthographic projection matrix for 2D rendering.
-	mOrthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
-
-
+	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
 
 	return true;
 }
 
-void ZeldaDX11Renderer::BeginDraw()
+void ZeldaDX11Renderer::Finalize()
 {
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	// Clear the back buffer.
-	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
-	// Clear the depth buffer.
-	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void ZeldaDX11Renderer::EndDraw()
-{
-	// Present the back buffer to the screen since rendering is complete.
-	if (bVsyncEnabled)
+	if (matrixConstBuffer)
 	{
-		// Lock to screen refresh rate.
-		mSwapChain->Present(1, 0);
+		delete matrixConstBuffer;
+		matrixConstBuffer = nullptr;
 	}
-	else
+	if (lightConstBuffer)
 	{
-		// Present as fast as possible.
-		mSwapChain->Present(0, 0);
+		delete lightConstBuffer;
+		lightConstBuffer = nullptr;
 	}
-}
-
-void ZeldaDX11Renderer::DrawCube()
-{
-	XMMATRIX viewMatrix;
-
-	camera->Render();
-	camera->GetViewMatrix(viewMatrix);
-
-	model->Render(mDeviceContext);
-	int indexCount = model->GetIndexCount();
-
-	shader->Render(mDeviceContext, indexCount, mWorldMatrix, viewMatrix, mProjectionMatrix);
-}
-
-void ZeldaDX11Renderer::Shutdown()
-{
-	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	if (mSwapChain)
 	{
 		mSwapChain->SetFullscreenState(false, nullptr);
@@ -364,21 +348,115 @@ void ZeldaDX11Renderer::Shutdown()
 		mSwapChain = 0;
 	}
 
-	if (camera != nullptr)
+	// ResourceManager Finalize 추가 필요
+}
+
+void ZeldaDX11Renderer::BeginDraw()
+{
+	float color[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+	// Clear the back buffer.
+	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
+	// Clear the depth buffer.
+	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void ZeldaDX11Renderer::EndDraw()
+{
+	// Present the back buffer to the screen since rendering is complete.
+	if (bVsyncEnabled)
 	{
-		delete camera;
-		camera = nullptr;
+		// Lock to screen refresh rate.
+		mSwapChain->Present(1, 0);
 	}
-	if (shader != nullptr)
+	else
 	{
-		delete shader;
-		shader = nullptr;
+		// Present as fast as possible.
+		mSwapChain->Present(0, 0);
 	}
-	if (model != nullptr)
+}
+
+void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID texture, bool wireFrame)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(mainCameraID);
+
+	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
+	cubeMesh->Render(mDeviceContext);
+
+	ZeldaTexture* cubeTexture = ResourceManager::GetInstance().GetTexture(texture);
+
+	if (wireFrame)
 	{
-		delete model;
-		model = nullptr;
+		mDeviceContext->RSSetState(wireFrameRasterState);
+	}
+	else
+	{
+		mDeviceContext->RSSetState(defaultRasterState);
 	}
 
-	return;
+	// ZeldaMatrix to XMMATRIX
+	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+
+	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
+	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+
+	ConstantBufferManager::GetInstance().SetBuffer();
+
+	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+	shader->Render(mDeviceContext, cubeMesh, cubeTexture);
+}
+
+void ZeldaDX11Renderer::CreateResources()
+{
+	ResourceManager::GetInstance().CreateDefaultShader();
+	ResourceManager::GetInstance().CreateCubeMesh();
+
+	light = new ZeldaLight();
+	light->SetAmbient(0.2f, 0.2f, 0.2f, 1.0f);
+	light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	light->SetSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+	light->SetDirection(0.0f, 0.0f, 1.0f);
+}
+
+ResourceID ZeldaDX11Renderer::CreateTexture(const std::wstring& texturePath)
+{
+	return ResourceManager::GetInstance().CreateTexture(texturePath);
+}
+
+ResourceID ZeldaDX11Renderer::CreateCamera()
+{
+	return ResourceManager::GetInstance().CreateCamera(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+}
+
+bool ZeldaDX11Renderer::ReleaseCamera(ResourceID cameraID)
+{
+	return ResourceManager::GetInstance().ReleaseCamera(cameraID);
+}
+
+bool ZeldaDX11Renderer::SetMainCamera(ResourceID cameraID)
+{
+	if (ResourceManager::GetInstance().CheckCameraID(cameraID))
+	{
+		mainCameraID = cameraID;
+
+		return true;
+	}
+
+	return false;
+}
+
+bool ZeldaDX11Renderer::UpdateCamera(ResourceID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar)
+{
+	ZeldaCamera* targetCamera = ResourceManager::GetInstance().GetCamera(cameraID);
+	
+	if (targetCamera == nullptr)
+	{
+		return false;
+	}
+
+	targetCamera->SetTransformMatrix(MathConverter::EigenMatrixToXMMatrix(worldMatrix));
+	targetCamera->SetOption(fieldOfView, cameraNear, cameraFar);
+
+	return true;
 }

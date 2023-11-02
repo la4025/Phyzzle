@@ -9,12 +9,15 @@ struct VertexInputType
 {
     float4 position : POSITION;
     float4 color : COLOR;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
 };
 
 PixelInputType main(VertexInputType input)
@@ -30,7 +33,13 @@ PixelInputType main(VertexInputType input)
     output.position = mul(output.position, projectionMatrix);
 
 	// 입력받은 색상을 그대로 픽셀 셰이더에서 이용하도록 저장한다.
-    output.color = input.color;
+    output.tex = input.tex;
+    
+    // Calculate the normal vector against the world matrix only.
+    output.normal = mul(input.normal, (float3x3)worldMatrix);
 
+	// Normalize the normal vector.
+    output.normal = normalize(output.normal);
+    
     return output;
 }

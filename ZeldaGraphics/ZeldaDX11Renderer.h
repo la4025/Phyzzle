@@ -2,28 +2,37 @@
 
 #include "IZeldaRenderer.h"
 
-#include <d3d11.h>
+#include "ConstantBuffer.h"
 
+#include <d3d11.h>
 #include <DirectXMath.h>
-#include "ZeldaCamera.h"
-#include "ZeldaModel.h"
-#include "ZeldaShader.h"
+
+class ZeldaCamera;
+class ZeldaShader;
+class ZeldaModel;
+class ZeldaLight;
 
 class ZeldaDX11Renderer : public IZeldaRenderer
 {
 public:
-	virtual void CreateResources() override;
-
-	virtual bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float screenNear) override;
+	virtual bool Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float screenNear) override;
+	virtual void Finalize() override;
 
 	virtual void BeginDraw() override;
 	virtual void EndDraw() override;
 
-	virtual void DrawCube() override;
+	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID texture, bool wireFrame) override;
+
+	virtual void CreateResources() override;
+	virtual ResourceID CreateTexture(const std::wstring& texturePath) override;
+
+	virtual ResourceID CreateCamera() override;
+	virtual bool ReleaseCamera(ResourceID cameraID) override;
+
+	virtual bool SetMainCamera(ResourceID cameraID) override;
+	virtual bool UpdateCamera(ResourceID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar) override;
 
 private:
-	void Shutdown();
-
 	bool bVsyncEnabled;
 	int mVideoCardMemory;
 	char mVideoCardDescription[128];
@@ -36,15 +45,21 @@ private:
 	ID3D11DepthStencilView* mDepthStencilView;
 	ID3D11RasterizerState* mRasterState;
 
-	ZeldaCamera* camera;
-	ZeldaShader* shader;
-	ZeldaModel* model;
+	ID3D11RasterizerState* defaultRasterState;
+	ID3D11RasterizerState* wireFrameRasterState;
 
-	DirectX::XMMATRIX mProjectionMatrix;
-	DirectX::XMMATRIX mWorldMatrix;
-	DirectX::XMMATRIX mOrthoMatrix;
+	ResourceID mainCameraID;
+	ZeldaLight* light;
+
+	HWND hWnd;
+	unsigned int screenWidth;
+	unsigned int screenHeight;
 
 	// hwnd
 	// fullScreenMode
+
+	// Constant Buffer
+	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer;
+	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer;
 
 };
