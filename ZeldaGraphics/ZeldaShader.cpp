@@ -42,7 +42,43 @@ ZeldaShader::~ZeldaShader()
 	}
 }
 
+<<<<<<< HEAD
 bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName)
+=======
+bool ZeldaShader::Initialize(ID3D11Device* device, HWND hwnd)
+{
+	bool result;
+
+	// Initialize the vertex and pixel shaders.
+	result = InitializeShader(device, hwnd, L"E:\\final\\Project\\Sheikah_Project\\x64\\Debug\\DLL\\VertexShader.cso", L"E:\\final\\Project\\Sheikah_Project\\x64\\Debug\\DLL\\PixelShader.cso");
+	if (!result) return false;
+
+	return true;
+}
+
+void ZeldaShader::Shutdown()
+{
+	// Shutdown the vertex and pixel shaders as well as the related objects.
+	ShutdownShader();
+
+	return;
+}
+
+bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix)
+{
+	bool result;
+
+	// Set the shader parameters that it will use for rendering.
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
+	if (!result) return false;
+	// Now render the prepared buffers with the shader.
+	RenderShader(deviceContext, indexCount);
+
+	return true;
+}
+
+bool ZeldaShader::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFileName, const WCHAR* psFileName)
+>>>>>>> 9d3ce9b0569628cc6b446fa8c43afd2533ee8672
 {
 	HRESULT result;
 	ID3DBlob* errorMessage;

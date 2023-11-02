@@ -7,21 +7,83 @@
     <Filter Include="Core">
       <UniqueIdentifier>{e68248b4-d5ab-4270-8277-6845edee5683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{8943e751-dc73-4a19-bc01-0ed57e3b59da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Transform">
+      <UniqueIdentifier>{40dd3d8c-ed88-4f11-87ab-a835fa5206b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\dll">
+      <UniqueIdentifier>{2615fabf-51e8-4853-b558-ee689eada209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{e90a2f97-4873-49a2-83ea-e26301fa1877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rigidbody">
+      <UniqueIdentifier>{2fa25854-fdb6-4c93-a1d5-bf1c6f681791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{b029a29e-d767-4deb-a584-ef7958d355ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SceneManager">
+      <UniqueIdentifier>{6130b827-11ec-46ba-88b0-d704399f7849}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="CoreCycle.cpp">
+    <ClCompile Include="GameLoop.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Core\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="PurahEngine.cpp" />
+    <ClCompile Include="Collision.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Rigidbody</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="CoreCycle.h">
+    <ClInclude Include="GameLoop.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Core\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PurahEngineAPI.h">
+      <Filter>Core\dll</Filter>
+    </ClInclude>
+    <ClInclude Include="PurahEngine.h" />
+    <ClInclude Include="Collision.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Rigidbody</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>SceneManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
