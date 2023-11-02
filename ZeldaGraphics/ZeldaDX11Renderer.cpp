@@ -16,6 +16,8 @@
 
 #include "MathConverter.h"
 
+#include "ConstantBufferManager.h"
+
 bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear)
 {
 	hWnd = hwnd;
@@ -278,11 +280,29 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	
 	ResourceManager::GetInstance().Initialize(mDevice);
 
+	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
+	matrixConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
+	lightConstBuffer = new ConstantBuffer<LightBufferType, ShaderType::PixelShader>(mDevice);
+
+	ConstantBufferManager::GetInstance().RegisterVSBuffer(matrixConstBuffer);
+
+	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
+
 	return true;
 }
 
 void ZeldaDX11Renderer::Finalize()
 {
+	if (matrixConstBuffer)
+	{
+		delete matrixConstBuffer;
+		matrixConstBuffer = nullptr;
+	}
+	if (lightConstBuffer)
+	{
+		delete lightConstBuffer;
+		lightConstBuffer = nullptr;
+	}
 	if (mSwapChain)
 	{
 		mSwapChain->SetFullscreenState(false, nullptr);
@@ -377,8 +397,14 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID 
 	// ZeldaMatrix to XMMATRIX
 	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 
+	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
+	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+
+	ConstantBufferManager::GetInstance().SetBuffer();
+
 	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
-	shader->Render(mDeviceContext, cubeMesh, dxworldMatrix, currentcamera->GetViewMatrix(), currentcamera->GetProjMatrix(), cubeTexture, light->GetDirection(), light->GetDiffuseColor());
+	shader->Render(mDeviceContext, cubeMesh, cubeTexture);
 }
 
 void ZeldaDX11Renderer::CreateResources()
@@ -387,7 +413,9 @@ void ZeldaDX11Renderer::CreateResources()
 	ResourceManager::GetInstance().CreateCubeMesh();
 
 	light = new ZeldaLight();
+	light->SetAmbient(0.2f, 0.2f, 0.2f, 1.0f);
 	light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	light->SetSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 	light->SetDirection(0.0f, 0.0f, 1.0f);
 }
 

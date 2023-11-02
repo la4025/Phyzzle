@@ -19,13 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="ConstantBufferManager.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="header\GraphicsResourceID.h" />
     <ClInclude Include="header\IZeldaRenderer.h" />
     <ClInclude Include="header\ZeldaGraphics.h" />
     <ClInclude Include="header\ZeldaGraphicsAPI.h" />
+    <ClInclude Include="IConstantBuffer.h" />
     <ClInclude Include="IDGenerator.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="MathConverter.h" />
+    <ClInclude Include="ModelingData.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ZeldaCamera.h" />
@@ -38,6 +43,8 @@
     <ClInclude Include="ZeldaTexture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConstantBufferManager.cpp" />
+    <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IDGenerator.cpp" />
     <ClCompile Include="MathConverter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -167,8 +174,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)assimpLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
@@ -194,7 +201,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)assimpLib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>

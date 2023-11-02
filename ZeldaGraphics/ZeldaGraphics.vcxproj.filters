@@ -27,6 +27,18 @@
     <Filter Include="Core\Resource\Texture">
       <UniqueIdentifier>{62f65f39-551d-48ba-bead-b3edc055ed3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer">
+      <UniqueIdentifier>{bb7cdd47-e6be-4c15-b621-9ce4bb4bdcb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resource\Camera">
+      <UniqueIdentifier>{b355fc01-e96c-4bde-af4e-2266190ef5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resource\Model">
+      <UniqueIdentifier>{39798b87-176a-481c-be4b-4e4451906328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ConstantBuffer">
+      <UniqueIdentifier>{52be387d-a7d5-43d6-9fb3-30d067281a36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\IZeldaRenderer.h">
@@ -35,19 +47,10 @@
     <ClInclude Include="IDrawable.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="ZeldaCamera.h">
-      <Filter>practice</Filter>
-    </ClInclude>
-    <ClInclude Include="ZeldaDX11Renderer.h">
-      <Filter>practice</Filter>
-    </ClInclude>
     <ClInclude Include="header\ZeldaGraphicsAPI.h">
       <Filter>practice</Filter>
     </ClInclude>
     <ClInclude Include="ZeldaLight.h">
-      <Filter>practice</Filter>
-    </ClInclude>
-    <ClInclude Include="ZeldaModel.h">
       <Filter>practice</Filter>
     </ClInclude>
     <ClInclude Include="ZeldaShader.h">
@@ -80,18 +83,33 @@
     <ClInclude Include="IDGenerator.h">
       <Filter>Core\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="ZeldaDX11Renderer.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeldaCamera.h">
+      <Filter>Core\Resource\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelingData.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Core\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="IConstantBuffer.h">
+      <Filter>Core\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferManager.h">
+      <Filter>Core\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ZeldaModel.h">
+      <Filter>Core\Resource\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ZeldaCamera.cpp">
-      <Filter>practice</Filter>
-    </ClCompile>
-    <ClCompile Include="ZeldaDX11Renderer.cpp">
-      <Filter>practice</Filter>
-    </ClCompile>
     <ClCompile Include="ZeldaLight.cpp">
-      <Filter>practice</Filter>
-    </ClCompile>
-    <ClCompile Include="ZeldaModel.cpp">
       <Filter>practice</Filter>
     </ClCompile>
     <ClCompile Include="ZeldaShader.cpp">
@@ -117,6 +135,21 @@
     </ClCompile>
     <ClCompile Include="IDGenerator.cpp">
       <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ZeldaDX11Renderer.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ZeldaCamera.cpp">
+      <Filter>Core\Resource\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBufferManager.cpp">
+      <Filter>Core\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ZeldaModel.cpp">
+      <Filter>Core\Resource\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

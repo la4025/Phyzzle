@@ -9,8 +9,6 @@ ZeldaShader::ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, c
 	vertexShader(nullptr),
 	pixelShader(nullptr),
 	layout(nullptr),
-	matrixBuffer(nullptr),
-	lightBuffer(nullptr),
 	samplerState(nullptr)
 {
 	Initialize(device, vsFileName, psFileName);
@@ -23,18 +21,6 @@ ZeldaShader::~ZeldaShader()
 	{
 		samplerState->Release();
 		samplerState = 0;
-	}
-	// Release the light constant buffer.
-	if (lightBuffer)
-	{
-		lightBuffer->Release();
-		lightBuffer = 0;
-	}
-	// Release the matrix constant buffer.
-	if (matrixBuffer)
-	{
-		matrixBuffer->Release();
-		matrixBuffer = 0;
 	}
 	// Release the layout.
 	if (layout)
@@ -64,8 +50,6 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	ID3DBlob* pixelShaderBuffer;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[VertexType::size];
 	unsigned int numElements;
-	D3D11_BUFFER_DESC matrixBufferDesc;
-	D3D11_BUFFER_DESC lightBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	// Initialize the pointers this function will use to null.
@@ -124,18 +108,6 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = 0;
 
-	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBufferDesc.MiscFlags = 0;
-	matrixBufferDesc.StructureByteStride = 0;
-
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, nullptr, &matrixBuffer);
-	if (FAILED(result)) return false;
-
 	// Create a texture sampler state description.
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -155,28 +127,15 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	result = device->CreateSamplerState(&samplerDesc, &samplerState);
 	if (FAILED(result)) return false;
 
-	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
-	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
-	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
-	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	lightBufferDesc.MiscFlags = 0;
-	lightBufferDesc.StructureByteStride = 0;
-
-	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&lightBufferDesc, nullptr, &lightBuffer);
-	if (FAILED(result)) return false;
-
 	return true;
 }
 
-bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ZeldaTexture* texture, DirectX::XMFLOAT3 lightDirection, DirectX::XMFLOAT4 diffuse)
+bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, ZeldaTexture* texture)
 {
 	bool result;
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture->GetTexture(), lightDirection, diffuse);
+	result = SetShaderParameters(deviceContext, texture->GetTexture());
 	if (!result) return false;
 	// Now render the prepared buffers with the shader.
 	RenderShader(deviceContext, mesh->GetIndexCount());
@@ -184,65 +143,12 @@ bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, Di
 	return true;
 }
 
-bool ZeldaShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 lightDirection, DirectX::XMFLOAT4 diffuse)
+bool ZeldaShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture)
 {
-	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	MatrixBufferType* dataPtr;
-	LightBufferType* lightDataPtr;
-	unsigned int bufferNumber;
-
-	// Transpose the matrices to prepare them for the shader.
-	worldMatrix = XMMatrixTranspose(worldMatrix);
-	viewMatrix = XMMatrixTranspose(viewMatrix);
-	projectionMatrix = XMMatrixTranspose(projectionMatrix);
-
-	// Lock the constant buffer so it can be written to.
-	result = deviceContext->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result)) return false;
-	// Get a pointer to the data in the constant buffer.
-	// MatrixBufferType은 클래스에서 정의한 변환 매트릭스 구조체이다.
-	// 여기서 알 수 있는 것은 D3D11_MAPPED_SUBRESOURCE에 수정한 데이터를 입력하는 곳이고,
-	// 여기를 통해서 mMatrixBuffer를 수정한다. mMatrixBuffer는 변환을 위한 constant버퍼임
-	dataPtr = (MatrixBufferType*)mappedResource.pData;
-	// Copy the matrices into the constant buffer.
-	dataPtr->world = worldMatrix;
-	dataPtr->view = viewMatrix;
-	dataPtr->projection = projectionMatrix;
-	// Unlock the constant buffer.
-	deviceContext->Unmap(matrixBuffer, 0);
-
-	// Set the position of the constant buffer in the vertex shader.
-	bufferNumber = 0;
-
-	// Finaly set the constant buffer in the vertex shader with the updated values.
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &matrixBuffer);
 
 	// Set shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &texture);
-
-
-	// Lock the light constant buffer so it can be written to.
-	result = deviceContext->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result)) return false;
-
-	// Get a pointer to the date in ther constant buffer.
-	lightDataPtr = (LightBufferType*)mappedResource.pData;
-
-	// Copy the lighting variables into the constant buffer.
-	lightDataPtr->ambient = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	lightDataPtr->diffuse = diffuse;
-	lightDataPtr->specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	lightDataPtr->lightDirection = lightDirection;
-	lightDataPtr->padding = 0.0f;
-
-	// Unlock the constant buffer.
-	deviceContext->Unmap(lightBuffer, 0);
-	// Set the position of the light constant buffer in the pixel shader.
-	bufferNumber = 0;
-
-	// Finally set the light constant buffer in the pixel shader with the updated values.
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &lightBuffer);
 
 	return true;
 }

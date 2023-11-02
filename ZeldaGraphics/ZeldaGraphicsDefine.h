@@ -30,5 +30,14 @@ struct LightBufferType
 
 struct useBufferType
 {
-	bool useTexture;
+	unsigned int useTexture;
+	unsigned int useTemp0;
+	unsigned int useTemp1;
+	unsigned int useTemp2;
+};
+
+enum class ShaderType
+{
+	VertexShader,
+	PixelShader
 };

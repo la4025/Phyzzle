@@ -2,6 +2,8 @@
 
 #include "IZeldaRenderer.h"
 
+#include "ConstantBuffer.h"
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -55,5 +57,9 @@ private:
 
 	// hwnd
 	// fullScreenMode
+
+	// Constant Buffer
+	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer;
+	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer;
 
 };
