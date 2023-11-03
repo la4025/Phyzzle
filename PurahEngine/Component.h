@@ -4,6 +4,10 @@ namespace PurahEngine
 {
 	class Component
 	{
+	protected:
+		Component();
+	public:
+		virtual ~Component();
 	public:
 		virtual void Awake();
 		virtual void Start();
@@ -26,7 +30,7 @@ namespace PurahEngine
 		virtual void OnCollisionStay();
 		// 충돌체가 충돌을 벗어났을 때 호출
 		virtual void OnCollisionExit();
-		
+
 		/// OnTrigger
 		// 트리거가 충돌했을 때 호출
 		virtual void OnTriggerEnter();
@@ -34,7 +38,7 @@ namespace PurahEngine
 		virtual void OnTriggerStay();
 		// 트리거가 충돌을 벗어났을 때 호출
 		virtual void OnTriggerExit();
-		
+
 		/// OnMouse
 		// 마우스가 오브젝트 위에 올라갔을 때 호출
 		virtual void OnMouseEnter();
@@ -42,6 +46,8 @@ namespace PurahEngine
 		virtual void OnMouseStay();
 		// 마우스가 오브젝트에서 벗어났을 때 호출
 		virtual void OnMouseExit();
+
+
 	};
 }
 
