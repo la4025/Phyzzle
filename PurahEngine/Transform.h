@@ -3,6 +3,9 @@
 #include "../ZonaiMath/ZonaiMath.h"
 #pragma comment(lib, "../x64/Debug/ZonaiMath.lib")
 
+#include <Eigen\Dense>
+#include <Eigen\Core>
+
 #include <vector>
 
 namespace PurahEngine
