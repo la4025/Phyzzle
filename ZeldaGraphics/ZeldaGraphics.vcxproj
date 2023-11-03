@@ -184,11 +184,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-<<<<<<< HEAD
-      <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
-=======
       <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
->>>>>>> 9d3ce9b0569628cc6b446fa8c43afd2533ee8672
+      <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,11 +211,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-<<<<<<< HEAD
       <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
-=======
       <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
->>>>>>> 9d3ce9b0569628cc6b446fa8c43afd2533ee8672
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
