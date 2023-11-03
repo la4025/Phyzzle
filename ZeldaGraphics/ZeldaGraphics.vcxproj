@@ -125,12 +125,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\DLL\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\DLL\</OutDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -184,7 +178,6 @@
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
       <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -212,7 +205,6 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\GraphicsTest\CompiledShader\"</Command>
-      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
