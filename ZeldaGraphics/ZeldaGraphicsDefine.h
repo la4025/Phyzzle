@@ -24,7 +24,7 @@ struct LightBufferType
 	DirectX::XMFLOAT4 ambient;
 	DirectX::XMFLOAT4 diffuse;
 	DirectX::XMFLOAT4 specular;
-	DirectX::XMFLOAT3 lightDirection;
+	DirectX::XMFLOAT3 lightDirection;//
 	float padding; // CreateBuffer함수가 성공하려면 16바이트의 배수로 만들어야 한다.(업데이트 및 전송이 빈번하기 때문에 효율적인 메모리 정렬이 되어있어야 한다고 함)
 };
 
