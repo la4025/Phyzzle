@@ -5,11 +5,10 @@
 struct VertexType
 {
 	DirectX::XMFLOAT4 position;
-	DirectX::XMFLOAT4 color;
 	DirectX::XMFLOAT2 texture;
 	DirectX::XMFLOAT3 normal;
 
-	const static int size = 4;
+	const static int size = 3;
 };
 
 struct MatrixBufferType
@@ -18,6 +17,8 @@ struct MatrixBufferType
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 };
+
+#pragma region Constant Buffer
 
 struct LightBufferType
 {
@@ -35,6 +36,8 @@ struct useBufferType
 	unsigned int useTemp1;
 	unsigned int useTemp2;
 };
+
+#pragma endregion
 
 enum class ShaderType
 {

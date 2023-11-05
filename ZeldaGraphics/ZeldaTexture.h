@@ -18,7 +18,6 @@ private:
 
 	ID3D11ShaderResourceView* textureView;
 
-	friend class TextureLoader; // 삭제 예정
 	friend class ResourceManager;
 };
 

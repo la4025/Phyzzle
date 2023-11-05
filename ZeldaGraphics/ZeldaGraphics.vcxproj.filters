@@ -59,9 +59,6 @@
     <ClInclude Include="ZeldaTexture.h">
       <Filter>Core\Resource\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="TextureLoader.h">
-      <Filter>Core\Resource\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Core\Resource</Filter>
     </ClInclude>
@@ -116,9 +113,6 @@
       <Filter>practice</Filter>
     </ClCompile>
     <ClCompile Include="ZeldaTexture.cpp">
-      <Filter>Core\Resource\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
       <Filter>Core\Resource\Texture</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">

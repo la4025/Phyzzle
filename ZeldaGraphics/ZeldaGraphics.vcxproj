@@ -32,7 +32,6 @@
     <ClInclude Include="MathConverter.h" />
     <ClInclude Include="ModelingData.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ZeldaCamera.h" />
     <ClInclude Include="ZeldaDX11Renderer.h" />
     <ClInclude Include="ZeldaGraphicsDefine.h" />
@@ -48,7 +47,6 @@
     <ClCompile Include="IDGenerator.cpp" />
     <ClCompile Include="MathConverter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="ZeldaCamera.cpp" />
     <ClCompile Include="ZeldaDX11Renderer.cpp" />
     <ClCompile Include="ZeldaGraphics.cpp" />

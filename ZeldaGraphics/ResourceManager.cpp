@@ -81,28 +81,24 @@ bool ResourceManager::CreateCubeMesh()
 		// 왼쪽 아래
 		XMStoreFloat4(&vertices[faceNum * 4 + 0].position, 0.5f * (front + left + down));
 		vertices[faceNum * 4 + 0].position.w = 1.0f;
-		vertices[faceNum * 4 + 0].color = { 1, 1, 1, 1 };
 		vertices[faceNum * 4 + 0].texture = XMFLOAT2(0.0f, 1.0f);
 		vertices[faceNum * 4 + 0].normal = dir[faceNum];
 
 		// 왼쪽 위
 		XMStoreFloat4(&vertices[faceNum * 4 + 1].position, 0.5f * (front + left + up));
 		vertices[faceNum * 4 + 1].position.w = 1.0f;
-		vertices[faceNum * 4 + 1].color = { 1, 1, 1, 1 };
 		vertices[faceNum * 4 + 1].texture = XMFLOAT2(0.0f, 0.0f);
 		vertices[faceNum * 4 + 1].normal = dir[faceNum];
 
 		// 오른쪽 위
 		XMStoreFloat4(&vertices[faceNum * 4 + 2].position, 0.5f * (front + right + up));
 		vertices[faceNum * 4 + 2].position.w = 1.0f;
-		vertices[faceNum * 4 + 2].color = { 1, 1, 1, 1 };
 		vertices[faceNum * 4 + 2].texture = XMFLOAT2(1.0f, 0.0f);
 		vertices[faceNum * 4 + 2].normal = dir[faceNum];
 
 		// 오른쪽 아래
 		XMStoreFloat4(&vertices[faceNum * 4 + 3].position, 0.5f * (front + right + down));
 		vertices[faceNum * 4 + 3].position.w = 1.0f;
-		vertices[faceNum * 4 + 3].color = { 1, 1, 1, 1 };
 		vertices[faceNum * 4 + 3].texture = XMFLOAT2(1.0f, 1.0f);
 		vertices[faceNum * 4 + 3].normal = dir[faceNum];
 	}
