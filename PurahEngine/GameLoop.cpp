@@ -1,5 +1,6 @@
-#include "GameLoop.h"]
+#include "GameLoop.h"
 #include "SceneManager.h"
+#include "GraphicsManager.h"
 #include <cassert>
 
 PurahEngine::GameLoop::GameLoop()
@@ -39,24 +40,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	SetMenu(hWnd, NULL);
 
 	// Graphics dll 초기화(변경 가능성 농후)
-	{
-		zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
-		if (zeldaGraphicsDLL == nullptr)
-		{
-			// DLL 로드 실패
-			assert(0);
-		}
-		auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
-		if (createZeldaRenderer == nullptr)
-		{
-			// DLL 함수를 찾을 수 없습니다.
-			assert(0);
-		}
-		renderer = createZeldaRenderer();
-		renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
-		renderer->CreateResources();
-	}
+	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
 
+	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
 }
 
@@ -96,9 +82,7 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
-	renderer->BeginDraw();
-	renderer->DrawCube();
-	renderer->EndDraw();
+	PurahEngine::GraphicsManager::GetInstance().Run();
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
