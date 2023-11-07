@@ -148,17 +148,16 @@
     <ClInclude Include="include\FloaterType.h" />
     <ClInclude Include="include\FloaterMacro.h" />
     <ClInclude Include="include\Timer.h" />
-    <ClInclude Include="RBTree.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <ClInclude Include="include\RBTree.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="include\SparseSet.h" />
+    <ClInclude Include="include\Vector.h" />
+    <ClInclude Include="include\ITester.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConvString.cpp" />
-    <ClCompile Include="RBTree.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

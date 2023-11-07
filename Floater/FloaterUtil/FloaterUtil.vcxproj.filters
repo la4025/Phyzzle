@@ -27,10 +27,19 @@
     <ClInclude Include="include\ConvString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RBTree.h">
+    <ClInclude Include="include\RBTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SparseSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ITester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -39,9 +48,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConvString.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RBTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

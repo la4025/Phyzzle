@@ -24,6 +24,7 @@ namespace flt
 		// 
 
 		Transform& transform;
+		bool isDraw;
 		std::wstring name;
 		//bool& isEnable;
 	};

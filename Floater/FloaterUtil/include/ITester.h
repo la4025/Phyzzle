@@ -1,5 +1,5 @@
 #pragma once
-
+#include "FloaterMacro.h"
 
 namespace flt
 {
@@ -12,3 +12,5 @@ namespace flt
 		};
 	}
 }
+
+

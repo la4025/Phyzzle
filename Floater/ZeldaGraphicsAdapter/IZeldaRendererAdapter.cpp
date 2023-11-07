@@ -24,13 +24,3 @@ void IZeldaRendererAdapter::Finalize()
 {
 	flt::DestroyRendererDX11(_renderer);
 }
-
-void IZeldaRendererAdapter::BeginDraw()
-{
-
-}
-
-void IZeldaRendererAdapter::EndDraw()
-{
-	_renderer->Render();
-}

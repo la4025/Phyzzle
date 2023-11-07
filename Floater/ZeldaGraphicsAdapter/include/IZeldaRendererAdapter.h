@@ -33,5 +33,6 @@ private:
 	float _cameraNear;
 	flt::IRenderer* _renderer;
 
+	std::map<ResourceID, std::wstring> _cameraMap;
 };
 
