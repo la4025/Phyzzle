@@ -282,11 +282,16 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 
 	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
 	matrixConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
+
 	lightConstBuffer = new ConstantBuffer<LightBufferType, ShaderType::PixelShader>(mDevice);
+	useConstBuffer = new ConstantBuffer<UseBufferType, ShaderType::PixelShader>(mDevice);
+	colorConstBuffer = new ConstantBuffer<ColorBufferType, ShaderType::PixelShader>(mDevice);
 
 	ConstantBufferManager::GetInstance().RegisterVSBuffer(matrixConstBuffer);
 
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterPSBuffer(useConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterPSBuffer(colorConstBuffer);
 
 	return true;
 }
@@ -302,6 +307,16 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete lightConstBuffer;
 		lightConstBuffer = nullptr;
+	}
+	if (useConstBuffer)
+	{
+		delete useConstBuffer;
+		useConstBuffer = nullptr;
+	}
+	if (colorConstBuffer)
+	{
+		delete colorConstBuffer;
+		colorConstBuffer = nullptr;
 	}
 	if (mSwapChain)
 	{
@@ -351,7 +366,7 @@ void ZeldaDX11Renderer::Finalize()
 	// ResourceManager Finalize 추가 필요
 }
 
-void ZeldaDX11Renderer::BeginDraw()
+void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 {
 	float color[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 
@@ -376,9 +391,9 @@ void ZeldaDX11Renderer::EndDraw()
 	}
 }
 
-void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID texture, bool wireFrame)
+void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a)
 {
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(mainCameraID);
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
 	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
 	cubeMesh->Render(mDeviceContext);
@@ -400,6 +415,8 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID 
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
 	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+	useConstBuffer->SetData({ false, (cubeTexture != nullptr), true });
+	colorConstBuffer->SetData({ { r, g, b, a } });
 
 	ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -407,7 +424,45 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID 
 	shader->Render(mDeviceContext, cubeMesh, cubeTexture);
 }
 
-void ZeldaDX11Renderer::CreateResources()
+void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(model);
+
+	// ZeldaMatrix to XMMATRIX
+	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+
+	for (int i = 0; i < modelData->GetMeshCount(); i++)
+	{
+		ZeldaMesh* currentMesh = modelData->GetMesh(i);
+		ZeldaTexture* currentTexture = modelData->GetTexture(i);
+
+		currentMesh->Render(mDeviceContext);
+
+		if (wireFrame)
+		{
+			mDeviceContext->RSSetState(wireFrameRasterState);
+		}
+		else
+		{
+			mDeviceContext->RSSetState(defaultRasterState);
+		}
+
+		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+		matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
+		lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+		useConstBuffer->SetData({ false, (currentTexture != nullptr), true });
+		colorConstBuffer->SetData({ { 1, 1, 1, 1 } });
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+
+		ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+		shader->Render(mDeviceContext, currentMesh, currentTexture);
+	}
+}
+
+void ZeldaDX11Renderer::CreateBasicResources()
 {
 	ResourceManager::GetInstance().CreateDefaultShader();
 	ResourceManager::GetInstance().CreateCubeMesh();
@@ -416,37 +471,60 @@ void ZeldaDX11Renderer::CreateResources()
 	light->SetAmbient(0.2f, 0.2f, 0.2f, 1.0f);
 	light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	light->SetSpecular(1.0f, 1.0f, 1.0f, 1.0f);
-	light->SetDirection(0.0f, 0.0f, 1.0f);
+	light->SetDirection(0.0f, -0.6f, 0.8f);
 }
 
-ResourceID ZeldaDX11Renderer::CreateTexture(const std::wstring& texturePath)
+void ZeldaDX11Renderer::ReleaseBasicResources()
+{
+	// 미구현
+	assert(0);
+}
+
+TextureID ZeldaDX11Renderer::CreateTexture(const std::wstring& texturePath)
 {
 	return ResourceManager::GetInstance().CreateTexture(texturePath);
 }
 
-ResourceID ZeldaDX11Renderer::CreateCamera()
+bool ZeldaDX11Renderer::ReleaseTexture(TextureID textureID)
+{
+	// 미구현
+	assert(0);
+	return false;
+}
+
+ModelID ZeldaDX11Renderer::CreateModel(const std::wstring& modelingFilePath)
+{
+	return ResourceManager::GetInstance().CreateModelFromModelingFile(modelingFilePath);
+}
+
+bool ZeldaDX11Renderer::ReleaseModel(ModelID modelID)
+{
+	// 미구현
+	assert(0);
+	return false;
+}
+
+CameraID ZeldaDX11Renderer::CreateCamera()
 {
 	return ResourceManager::GetInstance().CreateCamera(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
 }
 
-bool ZeldaDX11Renderer::ReleaseCamera(ResourceID cameraID)
+bool ZeldaDX11Renderer::ReleaseCamera(CameraID cameraID)
 {
+	if (ZeldaCamera::GetMainCamera() == cameraID)
+	{
+		ZeldaCamera::SetMainCamera(CameraID::ID_NULL);
+	}
+
 	return ResourceManager::GetInstance().ReleaseCamera(cameraID);
 }
 
-bool ZeldaDX11Renderer::SetMainCamera(ResourceID cameraID)
+bool ZeldaDX11Renderer::SetMainCamera(CameraID cameraID)
 {
-	if (ResourceManager::GetInstance().CheckCameraID(cameraID))
-	{
-		mainCameraID = cameraID;
-
-		return true;
-	}
-
-	return false;
+	return ZeldaCamera::SetMainCamera(cameraID);
 }
 
-bool ZeldaDX11Renderer::UpdateCamera(ResourceID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar)
+bool ZeldaDX11Renderer::UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar)
 {
 	ZeldaCamera* targetCamera = ResourceManager::GetInstance().GetCamera(cameraID);
 	

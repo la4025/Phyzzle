@@ -131,10 +131,13 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 
 bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, ZeldaTexture* texture)
 {
-	bool result;
+	bool result = true;
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, texture->GetTexture());
+	if (texture != nullptr)
+	{
+		result = SetShaderParameters(deviceContext, texture->GetTexture());
+	}
 	if (!result) return false;
 	// Now render the prepared buffers with the shader.
 	RenderShader(deviceContext, mesh->GetIndexCount());

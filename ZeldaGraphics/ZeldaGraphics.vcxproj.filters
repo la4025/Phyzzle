@@ -145,6 +145,9 @@
     <ClCompile Include="ZeldaModel.cpp">
       <Filter>Core\Resource\Model</Filter>
     </ClCompile>
+    <ClCompile Include="ModelingData.cpp">
+      <Filter>Core\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="TestShader.hlsl">

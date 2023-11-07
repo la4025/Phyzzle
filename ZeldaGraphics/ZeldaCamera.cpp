@@ -1,10 +1,13 @@
 #include "ZeldaCamera.h"
 
+#include "ResourceManager.h"
+
 using namespace DirectX;
 
 const float ZeldaCamera::DEFUALT_FOV = 3.141592654f / 4.0f;
 const float ZeldaCamera::DEFUALT_NEAR = 1.0f;
 const float ZeldaCamera::DEFUALT_FAR = 1000.0f;
+CameraID ZeldaCamera::mainCameraID = CameraID::ID_NULL;
 
 ZeldaCamera::ZeldaCamera(float screenWidth, float screenHeight) :
 	fieldOfView(DEFUALT_FOV),
@@ -113,4 +116,21 @@ DirectX::XMMATRIX ZeldaCamera::GetOrthoMatrix()
 	orthoMatrix = DirectX::XMMatrixOrthographicLH(screenWidth, screenHeight, cameraNear, cameraFar);
 
 	return orthoMatrix;
+}
+
+bool ZeldaCamera::SetMainCamera(CameraID cameraID)
+{
+	if (ResourceManager::GetInstance().CheckCameraID(cameraID))
+	{
+		mainCameraID = cameraID;
+
+		return true;
+	}
+
+	return false;
+}
+
+CameraID ZeldaCamera::GetMainCamera()
+{
+	return mainCameraID;
 }
