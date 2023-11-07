@@ -34,7 +34,9 @@ Eigen::Vector3f PurahEngine::Transform::GetWorldPosition() const
 	if (parentTransform != nullptr)
 	{
 		Eigen::Vector3f parentPosition = parentTransform->GetWorldPosition();
-		return parentPosition * position;
+		//return parentPosition.transpose() * position;
+		/// 이부분은 인재원 가서 수정할 것
+		return parentPosition.cwiseProduct(position);
 	}
 	else
 	{
@@ -61,7 +63,8 @@ Eigen::Vector3f PurahEngine::Transform::GetWorldScale() const
 	{
 		Eigen::Vector3f parentScale = parentTransform->GetWorldScale();
 
-		return parentScale * scale;
+		//return parentScale.transpose() * scale;
+		return parentScale.cwiseProduct(scale);
 	}
 	else
 	{

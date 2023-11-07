@@ -48,6 +48,14 @@ namespace PurahEngine
 		Eigen::Quaternionf rotation;
 		// 스케일
 		Eigen::Vector3f scale;
+		// 행렬
+		/// 행벡터는 벡터 * SRT, 열벡터는 TRS * 벡터
+		/// Eigen은 열벡터다.
+		// 월드행렬
+		Eigen::Matrix4f WorldMatrix;
+		// 로컬행렬
+		Eigen::Matrix4f LocalMatrix;
+
 
 		// 부모 Transform
 		Transform* parentTransform;
