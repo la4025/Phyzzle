@@ -13,5 +13,6 @@ namespace flt
 	class IRenderer;
 
 	extern "C" FLT_RENDERER IRenderer* CreateRendererDX11(HWND hwnd);
-	extern "C" FLT_RENDERER IRenderer* CreateRendererDX12(HWND hwnd);
+	extern "C" FLT_RENDERER bool DestroyRendererDX11(IRenderer* renderer);
+	//extern "C" FLT_RENDERER IRenderer* CreateRendererDX12(HWND hwnd);
 }
