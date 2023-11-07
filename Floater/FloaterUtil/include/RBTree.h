@@ -32,12 +32,16 @@ namespace flt
 		class iterator
 		{
 		public:
-			iterator();
+			iterator() : _dataList(nullptr), _index(-1);
 			iterator(const iterator& other);
 			iterator(iterator&& other) noexcept;
 			~iterator();
 
 			iterator& operator=(const iterator& other)
+			{
+
+			}
+			iterator& operator=(iterator&& other) noexcept
 			{
 
 			}
