@@ -2,6 +2,8 @@
 
 #include <DirectXMath.h>
 
+#include "GraphicsResourceID.h"
+
 class ZeldaCamera
 {
 public:
@@ -14,6 +16,9 @@ public:
 	DirectX::XMMATRIX GetViewMatrix();
 	DirectX::XMMATRIX GetProjMatrix();
 	DirectX::XMMATRIX GetOrthoMatrix();
+
+	static bool SetMainCamera(CameraID cameraID);
+	static CameraID GetMainCamera();
 
 private:
 	ZeldaCamera(float screenWidth, float screenHeight);
@@ -34,6 +39,8 @@ private:
 	DirectX::XMMATRIX viewMatrix;
 	DirectX::XMMATRIX projMatrix;
 	DirectX::XMMATRIX orthoMatrix;
+
+	static CameraID mainCameraID;
 
 	const static float DEFUALT_FOV;
 	const static float DEFUALT_NEAR;

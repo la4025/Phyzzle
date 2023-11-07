@@ -5,11 +5,10 @@
 struct VertexType
 {
 	DirectX::XMFLOAT4 position;
-	DirectX::XMFLOAT4 color;
 	DirectX::XMFLOAT2 texture;
 	DirectX::XMFLOAT3 normal;
 
-	const static int size = 4;
+	const static int size = 3;
 };
 
 struct MatrixBufferType
@@ -18,6 +17,8 @@ struct MatrixBufferType
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 };
+
+#pragma region Constant Buffer
 
 struct LightBufferType
 {
@@ -28,13 +29,20 @@ struct LightBufferType
 	float padding; // CreateBuffer함수가 성공하려면 16바이트의 배수로 만들어야 한다.(업데이트 및 전송이 빈번하기 때문에 효율적인 메모리 정렬이 되어있어야 한다고 함)
 };
 
-struct useBufferType
+struct UseBufferType
 {
+	unsigned int useNormal;
 	unsigned int useTexture;
+	unsigned int useColor;
 	unsigned int useTemp0;
-	unsigned int useTemp1;
-	unsigned int useTemp2;
 };
+
+struct ColorBufferType
+{
+	DirectX::XMFLOAT4 baseColor;
+};
+
+#pragma endregion
 
 enum class ShaderType
 {

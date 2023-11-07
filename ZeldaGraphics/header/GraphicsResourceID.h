@@ -1,5 +1,14 @@
 #pragma once
 
+enum class ResourceType : unsigned long long {
+	Camera = 1,
+	Texture = 2,
+	Model = 3,
+	Mesh = 4,
+	Shader = 5
+};
+
+template <ResourceType type>
 struct ResourceID
 {
 	union
@@ -27,15 +36,25 @@ struct ResourceID
 		unsigned char uc[16];
 	};
 
+	static constexpr ResourceType resourceType = type;
+	const static ResourceID ID_NULL;
+
 	bool operator==(const ResourceID& right) const
 	{
-		return ull[0] == right.ull[0] && ull[1] == right.ull[1];
+		return ull[0] == right.ull[0] && ull[1] == right.ull[1] && resourceType == right.resourceType;
 	}
 
 	bool operator!=(const ResourceID& right) const
 	{
-		return (ull[0] != right.ull[0]) || (ull[1] != right.ull[1]);
+		return (ull[0] != right.ull[0]) || (ull[1] != right.ull[1]) || (resourceType != right.resourceType);
 	}
 };
 
-const ResourceID ID_NULL = { 0llu, 0ull };
+template <ResourceType type>
+const ResourceID<type> ResourceID<type>::ID_NULL = { 0llu, 0llu };
+
+using CameraID = ResourceID<ResourceType::Camera>;
+using TextureID = ResourceID<ResourceType::Texture>;
+using ModelID = ResourceID<ResourceType::Model>;
+using MeshID = ResourceID<ResourceType::Mesh>;
+using ShaderID = ResourceID<ResourceType::Shader>;
