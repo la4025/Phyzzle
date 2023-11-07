@@ -32,5 +32,6 @@ private:
 	float _screenDepth;
 	float _cameraNear;
 	flt::IRenderer* _renderer;
+
 };
 

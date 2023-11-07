@@ -4,6 +4,11 @@
 #include <atomic>
 #include <mutex>
 
+/// <summary>
+/// 앞으로 할 일
+/// 같은 KEY값을 가지고 있지만 다른 데이터를 가진 Builder가 들어왔을 경우에 체크할 수 있도록.
+/// </summary>
+
 namespace flt
 {
 	struct ResourceBase;
@@ -30,7 +35,7 @@ namespace flt
 		{
 			for (const auto& [key, value] : resources)
 			{
-				wprintf(L"%s, 주소 : 0x%p, refcount : %d\n", value.typeName.c_str(), value.data, value.refCount);
+				wprintf(L"%s, Address : 0x%p, refcount : %d\n", value.typeName.c_str(), value.data, value.refCount);
 			}
 		}
 

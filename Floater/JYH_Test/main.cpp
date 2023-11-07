@@ -8,13 +8,41 @@
 #include "../FloaterRendererCommon/include/Transform.h"
 //#include <windows.h>
 
-void ParallelTest(int threadNum)
+
+#pragma region testInclude
+#include "../FloaterRendererCommon/include/IBuilder.h"
+#include "../FloaterRendererCommon/include/Resource.h"
+#include "../FloaterRendererCommon/include/ResourceMgr.h"
+#pragma endregion
+
+
+class TestResource
 {
-	for (int i = 0; i < 10; ++i)
+public:
+	void Release()
 	{
-		std::cout << threadNum << " ";
+		std::cout << *data << " Release" << std::endl;
 	}
-	std::cout << std::endl;
+
+	int* data;
+};
+
+template struct flt::Resource<TestResource>;
+
+struct TestBuilder : public flt::IBuilder<TestResource>
+{
+	TestBuilder(const std::wstring& key) : flt::IBuilder<TestResource>(key) {}
+
+	virtual TestResource* build() const override;
+	int num = 0;
+};
+
+TestResource* TestBuilder::build() const
+{
+	auto resource = new TestResource();
+	resource->data = new int(num);
+	std::cout << *resource->data << " Build" << std::endl;
+	return resource;
 }
 
 int main()
@@ -23,24 +51,34 @@ int main()
 	std::cout << std::boolalpha;
 
 
+
+#pragma region 테스트
+	{
+		flt::ResourceMgr mgr;
+
+
+		TestBuilder builder{ L"ONE" };
+		builder.num = 1;
+
+		TestBuilder builder2{ L"ONE" };
+		builder2.num = 2;
+
+		flt::Resource<TestResource> resource1{ mgr, builder };
+		flt::Resource<TestResource>* pResource1 = new flt::Resource<TestResource>{ mgr, builder };
+		flt::Resource<TestResource>* pResource2 = new flt::Resource<TestResource>{ mgr, builder };
+		flt::Resource<TestResource>* pResource3 = new flt::Resource<TestResource>{ mgr, builder };
+		flt::Resource<TestResource>* pResource4 = new flt::Resource<TestResource>{ mgr, builder };
+		flt::Resource<TestResource> resource2{ mgr, builder2 };
+		flt::Resource<TestResource> resource3{ mgr, builder };
+		flt::Resource<TestResource> resource4{ mgr, builder };
+	}
+#pragma endregion
+
+
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
 
-#pragma region 테스트
-	//while(renderer->Test())
-	//{ 
-	//
-	//}
-#pragma endregion
-
-
-
-#pragma omp parallel for
-	for(int i = 0; i < 100; ++i)
-	{
-		ParallelTest(i);
-	}
 
 	flt::Transform transform;
 	transform.SetPosition(0.0f, 0.0f, 0.7f);
@@ -132,7 +170,7 @@ int main()
 				std::cout << "abs Pos " << keyData.x << " " << keyData.y << std::endl;
 			}
 		}
-		
+
 
 		//Sleep(10);
 	}

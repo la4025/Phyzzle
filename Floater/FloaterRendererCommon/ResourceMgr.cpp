@@ -10,6 +10,7 @@ void* flt::ResourceMgr::GetResource(ResourceBase* resource, const IBuilderBase& 
 	resource->_key = builder.key;
 	if (resources.find(builder.key) == resources.end())
 	{
+		// 관리하지 않는 데이터일 경우 생성
 		std::wstring typeName;
 		data = builder(&typeName);
 		if (data == nullptr)
@@ -22,6 +23,7 @@ void* flt::ResourceMgr::GetResource(ResourceBase* resource, const IBuilderBase& 
 	}
 	else
 	{
+		// 관리중일 데이터일 경우 참조 카운트 증가
 		data = resources[builder.key].GetData();
 	}
 
