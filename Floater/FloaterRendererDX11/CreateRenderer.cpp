@@ -1,9 +1,14 @@
 #include "./include/CreateRenderer.h"
 #include "RendererDX11.h"
 
-extern "C" flt::IRenderer* flt::CreateRendererDX11(HWND hwnd)
+extern "C" flt::IRenderer * flt::CreateRendererDX11(HWND hwnd)
 {
-	RendererDX11* renderer = new RendererDX11();
+	RendererDX11* renderer = new(std::nothrow) RendererDX11();
+	if (renderer == nullptr)
+	{
+		return nullptr;
+	}
+
 	if (!renderer->Initialize(hwnd))
 	{
 		renderer->Finalize();
@@ -13,7 +18,20 @@ extern "C" flt::IRenderer* flt::CreateRendererDX11(HWND hwnd)
 	return renderer;
 }
 
-extern "C" flt::IRenderer* flt::CreateRendererDX12(HWND hwnd)
+extern "C" bool flt::DestroyRendererDX11(IRenderer * renderer)
 {
-	return nullptr;
+	auto rendererDX11 = dynamic_cast<RendererDX11*>(renderer);
+
+	if (rendererDX11 == nullptr)
+	{
+		return false;
+	}
+
+	if (rendererDX11->Finalize())
+	{
+		delete rendererDX11;
+		return true;
+	}
+
+	return false;
 }

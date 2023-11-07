@@ -1,11 +1,21 @@
 #define FLT_WINDOWS
 
+#include <map>
 #include <iostream>
 #include "../FloaterPlatform/include/Platform.h"
 #include "../FloaterUtil/include/Timer.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "../FloaterRendererCommon/include/Transform.h"
 //#include <windows.h>
+
+void ParallelTest(int threadNum)
+{
+	for (int i = 0; i < 10; ++i)
+	{
+		std::cout << threadNum << " ";
+	}
+	std::cout << std::endl;
+}
 
 int main()
 {
@@ -23,6 +33,14 @@ int main()
 	//
 	//}
 #pragma endregion
+
+
+
+#pragma omp parallel for
+	for(int i = 0; i < 100; ++i)
+	{
+		ParallelTest(i);
+	}
 
 	flt::Transform transform;
 	transform.SetPosition(0.0f, 0.0f, 0.7f);
