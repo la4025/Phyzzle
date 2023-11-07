@@ -28,6 +28,12 @@
     <Filter Include="SceneManager">
       <UniqueIdentifier>{6130b827-11ec-46ba-88b0-d704399f7849}</UniqueIdentifier>
     </Filter>
+    <Filter Include="InputManager">
+      <UniqueIdentifier>{c76577f9-370f-4a36-b09b-8bb28b636ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Manager">
+      <UniqueIdentifier>{4a05d4e7-f813-447e-8d56-990fba752ad4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -45,7 +51,6 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Core\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Collision.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
@@ -54,6 +59,13 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PurahEngine.cpp" />
+    <ClCompile Include="Componentmanager.cpp">
+      <Filter>Component\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +96,12 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Componentmanager.h">
+      <Filter>Component\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

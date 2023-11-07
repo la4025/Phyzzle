@@ -1,4 +1,5 @@
-#include "GameLoop.h"
+#include "GameLoop.h"]
+#include "SceneManager.h"
 #include <cassert>
 
 PurahEngine::GameLoop::GameLoop()
@@ -56,6 +57,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		renderer->CreateResources();
 	}
 
+	PurahEngine::SceneManager::GetInstance().Initialize();
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)

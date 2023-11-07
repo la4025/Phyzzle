@@ -1,5 +1,15 @@
 #include "Component.h"
 
+PurahEngine::Component::Component()
+{
+
+}
+
+PurahEngine::Component::~Component()
+{
+
+}
+
 void PurahEngine::Component::Awake()
 {
 

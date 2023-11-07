@@ -34,10 +34,11 @@ namespace PurahEngine
 		// 마우스가 오브젝트에서 벗어났을 때 호출
 		virtual void OnMouseExit();
 
-	public:
+	private:
 		// ComponentList로 Component 관리
 		std::vector<Component*> componentList;
 
+	public:
 		// ComponentList로 Component 추가
 		template<typename T>
 		T* AddComponent()
