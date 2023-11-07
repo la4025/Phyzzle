@@ -88,9 +88,8 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	// Create the vertex input layout description.
 	// This setup needs to match the VertexType structure in the ModelClass and in the shader.
 	polygonLayout[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-	polygonLayout[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-	polygonLayout[2] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-	polygonLayout[3] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+	polygonLayout[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+	polygonLayout[2] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
 	// Get a count of the elements in the layout.
 	numElements = VertexType::size;
@@ -132,10 +131,13 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 
 bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, ZeldaMesh* mesh, ZeldaTexture* texture)
 {
-	bool result;
+	bool result = true;
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, texture->GetTexture());
+	if (texture != nullptr)
+	{
+		result = SetShaderParameters(deviceContext, texture->GetTexture());
+	}
 	if (!result) return false;
 	// Now render the prepared buffers with the shader.
 	RenderShader(deviceContext, mesh->GetIndexCount());

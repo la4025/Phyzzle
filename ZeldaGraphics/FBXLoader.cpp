@@ -8,7 +8,10 @@ ZeldaModel* FBXLoader::LoadFBX(const std::wstring& filePath)
 {
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile("test.fbx", DEFAULT_LOAD_FLAG);
+	std::string multibyteFilePath;
+	multibyteFilePath.assign(filePath.begin(), filePath.end());
+
+	const aiScene* scene = importer.ReadFile(multibyteFilePath, DEFAULT_LOAD_FLAG);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -20,6 +23,12 @@ ZeldaModel* FBXLoader::LoadFBX(const std::wstring& filePath)
 
 		return nullptr;
 	}
+
+
+	ZeldaModel* model;
+
+
+	importer.FreeScene();
 
 	return nullptr;
 }

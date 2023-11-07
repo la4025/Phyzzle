@@ -68,7 +68,7 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 
 	renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
 
-	renderer->CreateResources();
+	renderer->CreateBasicResources();
 }
 
 void CoreSystem::Finalize()
@@ -206,6 +206,7 @@ void CoreSystem::run()
 		firstRun = false;
 
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
+		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -221,7 +222,7 @@ void CoreSystem::run()
 		renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 1000.0f);
 	}
 
-	renderer->BeginDraw();
+	renderer->BeginDraw(0.016f);
 
 	static float falling = 0.0f;
 
@@ -272,8 +273,17 @@ void CoreSystem::run()
 		0.0f, 0, 0, 1;
 
 
-	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false);
-	renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false);
+	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 1.0f, 1.0f, 1.0f);
+	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
+
+	Eigen::Matrix4f ganonMatrix;
+	ganonMatrix <<
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 50,
+		0, 0, 0, 1;
+
+	renderer->DrawModel(ganonMatrix, fbxID, false);
 	
 	renderer->EndDraw();
 }

@@ -1,13 +1,26 @@
-Texture2D shaderTexture;
+Texture2D shaderTexture : register(t0);
 SamplerState SampleType;
 
-cbuffer LightBuffer
+cbuffer LightBuffer : register(b0)
 {
     float4 ambient;
     float4 diffuse;
     float4 specular;
     float3 lightDirection;
     float padding;
+};
+
+cbuffer UseBufferType : register(b1)
+{
+    unsigned int useNormal;
+    unsigned int useTexture;
+    unsigned int useColor;
+    unsigned int useTemp0;
+};
+    
+cbuffer ColorBufferType : register(b2)
+{
+    float4 baseColor;
 };
 
 struct PixelInputType
@@ -26,7 +39,18 @@ float4 main(PixelInputType input) : SV_TARGET
     float4 color;
 
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
-    textureColor = shaderTexture.Sample(SampleType, input.tex);
+    if (useTexture == true)
+    {
+        textureColor = shaderTexture.Sample(SampleType, input.tex);
+    }
+    else if (useColor == true)
+    {
+        textureColor = baseColor;
+    }
+    else
+    {
+        textureColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    }
     
     // Invert the light direction for calculations.
     lightDir = -lightDirection;

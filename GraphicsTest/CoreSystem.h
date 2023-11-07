@@ -73,8 +73,9 @@ private:
 
 
 	// graphics
-	ResourceID mainCameraID;
-	ResourceID scdTextureID;
+	CameraID mainCameraID;
+	TextureID scdTextureID;
+	ModelID fbxID;
 
 
 	//singleton

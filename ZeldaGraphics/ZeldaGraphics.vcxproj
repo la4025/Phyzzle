@@ -32,7 +32,6 @@
     <ClInclude Include="MathConverter.h" />
     <ClInclude Include="ModelingData.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ZeldaCamera.h" />
     <ClInclude Include="ZeldaDX11Renderer.h" />
     <ClInclude Include="ZeldaGraphicsDefine.h" />
@@ -47,8 +46,8 @@
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IDGenerator.cpp" />
     <ClCompile Include="MathConverter.cpp" />
+    <ClCompile Include="ModelingData.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="ZeldaCamera.cpp" />
     <ClCompile Include="ZeldaDX11Renderer.cpp" />
     <ClCompile Include="ZeldaGraphics.cpp" />
@@ -168,13 +167,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)assimpInc;$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>assimp-vc143-mtd.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;assimp-vc143-mtd.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -192,7 +191,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)assimpInc;$(SolutionDir)eigen-3.4.0;$(SolutionDir)DirectXTex\Inc;$(SolutionDir)ZeldaGraphics\header</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -200,7 +199,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
