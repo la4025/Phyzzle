@@ -2,6 +2,14 @@
 #include "./include/Resource.h"
 #include "./include/IBuilder.h"
 
+namespace flt
+{
+	namespace global
+	{
+		ResourceMgr g_resourceMgr;
+	}
+}
+
 void* flt::ResourceMgr::GetResource(ResourceBase* resource, const IBuilderBase& builder)
 {
 	void* data = nullptr;

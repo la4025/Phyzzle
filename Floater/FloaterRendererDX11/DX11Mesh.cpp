@@ -4,7 +4,7 @@
 
 flt::DX11Mesh* flt::DX11MeshBuilder::build() const 
 {
-	DX11Mesh* pMesh = new DX11Mesh(*pResourceMgr, vsBuilder, psBuilder);
+	DX11Mesh* pMesh = new DX11Mesh(vsBuilder, psBuilder);
 	return pMesh;
 }
 
@@ -182,7 +182,7 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 	DX11PixelShaderBuilder psBuilder(L"../FloaterRendererDX11/CubePS.hlsl");
 	psBuilder.pDevice = pDevice;
 
-	DX11Mesh* pMesh = new DX11Mesh(*pResourceMgr, vsBuilder, psBuilder);
+	DX11Mesh* pMesh = new DX11Mesh(vsBuilder, psBuilder);
 	pMesh->vertexBuffer = vertexBuffer;
 	pMesh->singleVertexSize = sizeof(VertexUV);
 	pMesh->indexBuffer = indexBuffer;

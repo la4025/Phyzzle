@@ -16,7 +16,6 @@ namespace flt
 
 	//extern template class __declspec(dllexport) std::wstring;
 
-
 	class ResourceMgr
 	{
 	public:
@@ -73,4 +72,8 @@ namespace flt
 	};
 
 	//extern template class __declspec(dllexport) std::unordered_map< std::wstring, ResourceMgr::ManagedData>;
+	namespace global
+	{
+		extern ResourceMgr g_resourceMgr;
+	}
 }

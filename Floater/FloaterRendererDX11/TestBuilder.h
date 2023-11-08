@@ -63,9 +63,9 @@ namespace flt
 				builder1.t = this;
 
 
-				Resource<BuilderTest> test1(_resourceMgr, builder1);
-				Resource<BuilderTest> test2(_resourceMgr, builder1);
-				Resource<BuilderTest> test3(_resourceMgr, builder1);
+				Resource<BuilderTest> test1(builder1);
+				Resource<BuilderTest> test2(builder1);
+				Resource<BuilderTest> test3(builder1);
 				if (_testData != 1)
 				{
 					ASSERT(false, L"빌더로 여러개 만들었으나 1번만 생성되지 않음.");

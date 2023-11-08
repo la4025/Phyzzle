@@ -253,7 +253,7 @@ bool flt::RendererDX11::Render(float deltaTime)
 		_immediateContext->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, &mesh->singleVertexSize, &offset);
 		_immediateContext->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-		_immediateContext->DrawIndexed(mesh->indexCount, 0, 0);
+		_immediateContext->DrawIndexed((size_t)mesh->indexCount, 0, 0);
 	}
 
 
@@ -557,7 +557,7 @@ flt::Resource<flt::DX11Mesh>* flt::RendererDX11::CreateBox()
 	cubeBuilder.pImmediateContext = _immediateContext.Get();
 	cubeBuilder.pResourceMgr = &_resourceMgr;
 
-	Resource<DX11Mesh>* meshResource = new Resource<DX11Mesh>(_resourceMgr, cubeBuilder);
+	Resource<DX11Mesh>* meshResource = new Resource<DX11Mesh>(cubeBuilder);
 
 	return meshResource;
 }

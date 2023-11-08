@@ -19,6 +19,7 @@ namespace flt
 	template<typename Key, typename Value, typename KeyCompare = std::less<Key>, Allocator_<typename Key> KeyAllocator, Allocator_<typename Value> ValueAllocator>
 	class RBTree
 	{
+#pragma region NastedClassEnum
 	private:
 		struct Node
 		{
@@ -28,7 +29,6 @@ namespace flt
 			char useFlag;
 			Color color;
 		};
-
 		class iterator
 		{
 		public:
@@ -82,7 +82,12 @@ namespace flt
 			Node* _dataList;
 			int _index;
 		};
-
+		enum class Color : char
+		{
+			RED,
+			BLACK
+		};
+#pragma endregion
 	public:
 		RBTree();
 		RBTree(int capacity);
@@ -97,12 +102,14 @@ namespace flt
 
 		bool Clear();
 
-	private:
-		enum class Color : char
+
+		iterator begin()
 		{
-			RED,
-			BLACK
-		};
+
+		}
+
+	private:
+
 
 
 

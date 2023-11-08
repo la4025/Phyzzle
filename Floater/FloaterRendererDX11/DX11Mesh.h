@@ -28,9 +28,9 @@ namespace flt
 
 	struct DX11Mesh
 	{
-		DX11Mesh(ResourceMgr& resourceMgr, const DX11VertexShaderBuilder& vsBuilder, const DX11PixelShaderBuilder& psBuilder) :
-			vertexShader(resourceMgr, vsBuilder),
-			pixelShader(resourceMgr, psBuilder),
+		DX11Mesh(const DX11VertexShaderBuilder& vsBuilder, const DX11PixelShaderBuilder& psBuilder) :
+			vertexShader(vsBuilder),
+			pixelShader(psBuilder),
 			vertexBuffer(nullptr),
 			singleVertexSize(0),
 			indexBuffer(nullptr),

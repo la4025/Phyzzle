@@ -54,23 +54,20 @@ int main()
 
 #pragma region 테스트
 	{
-		flt::ResourceMgr mgr;
-
-
 		TestBuilder builder{ L"ONE" };
 		builder.num = 1;
 
 		TestBuilder builder2{ L"ONE" };
 		builder2.num = 2;
 
-		flt::Resource<TestResource> resource1{ mgr, builder };
-		flt::Resource<TestResource>* pResource1 = new flt::Resource<TestResource>{ mgr, builder };
-		flt::Resource<TestResource>* pResource2 = new flt::Resource<TestResource>{ mgr, builder };
-		flt::Resource<TestResource>* pResource3 = new flt::Resource<TestResource>{ mgr, builder };
-		flt::Resource<TestResource>* pResource4 = new flt::Resource<TestResource>{ mgr, builder };
-		flt::Resource<TestResource> resource2{ mgr, builder2 };
-		flt::Resource<TestResource> resource3{ mgr, builder };
-		flt::Resource<TestResource> resource4{ mgr, builder };
+		flt::Resource<TestResource> resource1{builder };
+		flt::Resource<TestResource>* pResource1 = new flt::Resource<TestResource>{ builder };
+		flt::Resource<TestResource>* pResource2 = new flt::Resource<TestResource>{ builder };
+		flt::Resource<TestResource>* pResource3 = new flt::Resource<TestResource>{ builder };
+		flt::Resource<TestResource>* pResource4 = new flt::Resource<TestResource>{ builder };
+		flt::Resource<TestResource> resource2{ builder2 };
+		flt::Resource<TestResource> resource3{ builder };
+		flt::Resource<TestResource> resource4{ builder };
 	}
 #pragma endregion
 
