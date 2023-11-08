@@ -34,6 +34,9 @@ namespace PurahEngine
 		// 오브젝트의 월드 스케일을 가져온다.
 		Eigen::Vector3f GetWorldScale() const;
 
+		Eigen::Matrix4f GetLocalMatrix() const;
+		Eigen::Matrix4f GetWorldMatrix() const;
+
 		/// set
 		// 포지션 세팅
 		void SetLocalPosition(Eigen::Vector3f setPosition);
@@ -51,10 +54,6 @@ namespace PurahEngine
 		// 행렬
 		/// 행벡터는 벡터 * SRT, 열벡터는 TRS * 벡터
 		/// Eigen은 열벡터다.
-		// 월드행렬
-		Eigen::Matrix4f WorldMatrix;
-		// 로컬행렬
-		Eigen::Matrix4f LocalMatrix;
 
 
 		// 부모 Transform

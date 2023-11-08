@@ -1,7 +1,9 @@
 #include "Transform.h"
 
+#define M_PI       3.14159265358979323846
+
 PurahEngine::Transform::Transform() :
-	position(Eigen::Vector3f::Identity()),
+	position(Eigen::Vector3f::Zero()),
 	rotation(Eigen::Quaternionf::Identity()),
 	scale(1,1,1),
 	parentTransform(nullptr)
@@ -70,6 +72,22 @@ Eigen::Vector3f PurahEngine::Transform::GetWorldScale() const
 	{
 		return scale;
 	}
+}
+
+Eigen::Matrix4f PurahEngine::Transform::GetLocalMatrix() const
+{
+	// Translation
+	Eigen::Matrix4f localTransform = Eigen::Matrix4f::Identity();
+	localTransform.block<3, 1>(0, 3) = position;
+
+	// Rotation
+	float angle = 45.0 * M_PI / 180.0;
+
+}
+
+Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
+{
+	Eigen::Matrix4f worldTransform = Eigen::Matrix4f::Identity();
 }
 
 void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
