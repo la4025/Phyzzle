@@ -5,7 +5,7 @@
 PurahEngine::Transform::Transform() :
 	position(Eigen::Vector3f::Zero()),
 	rotation(Eigen::Quaternionf::Identity()),
-	scale(1,1,1),
+	scale(1, 1, 1),
 	parentTransform(nullptr)
 {
 
@@ -76,18 +76,34 @@ Eigen::Vector3f PurahEngine::Transform::GetWorldScale() const
 
 Eigen::Matrix4f PurahEngine::Transform::GetLocalMatrix() const
 {
-	// Translation
-	Eigen::Matrix4f localTransform = Eigen::Matrix4f::Identity();
-	localTransform.block<3, 1>(0, 3) = position;
+	// Translation	
+	Eigen::Affine3f localTransform = Eigen::Affine3f::Identity();
+	localTransform.translation() = position;
+	// rotation
+	localTransform.linear() = rotation.toRotationMatrix();
+	// scale
+	localTransform.scale(scale);
 
-	// Rotation
-	float angle = 45.0 * M_PI / 180.0;
+	return localTransform.matrix();
 
 }
 
 Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
 {
-	Eigen::Matrix4f worldTransform = Eigen::Matrix4f::Identity();
+
+	if (parentTransform != nullptr)
+	{
+		Eigen::Affine3f worldTransform = Eigen::Affine3f::Identity();
+		worldTransform.translation() = position;
+		worldTransform.linear() = rotation.toRotationMatrix();
+		worldTransform.scale(scale);
+
+		return parentTransform->GetWorldMatrix() * GetLocalMatrix();
+	}
+	else
+	{
+		return GetLocalMatrix();
+	}
 }
 
 void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
