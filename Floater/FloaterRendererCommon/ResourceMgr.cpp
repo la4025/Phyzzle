@@ -1,6 +1,7 @@
-#include "./include/ResourceMgr.h"
+﻿#include "./include/ResourceMgr.h"
 #include "./include/Resource.h"
 #include "./include/IBuilder.h"
+
 
 namespace flt
 {

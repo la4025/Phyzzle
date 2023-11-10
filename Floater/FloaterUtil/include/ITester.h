@@ -8,6 +8,7 @@ namespace flt
 		class ITester
 		{
 		public:
+			virtual ~ITester() {}
 			virtual bool Test() = 0;
 		};
 	}

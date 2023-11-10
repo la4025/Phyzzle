@@ -1,4 +1,4 @@
-#include "RendererDX11.h"
+﻿#include "RendererDX11.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "DX11VSConstantBuffer.h"
 
@@ -17,7 +17,6 @@
 #include "TestBuilder.h"
 
 #pragma endregion
-
 
 #pragma comment(lib, "DXGI.lib")
 #pragma comment(lib, "D3D11.lib")
@@ -253,7 +252,7 @@ bool flt::RendererDX11::Render(float deltaTime)
 		_immediateContext->IASetVertexBuffers(0, 1, &mesh->vertexBuffer, &mesh->singleVertexSize, &offset);
 		_immediateContext->IASetIndexBuffer(mesh->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-		_immediateContext->DrawIndexed((size_t)mesh->indexCount, 0, 0);
+		_immediateContext->DrawIndexed(mesh->indexCount, 0, 0);
 	}
 
 
@@ -272,7 +271,7 @@ bool flt::RendererDX11::Render(float deltaTime)
 
 bool flt::RendererDX11::RegisterObject(Renderable& renderable)
 {
-	DX11Node* node = new DX11Node(renderable.transform);
+	DX11Node* node = new DX11Node(renderable.transform, renderable.isDraw);
 	if (!node)
 	{
 		return false;

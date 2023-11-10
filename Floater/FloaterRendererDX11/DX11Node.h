@@ -10,10 +10,11 @@ namespace flt
 {
 	struct DX11Node
 	{
-		DX11Node(Transform& transform);
+		DX11Node(const Transform& transform, const bool& isDraw);
 
 		std::wstring name;
-		Transform& transform;
+		const Transform& transform;
+		const bool& isDraw;
 		Resource<DX11Mesh>* mesh;
 		Camera* camera;
 

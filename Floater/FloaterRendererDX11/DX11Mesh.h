@@ -48,7 +48,7 @@ namespace flt
 		UINT singleVertexSize;
 
 		ID3D11Buffer* indexBuffer;
-		size_t indexCount;
+		UINT indexCount;
 
 		ID3D11ShaderResourceView* texture;
 		ID3D11SamplerState* sampler;

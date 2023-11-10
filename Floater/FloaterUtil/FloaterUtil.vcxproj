@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\HashTable.h" />
     <ClInclude Include="include\Allocator.h" />
     <ClInclude Include="include\ConvString.h" />
     <ClInclude Include="include\FloaterType.h" />
@@ -155,9 +156,16 @@
     <ClInclude Include="include\SparseSet.h" />
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="include\ITester.h" />
+    <ClInclude Include="include\FixedSizeMemoryPool.h" />
+    <ClInclude Include="TesterFixedSizeMemoryPool.h" />
+    <ClInclude Include="TesterRBTree.h" />
+    <ClInclude Include="include\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConvString.cpp" />
+    <ClCompile Include="FixedSizeMemoryPool.cpp" />
+    <ClCompile Include="TesterFixedSizeMemoryPool.cpp" />
+    <ClCompile Include="TesterRBTree.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

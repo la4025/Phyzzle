@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <unordered_map>
 #include <string>
 #include <atomic>
@@ -8,6 +8,7 @@
 /// 앞으로 할 일
 /// 같은 KEY값을 가지고 있지만 다른 데이터를 가진 Builder가 들어왔을 경우에 체크할 수 있도록.
 /// </summary>
+
 
 namespace flt
 {

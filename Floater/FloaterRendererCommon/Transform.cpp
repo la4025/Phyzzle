@@ -1,8 +1,7 @@
-#include "./include/Transform.h"
+﻿#include "./include/Transform.h"
 
 #include <DirectXMath.h>
 #include <cmath>
-
 
 void flt::Transform::SetMatrix(const Matrix4f& worldMatrix)
 {
@@ -92,7 +91,7 @@ void flt::Transform::AddScale(float x, float y, float z)
 	_scale.z += z;
 }
 
-flt::Matrix4f flt::Transform::GetTransformMatrix4f() const
+flt::Matrix4f flt::Transform::GetTransformMatrix4f() const noexcept
 {
 	return Matrix4f
 	{
@@ -103,7 +102,7 @@ flt::Matrix4f flt::Transform::GetTransformMatrix4f() const
 	};
 }
 
-flt::Matrix4f flt::Transform::GetRotationMatrix4f() const
+flt::Matrix4f flt::Transform::GetRotationMatrix4f() const noexcept
 {
 	float x2 = _rotation.x * _rotation.x;
 	float y2 = _rotation.y * _rotation.y;
@@ -124,7 +123,7 @@ flt::Matrix4f flt::Transform::GetRotationMatrix4f() const
 	};
 }
 
-flt::Matrix4f flt::Transform::GetScaleMatrix4f() const
+flt::Matrix4f flt::Transform::GetScaleMatrix4f() const noexcept
 {
 	return Matrix4f
 	{
@@ -135,7 +134,7 @@ flt::Matrix4f flt::Transform::GetScaleMatrix4f() const
 	};
 }
 
-flt::Matrix4f flt::Transform::GetMatrix4f() const
+flt::Matrix4f flt::Transform::GetMatrix4f() const noexcept
 {
 	return GetScaleMatrix4f() * GetRotationMatrix4f() * GetTransformMatrix4f();
 }

@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include <string>
+
 
 namespace flt
 {
@@ -13,7 +14,7 @@ namespace flt
 
 	struct Renderable
 	{
-		Renderable(Transform& transform) : transform(transform), name() {}
+		Renderable(const Transform& transform, const bool& isDraw) : transform(transform), isDraw(isDraw), name() {}
 		// 1. 그릴때 필요한것들.
 		// 2. 게임 엔진상에서 데이터를 바꾸고 싶은것들.
 
@@ -23,8 +24,8 @@ namespace flt
 		// shader
 		// 
 
-		Transform& transform;
-		bool isDraw;
+		const Transform& transform;
+		const bool& isDraw;
 		std::wstring name;
 		//bool& isEnable;
 	};

@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include "../FloaterRendererCommon/include/IBuilder.h"
 #include "../FloaterRendererCommon/include/Resource.h"
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
 
 #include "../FloaterUtil/include/ITester.h"
+
 
 namespace flt
 {

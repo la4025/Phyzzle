@@ -1,6 +1,8 @@
-#include "DX11Mesh.h"
+﻿#include "DX11Mesh.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include <directxtk/DDSTextureLoader.h>
+#include <directxtk/WICTextureLoader.h>
+
 
 flt::DX11Mesh* flt::DX11MeshBuilder::build() const 
 {
@@ -177,7 +179,7 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 	DX11VertexShaderBuilder vsBuilder(L"../FloaterRendererDX11/CubeVS.hlsl");
 	vsBuilder.pDevice = pDevice;
 	vsBuilder.pInputLayoutDesc = &(Basic32[0]);
-	vsBuilder.descElementCount = Basic32.size();
+	vsBuilder.descElementCount = (UINT)Basic32.size();
 
 	DX11PixelShaderBuilder psBuilder(L"../FloaterRendererDX11/CubePS.hlsl");
 	psBuilder.pDevice = pDevice;
@@ -186,7 +188,7 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 	pMesh->vertexBuffer = vertexBuffer;
 	pMesh->singleVertexSize = sizeof(VertexUV);
 	pMesh->indexBuffer = indexBuffer;
-	pMesh->indexCount = indices.size();
+	pMesh->indexCount = (UINT)indices.size();
 	pMesh->texture = textureView;
 	pMesh->sampler = samplerState;
 

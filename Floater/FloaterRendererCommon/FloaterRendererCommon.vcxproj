@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FBXLoader.h" />
+    <ClInclude Include="include\FBXLoader.h" />
     <ClInclude Include="include\IBuilder.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\IRenderer.h" />
@@ -28,6 +28,9 @@
     <ClInclude Include="include\ResourceMgr.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\RawMesh.h" />
+    <ClInclude Include="include\RawAnimation.h" />
+    <ClInclude Include="include\RawSkin.h" />
+    <ClInclude Include="RawShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FloaterMath\FloaterMath.vcxproj">

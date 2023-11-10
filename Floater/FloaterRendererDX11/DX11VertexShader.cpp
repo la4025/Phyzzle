@@ -1,4 +1,4 @@
-#include "DX11VertexShader.h"
+﻿#include "DX11VertexShader.h"
 #include "DX11VSConstantBuffer.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include <d3dcompiler.h>
@@ -7,6 +7,7 @@
 #if defined(DEBUG) || defined(_DEBUG)
 #include <dxgidebug.h>
 #endif
+
 
 //#pragma comment(lib, "D3DCompiler.lib")
 template<typename T>

@@ -1,4 +1,4 @@
-#define FLT_WINDOWS
+﻿#define FLT_WINDOWS
 
 #include <map>
 #include <iostream>
@@ -13,37 +13,9 @@
 #include "../FloaterRendererCommon/include/IBuilder.h"
 #include "../FloaterRendererCommon/include/Resource.h"
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
+#include "../FloaterUtil/TesterRBTree.h"
 #pragma endregion
 
-
-class TestResource
-{
-public:
-	void Release()
-	{
-		std::cout << *data << " Release" << std::endl;
-	}
-
-	int* data;
-};
-
-template struct flt::Resource<TestResource>;
-
-struct TestBuilder : public flt::IBuilder<TestResource>
-{
-	TestBuilder(const std::wstring& key) : flt::IBuilder<TestResource>(key) {}
-
-	virtual TestResource* build() const override;
-	int num = 0;
-};
-
-TestResource* TestBuilder::build() const
-{
-	auto resource = new TestResource();
-	resource->data = new int(num);
-	std::cout << *resource->data << " Build" << std::endl;
-	return resource;
-}
 
 int main()
 {
@@ -54,20 +26,12 @@ int main()
 
 #pragma region 테스트
 	{
-		TestBuilder builder{ L"ONE" };
-		builder.num = 1;
-
-		TestBuilder builder2{ L"ONE" };
-		builder2.num = 2;
-
-		flt::Resource<TestResource> resource1{builder };
-		flt::Resource<TestResource>* pResource1 = new flt::Resource<TestResource>{ builder };
-		flt::Resource<TestResource>* pResource2 = new flt::Resource<TestResource>{ builder };
-		flt::Resource<TestResource>* pResource3 = new flt::Resource<TestResource>{ builder };
-		flt::Resource<TestResource>* pResource4 = new flt::Resource<TestResource>{ builder };
-		flt::Resource<TestResource> resource2{ builder2 };
-		flt::Resource<TestResource> resource3{ builder };
-		flt::Resource<TestResource> resource4{ builder };
+		using namespace flt::test;
+		TesterRBTree tester;
+		if (!tester.Test())
+		{
+			ASSERT(false, "test fail");
+		}
 	}
 #pragma endregion
 
@@ -78,9 +42,10 @@ int main()
 
 
 	flt::Transform transform;
+	bool isDraw = true;
 	transform.SetPosition(0.0f, 0.0f, 0.7f);
 	transform.SetScale(0.5f, 0.5f, 0.5f);
-	flt::Renderable renderable(transform);
+	flt::Renderable renderable(transform, isDraw);
 	renderable.name = L"test";
 	renderer->RegisterObject(renderable);
 

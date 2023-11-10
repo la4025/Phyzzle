@@ -21,5 +21,4 @@ namespace flt
 		std::vector<Vertex::type> vertices;
 		std::vector<int> indices;
 	};
-
 }

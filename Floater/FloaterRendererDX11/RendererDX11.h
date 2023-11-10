@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
 #include "CommonMath.h"
@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <string>
+
 
 namespace flt
 {

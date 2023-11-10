@@ -45,7 +45,12 @@ namespace flt
 		void* _pData;
 	};
 
-	template<typename Derived>
+	template <typename T>
+	concept ReleaseAble = requires(T a) {
+		{ a.Release() } -> std::same_as<void>;
+	};
+
+	template<ReleaseAble Derived>
 	struct Resource : ResourceBase
 	{
 	public:
