@@ -9,11 +9,20 @@ namespace ZonaiPhysics
 	class ZnJoint;
 
 
-	class ZonaiPhysicsBase
+	enum class Shape
+	{
+		SPHERE,
+		BOX,
+		CAPSULE,
+		PLANE,
+		CONVEX,
+	};
+
+	class ZnPhysicsBase
 	{
 	public:
-		ZonaiPhysicsBase() noexcept = default;
-		virtual ~ZonaiPhysicsBase() noexcept;
+		ZnPhysicsBase() noexcept = default;
+		virtual ~ZnPhysicsBase() noexcept;
 	
 	public:
 	/// <summary>

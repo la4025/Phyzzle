@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -18,23 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ForceType.h" />
-    <ClInclude Include="ZnCollider.h" />
-    <ClInclude Include="ZnCollision.h" />
-    <ClInclude Include="ZnJoint.h" />
-    <ClInclude Include="ZnRigidBody.h" />
-    <ClInclude Include="ZnShape.h" />
-    <ClInclude Include="ZnMaterial.h" />
-    <ClInclude Include="ZnTransform.h" />
-    <ClInclude Include="ZnPhysicsBase.h" />
-    <ClInclude Include="ZnObject.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7480e343-f541-4fb4-937f-a23dd1f33aef}</ProjectGuid>
-    <RootNamespace>ZonaiPhysicsInterface</RootNamespace>
+    <ProjectGuid>{26d6405a-ac06-4f74-bb18-8ffdd4be4ae6}</ProjectGuid>
+    <RootNamespace>ZonaiPhysicsBase</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -116,8 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +126,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ZonaiPhysicsBase.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

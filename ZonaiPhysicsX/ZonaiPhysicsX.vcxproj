@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,11 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -115,11 +119,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)ZonaiPhysicsInterface\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ZonaiPhysicsInterface\;$(SolutionDir)ZonaiMath\;$(SolutionDir)physx\include;$(SolutionDir)physx\include\cudamanager;$(SolutionDir)physx\include\source\physxextensions\src;$(SolutionDir)physx\include\source\foundation\include;$(SolutionDir)physx\include\source\geomutils\include;$(SolutionDir)physx\snippets\graphics\include;$(SolutionDir)physx\snippets\compiler;$(SolutionDir)physx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ZonaiMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -38,19 +38,26 @@
 #include "../snippets/snippetcommon/SnippetPrint.h"
 #include "../snippets/snippetcommon/SnippetPVD.h"
 #include <windows.h>
+#include <vector>
 
 using namespace physx;
+namespace physx
+{
+	class PxJoint;
+}
 
 static PxDefaultAllocator		gAllocator;
 static PxDefaultErrorCallback	gErrorCallback;
 static PxFoundation*			gFoundation = NULL;
 static PxPhysics*				gPhysics = NULL;
 static PxDefaultCpuDispatcher*	gDispatcher = NULL;
-static PxScene*					gScene = NULL;
+static PxScene*					gScene[3] = { NULL, };
 static PxMaterial*				gMaterial = NULL;
 static PxPvd*					gPvd = NULL;
 static PxRigidDynamic*			last = NULL;
 static PxJoint*					lastj = NULL;
+
+static std::vector<physx::PxJoint*> jointList;
 
 // static PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 // {
@@ -66,6 +73,7 @@ static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, 
 {
 	PxSphericalJoint* j = PxSphericalJointCreate(*gPhysics, a0, t0, a1, t1);
 	j->setLimitCone(PxJointLimitCone(PxPi / 4, PxPi / 4));
+	j->setBreakForce(1000000, 10000000);
 	j->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, true);
 	return j;
 }
@@ -77,7 +85,6 @@ static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, Px
 	j->setBreakForce(1000, 100000);
 	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
 	j->setConstraintFlag(PxConstraintFlag::eDISABLE_PREPROCESSING, true);
-	lastj = j;
 	return j;
 }
 
@@ -85,6 +92,7 @@ static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, Px
 static PxJoint* createDampedD6(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
 {
 	PxD6Joint* j = PxD6JointCreate(*gPhysics, a0, t0, a1, t1);
+	j->setBreakForce(1000, 100000);
 	j->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
 	j->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
 	j->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
@@ -101,17 +109,25 @@ static void createChain(const PxTransform& t, PxU32 length, const PxGeometry& g,
 	PxVec3 offset(separation / 2, 0, 0);
 	PxTransform localTm(offset);
 	PxRigidDynamic* prev = NULL;
-
+	static int index = 0;
+	
 	for (PxU32 i = 0; i < length; i++)
 	{
 		PxRigidDynamic* current = PxCreateDynamic(*gPhysics, t * localTm, g, *gMaterial, 1.0f);
-		(*createJoint)(prev, prev ? PxTransform(offset) : t, current, PxTransform(-offset));
-		gScene->addActor(*current);
+		auto j = (*createJoint)(prev, prev ? PxTransform(offset) : t, current, PxTransform(-offset));
+		jointList.push_back(j);
+		if (index == 2)
+		{
+			gScene[0]->addActor(*current);
+		}
+		gScene[index]->addActor(*current);
 		prev = current;
 		localTm.p.x += separation;
 
 		last = current;
 	}
+
+	index++;
 }
 
 /*
@@ -166,7 +182,9 @@ void stepPhysics()// interactive
 
 void cleanupPhysics(bool /*interactive*/)
 {
-	PX_RELEASE(gScene);
+	PX_RELEASE(gScene[0]);
+	PX_RELEASE(gScene[1]);
+	PX_RELEASE(gScene[2]);
 	PX_RELEASE(gDispatcher);
 	PxCloseExtensions();
 	PX_RELEASE(gPhysics);
@@ -181,18 +199,12 @@ void cleanupPhysics(bool /*interactive*/)
 	printf("SnippetJoint done.\n");
 }
 
-// void keyPress(unsigned char key, const PxTransform& camera)
-// {
-// 	switch (toupper(key))
-// 	{
-// 	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0, 0, -1)) * 200);	break;
-// 	}
-// }
-
 bool keyPress(unsigned char key)
 {
 	return GetAsyncKeyState(key);
 }
+
+PxRigidStatic* staticRigid[3];
 
 int snippetMain(int, const char* const*)
 {
@@ -213,20 +225,25 @@ int snippetMain(int, const char* const*)
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-	gScene = gPhysics->createScene(sceneDesc);
-
-	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
-	if (pvdClient)
+	gScene[0] = gPhysics->createScene(sceneDesc);
+	gScene[1] = gPhysics->createScene(sceneDesc);
+	gScene[2] = gPhysics->createScene(sceneDesc);
+	
+	for (auto e : gScene)
 	{
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		PxPvdSceneClient* pvdClient = e->getScenePvdClient();
+		if (pvdClient)
+		{
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		}
 	}
 
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
 	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene->addActor(*groundPlane);
+	gScene[0]->addActor(*groundPlane);
 
 	// 각도가 제한된 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, 0.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
@@ -237,25 +254,58 @@ int snippetMain(int, const char* const*)
 	// 스프링으로 연결된 관절
 	createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
 
+	for (int i = 0; i < 3; i++) 
+	{
+		staticRigid[i] = PxCreateStatic(
+			*gPhysics,
+			PxTransform(PxVec3(0.f, 150.f, -10.f * i)),
+			PxBoxGeometry(2.f, 2.f, 2.f),
+			*gMaterial
+		);
+		PxActorFlags flags = 
+			// PxActorFlag::eVISUALIZATION | 
+			// PxActorFlag::eDISABLE_GRAVITY | 
+			// PxActorFlag::eSEND_SLEEP_NOTIFIES | 
+			PxActorFlag::eDISABLE_SIMULATION;
+
+		staticRigid[i]->setActorFlags(flags);
+
+		gScene[i]->addActor(*(staticRigid[i]));
+	}
+
 	while (1)
 	{
 		// gScene->simulate(1.0f / 600.0f);
-		gScene->simulate(1.f/ 500.f);
-		gScene->fetchResults(true);
+		for (auto e : gScene)
+		{
+			e->simulate(1.f / 500.f);
+			e->fetchResults(true);
+		}
+
 
 		if (GetAsyncKeyState(0x4B))  // K
 		{
-			auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
-			last->attachShape(*shape);
-			shape->release();
-		}
+// 			auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
+// 			last->attachShape(*shape);
+// 			shape->release();
 
+			for (auto e : staticRigid)
+			{
+				PxTransform t = e->getGlobalPose();
+				t.p.y -= 1.f/100.f;
+				e->setGlobalPose(t);
+			}
+		}
+		
 		static bool first = true;
 
 		if (GetAsyncKeyState(0x4C) && first)  // L
 		{
 			first = false;
-			lastj->setBreakForce(0.01f, 0.01f);
+			for (auto e : jointList)
+			{
+				e->release();
+			}
 		}
 	}
 

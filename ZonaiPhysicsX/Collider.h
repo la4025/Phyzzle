@@ -1,5 +1,5 @@
 #pragma once
-#include "ZonaiMath.h"
+#include "ZnObject.h"
 
 namespace ZonaiMath
 {
@@ -9,12 +9,10 @@ namespace ZonaiMath
 
 namespace ZonaiPhysics
 {
-	using namespace ZonaiMath;
-
-	class ZnTransform
+	class Collider
 	{
 	public:
-		Vector3D p;
-		Quaternion q;
+
 	};
-}
+} // namespace ZonaiPhysics
+

@@ -55,16 +55,17 @@ struct PxConstraintFlag
 {
 	enum Enum
 	{
-		eBROKEN						= 1<<0,		//!< whether the constraint is broken
-		eCOLLISION_ENABLED			= 1<<3,		//!< whether contacts should be generated between the objects this constraint constrains
-		eVISUALIZATION				= 1<<4,		//!< whether this constraint should be visualized, if constraint visualization is turned on
-		eDRIVE_LIMITS_ARE_FORCES	= 1<<5,		//!< limits for drive strength are forces rather than impulses
-		eIMPROVED_SLERP				= 1<<7,		//!< perform preprocessing for improved accuracy on D6 Slerp Drive (this flag will be removed in a future release when preprocessing is no longer required)
-		eDISABLE_PREPROCESSING		= 1<<8,		//!< suppress constraint preprocessing, intended for use with rowResponseThreshold. May result in worse solver accuracy for ill-conditioned constraints.
-		eENABLE_EXTENDED_LIMITS		= 1<<9,		//!< enables extended limit ranges for angular limits (e.g., limit values > PxPi or < -PxPi)
-		eGPU_COMPATIBLE				= 1<<10,	//!< the constraint type is supported by gpu dynamics
-		eALWAYS_UPDATE				= 1<<11,	//!< updates the constraint each frame
-		eDISABLE_CONSTRAINT			= 1<<12		//!< disables the constraint. SolverPrep functions won't be called for this constraint.
+		eBROKEN						= 1 << 0,	//!< 제약 조건이 깨졌는지 여부
+		eCOLLISION_ENABLED			= 1 << 3,	//!< 이 제약 조건이 제약하는 객체 간에 접촉을 생성해야 하는지 여부
+		eVISUALIZATION				= 1 << 4,	//!< 이 제약 조건이 시각화되어야 하는지 여부 (제약 조건 시각화가 활성화된 경우)
+		eDRIVE_LIMITS_ARE_FORCES	= 1 << 5,	//!< 구동 강도의 제한이 충격이 아니라 힘으로 표현되는지 여부
+		eIMPROVED_SLERP				= 1 << 7,	//!< D6 Slerp 드라이브의 더 나은 정확성을 위해 전처리를 수행하는지 여부 (이 플래그는 전처리가 더 이상 필요하지 않을 때 향후 릴리스에서 제거될 예정입니다)
+		eDISABLE_PREPROCESSING		= 1 << 8,	//!< 제약 조건 전처리를 억제합니다. rowResponseThreshold와 함께 사용하기 위해 만들어졌으며, 약한 조건의 제약 조건에 대해 원천적인 솔버 정확도가 감소할 수 있습니다.
+		eENABLE_EXTENDED_LIMITS		= 1 << 9,	//!< 각도 제한을 위해 확장된 제한 범위를 활성화하는지 여부 (예: 제한 값 > PxPi 또는 < -PxPi)
+		eGPU_COMPATIBLE				= 1 << 10,	//!< 제약 조건 유형이 GPU 물리 엔진에서 지원되는지 여부
+		eALWAYS_UPDATE				= 1 << 11,	//!< 매 프레임마다 제약 조건을 업데이트하는지 여부
+		eDISABLE_CONSTRAINT			= 1 << 12	//!< 제약 조건을 비활성화하는지 여부. 이 경우 SolverPrep 함수는 이 제약 조건에 대해 호출되지 않습니다.
+
 	};
 };
 

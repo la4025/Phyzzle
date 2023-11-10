@@ -106,109 +106,110 @@ class PxJoint : public PxBase
 public:
 
 	/**
-	\brief Set the actors for this joint. 
-	
-	An actor may be NULL to indicate the world frame. At most one of the actors may be NULL.
+	\brief 이 조인트의 액터를 설정합니다.
 
-	\param[in] actor0 the first actor.
-	\param[in] actor1 the second actor
+	액터는 월드 프레임을 나타내기 위해 NULL일 수 있습니다. 액터 중 최대 하나만 NULL일 수 있습니다.
+
+	\param[in] actor0 첫 번째 액터.
+	\param[in] actor1 두 번째 액터
 
 	@see getActors()
 	*/
 	virtual void				setActors(PxRigidActor* actor0, PxRigidActor* actor1)	= 0;
 
 	/**
-	\brief Get the actors for this joint. 
-	
-	\param[out] actor0 the first actor.
-	\param[out] actor1 the second actor
+	\brief 이 조인트의 액터를 가져옵니다.
+
+	\param[out] actor0 첫 번째 액터.
+	\param[out] actor1 두 번째 액터
 
 	@see setActors()
 	*/
 	virtual void				getActors(PxRigidActor*& actor0, PxRigidActor*& actor1)	const	= 0;
 
 	/**
-	\brief Set the joint local pose for an actor. 
-	
-	This is the relative pose which locates the joint frame relative to the actor.
+	\brief 액터의 조인트 로컬 포즈를 설정합니다.
 
-	\param[in] actor 0 for the first actor, 1 for the second actor.
-	\param[in] localPose the local pose for the actor this joint
+	이것은 조인트 프레임을 액터에 상대적으로 배치하는 상대적인 포즈입니다.
+
+	\param[in] actor 첫 번째 액터는 0, 두 번째 액터는 1입니다.
+	\param[in] localPose 이 조인트의 액터에 대한 로컬 포즈입니다.
 
 	@see getLocalPose()
 	*/
 	virtual void				setLocalPose(PxJointActorIndex::Enum actor, const PxTransform& localPose) = 0;
 
 	/**
-	\brief get the joint local pose for an actor. 
-	
-	\param[in] actor 0 for the first actor, 1 for the second actor.
+	\brief 액터의 조인트 로컬 포즈를 얻습니다.
 
-	return the local pose for this joint
+	\param[in] actor 첫 번째 액터는 0, 두 번째 액터는 1입니다.
+
+	조인트의 이 로컬 포즈를 반환합니다.
 
 	@see setLocalPose()
 	*/
 	virtual PxTransform			getLocalPose(PxJointActorIndex::Enum actor) const = 0;
 
 	/**
-	\brief get the relative pose for this joint
+	\brief 이 조인트의 상대적인 포즈를 얻습니다.
 
-	This function returns the pose of the joint frame of actor1 relative to actor0
+	이 함수는 actor1의 조인트 프레임의 포즈를 actor0에 상대적으로 반환합니다.
 
+	@see setLocalPose()
 	*/
 	virtual PxTransform			getRelativeTransform()	const	= 0;
 
 	/**
-	\brief get the relative linear velocity of the joint
+	\brief 조인트의 상대적인 선형 속도를 얻습니다.
 
-	This function returns the linear velocity of the origin of the constraint frame of actor1, relative to the origin of the constraint
-	frame of actor0. The value is returned in the constraint frame of actor0
+	이 함수는 actor0의 제약 조인트 프레임의 원점에 상대적인 actor1의 제약 조인트 프레임의 선형 속도를 반환합니다.
+	이 값은 actor0의 제약 조인트 프레임 내에서 반환됩니다.
 	*/
 	virtual PxVec3				getRelativeLinearVelocity()	const	= 0;
 
 	/**
-	\brief get the relative angular velocity of the joint
+	\brief 조인트의 상대적인 각 속도를 얻습니다.
 
-	This function returns the angular velocity of  actor1 relative to actor0. The value is returned in the constraint frame of actor0
+	이 함수는 actor0의 제약 조인트 프레임 내에서 반환된 값을 사용하여 actor1의 각 속도를 actor0에 상대적으로 반환합니다.
 	*/
 	virtual PxVec3				getRelativeAngularVelocity()	const	= 0;
 
 	/**
-	\brief set the break force for this joint. 
-	
-	if the constraint force or torque on the joint exceeds the specified values, the joint will break, 
-	at which point it will not constrain the two actors and the flag PxConstraintFlag::eBROKEN will be set. The
-	force and torque are measured in the joint frame of the first actor
+	\brief 이 조인트의 파단 힘을 설정합니다.
 
-	\param[in] force the maximum force the joint can apply before breaking
-	\param[in] torque the maximum torque the joint can apply before breaking
+	조인트에 가해지는 제약 힘이나 토크가 지정된 값보다 크면 조인트가 파단되며,
+	그 시점에서 두 액터를 제약하지 않으며 PxConstraintFlag::eBROKEN 플래그가 설정됩니다.
+	힘과 토크는 첫 번째 액터의 조인트 프레임에서 측정됩니다.
+
+	\param[in] force 파단되기 전에 조인트가 가할 수 있는 최대 힘
+	\param[in] torque 파단되기 전에 조인트가 가할 수 있는 최대 토크
 	*/
 	virtual void				setBreakForce(PxReal force, PxReal torque)	= 0;
 
 	/**
-	\brief get the break force for this joint. 
-	
-	\param[out] force the maximum force the joint can apply before breaking
-	\param[out] torque the maximum torque the joint can apply before breaking
+	\brief 이 관절의 파단 힘을 가져옵니다.
 
-	@see setBreakForce() 
+	\param[out] force 파단하기 전에 관절이 적용할 수 있는 최대 힘
+	\param[out] torque 파단하기 전에 관절이 적용할 수 있는 최대 토크
+
+	@see setBreakForce()
 	*/
 	virtual void				getBreakForce(PxReal& force, PxReal& torque)	const	= 0;
 
 	/**
-	\brief set the constraint flags for this joint. 
-	
-	\param[in] flags the constraint flags
+	\brief 이 관절에 대한 제약 조건 플래그를 설정합니다.
+
+	\param[in] flags 제약 조건 플래그
 
 	@see PxConstraintFlag
 	*/
 	virtual void				setConstraintFlags(PxConstraintFlags flags)	= 0;
 
 	/**
-	\brief set a constraint flags for this joint to a specified value. 
-	
-	\param[in] flag the constraint flag
-	\param[in] value the value to which to set the flag
+	\brief 이 관절에 대한 제약 조건 플래그를 지정된 값으로 설정합니다.
+
+	\param[in] flag 제약 조건 플래그
+	\param[in] value 플래그를 설정할 값
 
 	@see PxConstraintFlag
 	*/
@@ -222,20 +223,20 @@ public:
 	@see PxConstraintFlag
 	*/
 	virtual PxConstraintFlags	getConstraintFlags()	const	= 0;
-
+	
 	/**
-	\brief set the inverse mass scale for actor0.
+	\brief actor0의 역질량 스케일을 설정합니다.
 
-	\param[in] invMassScale the scale to apply to the inverse mass of actor 0 for resolving this constraint
+	\param[in] invMassScale 이 관절을 해결하기 위해 actor 0의 역질량에 적용할 스케일
 
 	@see getInvMassScale0
 	*/
 	virtual void				setInvMassScale0(PxReal invMassScale)	= 0;
 
 	/**
-	\brief get the inverse mass scale for actor0.
+	\brief actor0의 역질량 스케일을 가져옵니다.
 
-	\return inverse mass scale for actor0
+	\return actor0의 역질량 스케일
 
 	@see setInvMassScale0
 	*/
@@ -305,21 +306,21 @@ public:
 	virtual PxConstraint*		getConstraint()	const	= 0;
 
 	/**
-	\brief Sets a name string for the object that can be retrieved with getName().
-	
-	This is for debugging and is not used by the SDK. The string is not copied by the SDK, 
-	only the pointer is stored.
+	\brief getName()로 검색할 수 있는 개체의 이름 문자열을 설정합니다.
 
-	\param[in] name String to set the objects name to.
+	이것은 디버깅용이며 SDK에서는 사용되지 않습니다.
+	이 문자열은 SDK에 의해 복사되지 않으며 포인터만 저장됩니다.
+
+	\param[in] name 객체의 이름을 설정할 문자열입니다.
 
 	@see getName()
 	*/
 	virtual void				setName(const char* name)	= 0;
 
 	/**
-	\brief Retrieves the name string set with setName().
+	\brief setName()으로 설정한 이름 문자열을 검색합니다.
 
-	\return Name string associated with object.
+	\return 개체와 관련된 이름 문자열입니다.
 
 	@see setName()
 	*/
@@ -379,8 +380,8 @@ class PxSpring
 {
 public:
 
-	PxReal	stiffness;	//!< the spring strength of the drive: that is, the force proportional to the position error
-	PxReal	damping;	//!< the damping strength of the drive: that is, the force proportional to the velocity error
+	PxReal stiffness; //!< 드라이브의 스프링 강도: 즉, 위치 오차에 비례하는 힘
+	PxReal damping;   //!< 드라이브의 댐핑 강도: 즉, 속도 오차에 비례하는 힘
 
 	PxSpring(PxReal stiffness_, PxReal damping_): stiffness(stiffness_), damping(damping_) {}
 };
@@ -390,18 +391,18 @@ public:
 } // namespace physx
 #endif
 
-/** \brief Helper function to setup a joint's global frame
+/** \brief 조인의 전역 프레임을 설정하는 헬퍼 함수
 
-	This replaces the following functions from previous SDK versions:
+	이 함수는 이전 SDK 버전에서 다음 함수들을 대체합니다:
 
 	void NxJointDesc::setGlobalAnchor(const NxVec3& wsAnchor);
 	void NxJointDesc::setGlobalAxis(const NxVec3& wsAxis);
 
-	The function sets the joint's localPose using world-space input parameters.
+	이 함수는 월드 공간 입력 매개변수를 사용하여 조인의 로컬 포즈를 설정합니다.
 
-	\param[in] wsAnchor Global frame anchor point. <b>Range:</b> position vector
-	\param[in] wsAxis Global frame axis. <b>Range:</b> direction vector
-	\param[in,out] joint Joint having its global frame set.
+	\param[in] wsAnchor 전역 프레임 기준의 앵커 지점. <b>범위:</b> 위치 벡터
+	\param[in] wsAxis 전역 프레임 기준의 축. <b>범위:</b> 방향 벡터
+	\param[in,out] joint 전역 프레임을 설정하는 조인.
 */
 
 PX_C_EXPORT void PX_CALL_CONV PxSetJointGlobalFrame(physx::PxJoint& joint, const physx::PxVec3* wsAnchor, const physx::PxVec3* wsAxis);

@@ -69,52 +69,51 @@ struct PxShapeFlag
 	enum Enum
 	{
 		/**
-		\brief The shape will partake in collision in the physical simulation.
+		\brief 물리 시뮬레이션에서 이 모양은 충돌에 참여합니다.
 
-		\note It is illegal to raise the eSIMULATION_SHAPE and eTRIGGER_SHAPE flags.
-		In the event that one of these flags is already raised the sdk will reject any 
-		attempt to raise the other.  To raise the eSIMULATION_SHAPE first ensure that 
-		eTRIGGER_SHAPE is already lowered.
+		\note eSIMULATION_SHAPE 및 eTRIGGER_SHAPE 플래그를 동시에 올리는 것은 불법입니다.
+		이러한 플래그 중 하나가 이미 올려져 있으면 다른 하나를 올리려는 시도는 거부됩니다.
+		eSIMULATION_SHAPE를 올리려면 먼저 eTRIGGER_SHAPE가 이미 낮아져 있는지 확인하십시오.
 
-		\note This flag has no effect if simulation is disabled for the corresponding actor (see #PxActorFlag::eDISABLE_SIMULATION).
+		\note 해당 액터에 대한 시뮬레이션 비활성화가되어 있으면이 플래그는 효과가 없습니다 (참조 : #PxActorFlag::eDISABLE_SIMULATION).
 
 		@see PxSimulationEventCallback.onContact() PxScene.setSimulationEventCallback() PxShape.setFlag(), PxShape.setFlags()
 		*/
-		eSIMULATION_SHAPE				= (1<<0),
+		eSIMULATION_SHAPE = (1 << 0),
 
 		/**
-		\brief The shape will partake in scene queries (ray casts, overlap tests, sweeps, ...).
+		\brief 이 모양은 장면 쿼리 (레이 캐스트, 겹침 테스트, 스위프 등)에 참여합니다.
 		*/
-		eSCENE_QUERY_SHAPE				= (1<<1),
+		eSCENE_QUERY_SHAPE = (1 << 1),
 
 		/**
-		\brief The shape is a trigger which can send reports whenever other shapes enter/leave its volume.
+		\brief 이 모양은 다른 모양이 그 볼륨에 들어오거나 나갈 때마다 보고서를 보낼 수있는 트리거입니다.
 
-		\note Triangle meshes and heightfields can not be triggers. Shape creation will fail in these cases.
+		\note 삼각형 메쉬 및 높이 필드는 트리거가 될 수 없습니다. 이러한 경우 모양 생성이 실패합니다.
 
-		\note Shapes marked as triggers do not collide with other objects. If an object should act both
-		as a trigger shape and a collision shape then create a rigid body with two shapes, one being a 
-		trigger shape and the other a collision shape. 	It is illegal to raise the eTRIGGER_SHAPE and 
-		eSIMULATION_SHAPE flags on a single PxShape instance.  In the event that one of these flags is already 
-		raised the sdk will reject any attempt to raise the other.  To raise the eTRIGGER_SHAPE flag first 
-		ensure that eSIMULATION_SHAPE flag is already lowered.
+		\note 트리거로 표시된 모양은 다른 객체와 충돌하지 않습니다. 객체가 트리거 모양 및 충돌 모양 두 가지 역할을해야하는 경우
+		두 가지 모양이있는 강체 본을 만드십시오. 하나는 트리거 모양이고 다른 하나는 충돌 모양입니다.
+		eTRIGGER_SHAPE 및 eSIMULATION_SHAPE 플래그를 단일 PxShape 인스턴스에서 동시에 올리는 것은 불법입니다.
+		이러한 플래그 중 하나가 이미 올려져 있으면 다른 하나를 올리려는 시도는 거부됩니다.
+		eTRIGGER_SHAPE 플래그를 올리려면 먼저 eSIMULATION_SHAPE 플래그가 이미 낮아져 있는지 확인하십시오.
 
-		\note Trigger shapes will no longer send notification events for interactions with other trigger shapes.
+		\note 트리거 모양은 더 이상 다른 트리거 모양과의 상호 작용에 대한 알림 이벤트를 보내지 않습니다.
 
-		\note Shapes marked as triggers are allowed to participate in scene queries, provided the eSCENE_QUERY_SHAPE flag is set. 
+		\note 트리거로 표시된 모양은 eSCENE_QUERY_SHAPE 플래그가 설정되어 있는 경우 씬 쿼리에 참여할 수 있습니다.
 
-		\note This flag has no effect if simulation is disabled for the corresponding actor (see #PxActorFlag::eDISABLE_SIMULATION).
+		\note 해당 액터에 대한 시뮬레이션 비활성화가되어 있으면이 플래그는 효과가 없습니다 (참조 : #PxActorFlag::eDISABLE_SIMULATION).
 
 		@see PxSimulationEventCallback.onTrigger() PxScene.setSimulationEventCallback() PxShape.setFlag(), PxShape.setFlags()
 		*/
-		eTRIGGER_SHAPE					= (1<<2),
+		eTRIGGER_SHAPE = (1 << 2),
 
 		/**
-		\brief Enable debug renderer for this shape
+		\brief 이 모양에 대한 디버그 렌더러를 활성화합니다.
 
 		@see PxScene.getRenderBuffer() PxRenderBuffer PxVisualizationParameter
 		*/
-		eVISUALIZATION					= (1<<3)
+		eVISUALIZATION = (1 << 3)
+
 	};
 };
 

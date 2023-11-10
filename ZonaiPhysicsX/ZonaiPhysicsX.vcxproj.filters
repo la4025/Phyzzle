@@ -10,6 +10,12 @@
     <Filter Include="02. RigidBody">
       <UniqueIdentifier>{8aa7239d-2e33-4faa-8c45-44120e55505e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Joint">
+      <UniqueIdentifier>{c74a0f46-1a4d-4e3c-aa8d-d41150143a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Collider">
+      <UniqueIdentifier>{1ac945e8-5897-4d31-b191-f8a8dfbe15c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h">
@@ -21,6 +27,12 @@
     <ClInclude Include="RigidBody.h">
       <Filter>02. RigidBody</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>03. Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>04. Joint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -28,6 +40,12 @@
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>02. RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>03. Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>04. Joint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

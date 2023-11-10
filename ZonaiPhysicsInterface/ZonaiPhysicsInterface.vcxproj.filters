@@ -4,9 +4,12 @@
     <Filter Include="00. Interface">
       <UniqueIdentifier>{d27029c1-f813-4fad-bae8-54c26763a5db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Enum">
+      <UniqueIdentifier>{0897832c-dcf6-4c16-8384-d10e1cb203b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ZonaiPhysicsBase.h">
+    <ClInclude Include="ZnPhysicsBase.h">
       <Filter>00. Interface</Filter>
     </ClInclude>
     <ClInclude Include="ZnRigidBody.h">
@@ -21,5 +24,14 @@
       <Filter>00. Interface</Filter>
     </ClInclude>
     <ClInclude Include="ZnTransform.h" />
+    <ClInclude Include="ForceType.h">
+      <Filter>01. Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnObject.h">
+      <Filter>00. Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnCollider.h">
+      <Filter>00. Interface</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

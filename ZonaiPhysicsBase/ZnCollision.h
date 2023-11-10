@@ -1,20 +1,18 @@
 #pragma once
-#include "ZonaiMath.h"
 
 namespace ZonaiMath
 {
 	class Vector3D;
-	class Quaternion;
 }
+
 
 namespace ZonaiPhysics
 {
 	using namespace ZonaiMath;
 
-	class ZnTransform
+	class ZnCollision
 	{
 	public:
-		Vector3D p;
-		Quaternion q;
+		Vector3D impulse;
 	};
 }

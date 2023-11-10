@@ -1,5 +1,8 @@
 #pragma once
+#include "ForceType.h"
 #include "ZnRigidBody.h"
+
+#define OVERRIDE noexcept override
 
 namespace ZonaiMath
 {
@@ -9,14 +12,13 @@ namespace ZonaiMath
 namespace physx
 {
 	class PxRigidDynamic;
+	class PxRigidActor;
 }
 
 
 namespace ZonaiPhysics
 {
 	using namespace ZonaiMath;
-
-
 
 	class RigidBody : public ZnRigidBody
 	{
@@ -25,36 +27,85 @@ namespace ZonaiPhysics
 		virtual				~RigidBody() noexcept;
 
 	public:
-		virtual void		WakeUp() noexcept;
-		virtual bool		IsSleeping() const noexcept;
-		virtual bool		Collide() const noexcept;
+		virtual void		WakeUp() noexcept override;
+		virtual bool		IsSleeping() const noexcept override;
+
+		virtual DynamicLocks GetDynamicLockFlags() const noexcept override;
+		virtual void		SetDynamicLockFlag(DynamicLock flag, bool) noexcept override;
+		virtual void		SetDynamicLockFlags(DynamicLocks flags) noexcept override;
+		
+		virtual void*		GetUserData() const noexcept override;
+		virtual void		SetUserData(void*) noexcept override;
 
 	public:
-		virtual float		GetLinerDamping() const noexcept;
-		virtual float		GetAngularDamping() const noexcept;
-		virtual Vector3D	GetLinerVelocity() const noexcept;
-		virtual Vector3D	GetAngularVelocity() const noexcept;
-		virtual void*		GetUserData() const noexcept;
+		// Áú·®
+		virtual float		GetMass() const noexcept override;
+		virtual void		SetMass(float) noexcept override;
+		virtual float		GetInvMass() const noexcept override;
 
-	public:
-		virtual void		SetLinerDamping() noexcept;
-		virtual void		SetAngularDamping() noexcept;
-		virtual void		SetLinerVelocity() noexcept;
-		virtual void		SetAngularVelocity() noexcept;
-		virtual void*		SetUserData(void*) noexcept;
+		virtual Vector3D	GetInertiaTensor() const noexcept override;
+		virtual void		SetInertiaTensor(const Vector3D&) noexcept override;
+
+		virtual float		GetLinearDamping() const noexcept override;
+		virtual void		SetLinearDamping(float) noexcept override;
+
+		virtual float		GetAngularDamping() const noexcept override;
+		virtual void		SetAngularDamping(float) noexcept override;
 		
 	public:
-		virtual void		AddForce(Vector3D) noexcept;
-		virtual void		ClearForce() noexcept;
-		virtual void		AddTorque(Vector3D) noexcept;
-		virtual void		ClearTorque() noexcept;
+		// ¼Óµµ
+		virtual Vector3D	GetLinearVelocity() const noexcept override;
+		virtual void		SetLinearVelocity(const Vector3D&) noexcept override;
 
-	private:
-		physx::PxRigidDynamic* rigidbody;
-		void* userData;
+		virtual Vector3D	GetAngularVelocity() const noexcept override;
+		virtual void		SetAngularVelocity(const Vector3D&) noexcept override;
+		
+		virtual float		GetMaxLinearVelocity() const noexcept override;
+		virtual void		SetMaxLinearVelocity(const float&) noexcept override;
+
+		virtual float		GetMaxAngularVelocity() const noexcept override;
+		virtual void		SetMaxAngularVelocity(const float&) noexcept override;
+
+		virtual Vector3D	GetPosition() const noexcept override;
+		virtual void		SetPosition(const Vector3D&) noexcept override;
+
+		virtual Quaternion	GetQuaternion() const noexcept override;
+		virtual void		SetQuaternion(const Quaternion&) noexcept override;
+
+		// Èû
+		virtual void		AddForce(const Vector3D&, ForceType) noexcept override;
+		virtual void		ClearForce() noexcept override;
+	
+		virtual void		AddTorque(const Vector3D&, ForceType) noexcept override;
+		virtual void		ClearTorque() noexcept override;
 
 	public:
+		__declspec(property(get = GetLinearDamping, put = SetLinearDamping)) 
+			float linerDamping;
 
+		__declspec(property(get = GetAngularDamping, put = SetAngularDamping)) 
+			float angularDamping;
+
+		__declspec(property(get = GetLinearVelocity, put = SetLinearVelocity))
+			Vector3D linerVelocity;
+
+		__declspec(property(get = GetAngularVelocity, put = SetAngularVelocity)) 
+			Vector3D angularVelocity;
+
+		__declspec(property(get = GetMaxLinearVelocity, put = SetMaxLinearVelocity))
+			float maxLinearVelocity;
+
+		__declspec(property(get = GetMaxAngularVelocity, put = SetMaxAngularVelocity))
+			float maxAngularVelocity;
+
+		__declspec(property(get = GetPosition, put = SetPosition))
+			Vector3D position;
+
+		__declspec(property(get = GetQuaternion, put = SetQuaternion))
+			Quaternion quaternion;
+
+	private:
+		physx::PxRigidDynamic* rigidbody_;
 	};
-}
+} // namespace ZonaiPhysics
 

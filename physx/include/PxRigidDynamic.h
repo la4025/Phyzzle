@@ -364,16 +364,17 @@ public:
 	virtual		void				wakeUp() = 0;
 
 	/**
-	\brief Forces the actor to sleep. 
-	
-	The actor will stay asleep during the next simulation step if not touched by another non-sleeping actor.
-	
-	\note Any applied force will be cleared and the velocity and the wake counter of the actor will be set to 0.
+	\brief 액터를 슬립 상태로 만듭니다.
 
-	\note It is invalid to use this method if the actor has not been added to a scene already or if PxActorFlag::eDISABLE_SIMULATION is set.
+	만약 다른 슬립하지 않는 액터에 의해 터치되지 않는다면, 
+	다음 시뮬레이션 단계에서도 액터는 슬립 상태로 유지됩니다.
 
-	\note It is invalid to use this method for kinematic actors since the sleep state for kinematics is defined
-	based on whether a target pose has been set (see the comment in #isSleeping()).
+	참고: 적용된 힘은 지워지고, 액터의 속도와 깨어 있는 카운터(wake counter)는 0으로 설정됩니다.
+
+	참고: 이 메서드는 액터가 이미 시뮬레이션에 추가되지 않았거나 PxActorFlag::eDISABLE_SIMULATION이 설정된 경우에 사용할 수 없습니다.
+
+	참고: 키네매틱 액터의 경우 이 메서드를 사용하는 것은 무효입니다. 
+	키네매틱 액터의 슬립 상태는 대상 포즈가 설정되었는지 여부에 따라 정의됩니다(참조: #isSleeping()의 주석).
 
 	@see isSleeping() wakeUp()
 	*/
