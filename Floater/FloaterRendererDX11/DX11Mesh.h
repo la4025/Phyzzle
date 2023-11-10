@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <d3d11.h>
 #include "CommonMath.h"
 #include "../FloaterRendererCommon/include/IBuilder.h"
@@ -58,12 +58,11 @@ namespace flt
 
 	struct DX11MeshBuilder : public IBuilder<DX11Mesh>
 	{
-		DX11MeshBuilder(const std::wstring& name) : IBuilder<DX11Mesh>(name), pDevice(nullptr), pResourceMgr(nullptr), vsBuilder(), psBuilder() {}
+		DX11MeshBuilder(const std::wstring& name) : IBuilder<DX11Mesh>(name), pDevice(nullptr), vsBuilder(), psBuilder() {}
 
 		virtual DX11Mesh* build() const override;
 
 		ID3D11Device* pDevice;
-		ResourceMgr* pResourceMgr;
 		DX11VertexShaderBuilder vsBuilder;
 		DX11PixelShaderBuilder psBuilder;
 	};

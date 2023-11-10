@@ -23,6 +23,34 @@
 #pragma comment(lib, "D3DCompiler.lib")
 
 
+flt::RendererDX11::RendererDX11() :
+	_hwnd(NULL),
+	_isRunRenderEngine(false),
+	_useVsync(false),
+	_monitorIndex(0),
+	_refreshRatesIndex(1),
+	_windowWidth(1280),
+	_windowHeight(720),
+	_displayWidth(0),
+	_displayHeight(0),
+	_displayRefreshRates(),
+	_device(),
+	_immediateContext(),
+	_dxgiFactory(),
+	_adapters(),
+	_outputs(),
+	_swapChain(),
+	_backBuffer(),
+	_depthStencil(),
+	_renderTargetView(),
+	_depthStencilView(),
+	_rasterizerState(),
+	_renderableObjects()
+
+{
+
+}
+
 bool flt::RendererDX11::Initialize(HWND hwnd)
 {
 	_hwnd = hwnd;
@@ -554,7 +582,6 @@ flt::Resource<flt::DX11Mesh>* flt::RendererDX11::CreateBox()
 	DX11CubeBuilder cubeBuilder;
 	cubeBuilder.pDevice = _device.Get();
 	cubeBuilder.pImmediateContext = _immediateContext.Get();
-	cubeBuilder.pResourceMgr = &_resourceMgr;
 
 	Resource<DX11Mesh>* meshResource = new Resource<DX11Mesh>(cubeBuilder);
 

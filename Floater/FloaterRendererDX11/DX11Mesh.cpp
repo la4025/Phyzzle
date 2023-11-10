@@ -22,7 +22,6 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 {
 	ASSERT(pDevice, "디바이스 세팅 안함.");
 	ASSERT(pImmediateContext, "디바이스 컨텍스트 세팅 안함.");
-	ASSERT(pResourceMgr, "리소스 메니져 세팅 안함.");
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> Basic32 =
 	{

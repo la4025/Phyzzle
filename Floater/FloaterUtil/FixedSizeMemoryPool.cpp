@@ -4,22 +4,26 @@
 static constexpr int _chunkBitShift = 6;
 static constexpr int _chunkSize = (1 << 6);
 
-flt::FixedSizeMemoryPool::FixedSizeMemoryPool(uint32 pageSize) : FixedSizeMemoryPool(pageSize, 64)
+#define ALIGN_64(X) (((X) + 63) & ~63)
+
+
+flt::FixedSizeMemoryPool::FixedSizeMemoryPool(uint32 singlePageSize) : FixedSizeMemoryPool(singlePageSize, 64)
 {
 
 }
 
-flt::FixedSizeMemoryPool::FixedSizeMemoryPool(uint32 pageSize, uint32 capacity) :
-	_memoryChunks(((static_cast<size_t>(capacity) >> _chunkBitShift) + 1)),
+flt::FixedSizeMemoryPool::FixedSizeMemoryPool(uint32 singlePageSize, uint32 capacity) :
+	_memoryChunks(static_cast<size_t>(ALIGN_64(capacity))),
 	_contiguousStartIndex(0),
-	_singlePageSize(pageSize), 
-	_capacity(((capacity >> _chunkBitShift) + 1) << _chunkBitShift),
+	_singlePageSize(singlePageSize), 
+	_capacity(ALIGN_64(capacity)),
 	_allocatedCount(0),
-	_freeStack(((static_cast<size_t>(capacity) >> _chunkBitShift) + 1) << _chunkBitShift)
+	_freeStack()
 {
 	for (auto& chunk : _memoryChunks)
 	{
-		chunk = (byte*)malloc(_singlePageSize * _chunkSize);
+		chunk = (byte*)malloc((size_t)_singlePageSize * _chunkSize);
+		_freeStack.reserve(_capacity);
 	}
 }
 
@@ -32,6 +36,8 @@ flt::FixedSizeMemoryPool::~FixedSizeMemoryPool()
 			free(chunk);
 		}
 	}
+
+	_memoryChunks.clear();
 }
 
 void* flt::FixedSizeMemoryPool::Alloc()
@@ -49,6 +55,13 @@ void* flt::FixedSizeMemoryPool::Alloc()
 	if (_allocatedCount > _capacity)
 	{
 		_memoryChunks.emplace_back((byte*)malloc(_singlePageSize * _chunkSize));
+		if (_memoryChunks.back() == nullptr)
+		{
+			_memoryChunks.pop_back();
+			--_allocatedCount;
+			return nullptr;
+		}
+
 		_capacity += _chunkSize;
 	}
 

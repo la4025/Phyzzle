@@ -22,7 +22,7 @@ namespace flt
 	class RendererDX11 : public IRenderer
 	{
 	public:
-		RendererDX11() = default;
+		RendererDX11();
 		~RendererDX11() = default;
 
 		bool Initialize(HWND hwnd);
@@ -82,8 +82,5 @@ namespace flt
 
 		// 그리기 위한 오브젝트
 		std::vector<DX11Node*> _renderableObjects;
-
-		// 데이터 관리를 위한 리소스 매니저
-		ResourceMgr _resourceMgr;
 	};
 }

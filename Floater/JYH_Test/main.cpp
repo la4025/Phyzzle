@@ -14,6 +14,8 @@
 #include "../FloaterRendererCommon/include/Resource.h"
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
 #include "../FloaterUtil/TesterRBTree.h"
+
+#include "../FloaterUtil/TesterFixedSizeMemoryPool.h"
 #pragma endregion
 
 
@@ -22,13 +24,17 @@ int main()
 	setlocale(LC_ALL, ".UTF8");
 	std::cout << std::boolalpha;
 
-
-
 #pragma region 테스트
 	{
 		using namespace flt::test;
 		TesterRBTree tester;
 		if (!tester.Test())
+		{
+			ASSERT(false, "test fail");
+		}
+
+		TesterFixedSizeMemoryPool testerFixedSizeMemoryPool;
+		if (!testerFixedSizeMemoryPool.Test())
 		{
 			ASSERT(false, "test fail");
 		}

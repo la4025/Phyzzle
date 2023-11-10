@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include "FloaterType.h"
 
@@ -12,8 +12,8 @@ namespace flt
 	class FixedSizeMemoryPool final
 	{
 	public:
-		FixedSizeMemoryPool(uint32 pageSize);
-		FixedSizeMemoryPool(uint32 pageSize, uint32 capacity);
+		FixedSizeMemoryPool(uint32 singlePageSize);
+		FixedSizeMemoryPool(uint32 singlePageSize, uint32 capacity);
 		~FixedSizeMemoryPool();
 
 		void* Alloc();
