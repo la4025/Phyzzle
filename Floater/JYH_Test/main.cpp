@@ -21,6 +21,12 @@
 #include <chrono>
 #pragma endregion
 
+void StackOverflow()
+{
+	int i = 10;
+	StackOverflow();
+	std::cout << i << std::endl;
+}
 
 int main()
 {
@@ -48,8 +54,9 @@ int main()
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
 
+	StackOverflow();
 	int* i = nullptr;
-	*i = 0;
+	*i = 10;
 
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
 

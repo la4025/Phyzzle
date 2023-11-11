@@ -33,13 +33,20 @@ flt::OsWindows::~OsWindows()
 //	CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, 
 //	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
 
-using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE, DWORD, HANDLE, 
-	MINIDUMP_TYPE, 
-	CONST PMINIDUMP_EXCEPTION_INFORMATION, 
-	CONST PMINIDUMP_USER_STREAM_INFORMATION, 
-	CONST PMINIDUMP_CALLBACK_INFORMATION);
+struct DumpParam
+{
+	DWORD threadID;
+	LPEXCEPTION_POINTERS pExp;
+};
 
-LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp) {
+ULONG CreateDump(void* param)
+{
+	using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE, DWORD, HANDLE,
+		MINIDUMP_TYPE,
+		CONST PMINIDUMP_EXCEPTION_INFORMATION,
+		CONST PMINIDUMP_USER_STREAM_INFORMATION,
+		CONST PMINIDUMP_CALLBACK_INFORMATION);
+
 	LONG retval = EXCEPTION_CONTINUE_SEARCH;
 	HMODULE hDll = NULL;
 	hDll = ::LoadLibrary(L"DBGHELP.DLL");
@@ -54,26 +61,49 @@ LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp) {
 
 	if (hDll) {
 		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
-		if (pDump) 
+		if (pDump)
 		{
 			HANDLE hFile = ::CreateFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			if (INVALID_HANDLE_VALUE != hFile) 
+			if (INVALID_HANDLE_VALUE != hFile)
 			{
 				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
-				ExInfo.ThreadId = ::GetCurrentThreadId();
-				ExInfo.ExceptionPointers = pExp;
+				ExInfo.ThreadId = ((DumpParam*)param)->threadID;
+				ExInfo.ExceptionPointers = ((DumpParam*)param)->pExp;
 				ExInfo.ClientPointers = NULL;
 				BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithFullMemory, &ExInfo, NULL, NULL);
 				//BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL);
-				if (bOK) 
-				{ 
-					retval = EXCEPTION_EXECUTE_HANDLER; 
+				if (bOK)
+				{
+					retval = EXCEPTION_EXECUTE_HANDLER;
 				}
 				::CloseHandle(hFile);
 			}
 		}
 		::FreeLibrary(hDll);
 	}
+	return retval;
+}
+
+
+
+LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp) 
+{
+	LONG retval = 0;
+	DumpParam* param = new DumpParam();
+	param->threadID = ::GetCurrentThreadId();
+	param->pExp = pExp;
+	if (pExp->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW)
+	{
+		HANDLE hThread = CreateThread(NULL, 102400, CreateDump, param, 0, NULL);
+		WaitForSingleObject(hThread, INFINITE);
+		CloseHandle(hThread);
+	}
+	else
+	{
+		retval = CreateDump(param);
+	}
+
+	delete param;
 	return retval;
 }
 
