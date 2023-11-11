@@ -115,6 +115,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>$(SolutionDir)..\assimpInc;$(SolutionDir)..\eigen-3.4.0;$(SolutionDir)..\DirectXTex\Inc;$(SolutionDir)..\ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -135,6 +136,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>$(SolutionDir)..\assimpInc;$(SolutionDir)..\eigen-3.4.0;$(SolutionDir)..\DirectXTex\Inc;$(SolutionDir)..\ZeldaGraphics\header</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>

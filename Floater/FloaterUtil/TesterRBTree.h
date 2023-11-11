@@ -15,7 +15,7 @@ namespace flt
 
 		public:
 			TesterRBTree();
-			~TesterRBTree() {}
+			virtual ~TesterRBTree() {}
 
 			virtual bool Test() override;
 

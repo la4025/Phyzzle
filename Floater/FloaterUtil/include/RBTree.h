@@ -164,7 +164,6 @@ namespace flt
 		void delete_case5(Node* pNode);
 		void delete_case6(Node* pNode);
 
-		void 
 
 	private:
 		std::function<bool(const Key&, const Key&)> _compareFunc;

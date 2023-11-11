@@ -1,9 +1,15 @@
-﻿#include "OsWindows.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include "OsWindows.h"
 #include <iostream>
 #include <memory>
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include "../FloaterRendererDX11/include/CreateRenderer.h"
+#include "../FloaterUtil/include/ConvString.h"
+
+#include <DbgHelp.h>
+#include <chrono>
 
 
 flt::OsWindows::OsWindows() :
@@ -19,6 +25,56 @@ flt::OsWindows::OsWindows() :
 flt::OsWindows::~OsWindows()
 {
 
+}
+
+//typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, 
+//	MINIDUMP_TYPE DumpType, 
+//	CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam, 
+//	CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, 
+//	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
+
+using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE, DWORD, HANDLE, 
+	MINIDUMP_TYPE, 
+	CONST PMINIDUMP_EXCEPTION_INFORMATION, 
+	CONST PMINIDUMP_USER_STREAM_INFORMATION, 
+	CONST PMINIDUMP_CALLBACK_INFORMATION);
+
+LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp) {
+	LONG retval = EXCEPTION_CONTINUE_SEARCH;
+	HMODULE hDll = NULL;
+	hDll = ::LoadLibrary(L"DBGHELP.DLL");
+
+	WCHAR filename[64];
+
+	std::time_t currTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	tm* TimeOfDay = std::localtime(&currTime);
+	swprintf_s(filename, L"crash_%04d-%02d-%02d_%02dh%02dm%02ds.dmp",
+		TimeOfDay->tm_year + 1900, TimeOfDay->tm_mon + 1, TimeOfDay->tm_mday,
+		TimeOfDay->tm_hour, TimeOfDay->tm_min, TimeOfDay->tm_sec);
+
+	if (hDll) {
+		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
+		if (pDump) 
+		{
+			HANDLE hFile = ::CreateFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (INVALID_HANDLE_VALUE != hFile) 
+			{
+				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
+				ExInfo.ThreadId = ::GetCurrentThreadId();
+				ExInfo.ExceptionPointers = pExp;
+				ExInfo.ClientPointers = NULL;
+				BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithFullMemory, &ExInfo, NULL, NULL);
+				//BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL);
+				if (bOK) 
+				{ 
+					retval = EXCEPTION_EXECUTE_HANDLER; 
+				}
+				::CloseHandle(hFile);
+			}
+		}
+		::FreeLibrary(hDll);
+	}
+	return retval;
 }
 
 bool flt::OsWindows::Initialize(int windowWidth, int windowHeight, const std::wstring& title, const std::wstring& imgPath)
@@ -66,6 +122,12 @@ bool flt::OsWindows::Initialize(int windowWidth, int windowHeight, const std::ws
 
 	ShowWindow(_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(_hwnd);
+
+	// 덤프 파일을 남기기 위한 세팅.
+	// https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/nf-minidumpapiset-minidumpwritedump
+	// https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_information
+
+	SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopExceptionFilter);
 
 	return true;
 }

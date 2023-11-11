@@ -1,6 +1,6 @@
 ﻿#define FLT_WINDOWS
+#define _CRT_SECURE_NO_WARNINGS
 
-#include <map>
 #include <iostream>
 #include "../FloaterPlatform/include/Platform.h"
 #include "../FloaterUtil/include/Timer.h"
@@ -8,6 +8,7 @@
 #include "../FloaterRendererCommon/include/Transform.h"
 //#include <windows.h>
 
+#include "../FloaterUtil/include/ConvString.h"
 
 #pragma region testInclude
 #include "../FloaterRendererCommon/include/IBuilder.h"
@@ -16,6 +17,8 @@
 #include "../FloaterUtil/TesterRBTree.h"
 
 #include "../FloaterUtil/TesterFixedSizeMemoryPool.h"
+
+#include <chrono>
 #pragma endregion
 
 
@@ -44,6 +47,10 @@ int main()
 
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
+
+	int* i = nullptr;
+	*i = 0;
+
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
 
 
