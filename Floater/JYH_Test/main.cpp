@@ -36,7 +36,7 @@ int main()
 #pragma region 테스트
 	{
 		using namespace flt::test;
-		TesterRBTree tester;
+		TesterRBTree tester{ };
 		if (!tester.Test())
 		{
 			ASSERT(false, "test fail");
@@ -54,9 +54,9 @@ int main()
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
 
-	StackOverflow();
-	int* i = nullptr;
-	*i = 10;
+	//StackOverflow();
+	//int* i = nullptr;
+	//*i = 10;
 
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
 

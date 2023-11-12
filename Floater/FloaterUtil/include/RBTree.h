@@ -33,16 +33,31 @@ namespace flt
 		};
 		struct Node
 		{
-			Node() : Node(Key{}, Value{}, nullptr, Color::RED, & s_nil, & s_nil) {}
-			Node(Key key, Value value, Color color, Node* pParent, Node* pLeft, Node* pRight) :
+			Node() : Node(Key{}, Value{}, Color::RED, &s_nil, &s_nil, &s_nil) {}
+			Node(const Key& key, const Value& value) : Node(key, value, Color::RED, &s_nil, &s_nil, &s_nil) {}
+			Node(const Key& key, const Value& value, const Color& color, Node* pParent, Node* pLeft, Node* pRight) :
 				key(key), value(value), color(color),
-				pParent(pParent), pLeft(pLeft), pRight(pRight) {}
-
-			Node* GetGrandParent()
+				pParent(pParent), pLeft(pLeft), pRight(pRight) 
 			{
 				if (pParent == nullptr)
 				{
-					return nullptr;
+					this->pParent = &s_nil;
+				}
+				if (pLeft == nullptr)
+				{
+					this->pLeft = &s_nil;
+				}
+				if (pRight == nullptr)
+				{
+					this->pRight = &s_nil;
+				}
+			}
+
+			Node* GetGrandParent()
+			{
+				if (pParent == &s_nil)
+				{
+					return &s_nil;
 				}
 
 				return pParent->pParent;
@@ -51,9 +66,9 @@ namespace flt
 			Node* GetUncle()
 			{
 				Node* pGrandParent = GetGrandParent();
-				if (pGrandParent == nullptr)
+				if (pGrandParent == &s_nil)
 				{
-					return nullptr;
+					return &s_nil;
 				}
 
 				if (pGrandParent->pLeft == pParent)
@@ -68,9 +83,9 @@ namespace flt
 
 			Node* GetSibling()
 			{
-				if (pParent == nullptr)
+				if (pParent == &s_nil)
 				{
-					return nullptr;
+					return &s_nil;
 				}
 
 				if (pParent->pLeft == this)
@@ -108,7 +123,7 @@ namespace flt
 
 			bool operator!=(const iterator& other)
 			{
-				return _pNode != other._pNode;
+				return !operator==(other);
 			}
 
 			Node& operator*()
@@ -118,6 +133,37 @@ namespace flt
 			Node* operator->()
 			{
 				return _pNode;
+			}
+
+			iterator& operator++()
+			{
+				if (_pNode->pRight != &s_nil)
+				{
+					_pNode = _pNode->pRight;
+					while (_pNode->pLeft != &s_nil)
+					{
+						_pNode = _pNode->pLeft;
+					}
+				}
+				else
+				{
+					Node* pPrev = _pNode;
+					_pNode = _pNode->pParent;
+					while (_pNode != &s_nil && _pNode->pRight == pPrev)
+					{
+						pPrev = _pNode;
+						_pNode = _pNode->pParent;
+					}
+				}
+
+				return *this;
+			}
+
+			iterator operator++(int)
+			{
+				iterator temp = *this;
+				++(*this);
+				return temp;
 			}
 
 		private:
@@ -214,7 +260,7 @@ void flt::RBTree<Key, Value>::RotateRight(Node* pNode)
 	pLeft->pRight = pNode;
 	pLeft->pParent = pParent;
 
-	if (pParent != nullptr)
+	if (pParent != &s_nil)
 	{
 		if (pParent->pLeft == pNode)
 		{
@@ -247,7 +293,7 @@ void flt::RBTree<Key, Value>::RotateLeft(Node* pNode)
 	pRight->pLeft = pNode;
 	pRight->pParent = pParent;
 
-	if (pParent != nullptr)
+	if (pParent != &s_nil)
 	{
 		if (pParent->pLeft == pNode)
 		{
@@ -299,7 +345,7 @@ void flt::RBTree<Key, Value>::InsertCase3(Node* pNode)
 
 	Node* pUncle = pNode->GetUncle();
 
-	if (pUncle != nullptr && pUncle->color == Color::RED)
+	if (pUncle != &s_nil && pUncle->color == Color::RED)
 	{
 		pNode->pParent->color = Color::BLACK;
 		pUncle->color = Color::BLACK;
@@ -373,7 +419,19 @@ bool flt::RBTree<Key, Value>::Insert(Key key, Value value)
 template<typename Key, typename Value>
 flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::begin()
 {
-	return iterator{ _root };
+	Node* pNode = _root;
+
+	if (pNode == &s_nil)
+	{
+		return iterator{ pNode };
+	}
+
+	while (pNode->pLeft != &s_nil)
+	{
+		pNode = pNode->pLeft;
+	}
+
+	return iterator{ pNode };
 }
 
 template<typename Key, typename Value>
@@ -393,7 +451,7 @@ flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::BSTInsert(const Key& key
 		return nullptr;
 	}
 
-	Node* pNode = new (pMemory) Node{ key, value, Color::RED, nullptr, &s_nil, &s_nil };
+	Node* pNode = new (pMemory) Node{ key, value, Color::RED, &s_nil, &s_nil, &s_nil };
 
 	int depth = 1;
 
@@ -408,6 +466,7 @@ flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::BSTInsert(const Key& key
 		return pNode;
 	}
 
+	// 삽입에 실패했을 경우.
 	_memoryPool.Free(pNode);
 	return nullptr;
 }
@@ -450,7 +509,7 @@ flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::FindRecursive(const Key&
 	// NIL 노드를 만난다면 종료
 	if (pNode == &s_nil)
 	{
-		return nullptr;
+		return &s_nil;
 	}
 
 	const Key& cmpKey = pNode->key;
@@ -490,7 +549,7 @@ flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::Find(const Key& key)
 template<typename Key, typename Value>
 bool flt::RBTree<Key, Value>::Clear()
 {
-	_root = nullptr;
+	_root = &s_nil;
 	_memoryPool.FreeAll();
 }
 

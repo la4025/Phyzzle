@@ -2,15 +2,19 @@
 #include <iostream>
 #include <random>
 
-flt::test::TesterRBTree::TesterRBTree() : _tree(), _inputData()
+flt::test::TesterRBTree::TesterRBTree() : TesterRBTree(std::random_device()())
 {
-	int inputDataCount = 1000;
+}
 
+flt::test::TesterRBTree::TesterRBTree(unsigned int seed) : _inputDataCount(1000), _tree(), _inputData()
+{
 	std::mt19937_64 rng;
-	rng.seed(std::random_device()());
-	std::uniform_int_distribution<int> dist(0, 1000);
+	std::cout << "seed : " << seed << std::endl;
+	rng.seed(seed);
+	std::uniform_int_distribution<int> dist(0, _inputDataCount * 10);
 
-	for (int i = 0; i < 1000; ++i)
+	_inputData.reserve(_inputDataCount);
+	for (int i = 0; i < _inputDataCount; ++i)
 	{
 		_inputData.push_back(dist(rng));
 	}
@@ -30,7 +34,7 @@ bool flt::test::TesterRBTree::Test()
 
 
 	std::vector<int> v;
-	v.reserve(64);
+	v.reserve(_inputDataCount);
 	// 전위 순회
 	Preorder(_tree._root, &v);
 	for (auto& e : v)
@@ -47,6 +51,28 @@ bool flt::test::TesterRBTree::Test()
 		std::cout << e << " ";
 	}
 	std::cout << std::endl;
+
+	// iterator++로 순회 시 중위순회인지?
+	{
+		std::vector<int> iterVec;
+		iterVec.reserve(_inputDataCount);
+		
+		auto end = _tree.end();
+		for (auto it = _tree.begin(); it != end; ++it)
+		{
+			iterVec.push_back(it->key);
+		}
+		std::cout << std::endl;
+
+		for (int i = 0; i < v.size(); ++i)
+		{
+			if (v[i] != iterVec[i])
+			{
+				ASSERT(false, "중위 순회 오류");
+			}
+		}
+	}
+
 	v.clear();
 
 	// 후위 순회, 루트 노드가 마지막에 출력된다.
@@ -64,6 +90,7 @@ bool flt::test::TesterRBTree::Test()
 		auto it = _tree.Find(e);
 		if (it == _tree.end())
 		{
+			ASSERT(false, "값이 다 안들어감.");
 			return false;
 		}
 	}
