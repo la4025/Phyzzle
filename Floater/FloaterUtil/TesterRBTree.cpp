@@ -57,11 +57,17 @@ bool flt::test::TesterRBTree::Test()
 		std::vector<int> iterVec;
 		iterVec.reserve(_inputDataCount);
 		
-		auto end = _tree.end();
-		for (auto it = _tree.begin(); it != end; ++it)
+		//auto end = _tree.end();
+		//for (auto it = _tree.begin(); it != end; ++it)
+		//{
+		//	iterVec.push_back(it->key);
+		//}
+
+		for (auto& e : _tree)
 		{
-			iterVec.push_back(it->key);
+			iterVec.push_back(e.key);
 		}
+
 		std::cout << std::endl;
 
 		for (int i = 0; i < v.size(); ++i)
