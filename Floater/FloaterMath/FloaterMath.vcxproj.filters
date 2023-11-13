@@ -38,19 +38,19 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\Common.cpp">
+    <ClCompile Include="Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Matrix4f.cpp">
+    <ClCompile Include="Matrix4f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Quaternion.cpp">
+    <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Vector3f.cpp">
+    <ClCompile Include="Vector3f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Vector4f.cpp">
+    <ClCompile Include="Vector4f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
