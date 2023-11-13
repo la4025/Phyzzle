@@ -176,6 +176,7 @@ namespace flt
 #pragma endregion
 	public:
 		RBTree();
+		RBTree(int capacity);
 		~RBTree();
 
 		bool Insert(Key key, Value value);
@@ -185,7 +186,9 @@ namespace flt
 
 		Value& operator[](const Key& key);
 
-		bool Clear();
+		// 모든 노드를 삭제한다.
+		// 메모리는 해제하지 않으며 소멸자도 호출하지 않는다.
+		void Clear();
 
 		// iterator 관련 함수들
 		iterator begin();
@@ -219,24 +222,12 @@ namespace flt
 		int _blackHigh;
 		Node* _root;
 		FixedSizeMemoryPool _memoryPool;
+		int _size;
 
 		static Node s_nil;
 
 		friend  class ::flt::test::TesterRBTree;
-		friend class iterator;
 	};
-
-	template<typename Key, typename Value>
-	void flt::RBTree<Key, Value>::erase(Key key)
-	{
-
-	}
-
-	template<typename Key, typename Value>
-	void flt::RBTree<Key, Value>::erase(iterator it)
-	{
-		erase(it->key);
-	}
 
 	// static 멤버 변수 정의
 	template<typename Key, typename Value>
@@ -246,6 +237,19 @@ namespace flt
 //----------------------------------------------------------------------------------------------
 // Implementation
 //----------------------------------------------------------------------------------------------
+
+template<typename Key, typename Value>
+void flt::RBTree<Key, Value>::erase(Key key)
+{
+	ASSERT(false, "Not Implemented");
+	--_size;
+}
+
+template<typename Key, typename Value>
+void flt::RBTree<Key, Value>::erase(iterator it)
+{
+	erase(it->key);
+}
 
 template<typename Key, typename Value>
 void flt::RBTree<Key, Value>::RotateRight(Node* pNode)
@@ -414,10 +418,9 @@ bool flt::RBTree<Key, Value>::Insert(Key key, Value value)
 	}
 
 	InsertCase1(node);
-
+	++_size;
 	return true;
 }
-
 
 template<typename Key, typename Value>
 flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::begin()
@@ -550,22 +553,33 @@ flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::Find(const Key& key)
 }
 
 template<typename Key, typename Value>
-bool flt::RBTree<Key, Value>::Clear()
+void flt::RBTree<Key, Value>::Clear()
 {
 	_root = &s_nil;
 	_memoryPool.FreeAll();
+	_size = 0;
 }
 
 
 template<typename Key, typename Value>
-flt::RBTree<Key, Value>::RBTree() :
-	_compareFunc([](const Key& a, const Key& b) {return a < b; }),
-	_blackHigh(0),
-	_root(&s_nil),
-	_memoryPool(sizeof(Node), 1000)
+flt::RBTree<Key, Value>::RBTree() : 
+	RBTree(1024)
 {
 
 }
+
+
+template<typename Key, typename Value>
+flt::RBTree<Key, Value>::RBTree(int capacity) :
+	_compareFunc([](const Key& a, const Key& b) {return a < b; }),
+	_blackHigh(0),
+	_root(&s_nil),
+	_memoryPool(sizeof(Node), capacity),
+	_size(0)
+{
+
+}
+
 
 
 template<typename Key, typename Value>
