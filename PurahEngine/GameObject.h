@@ -1,11 +1,14 @@
 #pragma once
 #include <vector>
+#include <string>
 
 namespace PurahEngine
 {
 
 
 	class Component;
+	class SceneManager;
+	class Transform;
 
 	class GameObject
 	{
@@ -38,6 +41,14 @@ namespace PurahEngine
 		// ComponentList로 Component 관리
 		std::vector<Component*> componentList;
 
+	private:
+		GameObject(std::wstring objectname);
+		virtual ~GameObject();
+
+	private:
+		std::wstring name;
+		Transform* transform;
+
 	public:
 		// ComponentList로 Component 추가
 		template<typename T>
@@ -62,6 +73,10 @@ namespace PurahEngine
 
 			return nullptr; // 해당 타입의 컴포넌트를 찾지 못했을 때 nullptr 반환
 		}
+		friend SceneManager;
+		friend Transform;
 	};
+
+
 
 }

@@ -16,6 +16,11 @@ PurahEngine::Transform::~Transform()
 
 }
 
+void PurahEngine::Transform::Rotate()
+{
+
+}
+
 Eigen::Vector3f PurahEngine::Transform::GetLocalPosition() const
 {
 	return position;
