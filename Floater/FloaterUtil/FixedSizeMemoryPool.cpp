@@ -20,10 +20,11 @@ flt::FixedSizeMemoryPool::FixedSizeMemoryPool(uint32 singlePageSize, uint32 capa
 	_allocatedCount(0),
 	_freeStack()
 {
+	_freeStack.reserve(_capacity);
+
 	for (auto& chunk : _memoryChunks)
 	{
 		chunk = (byte*)malloc((size_t)_singlePageSize * _chunkSize);
-		_freeStack.reserve(_capacity);
 	}
 }
 
