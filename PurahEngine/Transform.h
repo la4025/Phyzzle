@@ -1,7 +1,5 @@
 #pragma once
 #include "Component.h"
-#include "../ZonaiMath/ZonaiMath.h"
-#pragma comment(lib, "../x64/Debug/ZonaiMath.lib")
 
 #include <Eigen\Dense>
 #include <vector>
@@ -35,6 +33,7 @@ namespace PurahEngine
 		Eigen::Vector3f GetWorldScale() const;
 
 		Eigen::Matrix4f GetLocalMatrix() const;
+
 		Eigen::Matrix4f GetWorldMatrix() const;
 
 		/// set
