@@ -4,9 +4,6 @@
     <Filter Include="DataStructure">
       <UniqueIdentifier>{63da3ed2-0eae-46d3-8b6b-408d7ceb5088}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tester">
-      <UniqueIdentifier>{25c68fca-901c-402c-af61-09a382e3b069}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{2a0d728d-5464-425b-a2d1-5bb9f7cacd1f}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     <ClInclude Include="include\ConvString.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="include\ITester.h">
-      <Filter>Tester</Filter>
-    </ClInclude>
     <ClInclude Include="include\Timer.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -54,7 +48,13 @@
     <ClInclude Include="include\FixedSizeMemoryPool.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="TesterFixedSizeMemoryPool.h" />
+    <ClInclude Include="TesterFixedSizeMemoryPool.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ITester.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Hash.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConvString.cpp">
@@ -69,6 +69,8 @@
     <ClCompile Include="FixedSizeMemoryPool.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="TesterFixedSizeMemoryPool.cpp" />
+    <ClCompile Include="TesterFixedSizeMemoryPool.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

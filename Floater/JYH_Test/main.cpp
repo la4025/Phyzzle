@@ -6,7 +6,6 @@
 #include "../FloaterUtil/include/Timer.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "../FloaterRendererCommon/include/Transform.h"
-//#include <windows.h>
 
 #include "../FloaterUtil/include/ConvString.h"
 
@@ -17,6 +16,7 @@
 #include "../FloaterUtil/TesterRBTree.h"
 
 #include "../FloaterUtil/TesterFixedSizeMemoryPool.h"
+#include "../FloaterUtil/include/Hash.h"
 
 #include <chrono>
 #pragma endregion
@@ -36,10 +36,42 @@ int main()
 #pragma region 테스트
 	{
 		using namespace flt::test;
-		TesterRBTree tester{ };
-		if (!tester.Test())
+
+		flt::Timer timer;
+
+		flt::wyhash hash1;
+		flt::wyhash hash2(0);
+		flt::wyhash::State state;
+		hash2.GetState(&state);
+		flt::wyhash hash3(state);
+
+		std::string str1 = "test";
+		uint64 i64_1 = 0x90237840;
+
+		timer.Start();
+		constexpr int loopCount = 10000000;
+		for (int i = 0; i < loopCount; ++i)
 		{
-			ASSERT(false, "test fail");
+			//uint64 hash1_2 = hash2(str1.c_str(), str1.size());
+			uint64 hash1_2 = hash2(&i64_1, sizeof(i64_1));
+			uint64 cmp = hash3(&i64_1, sizeof(i64_1));
+
+			if(hash1_2 != cmp)
+			{
+				ASSERT(false, "hash fail");
+			}
+		}
+		auto time = timer.GetLabTimeSeconds();
+		std::cout << "loopCount " << loopCount << ", time : " << time << std::endl;
+
+#pragma omp parallel for
+		for (int i = 0; i < 1; ++i)
+		{
+			TesterRBTree tester{ };
+			if (!tester.Test())
+			{
+				ASSERT(false, "test fail");
+			}
 		}
 
 		TesterFixedSizeMemoryPool testerFixedSizeMemoryPool;
