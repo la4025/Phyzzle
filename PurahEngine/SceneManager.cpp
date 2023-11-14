@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include "GameObject.h"
+#include "Transform.h"
 #include "Camera.h"
 
 PurahEngine::SceneManager::SceneManager()
@@ -15,8 +16,9 @@ PurahEngine::SceneManager::~SceneManager()
 
 PurahEngine::GameObject* PurahEngine::SceneManager::CreateGameObject(std::wstring objectName)
 {
-	GameObject* object = new GameObject();
+	GameObject* object = new GameObject(objectName);
 	objectList.push_back(object);
+	object->AddComponent<Transform>();
 	return object;
 }
 

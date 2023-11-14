@@ -72,3 +72,13 @@ void PurahEngine::GameObject::OnMouseExit()
 		component->OnMouseExit();
 	}
 }
+
+PurahEngine::GameObject::GameObject(std::wstring objectname)
+{
+	name = objectname;
+}
+
+PurahEngine::GameObject::~GameObject()
+{
+	componentList.clear();
+}
