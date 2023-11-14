@@ -34,6 +34,9 @@
     <Filter Include="Component\Manager">
       <UniqueIdentifier>{4a05d4e7-f813-447e-8d56-990fba752ad4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{f7f037aa-7efc-4e26-9456-6a11daed0781}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -66,6 +69,9 @@
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Componentmanager.cpp">
       <Filter>Component\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsManager.cpp">
+      <Filter>Core\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="Componentmanager.h">
       <Filter>Component\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsManager.h">
+      <Filter>Core\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

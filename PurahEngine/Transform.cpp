@@ -1,9 +1,11 @@
 #include "Transform.h"
 
+#define M_PI       3.14159265358979323846
+
 PurahEngine::Transform::Transform() :
-	position(ZonaiMath::Vector3D::Zero),
-	rotation(ZonaiMath::Quaternion::Identity),
-	scale(ZonaiMath::Vector3D(1.0f, 1.0f, 1.0f)),
+	position(Eigen::Vector3f::Zero()),
+	rotation(Eigen::Quaternionf::Identity()),
+	scale(1, 1, 1),
 	parentTransform(nullptr)
 {
 
@@ -14,26 +16,34 @@ PurahEngine::Transform::~Transform()
 
 }
 
-ZonaiMath::Vector3D PurahEngine::Transform::GetLocalPosition() const
+void PurahEngine::Transform::Rotate()
+{
+
+}
+
+Eigen::Vector3f PurahEngine::Transform::GetLocalPosition() const
 {
 	return position;
 }
 
-ZonaiMath::Quaternion PurahEngine::Transform::GetLocalRotation() const
+Eigen::Quaternionf PurahEngine::Transform::GetLocalRotation() const
 {
 	return rotation;
 }
 
-ZonaiMath::Vector3D PurahEngine::Transform::GetLocalScale() const
+Eigen::Vector3f PurahEngine::Transform::GetLocalScale() const
 {
 	return scale;
 }
 
-ZonaiMath::Vector3D PurahEngine::Transform::GetWorldPosition() const
+Eigen::Vector3f PurahEngine::Transform::GetWorldPosition() const
 {
 	if (parentTransform != nullptr)
 	{
-
+		Eigen::Vector3f parentPosition = parentTransform->GetWorldPosition();
+		//return parentPosition.transpose() * position;
+		/// 이부분은 인재원 가서 수정할 것
+		return parentPosition.cwiseProduct(position);
 	}
 	else
 	{
@@ -41,11 +51,12 @@ ZonaiMath::Vector3D PurahEngine::Transform::GetWorldPosition() const
 	}
 }
 
-ZonaiMath::Quaternion PurahEngine::Transform::GetWorldRotation() const
+Eigen::Quaternionf PurahEngine::Transform::GetWorldRotation() const
 {
 	if (parentTransform != nullptr)
 	{
-
+		Eigen::Quaternionf parentRotation = parentTransform->GetWorldRotation();
+		return parentRotation * rotation;
 	}
 	else
 	{
@@ -53,13 +64,14 @@ ZonaiMath::Quaternion PurahEngine::Transform::GetWorldRotation() const
 	}
 }
 
-ZonaiMath::Vector3D PurahEngine::Transform::GetWorldScale() const
+Eigen::Vector3f PurahEngine::Transform::GetWorldScale() const
 {
 	if (parentTransform != nullptr)
 	{
-		ZonaiMath::Vector3D parentScale = parentTransform->GetWorldScale();
+		Eigen::Vector3f parentScale = parentTransform->GetWorldScale();
 
-		return ZonaiMath::Vector3D(parentScale.x * scale.x, parentScale.y * scale.y, parentScale.z * scale.z);
+		//return parentScale.transpose() * scale;
+		return parentScale.cwiseProduct(scale);
 	}
 	else
 	{
@@ -67,17 +79,49 @@ ZonaiMath::Vector3D PurahEngine::Transform::GetWorldScale() const
 	}
 }
 
-void PurahEngine::Transform::SetLocalPosition(ZonaiMath::Vector3D setPosition)
+Eigen::Matrix4f PurahEngine::Transform::GetLocalMatrix() const
+{
+	// Translation	
+	Eigen::Affine3f localTransform = Eigen::Affine3f::Identity();
+	localTransform.translation() = position;
+	// rotation
+	localTransform.linear() = rotation.toRotationMatrix();
+	// scale
+	localTransform.scale(scale);
+
+	return localTransform.matrix();
+
+}
+
+Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
+{
+
+	if (parentTransform != nullptr)
+	{
+		Eigen::Affine3f worldTransform = Eigen::Affine3f::Identity();
+		worldTransform.translation() = position;
+		worldTransform.linear() = rotation.toRotationMatrix();
+		worldTransform.scale(scale);
+
+		return parentTransform->GetWorldMatrix() * GetLocalMatrix();
+	}
+	else
+	{
+		return GetLocalMatrix();
+	}
+}
+
+void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
 {
 	position = setPosition;
 }
 
-void PurahEngine::Transform::SetLocalRotation(ZonaiMath::Quaternion setRotation)
+void PurahEngine::Transform::SetLocalRotation(Eigen::Quaternionf setRotation)
 {
 	rotation = setRotation;
 }
 
-void PurahEngine::Transform::SetLocalScale(ZonaiMath::Vector3D setScale)
+void PurahEngine::Transform::SetLocalScale(Eigen::Vector3f setScale)
 {
 	scale = setScale;
 }

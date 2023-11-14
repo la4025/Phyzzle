@@ -8,6 +8,7 @@ namespace PurahEngine
 	class GameLoop;
 	class GameObject;
 	class Camera;
+	class Transform;
 
 	class SceneManager
 	{
@@ -36,6 +37,8 @@ namespace PurahEngine
 
 		// GameLoop에 friend선언을 해줌으로써 private설정이 되있는 Initialize()를 GameLoop에서 쓸 수 있다.
 		friend GameLoop;
+		friend GameObject;
+		friend Transform;
 	public:
 		static SceneManager& GetInstance();
 	};

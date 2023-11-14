@@ -1,8 +1,7 @@
 #pragma once
 #include "Component.h"
-#include "../ZonaiMath/ZonaiMath.h"
-#pragma comment(lib, "../x64/Debug/ZonaiMath.lib")
 
+#include <Eigen\Dense>
 #include <vector>
 
 namespace PurahEngine
@@ -19,34 +18,42 @@ namespace PurahEngine
 		/// get
 		// Local
 		// 오브젝트의 포지션을 가져온다.
-		ZonaiMath::Vector3D GetLocalPosition() const;
+		Eigen::Vector3f GetLocalPosition() const;
 		// 오브젝트의 로테이션을 가져온다.
-		ZonaiMath::Quaternion GetLocalRotation() const;
+		Eigen::Quaternionf GetLocalRotation() const;
 		// 오브젝트의 스케일을 가져온다.
-		ZonaiMath::Vector3D GetLocalScale() const;
+		Eigen::Vector3f GetLocalScale() const;
 
 		// World
 		// 오브젝트의 월드 포지션을 가져온다.
-		ZonaiMath::Vector3D GetWorldPosition() const;
+		Eigen::Vector3f GetWorldPosition() const;
 		// 오브젝트의 월드 로테이션을 가져온다.
-		ZonaiMath::Quaternion GetWorldRotation() const;
+		Eigen::Quaternionf GetWorldRotation() const;
 		// 오브젝트의 월드 스케일을 가져온다.
-		ZonaiMath::Vector3D GetWorldScale() const;
+		Eigen::Vector3f GetWorldScale() const;
+
+		Eigen::Matrix4f GetLocalMatrix() const;
+
+		Eigen::Matrix4f GetWorldMatrix() const;
 
 		/// set
 		// 포지션 세팅
-		void SetLocalPosition(ZonaiMath::Vector3D setPosition);
+		void SetLocalPosition(Eigen::Vector3f setPosition);
 		// 로테이션 세팅
-		void SetLocalRotation(ZonaiMath::Quaternion setRotation);
+		void SetLocalRotation(Eigen::Quaternionf setRotation);
 		// 스케일 세팅
-		void SetLocalScale(ZonaiMath::Vector3D setScale);
+		void SetLocalScale(Eigen::Vector3f setScale);
 	private:
 		// 위치
-		ZonaiMath::Vector3D position;
+		Eigen::Vector3f position;
 		// 로테이션
-		ZonaiMath::Quaternion rotation;
+		Eigen::Quaternionf rotation;
 		// 스케일
-		ZonaiMath::Vector3D scale;
+		Eigen::Vector3f scale;
+		// 행렬
+		/// 행벡터는 벡터 * SRT, 열벡터는 TRS * 벡터
+		/// Eigen은 열벡터다.
+
 
 		// 부모 Transform
 		Transform* parentTransform;
