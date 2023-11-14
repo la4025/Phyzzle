@@ -1,6 +1,9 @@
 #include "GameLoop.h"
 #include "SceneManager.h"
 #include "GraphicsManager.h"
+#include "Transform.h"
+#include "GameObject.h"
+#include "InputManager.h"
 #include <cassert>
 
 PurahEngine::GameLoop::GameLoop()
@@ -44,6 +47,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// SceneManager √ ±‚»≠
 	PurahEngine::SceneManager::GetInstance().Initialize();
+
+	
+	
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -82,6 +88,7 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
+	PurahEngine::InputManager::Getinstance().Update();
 	PurahEngine::GraphicsManager::GetInstance().Run();
 }
 
