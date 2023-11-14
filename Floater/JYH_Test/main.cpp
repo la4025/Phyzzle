@@ -18,7 +18,7 @@
 #include "../FloaterUtil/TesterFixedSizeMemoryPool.h"
 #include "../FloaterUtil/include/Hash.h"
 
-#include <chrono>
+#include <unordered_map>
 #pragma endregion
 
 void StackOverflow()
@@ -37,35 +37,8 @@ int main()
 	{
 		using namespace flt::test;
 
-		flt::Timer timer;
-
-		flt::wyhash hash1;
-		flt::wyhash hash2(0);
-		flt::wyhash::State state;
-		hash2.GetState(&state);
-		flt::wyhash hash3(state);
-
-		std::string str1 = "test";
-		uint64 i64_1 = 0x90237840;
-
-		timer.Start();
-		constexpr int loopCount = 10000000;
-		for (int i = 0; i < loopCount; ++i)
-		{
-			//uint64 hash1_2 = hash2(str1.c_str(), str1.size());
-			uint64 hash1_2 = hash2(&i64_1, sizeof(i64_1));
-			uint64 cmp = hash3(&i64_1, sizeof(i64_1));
-
-			if(hash1_2 != cmp)
-			{
-				ASSERT(false, "hash fail");
-			}
-		}
-		auto time = timer.GetLabTimeSeconds();
-		std::cout << "loopCount " << loopCount << ", time : " << time << std::endl;
-
 #pragma omp parallel for
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 10; ++i)
 		{
 			TesterRBTree tester{ };
 			if (!tester.Test())
