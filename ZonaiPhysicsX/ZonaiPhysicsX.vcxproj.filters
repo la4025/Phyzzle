@@ -33,6 +33,12 @@
     <ClInclude Include="Joint.h">
       <Filter>04. Joint</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="FixedJoint.h">
+      <Filter>04. Joint</Filter>
+    </ClInclude>
+=======
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -44,7 +50,11 @@
     <ClCompile Include="Collider.cpp">
       <Filter>03. Collider</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="FixedJoint.cpp">
+=======
     <ClCompile Include="Joint.cpp">
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
       <Filter>04. Joint</Filter>
     </ClCompile>
   </ItemGroup>

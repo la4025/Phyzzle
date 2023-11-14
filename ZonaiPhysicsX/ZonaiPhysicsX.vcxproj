@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collider.h" />
+<<<<<<< HEAD
+    <ClInclude Include="FixedJoint.h" />
+=======
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="World.h" />
@@ -27,7 +31,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="FixedJoint.cpp" />
+=======
     <ClCompile Include="Joint.cpp" />
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -119,7 +127,11 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+<<<<<<< HEAD
+      <AdditionalIncludeDirectories>$(SolutionDir)ZonaiPhysicsBase\;$(SolutionDir)ZonaiMath\;$(SolutionDir)physx\include;$(SolutionDir)physx\include\cudamanager;$(SolutionDir)physx\include\source\physxextensions\src;$(SolutionDir)physx\include\source\foundation\include;$(SolutionDir)physx\include\source\geomutils\include;$(SolutionDir)physx\snippets\graphics\include;$(SolutionDir)physx\snippets\compiler;$(SolutionDir)physx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
       <AdditionalIncludeDirectories>$(SolutionDir)ZonaiPhysicsInterface\;$(SolutionDir)ZonaiMath\;$(SolutionDir)physx\include;$(SolutionDir)physx\include\cudamanager;$(SolutionDir)physx\include\source\physxextensions\src;$(SolutionDir)physx\include\source\foundation\include;$(SolutionDir)physx\include\source\geomutils\include;$(SolutionDir)physx\snippets\graphics\include;$(SolutionDir)physx\snippets\compiler;$(SolutionDir)physx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

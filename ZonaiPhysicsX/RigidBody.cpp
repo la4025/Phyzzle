@@ -4,10 +4,31 @@
 
 namespace ZonaiPhysics
 {
+<<<<<<< HEAD
+	RigidBody::RigidBody() noexcept
+	{
+
+	}
+
+	RigidBody::RigidBody(physx::PxPhysics*& _factory) noexcept
+	{
+		using namespace physx;
+		rigidbody_ = _factory->createRigidDynamic(PxTransform(PxVec3()));
+	}
+
+	RigidBody::~RigidBody() noexcept
+	{
+		rigidbody_->release();
+	}
+
+	void RigidBody::WakeUp() noexcept
+	{
+=======
 	void RigidBody::WakeUp() noexcept
 	{
 		PxFilterFlag
 
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 		rigidbody_->wakeUp();
 	}
 

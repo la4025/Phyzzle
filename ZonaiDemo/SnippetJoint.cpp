@@ -56,6 +56,9 @@ static PxMaterial*				gMaterial = NULL;
 static PxPvd*					gPvd = NULL;
 static PxRigidDynamic*			last = NULL;
 static PxJoint*					lastj = NULL;
+static PxRigidStatic*			staticRigid[3] = { NULL };
+
+static std::vector<physx::PxJoint*> jointList;
 
 static std::vector<physx::PxJoint*> jointList;
 
@@ -262,11 +265,18 @@ int snippetMain(int, const char* const*)
 			PxBoxGeometry(2.f, 2.f, 2.f),
 			*gMaterial
 		);
+<<<<<<< HEAD
+
+		PxActorFlags flags = PxActorFlag::eDISABLE_SIMULATION;
+
+		PxShapeFlags shapeFlags = PxShapeFlag::eSCENE_QUERY_SHAPE
+=======
 		PxActorFlags flags = 
 			// PxActorFlag::eVISUALIZATION | 
 			// PxActorFlag::eDISABLE_GRAVITY | 
 			// PxActorFlag::eSEND_SLEEP_NOTIFIES | 
 			PxActorFlag::eDISABLE_SIMULATION;
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 
 		staticRigid[i]->setActorFlags(flags);
 

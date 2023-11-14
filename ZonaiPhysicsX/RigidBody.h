@@ -11,6 +11,7 @@ namespace ZonaiMath
 
 namespace physx
 {
+	class PxPhysics;
 	class PxRigidDynamic;
 	class PxRigidActor;
 }
@@ -23,7 +24,8 @@ namespace ZonaiPhysics
 	class RigidBody : public ZnRigidBody
 	{
 	public:
-							RigidBody() noexcept = default;
+							RigidBody() noexcept = delete;
+							RigidBody(physx::PxPhysics*&) noexcept;
 		virtual				~RigidBody() noexcept;
 
 	public:
@@ -106,6 +108,10 @@ namespace ZonaiPhysics
 
 	private:
 		physx::PxRigidDynamic* rigidbody_;
+<<<<<<< HEAD
+		physx::PxRigidStatic* rigidstatic_;
+=======
+>>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 	};
 } // namespace ZonaiPhysics
 
