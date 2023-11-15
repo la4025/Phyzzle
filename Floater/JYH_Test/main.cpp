@@ -37,21 +37,48 @@ int main()
 	{
 		using namespace flt::test;
 
-#pragma omp parallel for
-		for (int i = 0; i < 10; ++i)
-		{
-			TesterRBTree tester{ };
-			if (!tester.Test())
-			{
-				ASSERT(false, "test fail");
-			}
-		}
+		int index = 0;
 
-		TesterFixedSizeMemoryPool testerFixedSizeMemoryPool;
-		if (!testerFixedSizeMemoryPool.Test())
+		std::cin >> index;
+
+		constexpr int64 count = 10000000000;
+		char* pi1 = (char*)malloc(sizeof(char) * count);
+		char* pi2 = (char*)malloc(sizeof(char) * count);
+
+		flt::Timer timer;
+		int64 time = 0;
+
+		timer.Start();
+		memset((void*)pi1, 0, sizeof(char) * count);
+		time = timer.GetLabTimeMicroSeconds();
+		std::cout << "memest : " << time << std::endl;
+		std::cout << (int)pi1[index] << std::endl;
+
+		timer.Start();
+		for (int64 i = 0; i < count; ++i)
 		{
-			ASSERT(false, "test fail");
+			pi2[i] = (char)0xFF;
 		}
+		time = timer.GetLabTimeMicroSeconds();
+		std::cout << "for : " << time << std::endl;
+		std::cout << (int)pi2[index] << std::endl;
+
+//
+//#pragma omp parallel for
+//		for (int i = 0; i < 10; ++i)
+//		{
+//			TesterRBTree tester{ };
+//			if (!tester.Test())
+//			{
+//				ASSERT(false, "test fail");
+//			}
+//		}
+//
+//		TesterFixedSizeMemoryPool testerFixedSizeMemoryPool;
+//		if (!testerFixedSizeMemoryPool.Test())
+//		{
+//			ASSERT(false, "test fail");
+//		}
 	}
 #pragma endregion
 
