@@ -20,10 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collider.h" />
-<<<<<<< HEAD
-    <ClInclude Include="FixedJoint.h" />
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="World.h" />
