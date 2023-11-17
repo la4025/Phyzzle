@@ -216,7 +216,7 @@ bool flt::RendererDX11::Render(float deltaTime)
 	_immediateContext->ClearRenderTargetView(_renderTargetView.Get(), DirectX::Colors::Black);
 	_immediateContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	_immediateContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
-
+	_worldMatrixCache.Clear();
 
 	// 각 mesh별로 들어가야하지만 일단 여기서 만들자.
 	D3D11_RASTERIZER_DESC rasterizerDesc = { };
@@ -246,7 +246,8 @@ bool flt::RendererDX11::Render(float deltaTime)
 		}
 
 		// 렌더링
-		DirectX::XMMATRIX world = ConvXMMatrix(node->transform.GetMatrix4f());
+		Matrix4f worldMatrix = GetWorldMatrixRecursive(&node->transform);
+		DirectX::XMMATRIX world = ConvertXMMatrix(worldMatrix);
 
 		DirectX::XMMATRIX worldViewProj = world;
 
@@ -552,10 +553,10 @@ void flt::RendererDX11::RenderSingleNodeRecursive(DX11Node* node, const Matrix4f
 	// 렌더링
 	VSConstantBuffer vsConstantBuffer
 	{
-		ConvXMMatrix(worldMatrix),
-		ConvXMMatrix(worldMatrix.Inverse().Transpose()),
-		ConvXMMatrix(viewProjMatrix),
-		ConvXMMatrix(worldMatrix * viewProjMatrix)
+		ConvertXMMatrix(worldMatrix),
+		ConvertXMMatrix(worldMatrix.Inverse().Transpose()),
+		ConvertXMMatrix(viewProjMatrix),
+		ConvertXMMatrix(worldMatrix * viewProjMatrix)
 	};
 }
 
@@ -575,6 +576,31 @@ bool flt::RendererDX11::SetVsConstantBuffer(ID3D11Buffer* vsConstantBuffer, void
 	_immediateContext->VSSetConstantBuffers(slot, 1, &vsConstantBuffer);
 
 	return true;
+}
+
+flt::Matrix4f flt::RendererDX11::GetWorldMatrixRecursive(const Transform* transform)
+{
+	// nullptr이라면 기본 매트릭스 반환.
+	if (!transform)
+	{
+		return Matrix4f
+		{ 
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
+		};
+	}
+
+	// 이미 캐싱이 되어있다면 해당 캐시 반환
+	auto iter = _worldMatrixCache.Find(transform);
+	if (iter != _worldMatrixCache.end())
+	{
+		return iter->value;
+	}
+
+	// 캐싱이 되어있지 않다면 캐싱 후 반환.
+	return _worldMatrixCache[transform] = transform->GetMatrix4f() * GetWorldMatrixRecursive(transform->GetParent());
 }
 
 flt::Resource<flt::DX11Mesh>* flt::RendererDX11::CreateBox()

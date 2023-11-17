@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <type_traits>
 
 namespace flt
@@ -12,7 +12,6 @@ namespace flt
 		{ a.Construct(p, std::move(rvalue)) };
 		{ a.Destroy(p) };
 	};
-
 
 	template<typename T>
 	class Allocator

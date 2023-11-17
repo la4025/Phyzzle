@@ -54,7 +54,9 @@
     <ClInclude Include="include\ITester.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="include\Hash.h" />
+    <ClInclude Include="include\Hash.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConvString.cpp">

@@ -37,48 +37,6 @@ int main()
 	{
 		using namespace flt::test;
 
-		int index = 0;
-
-		std::cin >> index;
-
-		constexpr int64 count = 10000000000;
-		char* pi1 = (char*)malloc(sizeof(char) * count);
-		char* pi2 = (char*)malloc(sizeof(char) * count);
-
-		flt::Timer timer;
-		int64 time = 0;
-
-		timer.Start();
-		memset((void*)pi1, 0, sizeof(char) * count);
-		time = timer.GetLabTimeMicroSeconds();
-		std::cout << "memest : " << time << std::endl;
-		std::cout << (int)pi1[index] << std::endl;
-
-		timer.Start();
-		for (int64 i = 0; i < count; ++i)
-		{
-			pi2[i] = (char)0xFF;
-		}
-		time = timer.GetLabTimeMicroSeconds();
-		std::cout << "for : " << time << std::endl;
-		std::cout << (int)pi2[index] << std::endl;
-
-//
-//#pragma omp parallel for
-//		for (int i = 0; i < 10; ++i)
-//		{
-//			TesterRBTree tester{ };
-//			if (!tester.Test())
-//			{
-//				ASSERT(false, "test fail");
-//			}
-//		}
-//
-//		TesterFixedSizeMemoryPool testerFixedSizeMemoryPool;
-//		if (!testerFixedSizeMemoryPool.Test())
-//		{
-//			ASSERT(false, "test fail");
-//		}
 	}
 #pragma endregion
 
@@ -86,20 +44,23 @@ int main()
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
 
-	//StackOverflow();
-	//int* i = nullptr;
-	//*i = 10;
-
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
-
 
 	flt::Transform transform;
 	bool isDraw = true;
 	transform.SetPosition(0.0f, 0.0f, 0.7f);
-	transform.SetScale(0.5f, 0.5f, 0.5f);
+	transform.SetScale(0.3f, 0.3f, 0.3f);
 	flt::Renderable renderable(transform, isDraw);
 	renderable.name = L"test";
 	renderer->RegisterObject(renderable);
+
+	flt::Transform childTransform;
+	childTransform.SetPosition(1.0f, 0.0f, 0.0f);
+	childTransform.SetScale(0.5f, 0.5f, 0.5f);
+	childTransform.SetParent(&transform);
+	flt::Renderable childRenderable(childTransform, isDraw);
+	renderable.name = L"testChild";
+	renderer->RegisterObject(childRenderable);
 
 	//ASSERT(renderer, "렌더러 생성 실패");
 
@@ -111,9 +72,11 @@ int main()
 		}
 
 		renderer->Render(1.0f);
-		transform.AddRotation({ 1.0f, 0.0f, 0.0f }, 0.01f);
+		//transform.AddRotation({ 1.0f, 0.0f, 0.0f }, 0.01f);
 		transform.AddRotation({ 0.0f, 1.0f, 0.0f }, 0.01f);
-		transform.AddRotation({ 0.0f, 0.0f, 1.0f }, 0.01f);
+		//transform.AddRotation({ 0.0f, 0.0f, 1.0f }, 0.01f);
+
+		childTransform.AddRotation({ 0.0f, 1.0f, 0.0f }, 0.02f);
 
 		//if (!renderer->Render(deltaTime))
 		//{
@@ -186,7 +149,7 @@ int main()
 		}
 
 
-		//Sleep(10);
+		Sleep(10);
 	}
 
 	renderer->DeregisterObject(renderable);

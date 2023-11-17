@@ -3,6 +3,7 @@
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
 #include "CommonMath.h"
 #include "DX11Node.h"
+#include "../FloaterUtil/include/RBTree.h"
 
 #include <windows.h>
 #include <wrl/client.h>
@@ -45,6 +46,7 @@ namespace flt
 
 		bool SetVsConstantBuffer(ID3D11Buffer* vsConstantBuffer, void* pData, size_t dataSize, UINT slot);
 
+		Matrix4f GetWorldMatrixRecursive(const Transform* transform);
 
 		// 테스트 private 함수들
 	private:
@@ -82,5 +84,7 @@ namespace flt
 
 		// 그리기 위한 오브젝트
 		std::vector<DX11Node*> _renderableObjects;
+
+		RBTree<const Transform*, Matrix4f> _worldMatrixCache;
 	};
 }

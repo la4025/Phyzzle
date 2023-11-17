@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <functional>
 #include "FixedSizeMemoryPool.h"
+#include "FloaterMacro.h"
 //#include "Allocator.h"
 
 
@@ -27,6 +28,10 @@ namespace flt
 	template<typename Key, typename Value>
 	class RBTree
 	{
+		using ConstKey_t = std::conditional_t<std::is_pointer_v<Key>, const std::remove_pointer_t<Key>*, const Key>;
+		using ConstKeyRef_t = std::conditional_t<std::is_pointer_v<Key>, ConstKey_t, ConstKey_t&>;
+		using ConstValue_t = std::conditional_t<std::is_pointer_v<Value>, const std::remove_pointer_t<Value>*, const Value>;
+		using ConstValueRef_t = std::conditional_t<std::is_pointer_v<Value>, ConstValue_t, ConstValue_t&>;
 #pragma region Nasted
 	private:
 		enum class Color : char
@@ -37,8 +42,8 @@ namespace flt
 		struct Node
 		{
 			Node() : Node(Key{}, Value{}, Color::RED, &s_nil, &s_nil, &s_nil) {}
-			Node(const Key& key, const Value& value) : Node(key, value, Color::RED, &s_nil, &s_nil, &s_nil) {}
-			Node(const Key& key, const Value& value, const Color& color, Node* pParent, Node* pLeft, Node* pRight) :
+			Node(Key key, Value value) : Node(key, value, Color::RED, &s_nil, &s_nil, &s_nil) {}
+			Node(Key key, Value value, Color color, Node* pParent, Node* pLeft, Node* pRight) :
 				key(key), value(value), color(color),
 				pParent(pParent), pLeft(pLeft), pRight(pRight) 
 			{
@@ -179,12 +184,12 @@ namespace flt
 		RBTree(int capacity);
 		~RBTree();
 
-		bool Insert(Key key, Value value);
-		void erase(Key key);
-		void erase(iterator it);
-		iterator Find(const Key& key);
+		bool Insert(Key& key, const Value& value);
+		void erase(ConstKeyRef_t key);
+		void erase(const iterator& it);
+		iterator Find(ConstKeyRef_t key);
 
-		Value& operator[](const Key& key);
+		Value& operator[](Key& key);
 
 		// 모든 노드를 삭제한다.
 		// 메모리는 해제하지 않으며 소멸자도 호출하지 않는다.
@@ -195,9 +200,9 @@ namespace flt
 		iterator end();
 
 	private:
-		Node* FindRecursive(const Key& key, Node* pNode);
+		Node* FindRecursive(ConstKeyRef_t key, Node* pNode);
 
-		Node* BSTInsert(const Key& key, const Value& value);
+		Node* BSTInsert(Key& key, const Value& value);
 		bool BSTInsertRecursive(Node* pCmpNode, Node* pNode, int* outDepth);
 
 		void InsertCase1(Node* pNode);
@@ -218,7 +223,7 @@ namespace flt
 
 
 	private:
-		std::function<bool(const Key&, const Key&)> _compareFunc;
+		std::function<bool(ConstKeyRef_t, ConstKeyRef_t)> _compareFunc;
 		int _blackHigh;
 		Node* _root;
 		FixedSizeMemoryPool _memoryPool;
@@ -226,7 +231,9 @@ namespace flt
 
 		static Node s_nil;
 
-		friend  class ::flt::test::TesterRBTree;
+		friend class ::flt::test::TesterRBTree;
+		friend struct RBTree<Key, Value>::Node;
+		friend class RBTree<Key, Value>::iterator;
 	};
 
 	// static 멤버 변수 정의
@@ -239,14 +246,14 @@ namespace flt
 //----------------------------------------------------------------------------------------------
 
 template<typename Key, typename Value>
-void flt::RBTree<Key, Value>::erase(Key key)
+void flt::RBTree<Key, Value>::erase(ConstKeyRef_t key)
 {
 	ASSERT(false, "Not Implemented");
 	--_size;
 }
 
 template<typename Key, typename Value>
-void flt::RBTree<Key, Value>::erase(iterator it)
+void flt::RBTree<Key, Value>::erase(const iterator& it)
 {
 	erase(it->key);
 }
@@ -408,7 +415,7 @@ void flt::RBTree<Key, Value>::InsertCase5(Node* pNode)
 }
 
 template<typename Key, typename Value>
-bool flt::RBTree<Key, Value>::Insert(Key key, Value value)
+bool flt::RBTree<Key, Value>::Insert(Key& key, const Value& value)
 {
 	Node* node = BSTInsert(key, value);
 
@@ -447,10 +454,8 @@ flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::end()
 }
 
 template<typename Key, typename Value>
-flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::BSTInsert(const Key& key, const Value& value)
+flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::BSTInsert(Key& key, const Value& value)
 {
-	//Node* pNode = new(std::nothrow) Node{ key, value, Color::RED, nullptr, &s_nil, &s_nil };
-
 	void* pMemory = _memoryPool.Alloc();
 	if (pMemory == nullptr)
 	{
@@ -510,7 +515,7 @@ bool flt::RBTree<Key, Value>::BSTInsertRecursive(Node* pCmpNode, Node* pNode, in
 }
 
 template<typename Key, typename Value>
-flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::FindRecursive(const Key& key, Node* pNode)
+flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::FindRecursive(ConstKeyRef_t key, flt::RBTree<Key, Value>::Node* pNode)
 {
 	// NIL 노드를 만난다면 종료
 	if (pNode == &s_nil)
@@ -518,7 +523,7 @@ flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::FindRecursive(const Key&
 		return &s_nil;
 	}
 
-	const Key& cmpKey = pNode->key;
+	ConstKeyRef_t cmpKey = pNode->key;
 
 	// key를 찾았다면 종료
 	if (cmpKey == key)
@@ -539,7 +544,7 @@ flt::RBTree<Key, Value>::Node* flt::RBTree<Key, Value>::FindRecursive(const Key&
 }
 
 template<typename Key, typename Value>
-Value& flt::RBTree<Key, Value>::operator[](const Key& key)
+Value& flt::RBTree<Key, Value>::operator[](Key& key)
 {
 	Insert(key, Value{});
 
@@ -547,7 +552,7 @@ Value& flt::RBTree<Key, Value>::operator[](const Key& key)
 }
 
 template<typename Key, typename Value>
-flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::Find(const Key& key)
+flt::RBTree<Key, Value>::iterator flt::RBTree<Key, Value>::Find(ConstKeyRef_t key)
 {
 	return iterator{ FindRecursive(key, _root) };
 }
@@ -571,7 +576,7 @@ flt::RBTree<Key, Value>::RBTree() :
 
 template<typename Key, typename Value>
 flt::RBTree<Key, Value>::RBTree(int capacity) :
-	_compareFunc([](const Key& a, const Key& b) {return a < b; }),
+	_compareFunc([](ConstKeyRef_t a, ConstKeyRef_t b) {return a < b; }),
 	_blackHigh(0),
 	_root(&s_nil),
 	_memoryPool(sizeof(Node), capacity),
