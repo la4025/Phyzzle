@@ -21,12 +21,15 @@
 #include <unordered_map>
 #pragma endregion
 
+#pragma warning(push)
+#pragma warning(disable: 4717)
 void StackOverflow()
 {
 	int i = 10;
 	StackOverflow();
 	std::cout << i << std::endl;
 }
+#pragma warning (pop)
 
 int main()
 {
