@@ -58,21 +58,23 @@ void PurahEngine::GraphicsManager::Run()
 		}
 	}
 	renderer->BeginDraw(0.0f);
-	float angle = 3.14f / 18.0f;  // 90도를 라디안으로 표현
+	float angle = 45.0f;  // 90도를 라디안으로 표현
 	Eigen::Matrix3f rotation_matrix;
 	rotation_matrix = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
 	test.block<3, 3>(0, 0) = rotation_matrix;
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
-		testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() * 
-																Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY())));
+		//testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() * 
+			//													Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY())));
+		testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
 	}
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('E') == true)
 	{
-		testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() *
-			Eigen::Quaternionf(Eigen::AngleAxisf(-angle, Eigen::Vector3f::UnitY())));
+		//testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() *
+			//Eigen::Quaternionf(Eigen::AngleAxisf(-angle, Eigen::Vector3f::UnitY())));
+		testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), -angle);
 	}
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed(VK_UP) == true)

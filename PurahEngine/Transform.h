@@ -13,7 +13,7 @@ namespace PurahEngine
 		virtual ~Transform();
 
 		// 회전 함수
-		void Rotate();
+		void Rotate(Eigen::Vector3f axis, float angle);
 
 		/// get
 		// Local
