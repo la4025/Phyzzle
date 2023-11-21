@@ -18,6 +18,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ForceType.h" />
+    <ClInclude Include="ZnCollider.h" />
+    <ClInclude Include="ZnCollision.h" />
+    <ClInclude Include="ZnJoint.h" />
+    <ClInclude Include="ZnMaterial.h" />
+    <ClInclude Include="ZnObject.h" />
+    <ClInclude Include="ZnPhysicsBase.h" />
+    <ClInclude Include="ZnRigidBody.h" />
+    <ClInclude Include="ZnShape.h" />
+    <ClInclude Include="ZnTransform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ZnPhysicsBase.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -104,19 +119,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-<<<<<<< HEAD
       <AdditionalIncludeDirectories>$(SolutionDir)ZonaiMath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-<<<<<<< HEAD
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ZonaiMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,12 +144,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-<<<<<<< HEAD
-=======
-  <ItemGroup>
-    <ClCompile Include="ZonaiPhysicsBase.cpp" />
-  </ItemGroup>
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
