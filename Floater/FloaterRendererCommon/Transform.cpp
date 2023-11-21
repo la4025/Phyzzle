@@ -269,6 +269,11 @@ bool flt::Transform::SetParent(Transform* pParent)
 
 void flt::Transform::MakeDirtyRecursive() noexcept
 {
+	if (_isDirty)
+	{
+		return;
+	}
+
 	_isDirty = true;
 
 	for (auto& child : _children)
