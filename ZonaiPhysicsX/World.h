@@ -1,13 +1,10 @@
 #pragma once
 #include "ZnPhysicsBase.h"
 #include "PxPhysicsAPI.h"
-<<<<<<< HEAD
 #include <map>
 #include <string>
 
 #define PVD_HOST "127.0.0.1"
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 
 namespace physx
 {
@@ -62,28 +59,16 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
-<<<<<<< HEAD
 		virtual ZnRigidBody*	CreateRigidBody(const std::wstring&) noexcept override;
-=======
-		virtual ZnRigidBody*	CreateRigidBody() noexcept;
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 		
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-<<<<<<< HEAD
 		virtual ZnCollider*		CreatBoxCollider(const std::wstring&, float width, float height) noexcept;
 		virtual ZnCollider*		CreatPlaneCollider(const std::wstring&) noexcept;
 		virtual ZnCollider*		CreatSphereCollider(const std::wstring&) noexcept;
 		virtual ZnCollider*		CreateCapsuleCollider(const std::wstring&) noexcept;
 		virtual ZnCollider*		CreateCustomCollider(const std::wstring&) noexcept;
-=======
-		virtual ZnCollider*		CreatBoxCollider(float width, float height) noexcept;
-		virtual ZnCollider*		CreatPlaneCollider() noexcept;
-		virtual ZnCollider*		CreatSphereCollider() noexcept;
-		virtual ZnCollider*		CreateCapsuleCollider() noexcept;
-		virtual ZnCollider*		CreateCustomCollider() noexcept;
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 		
 		/// <summary>
 		/// Create Joint
@@ -104,13 +89,10 @@ namespace ZonaiPhysics
 		physx::PxScene*					scene;
 		physx::PxMaterial*				material;
 		physx::PxPvd*					pvd;
-<<<<<<< HEAD
 
 	private:
 		std::map<std::wstring, RigidBody*> bodies;
 		bool first;
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 	};
 } // namespace ZonaiPhysics
 
