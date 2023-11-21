@@ -63,6 +63,10 @@ void PurahEngine::GraphicsManager::Run()
 	rotation_matrix = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
 	test.block<3, 3>(0, 0) = rotation_matrix;
 
+	int a;
+	int b;
+	int c = a * (a < b) + b * (a <= b);
+
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
 		//testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
