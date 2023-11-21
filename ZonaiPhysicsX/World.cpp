@@ -11,8 +11,6 @@ namespace ZonaiPhysics
 		pvd = PxCreatePvd(*foundation);
 		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 		pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-<<<<<<< HEAD
-=======
 
 		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
 		PxInitExtensions(*physics, pvd);
@@ -41,8 +39,6 @@ namespace ZonaiPhysics
 
 	void World::Finalize() noexcept
 	{
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
-
 		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
 		PxInitExtensions(*physics, pvd);
 
@@ -95,7 +91,6 @@ namespace ZonaiPhysics
 		return new RigidBody(physics);
 	}
 
-<<<<<<< HEAD
 	ZnRigidBody* World::CreateRigidBody(const std::wstring& _id) noexcept
 	{
 		auto itr = bodies.find(_id);
@@ -132,7 +127,4 @@ namespace ZonaiPhysics
 	{
 
 	}
-
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 } // namespace ZonaiPhysics
