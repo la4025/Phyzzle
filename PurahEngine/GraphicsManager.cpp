@@ -65,15 +65,11 @@ void PurahEngine::GraphicsManager::Run()
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
-		//testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() * 
-			//													Eigen::Quaternionf(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY())));
 		testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
 	}
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('E') == true)
 	{
-		//testObject->GetComponent<Transform>()->SetLocalRotation(testObject->GetComponent<Transform>()->GetLocalRotation() *
-			//Eigen::Quaternionf(Eigen::AngleAxisf(-angle, Eigen::Vector3f::UnitY())));
 		testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), -angle);
 	}
 
