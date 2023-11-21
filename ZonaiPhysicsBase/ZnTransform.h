@@ -14,7 +14,6 @@ namespace ZonaiPhysics
 	class ZnTransform
 	{
 	public:
-<<<<<<< HEAD
 		ZnTransform() noexcept = default;
 
 		ZnTransform(const Vector3D& _vec) noexcept : position(_vec), quaternion()
@@ -38,9 +37,5 @@ namespace ZonaiPhysics
 	public:
 		Vector3D position;
 		Quaternion quaternion;
-=======
-		Vector3D p;
-		Quaternion q;
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 	};
 }

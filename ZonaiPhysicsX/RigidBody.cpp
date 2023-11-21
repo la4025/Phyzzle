@@ -4,7 +4,6 @@
 
 namespace ZonaiPhysics
 {
-<<<<<<< HEAD
 	RigidBody::RigidBody() noexcept
 	{
 
@@ -23,12 +22,6 @@ namespace ZonaiPhysics
 
 	void RigidBody::WakeUp() noexcept
 	{
-=======
-	void RigidBody::WakeUp() noexcept
-	{
-		PxFilterFlag
-
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 		rigidbody_->wakeUp();
 	}
 

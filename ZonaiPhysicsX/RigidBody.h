@@ -108,10 +108,7 @@ namespace ZonaiPhysics
 
 	private:
 		physx::PxRigidDynamic* rigidbody_;
-<<<<<<< HEAD
 		physx::PxRigidStatic* rigidstatic_;
-=======
->>>>>>> 49329f7c854b5a1bc6f7f78c07b81085dead6dbe
 	};
 } // namespace ZonaiPhysics
 
