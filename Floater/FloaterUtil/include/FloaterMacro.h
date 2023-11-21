@@ -44,3 +44,6 @@ while (false)
 #define ASSERT(condition, message)
 
 #endif
+
+#define BRANCHLESS_MIN(a, b) (a * (a < b) + b * (a <= b))
+#define BRANCHLESS_MAX(a, b) (a * (a > b) + b * (a >= b))

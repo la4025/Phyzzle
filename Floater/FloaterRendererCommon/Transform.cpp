@@ -5,6 +5,8 @@
 
 void flt::Transform::SetMatrix(const Matrix4f& worldMatrix)
 {
+	MakeDirtyRecursive();
+
 	DirectX::XMMATRIX matrix
 	{
 		worldMatrix.e[0][0], worldMatrix.e[0][1], worldMatrix.e[0][2], worldMatrix.e[0][3],
@@ -18,6 +20,8 @@ void flt::Transform::SetMatrix(const Matrix4f& worldMatrix)
 
 void flt::Transform::SetPosition(float x, float y, float z)
 {
+	MakeDirtyRecursive();
+
 	_position.x = x;
 	_position.y = y;
 	_position.z = z;
@@ -25,16 +29,22 @@ void flt::Transform::SetPosition(float x, float y, float z)
 
 void flt::Transform::SetPosition(const Vector4f& position)
 {
+	MakeDirtyRecursive();
+
 	_position = position;
 }
 
 void flt::Transform::SetRotation(float degreeX, float degreeY, float degreeZ)
 {
+	MakeDirtyRecursive();
+
 	_rotation.SetEuler(degreeX, degreeY, degreeY);
 }
 
 void flt::Transform::SetRotation(const Vector3f& axis, float radian)
 {
+	MakeDirtyRecursive();
+
 	Quaternion q(axis, radian);
 	_rotation = q;
 	_rotation.Normalize();
@@ -42,11 +52,15 @@ void flt::Transform::SetRotation(const Vector3f& axis, float radian)
 
 void flt::Transform::SetRotation(const Quaternion& q)
 {
+	MakeDirtyRecursive();
+
 	_rotation = q;
 }
 
 void flt::Transform::SetScale(float x, float y, float z)
 {
+	MakeDirtyRecursive();
+
 	_scale.x = x;
 	_scale.y = y;
 	_scale.z = z;
@@ -54,11 +68,15 @@ void flt::Transform::SetScale(float x, float y, float z)
 
 void flt::Transform::SetScale(const Vector4f& scale)
 {
+	MakeDirtyRecursive();
+
 	_scale = scale;
 }
 
 void flt::Transform::AddPosition(float x, float y, float z)
 {
+	MakeDirtyRecursive();
+
 	_position.x += x;
 	_position.y += y;
 	_position.z += z;
@@ -66,12 +84,16 @@ void flt::Transform::AddPosition(float x, float y, float z)
 
 void flt::Transform::AddPosition(const Vector4f& position)
 {
+	MakeDirtyRecursive();
+
 	_position += position;
 	_position.w = 1.0f;
 }
 
 void flt::Transform::AddRotation(const Vector3f& axis, float radian)
 {
+	MakeDirtyRecursive();
+
 	//Quaternion q0{ DirectX::XMQuaternionRotationAxis(Vector4f{ axis, 0.0f }, radian) };
 	Quaternion q(axis, radian);
 	//q.SetEuler(degreeX, degreeY, degree);
@@ -80,12 +102,16 @@ void flt::Transform::AddRotation(const Vector3f& axis, float radian)
 
 void flt::Transform::AddRotation(const Quaternion& q)
 {
+	MakeDirtyRecursive();
+
 	_rotation = q * _rotation;
 	_rotation.Normalize();
 }
 
 void flt::Transform::AddScale(float x, float y, float z)
 {
+	MakeDirtyRecursive();
+
 	_scale.x += x;
 	_scale.y += y;
 	_scale.z += z;
@@ -134,17 +160,49 @@ flt::Matrix4f flt::Transform::GetScaleMatrix4f() const noexcept
 	};
 }
 
-flt::Matrix4f flt::Transform::GetMatrix4f() const noexcept
+flt::Matrix4f flt::Transform::GetLocalMatrix4f() const noexcept
 {
-	return GetScaleMatrix4f() * GetRotationMatrix4f() * GetTransformMatrix4f();
+	float x2 = _rotation.x * _rotation.x;
+	float y2 = _rotation.y * _rotation.y;
+	float z2 = _rotation.z * _rotation.z;
+	float xy = _rotation.x * _rotation.y;
+	float xz = _rotation.x * _rotation.z;
+	float yz = _rotation.y * _rotation.z;
+	float wx = _rotation.w * _rotation.x;
+	float wy = _rotation.w * _rotation.y;
+	float wz = _rotation.w * _rotation.z;
+
+	return Matrix4f
+	{
+		_scale.x * (1.f - 2.f * (y2 + z2)),	_scale.x * (2.f * (xy + wz)),		_scale.x * (2.f * (xz - wy)),		0.f,
+		_scale.y * (2.f * (xy - wz)),		_scale.y * (1.f - 2.f * (x2 + z2)),	_scale.y * (2.f * (yz + wx)),		0.f,
+		_scale.z * (2.f * (xz + wy)),		_scale.z * (2.f * (yz - wx)),		_scale.z * (1.f - 2.f * (x2 + y2)),	0.f,
+		_position.x,						_position.y,						_position.z,						1.f
+	};
+
+	//return GetScaleMatrix4f() * GetRotationMatrix4f() * GetTransformMatrix4f();
+}
+
+flt::Matrix4f flt::Transform::GetWorldMatrix4f() noexcept
+{
+	if (_isDirty)
+	{
+		CalcWorldMatrixRecursive();
+
+		_isDirty = false;
+	}
+
+	return _worldMatrix;
 }
 
 void flt::Transform::LookAt(Vector4f target)
 {
+	MakeDirtyRecursive();
+
 	// target을 바라보도록 회전
 	Vector4f wantLook = target - _position;
 	wantLook.Vector3Normalize();
-	Vector4f currLook = Vector4f(0.f, 0.f, 1.f, 1.f) * GetMatrix4f() - _position;
+	Vector4f currLook = Vector4f(0.f, 0.f, 1.f, 1.f) * GetLocalMatrix4f() - _position;
 	currLook.Vector3Normalize();
 	Vector4f axis = currLook.Vector3Cross(wantLook);
 
@@ -204,5 +262,29 @@ bool flt::Transform::SetParent(Transform* pParent)
 
 	_pParent = pParent;
 
+	MakeDirtyRecursive();
+
 	return true;
+}
+
+void flt::Transform::MakeDirtyRecursive() noexcept
+{
+	_isDirty = true;
+
+	for (auto& child : _children)
+	{
+		child->MakeDirtyRecursive();
+	}
+}
+
+void flt::Transform::CalcWorldMatrixRecursive() noexcept
+{
+	if (_pParent)
+	{
+		_worldMatrix = GetLocalMatrix4f() * _pParent->GetWorldMatrix4f();
+	}
+	else
+	{
+		_worldMatrix = GetLocalMatrix4f();
+	}
 }

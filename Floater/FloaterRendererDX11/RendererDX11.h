@@ -20,6 +20,8 @@ namespace flt
 	template<typename T>
 	using comptr = Microsoft::WRL::ComPtr<T>;
 
+
+
 	class RendererDX11 : public IRenderer
 	{
 	public:
@@ -30,8 +32,8 @@ namespace flt
 		bool Finalize();
 
 		virtual bool Render(float deltaTime);
-		virtual bool RegisterObject(Renderable& renderable);
-		virtual bool DeregisterObject(Renderable& renderable);
+		virtual HOBJECT RegisterObject(RendererObject& renderable);
+		virtual bool DeregisterObject(RendererObject& renderable);
 
 		virtual bool Test() override;
 	public:
@@ -45,8 +47,6 @@ namespace flt
 		void RenderSingleNodeRecursive(DX11Node* node, const Matrix4f& parentMatrix);
 
 		bool SetVsConstantBuffer(ID3D11Buffer* vsConstantBuffer, void* pData, size_t dataSize, UINT slot);
-
-		Matrix4f GetWorldMatrixRecursive(const Transform* transform);
 
 		// 테스트 private 함수들
 	private:
@@ -84,7 +84,5 @@ namespace flt
 
 		// 그리기 위한 오브젝트
 		std::vector<DX11Node*> _renderableObjects;
-
-		RBTree<const Transform*, Matrix4f> _worldMatrixCache;
 	};
 }

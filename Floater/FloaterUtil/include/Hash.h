@@ -76,7 +76,7 @@ namespace flt
 			_mum(&a, &b);
 			return  _mix(a ^ _secret[0] ^ len, b ^ _secret[1]);
 		}
-		
+
 		void GetState(State* outState)
 		{
 			ASSERT(outState, "nullptr");
@@ -92,45 +92,45 @@ namespace flt
 		uint64 _seed;
 		uint64 _secret[4];
 
-		inline uint64 _rot(uint64 x) 
-		{ 
-			return (x >> 32) | (x << 32); 
+		inline uint64 _rot(uint64 x)
+		{
+			return (x >> 32) | (x << 32);
 		}
 		inline void _mum(uint64* A, uint64* B)
 		{
 			*A = _umul128(*A, *B, B);
 		}
-		inline uint64 _mix(uint64 A, uint64 B) 
-		{ 
-			_mum(&A, &B); 
-			return A ^ B; 
+		inline uint64 _mix(uint64 A, uint64 B)
+		{
+			_mum(&A, &B);
+			return A ^ B;
 		}
-		inline uint64 _r8(const uint8* p) 
-		{ 
-			uint64 v; 
-			memcpy(&v, p, 8); 
-			return v; 
+		inline uint64 _r8(const uint8* p)
+		{
+			uint64 v;
+			memcpy(&v, p, 8);
+			return v;
 		}
-		inline uint64 _r4(const uint8* p) 
-		{ 
-			uint32 v; 
-			memcpy(&v, p, 4); 
-			return v; 
+		inline uint64 _r4(const uint8* p)
+		{
+			uint32 v;
+			memcpy(&v, p, 4);
+			return v;
 		}
-		inline uint64 _r3(const uint8* p, size_t k) 
-		{ 
-			return (((uint64)p[0]) << 16) | (((uint64)p[k >> 1]) << 8) | p[k - 1]; 
+		inline uint64 _r3(const uint8* p, size_t k)
+		{
+			return (((uint64)p[0]) << 16) | (((uint64)p[k >> 1]) << 8) | p[k - 1];
 		}
 
-		inline uint64_t hash64(uint64_t A, uint64_t B) 
-		{ 
-			A ^= 0x2d358dccaa6c78a5ull; 
-			B ^= 0x8bb84b93962eacc9ull; 
-			_mum(&A, &B); 
-			return _mix(A ^ 0x2d358dccaa6c78a5ull, B ^ 0x8bb84b93962eacc9ull); 
+		inline uint64_t hash64(uint64_t A, uint64_t B)
+		{
+			A ^= 0x2d358dccaa6c78a5ull;
+			B ^= 0x8bb84b93962eacc9ull;
+			_mum(&A, &B);
+			return _mix(A ^ 0x2d358dccaa6c78a5ull, B ^ 0x8bb84b93962eacc9ull);
 		}
-		inline uint64_t wyrand() 
-		{ 
+		inline uint64_t wyrand()
+		{
 			//uint64 seed = _seed;
 			_seed += 0x2d358dccaa6c78a5ull;
 			return _mix(_seed, _seed ^ 0x8bb84b93962eacc9ull);
@@ -182,6 +182,21 @@ namespace flt
 					}
 				} while (!ok);
 			}
+		}
+	};
+
+	struct dhb2
+	{
+		inline uint32_t operator()(const void* key, size_t len)
+		{
+			const uint8_t* p = (const uint8_t*)key;
+			uint32_t hash = 5381;
+			for (size_t i = 0; i < len; i++)
+			{
+				// hash * 33 + p[i]
+				hash = ((hash << 5) + hash) + p[i];
+			}
+			return hash;
 		}
 	};
 }

@@ -18,6 +18,8 @@
 #include "../FloaterUtil/TesterFixedSizeMemoryPool.h"
 #include "../FloaterUtil/include/Hash.h"
 
+#include "../FloaterRendererCommon/include/Camera.h"
+
 #include <unordered_map>
 #pragma endregion
 
@@ -38,30 +40,38 @@ int main()
 
 #pragma region 테스트
 	{
+		using namespace flt;
 		using namespace flt::test;
-
+		Transform transform;
+		Camera camera(&transform);
+		transform.SetPosition(0.0f, 0.0f, 0.7f);
+		transform.SetScale(0.3f, 0.3f, 0.3f);
+		transform.SetRotation(20.f, 40.f, 80.f);
+		
+		auto viewMatrix = camera.GetViewMatrix();
 	}
 #pragma endregion
-
 
 	flt::Platform platform;
 	platform.Initialize(1280, 720, L"title", L".\\path");
 
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);
 
-	flt::Transform transform;
 	bool isDraw = true;
-	transform.SetPosition(0.0f, 0.0f, 0.7f);
-	transform.SetScale(0.3f, 0.3f, 0.3f);
-	flt::Renderable renderable(transform, isDraw);
+	flt::RawNode node(L"testNode");
+	node.transform.SetPosition(0.0f, 0.0f, 0.7f);
+	node.transform.SetScale(0.3f, 0.3f, 0.3f);
+
+	flt::RendererObject renderable(node, isDraw, L"testObject");
 	renderable.name = L"test";
 	renderer->RegisterObject(renderable);
 
-	flt::Transform childTransform;
-	childTransform.SetPosition(1.0f, 0.0f, 0.0f);
-	childTransform.SetScale(0.5f, 0.5f, 0.5f);
-	childTransform.SetParent(&transform);
-	flt::Renderable childRenderable(childTransform, isDraw);
+	flt::RawNode childNode(L"testChildNode");
+	childNode.transform.SetPosition(1.0f, 0.0f, 0.0f);
+	childNode.transform.SetScale(0.5f, 0.5f, 0.5f);
+	childNode.transform.SetParent(&node.transform);
+
+	flt::RendererObject childRenderable(childNode, isDraw, L"testChildObject");
 	renderable.name = L"testChild";
 	renderer->RegisterObject(childRenderable);
 
@@ -76,16 +86,15 @@ int main()
 
 		renderer->Render(1.0f);
 		//transform.AddRotation({ 1.0f, 0.0f, 0.0f }, 0.01f);
-		transform.AddRotation({ 0.0f, 1.0f, 0.0f }, 0.01f);
+		node.transform.AddRotation({ 0.0f, 1.0f, 0.0f }, -0.1f);
 		//transform.AddRotation({ 0.0f, 0.0f, 1.0f }, 0.01f);
 
-		childTransform.AddRotation({ 0.0f, 1.0f, 0.0f }, 0.02f);
+		childNode.transform.AddRotation({ 0.0f, 1.0f, 0.0f }, 0.80f);
 
 		//if (!renderer->Render(deltaTime))
 		//{
 		//	break;
 		//}
-
 		{
 			auto keyData = platform.GetKey(flt::KeyCode::z);
 			if (keyData)
@@ -150,7 +159,6 @@ int main()
 				std::cout << "abs Pos " << keyData.x << " " << keyData.y << std::endl;
 			}
 		}
-
 
 		Sleep(10);
 	}

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../FloaterRendererCommon/include/Transform.h"
 #include "../FloaterRendererCommon/include/Camera.h"
 #include "DX11Mesh.h"
@@ -10,10 +10,10 @@ namespace flt
 {
 	struct DX11Node
 	{
-		DX11Node(const Transform& transform, const bool& isDraw);
+		DX11Node(Transform& transform, const bool& isDraw);
 
 		std::wstring name;
-		const Transform& transform;
+		Transform& transform;
 		const bool& isDraw;
 		Resource<DX11Mesh>* mesh;
 		Camera* camera;

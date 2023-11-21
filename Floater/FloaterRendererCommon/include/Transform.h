@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../../FloaterMath/include/Matrix4f.h"
 #include "../../FloaterMath/include/Vector3f.h"
@@ -12,8 +12,7 @@ namespace flt
 	class Transform
 	{
 	public:
-		Transform() : _position(), _scale(1.0f, 1.0f, 1.0f, 0.0f), _rotation(),
-		_pParent(nullptr), _children() {}
+		Transform() : _position(), _scale(1.0f, 1.0f, 1.0f, 0.0f), _rotation(), _pParent(nullptr), _children(), _worldMatrix(), _isDirty(true) {}
 
 		void SetMatrix(const Matrix4f& worldMatrix);
 
@@ -39,7 +38,8 @@ namespace flt
 		Matrix4f GetTransformMatrix4f() const noexcept;
 		Matrix4f GetRotationMatrix4f() const noexcept;
 		Matrix4f GetScaleMatrix4f() const noexcept;
-		Matrix4f GetMatrix4f() const noexcept;
+		Matrix4f GetLocalMatrix4f() const noexcept;
+		Matrix4f GetWorldMatrix4f() noexcept;
 
 		void LookAt(Vector4f target);
 
@@ -49,6 +49,10 @@ namespace flt
 		Transform* GetChild(size_t index) const noexcept { return _children[index]; }
 		const std::vector<Transform*>& GetChildren() const noexcept { return _children; }
 
+	private:
+		void MakeDirtyRecursive() noexcept;
+		void CalcWorldMatrixRecursive() noexcept;
+
 
 	private:
 		Vector4f _position;
@@ -57,5 +61,8 @@ namespace flt
 
 		Transform* _pParent;
 		std::vector<Transform*> _children;
+
+		Matrix4f _worldMatrix;
+		bool _isDirty;
 	};
 }

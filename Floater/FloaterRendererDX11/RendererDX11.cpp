@@ -216,7 +216,6 @@ bool flt::RendererDX11::Render(float deltaTime)
 	_immediateContext->ClearRenderTargetView(_renderTargetView.Get(), DirectX::Colors::Black);
 	_immediateContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	_immediateContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
-	_worldMatrixCache.Clear();
 
 	// 각 mesh별로 들어가야하지만 일단 여기서 만들자.
 	D3D11_RASTERIZER_DESC rasterizerDesc = { };
@@ -246,7 +245,8 @@ bool flt::RendererDX11::Render(float deltaTime)
 		}
 
 		// 렌더링
-		Matrix4f worldMatrix = GetWorldMatrixRecursive(&node->transform);
+		//Matrix4f worldMatrix = GetWorldMatrixRecursive(&node->transform);
+		Matrix4f worldMatrix = node->transform.GetWorldMatrix4f();
 		DirectX::XMMATRIX world = ConvertXMMatrix(worldMatrix);
 
 		DirectX::XMMATRIX worldViewProj = world;
@@ -298,9 +298,9 @@ bool flt::RendererDX11::Render(float deltaTime)
 	return true;
 }
 
-bool flt::RendererDX11::RegisterObject(Renderable& renderable)
+flt::HOBJECT flt::RendererDX11::RegisterObject(RendererObject& renderable)
 {
-	DX11Node* node = new DX11Node(renderable.transform, renderable.isDraw);
+	DX11Node* node = new DX11Node(renderable.node.transform, renderable.isDraw);
 	if (!node)
 	{
 		return false;
@@ -316,7 +316,7 @@ bool flt::RendererDX11::RegisterObject(Renderable& renderable)
 	return true;
 }
 
-bool flt::RendererDX11::DeregisterObject(Renderable& renderable)
+bool flt::RendererDX11::DeregisterObject(RendererObject& renderable)
 {
 	return false;
 }
@@ -515,7 +515,7 @@ bool flt::RendererDX11::OnResize()
 	_immediateContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
 
 	// 뷰포트 생성
-	D3D11_VIEWPORT viewPort[1];
+	D3D11_VIEWPORT viewPort[1]{};
 	viewPort[0].TopLeftX = 0.0f;
 	viewPort[0].TopLeftY = 0.0f;
 	viewPort[0].Width = (FLOAT)backBufferDesc.Width;
@@ -537,7 +537,7 @@ bool flt::RendererDX11::OnResize()
 
 void flt::RendererDX11::RenderSingleNodeRecursive(DX11Node* node, const Matrix4f& parentMatrix)
 {
-	Matrix4f worldMatrix = node->transform.GetMatrix4f() * parentMatrix;
+	Matrix4f worldMatrix = node->transform.GetLocalMatrix4f() * parentMatrix;
 	Matrix4f viewProjMatrix = Matrix4f::Identity();
 
 	for (auto& [name, child] : node->children)
@@ -576,31 +576,6 @@ bool flt::RendererDX11::SetVsConstantBuffer(ID3D11Buffer* vsConstantBuffer, void
 	_immediateContext->VSSetConstantBuffers(slot, 1, &vsConstantBuffer);
 
 	return true;
-}
-
-flt::Matrix4f flt::RendererDX11::GetWorldMatrixRecursive(const Transform* transform)
-{
-	// nullptr이라면 기본 매트릭스 반환.
-	if (!transform)
-	{
-		return Matrix4f
-		{ 
-			1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			0.f, 0.f, 0.f, 1.f
-		};
-	}
-
-	// 이미 캐싱이 되어있다면 해당 캐시 반환
-	auto iter = _worldMatrixCache.Find(transform);
-	if (iter != _worldMatrixCache.end())
-	{
-		return iter->value;
-	}
-
-	// 캐싱이 되어있지 않다면 캐싱 후 반환.
-	return _worldMatrixCache[transform] = transform->GetMatrix4f() * GetWorldMatrixRecursive(transform->GetParent());
 }
 
 flt::Resource<flt::DX11Mesh>* flt::RendererDX11::CreateBox()
