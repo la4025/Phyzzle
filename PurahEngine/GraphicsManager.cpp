@@ -58,7 +58,7 @@ void PurahEngine::GraphicsManager::Run()
 		}
 	}
 	renderer->BeginDraw(0.0f);
-	float angle = 45.0f;  // 90도를 라디안으로 표현
+	float angle = 45.0f;
 	Eigen::Matrix3f rotation_matrix;
 	rotation_matrix = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
 	test.block<3, 3>(0, 0) = rotation_matrix;
