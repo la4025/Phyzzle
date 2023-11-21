@@ -65,7 +65,8 @@ void PurahEngine::GraphicsManager::Run()
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
-		testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
+		//testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
+		testObject->GetComponent<Transform>()->Rotate(testObject->GetComponent<Transform>()->up, angle);
 	}
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('E') == true)
