@@ -20,15 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="SphericalJoint.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
+    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="SphericalJoint.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
