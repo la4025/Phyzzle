@@ -16,9 +16,10 @@ PurahEngine::Transform::~Transform()
 
 }
 
-void PurahEngine::Transform::Rotate()
+void PurahEngine::Transform::Rotate(Eigen::Vector3f axis, float angle)
 {
-
+	// axis는 UnitX(), UnitY(), UnitZ()로 할것
+	rotation = Eigen::AngleAxisf(angle * (M_PI / 180.f), axis) * rotation;
 }
 
 Eigen::Vector3f PurahEngine::Transform::GetLocalPosition() const
@@ -38,17 +39,8 @@ Eigen::Vector3f PurahEngine::Transform::GetLocalScale() const
 
 Eigen::Vector3f PurahEngine::Transform::GetWorldPosition() const
 {
-	if (parentTransform != nullptr)
-	{
-		Eigen::Vector3f parentPosition = parentTransform->GetWorldPosition();
-		//return parentPosition.transpose() * position;
-		/// 이부분은 인재원 가서 수정할 것
-		return parentPosition.cwiseProduct(position);
-	}
-	else
-	{
-		return position;
-	}
+	Eigen::Vector3f worldPosition = GetWorldMatrix().block<3, 1>(0, 3);
+	return worldPosition;
 }
 
 Eigen::Quaternionf PurahEngine::Transform::GetWorldRotation() const
@@ -90,12 +82,10 @@ Eigen::Matrix4f PurahEngine::Transform::GetLocalMatrix() const
 	localTransform.scale(scale);
 
 	return localTransform.matrix();
-
 }
 
 Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
 {
-
 	if (parentTransform != nullptr)
 	{
 		Eigen::Affine3f worldTransform = Eigen::Affine3f::Identity();
