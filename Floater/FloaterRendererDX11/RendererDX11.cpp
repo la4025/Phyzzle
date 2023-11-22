@@ -45,7 +45,8 @@ flt::RendererDX11::RendererDX11() :
 	_renderTargetView(),
 	_depthStencilView(),
 	_rasterizerState(),
-	_renderableObjects()
+	_renderableObjects(),
+	_cameras()
 
 {
 
@@ -313,6 +314,12 @@ flt::HOBJECT flt::RendererDX11::RegisterObject(RendererObject& renderable)
 	}
 
 	_renderableObjects.push_back(node);
+
+	if (node->camera)
+	{
+		_cameras.push_back(node->camera);
+	}
+
 	return true;
 }
 

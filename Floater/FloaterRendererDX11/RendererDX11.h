@@ -84,5 +84,6 @@ namespace flt
 
 		// 그리기 위한 오브젝트
 		std::vector<DX11Node*> _renderableObjects;
+		std::vector<Camera*> _cameras;
 	};
 }
