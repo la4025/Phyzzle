@@ -1,16 +1,22 @@
-#include "include/Platform.h"
+﻿#include "include/Platform.h"
 #include "OsPlatform.h"
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include <chrono>
 
 class flt::Platform::impl : public PLATFORM_OS
 {
-
+public:
+	impl(bool useCondole) : PLATFORM_OS(useCondole) {}
 };
 
-flt::Platform::Platform()
+flt::Platform::Platform() : Platform(false)
 {
-	_pOsImpl = new impl;
+	
+}
+
+flt::Platform::Platform(bool useConsole)
+{
+	_pOsImpl = new impl(useConsole);
 }
 
 flt::Platform::~Platform()

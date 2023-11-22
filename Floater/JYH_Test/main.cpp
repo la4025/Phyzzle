@@ -1,11 +1,11 @@
 ﻿#define FLT_WINDOWS
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
 #include "../FloaterPlatform/include/Platform.h"
-#include "../FloaterUtil/include/Timer.h"
-#include "../FloaterUtil/include/FloaterMacro.h"
 #include "../FloaterRendererCommon/include/Transform.h"
+#include "../FloaterUtil/include/FloaterMacro.h"
+#include "../FloaterUtil/include/Timer.h"
+#include <iostream>
 
 #include "../FloaterUtil/include/ConvString.h"
 
@@ -52,7 +52,7 @@ int main()
 	}
 #pragma endregion
 
-	flt::Platform platform;
+	flt::Platform platform{ true };
 	platform.Initialize(1280, 720, L"title", L".\\path");
 
 	auto renderer = platform.CreateRenderer(flt::RendererType::DX11);

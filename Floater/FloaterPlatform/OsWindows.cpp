@@ -12,18 +12,47 @@
 #include <chrono>
 
 
-flt::OsWindows::OsWindows() :
+flt::OsWindows::OsWindows(bool useConsole) :
 	_hwnd(NULL),
 	_isActivated(false),
 	_keyTimer(),
-	_keyState{ 0, },
-	_keyData{ 0, }
+	_pKeyStates{ new(std::nothrow) bool[(int)KeyCode::MAX] },
+	_pKeyDatas{ new(std::nothrow) KeyData[(int)KeyCode::MAX] },
+	_keyUp(),
+	_consoleHwnd(NULL)
 {
+	_consoleHwnd = GetConsoleWindow();
+	if (_consoleHwnd == NULL)
+	{
+		if (useConsole)
+		{
+			AllocConsole();
+			_consoleHwnd = GetConsoleWindow();
+			if (_consoleHwnd == NULL)
+			{
+				ASSERT(false, "콘솔 윈도우 핸들을 가져오지 못했습니다.");
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
 
+	if (!useConsole)
+	{
+		ShowWindow(_consoleHwnd, SW_HIDE);
+	}
+	else
+	{
+		ShowWindow(_consoleHwnd, SW_SHOW);
+	}
 }
 
 flt::OsWindows::~OsWindows()
 {
+	delete[] _pKeyStates;
+	delete[] _pKeyDatas;
 
 }
 
@@ -86,7 +115,7 @@ ULONG CreateDump(void* param)
 
 
 
-LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp) 
+LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp)
 {
 	LONG retval = 0;
 	DumpParam* param = new DumpParam();
@@ -95,6 +124,13 @@ LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp)
 	if (pExp->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW)
 	{
 		HANDLE hThread = CreateThread(NULL, 102400, CreateDump, param, 0, NULL);
+		if (hThread == NULL)
+		{
+			auto error = GetLastError();
+			std::cout << "CreateThread Error : " << error << std::endl;
+			return retval;
+		}
+
 		WaitForSingleObject(hThread, INFINITE);
 		CloseHandle(hThread);
 	}
@@ -222,9 +258,9 @@ void flt::OsWindows::DestroyRenderer(IRenderer* renderer)
 
 flt::KeyData flt::OsWindows::GetKey(KeyCode code)
 {
-	if (_keyState[(int)code])
+	if (_pKeyStates[(int)code])
 	{
-		return _keyData[(int)code];
+		return _pKeyDatas[(int)code];
 	}
 
 	KeyData keydata;
@@ -251,33 +287,33 @@ void flt::OsWindows::UpdateKeyState()
 	// keyUp 처리
 	for (const auto& index : _keyUp)
 	{
-		_keyState[index] = false;
-		_keyData[index].keyTime = 0;
+		_pKeyStates[index] = false;
+		_pKeyDatas[index].keyTime = 0;
 	}
 	_keyUp.clear();
 
 	// 매 프레임 초기화 해줘야 하는 키들.
 	// 현재 마우스 좌표, 휠업 다운.
 
-	_keyState[(int)KeyCode::mouseRelativePos] = false;
-	_keyData[(int)KeyCode::mouseRelativePos].keyTime = 0;
-	_keyData[(int)KeyCode::mouseRelativePos].x = 0;
-	_keyData[(int)KeyCode::mouseRelativePos].y = 0;
+	_pKeyStates[(int)KeyCode::mouseRelativePos] = false;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].y = 0;
 
-	_keyState[(int)KeyCode::mouseAbsolutePos] = false;
-	_keyData[(int)KeyCode::mouseAbsolutePos].keyTime = 0;
-	_keyData[(int)KeyCode::mouseAbsolutePos].x = 0;
-	_keyData[(int)KeyCode::mouseAbsolutePos].y = 0;
+	_pKeyStates[(int)KeyCode::mouseAbsolutePos] = false;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].y = 0;
 
-	_keyState[(int)KeyCode::mouseWheelUp] = false;
-	_keyData[(int)KeyCode::mouseWheelUp].keyTime = 0;
-	_keyData[(int)KeyCode::mouseWheelUp].x = 0;
-	_keyData[(int)KeyCode::mouseWheelUp].y = 0;
+	_pKeyStates[(int)KeyCode::mouseWheelUp] = false;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].y = 0;
 
-	_keyState[(int)KeyCode::mouseWheelDown] = false;
-	_keyData[(int)KeyCode::mouseWheelDown].keyTime = 0;
-	_keyData[(int)KeyCode::mouseWheelDown].x = 0;
-	_keyData[(int)KeyCode::mouseWheelDown].y = 0;
+	_pKeyStates[(int)KeyCode::mouseWheelDown] = false;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].y = 0;
 }
 
 void flt::OsWindows::HandleKeyboardRawData(const RAWKEYBOARD& data)
@@ -333,14 +369,14 @@ void flt::OsWindows::HandleMouseRawData(const RAWMOUSE& data)
 		KeyData wheelData{ time, wheelDelta, wheelDelta };
 		if (wheelDelta > 0)
 		{
-			wheelData.x += _keyData[(int)KeyCode::mouseWheelUp].x;
-			wheelData.y += _keyData[(int)KeyCode::mouseWheelUp].y;
+			wheelData.x += _pKeyDatas[(int)KeyCode::mouseWheelUp].x;
+			wheelData.y += _pKeyDatas[(int)KeyCode::mouseWheelUp].y;
 			SetKeyState(KeyCode::mouseWheelUp, wheelData, true, false);
 		}
 		else
 		{
-			wheelData.x += _keyData[(int)KeyCode::mouseWheelDown].x;
-			wheelData.y += _keyData[(int)KeyCode::mouseWheelDown].y;
+			wheelData.x += _pKeyDatas[(int)KeyCode::mouseWheelDown].x;
+			wheelData.y += _pKeyDatas[(int)KeyCode::mouseWheelDown].y;
 			SetKeyState(KeyCode::mouseWheelDown, wheelData, true, false);
 		}
 	}
@@ -387,8 +423,8 @@ void flt::OsWindows::HandleMouseRawData(const RAWMOUSE& data)
 		// 상대 좌표 마우스 위치 세팅
 		KeyData mouseMove;
 		mouseMove.keyTime = 0;
-		mouseMove.x = rawX + _keyData[(int)KeyCode::mouseRelativePos].x;
-		mouseMove.y = rawY + _keyData[(int)KeyCode::mouseRelativePos].y;
+		mouseMove.x = rawX + _pKeyDatas[(int)KeyCode::mouseRelativePos].x;
+		mouseMove.y = rawY + _pKeyDatas[(int)KeyCode::mouseRelativePos].y;
 		SetKeyState(KeyCode::mouseRelativePos, mouseMove, true, false);
 
 		// 절대 좌표 마우스 위치 세팅
@@ -403,11 +439,11 @@ void flt::OsWindows::SetKeyState(KeyCode code, const KeyData& data, bool isActiv
 {
 	if (isActive)
 	{
-		if (_keyData[(int)code].keyTime == 0)
+		if (_pKeyDatas[(int)code].keyTime == 0)
 		{
-			_keyData[(int)code] = data;
+			_pKeyDatas[(int)code] = data;
 		}
-		_keyState[(int)code] = true;
+		_pKeyStates[(int)code] = true;
 	}
 
 	if (isInActive)
@@ -462,7 +498,7 @@ LRESULT WINAPI flt::OsWindows::WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
 				thisPtr->_isActivated = false;
-				memset(thisPtr->_keyState, 0, sizeof(thisPtr->_keyState));
+				memset(thisPtr->_pKeyStates, 0, sizeof(*(thisPtr->_pKeyStates)) * (int)KeyCode::MAX);
 			}
 			else
 			{
@@ -649,7 +685,7 @@ bool flt::OsWindows::GetError(std::wstring* outErrorMsg, unsigned int* outErrorC
 		return false;
 	}
 
-	std::wstring temp{msgBuffer};
+	std::wstring temp{ msgBuffer };
 	*outErrorMsg += temp;
 
 	return true;
