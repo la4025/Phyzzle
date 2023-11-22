@@ -265,6 +265,7 @@ int snippetMain(int, const char* const*)
 			PxBoxGeometry(2.f, 2.f, 2.f),
 			*gMaterial
 		);
+
 		PxShapeFlags shapeFlags = PxShapeFlag::eSCENE_QUERY_SHAPE;
 
 		PxActorFlags flags = 

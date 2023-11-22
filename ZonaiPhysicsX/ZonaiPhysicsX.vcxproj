@@ -24,7 +24,7 @@
     <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SphericalJoint.h" />
-    <ClInclude Include="World.h" />
+    <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
@@ -33,7 +33,7 @@
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="ZnPhysicsX.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

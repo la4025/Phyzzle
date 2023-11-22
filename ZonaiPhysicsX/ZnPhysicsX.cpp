@@ -1,10 +1,10 @@
-#include "World.h"
+#include "ZnPhysicsX.h"
 #include "RigidBody.h"
 
 
 namespace ZonaiPhysics
 {
-	void World::Initialize() noexcept
+	void ZnPhysicsX::Initialize() noexcept
 	{
 		using namespace physx;
 		foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
@@ -31,46 +31,13 @@ namespace ZonaiPhysics
 		}
 	}
 
-	void World::Simulation(float _dt) noexcept
+	void ZnPhysicsX::Simulation(float _dt) noexcept
 	{
 		scene->simulate(_dt);
 		scene->fetchResults(true);
 	}
 
-	void World::Finalize() noexcept
-	{
-		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
-		PxInitExtensions(*physics, pvd);
-
-		PxSceneDesc sceneDesc(physics->getTolerancesScale());
-		sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
-		dispatcher = PxDefaultCpuDispatcherCreate(2);
-		sceneDesc.cpuDispatcher = dispatcher;
-		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-		scene = physics->createScene(sceneDesc);
-
-		PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
-		if (pvdClient)
-		{
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-		}
-
-		first = true;
-	}
-
-	void World::Simulation(float _dt) noexcept
-	{
-		if (first)
-		{
-			first = false;
-		}
-		scene->simulate(_dt);
-		scene->fetchResults(true);
-	}
-
-	void World::Finalize() noexcept
+	void ZnPhysicsX::Finalize() noexcept
 	{
 		using namespace physx;
 		PX_RELEASE(scene);
@@ -86,12 +53,7 @@ namespace ZonaiPhysics
 		PX_RELEASE(foundation);
 	}
 
-	ZnRigidBody* World::CreateRigidBody() noexcept
-	{
-		return new RigidBody(physics);
-	}
-
-	ZnRigidBody* World::CreateRigidBody(const std::wstring& _id) noexcept
+	ZnRigidBody* ZnPhysicsX::CreateRigidBody(const std::wstring& _id) noexcept
 	{
 		auto itr = bodies.find(_id);
 		if (itr != bodies.end())
@@ -101,30 +63,42 @@ namespace ZonaiPhysics
 
 		RigidBody* newRigidBody = new RigidBody(physics);
 		bodies.insert(std::make_pair(_id, newRigidBody));
+
 		return newRigidBody;
 	}
 
-	ZnCollider* World::CreatBoxCollider(float width, float height) noexcept
+	ZnCollider* ZnPhysicsX::CreatBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
 	{
 		auto itr = bodies.find(_id);
 		if (itr != bodies.end())
 		{
 			return itr->second;
 		}
+
+		RigidBody* newRigidBody = new Collider(physics);
+		bodies.insert(std::make_pair(_id, newRigidBody));
+
+		return newRigidBody;
 	}
 
-	ZnCollider* World::CreatPlaneCollider() noexcept
+	ZnCollider* ZnPhysicsX::CreatPlaneCollider(const std::wstring&, float x, float y) noexcept
 	{
 
 	}
 
-	ZnCollider* World::CreatSphereCollider() noexcept
+	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring&, float radius) noexcept
 	{
 
 	}
 
-	ZnCollider* World::CreateCapsuleCollider() noexcept
+	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept
 	{
 
 	}
+
+	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
+	{
+
+	}
+
 } // namespace ZonaiPhysics

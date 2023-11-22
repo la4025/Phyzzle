@@ -4,7 +4,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="ZnPhysicsX.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
   </ItemGroup>
@@ -12,7 +12,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="World.h" />
+    <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="SphericalJoint.h" />

@@ -27,6 +27,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />
     <ClInclude Include="Renderer.h" />
@@ -43,6 +44,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RigidBody.cpp" />

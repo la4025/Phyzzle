@@ -29,7 +29,7 @@ namespace ZonaiPhysics
 		virtual Quaternion	GetQuaternion() const noexcept = 0;
 		virtual void		SetQuaternion(const Quaternion& _quaternion) noexcept = 0;
 
-		virtual void		SetTransform(const Vector3D& _position, const Quaternion& _quaternion) noexcept;
+		virtual void		SetTransform(const Vector3D& _position, const Quaternion& _quaternion) noexcept = 0;
 
 		/**
 		유저 데이터
@@ -39,3 +39,8 @@ namespace ZonaiPhysics
 
 	};
 }
+
+/*
+오브젝트가 PxRigidDynamic을 들고 있고
+RigidBody, Collider가 그걸 받아서 쓰는 형태로 하는데.
+*/
