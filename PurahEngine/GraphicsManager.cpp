@@ -10,6 +10,9 @@
 
 void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 {
+#ifdef YH_RENDERER
+	renderer = new IZeldaRendererAdapter();
+#else
 	zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
 	if (zeldaGraphicsDLL == nullptr)
 	{
@@ -23,8 +26,11 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 		assert(0);
 	}
 	renderer = createZeldaRenderer();
+#endif
 	renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
 	renderer->CreateBasicResources();
+
+
 }
 
 void PurahEngine::GraphicsManager::Run()
