@@ -1,6 +1,6 @@
-#pragma once
-
+﻿#pragma once
 #include "../FloaterUtil/include/FloaterType.h"
+
 
 namespace flt
 {

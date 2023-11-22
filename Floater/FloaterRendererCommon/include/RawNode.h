@@ -1,6 +1,8 @@
 #pragma once
 #include "Transform.h"
 #include "RawMesh.h"
+#include "RawSkin.h"
+#include "RawAnimation.h"
 #include "Camera.h"
 
 #include <string>
@@ -16,6 +18,8 @@ namespace flt
 		std::wstring name;
 		Transform transform;
 		RawMesh* mesh;
+		RawSkin* skin;
+		RawAnimation* animation;
 		Camera* camera;
 
 		int boneIndex;

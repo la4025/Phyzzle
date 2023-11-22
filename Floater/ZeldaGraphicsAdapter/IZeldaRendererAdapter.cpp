@@ -1,4 +1,4 @@
-#include "./include/IZeldaRendererAdapter.h"
+﻿#include "./include/IZeldaRendererAdapter.h"
 
 bool IZeldaRendererAdapter::Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear)
 {
@@ -25,12 +25,12 @@ void IZeldaRendererAdapter::Finalize()
 	flt::DestroyRendererDX11(_renderer);
 }
 
-void IZeldaRendererAdapter::BeginDraw()
+void IZeldaRendererAdapter::BeginDraw(float deltaTime)
 {
-
+	_renderer->Render(deltaTime);
 }
 
 void IZeldaRendererAdapter::EndDraw()
 {
-	_renderer->Render();
+	return;
 }

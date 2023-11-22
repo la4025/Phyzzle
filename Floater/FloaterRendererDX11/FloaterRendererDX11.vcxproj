@@ -25,7 +25,6 @@
     <ClCompile Include="DX11VertexShader.cpp" />
     <ClCompile Include="DX11Mesh.cpp" />
     <ClCompile Include="DX11Node.cpp" />
-    <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="RendererDX11.cpp" />
     <ClCompile Include="TestBuilder.cpp" />
   </ItemGroup>
@@ -35,13 +34,11 @@
     <ClInclude Include="DX11VertexShader.h" />
     <ClInclude Include="DX11VSConstantBuffer.h" />
     <ClInclude Include="include\CreateRenderer.h" />
-    <ClInclude Include="ITester.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="CommonMath.h" />
     <ClInclude Include="DX11Mesh.h" />
     <ClInclude Include="DX11Node.h" />
-    <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="RendererDX11.h" />
     <ClInclude Include="TestBuilder.h" />
     <ClInclude Include="Texture.h" />
@@ -171,11 +168,13 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <GenerateMapFile>true</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -190,6 +189,8 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -197,6 +198,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <GenerateMapFile>true</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include "../FloaterRendererCommon/include/ResourceMgr.h"
 #include "CommonMath.h"
 #include "DX11Node.h"
+#include "../FloaterUtil/include/RBTree.h"
 
 #include <windows.h>
 #include <wrl/client.h>
@@ -13,23 +14,26 @@
 #include <vector>
 #include <string>
 
+
 namespace flt
 {
 	template<typename T>
 	using comptr = Microsoft::WRL::ComPtr<T>;
 
+
+
 	class RendererDX11 : public IRenderer
 	{
 	public:
-		RendererDX11() = default;
+		RendererDX11();
 		~RendererDX11() = default;
 
 		bool Initialize(HWND hwnd);
 		bool Finalize();
 
 		virtual bool Render(float deltaTime);
-		virtual bool RegisterObject(Renderable& renderable);
-		virtual bool DeregisterObject(Renderable& renderable);
+		virtual HOBJECT RegisterObject(RendererObject& renderable);
+		virtual bool DeregisterObject(RendererObject& renderable);
 
 		virtual bool Test() override;
 	public:
@@ -43,7 +47,6 @@ namespace flt
 		void RenderSingleNodeRecursive(DX11Node* node, const Matrix4f& parentMatrix);
 
 		bool SetVsConstantBuffer(ID3D11Buffer* vsConstantBuffer, void* pData, size_t dataSize, UINT slot);
-
 
 		// 테스트 private 함수들
 	private:
@@ -81,8 +84,6 @@ namespace flt
 
 		// 그리기 위한 오브젝트
 		std::vector<DX11Node*> _renderableObjects;
-
-		// 데이터 관리를 위한 리소스 매니저
-		ResourceMgr _resourceMgr;
+		std::vector<Camera*> _cameras;
 	};
 }

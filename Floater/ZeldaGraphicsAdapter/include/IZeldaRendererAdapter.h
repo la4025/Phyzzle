@@ -1,7 +1,8 @@
-#pragma once
+﻿#pragma once
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include "../FloaterRendererDX11/include/CreateRenderer.h"
 #include "IZeldaRenderer.h"
+#include <map>
 
 class IZeldaRendererAdapter : public IZeldaRenderer
 {
@@ -9,19 +10,27 @@ public:
 	virtual bool Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear) override;
 	virtual void Finalize() override;
 
-	virtual void BeginDraw() override;
+	// deltaTime의 단위는 second
+	virtual void BeginDraw(float deltaTime) override;
 	virtual void EndDraw() override;
 
-	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, ResourceID texture, bool wireFrame) override;
+	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a) override;
+	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame) override;
 
-	virtual void CreateResources() override;
-	virtual ResourceID CreateTexture(const std::wstring& texturePath) override;
+	virtual void CreateBasicResources() override;
+	virtual void ReleaseBasicResources() override;
 
-	virtual ResourceID CreateCamera() override;
-	virtual bool ReleaseCamera(ResourceID cameraID) override;
+	virtual TextureID CreateTexture(const std::wstring& texturePath) override;
+	virtual bool ReleaseTexture(TextureID textureID) override;
 
-	virtual bool SetMainCamera(ResourceID cameraID) override;
-	virtual bool UpdateCamera(ResourceID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar) override;
+	virtual ModelID CreateModel(const std::wstring& modelingFilePath) override;
+	virtual bool ReleaseModel(ModelID modelID) override;
+
+	virtual CameraID CreateCamera() override;
+	virtual bool ReleaseCamera(CameraID cameraID) override;
+
+	virtual bool SetMainCamera(CameraID cameraID) override;
+	virtual bool UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar) override;
 
 private:
 	unsigned int _screenWidth;

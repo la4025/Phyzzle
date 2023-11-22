@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <d3d11.h>
 #include "CommonMath.h"
 #include "../FloaterRendererCommon/include/IBuilder.h"
@@ -28,9 +28,9 @@ namespace flt
 
 	struct DX11Mesh
 	{
-		DX11Mesh(ResourceMgr& resourceMgr, const DX11VertexShaderBuilder& vsBuilder, const DX11PixelShaderBuilder& psBuilder) :
-			vertexShader(resourceMgr, vsBuilder),
-			pixelShader(resourceMgr, psBuilder),
+		DX11Mesh(const DX11VertexShaderBuilder& vsBuilder, const DX11PixelShaderBuilder& psBuilder) :
+			vertexShader(vsBuilder),
+			pixelShader(psBuilder),
 			vertexBuffer(nullptr),
 			singleVertexSize(0),
 			indexBuffer(nullptr),
@@ -48,7 +48,7 @@ namespace flt
 		UINT singleVertexSize;
 
 		ID3D11Buffer* indexBuffer;
-		size_t indexCount;
+		UINT indexCount;
 
 		ID3D11ShaderResourceView* texture;
 		ID3D11SamplerState* sampler;
@@ -58,12 +58,11 @@ namespace flt
 
 	struct DX11MeshBuilder : public IBuilder<DX11Mesh>
 	{
-		DX11MeshBuilder(const std::wstring& name) : IBuilder<DX11Mesh>(name), pDevice(nullptr), pResourceMgr(nullptr), vsBuilder(), psBuilder() {}
+		DX11MeshBuilder(const std::wstring& name) : IBuilder<DX11Mesh>(name), pDevice(nullptr), vsBuilder(), psBuilder() {}
 
 		virtual DX11Mesh* build() const override;
 
 		ID3D11Device* pDevice;
-		ResourceMgr* pResourceMgr;
 		DX11VertexShaderBuilder vsBuilder;
 		DX11PixelShaderBuilder psBuilder;
 	};

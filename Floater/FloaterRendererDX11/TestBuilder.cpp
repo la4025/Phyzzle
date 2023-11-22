@@ -10,6 +10,6 @@ void flt::test::BuilderTest::Release()
 flt::test::BuilderTest* flt::test::BuilderTestBuilder::build() const
 {
 	BuilderTest* pBuilderTest = new BuilderTest();
-	pBuilderTest->pTestData = new TestData();
+	pBuilderTest->pTestData = new TestData(&t->_testData);
 	return pBuilderTest;
 }

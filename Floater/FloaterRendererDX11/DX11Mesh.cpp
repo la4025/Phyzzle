@@ -1,10 +1,12 @@
-#include "DX11Mesh.h"
+﻿#include "DX11Mesh.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include <directxtk/DDSTextureLoader.h>
+#include <directxtk/WICTextureLoader.h>
+
 
 flt::DX11Mesh* flt::DX11MeshBuilder::build() const 
 {
-	DX11Mesh* pMesh = new DX11Mesh(*pResourceMgr, vsBuilder, psBuilder);
+	DX11Mesh* pMesh = new DX11Mesh(vsBuilder, psBuilder);
 	return pMesh;
 }
 
@@ -20,7 +22,6 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 {
 	ASSERT(pDevice, "디바이스 세팅 안함.");
 	ASSERT(pImmediateContext, "디바이스 컨텍스트 세팅 안함.");
-	ASSERT(pResourceMgr, "리소스 메니져 세팅 안함.");
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> Basic32 =
 	{
@@ -177,16 +178,16 @@ flt::DX11Mesh* flt::DX11CubeBuilder::build() const
 	DX11VertexShaderBuilder vsBuilder(L"../FloaterRendererDX11/CubeVS.hlsl");
 	vsBuilder.pDevice = pDevice;
 	vsBuilder.pInputLayoutDesc = &(Basic32[0]);
-	vsBuilder.descElementCount = Basic32.size();
+	vsBuilder.descElementCount = (UINT)Basic32.size();
 
 	DX11PixelShaderBuilder psBuilder(L"../FloaterRendererDX11/CubePS.hlsl");
 	psBuilder.pDevice = pDevice;
 
-	DX11Mesh* pMesh = new DX11Mesh(*pResourceMgr, vsBuilder, psBuilder);
+	DX11Mesh* pMesh = new DX11Mesh(vsBuilder, psBuilder);
 	pMesh->vertexBuffer = vertexBuffer;
 	pMesh->singleVertexSize = sizeof(VertexUV);
 	pMesh->indexBuffer = indexBuffer;
-	pMesh->indexCount = indices.size();
+	pMesh->indexCount = (UINT)indices.size();
 	pMesh->texture = textureView;
 	pMesh->sampler = samplerState;
 

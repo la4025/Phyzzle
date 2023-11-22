@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <chrono>
 #include "FloaterType.h"
 
@@ -13,7 +13,7 @@ namespace flt
 		void Stop();
 		void Update();
 
-		double GetElapsedSeconds();
+		double GetTotalSeconds();
 		double GetLabTimeSeconds();
 		int64 GetLabTimeMicroSeconds();
 		double GetDeltaSeconds();
@@ -23,5 +23,3 @@ namespace flt
 		int64 _deltaMicroSeconds;
 	};
 }
-
-

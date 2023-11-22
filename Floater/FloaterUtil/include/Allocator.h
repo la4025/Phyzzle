@@ -1,8 +1,18 @@
-#pragma once
-
+﻿#pragma once
+#include <type_traits>
 
 namespace flt
 {
+	template <typename T, typename Alloc>
+	concept Allocator_ = requires(Alloc a, T * p, size_t n, const T & value, T && rvalue) {
+		{ a.Allocate(n) } -> std::same_as<T*>;
+		{ a.DeAllocate(p) };
+		{ a.Construct(p) };
+		{ a.Construct(p, value) };
+		{ a.Construct(p, std::move(rvalue)) };
+		{ a.Destroy(p) };
+	};
+
 	template<typename T>
 	class Allocator
 	{

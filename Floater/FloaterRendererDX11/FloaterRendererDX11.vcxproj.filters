@@ -25,17 +25,11 @@
     <Filter Include="Test">
       <UniqueIdentifier>{6ce95901-f138-43f7-8884-34d64ec46fa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{29a520e2-db3b-4489-b642-91d1a92a1700}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CreateRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RendererDX11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DX11Node.cpp">
       <Filter>RendererResource</Filter>
     </ClCompile>
@@ -54,14 +48,14 @@
     <ClCompile Include="TestBuilder.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="RendererDX11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RendererDX11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DX11Node.h">
       <Filter>RendererResource</Filter>
     </ClInclude>
@@ -98,8 +92,8 @@
     <ClInclude Include="TestBuilder.h">
       <Filter>Test</Filter>
     </ClInclude>
-    <ClInclude Include="ITester.h">
-      <Filter>Test</Filter>
+    <ClInclude Include="RendererDX11.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include <windows.h>
+
 
 /// 다양한 곳에서 사용할 매크로를 정의해 놓은 헤더파일
 /// static_assert와 assert를 정의해 놓았음.
@@ -43,3 +44,6 @@ while (false)
 #define ASSERT(condition, message)
 
 #endif
+
+#define BRANCHLESS_MIN(a, b) (a * (a < b) + b * (a <= b))
+#define BRANCHLESS_MAX(a, b) (a * (a > b) + b * (a >= b))

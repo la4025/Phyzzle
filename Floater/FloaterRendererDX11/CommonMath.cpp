@@ -1,6 +1,6 @@
-#include "CommonMath.h"
+﻿#include "CommonMath.h"
 
-DirectX::XMMATRIX flt::ConvXMMatrix(const Matrix4f& matrix)
+DirectX::XMMATRIX flt::ConvertXMMatrix(const Matrix4f& matrix)
 {
 	DirectX::XMMATRIX result
 	{
