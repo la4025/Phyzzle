@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "../../FloaterMath/include/Matrix4f.h"
+#include "../../FloaterMath/include/Quaternion.h"
 #include "../../FloaterMath/include/Vector3f.h"
 #include "../../FloaterMath/include/Vector4f.h"
-#include "../../FloaterMath/include/Quaternion.h"
 #include <vector>
 
 
@@ -13,6 +13,7 @@ namespace flt
 	{
 	public:
 		Transform() : _position(), _scale(1.0f, 1.0f, 1.0f, 0.0f), _rotation(), _pParent(nullptr), _children(), _worldMatrix(), _isDirty(true) {}
+		~Transform();
 
 		void SetMatrix(const Matrix4f& worldMatrix);
 

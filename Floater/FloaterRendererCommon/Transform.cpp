@@ -3,6 +3,15 @@
 #include <DirectXMath.h>
 #include <cmath>
 
+flt::Transform::~Transform()
+{
+	for (auto& child : _children)
+	{
+		child->SetParent(nullptr);
+	}
+
+}
+
 void flt::Transform::SetMatrix(const Matrix4f& worldMatrix)
 {
 	MakeDirtyRecursive();
@@ -246,6 +255,7 @@ bool flt::Transform::SetParent(Transform* pParent)
 		checkRecursive = checkRecursive->_pParent;
 	}
 
+	// 이미 어떤 자식이 ㄹ경우에는 
 	if (_pParent)
 	{
 		auto iter = std::find(_pParent->_children.begin(), _pParent->_children.end(), this);
