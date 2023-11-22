@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../../FloaterMath/include/Vector2f.h"
 #include "../../FloaterMath/include/Vector3f.h"
 #include "../../FloaterMath/include/Vector4f.h"
@@ -6,7 +6,7 @@
 
 namespace flt
 {
-	struct Vertex
+	struct RawVertex
 	{
 		using type = struct
 		{
@@ -18,8 +18,7 @@ namespace flt
 
 	struct RawMesh
 	{
-		std::vector<Vertex::type> vertices;
+		std::vector<RawVertex::type> vertices;
 		std::vector<int> indices;
 	};
-
 }

@@ -1,24 +1,146 @@
+﻿#define _CRT_SECURE_NO_WARNINGS
+
 #include "OsWindows.h"
 #include <iostream>
 #include <memory>
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "../FloaterRendererCommon/include/IRenderer.h"
 #include "../FloaterRendererDX11/include/CreateRenderer.h"
+#include "../FloaterUtil/include/ConvString.h"
+
+#include <DbgHelp.h>
+#include <chrono>
 
 
-flt::OsWindows::OsWindows() :
+flt::OsWindows::OsWindows(bool useConsole) :
 	_hwnd(NULL),
 	_isActivated(false),
 	_keyTimer(),
-	_keyState{ 0, },
-	_keyData{ 0, }
+	_pKeyStates{ new(std::nothrow) bool[(int)KeyCode::MAX] },
+	_pKeyDatas{ new(std::nothrow) KeyData[(int)KeyCode::MAX] },
+	_keyUp(),
+	_consoleHwnd(NULL)
 {
+	_consoleHwnd = GetConsoleWindow();
+	if (_consoleHwnd == NULL)
+	{
+		if (useConsole)
+		{
+			AllocConsole();
+			_consoleHwnd = GetConsoleWindow();
+			if (_consoleHwnd == NULL)
+			{
+				ASSERT(false, "콘솔 윈도우 핸들을 가져오지 못했습니다.");
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
 
+	if (!useConsole)
+	{
+		ShowWindow(_consoleHwnd, SW_HIDE);
+	}
+	else
+	{
+		ShowWindow(_consoleHwnd, SW_SHOW);
+	}
 }
 
 flt::OsWindows::~OsWindows()
 {
+	delete[] _pKeyStates;
+	delete[] _pKeyDatas;
 
+}
+
+//typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, 
+//	MINIDUMP_TYPE DumpType, 
+//	CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam, 
+//	CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, 
+//	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
+
+struct DumpParam
+{
+	DWORD threadID;
+	LPEXCEPTION_POINTERS pExp;
+};
+
+ULONG CreateDump(void* param)
+{
+	using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE, DWORD, HANDLE,
+		MINIDUMP_TYPE,
+		CONST PMINIDUMP_EXCEPTION_INFORMATION,
+		CONST PMINIDUMP_USER_STREAM_INFORMATION,
+		CONST PMINIDUMP_CALLBACK_INFORMATION);
+
+	LONG retval = EXCEPTION_CONTINUE_SEARCH;
+	HMODULE hDll = NULL;
+	hDll = ::LoadLibrary(L"DBGHELP.DLL");
+
+	WCHAR filename[64];
+
+	std::time_t currTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	tm* TimeOfDay = std::localtime(&currTime);
+	swprintf_s(filename, L"crash_%04d-%02d-%02d_%02dh%02dm%02ds.dmp",
+		TimeOfDay->tm_year + 1900, TimeOfDay->tm_mon + 1, TimeOfDay->tm_mday,
+		TimeOfDay->tm_hour, TimeOfDay->tm_min, TimeOfDay->tm_sec);
+
+	if (hDll) {
+		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
+		if (pDump)
+		{
+			HANDLE hFile = ::CreateFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (INVALID_HANDLE_VALUE != hFile)
+			{
+				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
+				ExInfo.ThreadId = ((DumpParam*)param)->threadID;
+				ExInfo.ExceptionPointers = ((DumpParam*)param)->pExp;
+				ExInfo.ClientPointers = NULL;
+				BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithFullMemory, &ExInfo, NULL, NULL);
+				//BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL);
+				if (bOK)
+				{
+					retval = EXCEPTION_EXECUTE_HANDLER;
+				}
+				::CloseHandle(hFile);
+			}
+		}
+		::FreeLibrary(hDll);
+	}
+	return retval;
+}
+
+
+
+LONG TopExceptionFilter(LPEXCEPTION_POINTERS pExp)
+{
+	LONG retval = 0;
+	DumpParam* param = new DumpParam();
+	param->threadID = ::GetCurrentThreadId();
+	param->pExp = pExp;
+	if (pExp->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW)
+	{
+		HANDLE hThread = CreateThread(NULL, 102400, CreateDump, param, 0, NULL);
+		if (hThread == NULL)
+		{
+			auto error = GetLastError();
+			std::cout << "CreateThread Error : " << error << std::endl;
+			return retval;
+		}
+
+		WaitForSingleObject(hThread, INFINITE);
+		CloseHandle(hThread);
+	}
+	else
+	{
+		retval = CreateDump(param);
+	}
+
+	delete param;
+	return retval;
 }
 
 bool flt::OsWindows::Initialize(int windowWidth, int windowHeight, const std::wstring& title, const std::wstring& imgPath)
@@ -66,6 +188,12 @@ bool flt::OsWindows::Initialize(int windowWidth, int windowHeight, const std::ws
 
 	ShowWindow(_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(_hwnd);
+
+	// 덤프 파일을 남기기 위한 세팅.
+	// https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/nf-minidumpapiset-minidumpwritedump
+	// https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_information
+
+	SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopExceptionFilter);
 
 	return true;
 }
@@ -130,9 +258,9 @@ void flt::OsWindows::DestroyRenderer(IRenderer* renderer)
 
 flt::KeyData flt::OsWindows::GetKey(KeyCode code)
 {
-	if (_keyState[(int)code])
+	if (_pKeyStates[(int)code])
 	{
-		return _keyData[(int)code];
+		return _pKeyDatas[(int)code];
 	}
 
 	KeyData keydata;
@@ -159,33 +287,33 @@ void flt::OsWindows::UpdateKeyState()
 	// keyUp 처리
 	for (const auto& index : _keyUp)
 	{
-		_keyState[index] = false;
-		_keyData[index].keyTime = 0;
+		_pKeyStates[index] = false;
+		_pKeyDatas[index].keyTime = 0;
 	}
 	_keyUp.clear();
 
 	// 매 프레임 초기화 해줘야 하는 키들.
 	// 현재 마우스 좌표, 휠업 다운.
 
-	_keyState[(int)KeyCode::mouseRelativePos] = false;
-	_keyData[(int)KeyCode::mouseRelativePos].keyTime = 0;
-	_keyData[(int)KeyCode::mouseRelativePos].x = 0;
-	_keyData[(int)KeyCode::mouseRelativePos].y = 0;
+	_pKeyStates[(int)KeyCode::mouseRelativePos] = false;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseRelativePos].y = 0;
 
-	_keyState[(int)KeyCode::mouseAbsolutePos] = false;
-	_keyData[(int)KeyCode::mouseAbsolutePos].keyTime = 0;
-	_keyData[(int)KeyCode::mouseAbsolutePos].x = 0;
-	_keyData[(int)KeyCode::mouseAbsolutePos].y = 0;
+	_pKeyStates[(int)KeyCode::mouseAbsolutePos] = false;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseAbsolutePos].y = 0;
 
-	_keyState[(int)KeyCode::mouseWheelUp] = false;
-	_keyData[(int)KeyCode::mouseWheelUp].keyTime = 0;
-	_keyData[(int)KeyCode::mouseWheelUp].x = 0;
-	_keyData[(int)KeyCode::mouseWheelUp].y = 0;
+	_pKeyStates[(int)KeyCode::mouseWheelUp] = false;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelUp].y = 0;
 
-	_keyState[(int)KeyCode::mouseWheelDown] = false;
-	_keyData[(int)KeyCode::mouseWheelDown].keyTime = 0;
-	_keyData[(int)KeyCode::mouseWheelDown].x = 0;
-	_keyData[(int)KeyCode::mouseWheelDown].y = 0;
+	_pKeyStates[(int)KeyCode::mouseWheelDown] = false;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].keyTime = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].x = 0;
+	_pKeyDatas[(int)KeyCode::mouseWheelDown].y = 0;
 }
 
 void flt::OsWindows::HandleKeyboardRawData(const RAWKEYBOARD& data)
@@ -241,14 +369,14 @@ void flt::OsWindows::HandleMouseRawData(const RAWMOUSE& data)
 		KeyData wheelData{ time, wheelDelta, wheelDelta };
 		if (wheelDelta > 0)
 		{
-			wheelData.x += _keyData[(int)KeyCode::mouseWheelUp].x;
-			wheelData.y += _keyData[(int)KeyCode::mouseWheelUp].y;
+			wheelData.x += _pKeyDatas[(int)KeyCode::mouseWheelUp].x;
+			wheelData.y += _pKeyDatas[(int)KeyCode::mouseWheelUp].y;
 			SetKeyState(KeyCode::mouseWheelUp, wheelData, true, false);
 		}
 		else
 		{
-			wheelData.x += _keyData[(int)KeyCode::mouseWheelDown].x;
-			wheelData.y += _keyData[(int)KeyCode::mouseWheelDown].y;
+			wheelData.x += _pKeyDatas[(int)KeyCode::mouseWheelDown].x;
+			wheelData.y += _pKeyDatas[(int)KeyCode::mouseWheelDown].y;
 			SetKeyState(KeyCode::mouseWheelDown, wheelData, true, false);
 		}
 	}
@@ -295,8 +423,8 @@ void flt::OsWindows::HandleMouseRawData(const RAWMOUSE& data)
 		// 상대 좌표 마우스 위치 세팅
 		KeyData mouseMove;
 		mouseMove.keyTime = 0;
-		mouseMove.x = rawX + _keyData[(int)KeyCode::mouseRelativePos].x;
-		mouseMove.y = rawY + _keyData[(int)KeyCode::mouseRelativePos].y;
+		mouseMove.x = rawX + _pKeyDatas[(int)KeyCode::mouseRelativePos].x;
+		mouseMove.y = rawY + _pKeyDatas[(int)KeyCode::mouseRelativePos].y;
 		SetKeyState(KeyCode::mouseRelativePos, mouseMove, true, false);
 
 		// 절대 좌표 마우스 위치 세팅
@@ -311,11 +439,11 @@ void flt::OsWindows::SetKeyState(KeyCode code, const KeyData& data, bool isActiv
 {
 	if (isActive)
 	{
-		if (_keyData[(int)code].keyTime == 0)
+		if (_pKeyDatas[(int)code].keyTime == 0)
 		{
-			_keyData[(int)code] = data;
+			_pKeyDatas[(int)code] = data;
 		}
-		_keyState[(int)code] = true;
+		_pKeyStates[(int)code] = true;
 	}
 
 	if (isInActive)
@@ -370,7 +498,7 @@ LRESULT WINAPI flt::OsWindows::WinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
 				thisPtr->_isActivated = false;
-				memset(thisPtr->_keyState, 0, sizeof(thisPtr->_keyState));
+				memset(thisPtr->_pKeyStates, 0, sizeof(*(thisPtr->_pKeyStates)) * (int)KeyCode::MAX);
 			}
 			else
 			{
@@ -557,7 +685,7 @@ bool flt::OsWindows::GetError(std::wstring* outErrorMsg, unsigned int* outErrorC
 		return false;
 	}
 
-	std::wstring temp{msgBuffer};
+	std::wstring temp{ msgBuffer };
 	*outErrorMsg += temp;
 
 	return true;

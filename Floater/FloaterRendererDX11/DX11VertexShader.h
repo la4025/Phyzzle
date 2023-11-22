@@ -44,7 +44,7 @@ namespace flt
 
 	struct DX11VertexShaderBuilder : public IBuilder<DX11VertexShader>
 	{
-		DX11VertexShaderBuilder() = default;
+		DX11VertexShaderBuilder() : pDevice(nullptr), pInputLayoutDesc(nullptr), descElementCount(0) {}
 		DX11VertexShaderBuilder(const std::wstring filePath) : IBuilder<DX11VertexShader>(filePath), pDevice(nullptr), pInputLayoutDesc(nullptr), descElementCount(0) {}
 
 		virtual DX11VertexShader* build() const override;

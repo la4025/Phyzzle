@@ -20,7 +20,7 @@ namespace flt
 
 	struct DX11PixelShaderBuilder : public IBuilder<DX11PixelShader>
 	{
-		DX11PixelShaderBuilder() = default;
+		DX11PixelShaderBuilder() : pDevice(nullptr) {}
 		DX11PixelShaderBuilder(const std::wstring filePath) : IBuilder<DX11PixelShader>(filePath), pDevice(nullptr) {}
 
 		virtual DX11PixelShader* build() const override;

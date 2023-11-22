@@ -1,5 +1,5 @@
 #pragma once
-
+#include "FloaterMacro.h"
 
 namespace flt
 {
@@ -8,7 +8,10 @@ namespace flt
 		class ITester
 		{
 		public:
+			virtual ~ITester() {}
 			virtual bool Test() = 0;
 		};
 	}
 }
+
+

@@ -1,5 +1,8 @@
-#pragma once
+﻿#pragma once
 #include <string>
+#include "RawNode.h"
+#include "../../FloaterUtil/include/FloaterType.h"
+
 
 namespace flt
 {
@@ -11,9 +14,9 @@ namespace flt
 		ACCELERATED = 0x0000'0002
 	};
 
-	struct Renderable
+	struct RendererObject
 	{
-		Renderable(Transform& transform) : transform(transform), name() {}
+		RendererObject(RawNode& rawNode, const bool& isDraw, const std::wstring& name) : node(rawNode), isDraw(isDraw), name(name) {}
 		// 1. 그릴때 필요한것들.
 		// 2. 게임 엔진상에서 데이터를 바꾸고 싶은것들.
 
@@ -21,12 +24,13 @@ namespace flt
 		// model
 		// material, texture
 		// shader
-		// 
 
-		Transform& transform;
+		RawNode& node;
+		const bool& isDraw;
 		std::wstring name;
-		//bool& isEnable;
 	};
+
+	using HOBJECT = uint64;
 
 	class IRenderer
 	{
@@ -35,8 +39,8 @@ namespace flt
 		virtual ~IRenderer() = default;
 
 		virtual bool Render(float deltaTime) = 0;
-		virtual bool RegisterObject(Renderable& renderable) = 0;
-		virtual bool DeregisterObject(Renderable& renderable) = 0;
+		virtual HOBJECT RegisterObject(RendererObject& renderable) = 0;
+		virtual bool DeregisterObject(RendererObject& renderable) = 0;
 
 		virtual bool Test() { return false; };
 	};

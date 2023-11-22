@@ -1,8 +1,14 @@
-#pragma once
+﻿#pragma once
 #include <unordered_map>
 #include <string>
 #include <atomic>
 #include <mutex>
+
+/// <summary>
+/// 앞으로 할 일
+/// 같은 KEY값을 가지고 있지만 다른 데이터를 가진 Builder가 들어왔을 경우에 체크할 수 있도록.
+/// </summary>
+
 
 namespace flt
 {
@@ -10,7 +16,6 @@ namespace flt
 	struct IBuilderBase;
 
 	//extern template class __declspec(dllexport) std::wstring;
-
 
 	class ResourceMgr
 	{
@@ -30,7 +35,7 @@ namespace flt
 		{
 			for (const auto& [key, value] : resources)
 			{
-				wprintf(L"%s, 주소 : 0x%p, refcount : %d\n", value.typeName.c_str(), value.data, value.refCount);
+				wprintf(L"%s, Address : 0x%p, refcount : %d\n", value.typeName.c_str(), value.data, value.refCount);
 			}
 		}
 
@@ -68,4 +73,8 @@ namespace flt
 	};
 
 	//extern template class __declspec(dllexport) std::unordered_map< std::wstring, ResourceMgr::ManagedData>;
+	namespace global
+	{
+		extern ResourceMgr g_resourceMgr;
+	}
 }

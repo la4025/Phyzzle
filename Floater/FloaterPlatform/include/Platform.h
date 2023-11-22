@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef FLT_WINDOWS
 #pragma comment(lib, "FloaterPlatform_Windows.lib")
@@ -22,6 +22,7 @@ namespace flt
 
 	public:
 		Platform();
+		Platform(bool useConsole);
 		~Platform();
 
 	public:

@@ -1,4 +1,4 @@
-#include "./include/Timer.h"
+﻿#include "./include/Timer.h"
 
 using namespace std::chrono;
 
@@ -34,7 +34,7 @@ void flt::Timer::Update()
 	_deltaMicroSeconds = duration;
 }
 
-double flt::Timer::GetElapsedSeconds()
+double flt::Timer::GetTotalSeconds()
 {
 	auto now = high_resolution_clock::now();
 	return (duration_cast<microseconds>(now - _init).count()) / DIV_MICRO;

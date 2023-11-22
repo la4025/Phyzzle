@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <windows.h>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ namespace flt
 	class OsWindows
 	{
 	public:
-		OsWindows();
+		OsWindows(bool useConsole);
 		virtual ~OsWindows();
 		bool Initialize(int windowWidth, int windowHeight, const std::wstring& title, const std::wstring& imgPath);
 		bool Finalize();
@@ -44,11 +44,11 @@ namespace flt
 		bool _isActivated;
 
 		Timer _keyTimer;
-		//const int _keyStateIndex;
-		bool _keyState[(int)KeyCode::MAX];
+		bool* _pKeyStates;
+		KeyData* _pKeyDatas;
 		std::vector<int> _keyUp;
-		KeyData _keyData[(int)KeyCode::MAX];
 
+		HWND _consoleHwnd;
 
 	private:
 		static unsigned char _keyMap[256];

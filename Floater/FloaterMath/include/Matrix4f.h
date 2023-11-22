@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 
 //#include <DirectXMath.h>
 #include <immintrin.h>
 #include "Vector4f.h"
+
 
 namespace flt
 {

@@ -19,6 +19,9 @@
     <Filter Include="Factory">
       <UniqueIdentifier>{a120e28c-3f92-489b-97b9-9468d33a315d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RawData">
+      <UniqueIdentifier>{d6b8fb00-175e-4740-bb81-0d86d1a5ea02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Transform.h">
@@ -27,16 +30,10 @@
     <ClInclude Include="include\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\RawNode.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RawMesh.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="include\IRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
+    <ClInclude Include="include\FBXLoader.h">
       <Filter>Loader</Filter>
     </ClInclude>
     <ClInclude Include="include\IBuilder.h">
@@ -48,15 +45,27 @@
     <ClInclude Include="include\ResourceMgr.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="include\RawNode.h">
+      <Filter>RawData</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RawMesh.h">
+      <Filter>RawData</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RawAnimation.h">
+      <Filter>RawData</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RawSkin.h">
+      <Filter>RawData</Filter>
+    </ClInclude>
+    <ClInclude Include="RawShader.h">
+      <Filter>RawData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Transform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RawNode.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
@@ -70,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="ResourceMgr.cpp">
       <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="RawNode.cpp">
+      <Filter>RawData</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

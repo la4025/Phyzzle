@@ -13,16 +13,14 @@ namespace flt
 	{
 		friend class ResourceMgr;
 
-		ResourceBase(ResourceMgr* pResourceMgr, const std::wstring& key)	:
-			_pResourceMgr(pResourceMgr),
+		ResourceBase(const std::wstring& key) :
 			_key(key),
 			_pData(nullptr)
 		{
 
 		}
 		ResourceBase(const ResourceBase& other) = delete;
-		ResourceBase(ResourceBase&& other) noexcept : 
-			_pResourceMgr(other._pResourceMgr), 
+		ResourceBase(ResourceBase&& other) noexcept :
 			_pData(other._pData), 
 			_key(other._key)
 		{
@@ -32,7 +30,6 @@ namespace flt
 		ResourceBase& operator=(const ResourceBase& other) = delete;
 		ResourceBase& operator=(ResourceBase&& other) noexcept
 		{
-			_pResourceMgr = other._pResourceMgr;
 			_pData = other._pData;
 			_key = other._key;
 			other._pData = nullptr;
@@ -46,15 +43,19 @@ namespace flt
 	protected:
 		std::wstring _key;
 		void* _pData;
-		ResourceMgr* _pResourceMgr;
 	};
 
-	template<typename Derived>
+	template <typename T>
+	concept ReleaseAble = requires(T a) {
+		{ a.Release() } -> std::same_as<void>;
+	};
+
+	template<ReleaseAble Derived>
 	struct Resource : ResourceBase
 	{
 	public:
-		Resource() : ResourceBase(nullptr, L"") {}
-		Resource(ResourceMgr& resourceMgr, const typename IBuilder<Derived>& builder) : ResourceBase(&resourceMgr, builder.key)
+		Resource() : ResourceBase(L"") {}
+		Resource(const typename IBuilder<Derived>& builder) : ResourceBase(builder.key)
 		{
 			SetData(builder);
 		}
@@ -75,7 +76,7 @@ namespace flt
 
 		void SetData(const IBuilderBase& builder)
 		{
-			auto data = _pResourceMgr->GetResource(this, builder);
+			auto data = global::g_resourceMgr.GetResource(this, builder);
 			Release();
 			_pData = data;
 		}
@@ -84,7 +85,7 @@ namespace flt
 		{
 			if (_pData)
 			{
-				if (_pResourceMgr->ReleaseResource(this))
+				if (global::g_resourceMgr.ReleaseResource(this))
 				{
 					((Derived*)_pData)->Release();
 				}
@@ -96,5 +97,13 @@ namespace flt
 		{
 			return (Derived*)_pData;
 		}
+		//Derived* operaotr* () const
+		//{
+		//	return (Derived*)_pData;
+		//}
+		//Derived* operator->() const
+		//{
+		//	return (Derived*)_pData;
+		//}
 	};
 }

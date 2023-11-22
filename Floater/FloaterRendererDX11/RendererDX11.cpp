@@ -1,4 +1,4 @@
-#include "RendererDX11.h"
+﻿#include "RendererDX11.h"
 #include "../FloaterUtil/include/FloaterMacro.h"
 #include "DX11VSConstantBuffer.h"
 
@@ -18,11 +18,39 @@
 
 #pragma endregion
 
-
 #pragma comment(lib, "DXGI.lib")
 #pragma comment(lib, "D3D11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
+
+flt::RendererDX11::RendererDX11() :
+	_hwnd(NULL),
+	_isRunRenderEngine(false),
+	_useVsync(false),
+	_monitorIndex(0),
+	_refreshRatesIndex(1),
+	_windowWidth(1280),
+	_windowHeight(720),
+	_displayWidth(0),
+	_displayHeight(0),
+	_displayRefreshRates(),
+	_device(),
+	_immediateContext(),
+	_dxgiFactory(),
+	_adapters(),
+	_outputs(),
+	_swapChain(),
+	_backBuffer(),
+	_depthStencil(),
+	_renderTargetView(),
+	_depthStencilView(),
+	_rasterizerState(),
+	_renderableObjects(),
+	_cameras()
+
+{
+
+}
 
 bool flt::RendererDX11::Initialize(HWND hwnd)
 {
@@ -190,7 +218,6 @@ bool flt::RendererDX11::Render(float deltaTime)
 	_immediateContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	_immediateContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
 
-
 	// 각 mesh별로 들어가야하지만 일단 여기서 만들자.
 	D3D11_RASTERIZER_DESC rasterizerDesc = { };
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
@@ -219,7 +246,9 @@ bool flt::RendererDX11::Render(float deltaTime)
 		}
 
 		// 렌더링
-		DirectX::XMMATRIX world = ConvXMMatrix(node->transform.GetMatrix4f());
+		//Matrix4f worldMatrix = GetWorldMatrixRecursive(&node->transform);
+		Matrix4f worldMatrix = node->transform.GetWorldMatrix4f();
+		DirectX::XMMATRIX world = ConvertXMMatrix(worldMatrix);
 
 		DirectX::XMMATRIX worldViewProj = world;
 
@@ -270,9 +299,9 @@ bool flt::RendererDX11::Render(float deltaTime)
 	return true;
 }
 
-bool flt::RendererDX11::RegisterObject(Renderable& renderable)
+flt::HOBJECT flt::RendererDX11::RegisterObject(RendererObject& renderable)
 {
-	DX11Node* node = new DX11Node(renderable.transform);
+	DX11Node* node = new DX11Node(renderable.node.transform, renderable.isDraw);
 	if (!node)
 	{
 		return false;
@@ -285,10 +314,16 @@ bool flt::RendererDX11::RegisterObject(Renderable& renderable)
 	}
 
 	_renderableObjects.push_back(node);
+
+	if (node->camera)
+	{
+		_cameras.push_back(node->camera);
+	}
+
 	return true;
 }
 
-bool flt::RendererDX11::DeregisterObject(Renderable& renderable)
+bool flt::RendererDX11::DeregisterObject(RendererObject& renderable)
 {
 	return false;
 }
@@ -487,7 +522,7 @@ bool flt::RendererDX11::OnResize()
 	_immediateContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
 
 	// 뷰포트 생성
-	D3D11_VIEWPORT viewPort[1];
+	D3D11_VIEWPORT viewPort[1]{};
 	viewPort[0].TopLeftX = 0.0f;
 	viewPort[0].TopLeftY = 0.0f;
 	viewPort[0].Width = (FLOAT)backBufferDesc.Width;
@@ -509,7 +544,7 @@ bool flt::RendererDX11::OnResize()
 
 void flt::RendererDX11::RenderSingleNodeRecursive(DX11Node* node, const Matrix4f& parentMatrix)
 {
-	Matrix4f worldMatrix = node->transform.GetMatrix4f() * parentMatrix;
+	Matrix4f worldMatrix = node->transform.GetLocalMatrix4f() * parentMatrix;
 	Matrix4f viewProjMatrix = Matrix4f::Identity();
 
 	for (auto& [name, child] : node->children)
@@ -525,10 +560,10 @@ void flt::RendererDX11::RenderSingleNodeRecursive(DX11Node* node, const Matrix4f
 	// 렌더링
 	VSConstantBuffer vsConstantBuffer
 	{
-		ConvXMMatrix(worldMatrix),
-		ConvXMMatrix(worldMatrix.Inverse().Transpose()),
-		ConvXMMatrix(viewProjMatrix),
-		ConvXMMatrix(worldMatrix * viewProjMatrix)
+		ConvertXMMatrix(worldMatrix),
+		ConvertXMMatrix(worldMatrix.Inverse().Transpose()),
+		ConvertXMMatrix(viewProjMatrix),
+		ConvertXMMatrix(worldMatrix * viewProjMatrix)
 	};
 }
 
@@ -555,9 +590,8 @@ flt::Resource<flt::DX11Mesh>* flt::RendererDX11::CreateBox()
 	DX11CubeBuilder cubeBuilder;
 	cubeBuilder.pDevice = _device.Get();
 	cubeBuilder.pImmediateContext = _immediateContext.Get();
-	cubeBuilder.pResourceMgr = &_resourceMgr;
 
-	Resource<DX11Mesh>* meshResource = new Resource<DX11Mesh>(_resourceMgr, cubeBuilder);
+	Resource<DX11Mesh>* meshResource = new Resource<DX11Mesh>(cubeBuilder);
 
 	return meshResource;
 }

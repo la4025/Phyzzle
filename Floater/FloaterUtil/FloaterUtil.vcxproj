@@ -114,6 +114,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,6 +134,8 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -143,22 +146,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Hash.h" />
+    <ClInclude Include="include\HashTable.h" />
     <ClInclude Include="include\Allocator.h" />
     <ClInclude Include="include\ConvString.h" />
     <ClInclude Include="include\FloaterType.h" />
     <ClInclude Include="include\FloaterMacro.h" />
     <ClInclude Include="include\Timer.h" />
-    <ClInclude Include="RBTree.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    <ClInclude Include="include\RBTree.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="include\SparseSet.h" />
+    <ClInclude Include="include\Vector.h" />
+    <ClInclude Include="include\ITester.h" />
+    <ClInclude Include="include\FixedSizeMemoryPool.h" />
+    <ClInclude Include="TesterFixedSizeMemoryPool.h" />
+    <ClInclude Include="TesterRBTree.h" />
+    <ClInclude Include="include\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConvString.cpp" />
-    <ClCompile Include="RBTree.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="FixedSizeMemoryPool.cpp" />
+    <ClCompile Include="TesterFixedSizeMemoryPool.cpp" />
+    <ClCompile Include="TesterRBTree.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
