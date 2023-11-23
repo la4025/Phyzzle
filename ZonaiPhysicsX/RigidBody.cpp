@@ -4,11 +4,6 @@
 
 namespace ZonaiPhysics
 {
-	RigidBody::RigidBody() noexcept
-	{
-
-	}
-
 	RigidBody::RigidBody(physx::PxPhysics*& _factory) noexcept
 	{
 		using namespace physx;

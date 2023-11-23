@@ -1,20 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="FixedJoint.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />
-    <ClCompile Include="Joint.cpp" />
-    <ClCompile Include="SphericalJoint.cpp" />
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Rigidbody</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedJoint.cpp">
+      <Filter>Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="SphericalJoint.cpp">
+      <Filter>Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collider.h" />
-    <ClInclude Include="Joint.h" />
-    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
-    <ClInclude Include="FixedJoint.h" />
-    <ClInclude Include="SphericalJoint.h" />
+    <ClInclude Include="RigidBody.h">
+      <Filter>Rigidbody</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedJoint.h">
+      <Filter>Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="SphericalJoint.h">
+      <Filter>Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Collider">
+      <UniqueIdentifier>{539620a7-3fb4-4f3a-bd51-a11e0a7a04de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rigidbody">
+      <UniqueIdentifier>{5ff07861-2445-4018-842b-cbeb394dad60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Joint">
+      <UniqueIdentifier>{b4341449-1497-499a-be4e-49f85d6d0d1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

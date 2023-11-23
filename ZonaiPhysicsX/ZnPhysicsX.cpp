@@ -1,5 +1,6 @@
 #include "ZnPhysicsX.h"
 #include "RigidBody.h"
+#include "Collider.h"
 
 
 namespace ZonaiPhysics
@@ -69,13 +70,9 @@ namespace ZonaiPhysics
 
 	ZnCollider* ZnPhysicsX::CreatBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
 	{
-		auto itr = bodies.find(_id);
-		if (itr != bodies.end())
-		{
-			return itr->second;
-		}
+		RigidBody* body = dynamic_cast<RigidBody*>(CreateRigidBody(_id));
 
-		RigidBody* newRigidBody = new Collider(physics);
+		Collider* newRigidBody = new Collider(physics);
 		bodies.insert(std::make_pair(_id, newRigidBody));
 
 		return newRigidBody;
@@ -99,6 +96,11 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
 	{
 
+	}
+
+	ZnPhysicsBase* CreatePhysics() noexcept
+	{
+		return nullptr;
 	}
 
 } // namespace ZonaiPhysics

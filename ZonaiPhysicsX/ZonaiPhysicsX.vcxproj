@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="Joint.h" />
@@ -28,9 +29,9 @@
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
-    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />

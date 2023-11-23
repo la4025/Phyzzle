@@ -31,6 +31,7 @@ namespace ZonaiPhysics
 	class ZnPhysicsX;
 
 	extern "C"
+
 	{
 		__declspec(dllexport) ZnPhysicsBase* CreatePhysics() noexcept;
 	}

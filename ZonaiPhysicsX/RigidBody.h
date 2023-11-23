@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include "ForceType.h"
 #include "ZnRigidBody.h"
 
@@ -12,6 +14,7 @@ namespace ZonaiMath
 namespace physx
 {
 	class PxPhysics;
+	class PxShape;
 	class PxRigidDynamic;
 	class PxRigidActor;
 }
@@ -108,7 +111,7 @@ namespace ZonaiPhysics
 
 	private:
 		physx::PxRigidDynamic* rigidbody_;
-		physx::PxRigidStatic* rigidstatic_;
+		std::vector<physx::PxShape*> shapes_;
 	};
 } // namespace ZonaiPhysics
 

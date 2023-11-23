@@ -279,6 +279,8 @@ int snippetMain(int, const char* const*)
 		gScene[i]->addActor(*(staticRigid[i]));
 	}
 
+	PxShape* shape2;
+
 	while (1)
 	{
 		// gScene->simulate(1.0f / 600.0f);
