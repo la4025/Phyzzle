@@ -23,6 +23,8 @@
 #include <unordered_map>
 #pragma endregion
 
+#include "../ZeldaGraphicsAdapter/include/IZeldaRendererAdapter.h"
+
 #pragma warning(push)
 #pragma warning(disable: 4717)
 void StackOverflow()
@@ -51,6 +53,9 @@ int main()
 		auto viewMatrix = camera.GetViewMatrix();
 	}
 #pragma endregion
+
+	auto adpaterTest = new IZeldaRendererAdapter();
+	adpaterTest->Initialize(1280, 720, false, NULL, false, 0.0f, 0.0f);
 
 	flt::Platform platform{ true };
 	platform.Initialize(1280, 720, L"title", L".\\path");
