@@ -8,6 +8,13 @@
 
 #include <cassert>
 
+#ifdef YH_DEBUG
+#pragma comment (lib, "../Debug/ZeldaGraphicsAdapter.lib")
+#elif YH_RELEASE
+#pragma comment (lib, "../Release/ZeldaGraphicsAdapter.lib")
+#endif
+
+
 void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 {
 #ifdef YH_RENDERER
@@ -17,6 +24,7 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 	if (zeldaGraphicsDLL == nullptr)
 	{
 		// DLL 로드 실패
+		GetLastError();
 		assert(0);
 	}
 	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
