@@ -1,5 +1,7 @@
-#include "./include/CreateRenderer.h"
+﻿#include "./include/CreateRenderer.h"
 #include "RendererDX11.h"
+
+#pragma comment(lib, "DirectXTK.lib")
 
 extern "C" flt::IRenderer * flt::CreateRendererDX11(HWND hwnd)
 {

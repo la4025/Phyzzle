@@ -55,7 +55,7 @@ int main()
 #pragma endregion
 
 	auto adpaterTest = new IZeldaRendererAdapter();
-	adpaterTest->Initialize(1280, 720, L"title", L".\\path");
+	adpaterTest->Initialize(1280, 720, false, NULL, false, 0.0f, 0.0f);
 
 	flt::Platform platform{ true };
 	platform.Initialize(1280, 720, L"title", L".\\path");

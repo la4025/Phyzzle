@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef FLOATERRENDERERDX11_EXPORTS
 #define FLT_RENDERER __declspec(dllexport)
