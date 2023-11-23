@@ -1,8 +1,11 @@
 ﻿#pragma once
-#include "../FloaterRendererCommon/include/IRenderer.h"
-#include "../FloaterRendererDX11/include/CreateRenderer.h"
 #include "IZeldaRenderer.h"
 #include <map>
+
+namespace flt
+{
+	class IRenderer;
+}
 
 class IZeldaRendererAdapter : public IZeldaRenderer
 {
