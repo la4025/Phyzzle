@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 PurahEngine::Camera::Camera()
-	: camera(Eigen::Matrix4f::Identity())
+	: cameraID(CameraID::ID_NULL), camera(Eigen::Matrix4f::Identity())
 {
 
 }

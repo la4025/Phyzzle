@@ -9,11 +9,11 @@ namespace PurahEngine
 		Camera();
 		virtual ~Camera();
 
-		CameraID cameraID = CameraID::ID_NULL;
 
 		void SetCameraPosition();
 
 	private:
+		CameraID cameraID;
 		Eigen::Matrix4f camera;
 	};
 }
