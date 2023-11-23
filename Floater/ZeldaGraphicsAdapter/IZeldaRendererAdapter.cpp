@@ -1,4 +1,6 @@
-﻿#include "./include/IZeldaRendererAdapter.h"
+﻿#include "../FloaterRendererCommon/include/IRenderer.h"
+#include "../FloaterRendererDX11/include/CreateRenderer.h"
+#include "./include/IZeldaRendererAdapter.h"
 
 bool IZeldaRendererAdapter::Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear)
 {
