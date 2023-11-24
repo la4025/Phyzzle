@@ -84,7 +84,7 @@ DirectX::XMMATRIX ZeldaCamera::GetViewMatrix()
 	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 
 	// Calculate the view matrix.
-	viewMatrix = XMMatrixLookAtLH(positionVector, transformedLookAt, upVector);
+	viewMatrix = XMMatrixLookToLH(positionVector, transformedLookAt, upVector);
 
 	return viewMatrix;
 }

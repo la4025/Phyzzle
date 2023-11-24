@@ -1,14 +1,18 @@
 #pragma once
 
+#include <d3d11.h>
 #include <DirectXMath.h>
 
 struct VertexType
 {
 	DirectX::XMFLOAT4 position;
-	DirectX::XMFLOAT2 texture;
 	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT2 texture;
+	DirectX::XMUINT4 boneIndices;
+	DirectX::XMFLOAT4 weight;
 
-	const static int size = 3;
+	const static unsigned int size;
+	const static D3D11_INPUT_ELEMENT_DESC layout[];
 };
 
 struct MatrixBufferType
@@ -34,7 +38,12 @@ struct UseBufferType
 	unsigned int useNormal;
 	unsigned int useTexture;
 	unsigned int useColor;
+	unsigned int useSRGB;
+
 	unsigned int useTemp0;
+	unsigned int useTemp1;
+	unsigned int useTemp2;
+	unsigned int useTemp3;
 };
 
 struct ColorBufferType

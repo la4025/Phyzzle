@@ -44,6 +44,32 @@ ZeldaModel::~ZeldaModel()
 	root = nullptr;
 }
 
+std::vector<ZNode*> ZeldaModel::GetAllNode()
+{
+	std::vector<ZNode*> result;
+
+	std::queue<ZNode*> q;
+
+	if (root == nullptr) return result;
+
+	result.push_back(root);
+	q.push(root);
+
+	while (!q.empty())
+	{
+		ZNode* currentNode = q.front();
+		q.pop();
+
+		for (int i = 0; i < currentNode->children.size(); i++)
+		{
+			q.push(currentNode->children[i]);
+			result.push_back(currentNode->children[i]);
+		}
+	}
+
+	return result;
+}
+
 unsigned int ZeldaModel::GetMeshCount()
 {
 	return meshes.size();
@@ -60,7 +86,7 @@ ZeldaTexture* ZeldaModel::GetTexture(unsigned int meshNum)
 }
 
 ZeldaModel::ZeldaModel(ZNode* root, const std::vector<ZMesh*>& meshes, const std::vector<ZMaterial*>& materials, const std::vector<ZeldaMesh*>& zeldaMeshes, const std::vector<ZeldaTexture*>& zeldaTextures) :
-	root(nullptr),
+	root(root),
 	meshes(meshes),
 	materials(materials),
 	zeldaMeshes(zeldaMeshes),

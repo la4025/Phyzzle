@@ -415,7 +415,7 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
 	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-	useConstBuffer->SetData({ false, (cubeTexture != nullptr), true });
+	useConstBuffer->SetData({ false, (cubeTexture != nullptr), true, (cubeTexture != nullptr) && cubeTexture->UseSRGB()});
 	colorConstBuffer->SetData({ { r, g, b, a } });
 
 	ConstantBufferManager::GetInstance().SetBuffer();
@@ -433,32 +433,38 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 	// ZeldaMatrix to XMMATRIX
 	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 
-	for (int i = 0; i < modelData->GetMeshCount(); i++)
+	std::vector<ZNode*> nodes = modelData->GetAllNode();
+
+	for (int i = 0; i < nodes.size(); i++)
 	{
-		ZeldaMesh* currentMesh = modelData->GetMesh(i);
-		ZeldaTexture* currentTexture = modelData->GetTexture(i);
-
-		currentMesh->Render(mDeviceContext);
-
-		if (wireFrame)
+		for (int j = 0; j < nodes[i]->zeldaMeshes.size(); j++)
 		{
-			mDeviceContext->RSSetState(wireFrameRasterState);
+			ZNode* currentNode = nodes[i];
+			ZeldaMesh* currentMesh = currentNode->zeldaMeshes[j];
+			ZeldaTexture* currentTexture = currentNode->zeldaTextures[j];
+
+			currentMesh->Render(mDeviceContext);
+
+			if (wireFrame)
+			{
+				mDeviceContext->RSSetState(wireFrameRasterState);
+			}
+			else
+			{
+				mDeviceContext->RSSetState(defaultRasterState);
+			}
+
+			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+			matrixConstBuffer->SetData({ XMMatrixTranspose(currentNode->GetWorldTransformMatrix() * MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
+			lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+			useConstBuffer->SetData({ false, (currentTexture != nullptr), true, (currentTexture != nullptr && currentTexture->UseSRGB()) });
+			colorConstBuffer->SetData({ { 1, 0, 0, 1 } });
+
+			ConstantBufferManager::GetInstance().SetBuffer();
+
+			ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+			shader->Render(mDeviceContext, currentMesh, currentTexture);
 		}
-		else
-		{
-			mDeviceContext->RSSetState(defaultRasterState);
-		}
-
-		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-		matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-		lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-		useConstBuffer->SetData({ false, (currentTexture != nullptr), true });
-		colorConstBuffer->SetData({ { 1, 1, 1, 1 } });
-
-		ConstantBufferManager::GetInstance().SetBuffer();
-
-		ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
-		shader->Render(mDeviceContext, currentMesh, currentTexture);
 	}
 }
 

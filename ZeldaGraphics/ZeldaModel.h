@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <queue>
 
 #include "ModelingData.h"
 #include "ZeldaGraphicsDefine.h"
@@ -17,6 +18,7 @@ class ZeldaModel
 public:
 	~ZeldaModel();
 
+	std::vector<ZNode*> GetAllNode();
 	unsigned int GetMeshCount();
 	ZeldaMesh* GetMesh(unsigned int meshNum);
 	ZeldaTexture* GetTexture(unsigned int meshNum);

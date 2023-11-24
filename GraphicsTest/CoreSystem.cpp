@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <cassert>
+#include <vector>
 
 #include "GraphicsResourceID.h"
 
@@ -200,27 +201,75 @@ bool CoreSystem::IsRun()
  
 void CoreSystem::run()
 {
+	static Eigen::Matrix4f cameraMatrix;
+
 	static bool firstRun = true;
 	if (firstRun)
 	{
 		firstRun = false;
 
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 
 		mainCameraID = renderer->CreateCamera();
 
 		renderer->SetMainCamera(mainCameraID);
 
-		Eigen::Matrix4f cameraMatrix;
 		cameraMatrix <<
 			1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, -10.0f,
-			0.0f, 0.0f, 0.0f, 0.0f;
-
-		renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 1000.0f);
+			0.0f, 0.0f, 0.0f, 1.0f;
 	}
+
+	const static float moveSpeed = 0.1f;
+	const static float rotateSpeed = 0.03f;
+
+	float rotateX = 0.0f;
+	float rotateY = 0.0f;
+	Eigen::Vector4f moveDelta = Eigen::Vector4f::Zero();
+
+	if (GetAsyncKeyState('W')) moveDelta += (cameraMatrix * Eigen::Vector4f::UnitZ()) * moveSpeed;
+	if (GetAsyncKeyState('S')) moveDelta -= (cameraMatrix * Eigen::Vector4f::UnitZ()) * moveSpeed;
+	if (GetAsyncKeyState('A')) moveDelta -= (cameraMatrix * Eigen::Vector4f::UnitX()) * moveSpeed;
+	if (GetAsyncKeyState('D')) moveDelta += (cameraMatrix * Eigen::Vector4f::UnitX()) * moveSpeed;
+	if (GetAsyncKeyState('Q')) moveDelta -= (cameraMatrix * Eigen::Vector4f::UnitY()) * moveSpeed;
+	if (GetAsyncKeyState('E')) moveDelta += (cameraMatrix * Eigen::Vector4f::UnitY()) * moveSpeed;
+	if (GetAsyncKeyState(VK_UP)) rotateX -= rotateSpeed;
+	if (GetAsyncKeyState(VK_DOWN)) rotateX += rotateSpeed;
+	if (GetAsyncKeyState(VK_LEFT)) rotateY -= rotateSpeed;
+	if (GetAsyncKeyState(VK_RIGHT)) rotateY += rotateSpeed;
+
+	if (GetAsyncKeyState(VK_CONTROL))
+	{
+		moveDelta *= 500;
+		rotateX *= 500;
+		rotateY *= 500;
+	}
+
+	Eigen::Matrix4f cameraRotateY;
+	cameraRotateY <<
+		cos(rotateY), 0, sin(rotateY), 0,
+		0, 1, 0, 0,
+		-sin(rotateY), 0, cos(rotateY), 0,
+		0, 0, 0, 1;
+	Eigen::Matrix4f cameraRotateX;
+	cameraRotateX <<
+		1, 0, 0, 0,
+		0, cos(rotateX), -sin(rotateX), 0,
+		0, sin(rotateX), cos(rotateX), 0,
+		0, 0, 0, 1;
+	Eigen::Matrix4f cameraMove;
+	cameraMove <<
+		1, 0, 0, moveDelta.x(),
+		0, 1, 0, moveDelta.y(),
+		0, 0, 1, moveDelta.z(),
+		0, 0, 0, 1;
+
+	cameraMatrix = cameraMove * cameraMatrix * cameraRotateX * cameraRotateY;
+
+	renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 10000.0f);
 
 	renderer->BeginDraw(0.016f);
 
@@ -272,18 +321,20 @@ void CoreSystem::run()
 		sin(rotation2), 0, cos(rotation2), 0,
 		0.0f, 0, 0, 1;
 
-
-	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 1.0f, 1.0f, 1.0f);
-	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
-
 	Eigen::Matrix4f ganonMatrix;
 	ganonMatrix <<
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 50,
+		0.1, 0, 0, 0,
+		0, 0.1, 0, -10,
+		0, 0, 0.1, 30,
 		0, 0, 0, 1;
 
-	renderer->DrawModel(ganonMatrix, fbxID, false);
+	renderer->DrawModel(worldMatrix, fbxID, false);
+
+	//renderer->DrawCube(fallingMatrix * worldMatrix, TextureID::ID_NULL, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
+
+
+
 	
 	renderer->EndDraw();
 }

@@ -3,7 +3,8 @@
 using namespace DirectX;
 
 ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
-	textureView(nullptr)
+	textureView(nullptr),
+	useSRGB(false)
 {
 	HRESULT result = S_FALSE;
 
@@ -11,22 +12,39 @@ ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
 
 	std::wstring fileType = filePath.substr(filePath.size() - 4, 4);
 
+	TexMetadata metaData;
+
 	if (fileType == L".tga")
 	{
-		result = LoadFromTGAFile(filePath.c_str(), nullptr, image);
+		result = LoadFromTGAFile(filePath.c_str(), &metaData, image);
 	}
 	else if (fileType == L".dds")
 	{
-		result = LoadFromDDSFile(filePath.c_str(), DDS_FLAGS_NONE, nullptr, image);
+		result = LoadFromDDSFile(filePath.c_str(), DDS_FLAGS_NONE, &metaData, image);
 	}
 	else if (fileType == L".jpg" || fileType == L".png")
 	{
-		result = LoadFromWICFile(filePath.c_str(), WIC_FLAGS_NONE, nullptr, image);
+		result = LoadFromWICFile(filePath.c_str(), WIC_FLAGS_NONE, &metaData, image);
+	}
+	else
+	{
+		assert(0);
 	}
 
 	if (FAILED(result))
 	{
 		assert(0);
+	}
+
+	if (metaData.format == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_B8G8R8X8_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_BC1_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_BC2_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_BC3_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_BC7_UNORM_SRGB ||
+		metaData.format == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB)
+	{
+		useSRGB = true;
 	}
 
 	result = CreateShaderResourceView(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), &textureView);
@@ -38,7 +56,8 @@ ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
 }
 
 ZeldaTexture::ZeldaTexture(const ZeldaTexture& zeldaTexture) :
-	textureView(nullptr)
+	textureView(nullptr),
+	useSRGB(false)
 {
 	
 }
@@ -55,4 +74,9 @@ ZeldaTexture::~ZeldaTexture()
 ID3D11ShaderResourceView* ZeldaTexture::GetTexture()
 {
 	return textureView;
+}
+
+bool ZeldaTexture::UseSRGB()
+{
+	return useSRGB;
 }
