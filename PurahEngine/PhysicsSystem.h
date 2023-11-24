@@ -23,7 +23,7 @@ namespace PurahEngine
 		PhysicsSystem& operator=(PhysicsSystem&&) noexcept = delete;
 
 	private:
-		static ZonaiPhysics::ZnPhysicsBase* physics;
+		ZonaiPhysics::ZnPhysicsBase* physics;
 
 	public:
 		void Initialize() noexcept;

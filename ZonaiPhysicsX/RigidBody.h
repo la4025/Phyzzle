@@ -14,15 +14,15 @@ namespace ZonaiMath
 namespace physx
 {
 	class PxPhysics;
-	class PxShape;
 	class PxRigidDynamic;
 	class PxRigidActor;
 }
 
-
 namespace ZonaiPhysics
 {
 	using namespace ZonaiMath;
+
+	class Collider;
 
 	class RigidBody : public ZnRigidBody
 	{
@@ -111,7 +111,7 @@ namespace ZonaiPhysics
 
 	private:
 		physx::PxRigidDynamic* rigidbody_;
-		std::vector<physx::PxShape*> shapes_;
+		std::vector<ZonaiPhysics::Collider*> shapes_;
 	};
 } // namespace ZonaiPhysics
 

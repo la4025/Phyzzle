@@ -279,7 +279,7 @@ int snippetMain(int, const char* const*)
 		gScene[i]->addActor(*(staticRigid[i]));
 	}
 
-	PxShape* shape2;
+	auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
 
 	while (1)
 	{
@@ -290,12 +290,23 @@ int snippetMain(int, const char* const*)
 			e->fetchResults(true);
 		}
 
+		if (GetAsyncKeyState(0x4A))  // J
+		{
+ 			last->attachShape(*shape);
+		}
+
+		if (GetAsyncKeyState(0x49))  // J
+		{
+			auto t = shape->getLocalPose();
+			t.p.x += 10.f;
+			t.p.y += 10.f;
+			t.p.z += 10.f;
+			shape->setLocalPose(t);
+		}
+
 
 		if (GetAsyncKeyState(0x4B))  // K
 		{
-// 			auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
-// 			last->attachShape(*shape);
-// 			shape->release();
 			for (auto e : staticRigid)
 			{
 				PxTransform t = e->getGlobalPose();

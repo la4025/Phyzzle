@@ -217,13 +217,14 @@ public:
 	virtual		void	setLocalPose(const PxTransform& pose)		= 0;
 
 	/**
-	\brief Retrieves the pose of the shape in actor space, i.e. relative to the actor they are owned by.
+	\brief 액터 공간에서의 도형의 포즈를 검색합니다.
+	즉, 해당 도형이 소유한 액터를 기준으로 상대적인 위치를 나타냅니다.
 
-	This transformation is identity by default.
+	기본적으로 이 변환은 항등 변환입니다.
 
-	\return Pose of shape relative to the actor's frame.
+	\return 액터 프레임을 기준으로 한 도형의 포즈.
 
-	@see setLocalPose() 
+	@see setLocalPose()
 	*/
 	virtual		PxTransform	getLocalPose()	const	= 0;
 
@@ -263,6 +264,7 @@ public:
 	virtual		void	setQueryFilterData(const PxFilterData& data)	= 0;
 
 	/**
+	 *
 	\brief Retrieves the shape's Query filter data.
 
 	@see setQueryFilterData() 

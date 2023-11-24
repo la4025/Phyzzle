@@ -22,7 +22,7 @@ namespace ZonaiPhysics
 	class Collider : public ZnCollider
 	{
 	public:
-		Collider() noexcept = delete;
+		Collider() noexcept;
 		Collider(physx::PxPhysics*&) noexcept;
 		virtual				~Collider() noexcept;
 
@@ -42,7 +42,6 @@ namespace ZonaiPhysics
 		virtual void		SetQuaternion(const Quaternion& _quaternion) noexcept override;
 		virtual Quaternion	GetLocalQuaternion() const noexcept override;
 		virtual void		SetLocalQuaternion(const Quaternion& _quaternion) noexcept override;
-
 
 		/**
 		유저 데이터
