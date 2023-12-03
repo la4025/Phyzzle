@@ -40,6 +40,9 @@
 #include <windows.h>
 #include <vector>
 
+#include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
+#include "../ZonaiPhysicsX/ZonaiPhysicsX.h"
+
 using namespace physx;
 namespace physx
 {
@@ -57,8 +60,6 @@ static PxPvd*					gPvd = NULL;
 static PxRigidDynamic*			last = NULL;
 static PxJoint*					lastj = NULL;
 static PxRigidStatic*			staticRigid[3] = { NULL };
-
-static std::vector<physx::PxJoint*> jointList;
 
 static std::vector<physx::PxJoint*> jointList;
 
@@ -207,10 +208,37 @@ bool keyPress(unsigned char key)
 	return GetAsyncKeyState(key);
 }
 
-PxRigidStatic* staticRigid[3];
-
 int snippetMain(int, const char* const*)
 {
+	std::wstring _path = L"../x64/Debug/ZonaiPhysicsX.dll";
+
+	HMODULE physicsDLL = LoadLibraryW(_path.c_str());
+	if (!physicsDLL)
+	{
+		// MessageBox(_hwnd, L"해당 경로에 Physics DLL 파일이 존재하지 않습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+		return false;
+	}
+
+	using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
+	ImportFunction CreateInstance{ (ImportFunction)GetProcAddress(physicsDLL, "CreatePhysics") };
+
+	if (CreateInstance == nullptr)
+	{
+		// MessageBox(_hwnd, L"Physics DLL에서 함수 포인터를 받아오지 못했습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+		return false;
+	}
+
+	ZonaiPhysics::ZnPhysicsBase* physicsEngine = CreateInstance();
+
+	if (physicsEngine == nullptr)
+	{
+		// MessageBox(_hwnd, L"Graphics Engine 객체 생성 실패", L"DLL 오류", NULL);
+		return false;
+	}
+
+	physicsEngine->Initialize();
+
+
 	static const PxU32 frameCount = 100;
 
 	// initPhysics(false);

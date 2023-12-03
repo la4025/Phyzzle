@@ -10,8 +10,6 @@ namespace ZonaiMath
 
 namespace ZonaiPhysics
 {
-	using namespace ZonaiMath;
-
 	class ZnCollider : public ZnObject
 	{
 	public:
@@ -19,10 +17,12 @@ namespace ZonaiPhysics
 		virtual				~ZnCollider() noexcept = 0;
 
 	public:
-		virtual Vector3D	GetLocalPosition() const noexcept = 0;
-		virtual void		SetLocalPosition(const Vector3D& _position) noexcept  = 0;
+		virtual ZonaiMath::Vector3D	GetLocalPosition() const noexcept = 0;
+		virtual void		SetLocalPosition(const ZonaiMath::Vector3D& _position) noexcept  = 0;
 
-		virtual Quaternion	GetLocalQuaternion() const noexcept = 0;
-		virtual void		SetLocalQuaternion(const Quaternion& _quaternion) noexcept = 0;
+		virtual ZonaiMath::Quaternion	GetLocalQuaternion() const noexcept = 0;
+		virtual void		SetLocalQuaternion(const ZonaiMath::Quaternion& _quaternion) noexcept = 0;
+
+		virtual void		SetTrigger(bool) noexcept = 0;
 	};
 }

@@ -1,6 +1,9 @@
-#include "ZnPhysicsX.h"
+#include "ZonaiMath.h"
+
+#include "BoxCollider.h"
 #include "RigidBody.h"
-#include "Collider.h"
+
+#include "ZnPhysicsX.h"
 
 
 namespace ZonaiPhysics
@@ -30,6 +33,8 @@ namespace ZonaiPhysics
 			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 		}
+
+		material = physics->createMaterial(0.5f, 0.5f, 0.6f);
 	}
 
 	void ZnPhysicsX::Simulation(float _dt) noexcept
@@ -54,7 +59,45 @@ namespace ZonaiPhysics
 		PX_RELEASE(foundation);
 	}
 
+	/// <summary>
+	/// 강체를 만들어서 반환
+	/// </summary>
 	ZnRigidBody* ZnPhysicsX::CreateRigidBody(const std::wstring& _id) noexcept
+	{
+		RigidBody* result = FindRigidBody(_id);
+
+		if (result == nullptr)
+		{
+			RigidBody* newRigidBody = new RigidBody(physics);
+			bodies.insert(std::make_pair(_id, newRigidBody));
+
+			return newRigidBody;
+		}
+		else
+		{
+			return result;
+		}
+	}
+
+	/// <summary>
+	/// 강체를 찾아서 거기에 콜라이더를 붙임.
+	/// </summary>
+	ZnCollider* ZnPhysicsX::CreatBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
+	{
+		RigidBody* body = FindRigidBody(_id);
+
+		if (body == nullptr)
+		{
+			body = new RigidBody(physics);
+			bodies.insert(std::make_pair(_id, body));
+		}
+
+		Collider* newRigidBody = new BoxCollider(physics, body, ZonaiMath::Vector3D(x, y, z), material);
+
+		return newRigidBody;
+	}
+
+	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
 	{
 		auto itr = bodies.find(_id);
 		if (itr != bodies.end())
@@ -62,45 +105,35 @@ namespace ZonaiPhysics
 			return itr->second;
 		}
 
-		RigidBody* newRigidBody = new RigidBody(physics);
-		bodies.insert(std::make_pair(_id, newRigidBody));
-
-		return newRigidBody;
-	}
-
-	ZnCollider* ZnPhysicsX::CreatBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
-	{
-		RigidBody* body = dynamic_cast<RigidBody*>(CreateRigidBody(_id));
-
-		Collider* newRigidBody = new Collider(physics);
-		bodies.insert(std::make_pair(_id, newRigidBody));
-
-		return newRigidBody;
-	}
-
-	ZnCollider* ZnPhysicsX::CreatPlaneCollider(const std::wstring&, float x, float y) noexcept
-	{
-
-	}
-
-	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring&, float radius) noexcept
-	{
-
-	}
-
-	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept
-	{
-
-	}
-
-	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
-	{
-
-	}
-
-	ZnPhysicsBase* CreatePhysics() noexcept
-	{
 		return nullptr;
+	}
+
+// 	ZnCollider* ZnPhysicsX::CreatPlaneCollider(const std::wstring&, float x, float y) noexcept
+// 	{
+// 
+// 	}
+// 
+// 	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring&, float radius) noexcept
+// 	{
+// 
+// 	}
+// 
+// 	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept
+// 	{
+// 
+// 	}
+// 
+// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
+// 	{
+// 
+// 	}
+
+	extern "C"
+	{
+		ZnPhysicsBase* CreatePhysics()
+		{
+			return new ZnPhysicsX();
+		}
 	}
 
 } // namespace ZonaiPhysics

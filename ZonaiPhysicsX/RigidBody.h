@@ -109,6 +109,10 @@ namespace ZonaiPhysics
 		__declspec(property(get = GetQuaternion, put = SetQuaternion))
 			Quaternion quaternion;
 
+	public:
+		void AddCollider(Collider*);
+		physx::PxRigidDynamic* getRigidDynamic() const noexcept;
+
 	private:
 		physx::PxRigidDynamic* rigidbody_;
 		std::vector<ZonaiPhysics::Collider*> shapes_;

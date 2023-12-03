@@ -201,4 +201,15 @@ namespace ZonaiPhysics
 	{
 		rigidbody_->clearTorque();
 	}
+
+	void RigidBody::AddCollider(Collider* _collider)
+	{
+		shapes_.push_back(_collider);
+	}
+
+	physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept
+	{
+		return rigidbody_;
+	}
+
 } // namespace ZonaiPhysics
