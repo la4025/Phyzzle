@@ -6,7 +6,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "FBXData.h"
+struct Model;
+struct Bone;
 
 namespace FBXLoader
 {

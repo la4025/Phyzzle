@@ -109,7 +109,43 @@ namespace FBXLoader
 		double duration; // Æ½´ç ½Ã°£
 		double tickPerSecond; // ½Ã°£´ç Æ½
 
-		std::map<Bone*, std::vector<Eigen::Matrix4f>> animationKey;
+		std::map<Bone*, std::vector<AnimationKey>> animationKey;
 		std::vector<Eigen::Matrix4f> animationMatrix;
+	};
+
+	struct AnimationKey
+	{
+		double time;
+		Eigen::Matrix4f value;
+
+		bool operator<(const AnimationKey& right)
+		{
+			return time < right.time;
+		}
+
+		bool operator<=(const AnimationKey& right)
+		{
+			return time <= right.time;
+		}
+
+		bool operator>(const AnimationKey& right)
+		{
+			return time > right.time;
+		}
+
+		bool operator>=(const AnimationKey& right)
+		{
+			return time >= right.time;
+		}
+
+		bool operator==(const AnimationKey& right)
+		{
+			return time == right.time;
+		}
+
+		bool operator!=(const AnimationKey& right)
+		{
+			return time != right.time;
+		}
 	};
 }

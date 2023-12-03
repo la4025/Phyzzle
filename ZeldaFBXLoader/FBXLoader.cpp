@@ -2,6 +2,8 @@
 
 #include <filesystem>
 
+#include "FBXData.h"
+
 namespace FBXLoader
 {
 	Model* FBXLoader::CreateModelFromFBX(const std::wstring& filePath)
@@ -42,6 +44,36 @@ namespace FBXLoader
 
 		for (int i = 0; i < scene->mNumAnimations; i++)
 		{
+			aiAnimation* aianimation = scene->mAnimations[i];
+
+			Animation* animationData = new Animation();
+
+			std::string str = aianimation->mName.C_Str();
+			animationData->name.assign(str.begin(), str.end());
+
+			animationData->duration = aianimation->mDuration;
+			animationData->tickPerSecond = aianimation->mTicksPerSecond;
+
+
+			for (int j = 0; j < aianimation->mNumChannels; j++)
+			{
+				aiNodeAnim* aibone = aianimation->mChannels[j];
+
+				// 여기 마저 만들어야한다.
+				aibone->mNodeName;
+				aibone->mPositionKeys[j].mTime;
+				aibone->mPositionKeys[j].mValue;
+
+				AnimationKey asdf = { 0, Eigen::Matrix4f::Identity() };
+
+			}
+
+			
+
+
+
+
+
 
 		}
 
