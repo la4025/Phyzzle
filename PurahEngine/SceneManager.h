@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <eigen/Dense>
 
 namespace PurahEngine
 {
@@ -11,7 +12,7 @@ namespace PurahEngine
 	class Camera;
 	class Transform;
 
-	class PURAHENGINE_API SceneManager
+	class SceneManager
 	{
 	private:
 		SceneManager();

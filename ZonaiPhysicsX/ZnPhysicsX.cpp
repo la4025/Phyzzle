@@ -72,10 +72,10 @@ namespace ZonaiPhysics
 		{
 			result = new RigidBody(physics);
 			bodies.insert(std::make_pair(_id, result));
-			scene->addActor(*result->getRigidDynamic());
 		}
 
 		result->CanSimulate();
+		scene->addActor(*result->getRigidDynamic());
 
 		return result;
 	}

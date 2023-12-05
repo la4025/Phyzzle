@@ -4,7 +4,20 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "InputManager.h"
+#include "PhysicsSystem.h"
 #include <cassert>
+
+
+/// <summary>
+///  임시
+/// </summary>
+#include "../ZonaiPhysicsBase/ZnCollider.h"
+#include "../ZonaiPhysicsBase/ZnRigidBody.h"
+#include "../ZonaiMath/ZonaiMath.h"
+
+ZonaiPhysics::ZnCollider* collider;
+ZonaiPhysics::ZnRigidBody* rigidBody;
+
 
 PurahEngine::GameLoop::GameLoop()
 {
@@ -48,7 +61,10 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
 
-	
+	PurahEngine::PhysicsSystem::GetInstance().Initialize();
+
+	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
+	collider = PurahEngine::PhysicsSystem::GetInstance().CreateBoxCollider(L"RigidBody", 5,5 ,5);
 	
 }
 
@@ -88,7 +104,12 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
+	PurahEngine::PhysicsSystem::GetInstance().Simulation(1 / 1000);
+	auto position = rigidBody->GetPosition();
+
+
 	PurahEngine::InputManager::Getinstance().Update();
+
 	PurahEngine::GraphicsManager::GetInstance().Run();
 }
 
