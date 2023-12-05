@@ -40,6 +40,11 @@
 #include <windows.h>
 #include <vector>
 
+#include "../ZonaiMath/ZonaiMath.h"
+#include "../ZonaiPhysicsBase/ZnCollider.h"
+#include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
+#include "../ZonaiPhysicsBase/ZnRigidBody.h"
+
 using namespace physx;
 namespace physx
 {
@@ -57,8 +62,6 @@ static PxPvd*					gPvd = NULL;
 static PxRigidDynamic*			last = NULL;
 static PxJoint*					lastj = NULL;
 static PxRigidStatic*			staticRigid[3] = { NULL };
-
-static std::vector<physx::PxJoint*> jointList;
 
 static std::vector<physx::PxJoint*> jointList;
 
@@ -207,114 +210,165 @@ bool keyPress(unsigned char key)
 	return GetAsyncKeyState(key);
 }
 
-PxRigidStatic* staticRigid[3];
-
 int snippetMain(int, const char* const*)
 {
-	static const PxU32 frameCount = 100;
+	std::wstring _path = L"../x64/Debug/ZonaiPhysicsX.dll";
 
-	// initPhysics(false);
-
-	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
-	gPvd = PxCreatePvd(*gFoundation);
-	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
-	PxInitExtensions(*gPhysics, gPvd);
-
-	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
-	gDispatcher = PxDefaultCpuDispatcherCreate(2);
-	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-	gScene[0] = gPhysics->createScene(sceneDesc);
-	gScene[1] = gPhysics->createScene(sceneDesc);
-	gScene[2] = gPhysics->createScene(sceneDesc);
-	
-	for (auto e : gScene)
+	HMODULE physicsDLL = LoadLibraryW(_path.c_str());
+	if (!physicsDLL)
 	{
-		PxPvdSceneClient* pvdClient = e->getScenePvdClient();
-		if (pvdClient)
-		{
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-		}
+		// MessageBox(_hwnd, L"해당 경로에 Physics DLL 파일이 존재하지 않습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+		return false;
 	}
 
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
+	ImportFunction CreateInstance{ (ImportFunction)GetProcAddress(physicsDLL, "CreatePhysics") };
 
-	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene[0]->addActor(*groundPlane);
-
-	// 각도가 제한된 관절
-	createChain(PxTransform(PxVec3(0.0f, 20.0f, 0.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
-
-	// 부숴지는 관절
-	createChain(PxTransform(PxVec3(0.0f, 20.0f, -10.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
-
-	// 스프링으로 연결된 관절
-	createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
-
-	for (int i = 0; i < 3; i++) 
+	if (CreateInstance == nullptr)
 	{
-		staticRigid[i] = PxCreateStatic(
-			*gPhysics,
-			PxTransform(PxVec3(0.f, 150.f, -10.f * i)),
-			PxBoxGeometry(2.f, 2.f, 2.f),
-			*gMaterial
-		);
-		PxShapeFlags shapeFlags = PxShapeFlag::eSCENE_QUERY_SHAPE;
-
-		PxActorFlags flags = 
-			// PxActorFlag::eVISUALIZATION | 
-			// PxActorFlag::eDISABLE_GRAVITY | 
-			// PxActorFlag::eSEND_SLEEP_NOTIFIES | 
-			PxActorFlag::eDISABLE_SIMULATION;
-
-		staticRigid[i]->setActorFlags(flags);
-
-		gScene[i]->addActor(*(staticRigid[i]));
+		// MessageBox(_hwnd, L"Physics DLL에서 함수 포인터를 받아오지 못했습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+		return false;
 	}
+
+	ZonaiPhysics::ZnPhysicsBase* physicsEngine = CreateInstance();
+
+	if (physicsEngine == nullptr)
+	{
+		// MessageBox(_hwnd, L"Graphics Engine 객체 생성 실패", L"DLL 오류", NULL);
+		return false;
+	}
+
+	physicsEngine->Initialize();
+
+	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+	// rigid->SetPosition({ 0, 50, 10 });
+
+	auto collider = physicsEngine->CreatBoxCollider(L"rigidBody", 3, 3, 3);
+	// collider->SetTrigger(true);
+
 
 	while (1)
 	{
-		// gScene->simulate(1.0f / 600.0f);
-		for (auto e : gScene)
-		{
-			e->simulate(1.f / 500.f);
-			e->fetchResults(true);
-		}
-
-
-		if (GetAsyncKeyState(0x4B))  // K
-		{
-// 			auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
-// 			last->attachShape(*shape);
-// 			shape->release();
-
-			for (auto e : staticRigid)
-			{
-				PxTransform t = e->getGlobalPose();
-				t.p.y -= 1.f/100.f;
-				e->setGlobalPose(t);
-			}
-		}
-		
-		static bool first = true;
-
-		if (GetAsyncKeyState(0x4C) && first)  // L
-		{
-			first = false;
-			for (auto e : jointList)
-			{
-				e->release();
-			}
-		}
+		physicsEngine->Simulation(1.0f / 600.0f);
 	}
 
-	cleanupPhysics(false);
+	//static const PxU32 frameCount = 100;
+
+	// initPhysics(false);
+
+	//gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
+	//gPvd = PxCreatePvd(*gFoundation);
+	//PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
+	//gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+
+	//gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+	//PxInitExtensions(*gPhysics, gPvd);
+
+	//PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
+	//sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+	//gDispatcher = PxDefaultCpuDispatcherCreate(2);
+	//sceneDesc.cpuDispatcher = gDispatcher;
+	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	//gScene[0] = gPhysics->createScene(sceneDesc);
+	//gScene[1] = gPhysics->createScene(sceneDesc);
+	//gScene[2] = gPhysics->createScene(sceneDesc);
+	//
+	//for (auto e : gScene)
+	//{
+	//	PxPvdSceneClient* pvdClient = e->getScenePvdClient();
+	//	if (pvdClient)
+	//	{
+	//		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+	//		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+	//		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+	//	}
+	//}
+
+	//gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+
+	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
+	//gScene[0]->addActor(*groundPlane);
+
+	//// 각도가 제한된 관절
+	//createChain(PxTransform(PxVec3(0.0f, 20.0f, 0.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
+
+	//// 부숴지는 관절
+	//createChain(PxTransform(PxVec3(0.0f, 20.0f, -10.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
+
+	//// 스프링으로 연결된 관절
+	//createChain(PxTransform(PxVec3(0.0f, 20.0f, -20.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
+
+	//for (int i = 0; i < 3; i++) 
+	//{
+	//	staticRigid[i] = PxCreateStatic(
+	//		*gPhysics,
+	//		PxTransform(PxVec3(0.f, 150.f, -10.f * i)),
+	//		PxBoxGeometry(2.f, 2.f, 2.f),
+	//		*gMaterial
+	//	);
+
+	//	PxShapeFlags shapeFlags = PxShapeFlag::eSCENE_QUERY_SHAPE;
+
+	//	PxActorFlags flags = 
+	//		// PxActorFlag::eVISUALIZATION | 
+	//		// PxActorFlag::eDISABLE_GRAVITY | 
+	//		// PxActorFlag::eSEND_SLEEP_NOTIFIES | 
+	//		PxActorFlag::eDISABLE_SIMULATION;
+
+	//	staticRigid[i]->setActorFlags(flags);
+
+	//	gScene[i]->addActor(*(staticRigid[i]));
+	//}
+
+	//auto shape = gPhysics->createShape(PxSphereGeometry(4.f), *gMaterial);
+
+	//while (1)
+	//{
+	//	// gScene->simulate(1.0f / 600.0f);
+	//	for (auto e : gScene)
+	//	{
+	//		e->simulate(1.f / 500.f);
+	//		e->fetchResults(true);
+	//	}
+
+	//	if (GetAsyncKeyState(0x4A))  // J
+	//	{
+ //			last->attachShape(*shape);
+	//	}
+
+	//	if (GetAsyncKeyState(0x49))  // J
+	//	{
+	//		auto t = shape->getLocalPose();
+	//		t.p.x += 10.f;
+	//		t.p.y += 10.f;
+	//		t.p.z += 10.f;
+	//		shape->setLocalPose(t);
+	//	}
+
+
+	//	if (GetAsyncKeyState(0x4B))  // K
+	//	{
+	//		for (auto e : staticRigid)
+	//		{
+	//			PxTransform t = e->getGlobalPose();
+	//			t.p.y -= 1.f/100.f;
+	//			e->setGlobalPose(t);
+	//		}
+	//	}
+	//	
+	//	static bool first = true;
+
+	//	if (GetAsyncKeyState(0x4C) && first)  // L
+	//	{
+	//		first = false;
+	//		for (auto e : jointList)
+	//		{
+	//			e->release();
+	//		}
+	//	}
+	//}
+
+	//cleanupPhysics(false);
 
 	return 0;
 }
