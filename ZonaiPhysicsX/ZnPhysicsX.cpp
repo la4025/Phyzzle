@@ -1,5 +1,7 @@
 #include "ZonaiMath.h"
 
+#include "PxPhysicsAPI.h"
+
 #include "BoxCollider.h"
 #include "RigidBody.h"
 
@@ -68,15 +70,14 @@ namespace ZonaiPhysics
 
 		if (result == nullptr)
 		{
-			RigidBody* newRigidBody = new RigidBody(physics);
-			bodies.insert(std::make_pair(_id, newRigidBody));
+			result = new RigidBody(physics);
+			bodies.insert(std::make_pair(_id, result));
+			scene->addActor(*result->getRigidDynamic());
+		}
 
-			return newRigidBody;
-		}
-		else
-		{
-			return result;
-		}
+		result->CanSimulate();
+
+		return result;
 	}
 
 	/// <summary>
@@ -90,6 +91,7 @@ namespace ZonaiPhysics
 		{
 			body = new RigidBody(physics);
 			bodies.insert(std::make_pair(_id, body));
+			scene->addActor(*body->getRigidDynamic());
 		}
 
 		Collider* newRigidBody = new BoxCollider(physics, body, ZonaiMath::Vector3D(x, y, z), material);

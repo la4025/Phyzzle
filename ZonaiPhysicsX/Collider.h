@@ -24,7 +24,7 @@ namespace ZonaiPhysics
 	public:
 		Collider() noexcept = delete;
 		Collider(physx::PxPhysics*&, RigidBody*) noexcept;
-		virtual				~Collider() noexcept;
+		virtual				~Collider() noexcept = default;
 
 	public:
 		/**

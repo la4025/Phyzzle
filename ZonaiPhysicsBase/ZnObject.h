@@ -12,7 +12,7 @@ namespace ZonaiPhysics
 	{
 	public:
 							ZnObject() noexcept = default;
-		virtual				~ZnObject() noexcept = 0;
+		virtual				~ZnObject() noexcept = default;
 
 	public:
 		/**

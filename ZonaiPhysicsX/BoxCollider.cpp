@@ -1,8 +1,7 @@
-#include "ZonaiMath.h"
-
 #include "RigidBody.h"
-
+#include "ZonaiMath.h"
 #include "PxPhysicsAPI.h"
+
 #include "BoxCollider.h"
 
 namespace ZonaiPhysics
@@ -13,6 +12,7 @@ namespace ZonaiPhysics
 		rigid_ = _body;
 
 		shape_ = _factory->createShape(PxBoxGeometry(_offset.x, _offset.y, _offset.z), *_material);
+		shape_->setFlag(PxShapeFlag::eVISUALIZATION, true);
 		_body->getRigidDynamic()->attachShape(*shape_);
 	}
 

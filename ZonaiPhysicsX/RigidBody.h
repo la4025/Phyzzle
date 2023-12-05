@@ -110,7 +110,8 @@ namespace ZonaiPhysics
 			Quaternion quaternion;
 
 	public:
-		void AddCollider(Collider*);
+		void AddCollider(Collider*) noexcept;
+		void CanSimulate() noexcept;
 		physx::PxRigidDynamic* getRigidDynamic() const noexcept;
 
 	private:

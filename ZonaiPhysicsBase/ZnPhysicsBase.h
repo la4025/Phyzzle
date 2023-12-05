@@ -22,7 +22,7 @@ namespace ZonaiPhysics
 	{
 	public:
 		ZnPhysicsBase() noexcept = default;
-		virtual ~ZnPhysicsBase() noexcept;
+		virtual ~ZnPhysicsBase() noexcept = default;
 	
 	public:
 		/// <summary>

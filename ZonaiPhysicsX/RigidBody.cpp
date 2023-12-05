@@ -7,7 +7,8 @@ namespace ZonaiPhysics
 	RigidBody::RigidBody(physx::PxPhysics*& _factory) noexcept
 	{
 		using namespace physx;
-		rigidbody_ = _factory->createRigidDynamic(PxTransform(PxVec3()));
+		rigidbody_ = _factory->createRigidDynamic(PxTransform(PxVec3(0,0,0)));
+		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
 	}
 
 	RigidBody::~RigidBody() noexcept
@@ -202,9 +203,15 @@ namespace ZonaiPhysics
 		rigidbody_->clearTorque();
 	}
 
-	void RigidBody::AddCollider(Collider* _collider)
+	void RigidBody::AddCollider(Collider* _collider) noexcept
 	{
 		shapes_.push_back(_collider);
+	}
+
+	void RigidBody::CanSimulate() noexcept
+	{
+		using namespace physx;
+		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
 	}
 
 	physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept

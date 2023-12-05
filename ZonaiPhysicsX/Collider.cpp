@@ -1,23 +1,14 @@
-#include "Collider.h"
-
-#include <windows.h>
-
 #include "RigidBody.h"
 #include "ZonaiMath.h"
 #include "PxPhysicsAPI.h"
+
+#include "Collider.h"
 
 namespace ZonaiPhysics
 {
 	Collider::Collider(physx::PxPhysics*& _factory, RigidBody* _rigid) noexcept : rigid_(_rigid), shape_()
 	{
 
-	}
-
-	Collider::~Collider() noexcept
-	{
-		rigid_->getRigidDynamic()->detachShape(*shape_);
-		// rigid_->detachShape(*shape_);
-		shape_->release();
 	}
 
 	/// <summary>
@@ -98,9 +89,11 @@ namespace ZonaiPhysics
 		shape_->setLocalPose(t);
 	}
 
-	void Collider::SetTrigger(bool) noexcept
+	void Collider::SetTrigger(bool _flag) noexcept
 	{
 		using namespace physx;
+		shape_->setFlag(PxShapeFlag::eTRIGGER_SHAPE, _flag);
+		// rigid_->getRigidDynamic()->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
 		// shape_->setFlags(PxShapeFlag::eTRIGGER_SHAPE)
 	}
 

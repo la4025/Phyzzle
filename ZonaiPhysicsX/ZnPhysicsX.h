@@ -1,7 +1,5 @@
 #pragma once
-#include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
-
-#include "PxPhysicsAPI.h"
+#include "ZnPhysicsBase.h"
 
 #include <map>
 #include <string>
@@ -38,7 +36,7 @@ namespace ZonaiPhysics
 	{
 	public:
 		ZnPhysicsX() noexcept = default;
-		virtual ~ZnPhysicsX() noexcept;
+		virtual ~ZnPhysicsX() noexcept = default;
 
 	public:
 		virtual void			Initialize() noexcept override;
