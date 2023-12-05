@@ -8,6 +8,13 @@
 
 #include <cassert>
 
+#ifdef YH_DEBUG
+#pragma comment (lib, "../Debug/ZeldaGraphicsAdapter.lib")
+#elif YH_RELEASE
+#pragma comment (lib, "../Release/ZeldaGraphicsAdapter.lib")
+#endif
+
+
 void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 {
 #ifdef YH_RENDERER
@@ -65,9 +72,6 @@ void PurahEngine::GraphicsManager::Run()
 	}
 	renderer->BeginDraw(0.0f);
 	float angle = 10.0f;
-	Eigen::Matrix3f rotation_matrix;
-	rotation_matrix = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
-	test.block<3, 3>(0, 0) = rotation_matrix;
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{

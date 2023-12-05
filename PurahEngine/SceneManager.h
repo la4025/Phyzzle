@@ -1,4 +1,5 @@
 #pragma once
+#include "PurahEngineAPI.h"
 
 #include <string>
 #include <vector>
@@ -10,7 +11,7 @@ namespace PurahEngine
 	class Camera;
 	class Transform;
 
-	class SceneManager
+	class PURAHENGINE_API SceneManager
 	{
 	private:
 		SceneManager();
@@ -25,15 +26,22 @@ namespace PurahEngine
 		GameObject* CreateGameObject(std::wstring objectName);
 		Camera* GetMainCamera();
 
+		void SetMainCamera(Camera * camera);
+
+		void SetName(std::wstring name);
+
 	private:
 		void Initialize();
 
 	private:
+		std::wstring sceneName;
+
 		// 씬에 생성된 오브젝트 리스트
 		std::vector<GameObject*> objectList;
 
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
+		Eigen::Vector3f cameraPosition;
 
 		// GameLoop에 friend선언을 해줌으로써 private설정이 되있는 Initialize()를 GameLoop에서 쓸 수 있다.
 		friend GameLoop;
