@@ -13,6 +13,7 @@ namespace ZonaiPhysics
 
 		shape_ = _factory->createShape(PxBoxGeometry(_offset.x, _offset.y, _offset.z), *_material);
 		shape_->setFlag(PxShapeFlag::eVISUALIZATION, true);
+		shape_->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
 		_body->getRigidDynamic()->attachShape(*shape_);
 	}
 

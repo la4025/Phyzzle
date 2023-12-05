@@ -34,9 +34,9 @@
 // ****************************************************************************
 
 #include <ctype.h>
-#include "PxPhysicsAPI.h"
-#include "../snippets/snippetcommon/SnippetPrint.h"
-#include "../snippets/snippetcommon/SnippetPVD.h"
+//#include "PxPhysicsAPI.h"
+//#include "../snippets/snippetcommon/SnippetPrint.h"
+//#include "../snippets/snippetcommon/SnippetPVD.h"
 #include <windows.h>
 #include <vector>
 
@@ -45,25 +45,25 @@
 #include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
 #include "../ZonaiPhysicsBase/ZnRigidBody.h"
 
-using namespace physx;
-namespace physx
-{
-	class PxJoint;
-}
-
-static PxDefaultAllocator		gAllocator;
-static PxDefaultErrorCallback	gErrorCallback;
-static PxFoundation*			gFoundation = NULL;
-static PxPhysics*				gPhysics = NULL;
-static PxDefaultCpuDispatcher*	gDispatcher = NULL;
-static PxScene*					gScene[3] = { NULL, };
-static PxMaterial*				gMaterial = NULL;
-static PxPvd*					gPvd = NULL;
-static PxRigidDynamic*			last = NULL;
-static PxJoint*					lastj = NULL;
-static PxRigidStatic*			staticRigid[3] = { NULL };
-
-static std::vector<physx::PxJoint*> jointList;
+//using namespace physx;
+//namespace physx
+//{
+//	class PxJoint;
+//}
+//
+//static PxDefaultAllocator		gAllocator;
+//static PxDefaultErrorCallback	gErrorCallback;
+//static PxFoundation*			gFoundation = NULL;
+//static PxPhysics*				gPhysics = NULL;
+//static PxDefaultCpuDispatcher*	gDispatcher = NULL;
+//static PxScene*					gScene[3] = { NULL, };
+//static PxMaterial*				gMaterial = NULL;
+//static PxPvd*					gPvd = NULL;
+//static PxRigidDynamic*			last = NULL;
+//static PxJoint*					lastj = NULL;
+//static PxRigidStatic*			staticRigid[3] = { NULL };
+//
+//static std::vector<physx::PxJoint*> jointList;
 
 // static PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 // {
@@ -75,66 +75,66 @@ static std::vector<physx::PxJoint*> jointList;
 // }
 
 // 각도가 제한된 구형 관절
-static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
-{
-	PxSphericalJoint* j = PxSphericalJointCreate(*gPhysics, a0, t0, a1, t1);
-	j->setLimitCone(PxJointLimitCone(PxPi / 4, PxPi / 4));
-	j->setBreakForce(1000000, 10000000);
-	j->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, true);
-	return j;
-}
-
-// 파괴 가능한 고정 관절
-static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
-{
-	PxFixedJoint* j = PxFixedJointCreate(*gPhysics, a0, t0, a1, t1);
-	j->setBreakForce(1000, 100000);
-	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
-	j->setConstraintFlag(PxConstraintFlag::eDISABLE_PREPROCESSING, true);
-	return j;
-}
-
-// 스프링으로 위치가 고정된 D6 관절
-static PxJoint* createDampedD6(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
-{
-	PxD6Joint* j = PxD6JointCreate(*gPhysics, a0, t0, a1, t1);
-	j->setBreakForce(1000, 100000);
-	j->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
-	j->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
-	j->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
-	j->setDrive(PxD6Drive::eSLERP, PxD6JointDrive(0, 1000, FLT_MAX, true));
-	return j;
-}
-
-typedef PxJoint* (*JointCreateFunction)(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1);
-
-// create a chain rooted at the origin and extending along the x-axis, all transformed by the argument t.
-
-static void createChain(const PxTransform& t, PxU32 length, const PxGeometry& g, PxReal separation, JointCreateFunction createJoint)
-{
-	PxVec3 offset(separation / 2, 0, 0);
-	PxTransform localTm(offset);
-	PxRigidDynamic* prev = NULL;
-	static int index = 0;
-	
-	for (PxU32 i = 0; i < length; i++)
-	{
-		PxRigidDynamic* current = PxCreateDynamic(*gPhysics, t * localTm, g, *gMaterial, 1.0f);
-		auto j = (*createJoint)(prev, prev ? PxTransform(offset) : t, current, PxTransform(-offset));
-		jointList.push_back(j);
-		if (index == 2)
-		{
-			gScene[0]->addActor(*current);
-		}
-		gScene[index]->addActor(*current);
-		prev = current;
-		localTm.p.x += separation;
-
-		last = current;
-	}
-
-	index++;
-}
+//static PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
+//{
+//	PxSphericalJoint* j = PxSphericalJointCreate(*gPhysics, a0, t0, a1, t1);
+//	j->setLimitCone(PxJointLimitCone(PxPi / 4, PxPi / 4));
+//	j->setBreakForce(1000000, 10000000);
+//	j->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, true);
+//	return j;
+//}
+//
+//// 파괴 가능한 고정 관절
+//static PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
+//{
+//	PxFixedJoint* j = PxFixedJointCreate(*gPhysics, a0, t0, a1, t1);
+//	j->setBreakForce(1000, 100000);
+//	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
+//	j->setConstraintFlag(PxConstraintFlag::eDISABLE_PREPROCESSING, true);
+//	return j;
+//}
+//
+//// 스프링으로 위치가 고정된 D6 관절
+//static PxJoint* createDampedD6(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
+//{
+//	PxD6Joint* j = PxD6JointCreate(*gPhysics, a0, t0, a1, t1);
+//	j->setBreakForce(1000, 100000);
+//	j->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
+//	j->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
+//	j->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
+//	j->setDrive(PxD6Drive::eSLERP, PxD6JointDrive(0, 1000, FLT_MAX, true));
+//	return j;
+//}
+//
+//typedef PxJoint* (*JointCreateFunction)(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1);
+//
+//// create a chain rooted at the origin and extending along the x-axis, all transformed by the argument t.
+//
+//static void createChain(const PxTransform& t, PxU32 length, const PxGeometry& g, PxReal separation, JointCreateFunction createJoint)
+//{
+//	PxVec3 offset(separation / 2, 0, 0);
+//	PxTransform localTm(offset);
+//	PxRigidDynamic* prev = NULL;
+//	static int index = 0;
+//	
+//	for (PxU32 i = 0; i < length; i++)
+//	{
+//		PxRigidDynamic* current = PxCreateDynamic(*gPhysics, t * localTm, g, *gMaterial, 1.0f);
+//		auto j = (*createJoint)(prev, prev ? PxTransform(offset) : t, current, PxTransform(-offset));
+//		jointList.push_back(j);
+//		if (index == 2)
+//		{
+//			gScene[0]->addActor(*current);
+//		}
+//		gScene[index]->addActor(*current);
+//		prev = current;
+//		localTm.p.x += separation;
+//
+//		last = current;
+//	}
+//
+//	index++;
+//}
 
 /*
 void initPhysics(bool interactive)
@@ -186,35 +186,35 @@ void stepPhysics()// interactive
 }
 */
 
-void cleanupPhysics(bool /*interactive*/)
-{
-	PX_RELEASE(gScene[0]);
-	PX_RELEASE(gScene[1]);
-	PX_RELEASE(gScene[2]);
-	PX_RELEASE(gDispatcher);
-	PxCloseExtensions();
-	PX_RELEASE(gPhysics);
-	if (gPvd)
-	{
-		PxPvdTransport* transport = gPvd->getTransport();
-		gPvd->release();	gPvd = NULL;
-		PX_RELEASE(transport);
-	}
-	PX_RELEASE(gFoundation);
-
-	printf("SnippetJoint done.\n");
-}
-
-bool keyPress(unsigned char key)
-{
-	return GetAsyncKeyState(key);
-}
+//void cleanupPhysics(bool /*interactive*/)
+//{
+//	PX_RELEASE(gScene[0]);
+//	PX_RELEASE(gScene[1]);
+//	PX_RELEASE(gScene[2]);
+//	PX_RELEASE(gDispatcher);
+//	PxCloseExtensions();
+//	PX_RELEASE(gPhysics);
+//	if (gPvd)
+//	{
+//		PxPvdTransport* transport = gPvd->getTransport();
+//		gPvd->release();	gPvd = NULL;
+//		PX_RELEASE(transport);
+//	}
+//	PX_RELEASE(gFoundation);
+//
+//	printf("SnippetJoint done.\n");
+//}
+//
+//bool keyPress(unsigned char key)
+//{
+//	return GetAsyncKeyState(key);
+//}
 
 int snippetMain(int, const char* const*)
 {
-	std::wstring _path = L"../x64/Debug/ZonaiPhysicsX.dll";
+	std::wstring path = L"../x64/Debug/ZonaiPhysicsX.dll";
 
-	HMODULE physicsDLL = LoadLibraryW(_path.c_str());
+	HMODULE physicsDLL = LoadLibraryW(path.c_str());
 	if (!physicsDLL)
 	{
 		// MessageBox(_hwnd, L"해당 경로에 Physics DLL 파일이 존재하지 않습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
@@ -222,7 +222,7 @@ int snippetMain(int, const char* const*)
 	}
 
 	using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
-	ImportFunction CreateInstance{ (ImportFunction)GetProcAddress(physicsDLL, "CreatePhysics") };
+	ImportFunction CreateInstance{ reinterpret_cast<ImportFunction>(GetProcAddress(physicsDLL, "CreatePhysics")) };
 
 	if (CreateInstance == nullptr)
 	{
@@ -240,14 +240,15 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize();
 
-	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
-	// rigid->SetPosition({ 0, 50, 10 });
+	// rigid->SetPosition({ 0, 50, -60 });
 
-	auto collider = physicsEngine->CreatBoxCollider(L"rigidBody", 3, 3, 3);
+	// auto collider = physicsEngine->CreatBoxCollider(L"rigidBody", 3, 3, 3);
+	// collider->SetPosition({ 0, 50, -60 });
 	// collider->SetTrigger(true);
 
+	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
 
-	while (1)
+	while (true)
 	{
 		physicsEngine->Simulation(1.0f / 600.0f);
 	}

@@ -7,14 +7,17 @@ namespace PurahEngine
 
 	void PhysicsSystem::Initialize() noexcept
 	{
-		// physics = new ZonaiPhysics::ZnPhysicsBase();
 		ZonaiPhysicsXDLL = LoadLibrary(L"ZonaiPhysicsX.dll");
+
 		if (ZonaiPhysicsXDLL == nullptr)
 		{
 			// DLL 로드 실패
 			assert(0);
 		}
-		auto createZonaiPhysics = reinterpret_cast<ZonaiPhysics::ZnPhysicsBase* (*)()>(GetProcAddress(ZonaiPhysicsXDLL, "CreatePhysics"));
+
+		using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
+		ImportFunction createZonaiPhysics{ reinterpret_cast<ImportFunction>(GetProcAddress(ZonaiPhysicsXDLL, "CreatePhysics")) };
+
 		if (createZonaiPhysics == nullptr)
 		{
 			// DLL 함수를 찾을 수 없습니다.

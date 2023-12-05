@@ -8,7 +8,6 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		rigidbody_ = _factory->createRigidDynamic(PxTransform(PxVec3(0,0,0)));
-		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
 	}
 
 	RigidBody::~RigidBody() noexcept

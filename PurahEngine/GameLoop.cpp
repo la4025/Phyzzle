@@ -64,6 +64,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	PurahEngine::PhysicsSystem::GetInstance().Initialize();
 
 	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
+
+	rigidBody->SetPosition({ 0, 50, -70 });
+
 	collider = PurahEngine::PhysicsSystem::GetInstance().CreateBoxCollider(L"RigidBody", 5,5 ,5);
 	
 }
@@ -104,7 +107,7 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
-	PurahEngine::PhysicsSystem::GetInstance().Simulation(1 / 1000);
+	PurahEngine::PhysicsSystem::GetInstance().Simulation(1.f / 100.f);
 	auto position = rigidBody->GetPosition();
 
 

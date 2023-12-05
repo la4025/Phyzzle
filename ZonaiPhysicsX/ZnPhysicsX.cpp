@@ -72,10 +72,10 @@ namespace ZonaiPhysics
 		{
 			result = new RigidBody(physics);
 			bodies.insert(std::make_pair(_id, result));
+			scene->addActor(*result->getRigidDynamic());
 		}
 
-		result->CanSimulate();
-		scene->addActor(*result->getRigidDynamic());
+		result->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
 
 		return result;
 	}
@@ -90,6 +90,7 @@ namespace ZonaiPhysics
 		if (body == nullptr)
 		{
 			body = new RigidBody(physics);
+			body->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
 			bodies.insert(std::make_pair(_id, body));
 			scene->addActor(*body->getRigidDynamic());
 		}
