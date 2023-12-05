@@ -57,7 +57,7 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Core\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
+    <ClCompile Include="Collider.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
@@ -100,7 +100,7 @@
       <Filter>Core\dll</Filter>
     </ClInclude>
     <ClInclude Include="PurahEngine.h" />
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="Collider.h">
       <Filter>Collision</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">

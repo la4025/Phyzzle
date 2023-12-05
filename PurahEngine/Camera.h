@@ -9,12 +9,10 @@ namespace PurahEngine
 		Camera();
 		virtual ~Camera();
 
-
-		void SetCameraPosition();
-
+		void UpdateCamera(const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar);
 	private:
 		CameraID cameraID;
-		Eigen::Matrix4f camera;
+		IZeldaRenderer* renderer;
 	};
 }
 

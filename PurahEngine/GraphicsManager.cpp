@@ -24,7 +24,6 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 	if (zeldaGraphicsDLL == nullptr)
 	{
 		// DLL 로드 실패
-		GetLastError();
 		assert(0);
 	}
 	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
@@ -73,9 +72,6 @@ void PurahEngine::GraphicsManager::Run()
 	}
 	renderer->BeginDraw(0.0f);
 	float angle = 10.0f;
-	Eigen::Matrix3f rotation_matrix;
-	rotation_matrix = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
-	test.block<3, 3>(0, 0) = rotation_matrix;
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
