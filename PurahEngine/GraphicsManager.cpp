@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "SceneManager.h"
 #include "InputManager.h"
+#include "PhysicsSystem.h"
 #include <Eigen/Dense>
 
 #include <cassert>
