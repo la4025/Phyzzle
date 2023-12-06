@@ -107,9 +107,8 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
-	PurahEngine::PhysicsSystem::GetInstance().Simulation(1.f / 100.f);
+	PurahEngine::PhysicsSystem::GetInstance().Simulation(1.f / 600.f);
 	auto position = rigidBody->GetPosition();
-
 
 	PurahEngine::InputManager::Getinstance().Update();
 

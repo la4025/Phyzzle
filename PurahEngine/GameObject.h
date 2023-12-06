@@ -1,4 +1,6 @@
 #pragma once
+#include "PurahEngineAPI.h"
+
 #include <vector>
 #include <string>
 
@@ -10,7 +12,7 @@ namespace PurahEngine
 	class SceneManager;
 	class Transform;
 
-	class GameObject
+	class PURAHENGINE_API GameObject
 	{
 	public:
 		/// OnCollision

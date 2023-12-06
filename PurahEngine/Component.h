@@ -1,8 +1,9 @@
 #pragma once
+#include "PurahEngineAPI.h"
 
 namespace PurahEngine
 {
-	class Component
+	class PURAHENGINE_API Component
 	{
 	protected:
 		Component();
