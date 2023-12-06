@@ -240,13 +240,13 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize();
 
-	// rigid->SetPosition({ 0, 50, -60 });
 
-	// auto collider = physicsEngine->CreatBoxCollider(L"rigidBody", 3, 3, 3);
+	auto collider = physicsEngine->CreatBoxCollider(L"rigidBody", 3, 3, 3);
 	// collider->SetPosition({ 0, 50, -60 });
 	// collider->SetTrigger(true);
 
 	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+	rigid->SetPosition({ 0, 50, -60 });
 
 	while (true)
 	{
@@ -345,7 +345,6 @@ int snippetMain(int, const char* const*)
 	//		t.p.z += 10.f;
 	//		shape->setLocalPose(t);
 	//	}
-
 
 	//	if (GetAsyncKeyState(0x4B))  // K
 	//	{
