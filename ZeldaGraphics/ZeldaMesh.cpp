@@ -1,6 +1,6 @@
 #include "ZeldaMesh.h"
 
-#include "ZeldaGraphicsDefine.h"
+#include "ZeldaShader.h"
 
 using namespace DirectX;
 
@@ -70,14 +70,6 @@ ZeldaMesh::ZeldaMesh(ID3D11Device* device, const std::vector<VertexType>& vertex
 	vertices = 0;
 	delete[] indices;
 	indices = 0;
-}
-
-ZeldaMesh::ZeldaMesh(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, int vertexCount, int indexCount) :
-	vertexBuffer(vertexBuffer),
-	indexBuffer(indexBuffer),
-	vertexCount(vertexCount),
-	indexCount(indexCount)
-{
 }
 
 ZeldaMesh::~ZeldaMesh()

@@ -11,6 +11,9 @@ class ZeldaCamera;
 class ZeldaShader;
 class ZeldaModel;
 class ZeldaLight;
+class ZeldaTexture;
+class ZeldaMaterial;
+class IRenderable;
 
 class ZeldaDX11Renderer : public IZeldaRenderer
 {
@@ -40,6 +43,8 @@ public:
 	virtual bool UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar) override;
 
 private:
+	void Render(ZeldaShader* shader, IRenderable* renderable, ZeldaTexture* texture);
+
 	bool bVsyncEnabled;
 	int mVideoCardMemory;
 	char mVideoCardDescription[128];
@@ -66,6 +71,8 @@ private:
 
 	// Constant Buffer
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer;
+	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer;
+
 	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer;
 	ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer;
 	ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer;

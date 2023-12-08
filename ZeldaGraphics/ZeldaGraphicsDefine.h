@@ -15,6 +15,8 @@ struct VertexType
 	const static D3D11_INPUT_ELEMENT_DESC layout[];
 };
 
+#pragma region Constant Buffer
+
 struct MatrixBufferType
 {
 	DirectX::XMMATRIX world;
@@ -22,7 +24,10 @@ struct MatrixBufferType
 	DirectX::XMMATRIX projection;
 };
 
-#pragma region Constant Buffer
+struct BoneBufferType
+{
+	DirectX::XMMATRIX boneTM[256];
+};
 
 struct LightBufferType
 {

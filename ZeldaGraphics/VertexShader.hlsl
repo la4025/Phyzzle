@@ -1,8 +1,13 @@
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+};
+
+cbuffer BoneBufferType : register(b1)
+{
+    matrix boneTM[256];
 };
 
 struct VertexInputType
@@ -29,9 +34,16 @@ PixelInputType main(VertexInputType input)
 	
 	// 적절한 행렬 계산을 위해 위치 벡터를 동차 좌표로 변환한다.
     input.position.w = 1.0f;
-
+        
 	// 월드, 뷰, 프로젝션 행렬들을 이용해 정점의 위치를 계산한다.
     output.position = mul(input.position, worldMatrix);
+    
+    output.position =
+    mul(mul(output.position, boneTM[input.boneIndices[0]]), input.weight[0]) +
+    mul(mul(output.position, boneTM[input.boneIndices[1]]), input.weight[1]) +
+    mul(mul(output.position, boneTM[input.boneIndices[2]]), input.weight[2]) +
+    mul(mul(output.position, boneTM[input.boneIndices[3]]), input.weight[3]);
+    
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 

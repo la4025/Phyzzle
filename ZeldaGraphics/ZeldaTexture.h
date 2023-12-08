@@ -15,12 +15,13 @@ public:
 
 private:
 	ZeldaTexture(ID3D11Device* device, const std::wstring& filePath);
-	ZeldaTexture(const ZeldaTexture& zeldaTexture);
+	ZeldaTexture(const ZeldaTexture& zeldaTexture) = delete;
 
 	ID3D11ShaderResourceView* textureView;
 
 	bool useSRGB;
 
+	friend class ZeldaMaterial;
 	friend class ResourceManager;
 };
 

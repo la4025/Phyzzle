@@ -6,6 +6,8 @@
 
 namespace FBXLoader
 {
+	const unsigned int FBXLoader::BONE_MAX = 256;
+
 	Model* FBXLoader::CreateModelFromFBX(const std::wstring& filePath)
 	{
 		Model* model = nullptr;
@@ -42,41 +44,6 @@ namespace FBXLoader
 
 		model = new Model();
 
-		for (int i = 0; i < scene->mNumAnimations; i++)
-		{
-			aiAnimation* aianimation = scene->mAnimations[i];
-
-			Animation* animationData = new Animation();
-
-			std::string str = aianimation->mName.C_Str();
-			animationData->name.assign(str.begin(), str.end());
-
-			animationData->duration = aianimation->mDuration;
-			animationData->tickPerSecond = aianimation->mTicksPerSecond;
-
-
-			for (int j = 0; j < aianimation->mNumChannels; j++)
-			{
-				aiNodeAnim* aibone = aianimation->mChannels[j];
-
-				// 여기 마저 만들어야한다.
-				aibone->mNodeName;
-				aibone->mPositionKeys[j].mTime;
-				aibone->mPositionKeys[j].mValue;
-
-				AnimationKey asdf = { 0, Eigen::Matrix4f::Identity() };
-
-			}
-
-			
-
-
-
-
-
-
-		}
-
 		if (scene->HasMaterials())
 		{
 			for (int i = 0; i < scene->mNumMaterials; i++)
@@ -108,10 +75,34 @@ namespace FBXLoader
 			}
 		}
 
-		std::map<std::wstring, Bone*> boneMap;
+		model->boneList.assign(BONE_MAX, nullptr);
+
+		std::map<std::wstring, unsigned int> boneIndexMap;
+		if (scene->HasMeshes())
+		{
+			for (int i = 0; i < scene->mNumMeshes; i++)
+			{
+				aiMesh* assimpMesh = scene->mMeshes[i];
+				for (int j = 0; j < assimpMesh->mNumBones; j++)
+				{
+					std::string str = assimpMesh->mBones[j]->mName.C_Str();
+					std::wstring boneName;
+					boneName.assign(str.begin(), str.end());
+
+					boneIndexMap[boneName] = 0;
+				}
+			}
+		}
+
+		int boneCount = 0;
+		for (auto iter = boneIndexMap.begin(); iter != boneIndexMap.end(); iter++)
+		{
+			(*iter).second = boneCount;
+			boneCount++;
+		}
 
 		model->root = new Bone();
-		CopyNodeData(model->root, scene->mRootNode, boneMap);
+		CopyNodeData(model->root, scene->mRootNode, boneIndexMap, model->boneList);
 
 		if (scene->HasMeshes())
 		{
@@ -120,19 +111,6 @@ namespace FBXLoader
 				aiMesh* assimpMesh = scene->mMeshes[i];
 
 				Mesh* meshData = new Mesh();
-
-				//for (int j = 0; j < assimpMesh->mNumBones; j++)
-				//{
-				//	std::string str = assimpMesh->mBones[j]->mName.C_Str();
-				//	std::wstring boneName;
-				//	boneName.assign(str.begin(), str.end());
-
-				//	for (int k = 0; k < assimpMesh->mBones[j]->mNumWeights; k++)
-				//	{
-				//		unsigned int vid = assimpMesh->mBones[j]->mWeights[k].mVertexId;
-				//		float weight = assimpMesh->mBones[j]->mWeights[k].mWeight;
-				//	}
-				//}
 
 				for (int j = 0; j < assimpMesh->mNumVertices; j++)
 				{
@@ -157,7 +135,53 @@ namespace FBXLoader
 						vtx.normal.z = assimpMesh->mNormals[j].z;
 					}
 
+					vtx.weight[0] = 0.0f;
+					vtx.weight[1] = 0.0f;
+					vtx.weight[2] = 0.0f;
+					vtx.weight[3] = 0.0f;
+
 					meshData->vertices.push_back(vtx);
+				}
+
+				for (int j = 0; j < assimpMesh->mNumBones; j++)
+				{
+					std::string str = assimpMesh->mBones[j]->mName.C_Str();
+					std::wstring boneName;
+					boneName.assign(str.begin(), str.end());
+
+					if (boneIndexMap.count(boneName) == 0)
+					{
+						continue;
+					}
+
+					auto offset = assimpMesh->mBones[j]->mOffsetMatrix;
+					model->boneList[boneIndexMap[boneName]]->offsetMatrix <<
+						offset.a1, offset.a2, offset.a3, offset.a4,
+						offset.b1, offset.b2, offset.b3, offset.b4,
+						offset.c1, offset.c2, offset.c3, offset.c4,
+						offset.d1, offset.d2, offset.d3, offset.d4;
+
+					for (int k = 0; k < assimpMesh->mBones[j]->mNumWeights; k++)
+					{
+						unsigned int vid = assimpMesh->mBones[j]->mWeights[k].mVertexId;
+						float weight = assimpMesh->mBones[j]->mWeights[k].mWeight;
+
+						for (int l = 0; l < 4; l++)
+						{
+							if (meshData->vertices[vid].weight[l] == 0.0f)
+							{
+								meshData->vertices[vid].weight[l] = weight;
+								meshData->vertices[vid].boneIndices[l] = boneIndexMap[boneName];
+								break;
+							}
+							else
+							{
+								// 하나의 버텍스가 4개 이상의 본에 영향을 받음
+								assert(l < 3);
+								continue;
+							}
+						}
+					}
 				}
 
 				for (int j = 0; j < assimpMesh->mNumFaces; j++)
@@ -174,9 +198,93 @@ namespace FBXLoader
 			}
 		}
 
-		
+		// Animation
+		for (int i = 0; i < scene->mNumAnimations; i++)
+		{
+			aiAnimation* aianimation = scene->mAnimations[i];
+
+			Animation* animationData = new Animation();
+			model->animationList.push_back(animationData);
+
+			std::string str = aianimation->mName.C_Str();
+			animationData->name.assign(str.begin(), str.end());
+
+			animationData->duration = aianimation->mDuration;
+			animationData->tickPerSecond = aianimation->mTicksPerSecond;
 
 
+			for (int j = 0; j < aianimation->mNumChannels; j++)
+			{
+				aiNodeAnim* aibone = aianimation->mChannels[j];
+
+				std::string boneName = aibone->mNodeName.C_Str();
+
+				std::wstring wboneName;
+				wboneName.assign(boneName.begin(), boneName.end());
+
+				std::map<double, Eigen::Matrix4f> keys;
+
+				// 데이터 뽑아봤을 때
+				// double로 되어 있어서 예상치 못했는데
+				// key.mTime은 0 ~ 200 이런식으로 음이 아닌 정수가 나온다
+				for (int k = 0; k < aibone->mNumScalingKeys; k++)
+				{
+					aiVectorKey key = aibone->mScalingKeys[k];
+					int time = key.mTime;
+					aiVector3D value = key.mValue;
+
+					Eigen::Matrix4f scaleMatrix;
+					scaleMatrix <<
+						value.x, 0, 0, 0,
+						0, value.y, 0, 0,
+						0, 0, value.z, 0,
+						0, 0, 0, 1;
+
+					keys[time] = scaleMatrix;
+				}
+
+				for (int k = 0; k < aibone->mNumRotationKeys; k++)
+				{
+					aiQuatKey key = aibone->mRotationKeys[k];
+					int time = key.mTime;
+					aiQuaternion value = key.mValue;
+
+					Eigen::Quaternionf q;
+					q.w() = value.w;
+					q.x() = value.x;
+					q.y() = value.y;
+					q.z() = value.z;
+
+					Eigen::Matrix3f rotMatrix = q.toRotationMatrix();
+					Eigen::Matrix4f rotMatrix4f;
+					rotMatrix4f <<
+						rotMatrix(0, 0), rotMatrix(0, 1), rotMatrix(0, 2), 0,
+						rotMatrix(1, 0), rotMatrix(1, 1), rotMatrix(1, 2), 0,
+						rotMatrix(2, 0), rotMatrix(2, 1), rotMatrix(2, 2), 0,
+						0, 0, 0, 1;
+
+					keys[time] *= rotMatrix4f;
+				}
+
+				for (int k = 0; k < aibone->mNumPositionKeys; k++)
+				{
+					aiVectorKey key = aibone->mPositionKeys[k];
+					int time = key.mTime;
+					aiVector3D value = key.mValue;
+
+					Eigen::Matrix4f posMatrix;
+					posMatrix <<
+						1, 0, 0, value.x,
+						0, 1, 0, value.y,
+						0, 0, 1, value.z,
+						0, 0, 0, 1;
+
+					keys[time] *= posMatrix;
+				}
+
+				animationData->animationKey[boneIndexMap[wboneName]] = keys;
+			}
+		}
 
 		importer.FreeScene();
 
@@ -188,7 +296,7 @@ namespace FBXLoader
 
 	}
 
-	void FBXLoader::CopyNodeData(Bone* bone, aiNode* ainode, std::map<std::wstring, Bone*>& boneMap)
+	void FBXLoader::CopyNodeData(Bone* bone, aiNode* ainode, std::map<std::wstring, unsigned int>& boneIndexMap, std::vector<Bone*>& boneList)
 	{
 		std::string str = ainode->mName.C_Str();
 		std::wstring wstr;
@@ -207,15 +315,18 @@ namespace FBXLoader
 			ainode->mTransformation.c1, ainode->mTransformation.c2, ainode->mTransformation.c3, ainode->mTransformation.c4,
 			ainode->mTransformation.d1, ainode->mTransformation.d2, ainode->mTransformation.d3, ainode->mTransformation.d4;
 
-		assert(boneMap.count(wstr) == 0);
-
-		boneMap.insert({ wstr, bone });
+		if (boneIndexMap.count(wstr) != 0)
+		{
+			boneList[boneIndexMap[wstr]] = bone;
+		}
 
 		for (int i = 0; i < ainode->mNumChildren; i++)
 		{
 			aiNode* aichild = ainode->mChildren[i];
 			Bone* childBone = new Bone();
-			CopyNodeData(childBone, aichild, boneMap);
+			childBone->parent = bone;
+			bone->children.push_back(childBone);
+			CopyNodeData(childBone, aichild, boneIndexMap, boneList);
 		}
 	}
 }

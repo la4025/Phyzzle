@@ -210,7 +210,8 @@ void CoreSystem::run()
 
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
-		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
+		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -328,9 +329,10 @@ void CoreSystem::run()
 		0, 0, 0.1, 30,
 		0, 0, 0, 1;
 
-	renderer->DrawModel(worldMatrix, fbxID, false);
+	//renderer->DrawModel(worldMatrix, fbxID, false);
+	renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false);
 
-	//renderer->DrawCube(fallingMatrix * worldMatrix, TextureID::ID_NULL, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
 

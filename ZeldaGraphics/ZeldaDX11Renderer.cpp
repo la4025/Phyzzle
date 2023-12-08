@@ -18,6 +18,8 @@
 
 #include "ConstantBufferManager.h"
 
+using namespace DirectX;
+
 bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen, float screenDepth, float cameraNear)
 {
 	hWnd = hwnd;
@@ -282,6 +284,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 
 	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
 	matrixConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
+	boneConstBuffer = new ConstantBuffer<BoneBufferType, ShaderType::VertexShader>(mDevice);
 
 	lightConstBuffer = new ConstantBuffer<LightBufferType, ShaderType::PixelShader>(mDevice);
 	useConstBuffer = new ConstantBuffer<UseBufferType, ShaderType::PixelShader>(mDevice);
@@ -302,6 +305,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete matrixConstBuffer;
 		matrixConstBuffer = nullptr;
+	}
+	if (boneConstBuffer)
+	{
+		delete boneConstBuffer;
+		boneConstBuffer = nullptr;
 	}
 	if (lightConstBuffer)
 	{
@@ -409,11 +417,12 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 		mDeviceContext->RSSetState(defaultRasterState);
 	}
 
-	// ZeldaMatrix to XMMATRIX
+	// EigenMatrix to XMMATRIX
 	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
+	// boneConstBuffer는 어차피 안쓸건데 set안해도 되지 않을까
 	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
 	useConstBuffer->SetData({ false, (cubeTexture != nullptr), true, (cubeTexture != nullptr) && cubeTexture->UseSRGB()});
 	colorConstBuffer->SetData({ { r, g, b, a } });
@@ -421,7 +430,7 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 	ConstantBufferManager::GetInstance().SetBuffer();
 
 	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
-	shader->Render(mDeviceContext, cubeMesh, cubeTexture);
+	shader->Render(mDeviceContext, cubeMesh->GetIndexCount(), cubeTexture);
 }
 
 void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame)
@@ -430,42 +439,19 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(model);
 
+	if (wireFrame)
+	{
+		mDeviceContext->RSSetState(wireFrameRasterState);
+	}
+	else
+	{
+		mDeviceContext->RSSetState(defaultRasterState);
+	}
+
 	// ZeldaMatrix to XMMATRIX
 	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 
-	std::vector<ZNode*> nodes = modelData->GetAllNode();
-
-	for (int i = 0; i < nodes.size(); i++)
-	{
-		for (int j = 0; j < nodes[i]->zeldaMeshes.size(); j++)
-		{
-			ZNode* currentNode = nodes[i];
-			ZeldaMesh* currentMesh = currentNode->zeldaMeshes[j];
-			ZeldaTexture* currentTexture = currentNode->zeldaTextures[j];
-
-			currentMesh->Render(mDeviceContext);
-
-			if (wireFrame)
-			{
-				mDeviceContext->RSSetState(wireFrameRasterState);
-			}
-			else
-			{
-				mDeviceContext->RSSetState(defaultRasterState);
-			}
-
-			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-			matrixConstBuffer->SetData({ XMMatrixTranspose(currentNode->GetWorldTransformMatrix() * MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-			lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-			useConstBuffer->SetData({ false, (currentTexture != nullptr), true, (currentTexture != nullptr && currentTexture->UseSRGB()) });
-			colorConstBuffer->SetData({ { 1, 0, 0, 1 } });
-
-			ConstantBufferManager::GetInstance().SetBuffer();
-
-			ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
-			shader->Render(mDeviceContext, currentMesh, currentTexture);
-		}
-	}
+	modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, dxworldMatrix, ResourceManager::GetInstance().GetDefaultShader(), light);
 }
 
 void ZeldaDX11Renderer::CreateBasicResources()
@@ -543,4 +529,9 @@ bool ZeldaDX11Renderer::UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& w
 	targetCamera->SetOption(fieldOfView, cameraNear, cameraFar);
 
 	return true;
+}
+
+void ZeldaDX11Renderer::Render(ZeldaShader* shader, IRenderable* renderable, ZeldaTexture* texture)
+{
+
 }

@@ -31,11 +31,6 @@ ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
 		assert(0);
 	}
 
-	if (FAILED(result))
-	{
-		assert(0);
-	}
-
 	if (metaData.format == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB ||
 		metaData.format == DXGI_FORMAT_B8G8R8X8_UNORM_SRGB ||
 		metaData.format == DXGI_FORMAT_BC1_UNORM_SRGB ||
@@ -47,19 +42,12 @@ ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
 		useSRGB = true;
 	}
 
-	result = CreateShaderResourceView(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), &textureView);
+	HRESULT result2 = CreateShaderResourceView(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), &textureView);
 
-	if (FAILED(result))
+	if (FAILED(result) || FAILED(result2))
 	{
-		assert(0);
+		MessageBox(0, (L"Failed to create ZeldaTexture\n" + filePath).c_str(), L"ZeldaTexture Error", MB_OK);
 	}
-}
-
-ZeldaTexture::ZeldaTexture(const ZeldaTexture& zeldaTexture) :
-	textureView(nullptr),
-	useSRGB(false)
-{
-	
 }
 
 ZeldaTexture::~ZeldaTexture()

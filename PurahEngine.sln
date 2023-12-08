@@ -28,6 +28,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{EFC4435C-4319-443F-BDA7-415D45DB01E8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeldaGraphics", "ZeldaGraphics\ZeldaGraphics.vcxproj", "{27DCDC47-2637-44B1-836A-06CCF14DD2FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6} = {00DD1113-33FA-44D8-847A-027EE8CBC5D6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsTest", "GraphicsTest\GraphicsTest.vcxproj", "{EAF21DD6-67B1-4F6E-8098-B1A5FE6622A7}"
 	ProjectSection(ProjectDependencies) = postProject
