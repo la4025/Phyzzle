@@ -211,7 +211,8 @@ void CoreSystem::run()
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
-		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
+		fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Capoeira.fbx");
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -224,7 +225,7 @@ void CoreSystem::run()
 			0.0f, 0.0f, 0.0f, 1.0f;
 	}
 
-	const static float moveSpeed = 0.1f;
+	const static float moveSpeed = 0.5f;
 	const static float rotateSpeed = 0.03f;
 
 	float rotateX = 0.0f;
@@ -244,9 +245,9 @@ void CoreSystem::run()
 
 	if (GetAsyncKeyState(VK_CONTROL))
 	{
-		moveDelta *= 500;
-		rotateX *= 500;
-		rotateY *= 500;
+		moveDelta *= 10;
+		rotateX *= 10;
+		rotateY *= 10;
 	}
 
 	Eigen::Matrix4f cameraRotateY;
@@ -325,12 +326,12 @@ void CoreSystem::run()
 	Eigen::Matrix4f ganonMatrix;
 	ganonMatrix <<
 		0.1, 0, 0, 0,
-		0, 0.1, 0, -10,
+		0, 0.1, 0, 0,
 		0, 0, 0.1, 30,
 		0, 0, 0, 1;
 
 	//renderer->DrawModel(worldMatrix, fbxID, false);
-	renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false);
+	renderer->DrawModel(ganonMatrix, fbxID, false);
 
 	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);

@@ -135,6 +135,11 @@ namespace FBXLoader
 						vtx.normal.z = assimpMesh->mNormals[j].z;
 					}
 
+					vtx.boneIndices[0] = 0xffffffffu;
+					vtx.boneIndices[1] = 0xffffffffu;
+					vtx.boneIndices[2] = 0xffffffffu;
+					vtx.boneIndices[3] = 0xffffffffu;
+
 					vtx.weight[0] = 0.0f;
 					vtx.weight[1] = 0.0f;
 					vtx.weight[2] = 0.0f;
@@ -308,6 +313,13 @@ namespace FBXLoader
 		{
 			bone->meshes.push_back(ainode->mMeshes[i]);
 		}
+
+		// 오프셋 초기화
+		bone->offsetMatrix <<
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1;
 
 		bone->transformMatrix <<
 			ainode->mTransformation.a1, ainode->mTransformation.a2, ainode->mTransformation.a3, ainode->mTransformation.a4,

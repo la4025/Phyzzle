@@ -291,6 +291,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	colorConstBuffer = new ConstantBuffer<ColorBufferType, ShaderType::PixelShader>(mDevice);
 
 	ConstantBufferManager::GetInstance().RegisterVSBuffer(matrixConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterVSBuffer(boneConstBuffer);
 
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(useConstBuffer);

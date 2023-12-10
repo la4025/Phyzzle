@@ -50,31 +50,33 @@ void ZeldaModel::Render(
 		Node* currentNode = current.first;
 		DirectX::XMMATRIX currentMatrix = current.second;
 
-		currentNode->finalTM = currentNode->offsetMatrix;// * currentMatrix;
-
+		currentNode->finalTM = currentNode->offsetMatrix * currentMatrix;
+		
 		for (int i = 0; i < currentNode->children.size(); i++)
 		{
 			Node* nextNode = currentNode->children[i];
-			DirectX::XMMATRIX nextMatrix = currentMatrix * nextNode->transformMatrix;
+			DirectX::XMMATRIX nextMatrix = nextNode->transformMatrix * currentMatrix;
 
 			nodeQueue.push({ nextNode, nextMatrix });
 		}
 	}
 
-	BoneBufferType boneBuffer;
+	BoneBufferType* boneBuffer = new BoneBufferType();
 	for (int i = 0; i < bones.size(); i++)
 	{
 		if (bones[i] == nullptr) continue;
-		boneBuffer.boneTM[i] = bones[i]->finalTM;
+		boneBuffer->boneTM[i] = bones[i]->finalTM;
 	}
 
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-	boneConstBuffer->SetData(boneBuffer);
+	boneConstBuffer->SetData(*boneBuffer);
 	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
 	colorConstBuffer->SetData({ { 1, 1, 1, 1 } });
+
+	delete boneBuffer;
 
 	// 모든 메쉬 그리기
 	for (int i = 0; i < meshes.size(); i++)
@@ -129,15 +131,10 @@ ZeldaModel::ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel) :
 			vertexType.texture.x = fbxMesh->vertices[j].textureCoordinate.u;
 			vertexType.texture.y = fbxMesh->vertices[j].textureCoordinate.v;
 
-			vertexType.boneIndices.x = 0;
-			vertexType.boneIndices.y = 0;
-			vertexType.boneIndices.z = 0;
-			vertexType.boneIndices.w = 0;
-
-			if (fbxMesh->vertices[j].boneIndices[0] < 256) vertexType.boneIndices.x = fbxMesh->vertices[j].boneIndices[0];
-			if (fbxMesh->vertices[j].boneIndices[1] < 256) vertexType.boneIndices.y = fbxMesh->vertices[j].boneIndices[1];
-			if (fbxMesh->vertices[j].boneIndices[2] < 256) vertexType.boneIndices.z = fbxMesh->vertices[j].boneIndices[2];
-			if (fbxMesh->vertices[j].boneIndices[3] < 256) vertexType.boneIndices.w = fbxMesh->vertices[j].boneIndices[3];
+			vertexType.boneIndices.x = fbxMesh->vertices[j].boneIndices[0];
+			vertexType.boneIndices.y = fbxMesh->vertices[j].boneIndices[1];
+			vertexType.boneIndices.z = fbxMesh->vertices[j].boneIndices[2];
+			vertexType.boneIndices.w = fbxMesh->vertices[j].boneIndices[3];
 
 			vertexType.weight.x = fbxMesh->vertices[j].weight[0];
 			vertexType.weight.y = fbxMesh->vertices[j].weight[1];

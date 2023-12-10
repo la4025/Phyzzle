@@ -81,24 +81,40 @@ bool ResourceManager::CreateCubeMesh()
 		vertexList[faceNum * 4 + 0].position.w = 1.0f;
 		vertexList[faceNum * 4 + 0].texture = XMFLOAT2(0.0f, 1.0f);
 		vertexList[faceNum * 4 + 0].normal = dir[faceNum];
+		vertexList[faceNum * 4 + 0].boneIndices.x = 0xffffffffu;
+		vertexList[faceNum * 4 + 0].boneIndices.y = 0xffffffffu;
+		vertexList[faceNum * 4 + 0].boneIndices.z = 0xffffffffu;
+		vertexList[faceNum * 4 + 0].boneIndices.w = 0xffffffffu;
 
 		// 왼쪽 위
 		XMStoreFloat4(&vertexList[faceNum * 4 + 1].position, 0.5f * (front + left + up));
 		vertexList[faceNum * 4 + 1].position.w = 1.0f;
 		vertexList[faceNum * 4 + 1].texture = XMFLOAT2(0.0f, 0.0f);
 		vertexList[faceNum * 4 + 1].normal = dir[faceNum];
+		vertexList[faceNum * 4 + 1].boneIndices.x = 0xffffffffu;
+		vertexList[faceNum * 4 + 1].boneIndices.y = 0xffffffffu;
+		vertexList[faceNum * 4 + 1].boneIndices.z = 0xffffffffu;
+		vertexList[faceNum * 4 + 1].boneIndices.w = 0xffffffffu;
 
 		// 오른쪽 위
 		XMStoreFloat4(&vertexList[faceNum * 4 + 2].position, 0.5f * (front + right + up));
 		vertexList[faceNum * 4 + 2].position.w = 1.0f;
 		vertexList[faceNum * 4 + 2].texture = XMFLOAT2(1.0f, 0.0f);
 		vertexList[faceNum * 4 + 2].normal = dir[faceNum];
+		vertexList[faceNum * 4 + 2].boneIndices.x = 0xffffffffu;
+		vertexList[faceNum * 4 + 2].boneIndices.y = 0xffffffffu;
+		vertexList[faceNum * 4 + 2].boneIndices.z = 0xffffffffu;
+		vertexList[faceNum * 4 + 2].boneIndices.w = 0xffffffffu;
 
 		// 오른쪽 아래
 		XMStoreFloat4(&vertexList[faceNum * 4 + 3].position, 0.5f * (front + right + down));
 		vertexList[faceNum * 4 + 3].position.w = 1.0f;
 		vertexList[faceNum * 4 + 3].texture = XMFLOAT2(1.0f, 1.0f);
 		vertexList[faceNum * 4 + 3].normal = dir[faceNum];
+		vertexList[faceNum * 4 + 3].boneIndices.x = 0xffffffffu;
+		vertexList[faceNum * 4 + 3].boneIndices.y = 0xffffffffu;
+		vertexList[faceNum * 4 + 3].boneIndices.z = 0xffffffffu;
+		vertexList[faceNum * 4 + 3].boneIndices.w = 0xffffffffu;
 	}
 
 	// Load the index array with data.

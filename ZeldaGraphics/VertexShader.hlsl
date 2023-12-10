@@ -39,10 +39,11 @@ PixelInputType main(VertexInputType input)
     output.position = mul(input.position, worldMatrix);
     
     output.position =
-    mul(mul(output.position, boneTM[input.boneIndices[0]]), input.weight[0]) +
-    mul(mul(output.position, boneTM[input.boneIndices[1]]), input.weight[1]) +
-    mul(mul(output.position, boneTM[input.boneIndices[2]]), input.weight[2]) +
-    mul(mul(output.position, boneTM[input.boneIndices[3]]), input.weight[3]);
+    mul(input.boneIndices[0] != 0xffffffffu, mul(mul(output.position, boneTM[input.boneIndices[0]]), input.weight[0])) +
+    mul(input.boneIndices[1] != 0xffffffffu, mul(mul(output.position, boneTM[input.boneIndices[1]]), input.weight[1])) +
+    mul(input.boneIndices[2] != 0xffffffffu, mul(mul(output.position, boneTM[input.boneIndices[2]]), input.weight[2])) +
+    mul(input.boneIndices[3] != 0xffffffffu, mul(mul(output.position, boneTM[input.boneIndices[3]]), input.weight[3])) +
+    mul(input.boneIndices[0] == 0xffffffffu, output.position);
     
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
