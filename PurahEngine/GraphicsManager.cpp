@@ -116,6 +116,11 @@ void PurahEngine::GraphicsManager::Run()
 	renderer->EndDraw();
 }
 
+IZeldaRenderer* PurahEngine::GraphicsManager::GetRenderer()
+{
+	return renderer;
+}
+
 PurahEngine::GraphicsManager::GraphicsManager()
 {
 

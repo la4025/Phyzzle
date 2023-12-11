@@ -23,6 +23,9 @@ namespace PurahEngine
 		void Initialize(HWND hWnd);
 		void Run();
 
+		IZeldaRenderer* GetRenderer();
+
+
 	private:
 		HMODULE zeldaGraphicsDLL;
 		IZeldaRenderer* renderer;

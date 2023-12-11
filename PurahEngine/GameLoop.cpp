@@ -61,6 +61,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
 
+	// PhysicsSysyem 초기화
 	PurahEngine::PhysicsSystem::GetInstance().Initialize();
 
 	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
