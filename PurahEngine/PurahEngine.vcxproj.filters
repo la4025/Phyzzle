@@ -145,5 +145,8 @@
     <ClInclude Include="TimeController.h">
       <Filter>Time</Filter>
     </ClInclude>
+    <ClInclude Include="IRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

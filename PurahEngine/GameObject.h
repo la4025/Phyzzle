@@ -49,7 +49,6 @@ namespace PurahEngine
 
 	private:
 		std::wstring name;
-		Transform* transform;
 
 	public:
 		// ComponentList로 Component 추가
@@ -58,6 +57,7 @@ namespace PurahEngine
 		{
 			T* t = new T;
 			componentList.push_back(t);
+			t->gameObject = this;
 			return t; // 추가된 컴포넌트 포인터를 반환
 		}
 

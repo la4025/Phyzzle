@@ -5,10 +5,10 @@ const float DEFAULT_FAR = 1000.0f;
 const float DEFAULT_FOV = 3.141592654f / 4.0f;
 
 PurahEngine::Camera::Camera()
-	: cameraID(renderer->CreateCamera()), renderer(PurahEngine::GraphicsManager::GetInstance().GetRenderer()), 
+	: cameraID(CameraID::ID_NULL), renderer(nullptr), 
 	cameraNear(DEFAULT_NEAR), cameraFar(DEFAULT_FAR), fieldOfView(DEFAULT_FOV)
 {
-	renderer->SetMainCamera(cameraID);
+	
 }
 
 PurahEngine::Camera::~Camera()
@@ -34,6 +34,26 @@ float PurahEngine::Camera::GetCameraFar()
 float PurahEngine::Camera::GetCameraFOV()
 {
 	return fieldOfView;
+}
+
+void PurahEngine::Camera::SetCameraID(CameraID camera)
+{
+	cameraID = camera;
+}
+
+void PurahEngine::Camera::SetRenderer(IZeldaRenderer* render)
+{
+	renderer = render;
+}
+
+void PurahEngine::Camera::CreateCamera()
+{
+	cameraID = renderer->CreateCamera();
+}
+
+void PurahEngine::Camera::SetMainCamera()
+{
+	renderer->SetMainCamera(cameraID);
 }
 
 void PurahEngine::Camera::UpdateCamera(const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar)

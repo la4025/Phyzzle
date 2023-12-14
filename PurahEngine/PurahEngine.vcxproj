@@ -43,6 +43,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />

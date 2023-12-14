@@ -19,10 +19,12 @@ namespace PurahEngine
 		float GetCameraFOV();
 
 		CameraID GetCameraID();
-		float GetCameraNear();
-		float GetCameraFar();
-		float GetCameraFOV();
 
+		void SetCameraID(CameraID camera);
+		void SetRenderer(IZeldaRenderer* render);
+
+		void CreateCamera();
+		void SetMainCamera();
 		void UpdateCamera(const Eigen::Matrix4f& worldMatrix, float fieldOfView, float cameraNear, float cameraFar);
 
 	private:
