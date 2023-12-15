@@ -30,6 +30,7 @@ private:
 		std::vector<unsigned int> meshes;
 
 		DirectX::XMMATRIX finalTM;
+		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX transformMatrix;
 		DirectX::XMMATRIX offsetMatrix;
 	};
@@ -41,6 +42,13 @@ private:
 		unsigned int materialIndex;
 	};
 
+	struct AnimationKeyInfo
+	{
+		DirectX::XMVECTOR scale;
+		DirectX::XMVECTOR rotation;
+		DirectX::XMVECTOR position;
+	};
+
 	struct Animation
 	{
 		std::wstring name;
@@ -48,9 +56,9 @@ private:
 		double duration; // Æ½´ç ½Ã°£
 		double tickPerSecond; // ½Ã°£´ç Æ½
 
-		// key: boneIndex
+		// key: nodeName
 		// value: map<time, Matrix> 
-		std::map<unsigned int, std::map<double, DirectX::XMMATRIX>> animationKey;
+		std::map<std::wstring, std::map<double, AnimationKeyInfo>> animationKey;
 	};
 
 public:

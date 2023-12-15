@@ -2,6 +2,8 @@
 
 #include <filesystem>
 
+#include <fstream>
+
 #include "FBXData.h"
 
 namespace FBXLoader
@@ -63,6 +65,7 @@ namespace FBXLoader
 						std::wstring wstr;
 						wstr.assign(str.begin(), str.end());
 						wstr = fileDirectory + L"\\" + wstr;
+
 						materialData->diffuseMap = wstr;
 					}
 				}
@@ -160,6 +163,7 @@ namespace FBXLoader
 					}
 
 					auto offset = assimpMesh->mBones[j]->mOffsetMatrix;
+
 					model->boneList[boneIndexMap[boneName]]->offsetMatrix <<
 						offset.a1, offset.a2, offset.a3, offset.a4,
 						offset.b1, offset.b2, offset.b3, offset.b4,
@@ -227,67 +231,50 @@ namespace FBXLoader
 				std::wstring wboneName;
 				wboneName.assign(boneName.begin(), boneName.end());
 
-				std::map<double, Eigen::Matrix4f> keys;
+				std::map<double, AnimationKeyInfo> keys;
 
-				// 데이터 뽑아봤을 때
-				// double로 되어 있어서 예상치 못했는데
-				// key.mTime은 0 ~ 200 이런식으로 음이 아닌 정수가 나온다
+				// 키 개수는 모두 같아야한다.
+				assert(aibone->mNumScalingKeys == aibone->mNumRotationKeys && aibone->mNumScalingKeys == aibone->mNumPositionKeys);
+
 				for (int k = 0; k < aibone->mNumScalingKeys; k++)
 				{
-					aiVectorKey key = aibone->mScalingKeys[k];
-					int time = key.mTime;
-					aiVector3D value = key.mValue;
+					aiVectorKey scalingKey = aibone->mScalingKeys[k];
+					aiQuatKey rotationKey = aibone->mRotationKeys[k];
+					aiVectorKey positionKey = aibone->mPositionKeys[k];
 
-					Eigen::Matrix4f scaleMatrix;
-					scaleMatrix <<
-						value.x, 0, 0, 0,
-						0, value.y, 0, 0,
-						0, 0, value.z, 0,
-						0, 0, 0, 1;
+					// time이 일치하지 않는 데이터가 있다면 중단
+					assert(scalingKey.mTime == rotationKey.mTime && scalingKey.mTime == positionKey.mTime);
+					double time = scalingKey.mTime;
 
-					keys[time] = scaleMatrix;
+					aiVector3D scalingValue = scalingKey.mValue;
+					aiQuaternion rotationValue = rotationKey.mValue;
+					aiVector3D positionValue = positionKey.mValue;
+
+					Float3 scale;
+					scale.x = scalingValue.x;
+					scale.y = scalingValue.y;
+					scale.z = scalingValue.z;
+
+					Quaternion rotation;
+					rotation.x = rotationValue.x;
+					rotation.y = rotationValue.y;
+					rotation.z = rotationValue.z;
+					rotation.w = rotationValue.w;
+
+					Float3 position;
+					position.x = positionValue.x;
+					position.y = positionValue.y;
+					position.z = positionValue.z;
+
+					AnimationKeyInfo keyinfo;
+					keyinfo.scaleKey = scale;
+					keyinfo.rotationKey = rotation;
+					keyinfo.positionKey = position;
+
+					keys[time] = keyinfo;
 				}
 
-				for (int k = 0; k < aibone->mNumRotationKeys; k++)
-				{
-					aiQuatKey key = aibone->mRotationKeys[k];
-					int time = key.mTime;
-					aiQuaternion value = key.mValue;
-
-					Eigen::Quaternionf q;
-					q.w() = value.w;
-					q.x() = value.x;
-					q.y() = value.y;
-					q.z() = value.z;
-
-					Eigen::Matrix3f rotMatrix = q.toRotationMatrix();
-					Eigen::Matrix4f rotMatrix4f;
-					rotMatrix4f <<
-						rotMatrix(0, 0), rotMatrix(0, 1), rotMatrix(0, 2), 0,
-						rotMatrix(1, 0), rotMatrix(1, 1), rotMatrix(1, 2), 0,
-						rotMatrix(2, 0), rotMatrix(2, 1), rotMatrix(2, 2), 0,
-						0, 0, 0, 1;
-
-					keys[time] *= rotMatrix4f;
-				}
-
-				for (int k = 0; k < aibone->mNumPositionKeys; k++)
-				{
-					aiVectorKey key = aibone->mPositionKeys[k];
-					int time = key.mTime;
-					aiVector3D value = key.mValue;
-
-					Eigen::Matrix4f posMatrix;
-					posMatrix <<
-						1, 0, 0, value.x,
-						0, 1, 0, value.y,
-						0, 0, 1, value.z,
-						0, 0, 0, 1;
-
-					keys[time] *= posMatrix;
-				}
-
-				animationData->animationKey[boneIndexMap[wboneName]] = keys;
+				animationData->animationKey[wboneName] = keys;
 			}
 		}
 
@@ -315,11 +302,7 @@ namespace FBXLoader
 		}
 
 		// 오프셋 초기화
-		bone->offsetMatrix <<
-			1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1;
+		bone->offsetMatrix = Eigen::Matrix4f::Identity();
 
 		bone->transformMatrix <<
 			ainode->mTransformation.a1, ainode->mTransformation.a2, ainode->mTransformation.a3, ainode->mTransformation.a4,

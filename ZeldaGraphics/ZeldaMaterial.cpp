@@ -7,7 +7,10 @@ ZeldaMaterial::ZeldaMaterial(ID3D11Device* device, DirectX::XMFLOAT4 baseColor, 
 	useDiffuseMap(false),
 	diffuseMap(nullptr)
 {
-	diffuseMap = new ZeldaTexture(device, diffuseFilePath);
+	if (diffuseFilePath != L"")
+	{
+		diffuseMap = new ZeldaTexture(device, diffuseFilePath);
+	}
 	useDiffuseMap = (diffuseMap != nullptr);
 }
 

@@ -211,8 +211,12 @@ void CoreSystem::run()
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
-		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
-		fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Capoeira.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Capoeira.fbx");
+		fbxID = renderer->CreateModel(L"D:\\GA4th4Q_Project\\Tree\\5_Project\\ZeldaEngine\\Resources\\FBX\\Boss\\Boss.fbx");
+		//fbxID = renderer->CreateModel(L"Box2.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Cylinder\\Cylinder.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Timmy_Shooting\\Timmy_Shooting.fbx");
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -248,6 +252,12 @@ void CoreSystem::run()
 		moveDelta *= 10;
 		rotateX *= 10;
 		rotateY *= 10;
+		if (GetAsyncKeyState(VK_SHIFT))
+		{
+			moveDelta *= 10;
+			rotateX *= 10;
+			rotateY *= 10;
+		}
 	}
 
 	Eigen::Matrix4f cameraRotateY;
@@ -271,7 +281,7 @@ void CoreSystem::run()
 
 	cameraMatrix = cameraMove * cameraMatrix * cameraRotateX * cameraRotateY;
 
-	renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 10000.0f);
+	renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 10000000.0f);
 
 	renderer->BeginDraw(0.016f);
 
@@ -333,7 +343,7 @@ void CoreSystem::run()
 	//renderer->DrawModel(worldMatrix, fbxID, false);
 	renderer->DrawModel(ganonMatrix, fbxID, false);
 
-	renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	//renderer->DrawCube(fallingMatrix * worldMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
 

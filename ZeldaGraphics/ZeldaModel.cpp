@@ -12,6 +12,9 @@
 #include "ResourceManager.h"
 #include "ConstantBufferManager.h"
 
+
+#include <fstream>
+
 using namespace DirectX;
 
 ZeldaModel::~ZeldaModel()
@@ -38,6 +41,18 @@ void ZeldaModel::Render(
 	ZeldaShader* shader,
 	ZeldaLight* light)
 {
+	// 임시 애니메이션 테스트 코드
+	static double animationFrame = 0.0;
+	animationFrame += 1.0;
+	/////////////////////////////////////////////////////////
+
+	static int animationNumber = 18;
+
+	if (animationFrame > 300.0)
+	{
+		animationFrame = 0.0;
+	}
+
 	// 애니메이션 시간에 따라 Bone정보 변경
 	std::queue<std::pair<Node*, DirectX::XMMATRIX>> nodeQueue;
 
@@ -51,11 +66,69 @@ void ZeldaModel::Render(
 		DirectX::XMMATRIX currentMatrix = current.second;
 
 		currentNode->finalTM = currentNode->offsetMatrix * currentMatrix;
-		
+
 		for (int i = 0; i < currentNode->children.size(); i++)
 		{
 			Node* nextNode = currentNode->children[i];
 			DirectX::XMMATRIX nextMatrix = nextNode->transformMatrix * currentMatrix;
+
+			// 임시 애니메이션 테스트 코드
+			if (animationList.size() != 0 && animationList[animationNumber]->animationKey.count(nextNode->name) != 0)
+			{
+				// lower_bound는 targetKey 이상인 첫 번째 iterator를 반환합니다.
+				auto upperIter = animationList[animationNumber]->animationKey[nextNode->name].lower_bound(animationFrame);
+
+				// upper_bound는 targetKey를 초과하는 첫 번째 iterator를 반환합니다.
+				auto lowerIter = animationList[animationNumber]->animationKey[nextNode->name].upper_bound(animationFrame);
+
+				// 만약 targetKey가 map 내에 있는 경우, lowerIter와 upperIter는 같은 위치를 가리킵니다.
+				if (lowerIter != animationList[animationNumber]->animationKey[nextNode->name].begin()) {
+					// lowerIter의 바로 이전 iterator가 targetKey보다 작으면서 가장 가까운 값입니다.
+					--lowerIter;
+				}
+				if (upperIter == animationList[animationNumber]->animationKey[nextNode->name].end())
+				{
+					upperIter--;
+				}
+
+				XMMATRIX interpolatedMatrix;
+				if (lowerIter != upperIter)
+				{
+					float beginTime = static_cast<float>(lowerIter->first);
+					float endTime = static_cast<float>(upperIter->first);
+					float currentTime = static_cast<float>(animationFrame);
+
+					// 시간에 대한 보간 계수 계산
+					float t = (currentTime - beginTime) / (endTime - beginTime);
+
+					// 선형 보간을 사용하여 행렬 보간
+					AnimationKeyInfo lowerKey = lowerIter->second;
+					AnimationKeyInfo upperKey = upperIter->second;
+
+					XMVECTOR scale = XMVectorLerp(lowerKey.scale, upperKey.scale, t);
+					XMVECTOR rotation = XMQuaternionSlerp(lowerKey.rotation, upperKey.rotation, t);
+					XMVECTOR position = XMVectorLerp(lowerKey.position, upperKey.position, t);
+
+					// 보간된 행렬 구성
+					XMMATRIX scaleMatrix = XMMatrixScalingFromVector(scale);
+					XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(rotation);
+					XMMATRIX translationMatrix = XMMatrixTranslationFromVector(position);
+
+					interpolatedMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+				}
+				else
+				{
+					AnimationKeyInfo keyinfo = lowerIter->second;
+					DirectX::XMMATRIX scaleMatrix = XMMatrixScalingFromVector(keyinfo.scale);
+					DirectX::XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(keyinfo.rotation);
+					DirectX::XMMATRIX translationMatrix = XMMatrixTranslationFromVector(keyinfo.position);
+					interpolatedMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+				}
+
+				nextMatrix = interpolatedMatrix * currentMatrix;
+			}
+			/////////////////////////////////////////////////////////
+
 
 			nodeQueue.push({ nextNode, nextMatrix });
 		}
@@ -65,7 +138,8 @@ void ZeldaModel::Render(
 	for (int i = 0; i < bones.size(); i++)
 	{
 		if (bones[i] == nullptr) continue;
-		boneBuffer->boneTM[i] = bones[i]->finalTM;
+		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+		boneBuffer->boneTM[i] = XMMatrixTranspose(bones[i]->finalTM);
 	}
 
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
@@ -85,7 +159,7 @@ void ZeldaModel::Render(
 		currentMesh->Render(deviceContext);
 		int indexCount = currentMesh->GetIndexCount();
 
-		useConstBuffer->SetData({ false, (materials[materialIndex[i]]->useDiffuseMap ), true, (materials[materialIndex[i]]->diffuseMap->UseSRGB() == false) && materials[materialIndex[i]]->diffuseMap->UseSRGB() });
+		useConstBuffer->SetData({ false, (materials[materialIndex[i]]->useDiffuseMap ), true, (materials[materialIndex[i]]->diffuseMap != nullptr) && materials[materialIndex[i]]->diffuseMap->UseSRGB() });
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -171,17 +245,34 @@ ZeldaModel::ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel) :
 		
 		for (auto iter = fbxAnimation->animationKey.begin(); iter != fbxAnimation->animationKey.end(); iter++)
 		{
-			unsigned int boneIndex = iter->first;
+			std::wstring nodeName = iter->first;
 
-			std::map<double, DirectX::XMMATRIX> keys;
+			std::map<double, AnimationKeyInfo> keys;
 
 			for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); iter2++)
 			{
 				double time = iter2->first;
-				DirectX::XMMATRIX matrix = MathConverter::EigenMatrixToXMMatrix(iter2->second);
-				keys[time] = matrix;
+				DirectX::XMVECTOR scale;
+				scale.m128_f32[0] = iter2->second.scaleKey.x;
+				scale.m128_f32[1] = iter2->second.scaleKey.y;
+				scale.m128_f32[2] = iter2->second.scaleKey.z;
+				scale.m128_f32[3] = 1.0f;
+
+				DirectX::XMVECTOR rotation;
+				rotation.m128_f32[0] = iter2->second.rotationKey.x;
+				rotation.m128_f32[1] = iter2->second.rotationKey.y;
+				rotation.m128_f32[2] = iter2->second.rotationKey.z;
+				rotation.m128_f32[3] = iter2->second.rotationKey.w;
+
+				DirectX::XMVECTOR position;
+				position.m128_f32[0] = iter2->second.positionKey.x;
+				position.m128_f32[1] = iter2->second.positionKey.y;
+				position.m128_f32[2] = iter2->second.positionKey.z;
+				position.m128_f32[3] = 1.0f;
+
+				keys[time] = AnimationKeyInfo(scale, rotation, position);
 			}
-			animation->animationKey[boneIndex] = keys;
+			animation->animationKey[nodeName] = keys;
 		}
 
 		animationList.push_back(animation);

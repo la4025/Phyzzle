@@ -59,6 +59,7 @@ namespace FBXLoader
 	};
 
 	using Color = Float4;
+	using Quaternion = Float4;
 
 	struct Vertex
 	{
@@ -109,6 +110,13 @@ namespace FBXLoader
 		std::vector<Animation*> animationList;
 	};
 
+	struct AnimationKeyInfo
+	{
+		Float3 scaleKey;
+		Quaternion rotationKey;
+		Float3 positionKey;
+	};
+
 	struct Animation
 	{
 		std::wstring name;
@@ -122,6 +130,6 @@ namespace FBXLoader
 		// 전부 identity로 초기화한 후에 time값을 index로 대입한다
 		// 읽어본 샘플에서는 발견하지 못했지만 건너뛰는 index값이 있다면
 		// identity가 아닌 그 이전의 값으로 바꿔야할지도 모른다.
-		std::map<unsigned int, std::map<double ,Eigen::Matrix4f>> animationKey;
+		std::map<std::wstring, std::map<double , AnimationKeyInfo>> animationKey;
 	};
 }
