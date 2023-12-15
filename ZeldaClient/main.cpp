@@ -52,7 +52,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	if (PurahEngine::InputManager::Getinstance().IsKeyPressed('Q') == true)
 	{
-		//testObject->GetComponent<Transform>()->Rotate(Eigen::Vector3f::UnitY(), angle);
 		testObject->GetComponent<PurahEngine::Transform>()->Rotate(testObject->GetComponent<PurahEngine::Transform>()->up, angle);
 	}
 
