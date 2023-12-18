@@ -112,6 +112,7 @@ void PurahEngine::GameLoop::run()
 	auto position = rigidBody->GetPosition();
 
 	PurahEngine::InputManager::Getinstance().Update();
+	PurahEngine::SceneManager::GetInstance().Update();
 
 	PurahEngine::GraphicsManager::GetInstance().Run();
 }

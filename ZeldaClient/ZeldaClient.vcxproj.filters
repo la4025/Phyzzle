@@ -4,10 +4,24 @@
     <Filter Include="00. EntryPoint">
       <UniqueIdentifier>{f926c70f-35da-4ad2-92ff-987508815f3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{c70e16f1-65b8-42f9-b20e-34416fec225f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\TestMovement">
+      <UniqueIdentifier>{1402db52-782d-48b6-9ef6-dfd7460ff3dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>00. EntryPoint</Filter>
     </ClCompile>
+    <ClCompile Include="TestMovement.cpp">
+      <Filter>Component\TestMovement</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestMovement.h">
+      <Filter>Component\TestMovement</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

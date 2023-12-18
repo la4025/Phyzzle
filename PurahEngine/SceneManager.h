@@ -31,6 +31,8 @@ namespace PurahEngine
 
 		void SetName(std::wstring name);
 
+		void Update();
+
 	private:
 		void Initialize();
 
