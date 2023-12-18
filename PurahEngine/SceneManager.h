@@ -12,7 +12,7 @@ namespace PurahEngine
 	class Camera;
 	class Transform;
 
-	class SceneManager
+	class PURAHENGINE_API SceneManager
 	{
 	private:
 		SceneManager();
