@@ -31,16 +31,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	
 
 	PurahEngine::GameObject* testObject = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject");
-	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"camera");
+	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
 	camera->AddComponent<PurahEngine::Camera>();
 	testObject->AddComponent<PurahEngine::Renderer>();
-	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
-	
 
+	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
 	camera->GetComponent<PurahEngine::Camera>()->SetRenderer(renderer);
 	camera->GetComponent<PurahEngine::Camera>()->CreateCamera();
 	camera->GetComponent<PurahEngine::Camera>()->SetMainCamera();
-	
+
 
 	textureID = renderer->CreateTexture(L"scd.jpg");
 	if (textureID == TextureID::ID_NULL)
