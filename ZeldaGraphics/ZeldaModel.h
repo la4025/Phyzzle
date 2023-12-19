@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <unordered_map>
+#include <algorithm>
 
 #include "ZeldaGraphicsDefine.h"
 #include "FBXData.h"
@@ -30,7 +32,7 @@ private:
 		std::vector<unsigned int> meshes;
 
 		DirectX::XMMATRIX finalTM;
-		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX worldMatrix;
 		DirectX::XMMATRIX transformMatrix;
 		DirectX::XMMATRIX offsetMatrix;
 	};
@@ -51,8 +53,6 @@ private:
 
 	struct Animation
 	{
-		std::wstring name;
-
 		double duration; // Æ½´ç ½Ã°£
 		double tickPerSecond; // ½Ã°£´ç Æ½
 
@@ -73,8 +73,13 @@ public:
 		ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer,
 		DirectX::XMMATRIX worldMatrix,
 		ZeldaShader* shader,
-		ZeldaLight* light
+		ZeldaLight* light,
+		const std::wstring& animationName,
+		float animationTime
 	);
+
+	std::vector<std::wstring> GetAnimationList();
+	std::vector<float> GetAnimationPlayTime();
 
 private:
 	ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel);
@@ -82,12 +87,28 @@ private:
 
 	void CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstring, Node*>& nodeTable);
 
+	void RenderAnimation(
+		ID3D11DeviceContext* deviceContext,
+		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
+		ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
+		ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer,
+		ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer,
+		ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer,
+		DirectX::XMMATRIX worldMatrix,
+		ZeldaShader* shader,
+		ZeldaLight* light,
+		const std::wstring& animationName,
+		float animationTime
+	);
+
 	Node* root;
 	std::vector<Node*> bones;
 	std::vector<ZeldaMesh*> meshes;
 	std::vector<unsigned int> materialIndex; // meshes[0]Àº materials[materialIndex[0]]À» °¡Áü
 	std::vector<ZeldaMaterial*> materials;
-	std::vector<Animation*> animationList;
+	std::unordered_map<std::wstring, Animation*> animationTable;
+
+	bool updatedWorldMatrix;
 
 	friend class ResourceManager;
 };

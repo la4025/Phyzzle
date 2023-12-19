@@ -134,6 +134,11 @@ bool ZeldaShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, Zel
 	return true;
 }
 
+ID3D11SamplerState* ZeldaShader::GetSamplerState()
+{
+	return samplerState;
+}
+
 bool ZeldaShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
