@@ -37,6 +37,17 @@ void PurahEngine::SceneManager::SetName(std::wstring name)
 	sceneName = name;
 }
 
+void PurahEngine::SceneManager::Update()
+{
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		for (auto component : object->componentList)
+		{
+			component->Update();
+		}
+	}
+}
+
 void PurahEngine::SceneManager::Initialize()
 {
 	// 씬을 초기화할때 카메라를 씬에 생성해둔다.

@@ -65,6 +65,7 @@ DirectX::XMMATRIX ZeldaCamera::GetViewMatrix()
 
 	isUpdatedViewMatrix = true;
 
+
 	viewMatrix = XMMatrixInverse(nullptr, transformMatrix);
 
 	return viewMatrix;
