@@ -10,6 +10,9 @@
     <Filter Include="Component\TestMovement">
       <UniqueIdentifier>{1402db52-782d-48b6-9ef6-dfd7460ff3dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\CameraMovement">
+      <UniqueIdentifier>{ee3c4eb7-3b80-4f6a-8109-ea0cc854be8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,10 +21,16 @@
     <ClCompile Include="TestMovement.cpp">
       <Filter>Component\TestMovement</Filter>
     </ClCompile>
+    <ClCompile Include="CameraMovement.cpp">
+      <Filter>Component\CameraMovement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
       <Filter>Component\TestMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMovement.h">
+      <Filter>Component\CameraMovement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

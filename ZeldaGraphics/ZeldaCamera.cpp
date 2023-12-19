@@ -76,15 +76,20 @@ DirectX::XMMATRIX ZeldaCamera::GetViewMatrix()
 	XMVECTOR rotationQuater;
 	XMMATRIX rotationMatrix;
 
-	XMMatrixDecompose(&scaleVector, &rotationQuater, &positionVector, transformMatrix);
 
-	rotationMatrix = XMMatrixRotationQuaternion(rotationQuater);
+	// XMMatrixDecompose(&scaleVector, &rotationQuater, &positionVector, transformMatrix);
+	// 
+	// rotationMatrix = XMMatrixRotationQuaternion(rotationQuater);
+	// 
+	// XMVECTOR transformedLookAt = XMVector3TransformCoord(lookAtVector, rotationMatrix);
+	// upVector = XMVector3TransformCoord(upVector, rotationMatrix);
+	// 
+	// // Calculate the view matrix.
+	// viewMatrix = XMMatrixLookToLH(positionVector, transformedLookAt, upVector);
 
-	XMVECTOR transformedLookAt = XMVector3TransformCoord(lookAtVector, rotationMatrix);
-	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
+	// auto s = XMMatrixInverse(nullptr, viewMatrix);
 
-	// Calculate the view matrix.
-	viewMatrix = XMMatrixLookAtLH(positionVector, transformedLookAt, upVector);
+	//viewMatrix = XMMatrixInverse(nullptr, transformMatrix);
 
 	return viewMatrix;
 }

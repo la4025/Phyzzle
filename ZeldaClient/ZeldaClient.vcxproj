@@ -134,10 +134,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="TestMovement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

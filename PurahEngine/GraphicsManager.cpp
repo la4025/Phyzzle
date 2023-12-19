@@ -48,7 +48,7 @@ void PurahEngine::GraphicsManager::Run()
 	renderer->BeginDraw(1.0f);
 	Camera* mainCamera = PurahEngine::SceneManager::GetInstance().GetMainCamera();
 	Eigen::Matrix4f position = mainCamera->GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldMatrix();
-	mainCamera->GetGameObject()->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
+	
 	mainCamera->SetRenderer(renderer);
 	mainCamera->UpdateCamera(position, 3.141592654f / 4.0f, 1.0f, 1000.0f);
 

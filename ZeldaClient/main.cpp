@@ -4,7 +4,7 @@
 #include "PurahEngine.h"
 
 #include "TestMovement.h"
-
+#include "CameraMovement.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -43,7 +43,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	camera->GetComponent<PurahEngine::Camera>()->CreateCamera();
 	camera->GetComponent<PurahEngine::Camera>()->SetMainCamera();
 	testObject->AddComponent<PurahEngine::TestMovement>();
-
+	camera->AddComponent<PurahEngine::CameraMovement>();
 
 	textureID = renderer->CreateTexture(L"scd.jpg");
 	if (textureID == TextureID::ID_NULL)
