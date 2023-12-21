@@ -1,6 +1,46 @@
 #include "GameObject.h"
 #include "Component.h"
 
+void PurahEngine::GameObject::Awake()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->Awake();
+	}
+}
+
+void PurahEngine::GameObject::Start()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->Start();
+	}
+}
+
+void PurahEngine::GameObject::FixedUpdate()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->FixedUpdate();
+	}
+}
+
+void PurahEngine::GameObject::Update()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->Update();
+	}
+}
+
+void PurahEngine::GameObject::LateUpdate()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->LateUpdate();
+	}
+}
+
 void PurahEngine::GameObject::OnCollisionEnter()
 {
 	for (PurahEngine::Component* component : componentList)

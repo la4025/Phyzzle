@@ -41,10 +41,11 @@ void PurahEngine::SceneManager::Update()
 {
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (auto component : object->componentList)
-		{
-			component->Update();
-		}
+		
+		object->Start();
+		object->FixedUpdate();
+		object->Update();
+		object->LateUpdate();
 	}
 }
 
