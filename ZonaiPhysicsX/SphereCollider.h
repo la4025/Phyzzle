@@ -20,12 +20,12 @@ namespace ZonaiPhysics
 {
 	class RigidBody;
 
-	class BoxCollider : public Collider
+	class SphereCollider : public Collider
 	{
 	public:
-		BoxCollider() noexcept = delete;
-		BoxCollider(physx::PxPhysics*&, RigidBody*&, const Eigen::Vector3f&, physx::PxMaterial*&) noexcept;
-		~BoxCollider() noexcept override;
+		SphereCollider() noexcept = delete;
+		SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&) noexcept;
+		~SphereCollider() noexcept override;
 	};
 } // ZonaiPhysics
 

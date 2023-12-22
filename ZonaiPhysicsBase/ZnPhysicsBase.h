@@ -3,11 +3,15 @@
 
 namespace ZonaiPhysics
 {
+	class FixedJoint;
+
 	class ZnRigidBody;
 	class ZnSoftBody;
 	class ZnCollider;
 	class ZnJoint;
-	class ZnTransform;
+
+	struct ZnTransform;
+	struct ZnRaycastInfo;
 
 	enum class Shape
 	{
@@ -43,7 +47,7 @@ namespace ZonaiPhysics
 		/// </summary>
 		virtual ZnCollider*		CreatBoxCollider(const std::wstring&, float x, float y, float z) noexcept = 0;
 		// virtual ZnCollider*		CreatPlaneCollider(const std::wstring&, float x, float y) noexcept = 0;
-		// virtual ZnCollider*		CreatSphereCollider(const std::wstring&, float radius) noexcept = 0;
+		virtual ZnCollider*		CreatSphereCollider(const std::wstring&, float radius) noexcept = 0;
 		// virtual ZnCollider*		CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept = 0;
 		// virtual ZnCollider*		CreateCustomCollider(const std::wstring&) noexcept = 0;
 
@@ -51,10 +55,13 @@ namespace ZonaiPhysics
 		/// Create Joint
 		/// </summary>
 		// virtual ZnJoint*		CreatD6Joint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;			// D6 조인트		*사실 뭔지 모름
-		// virtual ZnJoint*		CreatFixedJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;		// 고정 조인트
-		// virtual ZnJoint*		CreatDistanceJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;		// 거리 조인트
+		virtual ZnJoint*		CreatFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept = 0;		// 고정 조인트
+		virtual ZnJoint*		CreatDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept = 0;		// 거리 조인트
 		// virtual ZnJoint*		CreatSphericalJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;	// 구형 조인트
 		// virtual ZnJoint*		CreatRevoluteJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;		// 회전 조인트
 		// virtual ZnJoint*		CreatPrismaticJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept = 0;	// 프리즘 조인트
+
+
+		virtual bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept = 0;
 	};
 }

@@ -1,37 +1,42 @@
 #pragma once
+#include <Eigen/Dense>
 #include "ZnJoint.h"
+
+namespace physx
+{
+	class PxJoint;
+}
 
 namespace ZonaiPhysics
 {
+	class ZnRigidBody;
 	class ZnObject;
-
-	enum ObjectIndex
-	{
-		OBJECT0,
-		OBJECT1,
-	};
 
 	class Joint : public ZnJoint
 	{
 	public:
-						Joint() noexcept = default;
-		virtual			~Joint() noexcept;
+					Joint() noexcept;
+					~Joint() noexcept override;
 
 	public:
-		virtual void		SetObject(ZnObject*, ZnObject*) noexcept = 0;
-		virtual void		GetObject(ZnObject*&, ZnObject*&) const noexcept = 0;
+		//void		SetObject(ZnObject*, ZnObject*) noexcept override;
+		//void		GetObject(ZnObject*&, ZnObject*&) const noexcept override;
 
-		virtual void		SetLocalPosition(ObjectIndex, const Vector3D&) noexcept = 0;
-		virtual Vector3D	GetLocalPosition(ObjectIndex) const noexcept = 0;
+		void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept override;
+		Eigen::Vector3f	GetLocalPosition(eOBJECT) const noexcept override;
 
-		virtual void		SetLocalQuaternion(ObjectIndex, const Quaternion&) noexcept = 0;
-		virtual Quaternion	GetLocalQuaternion(ObjectIndex) const noexcept = 0;
+		void		SetLocalQuaternion(eOBJECT, const Eigen::Quaternionf &) noexcept override;
+		Eigen::Quaternionf	GetLocalQuaternion(eOBJECT) const noexcept override;
 
-		virtual Vector3D	GetRelativeLinearVelocity() const noexcept = 0;
-		virtual Vector3D	GetRelativeAngularVelocity() const noexcept = 0;
+		Eigen::Vector3f	GetRelativeLinearVelocity() const noexcept override;
+		Eigen::Vector3f	GetRelativeAngularVelocity() const noexcept override;
 
-		virtual void		SetBreakForce(float _force, float _torque) noexcept = 0;
-		virtual void		GetBreakForce(float& _force, float& _torque) const noexcept = 0;
+		void		SetBreakForce(float _force, float _torque) noexcept override;
+		void		GetBreakForce(float& _force, float& _torque) const noexcept override;
+
+	protected:
+		ZnRigidBody* object[2];
+		physx::PxJoint* joint;
 	};
 } // namespace ZonaiPhysics
 

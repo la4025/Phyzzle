@@ -38,9 +38,8 @@
 //#include "../snippets/snippetcommon/SnippetPrint.h"
 //#include "../snippets/snippetcommon/SnippetPVD.h"
 #include <windows.h>
-#include <vector>
 
-#include "../ZonaiMath/ZonaiMath.h"
+#include "Eigen/Dense"
 #include "../ZonaiPhysicsBase/ZnCollider.h"
 #include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
 #include "../ZonaiPhysicsBase/ZnRigidBody.h"

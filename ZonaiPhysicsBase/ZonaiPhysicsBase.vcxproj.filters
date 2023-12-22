@@ -31,6 +31,12 @@
     <ClInclude Include="ForceType.h">
       <Filter>02. Enum</Filter>
     </ClInclude>
+    <ClInclude Include="ZnRaycastInfo.h">
+      <Filter>01. Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnSimulationCallback.h">
+      <Filter>00. Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">

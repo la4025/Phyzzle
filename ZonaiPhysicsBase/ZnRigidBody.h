@@ -2,12 +2,6 @@
 #include "ForceType.h"
 #include "ZnObject.h"
 
-namespace ZonaiMath
-{
-	class Vector3D;
-	class Quaternion;
-}
-
 namespace ZonaiPhysics
 {
 	using DynamicLocks = unsigned char;
@@ -22,7 +16,7 @@ namespace ZonaiPhysics
 		LOCK_ANGULAR_Z = (1 << 5)
 	};
 
-	using namespace ZonaiMath;
+	using namespace Eigen;
 
 	class ZnRigidBody : public ZnObject
 	{
@@ -49,9 +43,6 @@ namespace ZonaiPhysics
 		virtual void		SetDynamicLockFlag(DynamicLock flag, bool) noexcept = 0;
 		virtual void		SetDynamicLockFlags(DynamicLocks flags) noexcept = 0;
 
-		virtual void*		GetUserData() const noexcept = 0;
-		virtual void		SetUserData(void*) noexcept = 0;
-
 	public:
 		/**
 		질량
@@ -63,8 +54,8 @@ namespace ZonaiPhysics
 		virtual void		SetMass(float) noexcept = 0;
 		virtual float		GetInvMass() const noexcept = 0;
 
-		virtual Vector3D	GetInertiaTensor() const noexcept = 0;
-		virtual void		SetInertiaTensor(const Vector3D&) noexcept = 0;
+		virtual Eigen::Vector3f	GetInertiaTensor() const noexcept = 0;
+		virtual void		SetInertiaTensor(const Eigen::Vector3f&) noexcept = 0;
 
 		/**
 		선형 감쇠 계수
@@ -85,14 +76,14 @@ namespace ZonaiPhysics
 		/**
 		선속도
 		*/
-		virtual Vector3D	GetLinearVelocity() const noexcept = 0;
-		virtual void		SetLinearVelocity(const Vector3D& _velocity) noexcept = 0;
+		virtual Eigen::Vector3f	GetLinearVelocity() const noexcept = 0;
+		virtual void		SetLinearVelocity(const Eigen::Vector3f& _velocity) noexcept = 0;
 		
 		/**
 		각속도
 		*/
-		virtual Vector3D	GetAngularVelocity() const noexcept = 0;
-		virtual void		SetAngularVelocity(const Vector3D& _velocity) noexcept = 0;
+		virtual Eigen::Vector3f	GetAngularVelocity() const noexcept = 0;
+		virtual void		SetAngularVelocity(const Eigen::Vector3f& _velocity) noexcept = 0;
 		
 		/**
 		선속도 제한
@@ -106,16 +97,18 @@ namespace ZonaiPhysics
 		virtual float		GetMaxAngularVelocity() const noexcept = 0;
 		virtual void		SetMaxAngularVelocity(const float&) noexcept = 0;
 
+		virtual void		SetForceAndTorque(const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type) noexcept = 0;
+
 		/**
 		물체에 힘을 가하거나 지움
 		*/
-		virtual void		AddForce(const Vector3D& _force, ForceType _type = ForceType::Force) noexcept = 0;
+		virtual void		AddForce(const Eigen::Vector3f& _force, ForceType _type = ForceType::Force) noexcept = 0;
 		virtual void		ClearForce() noexcept = 0;
 
 		/**
 		물체에 토크를 가하거나 지움
 		*/
-		virtual void		AddTorque(const Vector3D& _torque, ForceType _type = ForceType::Force) noexcept = 0;
+		virtual void		AddTorque(const Eigen::Vector3f& _torque, ForceType _type = ForceType::Force) noexcept = 0;
 		virtual void		ClearTorque() noexcept = 0;
 	};
 }

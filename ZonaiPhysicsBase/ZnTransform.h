@@ -1,10 +1,10 @@
 #pragma once
-#include "../ZonaiMath/ZonaiMath.h"
+#include <algorithm>
 
-namespace ZonaiMath
+namespace Eigen
 {
-	class Vector3D;
-	class Quaternion;
+	class Vector3f;
+	class Quaternionf;
 }
 
 namespace ZonaiPhysics
@@ -14,26 +14,42 @@ namespace ZonaiPhysics
 	public:
 		ZnTransform() noexcept = default;
 
-		ZnTransform(const ZonaiMath::Vector3D& _vec) noexcept : position(_vec), quaternion()
+		ZnTransform(const Eigen::Vector3f& _vec) noexcept : position(_vec), quaternion()
 		{}
 
-		ZnTransform(const ZonaiMath::Quaternion& _qat) noexcept : position(), quaternion(_qat)
+		ZnTransform(const Eigen::Quaternionf& _qat) noexcept : position(), quaternion(_qat)
 		{}
 
-		ZnTransform(const ZonaiMath::Vector3D& _vec, const ZonaiMath::Quaternion& _qat) noexcept : position(_vec), quaternion(_qat)
+		ZnTransform(const Eigen::Vector3f& _vec, const Eigen::Quaternionf& _qat) noexcept : position(_vec), quaternion(_qat)
 		{}
 
 		ZnTransform(const ZnTransform& _tran) noexcept : position(_tran.position), quaternion(_tran.quaternion)
 		{}
 
-		void operator=(const ZnTransform& _tran) noexcept
+		ZnTransform& operator=(const ZnTransform& _tran) noexcept
 		{
-			position = _tran.position;
-			quaternion = _tran.quaternion;
+			if (this != & _tran)
+			{
+				position = _tran.position;
+				quaternion = _tran.quaternion;
+			}
+
+			return *this;
+		}
+
+		ZnTransform& operator=(ZnTransform&& _tran) noexcept
+		{
+			if (this != &_tran)
+			{
+				position = std::move(_tran.position);
+				quaternion = std::move(_tran.quaternion);
+			}
+
+			return *this;
 		}
 
 	public:
-		ZonaiMath::Vector3D position;
-		ZonaiMath::Quaternion quaternion;
+		Eigen::Vector3f position;
+		Eigen::Quaternionf quaternion;
 	};
 }

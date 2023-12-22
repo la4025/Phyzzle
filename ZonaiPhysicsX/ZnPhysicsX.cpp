@@ -1,11 +1,11 @@
-#include "ZonaiMath.h"
-
-#include "PxPhysicsAPI.h"
-
 #include "BoxCollider.h"
 #include "RigidBody.h"
 
 #include "ZnPhysicsX.h"
+
+#include "FixedJoint.h"
+#include "ZnRaycastInfo.h"
+#include "SphereCollider.h"
 
 
 namespace ZonaiPhysics
@@ -21,10 +21,11 @@ namespace ZonaiPhysics
 		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
 		PxInitExtensions(*physics, pvd);
 
-		PxSceneDesc sceneDesc(physics->getTolerancesScale());
+		PxSceneDesc sceneDesc(physics->getTolerancesScale()); 
 		sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 		dispatcher = PxDefaultCpuDispatcherCreate(2);
 		sceneDesc.cpuDispatcher = dispatcher;
+		sceneDesc.simulationEventCallback = this;
 		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 		scene = physics->createScene(sceneDesc);
 
@@ -95,9 +96,102 @@ namespace ZonaiPhysics
 			scene->addActor(*body->getRigidDynamic());
 		}
 
-		Collider* newRigidBody = new BoxCollider(physics, body, ZonaiMath::Vector3D(x, y, z), material);
+		Collider* newRigidBody = new BoxCollider(physics, body, Eigen::Vector3f(x, y, z), material);
 
 		return newRigidBody;
+	}
+
+	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring& _id, float radius) noexcept
+	{
+		RigidBody* body = FindRigidBody(_id);
+
+		if (body == nullptr)
+		{
+			body = new RigidBody(physics);
+			body->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+			bodies.insert(std::make_pair(_id, body));
+			scene->addActor(*body->getRigidDynamic());
+		}
+
+		Collider* newRigidBody = new SphereCollider(physics, body, radius, material);
+
+		return newRigidBody;
+	}
+
+	ZnJoint* ZnPhysicsX::CreatFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = static_cast<RigidBody*>(_object0);
+		auto ob1 = static_cast<RigidBody*>(_object1);
+
+		auto* joint = new FixedJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
+	}
+
+	ZnJoint* ZnPhysicsX::CreatDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+
+	}
+
+	/// <summary>
+	///	방금 일어난 애들
+	/// </summary>
+	void ZnPhysicsX::onWake(physx::PxActor** actors, physx::PxU32 count)
+	{
+		for (auto i = 0; i < count; i++)
+		{
+			actors[i]->userData;
+		}
+	}
+
+	/// <summary>
+	/// 방금 잠자기 시작한 애들
+	/// <summary>
+	void ZnPhysicsX::onSleep(physx::PxActor** actors, physx::PxU32 count)
+	{
+
+	}
+
+	/// <summary>
+	/// 트리거 작동된 아이들
+	/// <summary>
+	void ZnPhysicsX::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
+	{
+		pairs.
+	}
+
+	/// <summary>
+	///	제약 부숴진 애들
+	/// <summary>
+	void ZnPhysicsX::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
+	{
+		constraints.
+	}
+
+	void ZnPhysicsX::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs,
+		physx::PxU32 nbPairs)
+	{
+		pairs->contactImpulses;
+	}
+
+	void ZnPhysicsX::onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer,
+		const physx::PxU32 count)
+	{
+		// 구현 안 해도 될듯
+	}
+
+	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
+	{
+		using namespace physx;
+		PxRaycastBuffer result;
+		bool detect = scene->raycast({ _from.x, _from.y, _from.z }, { _to.x, _to.y, _to.z }, _distance, result);
+		if (detect)
+		{
+			_out.data = result.block.actor->userData;
+			_out.position = Eigen::Vector3f{ result.block.position.x, result.block.position.y, result.block.position.z };
+		}
+
+		return detect;
 	}
 
 	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
@@ -135,7 +229,14 @@ namespace ZonaiPhysics
 	{
 		ZnPhysicsBase* CreatePhysics()
 		{
-			return new ZnPhysicsX();
+			static ZnPhysicsBase* instance = nullptr;
+
+			if (instance == nullptr)
+			{
+				instance = new ZnPhysicsX();
+			}
+
+			return instance;
 		}
 	}
 
