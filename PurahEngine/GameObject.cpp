@@ -113,6 +113,11 @@ void PurahEngine::GameObject::OnMouseExit()
 	}
 }
 
+std::wstring PurahEngine::GameObject::GetName()
+{
+	return name;
+}
+
 PurahEngine::GameObject::GameObject(std::wstring objectname)
 {
 	name = objectname;
