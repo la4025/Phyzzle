@@ -46,13 +46,8 @@
     <Filter Include="Physics\System">
       <UniqueIdentifier>{0ec0ba64-b61e-4d0f-9a22-7626faedf853}</UniqueIdentifier>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="Collider">
       <UniqueIdentifier>{e90a2f97-4873-49a2-83ea-e26301fa1877}</UniqueIdentifier>
-=======
-    <Filter Include="Time">
-      <UniqueIdentifier>{cc65efa9-ceee-4df9-80eb-c5c6b0b7df75}</UniqueIdentifier>
->>>>>>> master
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +90,6 @@
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Physics\System</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeController.cpp">
-      <Filter>Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,12 +135,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Physics\System</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeController.h">
-      <Filter>Time</Filter>
-    </ClInclude>
-    <ClInclude Include="IRenderer.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
