@@ -25,7 +25,7 @@ namespace ZonaiPhysics
 		sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 		dispatcher = PxDefaultCpuDispatcherCreate(2);
 		sceneDesc.cpuDispatcher = dispatcher;
-		sceneDesc.simulationEventCallback = this;
+		// sceneDesc.simulationEventCallback = NULL;
 		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 		scene = physics->createScene(sceneDesc);
 
@@ -60,6 +60,11 @@ namespace ZonaiPhysics
 			PX_RELEASE(transport);
 		}
 		PX_RELEASE(foundation);
+	}
+
+	void ZnPhysicsX::WorldClear() noexcept
+	{
+
 	}
 
 	/// <summary>
@@ -130,69 +135,74 @@ namespace ZonaiPhysics
 
 	ZnJoint* ZnPhysicsX::CreatDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
-
+		return nullptr;
 	}
 
-	/// <summary>
-	///	방금 일어난 애들
-	/// </summary>
-	void ZnPhysicsX::onWake(physx::PxActor** actors, physx::PxU32 count)
+	bool ZnPhysicsX::Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept
 	{
-		for (auto i = 0; i < count; i++)
-		{
-			actors[i]->userData;
-		}
+		return true;
 	}
 
-	/// <summary>
-	/// 방금 잠자기 시작한 애들
-	/// <summary>
-	void ZnPhysicsX::onSleep(physx::PxActor** actors, physx::PxU32 count)
-	{
+	///// <summary>
+	/////	방금 일어난 애들
+	///// </summary>
+	//void ZnPhysicsX::onWake(physx::PxActor** actors, physx::PxU32 count)
+	//{
+	//	for (auto i = 0; i < count; i++)
+	//	{
+	//		actors[i]->userData;
+	//	}
+	//}
 
-	}
+	///// <summary>
+	///// 방금 잠자기 시작한 애들
+	///// <summary>
+	//void ZnPhysicsX::onSleep(physx::PxActor** actors, physx::PxU32 count)
+	//{
 
-	/// <summary>
-	/// 트리거 작동된 아이들
-	/// <summary>
-	void ZnPhysicsX::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
-	{
-		pairs.
-	}
+	//}
 
-	/// <summary>
-	///	제약 부숴진 애들
-	/// <summary>
-	void ZnPhysicsX::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
-	{
-		constraints.
-	}
+	///// <summary>
+	///// 트리거 작동된 아이들
+	///// <summary>
+	//void ZnPhysicsX::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
+	//{
+	//	pairs.
+	//}
 
-	void ZnPhysicsX::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs,
-		physx::PxU32 nbPairs)
-	{
-		pairs->contactImpulses;
-	}
+	///// <summary>
+	/////	제약 부숴진 애들
+	///// <summary>
+	//void ZnPhysicsX::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
+	//{
+	//	constraints.
+	//}
 
-	void ZnPhysicsX::onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer,
-		const physx::PxU32 count)
-	{
-		// 구현 안 해도 될듯
-	}
+	//void ZnPhysicsX::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs,
+	//	physx::PxU32 nbPairs)
+	//{
+	//	pairs->contactImpulses;
+	//}
 
-	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
-	{
-		using namespace physx;
-		PxRaycastBuffer result;
-		bool detect = scene->raycast({ _from.x, _from.y, _from.z }, { _to.x, _to.y, _to.z }, _distance, result);
-		if (detect)
-		{
-			_out.data = result.block.actor->userData;
-			_out.position = Eigen::Vector3f{ result.block.position.x, result.block.position.y, result.block.position.z };
-		}
+	//void ZnPhysicsX::onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer,
+	//	const physx::PxU32 count)
+	//{
+	//	// 구현 안 해도 될듯
+	//}
 
-		return detect;
-	}
+	//bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
+	//{
+	//	using namespace physx;
+	//	PxRaycastBuffer result;
+	//	bool detect = scene->raycast({ _from.x, _from.y, _from.z }, { _to.x, _to.y, _to.z }, _distance, result);
+	//	if (detect)
+	//	{
+	//		_out.data = result.block.actor->userData;
+	//		_out.position = Eigen::Vector3f{ result.block.position.x, result.block.position.y, result.block.position.z };
+	//	}
+
+	//	return detect;
+	//}
 
 	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
 	{

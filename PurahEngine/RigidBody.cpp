@@ -1,10 +1,12 @@
 #include "RigidBody.h"
 
+#include "GameObject.h"
 #include "PhysicsSystem.h"
+#include "Transform.h"
 
 namespace PurahEngine
 {
-	RigidBody::RigidBody() : body()
+	RigidBody::RigidBody()
 	{
 
 	}
@@ -16,39 +18,30 @@ namespace PurahEngine
 
 	void RigidBody::Awake()
 	{
-		// body = PhysicsSystem::GetInstance().CreateRigidBody();
+		auto name = GetGameObject()->GetName();
+		body = PhysicsSystem::GetInstance().CreateRigidBody(name);
+		PhysicsSystem::GetInstance().bodies.push_back(this);
+		awake = false;
+		auto trans = GetGameObject()->GetComponent<Transform>();
+
+		body->SetPosition(trans->GetWorldPosition());
+		body->SetQuaternion(trans->GetWorldRotation());
+		SetKinematic(isKinematic);
 	}
 
-	Eigen::Vector3f RigidBody::GetPosition() const
-	{
-		return body->GetPosition();
-	}
-
-	void RigidBody::SetPosition(const Eigen::Vector3f& _position) noexcept
-	{
-		body->SetPosition(_position);
-	}
-
-	Eigen::Quaternionf RigidBody::GetQuaternion() const noexcept
-	{
-		return body->GetQuaternion();
-	}
-
-	void RigidBody::SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept
-	{
-		body->SetQuaternion(_quaternion);
-	}
-
+	/// \brief 스크립트에서 호출하지 말아라
 	void RigidBody::WakeUp() noexcept
 	{
 		body->WakeUp();
 	}
 
+	/// 스크립트에서 호출하지 말아라
 	bool RigidBody::IsSleeping() const noexcept
 	{
 		return body->IsSleeping();
 	}
 
+	/// 
 	ZonaiPhysics::DynamicLocks RigidBody::GetDynamicLockFlags() const noexcept
 	{
 		return body->GetDynamicLockFlags();
@@ -66,32 +59,74 @@ namespace PurahEngine
 
 	float RigidBody::GetMass() const noexcept
 	{
-		return  body->GetMass();
+		if (awake)
+		{
+			return mass;
+		}
+		else
+		{
+			return  body->GetMass();
+		}
 	}
 
 	void RigidBody::SetMass(float _mass) noexcept
 	{
-		body->SetMass(_mass);
+		if (awake)
+		{
+			mass = _mass;
+		}
+		else
+		{
+			body->SetMass(_mass);
+		}
 	}
 
 	float RigidBody::GetLinearDamping() const noexcept
 	{
-		return body->GetLinearDamping();
+		if (awake)
+		{
+			return linearDamping;
+		}
+		else
+		{
+			return body->GetLinearDamping();
+		}
 	}
 
 	void RigidBody::SetLinearDamping(float _damping) noexcept
 	{
-		body->SetLinearDamping(_damping);
+		if (awake)
+		{
+			linearDamping = _damping;
+		}
+		else
+		{
+			body->SetLinearDamping(_damping);
+		}
 	}
 
 	float RigidBody::GetAngularDamping() const noexcept
 	{
-		return body->GetAngularDamping();
+		if (awake)
+		{
+			return angularDamping;
+		}
+		else
+		{
+			return body->GetAngularDamping();
+		}
 	}
 
 	void RigidBody::SetAngularDamping(float _damping) noexcept
 	{
-		body->SetAngularDamping(_damping);
+		if (awake)
+		{
+			angularDamping = _damping;
+		}
+		else
+		{
+			body->SetAngularDamping(_damping);
+		}
 	}
 
 	Eigen::Vector3f RigidBody::GetLinearVelocity() const noexcept
@@ -114,29 +149,36 @@ namespace PurahEngine
 		body->SetAngularVelocity(_velocity);
 	}
 
-	float RigidBody::GetMaxLinearVelocity() const noexcept
-	{
-		return body->GetMaxLinearVelocity();
-	}
-
-	void RigidBody::SetMaxLinearVelocity(const float& _velo) noexcept
-	{
-		body->SetMaxLinearVelocity(_velo);
-	}
-
-	float RigidBody::GetMaxAngularVelocity() const noexcept
-	{
-		return body->GetMaxAngularVelocity();
-	}
-
-	void RigidBody::SetMaxAngularVelocity(const float& _velo) noexcept
-	{
-		body->SetMaxAngularVelocity(_velo);
-	}
+// 	float RigidBody::GetMaxLinearVelocity() const noexcept
+// 	{
+// 		return body->GetMaxLinearVelocity();
+// 	}
+// 
+// 	void RigidBody::SetMaxLinearVelocity(const float& _velo) noexcept
+// 	{
+// 		body->SetMaxLinearVelocity(_velo);
+// 	}
+// 
+// 	float RigidBody::GetMaxAngularVelocity() const noexcept
+// 	{
+// 		return body->GetMaxAngularVelocity();
+// 	}
+// 
+// 	void RigidBody::SetMaxAngularVelocity(const float& _velo) noexcept
+// 	{
+// 		body->SetMaxAngularVelocity(_velo);
+// 	}
 
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ZonaiPhysics::ForceType _type) noexcept
 	{
-		body->AddForce(_force, _type);
+		if (awake)
+		{
+			force = _force;
+		}
+		else
+		{
+			body->AddForce(_force, _type);
+		}
 	}
 
 	void RigidBody::ClearForce() noexcept
@@ -146,11 +188,40 @@ namespace PurahEngine
 
 	void RigidBody::AddTorque(const Eigen::Vector3f& _torque, ZonaiPhysics::ForceType _type) noexcept
 	{
-		body->AddTorque(_torque, _type);
+		if (awake)
+		{
+			torque = _torque;
+		}
+		else
+		{
+			body->AddTorque(_torque, _type);
+		}
 	}
 
 	void RigidBody::ClearTorque() noexcept
 	{
 		body->ClearTorque();
+	}
+
+	void RigidBody::SetKinematic(bool value) noexcept
+	{
+		if (awake)
+		{
+			isKinematic = value;
+		}
+		else
+		{
+			body->SetKinematic(value);
+		}
+	}
+
+	void RigidBody::SimulateResult()
+	{
+		auto pos = body->GetPosition();
+		auto rot = body->GetQuaternion();
+
+		auto transform = GetGameObject()->GetComponent<Transform>();
+		transform->SetLocalPosition(pos);
+		transform->SetLocalRotation(rot);
 	}
 }

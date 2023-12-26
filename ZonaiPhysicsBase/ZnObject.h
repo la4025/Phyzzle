@@ -20,7 +20,7 @@ namespace ZonaiPhysics
 		회전
 		*/
 		virtual Eigen::Quaternionf	GetQuaternion() const noexcept = 0;
-		virtual void		SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept = 0;
+		virtual void		 SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept = 0;
 
 		/**
 		유저 데이터

@@ -91,6 +91,10 @@
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Physics\System</Filter>
     </ClCompile>
+    <ClCompile Include="TimeController.cpp" />
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -135,6 +139,11 @@
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Physics\System</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="TimeController.h" />
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,3 @@
-#include "ZnObject.h"
-
 #include "Joint.h"
 
 #include <extensions/PxJoint.h>
@@ -7,10 +5,14 @@
 namespace ZonaiPhysics
 {
 	Joint::Joint() noexcept
-	= default;
+	{
+		
+	}
 
 	Joint::~Joint() noexcept
-	= default;
+	{
+		
+	}
 
 	//void Joint::SetObject(ZnObject* _object0, ZnObject* _object1) noexcept
 	//{
@@ -29,7 +31,7 @@ namespace ZonaiPhysics
 		using namespace physx;
 		const auto index = static_cast<PxJointActorIndex::Enum>(_index);
 		PxTransform t = joint->getLocalPose(index);
-		t.p = { _localPos.x, _localPos.y , _localPos.z };
+		t.p = { _localPos.x(), _localPos.y() , _localPos.z()};
 		joint->setLocalPose(index, t);
 	}
 
@@ -46,7 +48,7 @@ namespace ZonaiPhysics
 		using namespace physx;
 		const auto index = static_cast<PxJointActorIndex::Enum>(_index);
 		PxTransform t = joint->getLocalPose(index);
-		t.q = { _localQuat.x, _localQuat.y , _localQuat.z, _localQuat.w };
+		t.q = { _localQuat.x(), _localQuat.y() , _localQuat.z(), _localQuat.w()};
 		joint->setLocalPose(index, t);
 	}
 

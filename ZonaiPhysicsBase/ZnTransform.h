@@ -1,11 +1,6 @@
 #pragma once
 #include <algorithm>
-
-namespace Eigen
-{
-	class Vector3f;
-	class Quaternionf;
-}
+#include <Eigen/Dense>
 
 namespace ZonaiPhysics
 {

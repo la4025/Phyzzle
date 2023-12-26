@@ -17,23 +17,23 @@ namespace ZonaiPhysics
 
 		PxTransform t0, t1;
 
-		t0.p.x = _transform0.position.x;
-		t0.p.y = _transform0.position.y;
-		t0.p.z = _transform0.position.z;
+		t0.p.x = _transform0.position.x();
+		t0.p.y = _transform0.position.y();
+		t0.p.z = _transform0.position.z();
 
-		t0.q.x = _transform0.quaternion.x;
-		t0.q.y = _transform0.quaternion.y;
-		t0.q.z = _transform0.quaternion.z;
-		t0.q.w = _transform0.quaternion.w;
+		t0.q.x = _transform0.quaternion.x();
+		t0.q.y = _transform0.quaternion.y();
+		t0.q.z = _transform0.quaternion.z();
+		t0.q.w = _transform0.quaternion.w();
 
-		t1.p.x = _transform1.position.x;
-		t1.p.y = _transform1.position.y;
-		t1.p.z = _transform1.position.z;
+		t1.p.x = _transform1.position.x();
+		t1.p.y = _transform1.position.y();
+		t1.p.z = _transform1.position.z();
 
-		t1.q.x = _transform1.quaternion.x;
-		t1.q.y = _transform1.quaternion.y;
-		t1.q.z = _transform1.quaternion.z;
-		t1.q.w = _transform1.quaternion.w;
+		t1.q.x = _transform1.quaternion.x();
+		t1.q.y = _transform1.quaternion.y();
+		t1.q.z = _transform1.quaternion.z();
+		t1.q.w = _transform1.quaternion.w();
 
 		joint = physx::PxFixedJointCreate(
 			*_factory, 

@@ -78,6 +78,8 @@ namespace ZonaiPhysics
 		void		AddTorque(const Eigen::Vector3f&, ForceType) noexcept override;
 		void		ClearTorque() noexcept override;
 
+		void		SetKinematic(bool) noexcept override;
+
 	public:
 		__declspec(property(get = GetLinearDamping, put = SetLinearDamping)) 
 			float linerDamping;

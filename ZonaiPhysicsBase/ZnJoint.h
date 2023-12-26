@@ -1,11 +1,6 @@
 #pragma once
 #include "ZnRigidBody.h"
-
-namespace Eigen
-{
-	class Vector3f;
-	class Quaternionf;
-}
+#include <Eigen/Dense>
 
 
 namespace ZonaiPhysics
@@ -25,7 +20,7 @@ namespace ZonaiPhysics
 
 	public:
 							ZnJoint() noexcept = default;
-		virtual				~ZnJoint() noexcept = 0;
+		virtual				~ZnJoint() noexcept = default;
 
 	public:
 		/**

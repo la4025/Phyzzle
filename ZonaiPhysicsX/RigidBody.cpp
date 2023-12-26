@@ -79,7 +79,7 @@ namespace ZonaiPhysics
 	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& _I) noexcept
 	{
 		using namespace physx;
-		rigidbody_->setMassSpaceInertiaTensor(PxVec3(_I.x, _I.y, _I.z));
+		rigidbody_->setMassSpaceInertiaTensor(PxVec3(_I.x(), _I.y(), _I.z()));
 	}
 
 	float RigidBody::GetLinearDamping() const noexcept
@@ -112,7 +112,7 @@ namespace ZonaiPhysics
 	void RigidBody::SetLinearVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
 		using namespace physx;
-		rigidbody_->setLinearVelocity(PxVec3(_velocity.x, _velocity.y, _velocity.z));
+		rigidbody_->setLinearVelocity(PxVec3(_velocity.x(), _velocity.y(), _velocity.z()));
 	}
 
 	Eigen::Vector3f RigidBody::GetAngularVelocity() const noexcept
@@ -125,7 +125,7 @@ namespace ZonaiPhysics
 	void RigidBody::SetAngularVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
 		using namespace physx;
-		rigidbody_->setAngularVelocity(PxVec3(_velocity.x, _velocity.y, _velocity.z));
+		rigidbody_->setAngularVelocity(PxVec3(_velocity.x(), _velocity.y(), _velocity.z()));
 	}
 
 	float RigidBody::GetMaxLinearVelocity() const noexcept
@@ -158,9 +158,9 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		PxTransform t = rigidbody_->getGlobalPose();
-		t.p.x = _position.x;
-		t.p.y = _position.y;
-		t.p.z = _position.z;
+		t.p.x = _position.x();
+		t.p.y = _position.y();
+		t.p.z = _position.z();
 		rigidbody_->setGlobalPose(t);
 	}
 
@@ -175,10 +175,10 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		PxTransform t = rigidbody_->getGlobalPose();
-		t.q.w = _quaternion.w;
-		t.q.x = _quaternion.x;
-		t.q.y = _quaternion.y;
-		t.q.z = _quaternion.z;
+		t.q.w = _quaternion.w();
+		t.q.x = _quaternion.x();
+		t.q.y = _quaternion.y();
+		t.q.z = _quaternion.z();
 		rigidbody_->setGlobalPose(t);
 	}
 
@@ -187,8 +187,8 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		rigidbody_->setForceAndTorque(
-			{ _force.x, _force.y, _force.z }, 
-			{ _torque.x, _torque.y, _torque.z },
+			{ _force.x(), _force.y(), _force.z()},
+			{ _torque.x(), _torque.y(), _torque.z()},
 			static_cast<PxForceMode::Enum>(_type)
 		);
 	}
@@ -196,7 +196,7 @@ namespace ZonaiPhysics
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ForceType _type) noexcept
 	{
 		using namespace physx;
-		rigidbody_->addForce(PxVec3(_force.x, _force.y, _force.z), static_cast<PxForceMode::Enum>(_type));
+		rigidbody_->addForce(PxVec3(_force.x(), _force.y(), _force.z()), static_cast<PxForceMode::Enum>(_type));
 	}
 
 	void RigidBody::ClearForce() noexcept
@@ -207,12 +207,18 @@ namespace ZonaiPhysics
 	void RigidBody::AddTorque(const Eigen::Vector3f& _torque, ForceType _type) noexcept
 	{
 		using namespace physx;
-		rigidbody_->addForce(PxVec3(_torque.x, _torque.y, _torque.z), static_cast<PxForceMode::Enum>(_type));
+		rigidbody_->addForce(PxVec3(_torque.x(), _torque.y(), _torque.z()), static_cast<PxForceMode::Enum>(_type));
 	}
 
 	void RigidBody::ClearTorque() noexcept
 	{
 		rigidbody_->clearTorque();
+	}
+
+	void RigidBody::SetKinematic(bool value) noexcept
+	{
+		rigidbody_->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, value);
+		// rigidbody_->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, value);
 	}
 
 	void RigidBody::CanSimulate() noexcept

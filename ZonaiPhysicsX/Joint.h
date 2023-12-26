@@ -16,7 +16,7 @@ namespace ZonaiPhysics
 	{
 	public:
 					Joint() noexcept;
-					~Joint() noexcept override;
+				 	~Joint() noexcept override;
 
 	public:
 		//void		SetObject(ZnObject*, ZnObject*) noexcept override;

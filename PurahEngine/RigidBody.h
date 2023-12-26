@@ -1,5 +1,6 @@
 #pragma once
 /// ZonaiPhysics의 RigidBody를 래핑해준다.
+#include "PurahEngineAPI.h"
 #include "Component.h"
 #include <Eigen/Dense>
 #include "ZnRigidBody.h"
@@ -11,7 +12,7 @@ namespace ZonaiPhysics
 
 namespace PurahEngine
 {
-	class RigidBody : public Component
+	class PURAHENGINE_API RigidBody : public Component
 	{
 	public:
 		RigidBody();
@@ -21,18 +22,6 @@ namespace PurahEngine
 		void Awake() override;
 
 	public:
-		/**
-		위치
-		*/
-		Eigen::Vector3f	GetPosition() const noexcept;
-		void		SetPosition(const Eigen::Vector3f& _position) noexcept;
-
-		/**
-		회전
-		*/
-		Eigen::Quaternionf	GetQuaternion() const noexcept;
-		void		SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept;
-
 		/**
 		수면 상태의 강체를 깨움
 		*/
@@ -112,7 +101,25 @@ namespace PurahEngine
 		void		AddTorque(const Eigen::Vector3f& _torque, ZonaiPhysics::ForceType _type = ZonaiPhysics::ForceType::Force) noexcept;
 		void		ClearTorque() noexcept;
 
+		void		SetKinematic(bool) noexcept;
+
+	public:
+		void SimulateResult();
+
 	private:
-		ZonaiPhysics::ZnRigidBody* body;
+		bool awake{ true };
+		bool lock[3]{ false, false, false };
+		bool isKinematic{ false };
+
+		// float maxLinearVelocity{ 0.f };
+		// float maxAngularVelocity{ 0.f };
+		Eigen::Vector3f LinearVelocity{ 0.f, 0.f, 0.f };
+		Eigen::Vector3f angularVelocity{ 0.f, 0.f, 0.f };
+		float mass;
+		float linearDamping;
+		float angularDamping;
+		Eigen::Vector3f force{};
+		Eigen::Vector3f torque{};
+		ZonaiPhysics::ZnRigidBody* body{};
 	};
 }

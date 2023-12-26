@@ -110,5 +110,7 @@ namespace ZonaiPhysics
 		*/
 		virtual void		AddTorque(const Eigen::Vector3f& _torque, ForceType _type = ForceType::Force) noexcept = 0;
 		virtual void		ClearTorque() noexcept = 0;
+
+		virtual void		SetKinematic(bool) noexcept = 0;
 	};
 }

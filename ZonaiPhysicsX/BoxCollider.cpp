@@ -1,4 +1,4 @@
-#include "Eigen/Dense"
+#include <Eigen/Dense>
 #include "RigidBody.h"
 #include "PxPhysicsAPI.h"
 
@@ -16,7 +16,7 @@ namespace ZonaiPhysics
 		using namespace physx;
 		rigid_ = _body;
 
-		shape_ = _factory->createShape(PxBoxGeometry(_offset.x, _offset.y, _offset.z), *_material);
+		shape_ = _factory->createShape(PxBoxGeometry(_offset.x(), _offset.y(), _offset.z()), *_material);
 		shape_->userData = this;
 
 		shape_->setFlag(PxShapeFlag::eVISUALIZATION, true);

@@ -37,9 +37,9 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		PxTransform t = shape_->getLocalPose();
-		t.p.x = _position.x;
-		t.p.y = _position.y;
-		t.p.z = _position.z;
+		t.p.x = _position.x();
+		t.p.y = _position.y();
+		t.p.z = _position.z();
 		shape_->setLocalPose(t);
 	}
 
@@ -59,17 +59,17 @@ namespace ZonaiPhysics
 	{
 		using namespace physx;
 		PxQuat q = shape_->getLocalPose().q;
-		return { q.w, q.x, q.y, q.z };
+		return { q.w, q.x, q.y, q.z};
 	}
 
 	void Collider::SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) noexcept
 	{
 		using namespace physx;
 		PxTransform t = shape_->getLocalPose();
-		t.q.w = _quaternion.w;
-		t.q.x = _quaternion.x;
-		t.q.y = _quaternion.y;
-		t.q.z = _quaternion.z;
+		t.q.w = _quaternion.w();
+		t.q.x = _quaternion.x();
+		t.q.y = _quaternion.y();
+		t.q.z = _quaternion.z();
 		shape_->setLocalPose(t);
 	}
 
