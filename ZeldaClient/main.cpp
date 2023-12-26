@@ -44,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	boxTrans->SetLocalPosition({ 0, 5, 0 });
 
 	auto colliderBox = box->AddComponent<PurahEngine::BoxCollider>();
-	colliderBox->SetSize({ 1, 1, 1 });
+	colliderBox->SetSize({ 0.5f, 0.5f, 0.5f });
 
 	auto rigid = box->AddComponent<PurahEngine::RigidBody>();
 	rigid->SetMass(10.f);
@@ -60,7 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	trans->SetLocalPosition({0.f, -5.f, 0.f});
 
 	auto colliderBox2 = box2->AddComponent<PurahEngine::BoxCollider>();
-	colliderBox2->SetSize({ 100, 1, 100 });
+	colliderBox2->SetSize({ 100, 0.5f, 100 });
 
 	auto rigid2 = box2->AddComponent<PurahEngine::RigidBody>();
 	rigid2->SetMass(10.f);
