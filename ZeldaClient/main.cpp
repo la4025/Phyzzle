@@ -52,16 +52,38 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	auto cube = box->AddComponent<PurahEngine::Renderer>();
 
+	PurahEngine::GameObject* box3 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box03");
+	box3->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ 1, 6, 0 });
 
+	auto colliderBox3 = box3->AddComponent<PurahEngine::BoxCollider>();
+	colliderBox3->SetSize({ 0.5f, 0.5f, 0.5f });
+
+	auto rigid3 = box3->AddComponent<PurahEngine::RigidBody>();
+	rigid3->SetMass(10.f);
+	rigid3->SetKinematic(false);
+
+	auto cube3 = box3->AddComponent<PurahEngine::Renderer>();
+
+	PurahEngine::GameObject* box4 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box04");
+	box4->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ -0.5, 3, 0 });
+
+	auto colliderBox4 = box4->AddComponent<PurahEngine::BoxCollider>();
+	colliderBox4->SetSize({ 0.5f, 0.5f, 0.5f });
+
+	auto rigid4 = box4->AddComponent<PurahEngine::RigidBody>();
+	rigid4->SetMass(10.f);
+	rigid4->SetKinematic(false);
+
+	auto cube4 = box4->AddComponent<PurahEngine::Renderer>();
 
 	PurahEngine::GameObject* box2 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box02");
 
 	auto trans = box2->GetComponent<PurahEngine::Transform>();
-	trans->SetLocalPosition({0.f, -5.f, 0.f});
+	trans->SetLocalPosition({0.f, -3.f, 0.f});
 
 	auto colliderBox2 = box2->AddComponent<PurahEngine::BoxCollider>();
-	colliderBox2->SetSize({ 100, 0.5f, 100 });
-
+	colliderBox2->SetSize({ 5, 0.5f, 5 });
+	box2->GetComponent<PurahEngine::Transform>()->SetLocalScale({ 10, 1, 10 });
 	auto rigid2 = box2->AddComponent<PurahEngine::RigidBody>();
 	rigid2->SetMass(10.f);
 	rigid2->SetKinematic(true);
@@ -70,13 +92,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	colliderBox->Awake();
 	colliderBox2->Awake();
+	colliderBox3->Awake();
+	colliderBox4->Awake();
 	rigid->Awake();
 	rigid2->Awake();
+	rigid3->Awake();
+	rigid4->Awake();
 
 	PurahEngine::GameObject* testObject = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject");
 	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
 	camera->AddComponent<PurahEngine::Camera>();
-	testObject->AddComponent<PurahEngine::Renderer>();
+	//testObject->AddComponent<PurahEngine::Renderer>();
 
 	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
 	camera->GetComponent<PurahEngine::Camera>()->SetRenderer(renderer);
@@ -85,15 +111,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	testObject->AddComponent<PurahEngine::TestMovement>();
 	camera->AddComponent<PurahEngine::CameraMovement>();
 
-	textureID = renderer->CreateTexture(L"scd.jpg");
-	if (textureID == TextureID::ID_NULL)
-	{
-		assert(0);
-	}
-	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
+	//textureID = renderer->CreateTexture(L"scd.jpg");
+	//if (textureID == TextureID::ID_NULL)
+	//{
+	//	assert(0);
+	//}
+	//testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
 	cube->AddTexture(textureID);
 	cube2->AddTexture(textureID);
+	cube3->AddTexture(textureID);
+	cube4->AddTexture(textureID);
 
 	//PurahEngine::Run(); ¿ªÇÒ
 	CreateRun(nCmdShow);

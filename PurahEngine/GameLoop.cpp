@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "PhysicsSystem.h"
+#include "TimeController.h"
 #include <cassert>
 
 
@@ -18,6 +19,7 @@
 ZonaiPhysics::ZnCollider* collider;
 ZonaiPhysics::ZnRigidBody* rigidBody;
 
+static std::string timeInit = "Init";
 
 PurahEngine::GameLoop::GameLoop()
 {
@@ -54,6 +56,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		0, 0, width, height, NULL, NULL, hInstance, NULL);
 
 	SetMenu(hWnd, NULL);
+
+	// 시간관리자 초기화
+	PurahEngine::TimeController::GetInstance().Initialize(timeInit);
 
 	// Graphics dll 초기화(변경 가능성 농후)
 	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
@@ -108,7 +113,9 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
-	PurahEngine::PhysicsSystem::GetInstance().Simulation(1.f / 600.f);
+	PurahEngine::TimeController::GetInstance().Update(timeInit);
+	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(timeInit);
+	PurahEngine::PhysicsSystem::GetInstance().Simulation(0.02f);
 	auto position = rigidBody->GetPosition();
 
 	PurahEngine::InputManager::Getinstance().Update();

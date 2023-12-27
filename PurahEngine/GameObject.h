@@ -28,6 +28,8 @@ namespace PurahEngine
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdate();
 
+		void Enable();
+		void Disable();
 
 
 		/// OnCollision
@@ -54,6 +56,8 @@ namespace PurahEngine
 		// 마우스가 오브젝트에서 벗어났을 때 호출
 		virtual void OnMouseExit();
 
+		void SetActive(bool isTrue);
+
 		std::wstring GetName();
 
 	private:
@@ -62,10 +66,21 @@ namespace PurahEngine
 
 	private:
 		GameObject(std::wstring objectname);
+		GameObject(std::wstring objectname, bool isactive);
 		virtual ~GameObject();
 
 	private:
+		enum class State
+		{
+			CREATE,
+			ENABLE,
+			DISABLE,
+			DESTROY
+		};
+
+		State state;
 		std::wstring name;
+		bool isActive;
 
 	public:
 		// ComponentList로 Component 추가

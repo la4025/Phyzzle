@@ -3,17 +3,23 @@
 
 void PurahEngine::GameObject::Awake()
 {
-	for (PurahEngine::Component* component : componentList)
+	if (state == State::CREATE && isActive == true)
 	{
-		component->Awake();
+		for (PurahEngine::Component* component : componentList)
+		{
+			component->Awake();
+		}
 	}
 }
 
 void PurahEngine::GameObject::Start()
 {
-	for (PurahEngine::Component* component : componentList)
+	if (state == State::CREATE)
 	{
-		component->Start();
+		for (PurahEngine::Component* component : componentList)
+		{
+			component->Start();
+		}
 	}
 }
 
@@ -27,9 +33,12 @@ void PurahEngine::GameObject::FixedUpdate()
 
 void PurahEngine::GameObject::Update()
 {
-	for (PurahEngine::Component* component : componentList)
+	if (state == State::ENABLE)
 	{
-		component->Update();
+		for (PurahEngine::Component* component : componentList)
+		{
+			component->Update();
+		}
 	}
 }
 
@@ -39,6 +48,16 @@ void PurahEngine::GameObject::LateUpdate()
 	{
 		component->LateUpdate();
 	}
+}
+
+void PurahEngine::GameObject::Enable()
+{
+	state == State::ENABLE;
+}
+
+void PurahEngine::GameObject::Disable()
+{
+	state == State::DISABLE;
 }
 
 void PurahEngine::GameObject::OnCollisionEnter()
@@ -113,6 +132,11 @@ void PurahEngine::GameObject::OnMouseExit()
 	}
 }
 
+void PurahEngine::GameObject::SetActive(bool isTrue)
+{
+	isActive = isTrue;
+}
+
 std::wstring PurahEngine::GameObject::GetName()
 {
 	return name;
@@ -120,7 +144,16 @@ std::wstring PurahEngine::GameObject::GetName()
 
 PurahEngine::GameObject::GameObject(std::wstring objectname)
 {
+	state = State::CREATE;
 	name = objectname;
+
+}
+
+PurahEngine::GameObject::GameObject(std::wstring objectname, bool isactive)
+{
+	state = State::CREATE;
+	name = objectname;
+	isActive = isactive;
 }
 
 PurahEngine::GameObject::~GameObject()

@@ -44,7 +44,6 @@ void PurahEngine::SceneManager::Update()
 
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		
 		object->Start();
 		object->FixedUpdate();
 		object->Update();
