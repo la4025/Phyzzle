@@ -49,6 +49,9 @@
     <Filter Include="Collider">
       <UniqueIdentifier>{e90a2f97-4873-49a2-83ea-e26301fa1877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics\Component\Joint">
+      <UniqueIdentifier>{6731ae7b-2c71-4b93-8193-77819af87f22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp">
@@ -94,6 +97,12 @@
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>Physics\Component\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedJoint.cpp">
+      <Filter>Physics\Component\Joint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +153,12 @@
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="BoxCollider.h">
       <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Physics\Component\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="FixedJoint.h">
+      <Filter>Physics\Component\Joint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 #pragma once
-#include "ZnRigidBody.h"
 #include <Eigen/Dense>
 
 
@@ -23,13 +22,6 @@ namespace ZonaiPhysics
 		virtual				~ZnJoint() noexcept = default;
 
 	public:
-		/**
-		오브젝트를 조인트로 연결함.
-		둘 중 하나는 NULL일 수 있음.
-		*/
-		//virtual void		SetObject(ZnObject*, ZnObject*) noexcept = 0;
-		//virtual void		GetObject(ZnObject*&, ZnObject*&) const noexcept = 0;
-		
 		/**
 		오브젝트의 포지션
 		*/

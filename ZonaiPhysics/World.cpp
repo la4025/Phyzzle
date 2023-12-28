@@ -24,11 +24,11 @@ namespace ZonaiPhysics
 	{
 	}
 
-	ZnCollider* World::CreatBoxCollider(const std::wstring&, float x, float y, float z) noexcept
+	ZnCollider* World::CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept
 	{
 	}
 
-	ZnCollider* World::CreatSphereCollider(const std::wstring&, float radius) noexcept
+	ZnCollider* World::CreateSphereCollider(const std::wstring&, float radius) noexcept
 	{
 	}
 
@@ -36,7 +36,7 @@ namespace ZonaiPhysics
 	{
 	}
 
-	ZnJoint* World::CreatDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept
+	ZnJoint* World::CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept
 	{
 	}
 }

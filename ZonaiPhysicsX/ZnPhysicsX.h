@@ -61,21 +61,21 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		ZnCollider*		CreatBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
-// 		virtual ZnCollider*		CreatPlaneCollider(const std::wstring&, float x, float y) noexcept override;
- 		ZnCollider*		CreatSphereCollider(const std::wstring&, float radius) noexcept override;
+		ZnCollider*		CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
+// 		virtual ZnCollider*		CreatePlaneCollider(const std::wstring&, float x, float y) noexcept override;
+ 		ZnCollider*		CreateSphereCollider(const std::wstring&, float radius) noexcept override;
 // 		virtual ZnCollider*		CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
 // 		virtual ZnCollider*		CreateCustomCollider(const std::wstring&) noexcept override;
 // 		
 // 		/// <summary>
 // 		/// Create Joint
 // 		/// </summary>
- 		// ZnJoint*		CreatD6Joint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;			// D6 조인트		*사실 뭔지 모름
-		ZnJoint*		CreatFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
-		ZnJoint*		CreatDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
-// 		virtual ZnJoint*		CreatSphericalJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 구형 조인트
-// 		virtual ZnJoint*		CreatRevoluteJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;		// 회전 조인트
-// 		virtual ZnJoint*		CreatPrismaticJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 프리즘 조인트
+ 		// ZnJoint*		CreateD6Joint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;			// D6 조인트		*사실 뭔지 모름
+		ZnJoint*		CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
+		ZnJoint*		CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
+// 		virtual ZnJoint*		CreateSphericalJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 구형 조인트
+// 		virtual ZnJoint*		CreateRevoluteJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;		// 회전 조인트
+// 		virtual ZnJoint*		CreatePrismaticJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 프리즘 조인트
 
 	public:
 		virtual bool Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept override;

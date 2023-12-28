@@ -10,6 +10,12 @@ namespace ZonaiPhysics
 
 	}
 
+	void Collider::SetTrigger(bool _flag) noexcept
+	{
+		using namespace physx;
+		shape_->setFlag(PxShapeFlag::eTRIGGER_SHAPE, _flag);
+	}
+
 	/// <summary>
 	/// 이건 강체의 위치를 바꾸는건데...
 	/// 이게 맞을까?
@@ -71,12 +77,6 @@ namespace ZonaiPhysics
 		t.q.y = _quaternion.y();
 		t.q.z = _quaternion.z();
 		shape_->setLocalPose(t);
-	}
-
-	void Collider::SetTrigger(bool _flag) noexcept
-	{
-		using namespace physx;
-		shape_->setFlag(PxShapeFlag::eTRIGGER_SHAPE, _flag);
 	}
 
 	void* Collider::GetUserData() const noexcept

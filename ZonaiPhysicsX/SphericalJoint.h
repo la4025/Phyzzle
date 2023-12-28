@@ -1,6 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
-#include "Joint.h"
+#include "ZnSphericalJoint.h"
 
 namespace physx
 {
@@ -9,7 +9,7 @@ namespace physx
 
 namespace ZonaiPhysics
 {
-	class SphericalJoint : public Joint
+	class SphericalJoint : public ZnSphericalJoint
 	{
 	public:
 		SphericalJoint() noexcept;

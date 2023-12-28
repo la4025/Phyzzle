@@ -18,9 +18,6 @@
       <Filter>Collider</Filter>
     </ClCompile>
     <ClCompile Include="ZnSimulationCallbackX.cpp" />
-    <ClCompile Include="Joint.cpp">
-      <Filter>Joint</Filter>
-    </ClCompile>
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
       <Filter>Collider</Filter>
     </ClInclude>
     <ClInclude Include="FixedJoint.h">
-      <Filter>Joint</Filter>
-    </ClInclude>
-    <ClInclude Include="Joint.h">
       <Filter>Joint</Filter>
     </ClInclude>
     <ClInclude Include="SphericalJoint.h">

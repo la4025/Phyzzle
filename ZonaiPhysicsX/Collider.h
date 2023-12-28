@@ -17,16 +17,18 @@ namespace ZonaiPhysics
 	class Collider : public ZnCollider
 	{
 	public:
-		Collider() noexcept = delete;
-		Collider(physx::PxPhysics*&, RigidBody*) noexcept;
+							Collider() noexcept = delete;
+							Collider(physx::PxPhysics*&, RigidBody*) noexcept;
 		virtual				~Collider() noexcept = default;
 
 	public:
+		void				SetTrigger(bool) noexcept final;
+
 		/**
 		위치
 		*/
-		Eigen::Vector3f	GetPosition() const noexcept final;
-		void		SetPosition(const Eigen::Vector3f& _position) noexcept final;
+		Eigen::Vector3f		GetPosition() const noexcept final;
+		void				SetPosition(const Eigen::Vector3f& _position) noexcept final;
 		virtual  Eigen::Vector3f	GetLocalPosition() const noexcept final;
 		virtual	 void		SetLocalPosition(const Eigen::Vector3f& _position) noexcept final;
 
@@ -34,18 +36,17 @@ namespace ZonaiPhysics
 		회전
 		*/
 		Eigen::Quaternionf	GetQuaternion() const noexcept final;
-		void		SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept final;
+		void				SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept final;
 		virtual Eigen::Quaternionf	GetLocalQuaternion() const noexcept final;
 		virtual void		SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) noexcept final;
 
 		/**
 		유저 데이터
 		*/
-		void*		GetUserData() const noexcept final;
-		void		SetUserData(void* _userData) noexcept final;
+		void*				GetUserData() const noexcept final;
+		void				SetUserData(void* _userData) noexcept final;
 
 	public:
-		void		SetTrigger(bool) noexcept final;
 
 	public:
 		__declspec(property(get = GetPosition, put = SetPosition))
