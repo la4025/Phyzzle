@@ -174,14 +174,16 @@ public:
 	*/
 	virtual void				setFlag(PxConstraintFlag::Enum flag, bool value)				= 0;
 
-	/**
-	\brief Retrieve the constraint force most recently applied to maintain this constraint.
 
-	\note It is not allowed to use this method while the simulation is running (except during PxScene::collide(),
-	in PxContactModifyCallback or in contact report callbacks).
-	
-	\param[out] linear the constraint force
-	\param[out] angular the constraint torque
+	/**
+	\brief 이 제약을 유지하기 위해 가장 최근에 적용된 제약 힘을 검색합니다.
+
+	\note	시뮬레이션이 실행 중일 때
+			(PxScene::collide() 내에서 또는 PxContactModifyCallback이나
+			연락처 보고서 콜백 중에는 사용할 수 없습니다).
+
+	\param[out] linear 제약 힘
+	\param[out] angular 제약 토크
 	*/
 	virtual void				getForce(PxVec3& linear, PxVec3& angular)				const	= 0;
 

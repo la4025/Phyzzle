@@ -243,27 +243,33 @@ int snippetMain(int, const char* const*)
 	physicsEngine->Initialize();
 
 
-	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2, 2, 2);
+	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 4, 10, 4);
 	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
 	Eigen::Vector3f pos1{ 0, 50, -10 };
 	rigid->SetPosition(pos1);
+	rigid->SetMass(1.f);
 
 	auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2, 2, 2);
 	auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
-	Eigen::Vector3f pos2{ 0, 55, -5 };
-	rigid2->SetPosition({ 0, 55, -5 });
+	// Eigen::Vector3f pos2{ 0, 55, -5 };
+	rigid2->SetPosition({ 0, 70, -10 });
+	rigid2->SetMass(100);
 
-	auto fixedjoint = physicsEngine->CreateFixedJoint(rigid, ZonaiPhysics::ZnTransform{{},{}}, rigid2, ZonaiPhysics::ZnTransform{{},{}});
-	fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eOBJECT::eJOINT_OBJECT0, { 0, 0, 10 });
+	auto fixedjoint = physicsEngine->CreateFixedJoint(
+		rigid, ZonaiPhysics::ZnTransform{}, 
+		rigid2, ZonaiPhysics::ZnTransform{}
+	);
+	fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eOBJECT::eJOINT_OBJECT0, { 0, 10, 0 });
+	fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eOBJECT::eJOINT_OBJECT1, { 20, -2, 0 });
 
-	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 30, 1, 30);
+	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
 	auto ground = physicsEngine->CreateRigidBody(L"ground");
 	ground->SetPosition({ 0, 0, -10 });
 	ground->SetKinematic(true);
 
 	while (true)
 	{
-		physicsEngine->Simulation(1.0f / 1000.0f);
+		physicsEngine->Simulation(1.0f / 2000.0f);
 	}
 
 	//static const PxU32 frameCount = 100;

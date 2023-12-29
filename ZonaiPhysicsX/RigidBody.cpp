@@ -85,6 +85,7 @@ namespace ZonaiPhysics
 	void RigidBody::SetMass(float _mass) noexcept
 	{
 		rigidbody_->setMass(_mass);
+		rigidbody_->setMassSpaceInertiaTensor(rigidbody_->getCMassLocalPose().p);
 	}
 
 	float RigidBody::GetInvMass() const noexcept
