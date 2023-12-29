@@ -285,7 +285,7 @@ namespace FBXLoader
 
 	void FBXLoader::ReleaseModel(Model* model)
 	{
-
+		// 구현해야함...
 	}
 
 	void FBXLoader::CopyNodeData(Bone* bone, aiNode* ainode, std::map<std::wstring, unsigned int>& boneIndexMap, std::vector<Bone*>& boneList)

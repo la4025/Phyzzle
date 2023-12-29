@@ -75,6 +75,8 @@ private:
 	// graphics
 	CameraID mainCameraID;
 	TextureID scdTextureID;
+	TextureID hnsTextureID;
+	TextureID msTextureID;
 	ModelID fbxID;
 	ModelID fbxID2;
 

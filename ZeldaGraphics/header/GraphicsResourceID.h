@@ -5,7 +5,8 @@ enum class ResourceType : unsigned long long {
 	Texture = 2,
 	Model = 3,
 	Mesh = 4,
-	Shader = 5
+	Shader = 5,
+	Light = 6
 };
 
 template <ResourceType type>
@@ -58,3 +59,4 @@ using TextureID = ResourceID<ResourceType::Texture>;
 using ModelID = ResourceID<ResourceType::Model>;
 using MeshID = ResourceID<ResourceType::Mesh>;
 using ShaderID = ResourceID<ResourceType::Shader>;
+using LightID = ResourceID<ResourceType::Light>;

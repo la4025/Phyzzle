@@ -280,7 +280,8 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	if (FAILED(hr)) return false;
 
 	spriteBatch = new SpriteBatch(mDeviceContext);
-	
+	commonStates = new CommonStates(mDevice);
+
 	ResourceManager::GetInstance().Initialize(mDevice);
 
 	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
@@ -297,6 +298,77 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(useConstBuffer);
 	ConstantBufferManager::GetInstance().RegisterPSBuffer(colorConstBuffer);
+
+
+#pragma region Deffered Rendering
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	textureDesc.Width = screenWidth;
+	textureDesc.Height = screenHeight;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* renderTargetTextures[DEFFERED_BUFFER_COUNT];
+
+	// Texture2D 积己
+	for (int i = 0; i < DEFFERED_BUFFER_COUNT; i++)
+	{
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures[i]);
+		if (FAILED(result)) return false;
+	}
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc32;
+	ZeroMemory(&renderTargetViewDesc32, sizeof(renderTargetViewDesc32));
+	renderTargetViewDesc32.Format = textureDesc.Format;
+	renderTargetViewDesc32.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc32.Texture2D.MipSlice = 0;
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc8;
+	ZeroMemory(&renderTargetViewDesc8, sizeof(renderTargetViewDesc8));
+	renderTargetViewDesc8.Format = textureDesc.Format;
+	renderTargetViewDesc8.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc8.Texture2D.MipSlice = 0;
+
+	// RenderTargetView 积己
+	result = mDevice->CreateRenderTargetView(renderTargetTextures[0], &renderTargetViewDesc32, &defferedRenderTargets[0]);
+	if (FAILED(result)) return false;
+
+	result = mDevice->CreateRenderTargetView(renderTargetTextures[1], &renderTargetViewDesc32, &defferedRenderTargets[1]);
+	if (FAILED(result)) return false;
+
+	result = mDevice->CreateRenderTargetView(renderTargetTextures[2], &renderTargetViewDesc8, &defferedRenderTargets[2]);
+	if (FAILED(result)) return false;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Shader Resource View 积己
+	for (int i = 0; i < DEFFERED_BUFFER_COUNT; i++)
+	{
+		result = mDevice->CreateShaderResourceView(renderTargetTextures[i], &shaderResourceViewDesc, &defferedShaderResources[i]);
+		if (FAILED(result)) return false;
+	}
+
+	//Release render target texture array
+	for (int i = 0; i < DEFFERED_BUFFER_COUNT; i++)
+	{
+		renderTargetTextures[i]->Release();
+	}
+
+#pragma endregion Deffered Rendering
 
 	return true;
 }
@@ -376,6 +448,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete spriteBatch;
 		spriteBatch = nullptr;
+	}
+	if (commonStates)
+	{
+		delete commonStates;
+		commonStates = nullptr;
 	}
 
 	// ResourceManager Finalize 眠啊 鞘夸
@@ -492,7 +569,7 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID te
 	mDeviceContext->OMGetBlendState(&originalBlendState, originalBlendFactor, &originalSampleMask);
 	mDeviceContext->RSGetState(&originalRasterizerState);
 
-	spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, mDepthStencilState);
+	spriteBatch->Begin(SpriteSortMode_Deferred, commonStates->NonPremultiplied(), nullptr, mDepthStencilState);
 
 	spriteBatch->Draw(ResourceManager::GetInstance().GetTexture(texture)->GetTexture(), XMFLOAT2(position.x(), position.y()));
 

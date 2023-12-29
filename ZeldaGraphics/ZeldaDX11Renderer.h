@@ -6,7 +6,11 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
+
 #include <SpriteBatch.h>
+#include <CommonStates.h>
+
+#define DEFFERED_BUFFER_COUNT 3
 
 class ZeldaCamera;
 class ZeldaShader;
@@ -64,9 +68,14 @@ private:
 	ID3D11RasterizerState* defaultRasterState;
 	ID3D11RasterizerState* wireFrameRasterState;
 
+	// Deffered Rendering
+	ID3D11RenderTargetView* defferedRenderTargets[DEFFERED_BUFFER_COUNT];
+	ID3D11ShaderResourceView* defferedShaderResources[DEFFERED_BUFFER_COUNT];
+
 	ZeldaLight* light;
 
 	DirectX::SpriteBatch* spriteBatch;
+	DirectX::DX11::CommonStates* commonStates;
 
 	HWND hWnd;
 	unsigned int screenWidth;
