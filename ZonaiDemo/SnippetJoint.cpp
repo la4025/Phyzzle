@@ -242,30 +242,36 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize();
 
+	{
+		auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 4, 10, 4);
+		const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+		const Eigen::Vector3f pos1{ 0, 50, -10 };
+		rigid->SetPosition(pos1);
+		rigid->SetMass(1.f);
 
-	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 4, 10, 4);
-	auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
-	Eigen::Vector3f pos1{ 0, 50, -10 };
-	rigid->SetPosition(pos1);
-	rigid->SetMass(1.f);
+		auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2, 2, 2);
+		const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
+		const Eigen::Vector3f pos2{ 0, 0, 0 };
+		rigid2->SetPosition(pos2);
+		rigid2->SetMass(100);
 
-	auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2, 2, 2);
-	auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
-	// Eigen::Vector3f pos2{ 0, 55, -5 };
-	rigid2->SetPosition({ 0, 70, -10 });
-	rigid2->SetMass(100);
+		auto fixedjoint = physicsEngine->CreateFixedJoint(
+			NULL, ZonaiPhysics::ZnTransform{},
+			rigid, ZonaiPhysics::ZnTransform{}
+		);
+		fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eJOINT_OBJECT0, { 0, 10, 0 });
+		fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eJOINT_OBJECT1, { 20, -2, 0 });
 
-	auto fixedjoint = physicsEngine->CreateFixedJoint(
-		rigid, ZonaiPhysics::ZnTransform{}, 
-		rigid2, ZonaiPhysics::ZnTransform{}
-	);
-	fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eOBJECT::eJOINT_OBJECT0, { 0, 10, 0 });
-	fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eOBJECT::eJOINT_OBJECT1, { 20, -2, 0 });
+		auto fixedjoint2 = physicsEngine->CreateSphericalJoint(
+			NULL, ZonaiPhysics::ZnTransform{ {0, 0, 0} },
+			rigid2, ZonaiPhysics::ZnTransform{}
+		);
 
-	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
-	auto ground = physicsEngine->CreateRigidBody(L"ground");
-	ground->SetPosition({ 0, 0, -10 });
-	ground->SetKinematic(true);
+		auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
+		const auto ground = physicsEngine->CreateRigidBody(L"ground");
+		ground->SetPosition({ 0, 0, -10 });
+		ground->SetKinematic(true);
+	}
 
 	while (true)
 	{

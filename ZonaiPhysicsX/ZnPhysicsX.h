@@ -40,6 +40,25 @@ namespace ZonaiPhysics
 	struct ZnRaycastInfo;
 	struct ZnMaterial;
 
+	enum class ColliderID
+	{
+		Box				= 0,
+		Plane			= 1,
+		Sphere			= 2,
+		Capsule			= 3,
+		Custom			= 4,
+	};
+
+	enum class JointID
+	{
+		D6				= 0,
+		Fixed			= 1,
+		Distance		= 2,
+		Spherical		= 3,
+		Revolute		= 4,
+		Prismatic		= 5,
+	};
+
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
 	public:
@@ -73,7 +92,7 @@ namespace ZonaiPhysics
  		// ZnJoint*		CreateD6Joint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;			// D6 조인트		*사실 뭔지 모름
 		ZnJoint*		CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
 		ZnJoint*		CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
-// 		virtual ZnJoint*		CreateSphericalJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 구형 조인트
+ 		ZnJoint*		CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 구형 조인트
 // 		virtual ZnJoint*		CreateRevoluteJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;		// 회전 조인트
 // 		virtual ZnJoint*		CreatePrismaticJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 프리즘 조인트
 

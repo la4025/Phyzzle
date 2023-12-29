@@ -11,7 +11,7 @@ namespace ZonaiPhysics
 	class ZnJoint
 	{
 	public:
-		enum class eOBJECT
+		enum eOBJECT
 		{
 			eJOINT_OBJECT0 = 0,
 			eJOINT_OBJECT1 = 1,

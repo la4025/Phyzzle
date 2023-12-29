@@ -317,28 +317,28 @@ class PxJointLimitCone : public PxJointLimitParameters
 {
 public:
 	/**
-	\brief the maximum angle from the Y axis of the constraint frame.
+	\brief 제약 프레임의 Y 축으로부터의 최대 각도입니다.
 
-	<b>Unit:</b> Angular: Radians
-	<b>Range:</b> Angular: (0,PI)<br>
-	<b>Default:</b> PI/2
+	<b>단위:</b> 각도: 라디안
+	<b>범위:</b> 각도: (0, PI)<br>
+	<b>기본값:</b> PI/2
 	*/
 	PxReal yAngle;
 
 	/**
-	\brief the maximum angle from the Z-axis of the constraint frame.
+	\brief 제약 프레임의 Z 축으로부터의 최대 각도입니다.
 
-	<b>Unit:</b> Angular: Radians
-	<b>Range:</b> Angular: (0,PI)<br>
-	<b>Default:</b> PI/2
+	<b>단위:</b> 각도: 라디안
+	<b>범위:</b> 각도: (0, PI)<br>
+	<b>기본값:</b> PI/2
 	*/
 	PxReal zAngle;
 
 	/**
-	\brief Construct a cone hard limit. 
+	\brief 콘 형식의 제한을 생성합니다.
 
-	\param[in] yLimitAngle	The limit angle from the Y-axis of the constraint frame
-	\param[in] zLimitAngle	The limit angle from the Z-axis of the constraint frame
+	\param[in] yLimitAngle	제약 프레임으로부터 Y 축의 제한 각도
+	\param[in] zLimitAngle	제약 프레임으로부터 Z 축의 제한 각도
 
 	@see PxJointLimitParameters
 	*/
@@ -350,13 +350,13 @@ public:
 	}
 
 	/**
-	\brief Construct a cone soft limit. 
+	\brief 콘 형식의 소프트 제한을 생성합니다.
 
-	\param[in] yLimitAngle	The limit angle from the Y-axis of the constraint frame
-	\param[in] zLimitAngle	The limit angle from the Z-axis of the constraint frame
-	\param[in] spring		The stiffness and damping of the limit spring
+	\param[in] yLimitAngle	제약 프레임으로부터 Y 축의 제한 각도
+	\param[in] zLimitAngle	제약 프레임으로부터 Z 축의 제한 각도
+	\param[in] spring		제한 스프링의 강성과 감쇠
 
-	@see PxJointLimitParameters
+	@see PxJoint
 	*/
 	PxJointLimitCone(PxReal yLimitAngle, PxReal zLimitAngle, const PxSpring& spring) :
 		yAngle(yLimitAngle),

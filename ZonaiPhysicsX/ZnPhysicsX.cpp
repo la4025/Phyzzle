@@ -7,6 +7,8 @@
 
 #include "ZnPhysicsX.h"
 
+#include "SphericalJoint.h"
+
 
 namespace ZonaiPhysics
 {
@@ -28,6 +30,8 @@ namespace ZonaiPhysics
 		// sceneDesc.simulationEventCallback = NULL;
 		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 		scene = physics->createScene(sceneDesc);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.f);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.f);
 
 		PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
 		if (pvdClient)
@@ -136,6 +140,16 @@ namespace ZonaiPhysics
 	ZnJoint* ZnPhysicsX::CreateDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		return nullptr;
+	}
+
+	ZnJoint* ZnPhysicsX::CreateSphericalJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		auto* joint = new SphericalJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
 	}
 
 	bool ZnPhysicsX::Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept

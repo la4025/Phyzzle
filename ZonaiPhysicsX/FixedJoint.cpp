@@ -52,6 +52,8 @@ namespace ZonaiPhysics
 			rigid0, t0,
 			rigid1, t1
 		);
+
+		joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
 	}
 
 	FixedJoint::~FixedJoint() noexcept
@@ -90,6 +92,7 @@ namespace ZonaiPhysics
 		using namespace physx;
 		const auto index = static_cast<PxJointActorIndex::Enum>(_index);
 		// joint->setConstraintFlag(PxConstraintFlag::)
+		// joint->getRelativeLinearVelocity()
 		PxTransform t = joint->getLocalPose(index);
 		return { t.q.x, t.q.y , t.q.z, t.q.w };
 	}
