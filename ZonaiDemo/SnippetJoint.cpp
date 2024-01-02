@@ -209,8 +209,11 @@ void stepPhysics()// interactive
 //	return GetAsyncKeyState(key);
 //}
 
+#include "ZnFixedJoint.h"
 #include "ZnJoint.h"
+#include "ZnSphericalJoint.h"
 #include "ZnTransform.h"
+#include "../ZonaiMath/ZonaiMath.h"
 
 int snippetMain(int, const char* const*)
 {
@@ -242,40 +245,45 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize();
 
-	{
-		auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 4, 10, 4);
-		const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
-		const Eigen::Vector3f pos1{ 0, 50, -10 };
-		rigid->SetPosition(pos1);
-		rigid->SetMass(1.f);
+	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 0.5f);
+	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+	rigid->SetPosition({2.f, 20.f, 0.f});
+	rigid->UseGravity(true);
+	rigid->SetKinematic(false);
 
-		auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2, 2, 2);
-		const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
-		const Eigen::Vector3f pos2{ 0, 0, 0 };
-		rigid2->SetPosition(pos2);
-		rigid2->SetMass(100);
+	auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2.f, 0.5f, 0.5f);
+	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
+	rigid2->SetPosition({ 6.f, 20.f, 0.f });
+	rigid2->UseGravity(true);
+	rigid2->SetKinematic(false);
 
-		auto fixedjoint = physicsEngine->CreateFixedJoint(
-			NULL, ZonaiPhysics::ZnTransform{},
-			rigid, ZonaiPhysics::ZnTransform{}
-		);
-		fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eJOINT_OBJECT0, { 0, 10, 0 });
-		fixedjoint->SetLocalPosition(ZonaiPhysics::ZnJoint::eJOINT_OBJECT1, { 20, -2, 0 });
+	auto fixedjoint = physicsEngine->CreateFixedJoint(
+		NULL, ZonaiPhysics::ZnTransform{ {0.f, 20.f, 0} },
+		rigid, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
+	);
 
-		auto fixedjoint2 = physicsEngine->CreateSphericalJoint(
-			NULL, ZonaiPhysics::ZnTransform{ {0, 0, 0} },
-			rigid2, ZonaiPhysics::ZnTransform{}
-		);
+	auto sphericalJjoint = physicsEngine->CreateSphericalJoint(
+		rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0} },
+		rigid2, ZonaiPhysics::ZnTransform{{-2.f, 0.f, 0.f}}
+	);
 
-		auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
-		const auto ground = physicsEngine->CreateRigidBody(L"ground");
-		ground->SetPosition({ 0, 0, -10 });
-		ground->SetKinematic(true);
-	}
+	sphericalJjoint->SetLimitCone(ZonaiMath::PI / 9.f, ZonaiMath::PI / 4.f, 1000.f, 10.f);
+	sphericalJjoint->LimitEnable(true);
+
+	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
+	const auto ground = physicsEngine->CreateRigidBody(L"ground");
+	ground->SetPosition({ 0, 0, -10 });
+	ground->SetKinematic(true);
 
 	while (true)
 	{
-		physicsEngine->Simulation(1.0f / 2000.0f);
+		if (GetAsyncKeyState('F'))
+		{
+			rigid2->AddForce({ 40.f, 40.f, 40.f });
+			rigid2->AddTorque({ 40.f, 40.f, 40.f });
+		}
+
+		physicsEngine->Simulation(1.0f / 6000.0f);
 	}
 
 	//static const PxU32 frameCount = 100;

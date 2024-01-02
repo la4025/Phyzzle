@@ -53,7 +53,10 @@ namespace ZonaiPhysics
 			rigid1, t1
 		);
 
-		joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
+		if (joint)
+		{
+			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
+		}
 	}
 
 	FixedJoint::~FixedJoint() noexcept
