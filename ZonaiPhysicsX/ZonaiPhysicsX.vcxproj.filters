@@ -21,6 +21,9 @@
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
+    <ClCompile Include="DistanceJoint.cpp">
+      <Filter>Joint</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZnPhysicsX.h" />
@@ -43,6 +46,9 @@
     <ClInclude Include="ZnSimulationCallbackX.h" />
     <ClInclude Include="SphereCollider.h">
       <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DistanceJoint.h">
+      <Filter>Joint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
