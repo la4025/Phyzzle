@@ -52,8 +52,8 @@ namespace ZonaiPhysics
 		virtual void	SetStiffness(float _stiffness) override;
 		virtual float	GetStiffness() const override;
 
-		virtual void	SetDanmping(float _damping) override;
-		virtual float	GetDanmping() const override;
+		virtual void	SetDamping(float _damping) override;
+		virtual float	GetDamping() const override;
 
 		virtual void	SetMinDistanceEnable(bool _value) override;
 		virtual void	SetMaxDistanceEnable(bool _value) override;

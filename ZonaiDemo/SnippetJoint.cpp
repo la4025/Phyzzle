@@ -262,12 +262,18 @@ int snippetMain(int, const char* const*)
 		rigid, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
 	);
 
+	Eigen::AngleAxisf axis;
+	axis.angle() = - ZonaiMath::PI / 2.f;
+	axis.axis() = { 0.f, 0.f, 1.f };
+	Eigen::Quaternionf q{ axis };
+
 	auto sphericalJjoint = physicsEngine->CreateSphericalJoint(
-		rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0} },
+		rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0}, q },
 		rigid2, ZonaiPhysics::ZnTransform{{-2.f, 0.f, 0.f}}
 	);
 
-	sphericalJjoint->SetLimitCone(ZonaiMath::PI / 9.f, ZonaiMath::PI / 4.f, 1000.f, 10.f);
+	sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f, 1.f, 10000.f);
+	// sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f);
 	sphericalJjoint->LimitEnable(true);
 
 	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
@@ -277,13 +283,44 @@ int snippetMain(int, const char* const*)
 
 	while (true)
 	{
+		physicsEngine->Simulation(1.0f / 6000.0f);
+
 		if (GetAsyncKeyState('F'))
 		{
 			rigid2->AddForce({ 40.f, 40.f, 40.f });
 			rigid2->AddTorque({ 40.f, 40.f, 40.f });
 		}
 
-		physicsEngine->Simulation(1.0f / 6000.0f);
+		bool clickUp = GetAsyncKeyState('I');
+		bool clickRight = GetAsyncKeyState('L');
+		bool clickLeft = GetAsyncKeyState('J');
+		bool clickDown = GetAsyncKeyState('K');
+
+		if (clickUp || clickRight || clickLeft || clickDown)
+		{
+			auto pos = collider2->GetLocalPosition();
+			float y = 0, z = 0;
+
+			if (clickDown)
+			{
+				y -= 0.001f;
+			}
+			if (clickLeft)
+			{
+				z += 0.001f;
+			}
+			if (clickRight)
+			{
+				z -= 0.001f;
+			}
+			if (clickUp)
+			{
+				y += 0.001f;
+			}
+
+			pos = Eigen::Vector3f(pos.x(), pos.y() + y, pos.z() + z);
+			collider2->SetLocalPosition(pos);
+		}
 	}
 
 	//static const PxU32 frameCount = 100;

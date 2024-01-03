@@ -34,8 +34,8 @@ namespace ZonaiPhysics
 		
 		// 스프링 감쇠
 		// 기본값 0.f
-		virtual void	SetDanmping(float _damping) = 0;
-		virtual float	GetDanmping() const = 0;
+		virtual void	SetDamping(float _damping) = 0;
+		virtual float	GetDamping() const = 0;
 
 		// 조인트 플래그
 		virtual void	SetMinDistanceEnable(bool _value) = 0;

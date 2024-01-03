@@ -7,7 +7,9 @@
 
 namespace ZonaiPhysics
 {
-	SphericalJoint::SphericalJoint(physx::PxPhysics*& _factory, RigidBody* _object0, const ZnTransform& _transform0,
+	SphericalJoint::SphericalJoint(
+		physx::PxPhysics*& _factory, 
+		RigidBody* _object0, const ZnTransform& _transform0,
 		RigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		object[0] = _object0;

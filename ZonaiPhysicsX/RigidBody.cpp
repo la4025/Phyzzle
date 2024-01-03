@@ -44,6 +44,11 @@ namespace ZonaiPhysics
 		rigidbody_->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, value);
 	}
 
+	void RigidBody::UpdateInertiaTensor() noexcept
+	{
+		using namespace physx;
+	}
+
 	void RigidBody::CanSimulate(bool value) const noexcept
 	{
 		using namespace physx;
