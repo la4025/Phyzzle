@@ -39,7 +39,7 @@ ModelID ResourceManager::CreateModelFromModelingFile(const std::wstring& filePat
 
 bool ResourceManager::CreateCubeMesh()
 {
-	if (cubeMesh != nullptr)
+	if (cubeID != MeshID::ID_NULL)
 	{
 		return false;
 	}
@@ -128,9 +128,21 @@ bool ResourceManager::CreateCubeMesh()
 		indexList[6 * faceNum + 5] = 4 * faceNum + 0;
 	}
 
-	cubeMesh = new ZeldaMesh(device, vertexList, indexList);
+	cubeID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(cubeID) != 0 || cubeID == MeshID::ID_NULL)
+	{
+		cubeID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[cubeID] = new ZeldaMesh(device, vertexList, indexList);
 
 	return true;
+}
+
+MeshID ResourceManager::GetCubeID()
+{
+	return cubeID;
 }
 
 TextureID ResourceManager::CreateTexture(const std::wstring& filePath)
@@ -200,7 +212,7 @@ ZeldaModel* ResourceManager::GetModel(ModelID key)
 
 ZeldaMesh* ResourceManager::GetCubeMesh()
 {
-	return cubeMesh;
+	return meshTable[cubeID];
 }
 
 ZeldaMesh* ResourceManager::GetMesh(MeshID key)
@@ -286,7 +298,7 @@ ResourceManager& ResourceManager::GetInstance()
 
 ResourceManager::ResourceManager() :
 	device(nullptr),
-	cubeMesh(nullptr),
+	cubeID(MeshID::ID_NULL),
 	defaultShader(nullptr)
 {
 
@@ -294,10 +306,29 @@ ResourceManager::ResourceManager() :
 
 ResourceManager::~ResourceManager()
 {
-	if (cubeMesh != nullptr)
+	for (auto iter = modelTable.begin(); iter != modelTable.end(); iter++)
 	{
-		delete cubeMesh;
-		cubeMesh = nullptr;
+		delete iter->second;
+	}
+
+	for (auto iter = meshTable.begin(); iter != meshTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+
+	for (auto iter = textureTable.begin(); iter != textureTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+
+	for (auto iter = shaderTable.begin(); iter != shaderTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+
+	for (auto iter = cameraTable.begin(); iter != cameraTable.end(); iter++)
+	{
+		delete iter->second;
 	}
 
 	if (defaultShader != nullptr)

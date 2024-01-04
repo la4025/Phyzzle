@@ -10,6 +10,8 @@
 #include <SpriteBatch.h>
 #include <CommonStates.h>
 
+#include <unordered_map>
+
 #define DEFFERED_BUFFER_COUNT 3
 
 class ZeldaCamera;
@@ -19,6 +21,45 @@ class ZeldaLight;
 class ZeldaTexture;
 class ZeldaMaterial;
 class IRenderable;
+
+struct MeshInstancingInfo
+{
+	DirectX::XMMATRIX worldMatrix;
+	bool wireFrame;
+	DirectX::XMFLOAT4 color;
+};
+
+struct ModelInstancingInfo
+{
+	DirectX::XMMATRIX worldMatrix;
+	std::wstring animationName;
+	float animationTime;
+	bool wireFrame;
+};
+
+struct SpriteInstancingInfo
+{
+	DirectX::XMFLOAT2 position;
+};
+
+struct MeshRenderInfo
+{
+	std::vector<MeshInstancingInfo> instancingInfo;
+	MeshID meshId;
+	TextureID textureID;
+};
+
+struct ModelRenderInfo
+{
+	std::vector<ModelInstancingInfo> instancingInfo;
+	ModelID modelID;
+};
+
+struct SpriteRenderInfo
+{
+	std::vector<SpriteInstancingInfo> instancingInfo;
+	TextureID textureID;
+};
 
 class ZeldaDX11Renderer : public IZeldaRenderer
 {
@@ -91,4 +132,16 @@ private:
 	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer;
 	ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer;
 	ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer;
+
+
+	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.
+	std::unordered_map<std::pair<MeshID, TextureID>, MeshRenderInfo> organizedMeshRenderInfo;
+	std::unordered_map<ModelID, ModelRenderInfo> organizedModelRenderInfo;
+	std::unordered_map<TextureID, SpriteRenderInfo> organizedSpriteRenderInfo;
+
+	void DrawMeshRenderInfo(MeshRenderInfo renderInfo);
+	void DrawModelRenderInfo(ModelRenderInfo renderInfo);
+	void DrawSpriteRenderInfo(SpriteRenderInfo renderInfo);
+
+	void ClearRenderInfo();
 };

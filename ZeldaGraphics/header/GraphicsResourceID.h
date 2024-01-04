@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 enum class ResourceType : unsigned long long {
 	Camera = 1,
 	Texture = 2,
@@ -60,3 +62,57 @@ using ModelID = ResourceID<ResourceType::Model>;
 using MeshID = ResourceID<ResourceType::Mesh>;
 using ShaderID = ResourceID<ResourceType::Shader>;
 using LightID = ResourceID<ResourceType::Light>;
+
+namespace std {
+	template <>
+	struct hash<CameraID> {
+		std::size_t operator()(const CameraID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<TextureID> {
+		std::size_t operator()(const TextureID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<ModelID> {
+		std::size_t operator()(const ModelID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<MeshID> {
+		std::size_t operator()(const MeshID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<ShaderID> {
+		std::size_t operator()(const ShaderID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<std::pair<MeshID, TextureID>> {
+		size_t operator()(const std::pair<MeshID, TextureID>& obj) const {
+			return std::hash<MeshID>{}(obj.first) ^ std::hash<TextureID>{}(obj.second);
+		}
+	};
+}

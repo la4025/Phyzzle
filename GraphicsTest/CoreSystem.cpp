@@ -438,15 +438,12 @@ void CoreSystem::run()
 		}
 	}
 	
-
-	//renderer->DrawModel(worldMatrix, fbxID, false);
-	//renderer->DrawModel(ganonMatrix, fbxID, false);
-
-	renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", animationTime, false);
-	//renderer->DrawAnimation(ganonMatrix, fbxID2, animationNumber2 != 0 ? animationList2[animationNumber2] : L"", animationTime2, false);
-
-	//renderer->DrawCube(Eigen::Matrix4f::Identity(), scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
-	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
+	Eigen::Matrix4f rightPosMatrix;
+	rightPosMatrix <<
+		0.1, 0, 0, 200,
+		0, 0.1, 0, 0,
+		0, 0, 0.1, 30,
+		0, 0, 0, 1;
 
 	static int scdX = 0;
 	scdX += 4;
@@ -459,7 +456,17 @@ void CoreSystem::run()
 	renderer->DrawSprite({ scdX, 0 }, msTextureID);
 	renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);
 	//renderer->DrawSprite({ 1920 - scdX - 280, 800 }, hnsTextureID);
-	
+
+
+	renderer->DrawModel(rightPosMatrix, fbxID, false);
+	//renderer->DrawModel(ganonMatrix, fbxID, false);
+
+	renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", animationTime, false);
+	//renderer->DrawAnimation(ganonMatrix, fbxID2, animationNumber2 != 0 ? animationList2[animationNumber2] : L"", animationTime2, false);
+
+	renderer->DrawCube(Eigen::Matrix4f::Identity(), scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
+
 	renderer->EndDraw();
 }
 

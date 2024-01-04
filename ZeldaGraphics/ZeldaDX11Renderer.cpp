@@ -460,6 +460,8 @@ void ZeldaDX11Renderer::Finalize()
 
 void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 {
+	ClearRenderInfo();
+
 	float color[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 
 	// Clear the back buffer.
@@ -470,6 +472,39 @@ void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 
 void ZeldaDX11Renderer::EndDraw()
 {
+	for (auto iter : organizedMeshRenderInfo)
+	{
+		DrawMeshRenderInfo(iter.second);
+	}
+
+	for (auto iter : organizedModelRenderInfo)
+	{
+		DrawModelRenderInfo(iter.second);
+	}
+
+	// Begin Draw Sprite
+	ID3D11BlendState* originalBlendState;
+	FLOAT* originalBlendFactor = nullptr;
+	UINT originalSampleMask;
+	ID3D11RasterizerState* originalRasterizerState;
+
+	mDeviceContext->OMGetBlendState(&originalBlendState, originalBlendFactor, &originalSampleMask);
+	mDeviceContext->RSGetState(&originalRasterizerState);
+
+	spriteBatch->Begin(SpriteSortMode_Deferred, commonStates->NonPremultiplied(), nullptr, mDepthStencilState);
+
+	for (auto iter : organizedSpriteRenderInfo)
+	{
+		DrawSpriteRenderInfo(iter.second);
+	}
+
+	// End Draw Sprite
+	spriteBatch->End();
+
+	mDeviceContext->OMSetBlendState(originalBlendState, originalBlendFactor, originalSampleMask);
+	mDeviceContext->RSSetState(originalRasterizerState);
+
+
 	// Present the back buffer to the screen since rendering is complete.
 	if (bVsyncEnabled)
 	{
@@ -485,98 +520,105 @@ void ZeldaDX11Renderer::EndDraw()
 
 void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a)
 {
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+	MeshID cubeID = ResourceManager::GetInstance().GetCubeID();
 
-	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
-	cubeMesh->Render(mDeviceContext);
+	MeshInstancingInfo instancinInfo;
+	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancinInfo.wireFrame = wireFrame;
+	instancinInfo.color = { r, g, b, a };
 
-	ZeldaTexture* cubeTexture = ResourceManager::GetInstance().GetTexture(texture);
-
-	if (wireFrame)
+	auto iter = organizedMeshRenderInfo.find({ cubeID, texture });
+	
+	// 이미 동일한 것을 그린적이 있음
+	if (iter != organizedMeshRenderInfo.end())
 	{
-		mDeviceContext->RSSetState(wireFrameRasterState);
+		iter->second.instancingInfo.push_back(instancinInfo);
 	}
+	// 처음 그리는 경우
 	else
 	{
-		mDeviceContext->RSSetState(defaultRasterState);
+		MeshRenderInfo renderInfo;
+		renderInfo.instancingInfo.assign(1, instancinInfo);
+		renderInfo.meshId = cubeID;
+		renderInfo.textureID = texture;
+
+		organizedMeshRenderInfo[{ cubeID, texture }] = renderInfo;
 	}
-
-	// EigenMatrix to XMMATRIX
-	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-
-	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-	matrixConstBuffer->SetData({ XMMatrixTranspose(MathConverter::EigenMatrixToXMMatrix(worldMatrix)), XMMatrixTranspose(currentcamera ->GetViewMatrix()), XMMatrixTranspose(currentcamera ->GetProjMatrix()) });
-	// boneConstBuffer는 어차피 안쓸건데 set안해도 되지 않을까
-	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-	useConstBuffer->SetData({ false, (cubeTexture != nullptr), true, (cubeTexture != nullptr) && cubeTexture->UseSRGB()});
-	colorConstBuffer->SetData({ { r, g, b, a } });
-
-	ConstantBufferManager::GetInstance().SetBuffer();
-
-	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
-	shader->Render(mDeviceContext, cubeMesh->GetIndexCount(), cubeTexture);
 }
 
 void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame)
 {
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+	ModelInstancingInfo instancinInfo;
+	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancinInfo.wireFrame = wireFrame;
+	instancinInfo.animationName = L"";
+	instancinInfo.animationTime = 0.0f;
 
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(model);
+	auto iter = organizedModelRenderInfo.find(model);
 
-	if (wireFrame)
+	// 이미 동일한 것을 그린적이 있음
+	if (iter != organizedModelRenderInfo.end())
 	{
-		mDeviceContext->RSSetState(wireFrameRasterState);
+		iter->second.instancingInfo.push_back(instancinInfo);
 	}
+	// 처음 그리는 경우
 	else
 	{
-		mDeviceContext->RSSetState(defaultRasterState);
+		ModelRenderInfo renderInfo;
+		renderInfo.instancingInfo.assign(1, instancinInfo);
+		renderInfo.modelID = model;
+
+		organizedModelRenderInfo[model] = renderInfo;
 	}
-
-	// ZeldaMatrix to XMMATRIX
-	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-
-	modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, dxworldMatrix, ResourceManager::GetInstance().GetDefaultShader(), light, L"", 0.0f);
 }
 
 void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame)
 {
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+	ModelInstancingInfo instancinInfo;
+	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancinInfo.wireFrame = wireFrame;
+	instancinInfo.animationName = animationName;
+	instancinInfo.animationTime = animationTime;
 
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(model);
+	auto iter = organizedModelRenderInfo.find(model);
 
-	if (wireFrame)
+	// 이미 동일한 것을 그린적이 있음
+	if (iter != organizedModelRenderInfo.end())
 	{
-		mDeviceContext->RSSetState(wireFrameRasterState);
+		iter->second.instancingInfo.push_back(instancinInfo);
 	}
+	// 처음 그리는 경우
 	else
 	{
-		mDeviceContext->RSSetState(defaultRasterState);
+		ModelRenderInfo renderInfo;
+		renderInfo.instancingInfo.assign(1, instancinInfo);
+		renderInfo.modelID = model;
+
+		organizedModelRenderInfo[model] = renderInfo;
 	}
-
-	// ZeldaMatrix to XMMATRIX
-	DirectX::XMMATRIX dxworldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-
-	modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, dxworldMatrix, ResourceManager::GetInstance().GetDefaultShader(), light, animationName, animationTime);
 }
 
 void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture)
 {
-	ID3D11BlendState* originalBlendState;
-	FLOAT* originalBlendFactor = nullptr;
-	UINT originalSampleMask;
-	ID3D11RasterizerState* originalRasterizerState;
+	SpriteInstancingInfo instancinInfo;
+	instancinInfo.position = { position.x(), position.y() };
 
-	mDeviceContext->OMGetBlendState(&originalBlendState, originalBlendFactor, &originalSampleMask);
-	mDeviceContext->RSGetState(&originalRasterizerState);
+	auto iter = organizedSpriteRenderInfo.find(texture);
 
-	spriteBatch->Begin(SpriteSortMode_Deferred, commonStates->NonPremultiplied(), nullptr, mDepthStencilState);
+	// 이미 동일한 것을 그린적이 있음
+	if (iter != organizedSpriteRenderInfo.end())
+	{
+		iter->second.instancingInfo.push_back(instancinInfo);
+	}
+	// 처음 그리는 경우
+	else
+	{
+		SpriteRenderInfo renderInfo;
+		renderInfo.instancingInfo.assign(1, instancinInfo);
+		renderInfo.textureID = texture;
 
-	spriteBatch->Draw(ResourceManager::GetInstance().GetTexture(texture)->GetTexture(), XMFLOAT2(position.x(), position.y()));
-
-	spriteBatch->End();
-
-	mDeviceContext->OMSetBlendState(originalBlendState, originalBlendFactor, originalSampleMask);
-	mDeviceContext->RSSetState(originalRasterizerState);
+		organizedSpriteRenderInfo[texture] = renderInfo;
+	}
 }
 
 void ZeldaDX11Renderer::CreateBasicResources()
@@ -664,4 +706,83 @@ bool ZeldaDX11Renderer::UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& w
 	targetCamera->SetOption(fieldOfView, cameraNear, cameraFar);
 
 	return true;
+}
+
+void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
+	cubeMesh->Render(mDeviceContext);
+
+	ZeldaTexture* cubeTexture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
+
+	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+
+	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+	{
+		auto& instancingInfo = renderInfo.instancingInfo[i];
+
+		if (instancingInfo.wireFrame)
+		{
+			mDeviceContext->RSSetState(wireFrameRasterState);
+		}
+		else
+		{
+			mDeviceContext->RSSetState(defaultRasterState);
+		}
+
+		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+		matrixConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
+		// boneConstBuffer는 어차피 안쓸건데 set안해도 되지 않을까
+		lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
+		useConstBuffer->SetData({ false, (cubeTexture != nullptr), true, (cubeTexture != nullptr) && cubeTexture->UseSRGB() });
+		colorConstBuffer->SetData({ instancingInfo.color });
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+
+		shader->Render(mDeviceContext, cubeMesh->GetIndexCount(), cubeTexture);
+	}
+}
+
+void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
+
+	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+
+	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+	{
+		auto& instancingInfo = renderInfo.instancingInfo[i];
+
+		if (instancingInfo.wireFrame)
+		{
+			mDeviceContext->RSSetState(wireFrameRasterState);
+		}
+		else
+		{
+			mDeviceContext->RSSetState(defaultRasterState);
+		}
+
+		modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, instancingInfo.worldMatrix, shader, light, instancingInfo.animationName, instancingInfo.animationTime);
+	}
+}
+
+void ZeldaDX11Renderer::DrawSpriteRenderInfo(SpriteRenderInfo renderInfo)
+{
+	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
+
+	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+	{
+		spriteBatch->Draw(texture->GetTexture(), renderInfo.instancingInfo[i].position);
+	}
+}
+
+void ZeldaDX11Renderer::ClearRenderInfo()
+{
+	organizedMeshRenderInfo.clear();
+	organizedModelRenderInfo.clear();
+	organizedSpriteRenderInfo.clear();
 }

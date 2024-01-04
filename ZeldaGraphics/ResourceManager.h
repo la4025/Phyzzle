@@ -32,51 +32,6 @@ namespace std {
 	};
 }
 
-namespace std {
-	template <>
-	struct hash<CameraID> {
-		std::size_t operator()(const CameraID& key) const {
-			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
-		}
-	};
-}
-
-namespace std {
-	template <>
-	struct hash<TextureID> {
-		std::size_t operator()(const TextureID& key) const {
-			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
-		}
-	};
-}
-
-namespace std {
-	template <>
-	struct hash<ModelID> {
-		std::size_t operator()(const ModelID& key) const {
-			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
-		}
-	};
-}
-
-namespace std {
-	template <>
-	struct hash<MeshID> {
-		std::size_t operator()(const MeshID& key) const {
-			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
-		}
-	};
-}
-
-namespace std {
-	template <>
-	struct hash<ShaderID> {
-		std::size_t operator()(const ShaderID& key) const {
-			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
-		}
-	};
-}
-
 class ResourceManager
 {
 public:
@@ -85,6 +40,7 @@ public:
 	ModelID CreateModelFromModelingFile(const std::wstring& filePath);
 
 	bool CreateCubeMesh();
+	MeshID GetCubeID();
 	
 	TextureID CreateTexture(const std::wstring& filePath);
 
@@ -115,7 +71,7 @@ private:
 
 	std::unordered_map<CameraID, ZeldaCamera*> cameraTable;
 
-	ZeldaMesh* cubeMesh;
+	MeshID cubeID;
 	ZeldaShader* defaultShader;
 
 	//singleton
