@@ -107,6 +107,9 @@
     </FxCompile>
     <FxCompile Include="TestShader.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Buffers.hlsli" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

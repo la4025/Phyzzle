@@ -113,6 +113,8 @@ private:
 	ID3D11RenderTargetView* defferedRenderTargets[DEFFERED_BUFFER_COUNT];
 	ID3D11ShaderResourceView* defferedShaderResources[DEFFERED_BUFFER_COUNT];
 
+	ZeldaShader* defferedObjectShader;
+
 	ZeldaLight* light;
 
 	DirectX::SpriteBatch* spriteBatch;
@@ -130,8 +132,7 @@ private:
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer;
 
 	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer;
-	ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer;
-	ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer;
+	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer;
 
 
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.

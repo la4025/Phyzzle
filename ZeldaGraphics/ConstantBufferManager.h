@@ -10,14 +10,13 @@ public:
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void Finalize();
 
-	void RegisterVSBuffer(IConstantBuffer* buffer);
-	void RegisterPSBuffer(IConstantBuffer* buffer);
+	void RegisterBuffer(IConstantBuffer* buffer);
+	void DeRegisterBuffer(IConstantBuffer* buffer);
 
 	void SetBuffer();
 
 private:
-	std::vector<IConstantBuffer*> vsBufferList;
-	std::vector<IConstantBuffer*> psBufferList;
+	std::vector<IConstantBuffer*> bufferList;
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
 

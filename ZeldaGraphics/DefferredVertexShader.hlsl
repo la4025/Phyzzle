@@ -1,14 +1,4 @@
-cbuffer MatrixBuffer : register(b0)
-{
-    matrix worldMatrix;
-    matrix viewMatrix;
-    matrix projectionMatrix;
-};
-
-cbuffer BoneBufferType : register(b1)
-{
-    matrix boneTM[256];
-};
+#include "Buffers.hlsli"
 
 struct VertexInputType
 {

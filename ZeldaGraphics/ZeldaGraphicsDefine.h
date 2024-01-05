@@ -3,6 +3,14 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#define LIGHT_TYPE_DIRECTIONAL 0u
+#define LIGHT_TYPE_POINT 1u
+#define LIGHT_TYPE_SPOT 2u
+
+#define LIGHT_COUNT_MAX 50u
+
+#define BONE_COUNT_MAX 256u
+
 struct VertexType
 {
 	DirectX::XMFLOAT4 position;
@@ -22,38 +30,64 @@ struct MatrixBufferType
 	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
+
+	constexpr static unsigned int registerNum = 0;
 };
 
 struct BoneBufferType
 {
-	DirectX::XMMATRIX boneTM[256];
+	DirectX::XMMATRIX boneTM[BONE_COUNT_MAX];
+
+	constexpr static unsigned int registerNum = 1;
 };
 
-struct LightBufferType
+struct LightColor
 {
 	DirectX::XMFLOAT4 ambient;
 	DirectX::XMFLOAT4 diffuse;
 	DirectX::XMFLOAT4 specular;
-	DirectX::XMFLOAT3 lightDirection;//
-	float padding; // CreateBuffer함수가 성공하려면 16바이트의 배수로 만들어야 한다.(업데이트 및 전송이 빈번하기 때문에 효율적인 메모리 정렬이 되어있어야 한다고 함)
 };
 
-struct UseBufferType
+struct LightInfo
 {
-	unsigned int useNormal;
-	unsigned int useTexture;
-	unsigned int useColor;
-	unsigned int useSRGB;
+	LightColor color;
+	DirectX::XMFLOAT4 position;
+	DirectX::XMFLOAT4 direction;
+	unsigned int type;
+	float range;
+	float angle;
+	float padding;
+};
 
+struct LightBufferType
+{
+	unsigned int lightCount;
+	float padding[3];
+	LightInfo lights[LIGHT_COUNT_MAX];
+
+	constexpr static unsigned int registerNum = 2;
+};
+
+struct MaterialBufferType
+{
+	DirectX::XMFLOAT4 baseColor;
+
+	unsigned int useBaseColor;
+	unsigned int useSRGB;
+	unsigned int useDiffuse;
+	unsigned int useNormal;
+
+	unsigned int useARM;
+	unsigned int useHeight;
+	unsigned int useEmission;
 	unsigned int useTemp0;
+
 	unsigned int useTemp1;
 	unsigned int useTemp2;
 	unsigned int useTemp3;
-};
+	unsigned int useTemp4;
 
-struct ColorBufferType
-{
-	DirectX::XMFLOAT4 baseColor;
+	constexpr static unsigned int registerNum = 3;
 };
 
 #pragma endregion

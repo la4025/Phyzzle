@@ -5,6 +5,6 @@
 class IConstantBuffer
 {
 public:
-	virtual void SetBuffer(ID3D11DeviceContext* deviceContext, unsigned int registerNum) abstract;
+	virtual void SetBuffer(ID3D11DeviceContext* deviceContext) abstract;
 
 };

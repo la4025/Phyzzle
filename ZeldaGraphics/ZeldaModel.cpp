@@ -35,8 +35,7 @@ void ZeldaModel::Render(
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
 	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer,
-	ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer,
-	ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer,
+	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
 	ZeldaLight* light,
@@ -46,7 +45,7 @@ void ZeldaModel::Render(
 	// 정상적인 애니메이션 정보가 들어온 경우 RenderAnimation을 호출한다.
 	if (animationTime > 0.0f && animationTable.count(animationName) > 0)
 	{
-		RenderAnimation(deviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, worldMatrix, shader, light, animationName, animationTime);
+		RenderAnimation(deviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, materialConstBuffer, worldMatrix, shader, light, animationName, animationTime);
 		return;
 	}
 
@@ -93,8 +92,12 @@ void ZeldaModel::Render(
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 	boneConstBuffer->SetData(*boneBuffer);
-	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-	colorConstBuffer->SetData({ { 1, 1, 1, 1 } });
+	LightBufferType lightData;
+	lightData.lightCount = 1;
+	lightData.lights[0].color = { light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular() };
+	lightData.lights[0].direction = { light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 0 };
+	lightData.lights[0].type = LIGHT_TYPE_DIRECTIONAL;
+	lightConstBuffer->SetData(lightData);
 
 	delete boneBuffer;
 
@@ -105,11 +108,18 @@ void ZeldaModel::Render(
 		currentMesh->Render(deviceContext);
 		int indexCount = currentMesh->GetIndexCount();
 
-		useConstBuffer->SetData({ false, (materials[materialIndex[i]]->useDiffuseMap ), true, (materials[materialIndex[i]]->diffuseMap != nullptr) && materials[materialIndex[i]]->diffuseMap->UseSRGB() });
+		materialConstBuffer->SetData({
+			materials[materialIndex[i]]->baseColor,
+			!materials[materialIndex[i]]->useDiffuseMap,
+			materials[materialIndex[i]]->diffuseMap->UseSRGB(),
+			materials[materialIndex[i]]->useDiffuseMap
+			});
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
-		shader->Render(deviceContext, indexCount, materials[materialIndex[i]]->diffuseMap);
+		materials[materialIndex[i]]->SetShaderResource(deviceContext);
+
+		shader->Render(deviceContext, indexCount);
 	}
 }
 
@@ -289,8 +299,7 @@ void ZeldaModel::RenderAnimation(
 	ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
 	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer,
-	ConstantBuffer<UseBufferType, ShaderType::PixelShader>* useConstBuffer,
-	ConstantBuffer<ColorBufferType, ShaderType::PixelShader>* colorConstBuffer,
+	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
 	ZeldaLight* light,
@@ -390,8 +399,12 @@ void ZeldaModel::RenderAnimation(
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 	boneConstBuffer->SetData(*boneBuffer);
-	lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-	colorConstBuffer->SetData({ { 1, 1, 1, 1 } });
+	LightBufferType lightData;
+	lightData.lightCount = 1;
+	lightData.lights[0].color = { light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular() };
+	lightData.lights[0].direction = { light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 0 };
+	lightData.lights[0].type = LIGHT_TYPE_DIRECTIONAL;
+	lightConstBuffer->SetData(lightData);
 
 	delete boneBuffer;
 
@@ -402,10 +415,17 @@ void ZeldaModel::RenderAnimation(
 		currentMesh->Render(deviceContext);
 		int indexCount = currentMesh->GetIndexCount();
 
-		useConstBuffer->SetData({ false, (materials[materialIndex[i]]->useDiffuseMap), true, (materials[materialIndex[i]]->diffuseMap != nullptr) && materials[materialIndex[i]]->diffuseMap->UseSRGB() });
+		materialConstBuffer->SetData({
+			materials[materialIndex[i]]->baseColor,
+			!materials[materialIndex[i]]->useDiffuseMap,
+			materials[materialIndex[i]]->diffuseMap->UseSRGB(),
+			materials[materialIndex[i]]->useDiffuseMap
+			});
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
-		shader->Render(deviceContext, indexCount, materials[materialIndex[i]]->diffuseMap);
+		materials[materialIndex[i]]->SetShaderResource(deviceContext);
+
+		shader->Render(deviceContext, indexCount);
 	}
 }

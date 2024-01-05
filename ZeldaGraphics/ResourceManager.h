@@ -44,7 +44,6 @@ public:
 	
 	TextureID CreateTexture(const std::wstring& filePath);
 
-	bool CreateDefaultShader();
 	ShaderID CreateShader(const std::wstring& vsFilePath, const std::wstring& psFilePath);
 
 	CameraID CreateCamera(unsigned int screenWidth, unsigned int screenHeight);
@@ -53,7 +52,6 @@ public:
 	ZeldaMesh* GetCubeMesh();
 	ZeldaMesh* GetMesh(MeshID key);
 	ZeldaTexture* GetTexture(TextureID key);
-	ZeldaShader* GetDefaultShader();
 	ZeldaShader* GetShader(ShaderID key);
 	ZeldaCamera* GetCamera(CameraID cameraID);
 
@@ -72,7 +70,6 @@ private:
 	std::unordered_map<CameraID, ZeldaCamera*> cameraTable;
 
 	MeshID cubeID;
-	ZeldaShader* defaultShader;
 
 	//singleton
 public:

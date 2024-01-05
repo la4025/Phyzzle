@@ -159,17 +159,6 @@ TextureID ResourceManager::CreateTexture(const std::wstring& filePath)
 	return resourceID;
 }
 
-bool ResourceManager::CreateDefaultShader()
-{
-	if (defaultShader != nullptr)
-	{
-		return false;
-	}
-
-	defaultShader = new ZeldaShader(device, L"CompiledShader\\VertexShader.cso", L"CompiledShader\\PixelShader.cso");
-	return true;
-}
-
 ShaderID ResourceManager::CreateShader(const std::wstring& vsFilePath, const std::wstring& psFilePath)
 {
 	ShaderID resourceID = IDGenerator::CreateID<ResourceType::Shader>();
@@ -239,11 +228,6 @@ ZeldaTexture* ResourceManager::GetTexture(TextureID key)
 	return nullptr;
 }
 
-ZeldaShader* ResourceManager::GetDefaultShader()
-{
-	return defaultShader;
-}
-
 ZeldaShader* ResourceManager::GetShader(ShaderID key)
 {
 	auto iter = shaderTable.find(key);
@@ -298,8 +282,7 @@ ResourceManager& ResourceManager::GetInstance()
 
 ResourceManager::ResourceManager() :
 	device(nullptr),
-	cubeID(MeshID::ID_NULL),
-	defaultShader(nullptr)
+	cubeID(MeshID::ID_NULL)
 {
 
 }
@@ -329,11 +312,5 @@ ResourceManager::~ResourceManager()
 	for (auto iter = cameraTable.begin(); iter != cameraTable.end(); iter++)
 	{
 		delete iter->second;
-	}
-
-	if (defaultShader != nullptr)
-	{
-		delete defaultShader;
-		defaultShader = nullptr;
 	}
 }

@@ -289,15 +289,13 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	boneConstBuffer = new ConstantBuffer<BoneBufferType, ShaderType::VertexShader>(mDevice);
 
 	lightConstBuffer = new ConstantBuffer<LightBufferType, ShaderType::PixelShader>(mDevice);
-	useConstBuffer = new ConstantBuffer<UseBufferType, ShaderType::PixelShader>(mDevice);
-	colorConstBuffer = new ConstantBuffer<ColorBufferType, ShaderType::PixelShader>(mDevice);
+	materialConstBuffer = new ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>(mDevice);
 
-	ConstantBufferManager::GetInstance().RegisterVSBuffer(matrixConstBuffer);
-	ConstantBufferManager::GetInstance().RegisterVSBuffer(boneConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterBuffer(matrixConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterBuffer(boneConstBuffer);
 
-	ConstantBufferManager::GetInstance().RegisterPSBuffer(lightConstBuffer);
-	ConstantBufferManager::GetInstance().RegisterPSBuffer(useConstBuffer);
-	ConstantBufferManager::GetInstance().RegisterPSBuffer(colorConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterBuffer(lightConstBuffer);
+	ConstantBufferManager::GetInstance().RegisterBuffer(materialConstBuffer);
 
 
 #pragma region Deffered Rendering
@@ -368,6 +366,8 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		renderTargetTextures[i]->Release();
 	}
 
+	defferedObjectShader = new ZeldaShader(mDevice, L"CompiledShader\\DefferredVertexShader.cso", L"CompiledShader\\DefferredPixelShader.cso");
+
 #pragma endregion Deffered Rendering
 
 	return true;
@@ -390,15 +390,10 @@ void ZeldaDX11Renderer::Finalize()
 		delete lightConstBuffer;
 		lightConstBuffer = nullptr;
 	}
-	if (useConstBuffer)
+	if (materialConstBuffer)
 	{
-		delete useConstBuffer;
-		useConstBuffer = nullptr;
-	}
-	if (colorConstBuffer)
-	{
-		delete colorConstBuffer;
-		colorConstBuffer = nullptr;
+		delete materialConstBuffer;
+		materialConstBuffer = nullptr;
 	}
 	if (mSwapChain)
 	{
@@ -623,7 +618,6 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID te
 
 void ZeldaDX11Renderer::CreateBasicResources()
 {
-	ResourceManager::GetInstance().CreateDefaultShader();
 	ResourceManager::GetInstance().CreateCubeMesh();
 
 	light = new ZeldaLight();
@@ -715,9 +709,9 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
 	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
 	cubeMesh->Render(mDeviceContext);
 
-	ZeldaTexture* cubeTexture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
+	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
 
-	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+	ZeldaShader* shader = defferedObjectShader;
 
 	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
 	{
@@ -734,14 +728,26 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
 
 		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 		matrixConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-		// boneConstBuffer는 어차피 안쓸건데 set안해도 되지 않을까
-		lightConstBuffer->SetData({ light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular(), light->GetDirection() });
-		useConstBuffer->SetData({ false, (cubeTexture != nullptr), true, (cubeTexture != nullptr) && cubeTexture->UseSRGB() });
-		colorConstBuffer->SetData({ instancingInfo.color });
+		
+		LightBufferType lightData;
+		lightData.lightCount = 1;
+		lightData.lights[0].color = { light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular() };
+		lightData.lights[0].direction = { light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 0 };
+		lightData.lights[0].type = LIGHT_TYPE_DIRECTIONAL;
+		lightConstBuffer->SetData(lightData);
+
+		materialConstBuffer->SetData({
+			instancingInfo.color,
+			(texture == nullptr),
+			texture->UseSRGB(),
+			(texture != nullptr)
+			});
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
-		shader->Render(mDeviceContext, cubeMesh->GetIndexCount(), cubeTexture);
+		texture->SetShaderResource(mDeviceContext);
+
+		shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
 	}
 }
 
@@ -751,7 +757,7 @@ void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo)
 
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
 
-	ZeldaShader* shader = ResourceManager::GetInstance().GetDefaultShader();
+	ZeldaShader* shader = defferedObjectShader;
 
 	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
 	{
@@ -766,7 +772,7 @@ void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo)
 			mDeviceContext->RSSetState(defaultRasterState);
 		}
 
-		modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, useConstBuffer, colorConstBuffer, instancingInfo.worldMatrix, shader, light, instancingInfo.animationName, instancingInfo.animationTime);
+		modelData->Render(mDeviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, materialConstBuffer, instancingInfo.worldMatrix, shader, light, instancingInfo.animationName, instancingInfo.animationTime);
 	}
 }
 
