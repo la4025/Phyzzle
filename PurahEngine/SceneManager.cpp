@@ -44,7 +44,12 @@ void PurahEngine::SceneManager::Update()
 
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->Start();
+		if (object->isRun != true)
+		{
+			object->Awake();
+			object->Start();
+			object->isRun = true;
+		}
 		object->FixedUpdate();
 		object->Update();
 		object->LateUpdate();

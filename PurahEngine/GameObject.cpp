@@ -3,18 +3,26 @@
 
 void PurahEngine::GameObject::Awake()
 {
-	if (state == State::CREATE && isActive == true)
+	for (PurahEngine::Component* component : componentList)
 	{
-		for (PurahEngine::Component* component : componentList)
+		if (state == State::CREATE)
 		{
 			component->Awake();
+			if (isActive == true)
+			{
+				Enable();
+			}
+			else
+			{
+				Disable();
+			}
 		}
 	}
 }
 
 void PurahEngine::GameObject::Start()
 {
-	if (state == State::CREATE)
+	if (state == State::ENABLE)
 	{
 		for (PurahEngine::Component* component : componentList)
 		{
@@ -52,12 +60,12 @@ void PurahEngine::GameObject::LateUpdate()
 
 void PurahEngine::GameObject::Enable()
 {
-	state == State::ENABLE;
+	state = State::ENABLE;
 }
 
 void PurahEngine::GameObject::Disable()
 {
-	state == State::DISABLE;
+	state = State::DISABLE;
 }
 
 void PurahEngine::GameObject::OnCollisionEnter()
@@ -146,7 +154,7 @@ PurahEngine::GameObject::GameObject(std::wstring objectname)
 {
 	state = State::CREATE;
 	name = objectname;
-
+	isActive = true;
 }
 
 PurahEngine::GameObject::GameObject(std::wstring objectname, bool isactive)

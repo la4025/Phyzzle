@@ -115,3 +115,53 @@ void PurahEngine::Transform::SetLocalScale(Eigen::Vector3f setScale)
 {
 	scale = setScale;
 }
+
+void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
+{
+	/// 이론 : WorldMatrix 에서 Position 부분만 교체한다.
+	// Eigen::Matrix4f worldMatrix = GetWorldMatrix();
+	// worldMatrix.block<3, 1>(0, 3) = setPosition;
+
+	if (parentTransform != nullptr)
+	{
+
+	}
+	else
+	{
+		position = setPosition;
+	}
+}
+
+void PurahEngine::Transform::SetWorldRotation(Eigen::Quaternionf setRotation)
+{
+
+	if (parentTransform != nullptr)
+	{
+		rotation = parentTransform->GetWorldRotation().conjugate() * setRotation;
+	}
+	else
+	{
+		rotation = setRotation;
+	}
+}
+
+void PurahEngine::Transform::SetParent(PurahEngine::Transform* parentObject)
+{
+	if (parentTransform == nullptr)
+	{
+		parentTransform = parentObject;
+		parentObject->children.push_back(this);
+	}
+	else
+	{
+		// erase, remove 각각 따로 쓰게 될 경우 단점이 있다.
+		// erase 는 값을 삭제하면 size가 줄어든다. 하지만 return 값이 의미가 없다.
+		// remove 는 값을 삭제해도 size가 줄어들지 않는다. return 값이 남은 값들 중 마지막 값의 바로 뒤를 가리킨다.
+		// 고로 erase(remove())를 하게 되면 remove의 return으로 정렬을 하고, erase를 하게되면 size까지 줄어들게 할 수 있다.
+		parentTransform->children.erase(remove(parentTransform->children.begin(), parentTransform->children.end(), this), parentTransform->children.end());
+
+		// 위의 과정에서 parentTransform을 nullptr로 만들어줬다.
+		parentTransform = parentObject;
+		parentObject->children.push_back(this);
+	}
+}

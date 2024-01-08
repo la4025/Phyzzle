@@ -90,6 +90,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	auto cube2 = box2->AddComponent<PurahEngine::Renderer>();
 
+
+
 	colliderBox->Awake();
 	colliderBox2->Awake();
 	colliderBox3->Awake();
@@ -102,7 +104,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::GameObject* testObject = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject");
 	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
 	camera->AddComponent<PurahEngine::Camera>();
-	//testObject->AddComponent<PurahEngine::Renderer>();
+	testObject->AddComponent<PurahEngine::Renderer>();
 
 	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
 	camera->GetComponent<PurahEngine::Camera>()->SetRenderer(renderer);
@@ -110,6 +112,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	camera->GetComponent<PurahEngine::Camera>()->SetMainCamera();
 	testObject->AddComponent<PurahEngine::TestMovement>();
 	camera->AddComponent<PurahEngine::CameraMovement>();
+
+	PurahEngine::GameObject* testObject2 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject2");
+	testObject2->AddComponent<PurahEngine::Renderer>();
+	testObject2->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ 2, 0, 0 });
+	testObject->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ -2, 0, 0 });
+	testObject->GetComponent<PurahEngine::Transform>()->SetParent(testObject2->GetComponent<PurahEngine::Transform>());
+	float angle = 30.0f;
+	testObject2->GetComponent<PurahEngine::Transform>()->Rotate(Eigen::Vector3f(1, 1, 1).normalized(), angle);
+
+	PurahEngine::GameObject* testObject3 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject3");
+	testObject3->AddComponent<PurahEngine::Renderer>();
+	testObject3->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ -2, 0, 0 });
+	//testObject->GetComponent<PurahEngine::Transform>()->Rotate(Eigen::Vector3f(1, 1, 1).normalized(), angle);
+	testObject->GetComponent<PurahEngine::Transform>()->SetParent(testObject3->GetComponent<PurahEngine::Transform>());
+
+
+
+	auto colliderBox5 = testObject->AddComponent<PurahEngine::BoxCollider>();
+	colliderBox5->SetSize({0.5f, 0.5f, 0.5f });
+	
+	auto rigid5 = testObject->AddComponent<PurahEngine::RigidBody>();
+	rigid5->SetMass(10.f);
+
+	colliderBox5->Awake();
+	rigid5->Awake();
+
+
 
 	//textureID = renderer->CreateTexture(L"scd.jpg");
 	//if (textureID == TextureID::ID_NULL)

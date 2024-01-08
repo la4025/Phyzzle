@@ -81,11 +81,12 @@ namespace PurahEngine
 		State state;
 		std::wstring name;
 		bool isActive;
+		bool isRun = false;
 
 	public:
 		// ComponentList·Î Component Ãß°¡
 		template<typename T>
-		T* AddComponent()
+		T* AddComponent() 
 		{
 			T* t = new T;
 			componentList.push_back(t);
