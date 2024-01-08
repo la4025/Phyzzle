@@ -1,5 +1,6 @@
 #pragma once
 #include "ZnPrismaticJoint.h"
+#include "TemplateJoint.h"
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
 
@@ -15,7 +16,7 @@ namespace ZonaiPhysics
 	class ZnRigidBody;
 	class RigidBody;
 
-	class PrismaticJoint : public ZnPrismaticJoint
+	class PrismaticJoint : public TemplateJoint<ZnPrismaticJoint, physx::PxPrismaticJoint>
 	{
 	public:
 		PrismaticJoint() noexcept = delete;
@@ -25,22 +26,22 @@ namespace ZonaiPhysics
 			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
 		~PrismaticJoint() noexcept override;
 
-	public:
-		void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept override;
-		Eigen::Vector3f	GetLocalPosition(eOBJECT) const noexcept override;
+// 	public:
+// 		void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept override;
+// 		Eigen::Vector3f	GetLocalPosition(eOBJECT) const noexcept override;
+// 
+// 		void		SetLocalQuaternion(eOBJECT, const Eigen::Quaternionf&) noexcept override;
+// 		Eigen::Quaternionf	GetLocalQuaternion(eOBJECT) const noexcept override;
+// 
+// 		Eigen::Vector3f	GetRelativeLinearVelocity() const noexcept override;
+// 		Eigen::Vector3f	GetRelativeAngularVelocity() const noexcept override;
+// 
+// 		void		SetBreakForce(float _force, float _torque) noexcept override;
+// 		void		GetBreakForce(float& _force, float& _torque) const noexcept override;
 
-		void		SetLocalQuaternion(eOBJECT, const Eigen::Quaternionf&) noexcept override;
-		Eigen::Quaternionf	GetLocalQuaternion(eOBJECT) const noexcept override;
-
-		Eigen::Vector3f	GetRelativeLinearVelocity() const noexcept override;
-		Eigen::Vector3f	GetRelativeAngularVelocity() const noexcept override;
-
-		void		SetBreakForce(float _force, float _torque) noexcept override;
-		void		GetBreakForce(float& _force, float& _torque) const noexcept override;
-
-	private:
-		RigidBody* object[2];
-		physx::PxPrismaticJoint* joint;
+// 	private:
+// 		RigidBody* object[2];
+// 		physx::PxPrismaticJoint* joint;
 	};
 } // namespace ZonaiPhysics
 
