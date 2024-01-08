@@ -209,6 +209,7 @@ void stepPhysics()// interactive
 //	return GetAsyncKeyState(key);
 //}
 
+#include "ZnDistanceJoint.h"
 #include "ZnFixedJoint.h"
 #include "ZnJoint.h"
 #include "ZnSphericalJoint.h"
@@ -245,17 +246,18 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize();
 
+
+
+
 	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 0.5f);
 	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+	rigid->SetMaxLinearVelocity(100.f);
 	rigid->SetPosition({2.f, 20.f, 0.f});
-	rigid->UseGravity(true);
-	rigid->SetKinematic(false);
 
-	auto collider2 = physicsEngine->CreateBoxCollider(L"rigidBody2", 2.f, 0.5f, 0.5f);
+	auto collider2 = physicsEngine->CreateSphereCollider(L"rigidBody2", 2.f);
 	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
+	rigid2->SetMaxLinearVelocity(100.f);
 	rigid2->SetPosition({ 6.f, 20.f, 0.f });
-	rigid2->UseGravity(true);
-	rigid2->SetKinematic(false);
 
 	auto fixedjoint = physicsEngine->CreateFixedJoint(
 		NULL, ZonaiPhysics::ZnTransform{ {0.f, 20.f, 0} },
@@ -267,14 +269,25 @@ int snippetMain(int, const char* const*)
 	axis.axis() = { 0.f, 0.f, 1.f };
 	Eigen::Quaternionf q{ axis };
 
-	auto sphericalJjoint = physicsEngine->CreateSphericalJoint(
+	// auto sphericalJjoint = physicsEngine->CreateSphericalJoint(
+	// 	rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0}, q },
+	// 	rigid2, ZonaiPhysics::ZnTransform{{-2.f, 0.f, 0.f}}
+	// );
+	// 
+	// sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f, 1.f, 10.f);
+	// // sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f);
+	// sphericalJjoint->LimitEnable(true);
+
+	auto distanceJoint = physicsEngine->CreateDistanceJoint(
 		rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0}, q },
-		rigid2, ZonaiPhysics::ZnTransform{{-2.f, 0.f, 0.f}}
+		rigid2, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
 	);
 
-	sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f, 1.f, 10000.f);
-	// sphericalJjoint->SetLimitCone(ZonaiMath::PI / 20.f, ZonaiMath::PI / 20.f);
-	sphericalJjoint->LimitEnable(true);
+	distanceJoint->SetMinDistance(1.f);
+	distanceJoint->SetMaxDistance(5.f);
+	distanceJoint->SetStiffness(50.f);
+	distanceJoint->SetDamping(10.f);
+	distanceJoint->SetSpringEnable(true);
 
 	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
 	const auto ground = physicsEngine->CreateRigidBody(L"ground");
@@ -303,25 +316,27 @@ int snippetMain(int, const char* const*)
 
 			if (clickDown)
 			{
-				y -= 0.001f;
+				y = -5.f;
 			}
 			if (clickLeft)
 			{
-				z += 0.001f;
+				z = 5.f;
 			}
 			if (clickRight)
 			{
-				z -= 0.001f;
+				z = -5.f;
 			}
 			if (clickUp)
 			{
-				y += 0.001f;
+				y = 5.f;
 			}
 
-			pos = Eigen::Vector3f(pos.x(), pos.y() + y, pos.z() + z);
+			pos = Eigen::Vector3f(pos.x(), y, z);
 			collider2->SetLocalPosition(pos);
 		}
 	}
+
+	physicsEngine->Release(distanceJoint);
 
 	//static const PxU32 frameCount = 100;
 

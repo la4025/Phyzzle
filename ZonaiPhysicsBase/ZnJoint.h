@@ -21,11 +21,17 @@ namespace ZonaiPhysics
 							ZnJoint() noexcept = default;
 		virtual				~ZnJoint() noexcept = default;
 
+	protected:
+		physx::PxJoint* joint;
+
 	public:
 		/**
 		오브젝트의 포지션
 		*/
-		virtual void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept = 0;
+		virtual void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept
+		{
+			
+		}
 		virtual Eigen::Vector3f	GetLocalPosition(eOBJECT) const noexcept = 0;
 
 		/**

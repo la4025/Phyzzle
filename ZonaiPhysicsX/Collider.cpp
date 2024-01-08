@@ -95,7 +95,6 @@ namespace ZonaiPhysics
 	void Collider::UpdateInertiaTensor() const noexcept
 	{
 		auto pos = shape_->getLocalPose().p;
-		physx::PxRigidBodyExt::updateMassAndInertia(*rigid_->getRigidDynamic(), 0.4f, &pos, true);
-		auto pos2 = rigid_->GetPosition();
+		rigid_->getRigidDynamic()->setCMassLocalPose(shape_->getLocalPose());
 	}
 } // namespace ZonaiPhysics

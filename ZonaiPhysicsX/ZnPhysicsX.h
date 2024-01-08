@@ -83,18 +83,18 @@ namespace ZonaiPhysics
 		ZnCollider*				CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
 // 		ZnCollider*				CreatePlaneCollider(const std::wstring&, float x, float y) noexcept override;
  		ZnCollider*				CreateSphereCollider(const std::wstring&, float radius) noexcept override;
-// 		ZnCollider*				CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
+ 		ZnCollider*				CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
 // 		ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
-// 		
+	
 // 		/// <summary>
 // 		/// Create Joint
 // 		/// </summary>
- 		// ZnJoint*				CreateD6Joint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;			// D6 조인트		*사실 뭔지 모름
+ 		// ZnD6Joint*				CreateD6Joint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;			// D6 조인트		*사실 뭔지 모름
 		ZnFixedJoint*			CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
-		ZnJoint*				CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
+		ZnDistanceJoint*		CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
 		ZnSphericalJoint*		CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 구형 조인트
-// 		virtual ZnJoint*		CreateRevoluteJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;		// 회전 조인트
-// 		virtual ZnJoint*		CreatePrismaticJoint(ZnRigidBody*, ZnTransform, ZnRigidBody*, ZnTransform) noexcept override;	// 프리즘 조인트
+		ZnHingeJoint*			CreateRevoluteJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 회전 조인트
+		ZnPrismaticJoint*		CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 프리즘 조인트
 
 	public:
 		bool					Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept override;
