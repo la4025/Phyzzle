@@ -20,21 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="DistanceJoint.h" />
     <ClInclude Include="FixedJoint.h" />
-    <ClInclude Include="Joint.h" />
+    <ClInclude Include="PrismaticJoint.h" />
+    <ClInclude Include="HingeJoint.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SphericalJoint.h" />
+    <ClInclude Include="TemplateJoint.h" />
     <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZnSimulationCallbackX.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="CapsuleCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="DistanceJoint.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
-    <ClCompile Include="Joint.cpp" />
+    <ClCompile Include="PrismaticJoint.cpp" />
+    <ClCompile Include="HingeJoint.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
@@ -133,7 +140,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ZonaiMath.lib;PhysXExtensions_static_64.lib;PhysXPvdSDK_static_64.lib;PhysX_static_64.lib;PhysXVehicle_static_64.lib;PhysXVehicle2_static_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCooking_static_64.lib;PhysXCommon_static_64.lib;PhysXFoundation_static_64.lib;SnippetUtils_static_64.lib;PVDRuntime_64.lib;SnippetRender_static_64.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(SolutionDir)physx\debug;$(SolutionDir)eigen-3.4.0</AdditionalLibraryDirectories>

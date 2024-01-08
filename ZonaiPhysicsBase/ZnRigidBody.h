@@ -37,6 +37,16 @@ namespace ZonaiPhysics
 		virtual bool		IsSleeping() const noexcept = 0;
 
 		/**
+		중력의 영향을 받는가? 
+		*/
+		virtual void		UseGravity(bool) noexcept = 0;
+
+		/**
+		키네마틱 설정
+		*/
+		virtual void		SetKinematic(bool) noexcept = 0;
+
+		/**
 		강체의 움직임을 제한하는 플래그
 		*/
 		virtual DynamicLocks GetDynamicLockFlags() const noexcept = 0;
@@ -111,6 +121,5 @@ namespace ZonaiPhysics
 		virtual void		AddTorque(const Eigen::Vector3f& _torque, ForceType _type = ForceType::Force) noexcept = 0;
 		virtual void		ClearTorque() noexcept = 0;
 
-		virtual void		SetKinematic(bool) noexcept = 0;
 	};
 }

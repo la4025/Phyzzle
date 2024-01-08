@@ -5,6 +5,11 @@
 
 namespace ZonaiPhysics
 {
+	RigidBody::RigidBody() noexcept
+	{
+
+	}
+
 	RigidBody::RigidBody(physx::PxPhysics*& _factory) noexcept
 	{
 		using namespace physx;
@@ -25,6 +30,29 @@ namespace ZonaiPhysics
 	bool RigidBody::IsSleeping() const noexcept
 	{
 		return rigidbody_->isSleeping();
+	}
+
+	void RigidBody::UseGravity(bool value) noexcept
+	{
+		using namespace physx;
+		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !value);
+	}
+
+	void RigidBody::SetKinematic(bool value) noexcept
+	{
+		using namespace physx;
+		rigidbody_->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, value);
+	}
+
+	void RigidBody::UpdateInertiaTensor() noexcept
+	{
+		using namespace physx;
+	}
+
+	void RigidBody::CanSimulate(bool value) const noexcept
+	{
+		using namespace physx;
+		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, !value);
 	}
 
 	DynamicLocks RigidBody::GetDynamicLockFlags() const noexcept
@@ -62,6 +90,7 @@ namespace ZonaiPhysics
 	void RigidBody::SetMass(float _mass) noexcept
 	{
 		rigidbody_->setMass(_mass);
+		rigidbody_->setMassSpaceInertiaTensor(rigidbody_->getCMassLocalPose().p);
 	}
 
 	float RigidBody::GetInvMass() const noexcept
@@ -215,21 +244,8 @@ namespace ZonaiPhysics
 		rigidbody_->clearTorque();
 	}
 
-	void RigidBody::SetKinematic(bool value) noexcept
-	{
-		rigidbody_->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, value);
-		// rigidbody_->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, value);
-	}
-
-	void RigidBody::CanSimulate() noexcept
-	{
-		using namespace physx;
-		rigidbody_->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, false);
-	}
-
 	physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept
 	{
 		return rigidbody_;
 	}
-
 } // namespace ZonaiPhysics

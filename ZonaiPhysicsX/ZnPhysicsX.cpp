@@ -1,11 +1,19 @@
-#include "BoxCollider.h"
 #include "RigidBody.h"
+
+#include "BoxCollider.h"
+#include "SphereCollider.h"
+#include "CapsuleCollider.h"
+
+#include "FixedJoint.h"
+#include "DistanceJoint.h"
+#include "HingeJoint.h"
+#include "PrismaticJoint.h"
+#include "SphericalJoint.h"
+
+#include "ZnRaycastInfo.h"
 
 #include "ZnPhysicsX.h"
 
-#include "FixedJoint.h"
-#include "ZnRaycastInfo.h"
-#include "SphereCollider.h"
 
 
 namespace ZonaiPhysics
@@ -28,6 +36,8 @@ namespace ZonaiPhysics
 		// sceneDesc.simulationEventCallback = NULL;
 		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 		scene = physics->createScene(sceneDesc);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.f);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.f);
 
 		PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
 		if (pvdClient)
@@ -81,7 +91,7 @@ namespace ZonaiPhysics
 			scene->addActor(*result->getRigidDynamic());
 		}
 
-		result->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
+		result->CanSimulate(true);
 
 		return result;
 	}
@@ -89,14 +99,14 @@ namespace ZonaiPhysics
 	/// <summary>
 	/// 강체를 찾아서 거기에 콜라이더를 붙임.
 	/// </summary>
-	ZnCollider* ZnPhysicsX::CreatBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
+	ZnCollider* ZnPhysicsX::CreateBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
 	{
 		RigidBody* body = FindRigidBody(_id);
 
 		if (body == nullptr)
 		{
 			body = new RigidBody(physics);
-			body->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+			body->CanSimulate(false);
 			bodies.insert(std::make_pair(_id, body));
 			scene->addActor(*body->getRigidDynamic());
 		}
@@ -106,14 +116,14 @@ namespace ZonaiPhysics
 		return newRigidBody;
 	}
 
-	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring& _id, float radius) noexcept
+	ZnCollider* ZnPhysicsX::CreateSphereCollider(const std::wstring& _id, float radius) noexcept
 	{
 		RigidBody* body = FindRigidBody(_id);
 
 		if (body == nullptr)
 		{
 			body = new RigidBody(physics);
-			body->getRigidDynamic()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+			body->CanSimulate(false);
 			bodies.insert(std::make_pair(_id, body));
 			scene->addActor(*body->getRigidDynamic());
 		}
@@ -123,86 +133,92 @@ namespace ZonaiPhysics
 		return newRigidBody;
 	}
 
-	ZnJoint* ZnPhysicsX::CreatFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	// 	ZnCollider* ZnPhysicsX::CreatePlaneCollider(const std::wstring&, float x, float y) noexcept
+	// 	{
+	// 
+	// 	}
+	// 
+	// 	ZnCollider* ZnPhysicsX::CreateSphereCollider(const std::wstring&, float radius) noexcept
+	// 	{
+	// 
+	// 	}
+
+	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring& _id, float _radius, float _height) noexcept
 	{
-		auto ob0 = static_cast<RigidBody*>(_object0);
-		auto ob1 = static_cast<RigidBody*>(_object1);
+		RigidBody* body = FindRigidBody(_id);
+
+		if (body == nullptr)
+		{
+			body = new RigidBody(physics);
+			body->CanSimulate(false);
+			bodies.insert(std::make_pair(_id, body));
+			scene->addActor(*body->getRigidDynamic());
+		}
+
+		Collider* newRigidBody = new CapsuleCollider(physics, body, _radius, _height, material);
+
+		return newRigidBody;
+	}
+
+	// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
+	// 	{
+	// 
+	// 	}
+
+	ZnFixedJoint* ZnPhysicsX::CreateFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		auto* joint = new FixedJoint(physics, ob0, _transform0, ob1, _transform1);
 
 		return  joint;
 	}
 
-	ZnJoint* ZnPhysicsX::CreatDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnDistanceJoint* ZnPhysicsX::CreateDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
-		return nullptr;
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		auto* joint = new DistanceJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
+	}
+
+	ZnSphericalJoint* ZnPhysicsX::CreateSphericalJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		auto* joint = new SphericalJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
+	}
+
+	ZnHingeJoint* ZnPhysicsX::CreateRevoluteJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		auto* joint = new HingeJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
+	}
+
+	ZnPrismaticJoint* ZnPhysicsX::CreatePrismaticJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	{
+		auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return  joint;
 	}
 
 	bool ZnPhysicsX::Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept
 	{
 		return true;
 	}
-
-	///// <summary>
-	/////	방금 일어난 애들
-	///// </summary>
-	//void ZnPhysicsX::onWake(physx::PxActor** actors, physx::PxU32 count)
-	//{
-	//	for (auto i = 0; i < count; i++)
-	//	{
-	//		actors[i]->userData;
-	//	}
-	//}
-
-	///// <summary>
-	///// 방금 잠자기 시작한 애들
-	///// <summary>
-	//void ZnPhysicsX::onSleep(physx::PxActor** actors, physx::PxU32 count)
-	//{
-
-	//}
-
-	///// <summary>
-	///// 트리거 작동된 아이들
-	///// <summary>
-	//void ZnPhysicsX::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
-	//{
-	//	pairs.
-	//}
-
-	///// <summary>
-	/////	제약 부숴진 애들
-	///// <summary>
-	//void ZnPhysicsX::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
-	//{
-	//	constraints.
-	//}
-
-	//void ZnPhysicsX::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs,
-	//	physx::PxU32 nbPairs)
-	//{
-	//	pairs->contactImpulses;
-	//}
-
-	//void ZnPhysicsX::onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer,
-	//	const physx::PxU32 count)
-	//{
-	//	// 구현 안 해도 될듯
-	//}
-
-	//bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
-	//{
-	//	using namespace physx;
-	//	PxRaycastBuffer result;
-	//	bool detect = scene->raycast({ _from.x, _from.y, _from.z }, { _to.x, _to.y, _to.z }, _distance, result);
-	//	if (detect)
-	//	{
-	//		_out.data = result.block.actor->userData;
-	//		_out.position = Eigen::Vector3f{ result.block.position.x, result.block.position.y, result.block.position.z };
-	//	}
-
-	//	return detect;
-	//}
 
 	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
 	{
@@ -214,26 +230,6 @@ namespace ZonaiPhysics
 
 		return nullptr;
 	}
-
-// 	ZnCollider* ZnPhysicsX::CreatPlaneCollider(const std::wstring&, float x, float y) noexcept
-// 	{
-// 
-// 	}
-// 
-// 	ZnCollider* ZnPhysicsX::CreatSphereCollider(const std::wstring&, float radius) noexcept
-// 	{
-// 
-// 	}
-// 
-// 	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept
-// 	{
-// 
-// 	}
-// 
-// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
-// 	{
-// 
-// 	}
 
 	extern "C"
 	{
