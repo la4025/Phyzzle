@@ -23,7 +23,11 @@ namespace PurahEngine
 
 	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
+<<<<<<< HEAD
 		const Eigen::Vector3f& GetPosition() noexcept;
+=======
+		const Eigen::Vector3f& GetPosition(const Eigen::Vector3f& _pos) noexcept;
+>>>>>>> f91834b3d40dd48f2b432cafdb3aba2eb26cde16
 
 	public:
 		/**
