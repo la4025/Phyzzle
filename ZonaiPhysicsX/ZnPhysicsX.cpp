@@ -202,17 +202,17 @@ namespace ZonaiPhysics
 
 		auto* joint = new HingeJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  nullptr;
+		return  joint;
 	}
 
 	ZnPrismaticJoint* ZnPhysicsX::CreatePrismaticJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
-// 
-// 		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
+ 
+ 		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  nullptr;
+		return  joint;
 	}
 
 	bool ZnPhysicsX::Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept

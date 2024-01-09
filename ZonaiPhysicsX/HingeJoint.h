@@ -7,7 +7,6 @@
 namespace physx
 {
 	class PxPhysics;
-	class PxFixedJoint;
 }
 
 namespace ZonaiPhysics
@@ -27,10 +26,24 @@ namespace ZonaiPhysics
 		~HingeJoint() noexcept override;
 
 	public:
-		float GetAngle() const;
-		float GetVelocity() const;
-		void SetLimit(float _upper, float _lower);
-		void SetLimit(float _upper, float _lower, float _stiffness, float _damping);
+		float GetAngle() const override;
+		float GetVelocity() const override;
+
+		void SetLimit(float _upper, float _lower) override;
+		void SetLimit(float _upper, float _lower, float _stiffness, float _damping) override;
+
+		void SetDriveVelocity(float _velocity) override;
+		float GetDriveVelocity() const override;
+
+		void SetDriveForceLimit(float) override;
+		float GetDriveForceLimit() const override;
+
+		void SetDriveGearRatio(float) override;
+		float GetDriveGearRatio() const override;
+
+		void SetLimitEnable(bool) override;
+		void SetDriveEnable(bool) override;
+		void SetDriveFreespin(bool) override;
 	};
 } // namespace ZonaiPhysics
 

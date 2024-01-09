@@ -7,7 +7,6 @@
 namespace physx
 {
 	class PxPhysics;
-	class PxFixedJoint;
 }
 
 namespace ZonaiPhysics
@@ -26,22 +25,20 @@ namespace ZonaiPhysics
 			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
 		~PrismaticJoint() noexcept override;
 
-// 	public:
-// 		void		SetLocalPosition(eOBJECT, const Eigen::Vector3f&) noexcept override;
-// 		Eigen::Vector3f	GetLocalPosition(eOBJECT) const noexcept override;
-// 
-// 		void		SetLocalQuaternion(eOBJECT, const Eigen::Quaternionf&) noexcept override;
-// 		Eigen::Quaternionf	GetLocalQuaternion(eOBJECT) const noexcept override;
-// 
-// 		Eigen::Vector3f	GetRelativeLinearVelocity() const noexcept override;
-// 		Eigen::Vector3f	GetRelativeAngularVelocity() const noexcept override;
-// 
-// 		void		SetBreakForce(float _force, float _torque) noexcept override;
-// 		void		GetBreakForce(float& _force, float& _torque) const noexcept override;
+	public:
+		float GetPosition() const override;
 
-// 	private:
-// 		RigidBody* object[2];
-// 		physx::PxPrismaticJoint* joint;
+		float GetVelocity() const override;
+
+		void SetLimit(float _lower, float _upper) override;
+		void SetLimit(float _lower, float _upper, float _stiffness, float _damping) override;
+
+		void SetLimitEnable(bool) override;
+
+		bool IsLimitEnalbed() const override;
+
+	public:
+		physx::PxTolerancesScale const* tolerances;
 	};
 } // namespace ZonaiPhysics
 

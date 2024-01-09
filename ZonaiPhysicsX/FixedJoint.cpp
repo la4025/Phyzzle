@@ -53,6 +53,8 @@ namespace ZonaiPhysics
 			rigid1, t1
 		);
 
+		assert(joint != nullptr, "ZonaiPhysicsX :: Fixed Joint Initialize Error");
+
 		if (joint)
 		{
 			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);

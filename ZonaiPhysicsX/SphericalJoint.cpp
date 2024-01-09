@@ -55,6 +55,8 @@ namespace ZonaiPhysics
 			rigid1, t1
 		);
 
+		assert(joint == nullptr, "ZonaiPhysicsX :: Spherical Joint Initialize Error");
+
 		if (joint)
 		{
 			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
@@ -70,6 +72,8 @@ namespace ZonaiPhysics
 
 	void SphericalJoint::GetLimitAngle(float* _outY, float* _outZ)
 	{
+		assert(joint != nullptr);
+
 		auto cone = joint->getLimitCone();
 
 		if (_outY)
@@ -84,17 +88,26 @@ namespace ZonaiPhysics
 
 	void SphericalJoint::LimitEnable(bool _value)
 	{
+		assert(joint != nullptr);
+
+
 		using namespace physx;
 		joint->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, _value);
 	}
 
 	void SphericalJoint::SetLimitCone(float _yAngle, float _zAngle)
 	{
+		assert(joint != nullptr);
+
+
 		joint->setLimitCone({ _yAngle, _zAngle });
 	}
 
 	void SphericalJoint::SetLimitCone(float _yAngle, float _zAngle, float _stiffness, float _damping)
 	{
+		assert(joint != nullptr);
+
+
 		joint->setLimitCone({ _yAngle, _zAngle, {_stiffness, _damping} });
 	}
 }
