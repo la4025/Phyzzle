@@ -124,7 +124,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::GameObject* testObject3 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject3");
 	testObject3->AddComponent<PurahEngine::Renderer>();
 	testObject3->GetComponent<PurahEngine::Transform>()->SetLocalPosition({ -2, 0, 0 });
-	//testObject->GetComponent<PurahEngine::Transform>()->Rotate(Eigen::Vector3f(1, 1, 1).normalized(), angle);
+	testObject->GetComponent<PurahEngine::Transform>()->Rotate(Eigen::Vector3f(1, 1, 1).normalized(), angle);
 	testObject->GetComponent<PurahEngine::Transform>()->SetParent(testObject3->GetComponent<PurahEngine::Transform>());
 
 
@@ -132,11 +132,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	auto colliderBox5 = testObject->AddComponent<PurahEngine::BoxCollider>();
 	colliderBox5->SetSize({0.5f, 0.5f, 0.5f });
 	
+	colliderBox5->Awake();
 	auto rigid5 = testObject->AddComponent<PurahEngine::RigidBody>();
 	rigid5->SetMass(10.f);
-
-	colliderBox5->Awake();
 	rigid5->Awake();
+	rigid5->SetPosition(testObject->GetComponent<PurahEngine::Transform>()->GetWorldPosition());
 
 
 

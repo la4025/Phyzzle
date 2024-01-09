@@ -22,7 +22,7 @@ namespace ZonaiPhysics
 		virtual				~ZnJoint() noexcept = default;
 
 	protected:
-		physx::PxJoint* joint;
+		//physx::PxJoint* joint;
 
 	public:
 		/**
