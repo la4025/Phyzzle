@@ -229,9 +229,10 @@ namespace PurahEngine
 	{
 		auto pos = body->GetPosition();
 		auto rot = body->GetQuaternion();
+		auto y = pos.y();
 
 		auto transform = GetGameObject()->GetComponent<Transform>();
-		transform->SetLocalPosition(pos);
-		transform->SetLocalRotation(rot);
+		transform->SetWorldPosition(pos);
+		transform->SetWorldRotation(rot);
 	}
 }

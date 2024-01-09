@@ -21,13 +21,6 @@ namespace ZonaiPhysics
 							ZnJoint() noexcept = default;
 		virtual				~ZnJoint() noexcept = default;
 
-	protected:
-<<<<<<< HEAD
-		//physx::PxJoint* joint;
-=======
-		// physx::PxJoint* joint;
->>>>>>> master
-
 	public:
 		/**
 		오브젝트의 포지션

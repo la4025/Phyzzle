@@ -124,7 +124,7 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 
 	if (parentTransform != nullptr)
 	{
-
+		position = -(parentTransform->GetWorldPosition()) + setPosition;
 	}
 	else
 	{

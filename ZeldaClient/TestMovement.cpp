@@ -28,7 +28,11 @@ void PurahEngine::TestMovement::Update()
 
 	if (inputManager.IsKeyPressed('W') == true)
 	{
-		GetGameObject()->GetComponent<PurahEngine::Transform>()->SetLocalPosition(GetGameObject()->GetComponent<PurahEngine::Transform>()->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.1f, 0.0f));
+		auto prevPos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetLocalPosition();
+		auto movement = Eigen::Vector3f(0.0f, 0.1f, 0.0f);
+		GetGameObject()->GetComponent<PurahEngine::Transform>()->SetLocalPosition(prevPos + movement);
+
+		auto nowPos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetLocalPosition();
 	}
 	if (inputManager.IsKeyPressed('S') == true)
 	{
@@ -55,7 +59,9 @@ void PurahEngine::TestMovement::Update()
 
 	static float rotationValue = 0.0f;
 
-
+	auto rigid5 = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+	auto worldpos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldPosition();
+	rigid5->SetPosition(worldpos);
 
 
 	if (inputManager.IsKeyPressed('B') == true)
