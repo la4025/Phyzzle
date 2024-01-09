@@ -67,6 +67,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	PurahEngine::SceneManager::GetInstance().Initialize();
 
 	// PhysicsSysyem ÃÊ±âÈ­
+
 	PurahEngine::PhysicsSystem::GetInstance().Initialize();
 
 // 	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
@@ -75,6 +76,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 // 
 // 	collider = PurahEngine::PhysicsSystem::GetInstance().CreateBoxCollider(L"RigidBody", 5,5 ,5);
 // 	
+
+	PurahEngine::PhysicsSystem::GetInstance().Initialize();	
+
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -113,10 +117,12 @@ void PurahEngine::GameLoop::Finalize()
 
 void PurahEngine::GameLoop::run()
 {
+
 	PurahEngine::TimeController::GetInstance().Update(timeInit);
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(timeInit);
 	PurahEngine::PhysicsSystem::GetInstance().Simulation(0.02f);
 	// auto position = rigidBody->GetPosition();
+
 
 	PurahEngine::InputManager::Getinstance().Update();
 	PurahEngine::SceneManager::GetInstance().Update();

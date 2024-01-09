@@ -94,7 +94,10 @@ namespace ZonaiPhysics
 		t.q.x = _quaternion.x();
 		t.q.y = _quaternion.y();
 		t.q.z = _quaternion.z();
+		rigidbody->getRigidDynamic()->detachShape(*shape);
 		shape->setLocalPose(t);
+		rigidbody->getRigidDynamic()->attachShape(*shape);
+		UpdateInertiaTensor();
 	}
 
 	void* Collider::GetUserData() const noexcept
