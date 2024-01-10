@@ -1,5 +1,7 @@
 #include "TestMovement.h"
 #include "TimeController.h"
+#include "SoundManager.h"
+
 PurahEngine::TestMovement::TestMovement()
 {
 
@@ -16,35 +18,28 @@ void PurahEngine::TestMovement::Update()
 
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
 
+	const auto rigid = GetGameObject()->GetComponent<RigidBody>();
 	const auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
 	auto movement = Eigen::Vector3f{ 0.f, 0.f, 0.f };
 
 	if (inputManager.IsKeyPressed('Q') == true)
 	{
-		const auto axis = GetGameObject()->GetComponent<PurahEngine::Transform>()->up;
+		const auto axis = trans->up;
 		trans->Rotate(axis, angle);
 	}
 	if (inputManager.IsKeyPressed('E') == true)
 	{
-		const auto axis = Eigen::Vector3f::UnitY();
+		const auto axis = trans->up;
 		trans->Rotate(axis, -angle);
 	}
 
 	if (inputManager.IsKeyPressed('W') == true)
 	{
-
-		auto prevPos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetLocalPosition();
-		auto movement = Eigen::Vector3f(0.0f, 0.1f, 0.0f);
-		GetGameObject()->GetComponent<PurahEngine::Transform>()->SetLocalPosition(prevPos + movement);
-
-		auto nowPos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetLocalPosition();
-
-		movement += Eigen::Vector3f(0.0f, 0.1f, 0.0f);
-
+		movement += Eigen::Vector3f(0.0f, 0.0f, 0.1f);
 	}
 	if (inputManager.IsKeyPressed('S') == true)
 	{
-		movement += Eigen::Vector3f(0.0f, -0.1f, 0.0f);
+		movement += Eigen::Vector3f(0.0f, 0.0f, -0.1f);
 	}
 	if (inputManager.IsKeyPressed('A') == true)
 	{
@@ -53,6 +48,10 @@ void PurahEngine::TestMovement::Update()
 	if (inputManager.IsKeyPressed('D') == true)
 	{
 		movement += Eigen::Vector3f(0.1f, 0.0f, 0.0f);
+	}
+	if (inputManager.IsKeyPressed(VK_SPACE) == true)
+	{
+		movement += Eigen::Vector3f(0.0f, 0.1f, 0.0f);
 	}
 
 	if (inputManager.IsKeyPressed('Z') == true)
@@ -67,11 +66,6 @@ void PurahEngine::TestMovement::Update()
 
 
 	static float rotationValue = 0.0f;
-
-	auto rigid5 = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
-	auto worldpos = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldPosition();
-	rigid5->SetPosition(worldpos);
-
 
 	if (inputManager.IsKeyPressed('B') == true)
 	{
@@ -90,8 +84,25 @@ void PurahEngine::TestMovement::Update()
 	}
 
 	const auto localPos = trans->GetLocalPosition();
-	const auto rigid = GetGameObject()->GetComponent<RigidBody>();
+	
 	rigid->SetPosition(localPos + movement);
+
 	// trans->SetLocalPosition(localPos + movement);
 
+
+	/// Sound Test-----------------------------------------------------------
+	if (inputManager.IsKeyPressed('8') == true)
+	{
+		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test001");
+	}
+
+	if (inputManager.IsKeyPressed('9') == true)
+	{
+		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test002");
+	}
+
+	if (inputManager.IsKeyPressed('0') == true)
+	{
+		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test003");
+	}
 }

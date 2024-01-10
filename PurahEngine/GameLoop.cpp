@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "PhysicsSystem.h"
 #include "TimeController.h"
+#include "SoundManager.h"
 #include <cassert>
 
 
@@ -70,14 +71,15 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	PurahEngine::PhysicsSystem::GetInstance().Initialize();
 
+	// SoundManager ÃÊ±âÈ­
+	PurahEngine::SoundManager::GetInstance().Initialize();
+
 // 	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
 // 
 // 	rigidBody->SetPosition({ 0, 50, -70 });
 // 
 // 	collider = PurahEngine::PhysicsSystem::GetInstance().CreateBoxCollider(L"RigidBody", 5,5 ,5);
 // 	
-
-	PurahEngine::PhysicsSystem::GetInstance().Initialize();	
 
 }
 
@@ -121,11 +123,11 @@ void PurahEngine::GameLoop::run()
 	PurahEngine::TimeController::GetInstance().Update(timeInit);
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(timeInit);
 	PurahEngine::PhysicsSystem::GetInstance().Simulation(0.02f);
-	// auto position = rigidBody->GetPosition();
 
 
 	PurahEngine::InputManager::Getinstance().Update();
 	PurahEngine::SceneManager::GetInstance().Update();
+	PurahEngine::SoundManager::GetInstance().Update();
 
 	PurahEngine::GraphicsManager::GetInstance().Run();
 }
