@@ -66,10 +66,17 @@ namespace ZonaiPhysics
 		virtual ~ZnPhysicsX() noexcept = default;
 
 	public:
-		virtual void			Initialize() noexcept override;
-		virtual void			Simulation(float _dt) noexcept override;
-		virtual void			Finalize() noexcept override;
+		void			Initialize() noexcept override;
+		void			Simulation(float _dt) noexcept override;
+		void			Finalize() noexcept override;
 		virtual void			WorldClear() noexcept;
+
+	public:
+		void			SetGravity(const Eigen::Vector3f&) noexcept override;
+		void			Release(ZnBase* _instance) override
+		{
+			delete _instance;
+		}
 
 	public:
 		/// <summary>
@@ -81,15 +88,13 @@ namespace ZonaiPhysics
 		/// Create Collider
 		/// </summary>
 		ZnCollider*				CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
-// 		ZnCollider*				CreatePlaneCollider(const std::wstring&, float x, float y) noexcept override;
  		ZnCollider*				CreateSphereCollider(const std::wstring&, float radius) noexcept override;
  		ZnCollider*				CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
-// 		ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
+ 		// ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
 	
 // 		/// <summary>
 // 		/// Create Joint
 // 		/// </summary>
- 		// ZnD6Joint*				CreateD6Joint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;			// D6 조인트		*사실 뭔지 모름
 		ZnFixedJoint*			CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
 		ZnDistanceJoint*		CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
 		ZnSphericalJoint*		CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 구형 조인트
@@ -102,6 +107,8 @@ namespace ZonaiPhysics
 	private:
 		RigidBody*				FindRigidBody(const std::wstring&) noexcept;
 		Collider*				CreateCollider(const std::wstring&) noexcept;
+
+	public:
 
 	private:
 		physx::PxDefaultAllocator		allocator;

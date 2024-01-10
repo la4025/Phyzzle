@@ -17,7 +17,7 @@ namespace ZonaiPhysics
 
 		using namespace physx;
 
-		physx::PxTransform t0{}, t1{};
+		PxTransform t0{}, t1{};
 
 		t0.p.x = _transform0.position.x();
 		t0.p.y = _transform0.position.y();
@@ -49,7 +49,7 @@ namespace ZonaiPhysics
 			rigid1 = _object1->getRigidDynamic();
 		}
 
-		joint = physx::PxSphericalJointCreate(
+		joint = PxSphericalJointCreate(
 			*_factory,
 			rigid0, t0,
 			rigid1, t1
@@ -90,23 +90,19 @@ namespace ZonaiPhysics
 	{
 		assert(joint != nullptr);
 
-
-		using namespace physx;
-		joint->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, _value);
+		joint->setSphericalJointFlag(physx::PxSphericalJointFlag::eLIMIT_ENABLED, _value);
 	}
 
 	void SphericalJoint::SetLimitCone(float _yAngle, float _zAngle)
 	{
 		assert(joint != nullptr);
 
-
 		joint->setLimitCone({ _yAngle, _zAngle });
 	}
 
-	void SphericalJoint::SetLimitCone(float _yAngle, float _zAngle, float _stiffness, float _damping)
+	void SphericalJoint::SetLimitConeWithSpring(float _yAngle, float _zAngle, float _stiffness, float _damping)
 	{
 		assert(joint != nullptr);
-
 
 		joint->setLimitCone({ _yAngle, _zAngle, {_stiffness, _damping} });
 	}

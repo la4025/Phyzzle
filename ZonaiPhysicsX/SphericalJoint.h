@@ -30,7 +30,7 @@ namespace ZonaiPhysics
 		void GetLimitAngle(float* _outY, float* _outZ) override;
 		void LimitEnable(bool) override;
 		void SetLimitCone(float _yAngle, float _zAngle) override;
-		void SetLimitCone(float _yAngle, float _zAngle, float _stiffness, float _damping) override;
+		void SetLimitConeWithSpring(float _yAngle, float _zAngle, float _stiffness, float _damping) override;
 	};
 }
 

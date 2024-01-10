@@ -303,7 +303,7 @@ namespace ZonaiPhysics
 		assert(pxBody != nullptr);
 
 		using namespace physx;
-		pxBody->addForce(PxVec3(_torque.x(), _torque.y(), _torque.z()), static_cast<PxForceMode::Enum>(_type));
+		pxBody->addTorque(PxVec3(_torque.x(), _torque.y(), _torque.z()), static_cast<PxForceMode::Enum>(_type));
 	}
 
 	void RigidBody::ClearTorque() noexcept

@@ -36,8 +36,8 @@ namespace ZonaiPhysics
 		// sceneDesc.simulationEventCallback = NULL;
 		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 		scene = physics->createScene(sceneDesc);
-		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.f);
-		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.f);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 3.f);
+		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
 
 		PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
 		if (pvdClient)
@@ -75,6 +75,13 @@ namespace ZonaiPhysics
 	void ZnPhysicsX::WorldClear() noexcept
 	{
 
+	}
+
+	void ZnPhysicsX::SetGravity(const Eigen::Vector3f& _gravity) noexcept
+	{
+		assert(scene != nullptr, "");
+
+		scene->setGravity({ _gravity.x(), _gravity.y(), _gravity.z() });
 	}
 
 	/// <summary>
@@ -133,16 +140,6 @@ namespace ZonaiPhysics
 		return newRigidBody;
 	}
 
-	// 	ZnCollider* ZnPhysicsX::CreatePlaneCollider(const std::wstring&, float x, float y) noexcept
-	// 	{
-	// 
-	// 	}
-	// 
-	// 	ZnCollider* ZnPhysicsX::CreateSphereCollider(const std::wstring&, float radius) noexcept
-	// 	{
-	// 
-	// 	}
-
 	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring& _id, float _radius, float _height) noexcept
 	{
 		RigidBody* body = FindRigidBody(_id);
@@ -192,7 +189,7 @@ namespace ZonaiPhysics
 
 		auto* joint = new SphericalJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  joint;
+		return joint;
 	}
 
 	ZnHingeJoint* ZnPhysicsX::CreateHingeJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
@@ -202,7 +199,7 @@ namespace ZonaiPhysics
 
 		auto* joint = new HingeJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  joint;
+		return joint;
 	}
 
 	ZnPrismaticJoint* ZnPhysicsX::CreatePrismaticJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
@@ -215,9 +212,23 @@ namespace ZonaiPhysics
 		return  joint;
 	}
 
-	bool ZnPhysicsX::Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept
+	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
 	{
-		return true;
+		physx::PxRaycastBuffer temp;
+
+		if (bool hit = scene->raycast({ _from.x(), _from.y() , _from.z() }, { _to.x(), _to.y() , _to.z() }, _distance, temp))
+		{
+			_out.bodyData = static_cast<ZnRigidBody*>(temp.block.actor->userData)->GetUserData();
+			_out.colliderData = static_cast<ZnCollider*>(temp.block.shape->userData)->GetUserData();
+			_out.position = { temp.block.position.x, temp.block.position.y , temp.block.position.z };
+			_out.distance = temp.block.distance;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept

@@ -31,7 +31,7 @@ namespace ZonaiPhysics
 		float GetVelocity() const override;
 
 		void SetLimit(float _lower, float _upper) override;
-		void SetLimit(float _lower, float _upper, float _stiffness, float _damping) override;
+		void SetLimitWithSpring(float _lower, float _upper, float _stiffness, float _damping) override;
 
 		void SetLimitEnable(bool) override;
 

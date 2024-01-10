@@ -1,10 +1,12 @@
 #pragma once
 #include <Eigen/Dense>
 
+#include "ZnBase.h"
+
 
 namespace ZonaiPhysics
 {
-	class ZnObject
+	class ZnObject : public ZnBase
 	{
 	public:
 							ZnObject() noexcept = default;

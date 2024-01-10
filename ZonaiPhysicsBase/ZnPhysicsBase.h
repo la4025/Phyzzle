@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <Eigen/Dense>
+#include "ZnBase.h"
 
 namespace ZonaiPhysics
 {
@@ -15,6 +16,7 @@ namespace ZonaiPhysics
 {
 	class FixedJoint;
 
+	class ZnBase;
 	class ZnRigidBody;
 	class ZnSoftBody;
 	class ZnCollider;
@@ -32,7 +34,7 @@ namespace ZonaiPhysics
 		CONVEX,
 	};
 
-	class ZnPhysicsBase
+	class ZnPhysicsBase : public ZnBase
 	{
 	public:
 		ZnPhysicsBase() noexcept = default;
@@ -46,11 +48,9 @@ namespace ZonaiPhysics
 		virtual void			Simulation(float _dt) noexcept = 0;
 		virtual void			Finalize() noexcept = 0;
 
-		template <typename pointer>
-		void Release(pointer _instance) /*requires (std::is_pointer(_instance))*/
-		{
-			delete _instance;
-		}
+		virtual void			SetGravity(const Eigen::Vector3f&) noexcept = 0;
+
+		virtual void			Release(ZnBase* _instance) = 0;
 
 	public:
 		/// <summary>
@@ -62,7 +62,6 @@ namespace ZonaiPhysics
 		/// Create Collider
 		/// </summary>
 		virtual ZnCollider*			CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept = 0;
-		// virtual ZnCollider*		CreatPlaneCollider(const std::wstring&, float x, float y) noexcept = 0;
 		virtual ZnCollider*			CreateSphereCollider(const std::wstring&, float radius) noexcept = 0;
 		virtual ZnCollider*			CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept = 0;
 		// virtual ZnCollider*		CreateCustomCollider(const std::wstring&) noexcept = 0;

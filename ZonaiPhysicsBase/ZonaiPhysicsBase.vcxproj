@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ZnBase.h" />
     <ClInclude Include="ZnPrismaticJoint.h" />
     <ClInclude Include="ZnHingeJoint.h" />
     <ClInclude Include="ZnDistanceJoint.h" />

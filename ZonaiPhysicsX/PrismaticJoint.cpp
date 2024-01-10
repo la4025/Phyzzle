@@ -53,7 +53,7 @@ namespace ZonaiPhysics
 			rigid1, t1
 		);
 
-		assert(joint == nullptr, "ZonaiPhysicsX :: Prismatic Joint Initialize Error");
+		assert(joint != nullptr, "ZonaiPhysicsX :: Prismatic Joint Initialize Error");
 
 		tolerances = &(_factory->getTolerancesScale());
 
@@ -91,7 +91,7 @@ namespace ZonaiPhysics
 		joint->setLimit({ *tolerances, _lower, _upper });
 	}
 
-	void PrismaticJoint::SetLimit(float _lower, float _upper, float _stiffness, float _damping)
+	void PrismaticJoint::SetLimitWithSpring(float _lower, float _upper, float _stiffness, float _damping)
 	{
 		assert(joint != nullptr);
 

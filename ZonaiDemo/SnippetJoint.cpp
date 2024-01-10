@@ -213,9 +213,34 @@ void stepPhysics()// interactive
 #include "ZnFixedJoint.h"
 #include "ZnHingeJoint.h"
 #include "ZnJoint.h"
+#include "ZnPrismaticJoint.h"
 #include "ZnSphericalJoint.h"
 #include "ZnTransform.h"
 #include "../ZonaiMath/ZonaiMath.h"
+
+
+#include <chrono>
+#include <iostream>
+
+#include "ZnRaycastInfo.h"
+
+class Timer {
+private:
+	std::chrono::steady_clock::time_point lastTime;
+
+public:
+	Timer() {
+		lastTime = std::chrono::steady_clock::now();
+	}
+
+	// 반환값: 초 단위의 델타 타임
+	double GetDelta() {
+		auto currentTime = std::chrono::steady_clock::now();
+		std::chrono::duration<double> delta = currentTime - lastTime;
+		lastTime = currentTime;
+		return delta.count();
+	}
+};
 
 int snippetMain(int, const char* const*)
 {
@@ -249,20 +274,48 @@ int snippetMain(int, const char* const*)
 
 
 
-
-	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 0.5f);
+	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 6.f);
 	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
 	rigid->SetMaxLinearVelocity(100.f);
-	rigid->SetPosition({2.f, 20.f, 0.f});
+	rigid->SetPosition({0.f, 5.f, 0.f});
 
 	auto collider2 = physicsEngine->CreateSphereCollider(L"rigidBody2", 2.f);
 	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
 	rigid2->SetMaxLinearVelocity(100.f);
-	rigid2->SetPosition({ 6.f, 20.f, 0.f });
+	rigid2->SetPosition({ 4.f, 5.f, 3.f });
+
+	auto collider3 = physicsEngine->CreateSphereCollider(L"rigidBody3", 2.f);
+	const auto rigid3 = physicsEngine->CreateRigidBody(L"rigidBody3");
+	rigid3->SetMaxLinearVelocity(100.f);
+	rigid3->SetPosition({ -4.f, 5.f, 3.f });
+
+	auto collider4 = physicsEngine->CreateSphereCollider(L"rigidBody4", 2.f);
+	const auto rigid4 = physicsEngine->CreateRigidBody(L"rigidBody4");
+	rigid4->SetMaxLinearVelocity(100.f);
+	rigid4->SetPosition({ 4.f, 5.f, -3.f });
+	rigid4->SetAngularDamping(0.5f);
+	// rigid4->SetLinearDamping(0.5f);
+
+	// auto collider5 = physicsEngine->CreateSphereCollider(L"rigidBody5", 2.f);
+	// const auto rigid5 = physicsEngine->CreateRigidBody(L"rigidBody5");
+	// rigid5->SetMaxLinearVelocity(100.f);
+	// rigid5->SetPosition({ -4.f, 5.f, -3.f });
+
+	// auto collider6 = physicsEngine->CreateSphereCollider(L"rigidBody6", 1.f);
+	// const auto rigid6 = physicsEngine->CreateRigidBody(L"rigidBody6");
+	// rigid6->SetMaxLinearVelocity(100.f);
+	// rigid6->SetPosition({ 2.f, 5.f, 3.f });
+	// rigid6->SetMass(5.f);
+	// 
+	// auto collider7 = physicsEngine->CreateSphereCollider(L"rigidBody7", 1.f);
+	// const auto rigid7 = physicsEngine->CreateRigidBody(L"rigidBody7");
+	// rigid7->SetMaxLinearVelocity(100.f);
+	// rigid7->SetPosition({ 2.f, 5.f, -3.f });
+	// rigid7->SetMass(5.f);
 
 	auto fixedjoint = physicsEngine->CreateFixedJoint(
 		NULL, ZonaiPhysics::ZnTransform{ {0.f, 20.f, 0} },
-		rigid, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
+		rigid, ZonaiPhysics::ZnTransform{ {0.f, 0.f, 0.f} }
 	);
 
 	Eigen::AngleAxisf axis;
@@ -290,63 +343,124 @@ int snippetMain(int, const char* const*)
 	//distanceJoint->SetDamping(10.f);
 	//distanceJoint->SetSpringEnable(true);
 
-	auto hingeJoint = physicsEngine->CreateHingeJoint(
-			rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0} },
-			rigid2, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
-		);
 
-	hingeJoint->SetLimit(-ZonaiMath::PI / 2, ZonaiMath::PI / 2 );
-	hingeJoint->SetLimitEnable(true);
+	// rigid 로컬 x로부터 2만큼 떨어진 곳에서 z축으로 90도 회전한 곳
+	// auto hingeJoint = physicsEngine->CreateHingeJoint(
+	// 		rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 3.f} },
+	// 		rigid2, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
+	// 	);
+	// hingeJoint->SetDriveEnable(true);
+	// hingeJoint->SetDriveVelocity(10.f);
+	// hingeJoint->SetDriveFreespin(false);
+	// 
+	// auto hingeJoint2 = physicsEngine->CreateHingeJoint(
+	// 	rigid, ZonaiPhysics::ZnTransform{ {-2.f, 0, 3.f} },
+	// 	rigid3, ZonaiPhysics::ZnTransform{ {2.f, 0.f, 0.f} }
+	// );
+	// hingeJoint2->SetDriveEnable(true);
+	// hingeJoint2->SetDriveVelocity(10.f);
+	// hingeJoint2->SetDriveFreespin(false);
+
+	 auto prismatic = physicsEngine->CreateDistanceJoint(
+	 	rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, -3.f} },
+	 	rigid4, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
+	 );
+
+	//  prismatic->SetSpringEnable(true);
+	 prismatic->SetMaxDistance(10.f);
+	 prismatic->SetMaxDistanceEnable(true);
+	 // prismatic->SetStiffness(10.f);
+	 // prismatic->SetDamping(10.f);
+
+
+	// auto hingeJoint5 = physicsEngine->CreateHingeJoint(
+	// 	rigid, ZonaiPhysics::ZnTransform{ {0.f, 0, 3.f} },
+	// 	rigid6, ZonaiPhysics::ZnTransform{ {0.f, 0.f, 0.f} }
+	// );
+	// hingeJoint5->SetDriveEnable(true);
+	// hingeJoint5->SetDriveVelocity(-5.f);
+	// 
+	// auto hingeJoint6 = physicsEngine->CreateHingeJoint(
+	// 	rigid, ZonaiPhysics::ZnTransform{ {0.f, 0, -3.f} },
+	// 	rigid7, ZonaiPhysics::ZnTransform{ {0.f, 0.f, 0.f} }
+	// );
+	// hingeJoint6->SetDriveEnable(true);
+	// hingeJoint6->SetDriveVelocity(-5.f);
 
 	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
 	const auto ground = physicsEngine->CreateRigidBody(L"ground");
-	ground->SetPosition({ 0, 0, -10 });
+	ground->SetPosition({ 0, 0, 0 });
 	ground->SetKinematic(true);
+
+	Timer timer;
 
 	while (true)
 	{
-		physicsEngine->Simulation(1.0f / 6000.0f);
+		float dt = timer.GetDelta();
 
-		if (GetAsyncKeyState('F'))
-		{
-			// rigid2->AddForce({ 40.f, 40.f, 40.f });
-			rigid2->AddTorque({ 40.f, 40.f, 40.f });
-		}
-		if (GetAsyncKeyState('G'))
-		{
-			// rigid2->AddForce({ 40.f, 40.f, 40.f });
-			rigid2->AddTorque({ -40.f, -40.f, -40.f });
-		}
+		physicsEngine->Simulation(dt);
+
+		//if (GetAsyncKeyState(VK_RIGHT))
+		//{
+		//	rigid4->AddForce({10.f, 0.f, 0.f});
+		//}
+		//if (GetAsyncKeyState(VK_LEFT))
+		//{
+		//	rigid4->AddForce({ -10.f, 0.f, 0.f });
+		//}
+		//if (GetAsyncKeyState(VK_DOWN))
+		//{
+		//	rigid4->AddForce({0.f, 0.f, 10.f});
+		//}
+		//if (GetAsyncKeyState(VK_UP))
+		//{
+		//	rigid4->AddForce({ 0.f, 10.f, 10.f });
+		//}
 
 		bool clickUp = GetAsyncKeyState('I');
 		bool clickRight = GetAsyncKeyState('L');
 		bool clickLeft = GetAsyncKeyState('J');
 		bool clickDown = GetAsyncKeyState('K');
 
+		bool KeySpace = GetAsyncKeyState(VK_SPACE);
+
+		// if (KeySpace)
+		// {
+ 			ZonaiPhysics::ZnRaycastInfo info;
+			Eigen::Vector3f pos = ground->GetPosition() + Eigen::Vector3f{ 0.f, 1.1f, 0.f };
+			if (physicsEngine->Raycast(pos, Eigen::Vector3f{0.f, 1.f, 0.f}.normalized(), 100.f, info))
+			{
+				std::cout << "O : " << info.distance << std::endl;
+			}
+			else
+			{
+				std::cout << "X" << std::endl;
+			}
+		// }
+
 		if (clickUp || clickRight || clickLeft || clickDown)
 		{
-			auto pos = collider2->GetLocalPosition();
-			float y = 0, z = 0;
+			Eigen::Vector3f nowpos = ground->GetPosition();
+			Eigen::Vector3f movement{ 0.f, 0.f, 0.f };
 
 			if (clickDown)
 			{
-				y = -5.f;
+				movement += Eigen::Vector3f{ 0.f, 0.f, 0.01f };
 			}
 			if (clickLeft)
 			{
-				z = 5.f;
+				movement += Eigen::Vector3f{ -0.01f, 0.f, 0.f };
 			}
 			if (clickRight)
 			{
-				z = -5.f;
+				movement += Eigen::Vector3f{ 0.01f, 0.f, 0.f };
 			}
 			if (clickUp)
 			{
-				y = 5.f;
+				movement += Eigen::Vector3f{ 0.f, 0.f, -0.01f };
 			}
 
-			pos = Eigen::Vector3f(pos.x(), y, z);
-			collider2->SetLocalPosition(pos);
+			ground->SetPosition(nowpos + movement);
 		}
 	}
 

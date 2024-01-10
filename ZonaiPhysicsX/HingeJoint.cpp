@@ -89,7 +89,7 @@ namespace ZonaiPhysics
 		joint->setLimit({ _lower, _upper });
 	}
 
-	void HingeJoint::SetLimit(float _lower, float _upper, float _stiffness, float _damping)
+	void HingeJoint::SetLimitWithSpring(float _lower, float _upper, float _stiffness, float _damping)
 	{
 		assert(joint != nullptr);
 
@@ -98,31 +98,43 @@ namespace ZonaiPhysics
 
 	void HingeJoint::SetDriveVelocity(float _velocity)
 	{
+		assert(joint != nullptr);
+
 		joint->setDriveVelocity(_velocity);
 	}
 
 	float HingeJoint::GetDriveVelocity() const
 	{
+		assert(joint != nullptr);
+
 		return joint->getDriveVelocity();
 	}
 
 	void HingeJoint::SetDriveForceLimit(float _limit)
 	{
+		assert(joint != nullptr);
+
 		joint->setDriveForceLimit(_limit);
 	}
 
 	float HingeJoint::GetDriveForceLimit() const
 	{
+		assert(joint != nullptr);
+
 		return joint->getDriveForceLimit();
 	}
 
 	void HingeJoint::SetDriveGearRatio(float _ratio)
 	{
+		assert(joint != nullptr);
+
 		joint->setDriveGearRatio(_ratio);
 	}
 
 	float HingeJoint::GetDriveGearRatio() const
 	{
+		assert(joint != nullptr);
+
 		return joint->getDriveGearRatio();
 	}
 

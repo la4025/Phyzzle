@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include "ZnBase.h"
 
 
 namespace ZonaiPhysics
@@ -8,7 +9,7 @@ namespace ZonaiPhysics
 	
 	class ZnObject;
 
-	class ZnJoint
+	class ZnJoint : public ZnBase
 	{
 	public:
 		enum eOBJECT
