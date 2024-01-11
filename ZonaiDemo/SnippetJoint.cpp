@@ -277,23 +277,23 @@ int snippetMain(int, const char* const*)
 	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 6.f);
 	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
 	rigid->SetMaxLinearVelocity(100.f);
-	rigid->SetPosition({0.f, 5.f, 0.f});
+	rigid->SetPosition({0.f, 15.f, 0.f});
 
-	auto collider2 = physicsEngine->CreateSphereCollider(L"rigidBody2", 2.f);
-	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
-	rigid2->SetMaxLinearVelocity(100.f);
-	rigid2->SetPosition({ 4.f, 5.f, 3.f });
-
-	auto collider3 = physicsEngine->CreateSphereCollider(L"rigidBody3", 2.f);
-	const auto rigid3 = physicsEngine->CreateRigidBody(L"rigidBody3");
-	rigid3->SetMaxLinearVelocity(100.f);
-	rigid3->SetPosition({ -4.f, 5.f, 3.f });
-
-	auto collider4 = physicsEngine->CreateSphereCollider(L"rigidBody4", 2.f);
-	const auto rigid4 = physicsEngine->CreateRigidBody(L"rigidBody4");
-	rigid4->SetMaxLinearVelocity(100.f);
-	rigid4->SetPosition({ 4.f, 5.f, -3.f });
-	rigid4->SetAngularDamping(0.5f);
+//	auto collider2 = physicsEngine->CreateSphereCollider(L"rigidBody2", 2.f);
+//	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
+//	rigid2->SetMaxLinearVelocity(100.f);
+//	rigid2->SetPosition({ 4.f, 5.f, 3.f });
+//
+//	auto collider3 = physicsEngine->CreateSphereCollider(L"rigidBody3", 2.f);
+//	const auto rigid3 = physicsEngine->CreateRigidBody(L"rigidBody3");
+//	rigid3->SetMaxLinearVelocity(100.f);
+//	rigid3->SetPosition({ -4.f, 5.f, 3.f });
+//
+//	auto collider4 = physicsEngine->CreateSphereCollider(L"rigidBody4", 2.f);
+//	const auto rigid4 = physicsEngine->CreateRigidBody(L"rigidBody4");
+//	rigid4->SetMaxLinearVelocity(100.f);
+//	rigid4->SetPosition({ 4.f, 5.f, -3.f });
+//	rigid4->SetAngularDamping(0.5f);
 	// rigid4->SetLinearDamping(0.5f);
 
 	// auto collider5 = physicsEngine->CreateSphereCollider(L"rigidBody5", 2.f);
@@ -313,15 +313,15 @@ int snippetMain(int, const char* const*)
 	// rigid7->SetPosition({ 2.f, 5.f, -3.f });
 	// rigid7->SetMass(5.f);
 
-	auto fixedjoint = physicsEngine->CreateFixedJoint(
-		NULL, ZonaiPhysics::ZnTransform{ {0.f, 20.f, 0} },
-		rigid, ZonaiPhysics::ZnTransform{ {0.f, 0.f, 0.f} }
-	);
-
-	Eigen::AngleAxisf axis;
-	axis.angle() = - ZonaiMath::PI / 2.f;
-	axis.axis() = { 0.f, 0.f, 1.f };
-	Eigen::Quaternionf q{ axis };
+//	auto fixedjoint = physicsEngine->CreateFixedJoint(
+//		NULL, ZonaiPhysics::ZnTransform{ {0.f, 20.f, 0} },
+//		rigid, ZonaiPhysics::ZnTransform{ {0.f, 0.f, 0.f} }
+//	);
+//
+//	Eigen::AngleAxisf axis;
+//	axis.angle() = - ZonaiMath::PI / 2.f;
+//	axis.axis() = { 0.f, 0.f, 1.f };
+//	Eigen::Quaternionf q{ axis };
 
 	// auto sphericalJjoint = physicsEngine->CreateSphericalJoint(
 	// 	rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, 0}, q },
@@ -361,16 +361,16 @@ int snippetMain(int, const char* const*)
 	// hingeJoint2->SetDriveVelocity(10.f);
 	// hingeJoint2->SetDriveFreespin(false);
 
-	 auto prismatic = physicsEngine->CreateDistanceJoint(
-	 	rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, -3.f} },
-	 	rigid4, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
-	 );
-
-	//  prismatic->SetSpringEnable(true);
-	 prismatic->SetMaxDistance(10.f);
-	 prismatic->SetMaxDistanceEnable(true);
-	 // prismatic->SetStiffness(10.f);
-	 // prismatic->SetDamping(10.f);
+//	 auto prismatic = physicsEngine->CreateDistanceJoint(
+//	 	rigid, ZonaiPhysics::ZnTransform{ {2.f, 0, -3.f} },
+//	 	rigid4, ZonaiPhysics::ZnTransform{ {-2.f, 0.f, 0.f} }
+//	 );
+//
+//	//  prismatic->SetSpringEnable(true);
+//	 prismatic->SetMaxDistance(10.f);
+//	 prismatic->SetMaxDistanceEnable(true);
+//	 // prismatic->SetStiffness(10.f);
+//	 // prismatic->SetDamping(10.f);
 
 
 	// auto hingeJoint5 = physicsEngine->CreateHingeJoint(

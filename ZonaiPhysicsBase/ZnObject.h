@@ -9,7 +9,8 @@ namespace ZonaiPhysics
 	class ZnObject : public ZnBase
 	{
 	public:
-							ZnObject() noexcept = default;
+							ZnObject() noexcept : userData()
+		{}
 		virtual				~ZnObject() noexcept = default;
 
 	public:
@@ -35,8 +36,3 @@ namespace ZonaiPhysics
 		void* userData;
 	};
 }
-
-/*
-오브젝트가 PxRigidDynamic을 들고 있고
-RigidBody, Collider가 그걸 받아서 쓰는 형태로 하는데.
-*/

@@ -8,11 +8,6 @@ namespace ZonaiPhysics
 {
 	class ZnSimulationCallback;
 
-	struct contactPair
-	{
-		
-	};
-
 	class ZnSimulationCallbackX : public physx::PxSimulationEventCallback
 	{
 	private:
@@ -28,6 +23,8 @@ namespace ZonaiPhysics
 
 	private:
 		void onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer, const physx::PxU32 count) override;
+
+		static ZnCollider* GetCollider(physx::PxShape* _shape);
 	};
 }
 

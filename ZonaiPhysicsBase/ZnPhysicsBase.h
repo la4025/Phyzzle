@@ -50,7 +50,7 @@ namespace ZonaiPhysics
 
 		virtual void			SetGravity(const Eigen::Vector3f&) noexcept = 0;
 
-		virtual void			Release(ZnBase* _instance) = 0;
+		virtual void			Release() = 0;
 
 	public:
 		/// <summary>

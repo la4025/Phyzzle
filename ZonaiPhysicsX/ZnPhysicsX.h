@@ -69,14 +69,13 @@ namespace ZonaiPhysics
 		void			Initialize() noexcept override;
 		void			Simulation(float _dt) noexcept override;
 		void			Finalize() noexcept override;
-		virtual void			WorldClear() noexcept;
+
+		static	ZnPhysicsBase* Instance();
+		void			Release() override;
 
 	public:
 		void			SetGravity(const Eigen::Vector3f&) noexcept override;
-		void			Release(ZnBase* _instance) override
-		{
-			delete _instance;
-		}
+
 
 	public:
 		/// <summary>
@@ -108,7 +107,7 @@ namespace ZonaiPhysics
 		RigidBody*				FindRigidBody(const std::wstring&) noexcept;
 		Collider*				CreateCollider(const std::wstring&) noexcept;
 
-	public:
+		static ZnPhysicsX*	instance;
 
 	private:
 		physx::PxDefaultAllocator		allocator;
@@ -118,10 +117,6 @@ namespace ZonaiPhysics
 		physx::PxDefaultCpuDispatcher*	dispatcher;
 		physx::PxScene*					scene;
 		physx::PxPvd*					pvd;
-
-		physx::PxRaycastHit hitInfo;
-		physx::PxRaycastBuffer hit;
-		physx::PxQueryFilterData d;
 
 		physx::PxMaterial*				material;
 

@@ -18,6 +18,8 @@
 
 namespace ZonaiPhysics
 {
+	ZnPhysicsX* ZnPhysicsX::instance = nullptr;
+
 	void ZnPhysicsX::Initialize() noexcept
 	{
 		using namespace physx;
@@ -72,9 +74,20 @@ namespace ZonaiPhysics
 		PX_RELEASE(foundation);
 	}
 
-	void ZnPhysicsX::WorldClear() noexcept
+	ZnPhysicsBase* ZnPhysicsX::Instance()
 	{
+		assert(!instance);
 
+		instance = new ZnPhysicsX();
+
+		return instance;
+	}
+
+	void ZnPhysicsX::Release()
+	{
+		assert(instance);
+
+		delete instance;
 	}
 
 	void ZnPhysicsX::SetGravity(const Eigen::Vector3f& _gravity) noexcept
@@ -119,6 +132,14 @@ namespace ZonaiPhysics
 		}
 
 		Collider* newRigidBody = new BoxCollider(physics, body, Eigen::Vector3f(x, y, z), material);
+
+		static int i = 0;
+		i++;
+		if (i == 2)
+		{
+			material->release();
+			float a = material->getDynamicFriction();
+		}
 
 		return newRigidBody;
 	}
@@ -246,14 +267,7 @@ namespace ZonaiPhysics
 	{
 		ZnPhysicsBase* CreatePhysics()
 		{
-			static ZnPhysicsBase* instance = nullptr;
-
-			if (instance == nullptr)
-			{
-				instance = new ZnPhysicsX();
-			}
-
-			return instance;
+			return ZnPhysicsX::Instance();
 		}
 	}
 
