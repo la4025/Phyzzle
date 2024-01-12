@@ -3,13 +3,43 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#define LIGHT_TYPE_DIRECTIONAL 0u
-#define LIGHT_TYPE_POINT 1u
-#define LIGHT_TYPE_SPOT 2u
+constexpr unsigned int LIGHT_COUNT_MAX = 50u;
+constexpr unsigned int BONE_COUNT_MAX = 256u;
 
-#define LIGHT_COUNT_MAX 50u
+namespace Deferred
+{
+	namespace Object
+	{
+		constexpr unsigned int Begin = 0u;
 
-#define BONE_COUNT_MAX 256u
+		constexpr unsigned int Position = 0u;
+		constexpr unsigned int Normal = 1u;
+		constexpr unsigned int Albedo = 2u;
+		constexpr unsigned int Depth = 3u;
+
+		constexpr unsigned int Count = 4u;
+	}
+
+	namespace Light
+	{
+		constexpr unsigned int Begin = 4u;
+
+		constexpr unsigned int Diffuse = 4u;
+		constexpr unsigned int Specular = 5u;
+
+		constexpr unsigned int Count = 2u;
+	}
+
+	constexpr unsigned int bufferCount = 6u;
+	constexpr unsigned int slotBegin = 5u;
+}
+
+enum class LightType : unsigned int
+{
+	Directional = 0u,
+	Point = 1u,
+	Spot = 2u
+};
 
 struct VertexType
 {
@@ -30,6 +60,8 @@ struct MatrixBufferType
 	DirectX::XMMATRIX world;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
+	float cameraFar;
+	float padding[3];
 
 	constexpr static unsigned int registerNum = 0;
 };
@@ -53,19 +85,25 @@ struct LightInfo
 	LightColor color;
 	DirectX::XMFLOAT4 position;
 	DirectX::XMFLOAT4 direction;
-	unsigned int type;
+	LightType type;
 	float range;
 	float angle;
 	float padding;
 };
 
-struct LightBufferType
+struct LightInfoBufferType
 {
-	unsigned int lightCount;
-	float padding[3];
 	LightInfo lights[LIGHT_COUNT_MAX];
 
 	constexpr static unsigned int registerNum = 2;
+};
+
+struct LightIndexBufferType
+{
+	unsigned int lightIndex;
+	float padding[3];
+
+	constexpr static unsigned int registerNum = 3;
 };
 
 struct MaterialBufferType
@@ -87,7 +125,7 @@ struct MaterialBufferType
 	unsigned int useTemp3;
 	unsigned int useTemp4;
 
-	constexpr static unsigned int registerNum = 3;
+	constexpr static unsigned int registerNum = 4;
 };
 
 #pragma endregion

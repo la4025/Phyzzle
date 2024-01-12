@@ -20,6 +20,10 @@ public:
 	static bool SetMainCamera(CameraID cameraID);
 	static CameraID GetMainCamera();
 
+	float GetFov() const;
+	float GetNear() const;
+	float GetFar() const;
+
 private:
 	ZeldaCamera(float screenWidth, float screenHeight);
 	ZeldaCamera(const ZeldaCamera& zeldaCamera) = delete;

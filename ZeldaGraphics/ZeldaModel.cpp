@@ -19,33 +19,65 @@ using namespace DirectX;
 
 ZeldaModel::~ZeldaModel()
 {
-	// mesh
-	
+	// root 부터 트리타고 전부 제거
+	std::queue<Node*> q;
+	if (root != nullptr)
+	{
+		q.push(root);
+	}
 
-	// material
+	while (!q.empty())
+	{
+		Node* current = q.front();
+		q.pop();
 
+		for (int i = 0; i < current->children.size(); i++)
+		{
+			q.push(current->children[i]);
+		}
 
+		delete current;
+	}
 
+	root = nullptr;
 
-	// 채워야함
+	// meshes 제거 (ZeldaMesh)
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		delete meshes[i];
+	}
+	meshes.clear();
+
+	// material 제거 (ZeldaMaterial)
+	for (int i = 0; i < materials.size(); i++)
+	{
+		delete materials[i];
+	}
+	materials.clear();
+
+	// Animation 제거
+	for (auto iter = animationTable.begin(); iter != animationTable.end(); iter++)
+	{
+		Animation* animation = iter->second;
+		delete animation;
+	}
+	animationTable.clear();
 }
 
 void ZeldaModel::Render(
 	ID3D11DeviceContext* deviceContext,
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
-	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
-	ZeldaLight* light,
 	const std::wstring& animationName,
 	float animationTime)
 {
 	// 정상적인 애니메이션 정보가 들어온 경우 RenderAnimation을 호출한다.
 	if (animationTime > 0.0f && animationTable.count(animationName) > 0)
 	{
-		RenderAnimation(deviceContext, matrixConstBuffer, boneConstBuffer, lightConstBuffer, materialConstBuffer, worldMatrix, shader, light, animationName, animationTime);
+		RenderAnimation(deviceContext, matrixConstBuffer, boneConstBuffer, materialConstBuffer, worldMatrix, shader, animationName, animationTime);
 		return;
 	}
 
@@ -92,12 +124,6 @@ void ZeldaModel::Render(
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 	boneConstBuffer->SetData(*boneBuffer);
-	LightBufferType lightData;
-	lightData.lightCount = 1;
-	lightData.lights[0].color = { light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular() };
-	lightData.lights[0].direction = { light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 0 };
-	lightData.lights[0].type = LIGHT_TYPE_DIRECTIONAL;
-	lightConstBuffer->SetData(lightData);
 
 	delete boneBuffer;
 
@@ -295,14 +321,11 @@ void ZeldaModel::CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstri
 
 void ZeldaModel::RenderAnimation(
 	ID3D11DeviceContext* deviceContext,
-	ConstantBuffer<MatrixBufferType,
-	ShaderType::VertexShader>* matrixConstBuffer,
+	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
-	ConstantBuffer<LightBufferType, ShaderType::PixelShader>* lightConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
-	ZeldaLight* light,
 	const std::wstring& animationName,
 	float animationTime)
 {
@@ -399,12 +422,6 @@ void ZeldaModel::RenderAnimation(
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 	boneConstBuffer->SetData(*boneBuffer);
-	LightBufferType lightData;
-	lightData.lightCount = 1;
-	lightData.lights[0].color = { light->GetAmbient(), light->GetDiffuseColor(), light->GetSpecular() };
-	lightData.lights[0].direction = { light->GetDirection().x, light->GetDirection().y, light->GetDirection().z, 0 };
-	lightData.lights[0].type = LIGHT_TYPE_DIRECTIONAL;
-	lightConstBuffer->SetData(lightData);
 
 	delete boneBuffer;
 

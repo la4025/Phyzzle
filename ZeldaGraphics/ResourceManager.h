@@ -13,11 +13,12 @@
 
 #include "GraphicsResourceID.h"
 
+class ZeldaCamera;
+class ZeldaTexture;
 class ZeldaModel;
 class ZeldaMesh;
-class ZeldaTexture;
 class ZeldaShader;
-class ZeldaCamera;
+class ZeldaLight;
 
 struct ZNode;
 struct ZMesh;
@@ -37,39 +38,52 @@ class ResourceManager
 public:
 	void Initialize(ID3D11Device* device);
 
-	ModelID CreateModelFromModelingFile(const std::wstring& filePath);
-
-	bool CreateCubeMesh();
-	MeshID GetCubeID();
-	
-	TextureID CreateTexture(const std::wstring& filePath);
-
-	ShaderID CreateShader(const std::wstring& vsFilePath, const std::wstring& psFilePath);
-
+	MeshID CreateCubeMesh();
+	MeshID CreateSquareMesh();
 	CameraID CreateCamera(unsigned int screenWidth, unsigned int screenHeight);
+	TextureID CreateTexture(const std::wstring& filePath);
+	ModelID CreateModelFromModelingFile(const std::wstring& filePath);
+	ShaderID CreateShader(const std::wstring& vsFilePath, const std::wstring& psFilePath);
+	LightID CreateDirectionalLight();
+	LightID CreatePointLight();
+	LightID CreateSpotLight();
 
-	ZeldaModel* GetModel(ModelID key);
+	void ReleaseCubeMesh();
+	void ReleaseSquareMesh();
+	void ReleaseCamera(CameraID cameraID);
+	void ReleaseTexture(TextureID textureID);
+	void ReleaseModel(ModelID modelID);
+	void ReleaseMesh(MeshID meshID);
+	void ReleaseShader(ShaderID shaderID);
+	void ReleaseLight(LightID lightID);
+
+	MeshID GetCubeID();
+	MeshID GetSquareID();
+
 	ZeldaMesh* GetCubeMesh();
-	ZeldaMesh* GetMesh(MeshID key);
-	ZeldaTexture* GetTexture(TextureID key);
-	ZeldaShader* GetShader(ShaderID key);
+	ZeldaMesh* GetSquareMesh();
 	ZeldaCamera* GetCamera(CameraID cameraID);
+	ZeldaTexture* GetTexture(TextureID key);
+	ZeldaModel* GetModel(ModelID key);
+	ZeldaMesh* GetMesh(MeshID key);
+	ZeldaShader* GetShader(ShaderID key);
+	ZeldaLight* GetLight(LightID key);
 
 	bool CheckCameraID(CameraID cameraID);
 
 
-	bool ReleaseCamera(CameraID cameraID);
-
 private:
 	ID3D11Device* device;
+	std::unordered_map<CameraID, ZeldaCamera*> cameraTable;
+	std::unordered_map<TextureID, ZeldaTexture*> textureTable;
 	std::unordered_map<ModelID, ZeldaModel*> modelTable;
 	std::unordered_map<MeshID, ZeldaMesh*> meshTable;
-	std::unordered_map<TextureID, ZeldaTexture*> textureTable;
 	std::unordered_map<ShaderID, ZeldaShader*> shaderTable;
+	std::unordered_map<LightID, ZeldaLight*> lightTable;
 
-	std::unordered_map<CameraID, ZeldaCamera*> cameraTable;
 
 	MeshID cubeID;
+	MeshID squareID;
 
 	//singleton
 public:

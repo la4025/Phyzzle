@@ -6,6 +6,7 @@
 #include "ZeldaTexture.h"
 #include "ZeldaShader.h"
 #include "ZeldaCamera.h"
+#include "ZeldaLight.h"
 #include "IDGenerator.h"
 
 #include "FBXData.h"
@@ -18,30 +19,11 @@ void ResourceManager::Initialize(ID3D11Device* device)
 	this->device = device;
 }
 
-ModelID ResourceManager::CreateModelFromModelingFile(const std::wstring& filePath)
-{
-	FBXLoader::FBXLoader fbxloader;
-	FBXLoader::Model* fbxmodel = fbxloader.CreateModelFromFBX(filePath);
-
-	ModelID resourceID = IDGenerator::CreateID<ResourceType::Model>();
-
-	while (modelTable.count(resourceID) != 0 || resourceID == ModelID::ID_NULL)
-	{
-		resourceID = IDGenerator::CreateID<ResourceType::Model>();
-	}
-
-	modelTable[resourceID] = new ZeldaModel(device, fbxmodel);
-
-	fbxloader.ReleaseModel(fbxmodel);
-
-	return resourceID;
-}
-
-bool ResourceManager::CreateCubeMesh()
+MeshID ResourceManager::CreateCubeMesh()
 {
 	if (cubeID != MeshID::ID_NULL)
 	{
-		return false;
+		return MeshID::ID_NULL;
 	}
 
 	std::vector<VertexType> vertexList;
@@ -137,12 +119,55 @@ bool ResourceManager::CreateCubeMesh()
 
 	meshTable[cubeID] = new ZeldaMesh(device, vertexList, indexList);
 
-	return true;
+	return cubeID;
 }
 
-MeshID ResourceManager::GetCubeID()
+MeshID ResourceManager::CreateSquareMesh()
 {
-	return cubeID;
+	if (squareID != MeshID::ID_NULL)
+	{
+		return MeshID::ID_NULL;
+	}
+
+	std::vector<VertexType> vertexList(4);
+	std::vector<unsigned int> indexList(6);
+
+	vertexList[0] = { { -0.5f, -0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f} };
+	vertexList[1] = { { -0.5f, +0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f} };
+	vertexList[2] = { { +0.5f, +0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 0.0f} };
+	vertexList[3] = { { +0.5f, -0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 1.0f, 1.0f} };
+
+	indexList[0] = 0;
+	indexList[1] = 1;
+	indexList[2] = 2;
+	indexList[3] = 0;
+	indexList[4] = 2;
+	indexList[5] = 3;
+
+	squareID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(squareID) != 0 || squareID == MeshID::ID_NULL)
+	{
+		squareID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[squareID] = new ZeldaMesh(device, vertexList, indexList);
+
+	return squareID;
+}
+
+CameraID ResourceManager::CreateCamera(unsigned int screenWidth, unsigned int screenHeight)
+{
+	ResourceID cameraID = IDGenerator::CreateID<ResourceType::Camera>();
+
+	while (cameraTable.count(cameraID) != 0 || cameraID == CameraID::ID_NULL)
+	{
+		cameraID = IDGenerator::CreateID<ResourceType::Camera>();
+	}
+
+	cameraTable[cameraID] = new ZeldaCamera(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+
+	return cameraID;
 }
 
 TextureID ResourceManager::CreateTexture(const std::wstring& filePath)
@@ -155,6 +180,25 @@ TextureID ResourceManager::CreateTexture(const std::wstring& filePath)
 	}
 
 	textureTable[resourceID] = new ZeldaTexture(device, filePath);
+
+	return resourceID;
+}
+
+ModelID ResourceManager::CreateModelFromModelingFile(const std::wstring& filePath)
+{
+	FBXLoader::FBXLoader fbxloader;
+	FBXLoader::Model* fbxmodel = fbxloader.CreateModelFromFBX(filePath);
+
+	ModelID resourceID = IDGenerator::CreateID<ResourceType::Model>();
+
+	while (modelTable.count(resourceID) != 0 || resourceID == ModelID::ID_NULL)
+	{
+		resourceID = IDGenerator::CreateID<ResourceType::Model>();
+	}
+
+	modelTable[resourceID] = new ZeldaModel(device, fbxmodel);
+
+	fbxloader.ReleaseModel(fbxmodel);
 
 	return resourceID;
 }
@@ -173,30 +217,168 @@ ShaderID ResourceManager::CreateShader(const std::wstring& vsFilePath, const std
 	return resourceID;
 }
 
-CameraID ResourceManager::CreateCamera(unsigned int screenWidth, unsigned int screenHeight)
+LightID ResourceManager::CreateDirectionalLight()
 {
-	ResourceID cameraID = IDGenerator::CreateID<ResourceType::Camera>();
+	LightID resourceID = IDGenerator::CreateID<ResourceType::Light>();
 
-	while (cameraTable.count(cameraID) != 0 || cameraID == CameraID::ID_NULL)
+	while (lightTable.count(resourceID) != 0 || resourceID == LightID::ID_NULL)
 	{
-		cameraID = IDGenerator::CreateID<ResourceType::Camera>();
+		resourceID = IDGenerator::CreateID<ResourceType::Light>();
 	}
 
-	cameraTable[cameraID] = new ZeldaCamera(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+	lightTable[resourceID] = new ZeldaLight(LightType::Directional);
 
-	return cameraID;
+	return resourceID;
 }
 
-ZeldaModel* ResourceManager::GetModel(ModelID key)
+LightID ResourceManager::CreatePointLight()
 {
-	auto iter = modelTable.find(key);
+	LightID resourceID = IDGenerator::CreateID<ResourceType::Light>();
 
-	if (iter != modelTable.end())
+	while (lightTable.count(resourceID) != 0 || resourceID == LightID::ID_NULL)
 	{
-		return (*iter).second;
+		resourceID = IDGenerator::CreateID<ResourceType::Light>();
 	}
 
-	return nullptr;
+	lightTable[resourceID] = new ZeldaLight(LightType::Point);
+
+	return resourceID;
+}
+
+LightID ResourceManager::CreateSpotLight()
+{
+	LightID resourceID = IDGenerator::CreateID<ResourceType::Light>();
+
+	while (lightTable.count(resourceID) != 0 || resourceID == LightID::ID_NULL)
+	{
+		resourceID = IDGenerator::CreateID<ResourceType::Light>();
+	}
+
+	lightTable[resourceID] = new ZeldaLight(LightType::Spot);
+
+	return resourceID;
+}
+
+void ResourceManager::ReleaseCubeMesh()
+{
+	ReleaseMesh(cubeID);
+}
+
+void ResourceManager::ReleaseSquareMesh()
+{
+	ReleaseMesh(squareID);
+}
+
+void ResourceManager::ReleaseCamera(CameraID cameraID)
+{
+	auto& table = cameraTable;
+	auto& id = cameraID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+void ResourceManager::ReleaseTexture(TextureID textureID)
+{
+	auto& table = textureTable;
+	auto& id = textureID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+void ResourceManager::ReleaseModel(ModelID modelID)
+{
+	auto& table = modelTable;
+	auto& id = modelID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+void ResourceManager::ReleaseMesh(MeshID meshID)
+{
+	auto& table = meshTable;
+	auto& id = meshID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+void ResourceManager::ReleaseShader(ShaderID shaderID)
+{
+	auto& table = shaderTable;
+	auto& id = shaderID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+void ResourceManager::ReleaseLight(LightID lightID)
+{
+	auto& table = lightTable;
+	auto& id = lightID;
+
+	assert(table.count(id) != 0);
+	if (table.count(id) != 0)
+	{
+		auto* targetPtr = table[id];
+		if (targetPtr != nullptr)
+		{
+			delete targetPtr;
+		}
+		table.erase(id);
+	}
+}
+
+MeshID ResourceManager::GetCubeID()
+{
+	return cubeID;
+}
+
+MeshID ResourceManager::GetSquareID()
+{
+	return squareID;
 }
 
 ZeldaMesh* ResourceManager::GetCubeMesh()
@@ -204,11 +386,16 @@ ZeldaMesh* ResourceManager::GetCubeMesh()
 	return meshTable[cubeID];
 }
 
-ZeldaMesh* ResourceManager::GetMesh(MeshID key)
+ZeldaMesh* ResourceManager::GetSquareMesh()
 {
-	auto iter = meshTable.find(key);
+	return meshTable[squareID];
+}
 
-	if (iter != meshTable.end())
+ZeldaCamera* ResourceManager::GetCamera(CameraID cameraID)
+{
+	auto iter = cameraTable.find(cameraID);
+
+	if (iter != cameraTable.end())
 	{
 		return (*iter).second;
 	}
@@ -228,6 +415,30 @@ ZeldaTexture* ResourceManager::GetTexture(TextureID key)
 	return nullptr;
 }
 
+ZeldaModel* ResourceManager::GetModel(ModelID key)
+{
+	auto iter = modelTable.find(key);
+
+	if (iter != modelTable.end())
+	{
+		return (*iter).second;
+	}
+
+	return nullptr;
+}
+
+ZeldaMesh* ResourceManager::GetMesh(MeshID key)
+{
+	auto iter = meshTable.find(key);
+
+	if (iter != meshTable.end())
+	{
+		return (*iter).second;
+	}
+
+	return nullptr;
+}
+
 ZeldaShader* ResourceManager::GetShader(ShaderID key)
 {
 	auto iter = shaderTable.find(key);
@@ -240,11 +451,11 @@ ZeldaShader* ResourceManager::GetShader(ShaderID key)
 	return nullptr;
 }
 
-ZeldaCamera* ResourceManager::GetCamera(CameraID cameraID)
+ZeldaLight* ResourceManager::GetLight(LightID key)
 {
-	auto iter = cameraTable.find(cameraID);
+	auto iter = lightTable.find(key);
 
-	if (iter != cameraTable.end())
+	if (iter != lightTable.end())
 	{
 		return (*iter).second;
 	}
@@ -257,23 +468,6 @@ bool ResourceManager::CheckCameraID(CameraID cameraID)
 	return cameraTable.count(cameraID) != 0;
 }
 
-bool ResourceManager::ReleaseCamera(CameraID cameraID)
-{
-	if (cameraTable.count(cameraID) != 0)
-	{
-		ZeldaCamera* targetCamera = cameraTable[cameraID];
-		if (targetCamera != nullptr)
-		{
-			delete targetCamera;
-		}
-		cameraTable.erase(cameraID);
-
-		return true;
-	}
-
-	return false;
-}
-
 ResourceManager& ResourceManager::GetInstance()
 {
 	static ResourceManager instance;
@@ -282,7 +476,8 @@ ResourceManager& ResourceManager::GetInstance()
 
 ResourceManager::ResourceManager() :
 	device(nullptr),
-	cubeID(MeshID::ID_NULL)
+	cubeID(MeshID::ID_NULL),
+	squareID(MeshID::ID_NULL)
 {
 
 }

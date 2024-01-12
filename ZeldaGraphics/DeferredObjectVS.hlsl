@@ -12,10 +12,9 @@ struct VertexInputType
 struct PixelInputType
 {
     float4 position : SV_POSITION;
+    float4 viewPosition : POSITION;
     float3 normal : NORMAL;
     float2 tex : TEXCOORD0;
-    uint4 boneIndices : BLENDINDICES;
-    float4 weight : BLENDWEIGHT;
 };
 
 PixelInputType main(VertexInputType input)
@@ -37,8 +36,11 @@ PixelInputType main(VertexInputType input)
 	// 월드, 뷰, 프로젝션 행렬들을 이용해 정점의 위치를 계산한다.
     output.position = mul(output.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
+    
+    output.viewPosition = float4(output.position.xyz, 1.0f);
     output.position = mul(output.position, projectionMatrix);
 
+    
 	// 입력받은 색상을 그대로 픽셀 셰이더에서 이용하도록 저장한다.
     output.tex = input.tex;
     
@@ -51,7 +53,7 @@ PixelInputType main(VertexInputType input)
     mul(input.boneIndices[0] == 0xffffffffu, input.normal);
     
     // Calculate the normal vector against the world matrix only.
-    output.normal = mul(output.normal, (float3x3) worldMatrix);
+    output.normal = mul(mul(output.normal, (float3x3) worldMatrix), (float3x3)viewMatrix);
 
 	// Normalize the normal vector.
     output.normal = normalize(output.normal);

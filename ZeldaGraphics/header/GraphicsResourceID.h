@@ -110,6 +110,15 @@ namespace std {
 
 namespace std {
 	template <>
+	struct hash<LightID> {
+		std::size_t operator()(const LightID& key) const {
+			return std::hash<unsigned long long>{}(key.ull1) ^ std::hash<unsigned long long>{}(key.ull2);
+		}
+	};
+}
+
+namespace std {
+	template <>
 	struct hash<std::pair<MeshID, TextureID>> {
 		size_t operator()(const std::pair<MeshID, TextureID>& obj) const {
 			return std::hash<MeshID>{}(obj.first) ^ std::hash<TextureID>{}(obj.second);

@@ -79,6 +79,7 @@ private:
 	TextureID msTextureID;
 	ModelID fbxID;
 	ModelID fbxID2;
+	LightID dirLightID;
 
 
 	//singleton

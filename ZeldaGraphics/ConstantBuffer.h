@@ -50,6 +50,7 @@ public:
 		isChanged = true;
 	}
 
+protected:
 	void SetBuffer(ID3D11DeviceContext* deviceContext) override
 	{
 		if (isChanged)
@@ -75,13 +76,13 @@ public:
 		{
 			case ShaderType::VertexShader:
 			{
-				deviceContext->VSSetConstantBuffers(bufferType::registerNum, 1, &dxBuffer);
+				deviceContext->VSSetConstantBuffers(registerNum, 1, &dxBuffer);
 				break;
 			}
 				
 			case ShaderType::PixelShader:
 			{
-				deviceContext->PSSetConstantBuffers(bufferType::registerNum, 1, &dxBuffer);
+				deviceContext->PSSetConstantBuffers(registerNum, 1, &dxBuffer);
 				break;
 			}
 
@@ -98,5 +99,7 @@ private:
 	bufferType data;
 
 	bool isChanged;
+
+	static constexpr unsigned int registerNum = bufferType::registerNum;
 };
 

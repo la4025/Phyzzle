@@ -4,7 +4,8 @@
 
 class IConstantBuffer
 {
-public:
+protected:
 	virtual void SetBuffer(ID3D11DeviceContext* deviceContext) abstract;
 
+	friend class ConstantBufferManager;
 };

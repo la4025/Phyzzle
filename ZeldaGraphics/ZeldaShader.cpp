@@ -59,12 +59,20 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	result = D3DReadFileToBlob(vsFileName.c_str(), &vertexShaderBuffer);
 	if (FAILED(result))
 	{
+		result = D3DReadFileToBlob((L"CompiledShader\\" + vsFileName).c_str(), &vertexShaderBuffer);
+	}
+	if (FAILED(result))
+	{
 		MessageBox(0, L"Failed to load compiled shader file", L"Shader Error", MB_OK);
 		return false;
 	}
 
 	// Compile the pixel shader code.
 	result = D3DReadFileToBlob(psFileName.c_str(), &pixelShaderBuffer);
+	if (FAILED(result))
+	{
+		result = D3DReadFileToBlob((L"CompiledShader\\" + psFileName).c_str(), &pixelShaderBuffer);
+	}
 	if (FAILED(result))
 	{
 		MessageBox(0, L"Failed to load compiled pixel shader file", L"Shader Error", MB_OK);

@@ -25,6 +25,8 @@ cbuffer MatrixBuffer : register(b0)
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+    float cameraFar;
+    float3 b0padding;
 };
 
 cbuffer BoneBufferType : register(b1)
@@ -50,14 +52,18 @@ struct LightInfo
     float padding;
 };
 
-cbuffer LightBufferType : register(b2)
+cbuffer LightInfoBufferType : register(b2)
 {
     LightInfo lights[LIGHT_COUNT_MAX];
-    unsigned int lightCount;
-    float3 padding;
 };
 
-cbuffer MaterialBufferType : register(b3)
+cbuffer LightIndexBufferType : register(b3)
+{
+    unsigned int lightIndex;
+    float b3padding[3];
+};
+
+cbuffer MaterialBufferType : register(b4)
 {
     float4 baseColor;
     

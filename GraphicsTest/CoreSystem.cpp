@@ -7,6 +7,14 @@
 
 #include "GraphicsResourceID.h"
 
+// 암시적 링크 사용
+#define ZELDA_GRAPHICS_IMPLICIT_LINK
+
+#ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
+#include "ZeldaGraphics.h"
+#pragma comment(lib, "ZeldaGraphics.lib")
+#endif // ZELDA_GRAPHICS_IMPLICIT_LINK
+
 void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned int width, unsigned int height, bool screenresizeable, bool notitlebar, bool minimizable, bool maximizable)
 {
 	// 내가 쓸 윈도우를 등록
@@ -51,7 +59,9 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	isFullScreenMode = false;
 	resizable = screenresizeable;
 
-
+#ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
+	renderer = ZeldaGraphics::CreateZeldaRenderer();
+#else
 	zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
 	if (zeldaGraphicsDLL == nullptr)
 	{
@@ -59,7 +69,7 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 		assert(0);
 	}
 
-	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer*(*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
+	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
 	if (createZeldaRenderer == nullptr)
 	{
 		// DLL 함수를 찾을 수 없습니다.
@@ -67,16 +77,18 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	}
 
 	renderer = createZeldaRenderer();
+#endif
 
 	renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
-
-	renderer->CreateBasicResources();
 }
 
 void CoreSystem::Finalize()
 {
 	renderer->Finalize();
 
+#ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
+	ZeldaGraphics::ReleaseZeldaRenderer(renderer);
+#else
 	auto releaseZeldaRenderer = reinterpret_cast<void(*)(IZeldaRenderer*)>(GetProcAddress(zeldaGraphicsDLL, "ReleaseZeldaRenderer"));
 	if (releaseZeldaRenderer == nullptr)
 	{
@@ -87,6 +99,7 @@ void CoreSystem::Finalize()
 	releaseZeldaRenderer(renderer);
 
 	FreeLibrary(zeldaGraphicsDLL);
+#endif
 }
 
 void CoreSystem::Run(_In_ int nCmdShow)
@@ -225,7 +238,7 @@ void CoreSystem::run()
 
 		if (currentFPS != lastFPS)
 		{
-			OutputDebugString((std::to_wstring(currentFPS) + L"\n").c_str());
+			//OutputDebugString((std::to_wstring(currentFPS) + L"\n").c_str());
 		}
 	}
 
@@ -257,6 +270,8 @@ void CoreSystem::run()
 
 		fbxID2 = renderer->CreateModel(L"D:\\GA4th4Q_Project\\Tree\\5_Project\\ZeldaEngine\\Resources\\FBX\\Boss\\Boss.fbx");
 		
+		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f });
+
 		mainCameraID = renderer->CreateCamera();
 
 		renderer->SetMainCamera(mainCameraID);
@@ -303,6 +318,17 @@ void CoreSystem::run()
 			rotateX *= 10;
 			rotateY *= 10;
 		}
+
+		if (GetAsyncKeyState(VK_F1)) renderer->SetDebugMode(DebugMode::Normal);
+		if (GetAsyncKeyState(VK_F2)) renderer->SetDebugMode(DebugMode::DeferredDebugAll);
+		if (GetAsyncKeyState(VK_F3)) renderer->SetDebugMode(DebugMode::DeferredDebug0);
+		if (GetAsyncKeyState(VK_F4)) renderer->SetDebugMode(DebugMode::DeferredDebug1);
+		if (GetAsyncKeyState(VK_F5)) renderer->SetDebugMode(DebugMode::DeferredDebug2);
+		if (GetAsyncKeyState(VK_F6)) renderer->SetDebugMode(DebugMode::DeferredDebug3);
+		if (GetAsyncKeyState(VK_F7)) renderer->SetDebugMode(DebugMode::DeferredDebug4);
+		if (GetAsyncKeyState(VK_F8)) renderer->SetDebugMode(DebugMode::DeferredDebug5);
+		if (GetAsyncKeyState(VK_F11)) renderer->SetRendererMode(RendererMode::OffWireFrameMode);
+		if (GetAsyncKeyState(VK_F12)) renderer->SetRendererMode(RendererMode::OnWireFrameMode);
 	}
 
 	Eigen::Matrix4f cameraRotateY;
@@ -326,7 +352,7 @@ void CoreSystem::run()
 
 	cameraMatrix = cameraMove * cameraMatrix * cameraRotateX * cameraRotateY;
 
-	renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 1.0f, 10000000.0f);
+	renderer->UpdateCamera(mainCameraID, cameraMatrix, 3.141592654f / 4.0f, 0.1f, 1000.0f);
 
 	renderer->BeginDraw(0.016f);
 
@@ -440,7 +466,7 @@ void CoreSystem::run()
 	
 	Eigen::Matrix4f rightPosMatrix;
 	rightPosMatrix <<
-		0.1, 0, 0, 200,
+		0.1, 0, 0, 900,
 		0, 0.1, 0, 0,
 		0, 0, 0.1, 30,
 		0, 0, 0, 1;
@@ -452,6 +478,8 @@ void CoreSystem::run()
 	{
 		scdX -= 1920;
 	}
+
+	renderer->DrawLight(dirLightID);
 
 	renderer->DrawSprite({ scdX, 0 }, msTextureID);
 	renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);

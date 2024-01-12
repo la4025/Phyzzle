@@ -5,7 +5,7 @@
 using namespace DirectX;
 
 const float ZeldaCamera::DEFUALT_FOV = 3.141592654f / 4.0f;
-const float ZeldaCamera::DEFUALT_NEAR = 1.0f;
+const float ZeldaCamera::DEFUALT_NEAR = 0.1f;
 const float ZeldaCamera::DEFUALT_FAR = 1000.0f;
 CameraID ZeldaCamera::mainCameraID = CameraID::ID_NULL;
 
@@ -114,4 +114,19 @@ bool ZeldaCamera::SetMainCamera(CameraID cameraID)
 CameraID ZeldaCamera::GetMainCamera()
 {
 	return mainCameraID;
+}
+
+float ZeldaCamera::GetFov() const
+{
+	return fieldOfView;
+}
+
+float ZeldaCamera::GetNear() const
+{
+	return cameraNear;
+}
+
+float ZeldaCamera::GetFar() const
+{
+	return cameraFar;
 }

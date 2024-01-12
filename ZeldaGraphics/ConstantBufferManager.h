@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "IConstantBuffer.h"
+#include "ZeldaGraphicsDefine.h"
 
 class ConstantBufferManager
 {
@@ -10,10 +11,14 @@ public:
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void Finalize();
 
+	void SetBuffer();
+
+protected:
 	void RegisterBuffer(IConstantBuffer* buffer);
 	void DeRegisterBuffer(IConstantBuffer* buffer);
 
-	void SetBuffer();
+	template<typename bufferType, ShaderType shaderType> requires std::is_same_v<decltype(bufferType::registerNum), const unsigned int>
+	friend class ConstantBuffer;
 
 private:
 	std::vector<IConstantBuffer*> bufferList;
