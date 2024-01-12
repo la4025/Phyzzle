@@ -7,6 +7,7 @@
 namespace PurahEngine
 {
 	class GameLoop;
+	class SceneManager;
 
 	class PURAHENGINE_API TimeController
 	{
@@ -47,6 +48,7 @@ namespace PurahEngine
 		TimeController& operator=(const TimeController& ref) = delete;
 
 		friend GameLoop;
+		friend SceneManager;
 	};
 }
 

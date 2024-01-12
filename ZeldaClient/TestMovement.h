@@ -12,5 +12,7 @@ namespace PurahEngine
 		~TestMovement();
 
 		void Update();
+
+		void FixedUpdate();
 	};
 }

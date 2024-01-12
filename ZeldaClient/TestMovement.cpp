@@ -12,8 +12,10 @@ PurahEngine::TestMovement::~TestMovement()
 
 }
 
+int j = 0;
 void PurahEngine::TestMovement::Update()
 {
+	j++;
 	const float angle = 10.0f;
 
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
@@ -105,4 +107,15 @@ void PurahEngine::TestMovement::Update()
 	{
 		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test003");
 	}
+
+	OutputDebugStringW((std::to_wstring(j) + L" ").c_str());
+}
+
+int i = 0;
+
+void PurahEngine::TestMovement::FixedUpdate()
+{
+	auto& inputManager = PurahEngine::InputManager::Getinstance();
+		i++;
+		OutputDebugStringW((std::to_wstring(i) + L"\n").c_str());
 }
