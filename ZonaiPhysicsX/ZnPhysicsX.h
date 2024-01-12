@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 
+#include "ZnSimulationCallbackX.h"
+
 #define PVD_HOST "127.0.0.1"
 
 namespace physx
@@ -107,8 +109,6 @@ namespace ZonaiPhysics
 		RigidBody*				FindRigidBody(const std::wstring&) noexcept;
 		Collider*				CreateCollider(const std::wstring&) noexcept;
 
-		static ZnPhysicsX*	instance;
-
 	private:
 		physx::PxDefaultAllocator		allocator;
 		physx::PxDefaultErrorCallback	errorCallback;
@@ -121,7 +121,10 @@ namespace ZonaiPhysics
 		physx::PxMaterial*				material;
 
 	private:
+		static ZnPhysicsX*		instance;
+
 		std::map<std::wstring, RigidBody*> bodies;
+		ZnSimulationCallbackX callback;
 	};
 
 	extern "C"

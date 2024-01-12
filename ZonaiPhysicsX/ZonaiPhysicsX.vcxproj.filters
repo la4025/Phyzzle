@@ -71,6 +71,7 @@
     <ClInclude Include="TemplateJoint.h">
       <Filter>Joint</Filter>
     </ClInclude>
+    <ClInclude Include="ZnUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Collider">

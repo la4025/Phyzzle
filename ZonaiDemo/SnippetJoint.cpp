@@ -222,7 +222,9 @@ void stepPhysics()// interactive
 #include <chrono>
 #include <iostream>
 
+#include "ZnCollision.h"
 #include "ZnRaycastInfo.h"
+#include "ZnSimulationCallback.h"
 
 class Timer {
 private:
@@ -239,6 +241,50 @@ public:
 		std::chrono::duration<double> delta = currentTime - lastTime;
 		lastTime = currentTime;
 		return delta.count();
+	}
+};
+
+class PhysicsEvent : public ZonaiPhysics::ZnSimulationCallback
+{
+public:
+	void OnWake(const ZonaiPhysics::ZnRigidBody*) noexcept override
+	{
+		std::cout << "OnWake" << std::endl;
+	}
+	void OnSleep(const ZonaiPhysics::ZnRigidBody*) noexcept override
+	{
+		std::cout << "OnSleep" << std::endl;
+	}
+	void OnConstraintBreak(const ZonaiPhysics::ZnJoint*) noexcept override
+	{
+		std::cout << "OnConstraintBreak" << std::endl;
+	}
+	void OnTriggerEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	{
+		std::cout << "OnTriggerEnter" << std::endl;
+	}
+	void OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	{
+		std::cout << "OnTriggerStay" << std::endl;
+	}
+	void OnTriggerExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	{
+		std::cout << "OnTriggerExit" << std::endl;
+	}
+	void OnCollisionEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
+		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+	{
+		std::cout << "OnCollisionEnter " << _collision.contactCount << std::endl;
+	}
+	void OnCollisionStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
+		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+	{
+		std::cout << "OnCollisionStay " << _collision.contactCount << std::endl;
+	}
+	void OnCollisionExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
+		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+	{
+		std::cout << "OnCollisionExit " << _collision.contactCount << std::endl;
 	}
 };
 
@@ -271,8 +317,6 @@ int snippetMain(int, const char* const*)
 	}
 
 	physicsEngine->Initialize();
-
-
 
 	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 6.f);
 	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");

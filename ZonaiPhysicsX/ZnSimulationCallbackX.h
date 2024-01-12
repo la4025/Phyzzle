@@ -10,9 +10,11 @@ namespace ZonaiPhysics
 
 	class ZnSimulationCallbackX : public physx::PxSimulationEventCallback
 	{
+	public:
+		void SetCallbackInstace(ZnSimulationCallback*);
+
 	private:
-		ZnSimulationCallback* callback = nullptr;
-		std::unordered_map<std::pair<ZnCollider*, ZnCollider*>, bool> triggerMap;
+		// std::unordered_map<std::pair<ZnCollider*, ZnCollider*>, bool> triggerMap;
 
 	public:
 		void onWake(physx::PxActor** actors, physx::PxU32 count) override;
@@ -24,6 +26,8 @@ namespace ZonaiPhysics
 	private:
 		void onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer, const physx::PxU32 count) override;
 
+	private:
+		static ZnSimulationCallback* callback;
 		static ZnCollider* GetCollider(physx::PxShape* _shape);
 	};
 }

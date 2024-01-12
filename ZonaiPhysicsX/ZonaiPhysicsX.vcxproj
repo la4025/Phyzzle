@@ -32,6 +32,7 @@
     <ClInclude Include="TemplateJoint.h" />
     <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZnSimulationCallbackX.h" />
+    <ClInclude Include="ZnUtil.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
   </ItemGroup>
   <ItemGroup>
