@@ -115,8 +115,8 @@ private:
 	void DrawSprite();
 	void EndDrawSprite();
 
-	void DrawMeshRenderInfo(MeshRenderInfo renderInfo);
-	void DrawModelRenderInfo(ModelRenderInfo renderInfo);
+	void DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShader* shader);
+	void DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaShader* shader);
 	void DrawSpriteRenderInfo(SpriteRenderInfo renderInfo);
 
 	void ClearRenderInfo();
@@ -153,6 +153,7 @@ private:
 	ZeldaShader* deferredObjectShader;
 	ZeldaShader* deferredLightShader;
 	ZeldaShader* deferredFinalShader;
+	ZeldaShader* fowardShader;
 
 	DebugMode debugMode;
 	DebugMode debugModeBuffer;
@@ -185,6 +186,11 @@ private:
 	std::unordered_map<ModelID, ModelRenderInfo> organizedModelRenderInfo;
 	std::unordered_map<TextureID, SpriteRenderInfo> organizedSpriteRenderInfo;
 	std::unordered_set<LightID> organizedLightRenderInfo;
+
+	// 오브젝트들을 실제로 그리는 과정에서 WireFrame으로 그리도록 설정된 오브젝트들을 여기에 저장해두고 deferred render 후에 그린다.
+	// 만약 RendererMode가 WireFrameMode라면 사용하지 않는다.
+	std::unordered_map<std::pair<MeshID, TextureID>, MeshRenderInfo> fowardMeshRenderInfo;
+	std::unordered_map<ModelID, ModelRenderInfo> fowardModelRenderInfo;
 
 #ifdef USE_BEGIN_FLAG
 	bool beginflag = false;

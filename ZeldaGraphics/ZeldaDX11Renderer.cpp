@@ -358,6 +358,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	deferredObjectShader = new ZeldaShader(mDevice, L"DeferredObjectVS.cso", L"DeferredObjectPS.cso");
 	deferredLightShader = new ZeldaShader(mDevice, L"DeferredLightVS.cso", L"DeferredLightPS.cso");
 	deferredFinalShader = new ZeldaShader(mDevice, L"DeferredFinalVS.cso", L"DeferredFinalPS.cso");
+	fowardShader = new ZeldaShader(mDevice, L"FowardVS.cso", L"FowardPS.cso");
 
 #pragma endregion Deferred Rendering
 
@@ -578,10 +579,12 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 	instancinInfo.wireFrame = wireFrame;
 	instancinInfo.color = { r, g, b, a };
 
-	auto iter = organizedMeshRenderInfo.find({ cubeID, texture });
+	std::unordered_map<std::pair<MeshID, TextureID>, MeshRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardMeshRenderInfo) : (organizedMeshRenderInfo);
+
+	auto iter = renderInfoContainer.find({ cubeID, texture });
 
 	// 이미 동일한 것을 그린적이 있음
-	if (iter != organizedMeshRenderInfo.end())
+	if (iter != renderInfoContainer.end())
 	{
 		iter->second.instancingInfo.push_back(instancinInfo);
 	}
@@ -593,7 +596,7 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 		renderInfo.meshId = cubeID;
 		renderInfo.textureID = texture;
 
-		organizedMeshRenderInfo[{ cubeID, texture }] = renderInfo;
+		renderInfoContainer[{ cubeID, texture }] = renderInfo;
 	}
 }
 
@@ -605,10 +608,12 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 	instancinInfo.animationName = L"";
 	instancinInfo.animationTime = 0.0f;
 
-	auto iter = organizedModelRenderInfo.find(model);
+	std::unordered_map<ModelID, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
+
+	auto iter = renderInfoContainer.find(model);
 
 	// 이미 동일한 것을 그린적이 있음
-	if (iter != organizedModelRenderInfo.end())
+	if (iter != renderInfoContainer.end())
 	{
 		iter->second.instancingInfo.push_back(instancinInfo);
 	}
@@ -619,7 +624,7 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.modelID = model;
 
-		organizedModelRenderInfo[model] = renderInfo;
+		renderInfoContainer[model] = renderInfo;
 	}
 }
 
@@ -631,10 +636,12 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 	instancinInfo.animationName = animationName;
 	instancinInfo.animationTime = animationTime;
 
-	auto iter = organizedModelRenderInfo.find(model);
+	std::unordered_map<ModelID, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
+
+	auto iter = renderInfoContainer.find(model);
 
 	// 이미 동일한 것을 그린적이 있음
-	if (iter != organizedModelRenderInfo.end())
+	if (iter != renderInfoContainer.end())
 	{
 		iter->second.instancingInfo.push_back(instancinInfo);
 	}
@@ -645,7 +652,7 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.modelID = model;
 
-		organizedModelRenderInfo[model] = renderInfo;
+		renderInfoContainer[model] = renderInfo;
 	}
 }
 
@@ -711,12 +718,12 @@ void ZeldaDX11Renderer::DrawDeferred()
 
 	for (auto& iter : organizedMeshRenderInfo)
 	{
-		DrawMeshRenderInfo(iter.second);
+		DrawMeshRenderInfo(iter.second, deferredObjectShader);
 	}
 	
 	for (auto& iter : organizedModelRenderInfo)
 	{
-		DrawModelRenderInfo(iter.second);
+		DrawModelRenderInfo(iter.second, deferredObjectShader);
 	}
 #pragma endregion
 
@@ -773,6 +780,19 @@ void ZeldaDX11Renderer::DrawDeferred()
 
 void ZeldaDX11Renderer::DrawForward()
 {
+	ID3D11ShaderResourceView* nullSRV[3] = { nullptr, nullptr, nullptr };
+	mDeviceContext->PSSetShaderResources(Deferred::slotBegin, 3, nullSRV);
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+
+	for (auto& iter : fowardMeshRenderInfo)
+	{
+		DrawMeshRenderInfo(iter.second, fowardShader);
+	}
+
+	for (auto& iter : fowardModelRenderInfo)
+	{
+		DrawModelRenderInfo(iter.second, fowardShader);
+	}
 }
 
 void ZeldaDX11Renderer::BeginDrawSprite()
@@ -992,7 +1012,7 @@ void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambi
 	}
 }
 
-void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
+void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShader* shader)
 {
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
@@ -1000,8 +1020,6 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
 	cubeMesh->Render(mDeviceContext);
 
 	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
-
-	ZeldaShader* shader = deferredObjectShader;
 
 	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
 	{
@@ -1028,11 +1046,9 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo)
 	}
 }
 
-void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo)
+void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaShader* shader)
 {
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
-
-	ZeldaShader* shader = deferredObjectShader;
 
 	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
 	{
@@ -1061,6 +1077,9 @@ void ZeldaDX11Renderer::ClearRenderInfo()
 	organizedModelRenderInfo.clear();
 	organizedSpriteRenderInfo.clear();
 	organizedLightRenderInfo.clear();
+
+	fowardMeshRenderInfo.clear();
+	fowardModelRenderInfo.clear();
 }
 
 void ZeldaDX11Renderer::UpdateMode()
@@ -1105,6 +1124,11 @@ bool ZeldaDX11Renderer::CheckDebugMode(DebugMode mode)
 bool ZeldaDX11Renderer::CheckRendererMode(RendererMode mode)
 {
 	if (mode == RendererMode::None && rendererMode == RendererMode::None) return true;
+
+	if (static_cast<unsigned int>(mode) >= 0x80000000u)
+	{
+		return (static_cast<unsigned int>(rendererMode) & (static_cast<unsigned int>(mode) - 0x80000000u)) == 0;
+	}
 
 	return static_cast<unsigned int>(rendererMode) & static_cast<unsigned int>(mode);
 }

@@ -61,14 +61,5 @@ PixelOutputType main(PixelInputType input)
     output.color = textureColor;
     output.depth = float4(depth, depth, depth, 1.0f);
     
-#ifdef _Debug
-
-#endif
-    
-    if (depth > 1.0f)
-    {
-        output.depth = float4(1.0f, 0.0f, 0.0f, 1.0f);
-    }
-    
     return output;
 }
