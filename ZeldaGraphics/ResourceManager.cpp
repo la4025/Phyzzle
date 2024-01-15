@@ -19,6 +19,45 @@ void ResourceManager::Initialize(ID3D11Device* device)
 	this->device = device;
 }
 
+void ResourceManager::Finalize()
+{
+	for (auto iter = cameraTable.begin(); iter != cameraTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	cameraTable.clear();
+
+	for (auto iter = textureTable.begin(); iter != textureTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	textureTable.clear();
+
+	for (auto iter = modelTable.begin(); iter != modelTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	modelTable.clear();
+
+	for (auto iter = meshTable.begin(); iter != meshTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	meshTable.clear();
+
+	for (auto iter = shaderTable.begin(); iter != shaderTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	shaderTable.clear();
+
+	for (auto iter = lightTable.begin(); iter != lightTable.end(); iter++)
+	{
+		delete iter->second;
+	}
+	lightTable.clear();
+}
+
 MeshID ResourceManager::CreateCubeMesh()
 {
 	if (cubeID != MeshID::ID_NULL)
@@ -156,6 +195,394 @@ MeshID ResourceManager::CreateSquareMesh()
 	return squareID;
 }
 
+MeshID ResourceManager::CreateSphereMesh()
+{
+	if (sphereID != MeshID::ID_NULL)
+	{
+		return MeshID::ID_NULL;
+	}
+
+	const float radius = 0.5f; // 구의 반지름
+	const unsigned int stackCount = 20; // 가로 분할
+	const unsigned int sliceCount = 20; // 세로 분할
+
+	std::vector<VertexType> vertexList;
+	std::vector<unsigned int> indexList(36);
+
+	// 북극
+	vertexList.push_back({ { 0.0f, radius, 0.0f, 0.0f }, { 0.0f , 1.0f, 0.0f }, { 0.5f, 0.0f } });
+
+	float stackAngle = DirectX::XM_PI / static_cast<float>(stackCount);
+	float sliceAngle = DirectX::XM_2PI / static_cast<float>(sliceCount);
+
+	float deltaU = 1.f / static_cast<float>(sliceCount);
+	float deltaV = 1.f / static_cast<float>(stackCount);
+
+	// 고리마다 돌면서 정점을 계산한다 (북극/남극 단일점은 고리가 X)
+	for (size_t y = 1; y <= stackCount - 1; ++y)
+	{
+		float phi = y * stackAngle;
+
+		// 고리에 위치한 정점
+		for (size_t x = 0; x <= sliceCount; ++x)
+		{
+			float theta = x * sliceAngle;
+
+			VertexType v;
+			v.position.x = radius * sinf(phi) * cosf(theta);
+			v.position.y = radius * cosf(phi);
+			v.position.z = radius * sinf(phi) * sinf(theta);
+			v.position.w = 0.0f;
+			DirectX::XMStoreFloat3(&v.normal, DirectX::XMVector3Normalize({ v.position.x, v.position.y, v.position.z }));
+			v.texture = { deltaU * x, deltaV * y };
+
+			//v.tangent.x = -radius * sinf(phi) * sinf(theta);
+			//v.tangent.y = 0.0f;
+			//v.tangent.z = radius * sinf(phi) * cosf(theta);
+			//v.tangent.Normalize();
+
+			vertexList.push_back(v);
+		}
+	}
+
+	// 남극
+	vertexList.push_back({ { 0.0f, -radius, 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }, { 0.5f, 1.0f } });
+
+	// 북극 인덱스
+	for (unsigned int i = 0; i <= sliceCount; ++i)
+	{
+		//  [0]
+		//   |  \
+			//  [i+1]-[i+2]
+		indexList.push_back(0);
+		indexList.push_back(i + 2);
+		indexList.push_back(i + 1);
+	}
+
+	// 몸통 인덱스
+	unsigned int ringVertexCount = sliceCount + 1;
+	for (unsigned int y = 0; y < stackCount - 2; ++y)
+	{
+		for (unsigned int x = 0; x < sliceCount; ++x)
+		{
+			//  [y, x]-[y, x+1]
+			//  |		/
+			//  [y+1, x]
+			indexList.push_back(1 + (y)*ringVertexCount + (x));
+			indexList.push_back(1 + (y)*ringVertexCount + (x + 1));
+			indexList.push_back(1 + (y + 1) * ringVertexCount + (x));
+			//		 [y, x+1]
+			//		 /	  |
+			//  [y+1, x]-[y+1, x+1]
+			indexList.push_back(1 + (y + 1) * ringVertexCount + (x));
+			indexList.push_back(1 + (y)*ringVertexCount + (x + 1));
+			indexList.push_back(1 + (y + 1) * ringVertexCount + (x + 1));
+		}
+	}
+
+	// 남극 인덱스
+	size_t bottomIndex = vertexList.size() - 1;
+	size_t lastRingStartIndex = bottomIndex - ringVertexCount;
+	for (size_t i = 0; i < sliceCount; ++i)
+	{
+		//  [last+i]-[last+i+1]
+		//  |      /
+		//  [bottom]
+		indexList.push_back(static_cast<int>(bottomIndex));
+		indexList.push_back(static_cast<int>(lastRingStartIndex + i));
+		indexList.push_back(static_cast<int>(lastRingStartIndex + i + 1));
+	}
+
+	sphereID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(sphereID) != 0 || sphereID == MeshID::ID_NULL)
+	{
+		sphereID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[sphereID] = new ZeldaMesh(device, vertexList, indexList);
+
+	return sphereID;
+}
+
+MeshID ResourceManager::CreateCapsuleMesh()
+{
+	if (capsuleID != MeshID::ID_NULL)
+	{
+		return MeshID::ID_NULL;
+	}
+
+	std::vector<VertexType> vertexList;
+	std::vector<unsigned int> indexList;
+
+	const float radius = 0.5f; // 캡슐의 반지름
+	const float height = 1.0f; // 캡슐의 높이
+	const int stackCount = 5; // 수평 분할
+	const int sliceCount = 20; // 수직 분할
+
+	// 상단 반구 정점
+	vertexList.push_back({ { 0.0f, radius + height * 0.5f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } });
+
+	for (int i = 1; i <= stackCount; i++)
+	{
+		// 윗방향 벡터와의 각도
+		float upTheta = XM_PI * 0.5f * (i / static_cast<float>(stackCount));
+
+		float xzsize = radius * sinf(upTheta);
+		float ysize = radius * cosf(upTheta);
+
+		for (int j = 0; j < sliceCount; j++)
+		{
+			float zTheta = XM_PI * 2.0f * (j / static_cast<float>(sliceCount));
+
+			float x = xzsize * sinf(zTheta);
+			float y = ysize + height * 0.5f;
+			float z = xzsize * cosf(zTheta);
+			DirectX::XMFLOAT3 normal;
+			DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize({ x, y - height * 0.5f, z }));
+
+			vertexList.push_back({ { x, y, z, 0.0f }, normal });
+		}
+	}
+
+	size_t middleIdx = vertexList.size();
+
+	// 하단 반구 정점
+	for (int i = stackCount; i >= 1; i--)
+	{
+		// 윗방향 벡터와의 각도
+		float upTheta = XM_PI * 0.5f * (i / static_cast<float>(stackCount));
+
+		float xzsize = radius * sinf(upTheta);
+		float ysize = radius * cosf(upTheta);
+
+		for (int j = 0; j < sliceCount; j++)
+		{
+			float zTheta = XM_PI * 2.0f * (j / static_cast<float>(sliceCount));
+
+			float x = xzsize * sinf(zTheta);
+			float y = ysize + height * 0.5f;
+			float z = xzsize * cosf(zTheta);
+			DirectX::XMFLOAT3 normal;
+			DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize({ x, -(y - height * 0.5f), z }));
+
+			vertexList.push_back({ { x, -y, z, 0.0f }, normal });
+		}
+	}
+
+	vertexList.push_back({ { 0.0f, -(radius + height * 0.5f), 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f } });
+
+	// 상단 반구 인덱스
+	for (int i = 0; i < sliceCount; i++) {
+		int a = 0;
+		int b = 1 + i;
+		int c = 1 + ((i + 1) % sliceCount);
+
+		indexList.push_back(a);
+		indexList.push_back(b);
+		indexList.push_back(c);
+	}
+
+	for (int i = 1; i < stackCount; i++) {
+		for (int j = 0; j < sliceCount; j++) {
+			int a = 1 + (i - 1) * sliceCount + j;
+			int b = 1 + (i - 1) * sliceCount + ((j + 1) % sliceCount);
+			int c = 1 + i * sliceCount + j;
+			int d = 1 + i * sliceCount + ((j + 1) % sliceCount);
+
+			indexList.push_back(a);
+			indexList.push_back(c);
+			indexList.push_back(d);
+
+			indexList.push_back(a);
+			indexList.push_back(d);
+			indexList.push_back(b);
+		}
+	}
+
+	// 실린더 부분 인덱스
+	for (int i = 0; i < sliceCount; i++)
+	{
+		int a = middleIdx - sliceCount + i;
+		int b = middleIdx - sliceCount + ((i + 1) % sliceCount);
+		int c = middleIdx + i;
+		int d = middleIdx + ((i + 1) % sliceCount);
+
+		indexList.push_back(a);
+		indexList.push_back(c);
+		indexList.push_back(d);
+
+		indexList.push_back(a);
+		indexList.push_back(d);
+		indexList.push_back(b);
+	}
+
+	// 하단 반구 인덱스
+	for (int i = 1; i < stackCount; i++) {
+		for (int j = 0; j < sliceCount; j++) {
+			int a = middleIdx + (i - 1) * sliceCount + j;
+			int b = middleIdx + (i - 1) * sliceCount + ((j + 1) % sliceCount);
+			int c = middleIdx + i * sliceCount + j;
+			int d = middleIdx + i * sliceCount + ((j + 1) % sliceCount);
+
+			indexList.push_back(a);
+			indexList.push_back(c);
+			indexList.push_back(d);
+
+			indexList.push_back(a);
+			indexList.push_back(d);
+			indexList.push_back(b);
+		}
+	}
+
+	for (int i = 0; i < sliceCount; i++) {
+		int a = vertexList.size() - 1;
+		int b = vertexList.size() - 1 - sliceCount + i;
+		int c = vertexList.size() - 1 - sliceCount + ((i + 1) % sliceCount);
+
+		indexList.push_back(b);
+		indexList.push_back(a);
+		indexList.push_back(c);
+	}
+
+	capsuleID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(capsuleID) != 0 || capsuleID == MeshID::ID_NULL)
+	{
+		capsuleID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[capsuleID] = new ZeldaMesh(device, vertexList, indexList);
+
+	return capsuleID;
+}
+
+MeshID ResourceManager::CreateCylinderMesh()
+{
+	if (cylinderID != MeshID::ID_NULL)
+	{
+		return MeshID::ID_NULL;
+	}
+
+	const float radius = 0.5f; // 실린더의 반지름
+	const float height = 1.0f; // 실린더의 높이
+	const int sliceCount = 20; // 수직 분할
+
+	std::vector<VertexType> vertexList;
+	std::vector<unsigned int> indexList;
+
+	// 정상 정점
+	vertexList.push_back({ { 0.0f, height * 0.5f, 0.0f, 0.0f }, { 0.0f , 1.0f, 0.0f } });
+
+	// 바닥 정점
+	vertexList.push_back({ { 0.0f, -height * 0.5f, 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f } });
+
+	// 윗면
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		float zTheta = DirectX::XM_2PI * (i / static_cast<float>(sliceCount));
+
+		float x = radius * sinf(zTheta);
+		float y = height * 0.5f;
+		float z = radius * cosf(zTheta);
+
+		vertexList.push_back({ { x, y, z, 0.0f }, { 0.0f, 1.0f, 0.0f } });
+	}
+
+	// 밑면
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		float zTheta = DirectX::XM_2PI * (i / static_cast<float>(sliceCount));
+
+		float x = radius * sinf(zTheta);
+		float y = height * 0.5f;
+		float z = radius * cosf(zTheta);
+
+		vertexList.push_back({ { x, -y, z, 0.0f }, { 0.0f, -1.0f, 0.0f } });
+	}
+
+	// 옆면 위
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		float zTheta = DirectX::XM_2PI * (i / static_cast<float>(sliceCount));
+
+		float x = radius * sinf(zTheta);
+		float y = height * 0.5f;
+		float z = radius * cosf(zTheta);
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize({ x, 0.0f, z }));
+
+		vertexList.push_back({ { x, y, z, 0.0f }, normal });
+	}
+
+	// 옆면 아래
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		float zTheta = DirectX::XM_2PI * (i / static_cast<float>(sliceCount));
+
+		float x = radius * sinf(zTheta);
+		float y = height * 0.5f;
+		float z = radius * cosf(zTheta);
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize({ x, 0.0f, z }));
+
+		vertexList.push_back({ { x, -y, z, 0.0f }, normal });
+	}
+
+
+	// 윗면 인덱스
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		int a = 0;
+		int b = 2 + i;
+		int c = 2 + ((i + 1) % sliceCount);
+
+		indexList.push_back(a);
+		indexList.push_back(b);
+		indexList.push_back(c);
+	}
+
+	// 옆면 인덱스
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		int a = 2 + (2 * sliceCount) + i;
+		int b = 2 + (2 * sliceCount) + ((i + 1) % sliceCount);
+		int c = 2 + (3 * sliceCount) + i;
+		int d = 2 + (3 * sliceCount) + ((i + 1) % sliceCount);
+
+		indexList.push_back(a);
+		indexList.push_back(c);
+		indexList.push_back(d);
+
+		indexList.push_back(a);
+		indexList.push_back(d);
+		indexList.push_back(b);
+	}
+
+	// 밑면 인덱스
+	for (int i = 0; i < sliceCount; ++i)
+	{
+		int a = 1;
+		int b = 2 + sliceCount + i;
+		int c = 2 + sliceCount + ((i + 1) % sliceCount);
+
+		indexList.push_back(b);
+		indexList.push_back(a);
+		indexList.push_back(c);
+	}
+
+	cylinderID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(cylinderID) != 0 || cylinderID == MeshID::ID_NULL)
+	{
+		cylinderID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[cylinderID] = new ZeldaMesh(device, vertexList, indexList);
+
+	return cylinderID;
+}
+
 CameraID ResourceManager::CreateCamera(unsigned int screenWidth, unsigned int screenHeight)
 {
 	ResourceID cameraID = IDGenerator::CreateID<ResourceType::Camera>();
@@ -262,11 +689,31 @@ LightID ResourceManager::CreateSpotLight()
 void ResourceManager::ReleaseCubeMesh()
 {
 	ReleaseMesh(cubeID);
+	cubeID = MeshID::ID_NULL;
 }
 
 void ResourceManager::ReleaseSquareMesh()
 {
 	ReleaseMesh(squareID);
+	squareID = MeshID::ID_NULL;
+}
+
+void ResourceManager::ReleaseSphereMesh()
+{
+	ReleaseMesh(sphereID);
+	sphereID = MeshID::ID_NULL;
+}
+
+void ResourceManager::ReleaseCapsuleMesh()
+{
+	ReleaseMesh(capsuleID);
+	capsuleID = MeshID::ID_NULL;
+}
+
+void ResourceManager::ReleaseCylinderMesh()
+{
+	ReleaseMesh(cylinderID);
+	cylinderID = MeshID::ID_NULL;
 }
 
 void ResourceManager::ReleaseCamera(CameraID cameraID)
@@ -381,6 +828,21 @@ MeshID ResourceManager::GetSquareID()
 	return squareID;
 }
 
+MeshID ResourceManager::GetSphereID()
+{
+	return sphereID;
+}
+
+MeshID ResourceManager::GetCapsuleID()
+{
+	return capsuleID;
+}
+
+MeshID ResourceManager::GetCylinderID()
+{
+	return cylinderID;
+}
+
 ZeldaMesh* ResourceManager::GetCubeMesh()
 {
 	return meshTable[cubeID];
@@ -389,6 +851,21 @@ ZeldaMesh* ResourceManager::GetCubeMesh()
 ZeldaMesh* ResourceManager::GetSquareMesh()
 {
 	return meshTable[squareID];
+}
+
+ZeldaMesh* ResourceManager::GetSphereMesh()
+{
+	return meshTable[sphereID];
+}
+
+ZeldaMesh* ResourceManager::GetCapsuleMesh()
+{
+	return meshTable[capsuleID];
+}
+
+ZeldaMesh* ResourceManager::GetCylinderMesh()
+{
+	return meshTable[cylinderID];
 }
 
 ZeldaCamera* ResourceManager::GetCamera(CameraID cameraID)
@@ -477,35 +954,15 @@ ResourceManager& ResourceManager::GetInstance()
 ResourceManager::ResourceManager() :
 	device(nullptr),
 	cubeID(MeshID::ID_NULL),
-	squareID(MeshID::ID_NULL)
+	squareID(MeshID::ID_NULL),
+	sphereID(MeshID::ID_NULL),
+	capsuleID(MeshID::ID_NULL),
+	cylinderID(MeshID::ID_NULL)
 {
 
 }
 
 ResourceManager::~ResourceManager()
 {
-	for (auto iter = modelTable.begin(); iter != modelTable.end(); iter++)
-	{
-		delete iter->second;
-	}
-
-	for (auto iter = meshTable.begin(); iter != meshTable.end(); iter++)
-	{
-		delete iter->second;
-	}
-
-	for (auto iter = textureTable.begin(); iter != textureTable.end(); iter++)
-	{
-		delete iter->second;
-	}
-
-	for (auto iter = shaderTable.begin(); iter != shaderTable.end(); iter++)
-	{
-		delete iter->second;
-	}
-
-	for (auto iter = cameraTable.begin(); iter != cameraTable.end(); iter++)
-	{
-		delete iter->second;
-	}
+	
 }

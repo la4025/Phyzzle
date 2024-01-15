@@ -394,6 +394,24 @@ void ZeldaDX11Renderer::Finalize()
 {
 	ReleaseBasicResources();
 
+	for (int i = 0; i < Deferred::bufferCount; i++)
+	{
+		if (deferredRenderTargets[i])
+		{
+			deferredRenderTargets[i]->Release();
+			deferredRenderTargets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < Deferred::bufferCount; i++)
+	{
+		if (deferredShaderResources[i])
+		{
+			deferredShaderResources[i]->Release();
+			deferredShaderResources[i] = nullptr;
+		}
+	}
+
 	if (alphaBlendState)
 	{
 		alphaBlendState->Release();
@@ -428,10 +446,6 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete materialConstBuffer;
 		materialConstBuffer = nullptr;
-	}
-	if (mSwapChain)
-	{
-		mSwapChain->SetFullscreenState(false, nullptr);
 	}
 	if (mRasterState)
 	{
@@ -498,8 +512,28 @@ void ZeldaDX11Renderer::Finalize()
 		delete deferredFinalShader;
 		deferredFinalShader = nullptr;
 	}
+	if (fowardShader)
+	{
+		delete fowardShader;
+		fowardShader = nullptr;
+	}
+	if (defaultRasterState)
+	{
+		defaultRasterState->Release();
+		defaultRasterState = nullptr;
+	}
+	if (wireFrameRasterState)
+	{
+		wireFrameRasterState->Release();
+		wireFrameRasterState = nullptr;
+	}
+	if (currentRasterState)
+	{
+		// 얘는 defaultRasterState, wireFrameRasterState를 받아두기만 하기 때문에 해제 필요없음
+		currentRasterState = nullptr;
+	}
 
-	// ResourceManager Finalize 추가 필요
+	ResourceManager::GetInstance().Finalize();
 }
 
 void ZeldaDX11Renderer::SetDebugMode(DebugMode mode)
@@ -523,19 +557,6 @@ void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 	UpdateMode();
 
 	ClearRenderInfo();
-
-	float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	float zeroColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	for (int i = 0; i < Deferred::bufferCount; i++)
-	{
-		mDeviceContext->ClearRenderTargetView(deferredRenderTargets[i], zeroColor);
-	}
-
-	// Clear the back buffer.
-	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
-	// Clear the depth buffer.
-	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void ZeldaDX11Renderer::EndDraw()
@@ -545,6 +566,23 @@ void ZeldaDX11Renderer::EndDraw()
 	assert(beginflag == true);
 	beginflag = false;
 #endif
+
+
+	float gray[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	for (int i = 0; i < Deferred::bufferCount; i++)
+	{
+		mDeviceContext->ClearRenderTargetView(deferredRenderTargets[i], black);
+	}
+
+	// Clear the back buffer.
+	bool existLight = organizedLightRenderInfo.size() != 0;
+	mDeviceContext->ClearRenderTargetView(mRenderTargetView, (existLight) ? (gray) : (black));
+		
+	// Clear the depth buffer.
+	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
 	
 	DrawDeferred();
 
@@ -566,8 +604,6 @@ void ZeldaDX11Renderer::EndDraw()
 		// Present as fast as possible.
 		mSwapChain->Present(0, 0);
 	}
-
-	
 }
 
 void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a)

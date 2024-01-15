@@ -37,9 +37,13 @@ class ResourceManager
 {
 public:
 	void Initialize(ID3D11Device* device);
+	void Finalize();
 
 	MeshID CreateCubeMesh();
 	MeshID CreateSquareMesh();
+	MeshID CreateSphereMesh();
+	MeshID CreateCapsuleMesh();
+	MeshID CreateCylinderMesh();
 	CameraID CreateCamera(unsigned int screenWidth, unsigned int screenHeight);
 	TextureID CreateTexture(const std::wstring& filePath);
 	ModelID CreateModelFromModelingFile(const std::wstring& filePath);
@@ -50,6 +54,9 @@ public:
 
 	void ReleaseCubeMesh();
 	void ReleaseSquareMesh();
+	void ReleaseSphereMesh();
+	void ReleaseCapsuleMesh();
+	void ReleaseCylinderMesh();
 	void ReleaseCamera(CameraID cameraID);
 	void ReleaseTexture(TextureID textureID);
 	void ReleaseModel(ModelID modelID);
@@ -59,9 +66,15 @@ public:
 
 	MeshID GetCubeID();
 	MeshID GetSquareID();
+	MeshID GetSphereID();
+	MeshID GetCapsuleID();
+	MeshID GetCylinderID();
 
 	ZeldaMesh* GetCubeMesh();
 	ZeldaMesh* GetSquareMesh();
+	ZeldaMesh* GetSphereMesh();
+	ZeldaMesh* GetCapsuleMesh();
+	ZeldaMesh* GetCylinderMesh();
 	ZeldaCamera* GetCamera(CameraID cameraID);
 	ZeldaTexture* GetTexture(TextureID key);
 	ZeldaModel* GetModel(ModelID key);
@@ -84,6 +97,9 @@ private:
 
 	MeshID cubeID;
 	MeshID squareID;
+	MeshID sphereID;
+	MeshID capsuleID;
+	MeshID cylinderID;
 
 	//singleton
 public:
