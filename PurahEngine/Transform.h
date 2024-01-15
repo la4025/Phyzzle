@@ -7,6 +7,8 @@
 
 namespace PurahEngine
 {
+	class RigidBody;
+
 	class PURAHENGINE_API Transform : public Component
 	{
 	public:
@@ -66,9 +68,13 @@ namespace PurahEngine
 		/// วเบคลอดย บคลอ * SRT, ฟญบคลอดย TRS * บคลอ
 		/// Eigenภบ ฟญบคลอดู.
 
+		RigidBody* rigidbody;
+		void SetRigidBody(RigidBody* rigid);
 
 		// บฮธ๐ Transform
 		Transform* parentTransform;
 		std::vector<Transform*> children;
+
+		friend class RigidBody;
 	};
 }

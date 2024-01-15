@@ -8,12 +8,12 @@ namespace PurahEngine
 {
 	RigidBody::RigidBody()
 	{
-
+		
 	}
 
 	RigidBody::~RigidBody()
 	{
-
+		GetGameObject()->GetComponent<PurahEngine::Transform>()->SetRigidBody(nullptr);
 	}
 
 	void RigidBody::Awake()
@@ -28,6 +28,7 @@ namespace PurahEngine
 		body->SetQuaternion(trans->GetWorldRotation());
 		SetKinematic(isKinematic);
 		UseGravity(useGravity);
+		GetGameObject()->GetComponent<PurahEngine::Transform>()->SetRigidBody(this);
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept

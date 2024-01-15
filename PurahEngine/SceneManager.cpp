@@ -41,6 +41,11 @@ void PurahEngine::SceneManager::SetName(std::wstring name)
 
 void PurahEngine::SceneManager::Update()
 {
+	PurahEngine::TimeController::GetInstance().Update("Simulate");
+	float SdeltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("Simulate");
+	static float SimuleTime = 0;
+	SimuleTime += SdeltaTime;
+
 	PhysicsSystem::GetInstance().SimulateResult();
 
 	PurahEngine::TimeController::GetInstance().Update("physics");

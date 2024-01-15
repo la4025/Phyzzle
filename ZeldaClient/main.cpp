@@ -52,13 +52,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	testObject->AddComponent<PurahEngine::TestMovement>();
 
 	auto objTrans = testObject->GetComponent<PurahEngine::Transform>();
-	objTrans->SetLocalPosition({ 0.0f, 5.0f, 0.0f });
+	objTrans->SetLocalPosition({ 0.0f, 3.0f, 0.0f });
+	
 
 	auto objCollider = testObject->AddComponent<PurahEngine::BoxCollider>();
 	objCollider->SetSize({ 0.5f, 0.5f, 0.5f });
 
 	auto objRigid = testObject->AddComponent<PurahEngine::RigidBody>();
-	objRigid->SetMass(10.f);
+	objRigid->SetMass(10.0f);
 	objRigid->UseGravity(true);
 
 	objCollider->Awake();
@@ -137,7 +138,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		assert(0);
 	}
 
-	//cube2->AddTexture(textureID);
+	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
 
 	//PurahEngine::Run(); ¿ªÇÒ

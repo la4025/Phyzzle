@@ -86,10 +86,12 @@ void PurahEngine::TestMovement::Update()
 	}
 
 	const auto localPos = trans->GetLocalPosition();
+	const auto worldPos = trans->GetWorldPosition();
 	
-	rigid->SetPosition(localPos + movement);
+	// Transform ¿¡°Ô Áà¶ó
+	//rigid->SetPosition(localPos + movement);
 
-	// trans->SetLocalPosition(localPos + movement);
+	trans->SetLocalPosition(localPos + movement);
 
 
 	/// Sound Test-----------------------------------------------------------

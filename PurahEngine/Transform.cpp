@@ -1,4 +1,6 @@
 #include "Transform.h"
+#include "RigidBody.h"
+#include "GameObject.h"
 
 #define M_PI       3.14159265358979323846
 
@@ -6,9 +8,10 @@ PurahEngine::Transform::Transform() :
 	position(Eigen::Vector3f::Zero()),
 	rotation(Eigen::Quaternionf::Identity()),
 	scale(1, 1, 1),
-	parentTransform(nullptr)
+	parentTransform(nullptr),
+	rigidbody(nullptr)
 {
-
+	
 }
 
 PurahEngine::Transform::~Transform()
@@ -104,6 +107,11 @@ Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
 void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
 {
 	position = setPosition;
+	
+	if (rigidbody != nullptr)
+	{
+		rigidbody->SetPosition(setPosition);
+	}
 }
 
 void PurahEngine::Transform::SetLocalRotation(Eigen::Quaternionf setRotation)
@@ -121,6 +129,7 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 	/// 이론 : WorldMatrix 에서 Position 부분만 교체한다.
 	// Eigen::Matrix4f worldMatrix = GetWorldMatrix();
 	// worldMatrix.block<3, 1>(0, 3) = setPosition;
+	
 
 	if (parentTransform != nullptr)
 	{
@@ -129,6 +138,11 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 	else
 	{
 		position = setPosition;
+	}
+
+	if (rigidbody != nullptr)
+	{
+		rigidbody->SetPosition(setPosition);
 	}
 }
 
@@ -164,4 +178,12 @@ void PurahEngine::Transform::SetParent(PurahEngine::Transform* parentObject)
 		parentTransform = parentObject;
 		parentObject->children.push_back(this);
 	}
+}
+
+void PurahEngine::Transform::SetRigidBody(RigidBody* rigid)
+{
+	assert(rigidbody == nullptr || (rigid == nullptr && rigidbody != nullptr));
+	
+	rigidbody = rigid;
+
 }
