@@ -86,6 +86,13 @@ protected:
 				break;
 			}
 
+			case ShaderType::VertexShaderAndPixelShader:
+			{
+				deviceContext->VSSetConstantBuffers(registerNum, 1, &dxBuffer);
+				deviceContext->PSSetConstantBuffers(registerNum, 1, &dxBuffer);
+				break;
+			}
+
 			default:
 			{
 				assert(0);

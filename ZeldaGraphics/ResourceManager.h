@@ -41,6 +41,7 @@ public:
 
 	MeshID CreateCubeMesh();
 	MeshID CreateSquareMesh();
+	MeshID CreateCircleMesh(); // 반지름 0.5인 원에 외접하는 정 16각형을 생성함
 	MeshID CreateSphereMesh();
 	MeshID CreateCapsuleMesh();
 	MeshID CreateCylinderMesh();
@@ -54,6 +55,7 @@ public:
 
 	void ReleaseCubeMesh();
 	void ReleaseSquareMesh();
+	void ReleaseCircleMesh();
 	void ReleaseSphereMesh();
 	void ReleaseCapsuleMesh();
 	void ReleaseCylinderMesh();
@@ -66,12 +68,14 @@ public:
 
 	MeshID GetCubeID();
 	MeshID GetSquareID();
+	MeshID GetCircleID();
 	MeshID GetSphereID();
 	MeshID GetCapsuleID();
 	MeshID GetCylinderID();
 
 	ZeldaMesh* GetCubeMesh();
 	ZeldaMesh* GetSquareMesh();
+	ZeldaMesh* GetCircleMesh();
 	ZeldaMesh* GetSphereMesh();
 	ZeldaMesh* GetCapsuleMesh();
 	ZeldaMesh* GetCylinderMesh();
@@ -97,6 +101,7 @@ private:
 
 	MeshID cubeID;
 	MeshID squareID;
+	MeshID circleID;
 	MeshID sphereID;
 	MeshID capsuleID;
 	MeshID cylinderID;

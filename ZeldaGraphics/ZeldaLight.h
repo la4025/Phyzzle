@@ -2,6 +2,8 @@
 
 #include "ZeldaGraphicsDefine.h"
 
+class ZeldaCamera;
+
 class ZeldaLight
 {
 public:
@@ -36,6 +38,8 @@ public:
 
 	LightType GetLightType();
 	LightInfo GetLightInfo();
+
+	DirectX::XMMATRIX GetWorldMatrix();
 
 private:
 	DirectX::XMFLOAT4 ambient;

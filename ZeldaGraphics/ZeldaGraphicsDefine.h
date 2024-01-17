@@ -128,10 +128,19 @@ struct MaterialBufferType
 	constexpr static unsigned int registerNum = 4;
 };
 
+struct ScreenBufferType
+{
+	DirectX::XMFLOAT2 screenSize;
+	float padding[2];
+
+	constexpr static unsigned int registerNum = 5;
+};
+
 #pragma endregion
 
 enum class ShaderType
 {
 	VertexShader,
-	PixelShader
+	PixelShader,
+	VertexShaderAndPixelShader
 };

@@ -116,6 +116,11 @@ CameraID ZeldaCamera::GetMainCamera()
 	return mainCameraID;
 }
 
+DirectX::XMMATRIX ZeldaCamera::GetTransformMatrix() const
+{
+	return transformMatrix;
+}
+
 float ZeldaCamera::GetFov() const
 {
 	return fieldOfView;

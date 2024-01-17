@@ -80,6 +80,7 @@ private:
 	ModelID fbxID;
 	ModelID fbxID2;
 	LightID dirLightID;
+	LightID pointLightID;
 
 
 	//singleton

@@ -45,6 +45,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC defaultRasterDesc;
 	D3D11_RASTERIZER_DESC wireFrameRasterDesc;
+	D3D11_RASTERIZER_DESC lightRasterDesc;
 	D3D11_VIEWPORT viewport;
 	float fieldOfView, screenAspect;
 
@@ -267,6 +268,21 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	result = mDevice->CreateRasterizerState(&wireFrameRasterDesc, &wireFrameRasterState);
 	if (FAILED(result)) return false;
 
+	// Setup the raster description which will determine how and what polygons will be drawn.
+	lightRasterDesc.AntialiasedLineEnable = false;
+	lightRasterDesc.CullMode = D3D11_CULL_FRONT;
+	lightRasterDesc.DepthBias = 0;
+	lightRasterDesc.DepthBiasClamp = 0.0f;
+	lightRasterDesc.DepthClipEnable = false;
+	lightRasterDesc.FillMode = D3D11_FILL_SOLID;
+	lightRasterDesc.FrontCounterClockwise = false;
+	lightRasterDesc.MultisampleEnable = false;
+	lightRasterDesc.ScissorEnable = false;
+	lightRasterDesc.SlopeScaledDepthBias = 0.0f;
+	// Create the rasterizer state from the description we just filled out.
+	result = mDevice->CreateRasterizerState(&lightRasterDesc, &pointLightRasterState);
+	if (FAILED(result)) return false;
+
 
 	// Set up the viewport for rendering.
 	viewport.Width = (float)screenWidth;
@@ -295,6 +311,10 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	lightIndexConstBuffer = new ConstantBuffer<LightIndexBufferType, ShaderType::PixelShader>(mDevice);
 	materialConstBuffer = new ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>(mDevice);
 
+	screenConstBuffer = new ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
+
+	screenConstBuffer->SetData({ { static_cast<float>(screenWidth), static_cast<float>(screenHeight) } });
+	ConstantBufferManager::GetInstance().SetBuffer();
 
 #pragma region Deferred Rendering
 
@@ -356,7 +376,9 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	}
 
 	deferredObjectShader = new ZeldaShader(mDevice, L"DeferredObjectVS.cso", L"DeferredObjectPS.cso");
-	deferredLightShader = new ZeldaShader(mDevice, L"DeferredLightVS.cso", L"DeferredLightPS.cso");
+	deferredDirectionalLightShader = new ZeldaShader(mDevice, L"DeferredDirectionalLightVS.cso", L"DeferredDirectionalLightPS.cso");
+	deferredPointLightShader = new ZeldaShader(mDevice, L"DeferredPointLightVS.cso", L"DeferredPointLightPS.cso");
+	deferredSpotLightShader = new ZeldaShader(mDevice, L"DeferredSpotLightVS.cso", L"DeferredSpotLightPS.cso");
 	deferredFinalShader = new ZeldaShader(mDevice, L"DeferredFinalVS.cso", L"DeferredFinalPS.cso");
 	fowardShader = new ZeldaShader(mDevice, L"FowardVS.cso", L"FowardPS.cso");
 
@@ -368,7 +390,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	blendDesc.AlphaToCoverageEnable = FALSE;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
 	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
@@ -447,6 +469,11 @@ void ZeldaDX11Renderer::Finalize()
 		delete materialConstBuffer;
 		materialConstBuffer = nullptr;
 	}
+	if (screenConstBuffer)
+	{
+		delete screenConstBuffer;
+		screenConstBuffer = nullptr;
+	}
 	if (mRasterState)
 	{
 		mRasterState->Release();
@@ -502,10 +529,20 @@ void ZeldaDX11Renderer::Finalize()
 		delete deferredObjectShader;
 		deferredObjectShader = nullptr;
 	}
-	if (deferredLightShader)
+	if (deferredDirectionalLightShader)
 	{
-		delete deferredLightShader;
-		deferredLightShader = nullptr;
+		delete deferredDirectionalLightShader;
+		deferredDirectionalLightShader = nullptr;
+	}
+	if (deferredPointLightShader)
+	{
+		delete deferredPointLightShader;
+		deferredPointLightShader = nullptr;
+	}
+	if (deferredSpotLightShader)
+	{
+		delete deferredSpotLightShader;
+		deferredSpotLightShader = nullptr;
 	}
 	if (deferredFinalShader)
 	{
@@ -526,6 +563,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		wireFrameRasterState->Release();
 		wireFrameRasterState = nullptr;
+	}
+	if (pointLightRasterState)
+	{
+		pointLightRasterState->Release();
+		pointLightRasterState = nullptr;
 	}
 	if (currentRasterState)
 	{
@@ -730,13 +772,20 @@ void ZeldaDX11Renderer::CreateBasicResources()
 {
 	ResourceManager::GetInstance().CreateCubeMesh();
 	ResourceManager::GetInstance().CreateSquareMesh();
-
+	ResourceManager::GetInstance().CreateCircleMesh();
+	ResourceManager::GetInstance().CreateSphereMesh();
+	ResourceManager::GetInstance().CreateCapsuleMesh();
+	ResourceManager::GetInstance().CreateCylinderMesh();
 }
 
 void ZeldaDX11Renderer::ReleaseBasicResources()
 {
 	ResourceManager::GetInstance().ReleaseCubeMesh();
 	ResourceManager::GetInstance().ReleaseSquareMesh();
+	ResourceManager::GetInstance().ReleaseCircleMesh();
+	ResourceManager::GetInstance().ReleaseSphereMesh();
+	ResourceManager::GetInstance().ReleaseCapsuleMesh();
+	ResourceManager::GetInstance().ReleaseCylinderMesh();
 }
 
 void ZeldaDX11Renderer::DrawDeferred()
@@ -767,10 +816,10 @@ void ZeldaDX11Renderer::DrawDeferred()
 #pragma region Draw Deferred Light
 	// 다음 그리기에 영향을 주지 않기 위해 뎁스스텐실을 비워놓음
 	mDeviceContext->OMSetRenderTargets(Deferred::Light::Count, deferredRenderTargets + Deferred::Light::Begin, nullptr);
-	mDeviceContext->PSSetShaderResources(Deferred::slotBegin, 2, deferredShaderResources);
+	mDeviceContext->PSSetShaderResources(Deferred::slotBegin, 2, deferredShaderResources + Deferred::Object::Begin);
 	float alphaBlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	mDeviceContext->OMSetBlendState(alphaBlendState, alphaBlendFactor, 0xFFFFFFFF);
-
+	
 	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
 
 	LightInfoBufferType lightInfoData;
@@ -781,23 +830,66 @@ void ZeldaDX11Renderer::DrawDeferred()
 		lightCount++;
 	}
 
-	matrixPsConstBuffer->SetData({ {}, XMMatrixTranspose(mainCamera->GetViewMatrix()), { XMMatrixTranspose(mainCamera->GetProjMatrix()) }, mainCamera->GetFar() });
+	MatrixBufferType lightMatrixBuffer;
+	lightMatrixBuffer.view = XMMatrixTranspose(mainCamera->GetViewMatrix());
+	lightMatrixBuffer.projection = XMMatrixTranspose(mainCamera->GetProjMatrix());
+	lightMatrixBuffer.cameraFar = mainCamera->GetFar();
+	
+	matrixPsConstBuffer->SetData(lightMatrixBuffer);
 	lightInfoConstBuffer->SetData(lightInfoData);
 
-	squareMesh->Render(mDeviceContext);
-
-	for (int i = 0; i < lightCount; i++)
+	lightCount = 0;
+	for (auto& iter : organizedLightRenderInfo)
 	{
+		ZeldaLight* light = ResourceManager::GetInstance().GetLight(iter);
+		LightType lightType = light->GetLightType();
+		ZeldaMesh* lightMesh = nullptr;
+		ZeldaShader* lightShader = nullptr;
+
+		if (lightType == LightType::Directional)
+		{
+			mDeviceContext->RSSetState(defaultRasterState);
+			lightMesh = squareMesh;
+			lightShader = deferredDirectionalLightShader;
+		}
+		else if (lightType == LightType::Point)
+		{
+			mDeviceContext->RSSetState(pointLightRasterState);
+			lightMesh = ResourceManager::GetInstance().GetSphereMesh();
+			lightShader = deferredPointLightShader;
+		}
+		else if (lightType == LightType::Spot)
+		{
+			// Spot Light Mesh 추가 필요
+
+			mDeviceContext->RSSetState(defaultRasterState);
+			
+			lightShader = deferredSpotLightShader;
+			assert(0);
+		}
+		else
+		{
+			assert(0);
+		}
+
+		lightMesh->Render(mDeviceContext);
+
+		lightMatrixBuffer.world = XMMatrixTranspose(light->GetWorldMatrix());
+		matrixVsConstBuffer->SetData(lightMatrixBuffer);
+
 		LightIndexBufferType lightIndexData;
-		lightIndexData.lightIndex = i;
+		lightIndexData.lightIndex = lightCount;
 		lightIndexConstBuffer->SetData(lightIndexData);
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
-		deferredLightShader->Render(mDeviceContext, squareMesh->GetIndexCount());
+		lightShader->Render(mDeviceContext, lightMesh->GetIndexCount());
+
+		lightCount++;
 	}
 
 	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+	mDeviceContext->RSSetState(defaultRasterState);
 
 #pragma endregion
 
@@ -990,7 +1082,7 @@ LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, cons
 	return lightID;
 }
 
-LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& position, float range, float angle)
+LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
 {
 	LightID lightID = ResourceManager::GetInstance().CreateSpotLight();
 
@@ -1000,6 +1092,7 @@ LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const
 	light->SetDiffuseColor(diffuse.x(), diffuse.y(), diffuse.z());
 	light->SetSpecular(specular.x(), specular.y(), specular.z());
 
+	light->SetDirection(direction.x(), direction.y(), direction.z());
 	light->SetPosition(position.x(), position.y(), position.z());
 	light->SetRange(range);
 	light->SetAngle(angle);

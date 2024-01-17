@@ -100,7 +100,7 @@ public:
 
 	virtual LightID CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction) override;
 	virtual LightID CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& position, float range) override;
-	virtual LightID CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& position, float range, float angle) override;
+	virtual LightID CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle) override;
 	virtual void ReleaseLight(LightID lightID) override;
 
 	virtual void UpdateLight(LightID lightID, const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle) override;
@@ -142,6 +142,7 @@ private:
 
 	ID3D11RasterizerState* defaultRasterState;
 	ID3D11RasterizerState* wireFrameRasterState;
+	ID3D11RasterizerState* pointLightRasterState;
 	ID3D11RasterizerState* currentRasterState;
 
 	ID3D11BlendState* alphaBlendState;
@@ -151,7 +152,9 @@ private:
 	ID3D11ShaderResourceView* deferredShaderResources[Deferred::bufferCount];
 
 	ZeldaShader* deferredObjectShader;
-	ZeldaShader* deferredLightShader;
+	ZeldaShader* deferredDirectionalLightShader;
+	ZeldaShader* deferredPointLightShader;
+	ZeldaShader* deferredSpotLightShader;
 	ZeldaShader* deferredFinalShader;
 	ZeldaShader* fowardShader;
 
@@ -179,6 +182,8 @@ private:
 	ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>* lightInfoConstBuffer;
 	ConstantBuffer<LightIndexBufferType, ShaderType::PixelShader>* lightIndexConstBuffer;
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer;
+	
+	ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>* screenConstBuffer;
 
 
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.

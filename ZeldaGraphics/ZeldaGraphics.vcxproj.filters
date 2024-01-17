@@ -174,10 +174,10 @@
     <FxCompile Include="DeferredObjectPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="DeferredLightVS.hlsl">
+    <FxCompile Include="DeferredDirectionalLightVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="DeferredLightPS.hlsl">
+    <FxCompile Include="DeferredDirectionalLightPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="DeferredFinalVS.hlsl">
@@ -192,9 +192,24 @@
     <FxCompile Include="FowardPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="DeferredPointLightVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredSpotLightVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPointLightPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredSpotLightPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Buffers.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Light.hlsli">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>

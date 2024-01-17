@@ -1,5 +1,7 @@
 #include "ZeldaLight.h"
 
+#include "ZeldaCamera.h"
+
 using namespace DirectX;
 
 ZeldaLight::ZeldaLight(LightType type) :
@@ -116,4 +118,46 @@ LightInfo ZeldaLight::GetLightInfo()
 	lightInfo.angle = angle;
 
 	return lightInfo;
+}
+
+DirectX::XMMATRIX ZeldaLight::GetWorldMatrix()
+{
+	switch (type)
+	{
+		case LightType::Directional:
+		{
+			// Directional Light는 WorldMatrix를 사용할 필요가 없기 때문에 그냥 적당히 넘겨준다.
+			return DirectX::XMMatrixIdentity();
+			break;
+		}
+
+		case LightType::Point:
+		{
+			float extra = 0.1f;
+
+			DirectX::XMMATRIX scaleMatrix = DirectX::XMMatrixScaling(2.0f * range, 2.0f * range, 2.0f * range);
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+
+			return scaleMatrix * translation;
+			break;
+		}
+
+		case LightType::Spot:
+		{
+			DirectX::XMVECTOR currentDir = { 0.0f, -1.0f, 0.0f, 0.0f };
+			DirectX::XMVECTOR targetDir = XMVector3Normalize({ direction.x, direction.y, direction.z, 0.0f });
+			DirectX::XMVECTOR axis = DirectX::XMVector3Cross(currentDir, targetDir);
+			float angle = DirectX::XMScalarACos(DirectX::XMVector3Dot(currentDir, targetDir).m128_f32[0]);
+
+			DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(range, range, range);
+			DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationAxis(axis, angle);
+			DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+			return scale * rotation * translation;
+			break;
+		}
+
+		default:
+			assert(0);
+			break;
+	}
 }

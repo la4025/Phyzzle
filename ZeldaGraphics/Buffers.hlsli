@@ -83,4 +83,10 @@ cbuffer MaterialBufferType : register(b4)
     unsigned int useTemp4;
 };
 
+cbuffer ScreenBufferType : register(b5)
+{
+    float2 screenSize;
+    float b5padding[2];
+}
+
 #endif

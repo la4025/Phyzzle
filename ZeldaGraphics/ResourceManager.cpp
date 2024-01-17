@@ -195,6 +195,58 @@ MeshID ResourceManager::CreateSquareMesh()
 	return squareID;
 }
 
+MeshID ResourceManager::CreateCircleMesh()
+{
+	if (circleID != MeshID::ID_NULL)
+	{
+		return MeshID::ID_NULL;
+	}
+
+	const unsigned int outerVertexCount = 16;
+	const float radius = 0.5f;
+	const float unitAngle = DirectX::XM_2PI / static_cast<float>(outerVertexCount);
+
+	std::vector<VertexType> vertexList(outerVertexCount + 1);
+	std::vector<unsigned int> indexList;
+	
+	for (unsigned int i = 0; i < outerVertexCount; i++)
+	{
+		float theta = unitAngle * (i + 1);
+		float tanUnitAngleDiv2 = DirectX::XMScalarSin(unitAngle / 2.0f) / DirectX::XMScalarCos(unitAngle / 2.0f);
+
+		VertexType v;
+		v.position.x = radius * DirectX::XMScalarCos(theta) + radius * tanUnitAngleDiv2 * DirectX::XMScalarCos(theta - DirectX::XM_PIDIV2);
+		v.position.y = radius * DirectX::XMScalarSin(theta) + radius * tanUnitAngleDiv2 * DirectX::XMScalarSin(theta - DirectX::XM_PIDIV2);
+		v.position.z = 0.0f;
+		v.position.w = 0.0f;
+		v.normal = { 0.0f, 0.0f, -1.0f };
+		v.texture.x = +(v.position.x + 1.0f) / 2.0f;
+		v.texture.y = -(v.position.y + 1.0f) / 2.0f;
+
+		vertexList[i] = v;
+	}
+
+	for (unsigned int i = 0; i < outerVertexCount; i++)
+	{
+		unsigned int j = (i + 1) % outerVertexCount;
+
+		indexList.push_back(j);
+		indexList.push_back(i);
+		indexList.push_back(outerVertexCount);
+	}
+
+	circleID = IDGenerator::CreateID<ResourceType::Mesh>();
+
+	while (meshTable.count(circleID) != 0 || circleID == MeshID::ID_NULL)
+	{
+		circleID = IDGenerator::CreateID<ResourceType::Mesh>();
+	}
+
+	meshTable[circleID] = new ZeldaMesh(device, vertexList, indexList);
+
+	return circleID;
+}
+
 MeshID ResourceManager::CreateSphereMesh()
 {
 	if (sphereID != MeshID::ID_NULL)
@@ -698,6 +750,12 @@ void ResourceManager::ReleaseSquareMesh()
 	squareID = MeshID::ID_NULL;
 }
 
+void ResourceManager::ReleaseCircleMesh()
+{
+	ReleaseMesh(circleID);
+	circleID = MeshID::ID_NULL;
+}
+
 void ResourceManager::ReleaseSphereMesh()
 {
 	ReleaseMesh(sphereID);
@@ -828,6 +886,11 @@ MeshID ResourceManager::GetSquareID()
 	return squareID;
 }
 
+MeshID ResourceManager::GetCircleID()
+{
+	return circleID;
+}
+
 MeshID ResourceManager::GetSphereID()
 {
 	return sphereID;
@@ -851,6 +914,11 @@ ZeldaMesh* ResourceManager::GetCubeMesh()
 ZeldaMesh* ResourceManager::GetSquareMesh()
 {
 	return meshTable[squareID];
+}
+
+ZeldaMesh* ResourceManager::GetCircleMesh()
+{
+	return meshTable[circleID];
 }
 
 ZeldaMesh* ResourceManager::GetSphereMesh()
@@ -955,6 +1023,7 @@ ResourceManager::ResourceManager() :
 	device(nullptr),
 	cubeID(MeshID::ID_NULL),
 	squareID(MeshID::ID_NULL),
+	circleID(MeshID::ID_NULL),
 	sphereID(MeshID::ID_NULL),
 	capsuleID(MeshID::ID_NULL),
 	cylinderID(MeshID::ID_NULL)

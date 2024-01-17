@@ -250,6 +250,12 @@ void CoreSystem::run()
 	static std::vector<std::wstring> animationList2;
 	static std::vector<float> animationPlayTimeList;
 	static std::vector<float> animationPlayTimeList2;
+	 
+	static float pointLightRange_Max = 200.0f;
+	static float pointLightRange_Min = 10.0f;
+	static float pointLightRange_Speed = 50.0f;
+	static float pointLightRange = 10.0f;
+	static Eigen::Vector3f pointLightPos = { 0.0f, 50.0f, 0.0f };
 
 	static bool firstRun = true;
 	if (firstRun)
@@ -272,14 +278,15 @@ void CoreSystem::run()
 		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Capoeira.fbx");
 		
 		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f });
+		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, pointLightPos, pointLightRange);
 
 		mainCameraID = renderer->CreateCamera();
 
 		renderer->SetMainCamera(mainCameraID);
 
 		cameraMatrix <<
-			1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f, 3.0f,
+			0.0f, 1.0f, 0.0f, 1.0f,
 			0.0f, 0.0f, 1.0f, -10.0f,
 			0.0f, 0.0f, 0.0f, 1.0f;
 
@@ -330,6 +337,25 @@ void CoreSystem::run()
 		if (GetAsyncKeyState(VK_F8)) renderer->SetDebugMode(DebugMode::DeferredDebug5);
 		if (GetAsyncKeyState(VK_F11)) renderer->SetRendererMode(RendererMode::OffWireFrameMode);
 		if (GetAsyncKeyState(VK_F12)) renderer->SetRendererMode(RendererMode::OnWireFrameMode);
+	}
+
+	if (GetAsyncKeyState('O'))
+	{
+		pointLightRange += (pointLightRange_Speed * deltaTime);
+		if (pointLightRange > pointLightRange_Max)
+		{
+			pointLightRange = pointLightRange_Max;
+		}
+		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, {}, pointLightPos, pointLightRange, 0.0f);
+	}
+	if (GetAsyncKeyState('P'))
+	{
+		pointLightRange -= (pointLightRange_Speed * deltaTime);
+		if (pointLightRange < pointLightRange_Min)
+		{
+			pointLightRange = pointLightRange_Min;
+		}
+		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, {}, pointLightPos, pointLightRange, 0.0f);
 	}
 
 	Eigen::Matrix4f cameraRotateY;
@@ -481,6 +507,7 @@ void CoreSystem::run()
 	}
 
 	renderer->DrawLight(dirLightID);
+	renderer->DrawLight(pointLightID);
 
 	renderer->DrawSprite({ scdX, 0 }, msTextureID);
 	renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);
@@ -491,9 +518,19 @@ void CoreSystem::run()
 	//renderer->DrawModel(ganonMatrix, fbxID, false);
 
 	renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", animationTime, false);
+	//renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", 4.0f, false);
 	//renderer->DrawAnimation(ganonMatrix, fbxID2, animationNumber2 != 0 ? animationList2[animationNumber2] : L"", animationTime2, false);
 
-	renderer->DrawCube(Eigen::Matrix4f::Identity(), scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	Eigen::Matrix4f cubeMatrix = Eigen::Matrix4f::Identity();
+	cubeMatrix(0, 0) = 10.0f;
+	cubeMatrix(1, 1) = 10.0f;
+	cubeMatrix(2, 2) = 10.0f;
+
+	cubeMatrix(0, 3) = 3.0f;
+	cubeMatrix(1, 3) = 1.0f;
+	cubeMatrix(2, 3) = 10.0f;
+
+	renderer->DrawCube(cubeMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
 	renderer->EndDraw();
