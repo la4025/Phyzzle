@@ -24,6 +24,8 @@ namespace ZonaiPhysics
 	public:
 		void				SetTrigger(bool) noexcept final;
 
+		void				SetLayerID(uint32_t) noexcept final;
+
 		/**
 		À§Ä¡
 		*/

@@ -87,9 +87,7 @@ namespace ZonaiPhysics
 		void			ClearTorque() noexcept override;
 
 	public:
-		physx::PxRigidDynamic* getRigidDynamic() const noexcept;
-
-	private:
+		// physx::PxRigidDynamic* getRigidDynamic() const noexcept;
 		physx::PxRigidDynamic* pxBody;
 	};
 } // namespace ZonaiPhysics

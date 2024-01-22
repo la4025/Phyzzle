@@ -19,12 +19,12 @@ namespace ZonaiPhysics
 	class SphericalJoint : public TemplateJoint<ZnSphericalJoint, physx::PxSphericalJoint>
 	{
 	public:
-							SphericalJoint() noexcept = delete;
-							SphericalJoint(
-								physx::PxPhysics*& _factory,
-								RigidBody* _object0, const ZnTransform& _transform0,
-								RigidBody* _object1, const ZnTransform& _transform1) noexcept;
-							~SphericalJoint() noexcept override;
+		SphericalJoint() noexcept = delete;
+		SphericalJoint(
+			physx::PxPhysics*& _factory,
+			RigidBody* _object0, const ZnTransform& _transform0,
+			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
+		~SphericalJoint() noexcept override;
 
 	public:
 		void GetLimitAngle(float* _outY, float* _outZ) override;
@@ -33,4 +33,3 @@ namespace ZonaiPhysics
 		void SetLimitConeWithSpring(float _yAngle, float _zAngle, float _stiffness, float _damping) override;
 	};
 }
-

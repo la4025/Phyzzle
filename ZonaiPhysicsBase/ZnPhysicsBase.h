@@ -5,6 +5,7 @@
 
 namespace ZonaiPhysics
 {
+	class ZnSimulationCallback;
 	class ZnPrismaticJoint;
 	class ZnHingeJoint;
 	class ZnDistanceJoint;
@@ -25,13 +26,13 @@ namespace ZonaiPhysics
 	class ZnTransform;
 	struct ZnRaycastInfo;
 
-	enum class Shape
+	// data0은 트리거 유무
+	// data1은 본인의 레이어 정보
+	// data2는 본인이 충돌 가능한 레이어 정보
+	enum LayerID
 	{
-		SPHERE,
-		BOX,
-		CAPSULE,
-		PLANE,
-		CONVEX,
+
+
 	};
 
 	class ZnPhysicsBase : public ZnBase
@@ -44,13 +45,11 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// 
 		/// </summary>
-		virtual void			Initialize() noexcept = 0;
-		virtual void			Simulation(float _dt) noexcept = 0;
-		virtual void			Finalize() noexcept = 0;
+		virtual void				Initialize(ZnSimulationCallback* = nullptr) noexcept = 0;
+		virtual void				Simulation(float _dt) noexcept = 0;
+		virtual void				Finalize() noexcept = 0;
 
-		virtual void			SetGravity(const Eigen::Vector3f&) noexcept = 0;
-
-		virtual void			Release() = 0;
+		virtual void				SetGravity(const Eigen::Vector3f&) noexcept = 0;
 
 	public:
 		/// <summary>

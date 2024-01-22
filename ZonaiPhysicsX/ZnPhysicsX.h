@@ -5,7 +5,8 @@
 #include <map>
 #include <string>
 
-#include "ZnSimulationCallbackX.h"
+#include "EventCallback.h"
+#include "FilterCallback.h"
 
 #define PVD_HOST "127.0.0.1"
 
@@ -42,94 +43,79 @@ namespace ZonaiPhysics
 	struct ZnRaycastInfo;
 	struct ZnMaterial;
 
-	enum class ColliderID
-	{
-		Box				= 0,
-		Plane			= 1,
-		Sphere			= 2,
-		Capsule			= 3,
-		Custom			= 4,
-	};
-
-	enum class JointID
-	{
-		D6				= 0,
-		Fixed			= 1,
-		Distance		= 2,
-		Spherical		= 3,
-		Revolute		= 4,
-		Prismatic		= 5,
-	};
-
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
 	public:
 		ZnPhysicsX() noexcept = default;
-		virtual ~ZnPhysicsX() noexcept = default;
+		~ZnPhysicsX() noexcept override = default;
 
 	public:
-		void			Initialize() noexcept override;
-		void			Simulation(float _dt) noexcept override;
-		void			Finalize() noexcept override;
+		void Initialize(ZnSimulationCallback*) noexcept override;
+		void Simulation(float _dt) noexcept override;
+		void Finalize() noexcept override;
 
-		static	ZnPhysicsBase* Instance();
-		void			Release() override;
+		static ZnPhysicsBase* Instance();
 
 	public:
-		void			SetGravity(const Eigen::Vector3f&) noexcept override;
-
+		void SetGravity(const Vector3f&) noexcept override;
+		void SetLayerData() noexcept;
 
 	public:
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
-		virtual ZnRigidBody*	CreateRigidBody(const std::wstring&) noexcept override;
+		ZnRigidBody* CreateRigidBody(const std::wstring&) noexcept override;
 
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		ZnCollider*				CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
- 		ZnCollider*				CreateSphereCollider(const std::wstring&, float radius) noexcept override;
- 		ZnCollider*				CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
- 		// ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
-	
-// 		/// <summary>
-// 		/// Create Joint
-// 		/// </summary>
-		ZnFixedJoint*			CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 고정 조인트
-		ZnDistanceJoint*		CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 거리 조인트
-		ZnSphericalJoint*		CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 구형 조인트
-		ZnHingeJoint*			CreateHingeJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;		// 회전 조인트
-		ZnPrismaticJoint*		CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;	// 프리즘 조인트
+		ZnCollider* CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
+		ZnCollider* CreateSphereCollider(const std::wstring&, float radius) noexcept override;
+		ZnCollider* CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
+		// ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
+
+		/// <summary>
+		/// Create Joint
+		/// </summary>
+		// 고정 조인트
+		ZnFixedJoint*		CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		// 거리 조인트
+		ZnDistanceJoint*	CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		// 구형 조인트
+		ZnSphericalJoint*	CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		// 회전 조인트
+		ZnHingeJoint*		CreateHingeJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		// 프리즘 조인트
+		ZnPrismaticJoint*	CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
 
 	public:
-		bool					Raycast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) noexcept override;
+		bool Raycast(const Vector3f&, const Vector3f&, float, ZnRaycastInfo&) noexcept override;
 
 	private:
-		RigidBody*				FindRigidBody(const std::wstring&) noexcept;
-		Collider*				CreateCollider(const std::wstring&) noexcept;
+		RigidBody* FindRigidBody(const std::wstring&) noexcept;
+		Collider* CreateCollider(const std::wstring&) noexcept;
 
 	private:
-		physx::PxDefaultAllocator		allocator;
-		physx::PxDefaultErrorCallback	errorCallback;
-		physx::PxFoundation*			foundation;
-		physx::PxPhysics*				physics;
-		physx::PxDefaultCpuDispatcher*	dispatcher;
-		physx::PxScene*					scene;
-		physx::PxPvd*					pvd;
+		physx::PxDefaultAllocator allocator;
+		physx::PxDefaultErrorCallback errorCallback;
+		physx::PxFoundation* foundation;
+		physx::PxPhysics* physics;
+		physx::PxDefaultCpuDispatcher* dispatcher;
+		physx::PxScene* scene;
+		physx::PxPvd* pvd;
 
-		physx::PxMaterial*				material;
+		physx::PxMaterial* material;
 
 	private:
-		static ZnPhysicsX*		instance;
+		static ZnPhysicsX* instance;
 
 		std::map<std::wstring, RigidBody*> bodies;
-		ZnSimulationCallbackX callback;
+		EventCallback eventCallback;
+		FilterCallback filterCallback;
 	};
 
-	extern "C"
-	{
-		__declspec(dllexport) ZnPhysicsBase* CreatePhysics();
+
+	extern "C" {
+	__declspec(dllexport) ZnPhysicsBase* CreatePhysics();
 	}
 } // namespace ZonaiPhysics
-

@@ -27,26 +27,25 @@ namespace ZonaiPhysics
 		~DistanceJoint() noexcept override;
 
 	public:
-		float	GetDistance() const override;
+		float GetDistance() const override;
 
-		void	SetMinDistance(float _distance) override;
-		float	GetMinDistance() const override;
+		void SetMinDistance(float _distance) override;
+		float GetMinDistance() const override;
 
-		void	SetMaxDistance(float _distance) override;
-		float	GetMaxDistance() const override;
+		void SetMaxDistance(float _distance) override;
+		float GetMaxDistance() const override;
 
-		void	SetTolerance(float _tolerance) override;
-		float	GetTolerance() const override;
+		void SetTolerance(float _tolerance) override;
+		float GetTolerance() const override;
 
-		void	SetStiffness(float _stiffness) override;
-		float	GetStiffness() const override;
+		void SetStiffness(float _stiffness) override;
+		float GetStiffness() const override;
 
-		void	SetDamping(float _damping) override;
-		float	GetDamping() const override;
+		void SetDamping(float _damping) override;
+		float GetDamping() const override;
 
-		void	SetMinDistanceEnable(bool _value) override;
-		void	SetMaxDistanceEnable(bool _value) override;
-		void	SetSpringEnable(bool _value) override;
+		void SetMinDistanceEnable(bool _value) override;
+		void SetMaxDistanceEnable(bool _value) override;
+		void SetSpringEnable(bool _value) override;
 	};
 }
-

@@ -1,7 +1,10 @@
 #include <Eigen/Dense>
 
 #include "PxPhysicsAPI.h"
+#include "ZnUtil.h"
+
 #include "RigidBody.h"
+
 
 namespace ZonaiPhysics
 {
@@ -19,6 +22,7 @@ namespace ZonaiPhysics
 	RigidBody::~RigidBody() noexcept
 	{
 		pxBody->release();
+		pxBody = nullptr;
 	}
 
 	void RigidBody::WakeUp() noexcept
@@ -39,16 +43,14 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, !value);
+		pxBody->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !value);
 	}
 
 	void RigidBody::SetKinematic(bool value) noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, value);
+		pxBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, value);
 	}
 
 	void RigidBody::UpdateInertiaTensor() noexcept
@@ -62,8 +64,7 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, !value);
+		pxBody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !value);
 	}
 
 	DynamicLocks RigidBody::GetDynamicLockFlags() const noexcept
@@ -77,16 +78,19 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setRigidDynamicLockFlag(static_cast<PxRigidDynamicLockFlag::Enum>(_flag), _value);
+		pxBody->setRigidDynamicLockFlag(
+			static_cast<physx::PxRigidDynamicLockFlag::Enum>(_flag), 
+			_value
+		);
 	}
 
 	void RigidBody::SetDynamicLockFlags(DynamicLocks _flags) noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setRigidDynamicLockFlags(static_cast<PxRigidDynamicLockFlags>(_flags));
+		pxBody->setRigidDynamicLockFlags(
+			static_cast<physx::PxRigidDynamicLockFlags>(_flags)
+		);
 	}
 
 	void* RigidBody::GetUserData() const noexcept
@@ -125,17 +129,14 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		PxVec3 I = pxBody->getMassSpaceInertiaTensor();
-		return { I.x, I.y, I.z };
+		return PhysxToEigen(pxBody->getMassSpaceInertiaTensor());
 	}
 
 	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& _I) noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setMassSpaceInertiaTensor(PxVec3(_I.x(), _I.y(), _I.z()));
+		pxBody->setMassSpaceInertiaTensor(EigenToPhysx(_I));
 	}
 
 	float RigidBody::GetLinearDamping() const noexcept
@@ -170,34 +171,28 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		PxVec3 v = pxBody->getLinearVelocity();
-		return { v.x, v.y, v.z };
+		return PhysxToEigen(pxBody->getLinearVelocity());
 	}
 
 	void RigidBody::SetLinearVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setLinearVelocity(PxVec3(_velocity.x(), _velocity.y(), _velocity.z()));
+		pxBody->setLinearVelocity(EigenToPhysx(_velocity));
 	}
 
 	Eigen::Vector3f RigidBody::GetAngularVelocity() const noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		PxVec3 v = pxBody->getAngularVelocity();
-		return { v.x, v.y, v.z };
+		return PhysxToEigen(pxBody->getAngularVelocity());
 	}
 
 	void RigidBody::SetAngularVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->setAngularVelocity(PxVec3(_velocity.x(), _velocity.y(), _velocity.z()));
+		pxBody->setAngularVelocity(EigenToPhysx(_velocity));
 	}
 
 	float RigidBody::GetMaxLinearVelocity() const noexcept
@@ -232,8 +227,7 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		auto transform = pxBody->getGlobalPose();
-		return { transform.p.x, transform.p.y, transform.p.z };
+		return PhysxToEigen(pxBody->getGlobalPose().p);
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _position) noexcept
@@ -242,9 +236,7 @@ namespace ZonaiPhysics
 
 		using namespace physx;
 		PxTransform t = pxBody->getGlobalPose();
-		t.p.x = _position.x();
-		t.p.y = _position.y();
-		t.p.z = _position.z();
+		t.p = EigenToPhysx(_position);
 		pxBody->setGlobalPose(t);
 	}
 
@@ -252,9 +244,7 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		PxTransform t = pxBody->getGlobalPose();
-		return { t.q.w, t.q.x, t.q.y, t.q.z };
+		return PhysxToEigen(pxBody->getGlobalPose().q);
 	}
 
 	void RigidBody::SetQuaternion(const Eigen::Quaternionf& _quaternion) noexcept
@@ -263,10 +253,7 @@ namespace ZonaiPhysics
 
 		using namespace physx;
 		PxTransform t = pxBody->getGlobalPose();
-		t.q.w = _quaternion.w();
-		t.q.x = _quaternion.x();
-		t.q.y = _quaternion.y();
-		t.q.z = _quaternion.z();
+		t.q = EigenToPhysx(_quaternion);
 		pxBody->setGlobalPose(t);
 	}
 
@@ -275,11 +262,10 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
 		pxBody->setForceAndTorque(
-			{ _force.x(), _force.y(), _force.z()},
-			{ _torque.x(), _torque.y(), _torque.z()},
-			static_cast<PxForceMode::Enum>(_type)
+			EigenToPhysx(_force),
+			EigenToPhysx(_torque),
+			static_cast<physx::PxForceMode::Enum>(_type)
 		);
 	}
 
@@ -287,8 +273,10 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->addForce(PxVec3(_force.x(), _force.y(), _force.z()), static_cast<PxForceMode::Enum>(_type));
+		pxBody->addForce(
+			EigenToPhysx(_force), 
+			static_cast<physx::PxForceMode::Enum>(_type)
+		);
 	}
 
 	void RigidBody::ClearForce() noexcept
@@ -302,8 +290,10 @@ namespace ZonaiPhysics
 	{
 		assert(pxBody != nullptr);
 
-		using namespace physx;
-		pxBody->addTorque(PxVec3(_torque.x(), _torque.y(), _torque.z()), static_cast<PxForceMode::Enum>(_type));
+		pxBody->addTorque(
+			EigenToPhysx(_torque), 
+			static_cast<physx::PxForceMode::Enum>(_type)
+		);
 	}
 
 	void RigidBody::ClearTorque() noexcept
@@ -313,8 +303,8 @@ namespace ZonaiPhysics
 		pxBody->clearTorque();
 	}
 
-	physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept
-	{
-		return pxBody;
-	}
+	//physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept
+	//{
+	//	return pxBody;
+	//}
 } // namespace ZonaiPhysics

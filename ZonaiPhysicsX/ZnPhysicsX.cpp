@@ -11,17 +11,19 @@
 #include "SphericalJoint.h"
 
 #include "ZnRaycastInfo.h"
+#include "FilterCallback.h"
 
 #include "ZnPhysicsX.h"
-
 
 
 namespace ZonaiPhysics
 {
 	ZnPhysicsX* ZnPhysicsX::instance = nullptr;
 
-	void ZnPhysicsX::Initialize() noexcept
+	void ZnPhysicsX::Initialize(ZnSimulationCallback* _instance) noexcept
 	{
+		assert(_instance);
+
 		using namespace physx;
 		foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
 		pvd = PxCreatePvd(*foundation);
@@ -31,12 +33,16 @@ namespace ZonaiPhysics
 		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
 		PxInitExtensions(*physics, pvd);
 
-		PxSceneDesc sceneDesc(physics->getTolerancesScale()); 
+		PxSceneDesc sceneDesc(physics->getTolerancesScale());
 		sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 		dispatcher = PxDefaultCpuDispatcherCreate(2);
 		sceneDesc.cpuDispatcher = dispatcher;
-		// sceneDesc.simulationEventCallback = NULL;
-		sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+
+		eventCallback.setInstance(_instance);
+		sceneDesc.simulationEventCallback = &eventCallback;
+		sceneDesc.filterShader = FilterShader;
+		// sceneDesc.filterCallback = &filterCallback;
+
 		scene = physics->createScene(sceneDesc);
 		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 3.f);
 		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
@@ -54,6 +60,8 @@ namespace ZonaiPhysics
 
 	void ZnPhysicsX::Simulation(float _dt) noexcept
 	{
+		assert(scene);
+
 		scene->simulate(_dt);
 		scene->fetchResults(true);
 	}
@@ -68,7 +76,8 @@ namespace ZonaiPhysics
 		if (pvd)
 		{
 			PxPvdTransport* transport = pvd->getTransport();
-			pvd->release();	pvd = NULL;
+			pvd->release();
+			pvd = nullptr;
 			PX_RELEASE(transport);
 		}
 		PX_RELEASE(foundation);
@@ -83,16 +92,16 @@ namespace ZonaiPhysics
 		return instance;
 	}
 
-	void ZnPhysicsX::Release()
-	{
-		assert(instance);
+	//void ZnPhysicsX::Release()
+	//{
+	//	assert(instance);
 
-		delete instance;
-	}
+	//	delete instance;
+	//}
 
-	void ZnPhysicsX::SetGravity(const Eigen::Vector3f& _gravity) noexcept
+	void ZnPhysicsX::SetGravity(const Vector3f& _gravity) noexcept
 	{
-		assert(scene != nullptr, "");
+		assert(scene != nullptr);
 
 		scene->setGravity({ _gravity.x(), _gravity.y(), _gravity.z() });
 	}
@@ -108,7 +117,7 @@ namespace ZonaiPhysics
 		{
 			result = new RigidBody(physics);
 			bodies.insert(std::make_pair(_id, result));
-			scene->addActor(*result->getRigidDynamic());
+			scene->addActor(*result->pxBody);
 		}
 
 		result->CanSimulate(true);
@@ -128,18 +137,10 @@ namespace ZonaiPhysics
 			body = new RigidBody(physics);
 			body->CanSimulate(false);
 			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->getRigidDynamic());
+			scene->addActor(*body->pxBody);
 		}
 
-		Collider* newRigidBody = new BoxCollider(physics, body, Eigen::Vector3f(x, y, z), material);
-
-		static int i = 0;
-		i++;
-		if (i == 2)
-		{
-			material->release();
-			float a = material->getDynamicFriction();
-		}
+		Collider* newRigidBody = new BoxCollider(physics, body, Vector3f(x, y, z), material);
 
 		return newRigidBody;
 	}
@@ -153,7 +154,7 @@ namespace ZonaiPhysics
 			body = new RigidBody(physics);
 			body->CanSimulate(false);
 			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->getRigidDynamic());
+			scene->addActor(*body->pxBody);
 		}
 
 		Collider* newRigidBody = new SphereCollider(physics, body, radius, material);
@@ -170,7 +171,7 @@ namespace ZonaiPhysics
 			body = new RigidBody(physics);
 			body->CanSimulate(false);
 			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->getRigidDynamic());
+			scene->addActor(*body->pxBody);
 		}
 
 		Collider* newRigidBody = new CapsuleCollider(physics, body, _radius, _height, material);
@@ -183,27 +184,30 @@ namespace ZonaiPhysics
 	// 
 	// 	}
 
-	ZnFixedJoint* ZnPhysicsX::CreateFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnFixedJoint* ZnPhysicsX::CreateFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+	                                           ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		auto* joint = new FixedJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  joint;
+		return joint;
 	}
 
-	ZnDistanceJoint* ZnPhysicsX::CreateDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnDistanceJoint* ZnPhysicsX::CreateDistanceJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+	                                                 ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		auto* joint = new DistanceJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  joint;
+		return joint;
 	}
 
-	ZnSphericalJoint* ZnPhysicsX::CreateSphericalJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnSphericalJoint* ZnPhysicsX::CreateSphericalJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+	                                                   ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
@@ -213,7 +217,8 @@ namespace ZonaiPhysics
 		return joint;
 	}
 
-	ZnHingeJoint* ZnPhysicsX::CreateHingeJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnHingeJoint* ZnPhysicsX::CreateHingeJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+	                                           ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
@@ -223,33 +228,31 @@ namespace ZonaiPhysics
 		return joint;
 	}
 
-	ZnPrismaticJoint* ZnPhysicsX::CreatePrismaticJoint(ZnRigidBody* _object0, const ZnTransform& _transform0, ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
+	ZnPrismaticJoint* ZnPhysicsX::CreatePrismaticJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+	                                                   ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
- 
- 		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
 
-		return  joint;
+		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
+
+		return joint;
 	}
 
-	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
+	bool ZnPhysicsX::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
 	{
 		physx::PxRaycastBuffer temp;
 
-		if (bool hit = scene->raycast({ _from.x(), _from.y() , _from.z() }, { _to.x(), _to.y() , _to.z() }, _distance, temp))
+		if (bool hit = scene->raycast({_from.x(), _from.y(), _from.z()}, {_to.x(), _to.y(), _to.z()}, _distance, temp))
 		{
 			_out.bodyData = static_cast<ZnRigidBody*>(temp.block.actor->userData)->GetUserData();
 			_out.colliderData = static_cast<ZnCollider*>(temp.block.shape->userData)->GetUserData();
-			_out.position = { temp.block.position.x, temp.block.position.y , temp.block.position.z };
+			_out.position = {temp.block.position.x, temp.block.position.y, temp.block.position.z};
 			_out.distance = temp.block.distance;
 
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
@@ -263,12 +266,10 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	extern "C"
+	extern "C" {
+	ZnPhysicsBase* CreatePhysics()
 	{
-		ZnPhysicsBase* CreatePhysics()
-		{
-			return ZnPhysicsX::Instance();
-		}
+		return ZnPhysicsX::Instance();
 	}
-
+	}
 } // namespace ZonaiPhysics

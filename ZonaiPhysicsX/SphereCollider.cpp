@@ -21,13 +21,13 @@ namespace ZonaiPhysics
 		shape->setFlag(PxShapeFlag::eVISUALIZATION, true);
 		shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
 
-		_body->getRigidDynamic()->attachShape(*shape);
+		_body->pxBody->attachShape(*shape);
 	}
 
 	SphereCollider::~SphereCollider() noexcept
 	{
 		shape->release();
-		rigidbody->getRigidDynamic()->detachShape(*shape);
+		rigidbody->pxBody->detachShape(*shape);
 
 		rigidbody = nullptr;
 	}

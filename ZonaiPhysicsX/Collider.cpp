@@ -3,6 +3,8 @@
 
 #include "Collider.h"
 
+#include "ZnUtil.h"
+
 namespace ZonaiPhysics
 {
 	Collider::Collider(physx::PxPhysics*& _factory, RigidBody* _rigid) noexcept :
@@ -16,7 +18,21 @@ namespace ZonaiPhysics
 		assert(shape != nullptr);
 
 		using namespace physx;
+		rigidbody->pxBody->detachShape(*shape);
+
+		if (_flag)
+		{
+			shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, !_flag);
+		}
+
 		shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, _flag);
+
+		rigidbody->pxBody->attachShape(*shape);
+	}
+
+	void Collider::SetLayerID(uint32_t _id) noexcept
+	{
+		shape->setSimulationFilterData({ _id, 0, 0, 0 });
 	}
 
 	/// <summary>
@@ -43,9 +59,11 @@ namespace ZonaiPhysics
 	{
 		assert(shape != nullptr);
 
-		using namespace physx;
-		PxVec3 v = shape->getLocalPose().p;
-		return { v.x, v.y, v.z };
+		// using namespace physx;
+		// PxVec3 v = shape->getLocalPose().p;
+		// return { v.x, v.y, v.z };
+
+		return PhysxToEigen(shape->getLocalPose().p);
 	}
 
 	void Collider::SetLocalPosition(const Eigen::Vector3f& _position) noexcept
@@ -53,13 +71,17 @@ namespace ZonaiPhysics
 		assert(rigidbody != nullptr);
 
 		using namespace physx;
+		rigidbody->pxBody->detachShape(*shape);
+
 		PxTransform t = shape->getLocalPose();
-		t.p.x = _position.x();
-		t.p.y = _position.y();
-		t.p.z = _position.z();
-		rigidbody->getRigidDynamic()->detachShape(*shape);
+		// t.p.x = _position.x();
+		// t.p.y = _position.y();
+		// t.p.z = _position.z();
+		t.p = EigenToPhysx(_position);
 		shape->setLocalPose(t);
-		rigidbody->getRigidDynamic()->attachShape(*shape);
+
+		rigidbody->pxBody->attachShape(*shape);
+
 		UpdateInertiaTensor();
 	}
 
@@ -79,9 +101,11 @@ namespace ZonaiPhysics
 	{
 		assert(shape != nullptr);
 
-		using namespace physx;
-		PxQuat q = shape->getLocalPose().q;
-		return { q.w, q.x, q.y, q.z};
+		// using namespace physx;
+		// PxQuat q = shape->getLocalPose().q;
+		// return { q.w, q.x, q.y, q.z};
+
+		return PhysxToEigen(shape->getLocalPose().q);
 	}
 
 	void Collider::SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) noexcept
@@ -89,14 +113,18 @@ namespace ZonaiPhysics
 		assert(shape != nullptr);
 
 		using namespace physx;
+		rigidbody->pxBody->detachShape(*shape);
+
 		PxTransform t = shape->getLocalPose();
-		t.q.w = _quaternion.w();
-		t.q.x = _quaternion.x();
-		t.q.y = _quaternion.y();
-		t.q.z = _quaternion.z();
-		rigidbody->getRigidDynamic()->detachShape(*shape);
+		// t.q.w = _quaternion.w();
+		// t.q.x = _quaternion.x();
+		// t.q.y = _quaternion.y();
+		// t.q.z = _quaternion.z();
+		t.q = EigenToPhysx(_quaternion);
 		shape->setLocalPose(t);
-		rigidbody->getRigidDynamic()->attachShape(*shape);
+
+		rigidbody->pxBody->attachShape(*shape);
+
 		UpdateInertiaTensor();
 	}
 
@@ -114,7 +142,7 @@ namespace ZonaiPhysics
 	{
 		assert(shape != nullptr && rigidbody != nullptr);
 
-		auto pos = shape->getLocalPose().p;
-		rigidbody->getRigidDynamic()->setCMassLocalPose(shape->getLocalPose());
+		// auto pos = shape->getLocalPose().p;
+		rigidbody->pxBody->setCMassLocalPose(shape->getLocalPose());
 	}
 } // namespace ZonaiPhysics

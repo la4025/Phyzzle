@@ -38,7 +38,6 @@ namespace ZonaiPhysics
 		bool IsLimitEnalbed() const override;
 
 	public:
-		physx::PxTolerancesScale const* tolerances;
+		const physx::PxTolerancesScale* tolerances;
 	};
 } // namespace ZonaiPhysics
-

@@ -17,7 +17,6 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
-    <ClCompile Include="ZnSimulationCallbackX.cpp" />
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Collider</Filter>
     </ClCompile>
@@ -32,6 +31,17 @@
     </ClCompile>
     <ClCompile Include="HingeJoint.cpp">
       <Filter>Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="ZnFactory.cpp" />
+    <ClCompile Include="ZnUtil.cpp" />
+    <ClCompile Include="FilterCallback.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="EventCallback.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaryCallback.cpp">
+      <Filter>Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +62,6 @@
     <ClInclude Include="BoxCollider.h">
       <Filter>Collider</Filter>
     </ClInclude>
-    <ClInclude Include="ZnSimulationCallbackX.h" />
     <ClInclude Include="SphereCollider.h">
       <Filter>Collider</Filter>
     </ClInclude>
@@ -72,6 +81,16 @@
       <Filter>Joint</Filter>
     </ClInclude>
     <ClInclude Include="ZnUtil.h" />
+    <ClInclude Include="ZnFactory.h" />
+    <ClInclude Include="FilterCallback.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventCallback.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaryCallback.h">
+      <Filter>Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Collider">
@@ -82,6 +101,9 @@
     </Filter>
     <Filter Include="Joint">
       <UniqueIdentifier>{b4341449-1497-499a-be4e-49f85d6d0d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{4bc93695-0572-49f8-ab21-3ed039a919d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

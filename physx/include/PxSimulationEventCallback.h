@@ -788,15 +788,16 @@ struct PxConstraintInfo
 /**
 \brief 시뮬레이션 이벤트를 수신하려면 사용자가 구현할 수 있는 인터페이스 클래스입니다.
 
-onAdvance()를 제외한 이 이벤트들은 #PxScene::fetchResults() 또는 #PxScene::flushSimulation() 중 하나를 호출할 때 sendPendingReports=true로 전송됩니다.
+onAdvance()를 제외한 이 이벤트들은 #PxScene::fetchResults() 또는 #PxScene::flushSimulation() 중 하나를 호출할 때
+sendPendingReports=true로 전송됩니다.
 onAdvance()는 시뮬레이션이 실행되는 동안(PxScene::simulate() 또는 PxScene::advance()와 PxScene::fetchResults() 사이) 호출됩니다.
 
-\note SDK 상태는 콜백 내에서 수정되어서는 안 됩니다.
-특히 객체를 생성하거나 파괴해서는 안 됩니다.
-상태 수정이 필요한 경우 변경 사항을 버퍼에 저장하고 시뮬레이션 단계 이후에 수행해야 합니다.
+\note	SDK 상태는 콜백 내에서 수정되어서는 안 됩니다.
+		특히 객체를 생성하거나 파괴해서는 안 됩니다.
+		상태 수정이 필요한 경우 변경 사항을 버퍼에 저장하고 시뮬레이션 단계 이후에 수행해야 합니다.
 
-<b>쓰레딩:</b> onAdvance()를 제외하고는 이러한 콜백을 스레드 안전하게 만들 필요가 없습니다.
-왜냐하면 이러한 콜백은 사용자 스레드의 맥락에서만 호출되기 때문입니다.
+<b>쓰레딩:</b>		onAdvance()를 제외하고는 이러한 콜백을 스레드 안전하게 만들 필요가 없습니다.
+					왜냐하면 이러한 콜백은 사용자 스레드의 맥락에서만 호출되기 때문입니다.
 
 @see PxScene.setSimulationEventCallback() PxScene.getSimulationEventCallback()
 */
