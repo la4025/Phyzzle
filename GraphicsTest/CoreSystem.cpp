@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <chrono>
+#include <random>
 
 #include "GraphicsResourceID.h"
 
@@ -517,8 +518,8 @@ void CoreSystem::run()
 	renderer->DrawModel(rightPosMatrix, fbxID, false);
 	//renderer->DrawModel(ganonMatrix, fbxID, false);
 
-	renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", animationTime, false);
-	//renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber2 != 0 ? animationList[animationNumber] : L"", 4.0f, false);
+	renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber != 0 ? animationList[animationNumber] : L"", animationTime, false);
+	//renderer->DrawAnimation(ganonMatrix, fbxID, animationNumber != 0 ? animationList[animationNumber] : L"", 4.0f, false);
 	//renderer->DrawAnimation(ganonMatrix, fbxID2, animationNumber2 != 0 ? animationList2[animationNumber2] : L"", animationTime2, false);
 
 	Eigen::Matrix4f cubeMatrix = Eigen::Matrix4f::Identity();
@@ -526,11 +527,30 @@ void CoreSystem::run()
 	cubeMatrix(1, 1) = 10.0f;
 	cubeMatrix(2, 2) = 10.0f;
 
-	cubeMatrix(0, 3) = 3.0f;
-	cubeMatrix(1, 3) = 1.0f;
+	cubeMatrix(0, 3) = 0.0f;
+	cubeMatrix(1, 3) = 0.0f;
 	cubeMatrix(2, 3) = 10.0f;
 
-	renderer->DrawCube(cubeMatrix, scdTextureID, false, 1.0f, 0.0f, 0.0f, 1.0f);
+	for (int i = 0; i < 10000; i++)
+	{
+		static std::vector<int> cubeInfo(10000, -1);
+
+		if (cubeInfo[i] == -1)
+		{
+			cubeInfo[i] = rand() % 4;
+		}
+
+		bool wire = (cubeInfo[i] == 0);
+		float R = (cubeInfo[i] == 1);
+		float G = (cubeInfo[i] == 2);
+		float B = (cubeInfo[i] == 3);
+
+		cubeMatrix(0, 3) = 15 * (i % 100);
+		cubeMatrix(1, 3) = 15 * (i / 100);
+		//renderer->DrawCube(cubeMatrix, scdTextureID, false, R, G, B, 1.0f);
+		renderer->DrawCube(cubeMatrix, TextureID::ID_NULL, wire, R, G, B, 1.0f);
+	}
+
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, ID_NULL, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
 	renderer->EndDraw();

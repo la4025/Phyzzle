@@ -82,6 +82,8 @@ private:
 	ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel);
 	ZeldaModel(const ZeldaModel& zeldaModel) = delete;
 
+	void CreateAnimationResourceView(ID3D11Device* device);
+
 	void CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstring, Node*>& nodeTable);
 
 	void RenderAnimation(
@@ -101,6 +103,8 @@ private:
 	std::vector<unsigned int> materialIndex; // meshes[0]Àº materials[materialIndex[0]]À» °¡Áü
 	std::vector<ZeldaMaterial*> materials;
 	std::unordered_map<std::wstring, Animation*> animationTable;
+
+	ID3D11ShaderResourceView* animationResourceView;
 
 	bool updatedWorldMatrix;
 

@@ -305,6 +305,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	ConstantBufferManager::GetInstance().Initialize(mDevice, mDeviceContext);
 	matrixVsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
 	boneConstBuffer = new ConstantBuffer<BoneBufferType, ShaderType::VertexShader>(mDevice);
+	instancingMatrixVsConstBuffer = new ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>(mDevice);
 
 	matrixPsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>(mDevice);
 	lightInfoConstBuffer = new ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>(mDevice);
@@ -375,12 +376,12 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		renderTargetTextures[i]->Release();
 	}
 
-	deferredObjectShader = new ZeldaShader(mDevice, L"DeferredObjectVS.cso", L"DeferredObjectPS.cso");
+	deferredObjectShader = new ZeldaShader(mDevice, L"DeferredObjectVS.cso", L"DeferredObjectPS.cso", L"DeferredInstancingObjectVS.cso");
 	deferredDirectionalLightShader = new ZeldaShader(mDevice, L"DeferredDirectionalLightVS.cso", L"DeferredDirectionalLightPS.cso");
 	deferredPointLightShader = new ZeldaShader(mDevice, L"DeferredPointLightVS.cso", L"DeferredPointLightPS.cso");
 	deferredSpotLightShader = new ZeldaShader(mDevice, L"DeferredSpotLightVS.cso", L"DeferredSpotLightPS.cso");
 	deferredFinalShader = new ZeldaShader(mDevice, L"DeferredFinalVS.cso", L"DeferredFinalPS.cso");
-	fowardShader = new ZeldaShader(mDevice, L"FowardVS.cso", L"FowardPS.cso");
+	fowardShader = new ZeldaShader(mDevice, L"FowardVS.cso", L"FowardPS.cso", L"FowardInstancingVS.cso");
 
 #pragma endregion Deferred Rendering
 
@@ -448,6 +449,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete boneConstBuffer;
 		boneConstBuffer = nullptr;
+	}
+	if (instancingMatrixVsConstBuffer)
+	{
+		delete instancingMatrixVsConstBuffer;
+		instancingMatrixVsConstBuffer = nullptr;
 	}
 	if (matrixPsConstBuffer)
 	{
@@ -654,12 +660,10 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 
 	MeshInstancingInfo instancinInfo;
 	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancinInfo.wireFrame = wireFrame;
-	instancinInfo.color = { r, g, b, a };
 
-	std::unordered_map<std::pair<MeshID, TextureID>, MeshRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardMeshRenderInfo) : (organizedMeshRenderInfo);
+	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardMeshRenderInfo) : (organizedMeshRenderInfo);
 
-	auto iter = renderInfoContainer.find({ cubeID, texture });
+	auto iter = renderInfoContainer.find({ { cubeID, texture }, { wireFrame, { r, g, b, a } } });
 
 	// 이미 동일한 것을 그린적이 있음
 	if (iter != renderInfoContainer.end())
@@ -673,8 +677,10 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.meshId = cubeID;
 		renderInfo.textureID = texture;
+		renderInfo.wireFrame = wireFrame;
+		renderInfo.color = { r, g, b, a };
 
-		renderInfoContainer[{ cubeID, texture }] = renderInfo;
+		renderInfoContainer[{ { cubeID, texture }, { wireFrame, { r, g, b, a } } }] = renderInfo;
 	}
 }
 
@@ -1146,32 +1152,84 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShade
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
 	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
-	cubeMesh->Render(mDeviceContext);
-
+	
 	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
 
-	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+	matrixBuffer.cameraFar = currentcamera->GetFar();
+	matrixVsConstBuffer->SetData(matrixBuffer);
+
+	// Instancing 사용
+	if (renderInfo.instancingInfo.size() > 1)
 	{
-		auto& instancingInfo = renderInfo.instancingInfo[i];
+		cubeMesh->RenderInstanced(mDeviceContext);
 
-		UseWireFrameRasterState(instancingInfo.wireFrame);
+		UseWireFrameRasterState(renderInfo.wireFrame);
 		mDeviceContext->RSSetState(currentRasterState);
-
-		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-		matrixVsConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-
 		materialConstBuffer->SetData({
-			instancingInfo.color,
-			(texture == nullptr),
-			texture->UseSRGB(),
-			(texture != nullptr)
+				{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
+				(texture == nullptr),
+				(texture != nullptr) && texture->UseSRGB(),
+				(texture != nullptr)
 			});
 
-		ConstantBufferManager::GetInstance().SetBuffer();
+		if (texture != nullptr)
+		{
+			texture->SetShaderResource(mDeviceContext);
+		}
 
-		texture->SetShaderResource(mDeviceContext);
+		InstancingMatrixBufferType* instacingMatrix = new InstancingMatrixBufferType();
 
-		shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
+		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+		{
+			auto& instancingInfo = renderInfo.instancingInfo[i];
+
+			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+			instacingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(instancingInfo.worldMatrix);
+
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.instancingInfo.size() - 1))
+			{
+				instancingMatrixVsConstBuffer->SetData(*instacingMatrix);
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				shader->RenderInstanced(mDeviceContext, cubeMesh->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
+			}
+		}
+
+		delete instacingMatrix;
+	}
+	else
+	{
+		cubeMesh->Render(mDeviceContext);
+
+		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+		{
+			auto& instancingInfo = renderInfo.instancingInfo[i];
+
+			UseWireFrameRasterState(renderInfo.wireFrame);
+			mDeviceContext->RSSetState(currentRasterState);
+			materialConstBuffer->SetData({
+					{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
+					(texture == nullptr),
+					(texture != nullptr) && texture->UseSRGB(),
+					(texture != nullptr)
+				});
+
+			if (texture != nullptr)
+			{
+				texture->SetShaderResource(mDeviceContext);
+			}
+
+			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+			matrixVsConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
+
+			ConstantBufferManager::GetInstance().SetBuffer();
+
+			shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
+		}
 	}
 }
 

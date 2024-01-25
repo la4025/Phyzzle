@@ -19,6 +19,12 @@ using namespace DirectX;
 
 ZeldaModel::~ZeldaModel()
 {
+	if (animationResourceView)
+	{
+		animationResourceView->Release();
+		animationResourceView = nullptr;
+	}
+
 	// root 부터 트리타고 전부 제거
 	std::queue<Node*> q;
 	if (root != nullptr)
@@ -62,6 +68,12 @@ ZeldaModel::~ZeldaModel()
 		delete animation;
 	}
 	animationTable.clear();
+
+	if (animationResourceView != nullptr)
+	{
+		animationResourceView->Release();
+		animationResourceView = nullptr;
+	}
 }
 
 void ZeldaModel::Render(
@@ -190,7 +202,8 @@ std::vector<float> ZeldaModel::GetAnimationPlayTime()
 
 ZeldaModel::ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel) :
 	root(nullptr),
-	updatedWorldMatrix(false)
+	updatedWorldMatrix(false),
+	animationResourceView(nullptr)
 {
 	root = new Node();
 
@@ -298,6 +311,48 @@ ZeldaModel::ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel) :
 
 		animationTable[fbxAnimation->name] = animation;
 	}
+
+	CreateAnimationResourceView(device);
+}
+
+void ZeldaModel::CreateAnimationResourceView(ID3D11Device* device)
+{
+	ID3D11Texture2D* tex2d = nullptr;
+
+	// 텍스처 생성
+	D3D11_TEXTURE2D_DESC textureDesc = {};
+	textureDesc.Width = 4 * BONE_COUNT_MAX;		// 텍스처 가로 크기 (Matrix를 이루는 Vector의 수) x (본 최대치)
+	textureDesc.Height = ANIMATION_FRAME_MAX;	// 텍스처 세로 크기 (프레임 최대치)
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = static_cast<unsigned long long>(animationTable.size());	// ArraySize 애니메이션 종류
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &tex2d);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Failed to Create Animation Resource View", L"Model Error", MB_OK);
+		assert(0);
+	}
+
+	// 셰이더 리소스 뷰 생성
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	hr = device->CreateShaderResourceView(tex2d, &srvDesc, &animationResourceView);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Failed to Create Animation Resource View", L"Model Error", MB_OK);
+		tex2d->Release();
+		assert(0);
+	}
+
+	tex2d->Release();
 }
 
 void ZeldaModel::CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstring, Node*>& nodeTable)

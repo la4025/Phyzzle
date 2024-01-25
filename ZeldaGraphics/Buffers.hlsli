@@ -9,6 +9,8 @@
 
 #define BONE_COUNT_MAX 256u
 
+#define BONE_INSTANCING_MAX 1024u
+
 Texture2D DiffuseMap : register(t0);
 Texture2D NormalMap : register(t1);
 Texture2D ARMMap : register(t2);
@@ -88,5 +90,10 @@ cbuffer ScreenBufferType : register(b5)
     float2 screenSize;
     float b5padding[2];
 }
+
+cbuffer InstancingMatrixBuffer : register(b6)
+{
+    matrix instancingWorldMatrix[BONE_INSTANCING_MAX];
+};
 
 #endif

@@ -5,6 +5,8 @@
 
 constexpr unsigned int LIGHT_COUNT_MAX = 50u;
 constexpr unsigned int BONE_COUNT_MAX = 256u;
+constexpr unsigned int ANIMATION_FRAME_MAX = 1024u;
+constexpr unsigned int INSTANCING_MAX = 1024u;
 
 namespace Deferred
 {
@@ -53,6 +55,30 @@ struct VertexType
 	const static D3D11_INPUT_ELEMENT_DESC layout[];
 };
 
+struct InstancingVertexType
+{
+	DirectX::XMFLOAT4 position;
+	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT2 texture;
+	DirectX::XMUINT4 boneIndices;
+	DirectX::XMFLOAT4 weight;
+	unsigned int instance;
+
+	const static unsigned int size;
+	const static D3D11_INPUT_ELEMENT_DESC layout[];
+
+	InstancingVertexType& operator=(const VertexType& originVertexType)
+	{
+		this->position = originVertexType.position;
+		this->normal = originVertexType.normal;
+		this->texture = originVertexType.texture;
+		this->boneIndices = originVertexType.boneIndices;
+		this->weight = originVertexType.weight;
+
+		return *this;
+	}
+};
+
 #pragma region Constant Buffer
 
 struct MatrixBufferType
@@ -63,14 +89,14 @@ struct MatrixBufferType
 	float cameraFar;
 	float padding[3];
 
-	constexpr static unsigned int registerNum = 0;
+	constexpr static unsigned int registerNumB = 0;
 };
 
 struct BoneBufferType
 {
 	DirectX::XMMATRIX boneTM[BONE_COUNT_MAX];
 
-	constexpr static unsigned int registerNum = 1;
+	constexpr static unsigned int registerNumB = 1;
 };
 
 struct LightColor
@@ -95,7 +121,7 @@ struct LightInfoBufferType
 {
 	LightInfo lights[LIGHT_COUNT_MAX];
 
-	constexpr static unsigned int registerNum = 2;
+	constexpr static unsigned int registerNumB = 2;
 };
 
 struct LightIndexBufferType
@@ -103,7 +129,7 @@ struct LightIndexBufferType
 	unsigned int lightIndex;
 	float padding[3];
 
-	constexpr static unsigned int registerNum = 3;
+	constexpr static unsigned int registerNumB = 3;
 };
 
 struct MaterialBufferType
@@ -125,7 +151,7 @@ struct MaterialBufferType
 	unsigned int useTemp3;
 	unsigned int useTemp4;
 
-	constexpr static unsigned int registerNum = 4;
+	constexpr static unsigned int registerNumB = 4;
 };
 
 struct ScreenBufferType
@@ -133,7 +159,14 @@ struct ScreenBufferType
 	DirectX::XMFLOAT2 screenSize;
 	float padding[2];
 
-	constexpr static unsigned int registerNum = 5;
+	constexpr static unsigned int registerNumB = 5;
+};
+
+struct InstancingMatrixBufferType
+{
+	DirectX::XMMATRIX instancingWorldMatrix[INSTANCING_MAX];
+
+	constexpr static unsigned int registerNumB = 6;
 };
 
 #pragma endregion

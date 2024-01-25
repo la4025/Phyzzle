@@ -204,6 +204,12 @@
     <FxCompile Include="DeferredSpotLightPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="DeferredInstancingObjectVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="FowardInstancingVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Buffers.hlsli">
