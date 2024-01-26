@@ -15,6 +15,10 @@
 
 #include "ZnPhysicsX.h"
 
+#include <ranges>
+
+#include "ZnWorld.h"
+
 
 namespace ZonaiPhysics
 {
@@ -25,34 +29,51 @@ namespace ZonaiPhysics
 		assert(_instance);
 
 		using namespace physx;
-		foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
-		pvd = PxCreatePvd(*foundation);
-		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-		pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-		physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
-		PxInitExtensions(*physics, pvd);
-
-		PxSceneDesc sceneDesc(physics->getTolerancesScale());
-		sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
-		dispatcher = PxDefaultCpuDispatcherCreate(2);
-		sceneDesc.cpuDispatcher = dispatcher;
-
-		eventCallback.setInstance(_instance);
-		sceneDesc.simulationEventCallback = &eventCallback;
-		sceneDesc.filterShader = FilterShader;
-		// sceneDesc.filterCallback = &filterCallback;
-
-		scene = physics->createScene(sceneDesc);
-		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 3.f);
-		scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
-
-		PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
-		if (pvdClient)
+		// SDK 생성
 		{
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+			ZnFactoryX::CreatePhysxFactory();
+		// 	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
+		// 	pvd = PxCreatePvd(*foundation);
+		// 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
+		// 	pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+		// 
+		// 	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
+		// 	PxInitExtensions(*physics, pvd);
+		}
+
+		// 씬 생성
+		{
+			PxSceneDesc sceneDesc(physics->getTolerancesScale());
+			sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+			dispatcher = PxDefaultCpuDispatcherCreate(2);
+			sceneDesc.cpuDispatcher = dispatcher;
+
+			eventCallback.setInstance(_instance);
+			sceneDesc.simulationEventCallback = &eventCallback;
+			sceneDesc.filterShader = FilterShader;
+			// sceneDesc.filterCallback = &filterCallback;
+
+			scene = physics->createScene(sceneDesc);
+			scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 3.f);
+			scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
+		}
+
+		// 레이어 설정
+		{
+			ZnLayer::Clear();
+			ZnLayer::SetCollisionData(0, { 0, 1, 2, 3 });
+		}
+
+		{
+			PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
+			if (pvdClient)
+			{
+				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+			}
+			pvdClient->updateCamera()
 		}
 
 		material = physics->createMaterial(0.5f, 0.5f, 0.6f);
@@ -62,28 +83,39 @@ namespace ZonaiPhysics
 	{
 		assert(scene);
 
-		scene->simulate(_dt);
-		scene->fetchResults(true);
+		ZnWorld::Run(_dt);
+		// scene->simulate(_dt);
+		// scene->fetchResults(true);
 	}
 
 	void ZnPhysicsX::Finalize() noexcept
 	{
 		using namespace physx;
+		for (auto& body : bodies | std::views::values)
+		{
+			delete body;
+			body = nullptr;
+		}
+		bodies.clear();
+
+
 		PX_RELEASE(scene);
 		PX_RELEASE(dispatcher);
-		PxCloseExtensions();
-		PX_RELEASE(physics);
-		if (pvd)
-		{
-			PxPvdTransport* transport = pvd->getTransport();
-			pvd->release();
-			pvd = nullptr;
-			PX_RELEASE(transport);
-		}
-		PX_RELEASE(foundation);
+
+		ZnFactoryX::Release();
+		// PxCloseExtensions();
+		// PX_RELEASE(physics);
+		// if (pvd)
+		// {
+		// 	PxPvdTransport* transport = pvd->getTransport();
+		// 	pvd->release();
+		// 	pvd = nullptr;
+		// 	PX_RELEASE(transport);
+		// }
+		// PX_RELEASE(foundation);
 	}
 
-	ZnPhysicsBase* ZnPhysicsX::Instance()
+	ZnPhysicsX* ZnPhysicsX::Instance()
 	{
 		assert(!instance);
 
@@ -92,18 +124,21 @@ namespace ZonaiPhysics
 		return instance;
 	}
 
-	//void ZnPhysicsX::Release()
-	//{
-	//	assert(instance);
-
-	//	delete instance;
-	//}
-
 	void ZnPhysicsX::SetGravity(const Vector3f& _gravity) noexcept
 	{
 		assert(scene != nullptr);
 
 		scene->setGravity({ _gravity.x(), _gravity.y(), _gravity.z() });
+	}
+
+	void ZnPhysicsX::SceneClear()
+	{
+
+	}
+
+	void ZnPhysicsX::SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) noexcept
+	{
+		ZnLayer::SetCollisionData(_layer, _data);
 	}
 
 	/// <summary>
@@ -115,9 +150,11 @@ namespace ZonaiPhysics
 
 		if (result == nullptr)
 		{
-			result = new RigidBody(physics);
+			result = new RigidBody();
+			ZnFactoryX::CreateRigidBody(_id);
 			bodies.insert(std::make_pair(_id, result));
-			scene->addActor(*result->pxBody);
+			ZnWorld::AddBody(scene, result->pxBody);
+			// scene->addActor(*result->pxBody);
 		}
 
 		result->CanSimulate(true);

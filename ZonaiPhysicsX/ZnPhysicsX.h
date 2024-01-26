@@ -3,12 +3,13 @@
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
 #include <map>
+#include <set>
 #include <string>
 
 #include "EventCallback.h"
 #include "FilterCallback.h"
-
-#define PVD_HOST "127.0.0.1"
+#include "ZnFactoryX.h"
+#include "ZnLayer.h"
 
 namespace physx
 {
@@ -43,6 +44,7 @@ namespace ZonaiPhysics
 	struct ZnRaycastInfo;
 	struct ZnMaterial;
 
+
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
 	public:
@@ -54,11 +56,12 @@ namespace ZonaiPhysics
 		void Simulation(float _dt) noexcept override;
 		void Finalize() noexcept override;
 
-		static ZnPhysicsBase* Instance();
+		static ZnPhysicsX* Instance();
 
 	public:
 		void SetGravity(const Vector3f&) noexcept override;
-		void SetLayerData() noexcept;
+		void SceneClear();
+		void SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) noexcept;
 
 	public:
 		/// <summary>
@@ -96,22 +99,25 @@ namespace ZonaiPhysics
 		Collider* CreateCollider(const std::wstring&) noexcept;
 
 	private:
-		physx::PxDefaultAllocator allocator;
-		physx::PxDefaultErrorCallback errorCallback;
-		physx::PxFoundation* foundation;
-		physx::PxPhysics* physics;
-		physx::PxDefaultCpuDispatcher* dispatcher;
+		// physx::PxDefaultAllocator allocator;
+		// physx::PxDefaultErrorCallback errorCallback;
+		// physx::PxFoundation* foundation;
+		// physx::PxPhysics* physics;
+		// physx::PxDefaultCpuDispatcher* dispatcher;
 		physx::PxScene* scene;
-		physx::PxPvd* pvd;
+		// physx::PxPvd* pvd;
 
 		physx::PxMaterial* material;
 
 	private:
 		static ZnPhysicsX* instance;
 
+	private:
 		std::map<std::wstring, RigidBody*> bodies;
 		EventCallback eventCallback;
 		FilterCallback filterCallback;
+
+		// ZnFactoryX factory;
 	};
 
 

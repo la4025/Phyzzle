@@ -40,5 +40,27 @@ namespace ZonaiPhysics
 	private:
 		static ZnCollider* GetCollider(physx::PxShape* _shape);
 	};
+
+	class CharacterControllerCallback : public physx::PxControllerFilterCallback
+	{
+		static physx::PxShape* getShape(const physx::PxController& controller)
+		{
+			physx::PxRigidDynamic* actor = controller.getActor();
+
+			// Early out if no actor or no shapes
+			if (!actor || actor->getNbShapes() < 1)
+				return nullptr;
+
+			// Get first shape only
+			physx::PxShape* shape = nullptr;
+			actor->getShapes(&shape, 1);
+
+			return shape;
+		}
+
+	public:
+		bool filter(const physx::PxController& a, const physx::PxController& b) override;
+	};
 }
+
 

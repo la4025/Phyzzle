@@ -164,4 +164,30 @@ namespace ZonaiPhysics
 	{
 		return static_cast<ZnCollider*>(_shape->userData);
 	}
+
+
+
+	bool CharacterControllerCallback::filter(const physx::PxController& a, const physx::PxController& b)
+	{
+		// Early out to avoid crashing
+		physx::PxShape* shapeA = getShape(a);
+		if (!shapeA)
+			return false;
+
+		physx::PxShape* shapeB = getShape(b);
+		if (!shapeB)
+			return false;
+
+		// Let triggers through
+		if (physx::PxFilterObjectIsTrigger(shapeB->getFlags()))
+			return false;
+
+		// Trigger the contact callback for pairs (A,B) where the filtermask of A contains the ID of B and vice versa
+		const physx::PxFilterData shapeFilterA = shapeA->getQueryFilterData();
+		const physx::PxFilterData shapeFilterB = shapeB->getQueryFilterData();
+		if (shapeFilterA.word0 & shapeFilterB.word1)
+			return true;
+
+		return false;
+	}
 }

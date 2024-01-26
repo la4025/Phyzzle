@@ -26,15 +26,6 @@ namespace ZonaiPhysics
 	class ZnTransform;
 	struct ZnRaycastInfo;
 
-	// data0은 트리거 유무
-	// data1은 본인의 레이어 정보
-	// data2는 본인이 충돌 가능한 레이어 정보
-	enum LayerID
-	{
-
-
-	};
-
 	class ZnPhysicsBase : public ZnBase
 	{
 	public:
@@ -52,6 +43,8 @@ namespace ZonaiPhysics
 		virtual void				SetGravity(const Eigen::Vector3f&) noexcept = 0;
 
 	public:
+		///	wstring은 void*로 변경될 예정.
+
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>

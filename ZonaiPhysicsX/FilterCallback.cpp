@@ -1,5 +1,8 @@
 #include "FilterCallback.h"
 
+#include <ZnLayer.h>
+#include "ZnPhysicsX.h"
+
 
 namespace ZonaiPhysics
 {
@@ -58,7 +61,8 @@ namespace ZonaiPhysics
 		physx::PxPairFlags& pairFlags,
 		const void* constantBlock, physx::PxU32 constantBlockSize)
 	{
-		const bool maskTest0 = (filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1);
+		const bool maskTest0 = ZnLayer::CanCollide(filterData0.word0, filterData1.word0);
+		// const bool maskTest0 = (filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1);
 
 		// Let triggers through
 		// 트리거를 통과시킵니다.

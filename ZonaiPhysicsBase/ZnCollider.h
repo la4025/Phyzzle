@@ -14,7 +14,8 @@ namespace ZonaiPhysics
 		// 트리거 설정
 		virtual void		SetTrigger(bool) noexcept = 0;
 
-		virtual void		SetLayerID(uint32_t) noexcept = 0;
+		// 레이어 설정
+		virtual void		SetLayerData(const uint32_t&) noexcept = 0;
 
 		// 콜라이더 위치 오프셋
 		virtual Eigen::Vector3f GetLocalPosition() const noexcept = 0;

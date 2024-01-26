@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="ZnPhysicsX.cpp" />
     <ClCompile Include="RigidBody.cpp">
       <Filter>Rigidbody</Filter>
     </ClCompile>
@@ -32,20 +31,36 @@
     <ClCompile Include="HingeJoint.cpp">
       <Filter>Joint</Filter>
     </ClCompile>
-    <ClCompile Include="ZnFactory.cpp" />
     <ClCompile Include="ZnUtil.cpp" />
     <ClCompile Include="FilterCallback.cpp">
-      <Filter>Event</Filter>
+      <Filter>Callback</Filter>
     </ClCompile>
     <ClCompile Include="EventCallback.cpp">
-      <Filter>Event</Filter>
+      <Filter>Callback</Filter>
     </ClCompile>
-    <ClCompile Include="QuaryCallback.cpp">
-      <Filter>Event</Filter>
+    <ClCompile Include="ZnFactoryX.cpp">
+      <Filter>0. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="ZnWorld.cpp">
+      <Filter>0. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="ZnPhysicsX.cpp">
+      <Filter>0. Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryFilterCallback.cpp">
+      <Filter>Callback</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyHelper.cpp">
+      <Filter>Rigidbody</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderHelper.cpp">
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="JointHelper.cpp">
+      <Filter>Joint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
     <ClInclude Include="RigidBody.h">
       <Filter>Rigidbody</Filter>
@@ -81,15 +96,35 @@
       <Filter>Joint</Filter>
     </ClInclude>
     <ClInclude Include="ZnUtil.h" />
-    <ClInclude Include="ZnFactory.h" />
     <ClInclude Include="FilterCallback.h">
-      <Filter>Event</Filter>
+      <Filter>Callback</Filter>
     </ClInclude>
     <ClInclude Include="EventCallback.h">
-      <Filter>Event</Filter>
+      <Filter>Callback</Filter>
     </ClInclude>
-    <ClInclude Include="QuaryCallback.h">
-      <Filter>Event</Filter>
+    <ClInclude Include="ZnFactoryX.h">
+      <Filter>0. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnWorld.h">
+      <Filter>0. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnPhysicsX.h">
+      <Filter>0. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnLayer.h">
+      <Filter>0. Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryFilterCallback.h">
+      <Filter>Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyHelper.h">
+      <Filter>Rigidbody</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderHelper.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="JointHelper.h">
+      <Filter>Joint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +137,10 @@
     <Filter Include="Joint">
       <UniqueIdentifier>{b4341449-1497-499a-be4e-49f85d6d0d1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Event">
+    <Filter Include="0. Factory">
+      <UniqueIdentifier>{1c9c9af7-2edf-4237-a765-23d19545baa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Callback">
       <UniqueIdentifier>{4bc93695-0572-49f8-ab21-3ed039a919d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

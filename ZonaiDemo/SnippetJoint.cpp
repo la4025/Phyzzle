@@ -58,7 +58,7 @@ public:
 	{
 		std::cout << "OnConstraintBreak" << std::endl;
 	}
-	void OnTriggerEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	void OnTriggerEnter(const ZonaiPhysics::ZnCollider* _collider0, const ZonaiPhysics::ZnCollider* _collider1) noexcept override
 	{
 		std::cout << "OnTriggerEnter" << std::endl;
 	}
@@ -70,7 +70,7 @@ public:
 	{
 		std::cout << "OnTriggerExit" << std::endl;
 	}
-	void OnCollisionEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
+	void OnCollisionEnter(const ZonaiPhysics::ZnCollider* _collider0, const ZonaiPhysics::ZnCollider* _collider1,
 		const ZonaiPhysics::ZnCollision& _collision) noexcept override
 	{
 		std::cout << "OnCollisionEnter " << _collision.contactCount << std::endl;
@@ -143,23 +143,6 @@ int snippetMain(int, const char* const*)
 
 		physicsEngine->Simulation(1.f/5000.f);
 
-		//if (GetAsyncKeyState(VK_RIGHT))
-		//{
-		//	rigid4->AddForce({10.f, 0.f, 0.f});
-		//}
-		//if (GetAsyncKeyState(VK_LEFT))
-		//{
-		//	rigid4->AddForce({ -10.f, 0.f, 0.f });
-		//}
-		//if (GetAsyncKeyState(VK_DOWN))
-		//{
-		//	rigid4->AddForce({0.f, 0.f, 10.f});
-		//}
-		//if (GetAsyncKeyState(VK_UP))
-		//{
-		//	rigid4->AddForce({ 0.f, 10.f, 10.f });
-		//}
-
 		bool clickFront = GetAsyncKeyState('I');
 		bool clickBack = GetAsyncKeyState('K');
 		bool clickLeft = GetAsyncKeyState('J');
@@ -168,20 +151,6 @@ int snippetMain(int, const char* const*)
 		bool clickDown = GetAsyncKeyState('O');
 
 		bool KeySpace = GetAsyncKeyState(VK_SPACE);
-
-		// if (KeySpace)
-		// {
- 		//	ZonaiPhysics::ZnRaycastInfo info;
-			//Eigen::Vector3f pos = ground->GetPosition() + Eigen::Vector3f{ 0.f, 1.1f, 0.f };
-			//if (physicsEngine->Raycast(pos, Eigen::Vector3f{0.f, 1.f, 0.f}.normalized(), 100.f, info))
-			//{
-			//	std::cout << "O : " << info.distance << std::endl;
-			//}
-			//else
-			//{
-			//	std::cout << "X" << std::endl;
-			//}
-		// }
 
 		if (clickUp || clickRight || clickLeft || clickDown || clickFront || clickBack)
 		{
