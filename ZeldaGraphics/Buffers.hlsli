@@ -19,6 +19,7 @@ Texture2D EmissionMap : register(t4);
 Texture2D Temp0Map : register(t5);
 Texture2D Temp1Map : register(t6);
 Texture2D Temp2Map : register(t7);
+Texture2DArray AnimationMap : register(t8);
 
 SamplerState Sampler : register(s0);
 
@@ -62,7 +63,7 @@ cbuffer LightInfoBufferType : register(b2)
 cbuffer LightIndexBufferType : register(b3)
 {
     unsigned int lightIndex;
-    float b3padding[3];
+    float3 b3padding;
 };
 
 cbuffer MaterialBufferType : register(b4)
@@ -88,12 +89,18 @@ cbuffer MaterialBufferType : register(b4)
 cbuffer ScreenBufferType : register(b5)
 {
     float2 screenSize;
-    float b5padding[2];
+    float2 b5padding;
 }
 
 cbuffer InstancingMatrixBuffer : register(b6)
 {
     matrix instancingWorldMatrix[BONE_INSTANCING_MAX];
 };
+
+cbuffer InstancingAnimationBuffer : register(b7)
+{
+    float4 animationFrame[BONE_INSTANCING_MAX / 4];
+    uint4 animationID[BONE_INSTANCING_MAX / 4];
+}
 
 #endif

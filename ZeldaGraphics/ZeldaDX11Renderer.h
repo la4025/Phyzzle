@@ -26,24 +26,6 @@ class ZeldaTexture;
 class ZeldaMaterial;
 class IRenderable;
 
-struct MeshInstancingInfo
-{
-	DirectX::XMMATRIX worldMatrix;
-};
-
-struct ModelInstancingInfo
-{
-	DirectX::XMMATRIX worldMatrix;
-	std::wstring animationName;
-	float animationTime;
-	bool wireFrame;
-};
-
-struct SpriteInstancingInfo
-{
-	DirectX::XMFLOAT2 position;
-};
-
 struct Color
 {
 	union
@@ -78,6 +60,7 @@ struct ModelRenderInfo
 {
 	std::vector<ModelInstancingInfo> instancingInfo;
 	ModelID modelID;
+	bool wireFrame;
 };
 
 struct SpriteRenderInfo
@@ -91,6 +74,15 @@ namespace std {
 	struct hash<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>> {
 		size_t operator()(const std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>& obj) const {
 			return std::hash<std::pair<MeshID, TextureID>>{}(obj.first) ^ (std::hash<unsigned int>{}(obj.second.second.r) ^ std::hash<unsigned int>{}(obj.second.second.y) ^ std::hash<unsigned int>{}(obj.second.second.z) ^ std::hash<unsigned int>{}(obj.second.second.w));
+		}
+	};
+}
+
+namespace std {
+	template <>
+	struct hash<std::pair<ModelID, bool>> {
+		size_t operator()(const std::pair<ModelID, bool>& obj) const {
+			return std::hash<ModelID>{}(obj.first) ^ std::hash<bool>{}(obj.second);
 		}
 	};
 }
@@ -208,6 +200,7 @@ private:
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixVsConstBuffer;
 	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer;
 	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixVsConstBuffer;
+	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationVsConstBuffer;
 
 	ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>* matrixPsConstBuffer;
 	ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>* lightInfoConstBuffer;
@@ -219,14 +212,14 @@ private:
 
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.
 	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> organizedMeshRenderInfo;
-	std::unordered_map<ModelID, ModelRenderInfo> organizedModelRenderInfo;
+	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo> organizedModelRenderInfo;
 	std::unordered_map<TextureID, SpriteRenderInfo> organizedSpriteRenderInfo;
 	std::unordered_set<LightID> organizedLightRenderInfo;
 
 	// 오브젝트들을 실제로 그리는 과정에서 WireFrame으로 그리도록 설정된 오브젝트들을 여기에 저장해두고 deferred render 후에 그린다.
 	// 만약 RendererMode가 WireFrameMode라면 사용하지 않는다.
 	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> fowardMeshRenderInfo;
-	std::unordered_map<ModelID, ModelRenderInfo> fowardModelRenderInfo;
+	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo> fowardModelRenderInfo;
 
 #ifdef USE_BEGIN_FLAG
 	bool beginflag = false;

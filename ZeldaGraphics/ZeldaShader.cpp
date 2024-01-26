@@ -136,6 +136,24 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 			instVertexShaderBuffer->GetBufferPointer(), instVertexShaderBuffer->GetBufferSize(), &instancingLayout);
 		if (FAILED(result)) return false;
 
+		//ID3D11ShaderReflection* shaderReflection = nullptr;
+		//D3DReflect(instVertexShaderBuffer->GetBufferPointer(), instVertexShaderBuffer->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&shaderReflection);
+
+		//// 상수 버퍼 정보 얻기
+		//D3D11_SHADER_DESC shaderDesc;
+		//shaderReflection->GetDesc(&shaderDesc);
+
+		//for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
+		//{
+		//	ID3D11ShaderReflectionConstantBuffer* cb = shaderReflection->GetConstantBufferByIndex(i);
+
+		//	D3D11_SHADER_BUFFER_DESC bufferDesc;
+		//	cb->GetDesc(&bufferDesc);
+
+		//	auto size = bufferDesc.Size;
+
+		//}
+		
 		// 해제
 		instVertexShaderBuffer->Release();
 		instVertexShaderBuffer = nullptr;

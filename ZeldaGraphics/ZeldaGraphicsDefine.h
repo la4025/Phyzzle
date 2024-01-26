@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -7,6 +9,8 @@ constexpr unsigned int LIGHT_COUNT_MAX = 50u;
 constexpr unsigned int BONE_COUNT_MAX = 256u;
 constexpr unsigned int ANIMATION_FRAME_MAX = 1024u;
 constexpr unsigned int INSTANCING_MAX = 1024u;
+
+constexpr unsigned int TEXTURE_SLOT_ANIMATION = 8u;
 
 namespace Deferred
 {
@@ -91,6 +95,7 @@ struct MatrixBufferType
 
 	constexpr static unsigned int registerNumB = 0;
 };
+static_assert(sizeof(MatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct BoneBufferType
 {
@@ -98,6 +103,7 @@ struct BoneBufferType
 
 	constexpr static unsigned int registerNumB = 1;
 };
+static_assert(sizeof(BoneBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct LightColor
 {
@@ -123,6 +129,7 @@ struct LightInfoBufferType
 
 	constexpr static unsigned int registerNumB = 2;
 };
+static_assert(sizeof(LightInfoBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct LightIndexBufferType
 {
@@ -131,6 +138,7 @@ struct LightIndexBufferType
 
 	constexpr static unsigned int registerNumB = 3;
 };
+static_assert(sizeof(LightIndexBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct MaterialBufferType
 {
@@ -153,6 +161,7 @@ struct MaterialBufferType
 
 	constexpr static unsigned int registerNumB = 4;
 };
+static_assert(sizeof(MaterialBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct ScreenBufferType
 {
@@ -161,6 +170,7 @@ struct ScreenBufferType
 
 	constexpr static unsigned int registerNumB = 5;
 };
+static_assert(sizeof(ScreenBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct InstancingMatrixBufferType
 {
@@ -168,6 +178,16 @@ struct InstancingMatrixBufferType
 
 	constexpr static unsigned int registerNumB = 6;
 };
+static_assert(sizeof(InstancingMatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+
+struct InstancingAnimationBufferType
+{
+	float animationFrame[INSTANCING_MAX];
+	unsigned int animationID[INSTANCING_MAX];
+
+	constexpr static unsigned int registerNumB = 7;
+};
+static_assert(sizeof(InstancingAnimationBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 #pragma endregion
 
@@ -176,4 +196,21 @@ enum class ShaderType
 	VertexShader,
 	PixelShader,
 	VertexShaderAndPixelShader
+};
+
+struct MeshInstancingInfo
+{
+	DirectX::XMMATRIX worldMatrix;
+};
+
+struct ModelInstancingInfo
+{
+	DirectX::XMMATRIX worldMatrix;
+	std::wstring animationName;
+	float animationTime;
+};
+
+struct SpriteInstancingInfo
+{
+	DirectX::XMFLOAT2 position;
 };

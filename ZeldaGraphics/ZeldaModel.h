@@ -75,6 +75,16 @@ public:
 		float animationTime
 	);
 
+	void RenderInstanced(
+		ID3D11DeviceContext* deviceContext,
+		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
+		ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixConstBuffer,
+		ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationConstBuffer,
+		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+		const std::vector<ModelInstancingInfo>& instancingInfo,
+		ZeldaShader* shader
+	);
+
 	std::vector<std::wstring> GetAnimationList();
 	std::vector<float> GetAnimationPlayTime();
 
@@ -83,6 +93,7 @@ private:
 	ZeldaModel(const ZeldaModel& zeldaModel) = delete;
 
 	void CreateAnimationResourceView(ID3D11Device* device);
+	void SetAnimationTexture(ID3D11DeviceContext* deviceContext);
 
 	void CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstring, Node*>& nodeTable);
 
@@ -103,6 +114,9 @@ private:
 	std::vector<unsigned int> materialIndex; // meshes[0]은 materials[materialIndex[0]]을 가짐
 	std::vector<ZeldaMaterial*> materials;
 	std::unordered_map<std::wstring, Animation*> animationTable;
+
+	// animationTable에서의 순서대로 ID를 1부터 부여한다. (0은 애니메이션이 적용되지 않은 상태)
+	std::unordered_map<std::wstring, unsigned int> animationIDTable;
 
 	ID3D11ShaderResourceView* animationResourceView;
 

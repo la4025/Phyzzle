@@ -306,6 +306,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	matrixVsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
 	boneConstBuffer = new ConstantBuffer<BoneBufferType, ShaderType::VertexShader>(mDevice);
 	instancingMatrixVsConstBuffer = new ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>(mDevice);
+	instancingAnimationVsConstBuffer = new ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>(mDevice);
 
 	matrixPsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>(mDevice);
 	lightInfoConstBuffer = new ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>(mDevice);
@@ -454,6 +455,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete instancingMatrixVsConstBuffer;
 		instancingMatrixVsConstBuffer = nullptr;
+	}
+	if (instancingAnimationVsConstBuffer)
+	{
+		delete instancingAnimationVsConstBuffer;
+		instancingAnimationVsConstBuffer = nullptr;
 	}
 	if (matrixPsConstBuffer)
 	{
@@ -688,13 +694,12 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 {
 	ModelInstancingInfo instancinInfo;
 	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancinInfo.wireFrame = wireFrame;
 	instancinInfo.animationName = L"";
 	instancinInfo.animationTime = 0.0f;
 
-	std::unordered_map<ModelID, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
+	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
 
-	auto iter = renderInfoContainer.find(model);
+	auto iter = renderInfoContainer.find({ model, wireFrame });
 
 	// 이미 동일한 것을 그린적이 있음
 	if (iter != renderInfoContainer.end())
@@ -707,8 +712,9 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 		ModelRenderInfo renderInfo;
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.modelID = model;
+		renderInfo.wireFrame = wireFrame;
 
-		renderInfoContainer[model] = renderInfo;
+		renderInfoContainer[{ model, wireFrame }] = renderInfo;
 	}
 }
 
@@ -716,13 +722,12 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 {
 	ModelInstancingInfo instancinInfo;
 	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancinInfo.wireFrame = wireFrame;
 	instancinInfo.animationName = animationName;
 	instancinInfo.animationTime = animationTime;
 
-	std::unordered_map<ModelID, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
+	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (fowardModelRenderInfo) : (organizedModelRenderInfo);
 
-	auto iter = renderInfoContainer.find(model);
+	auto iter = renderInfoContainer.find({ model, wireFrame });
 
 	// 이미 동일한 것을 그린적이 있음
 	if (iter != renderInfoContainer.end())
@@ -735,8 +740,9 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 		ModelRenderInfo renderInfo;
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.modelID = model;
+		renderInfo.wireFrame = wireFrame;
 
-		renderInfoContainer[model] = renderInfo;
+		renderInfoContainer[{ model, wireFrame }] = renderInfo;
 	}
 }
 
@@ -1237,14 +1243,25 @@ void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaSha
 {
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
 
-	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+	// Instancing 사용
+	if (renderInfo.instancingInfo.size() > 1)
 	{
-		auto& instancingInfo = renderInfo.instancingInfo[i];
-
-		UseWireFrameRasterState(instancingInfo.wireFrame);
+		UseWireFrameRasterState(renderInfo.wireFrame);
 		mDeviceContext->RSSetState(currentRasterState);
 
-		modelData->Render(mDeviceContext, matrixVsConstBuffer, boneConstBuffer, materialConstBuffer, instancingInfo.worldMatrix, shader, instancingInfo.animationName, instancingInfo.animationTime);
+		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, renderInfo.instancingInfo, shader);
+	}
+	else
+	{
+		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
+		{
+			auto& instancingInfo = renderInfo.instancingInfo[i];
+
+			UseWireFrameRasterState(renderInfo.wireFrame);
+			mDeviceContext->RSSetState(currentRasterState);
+
+			modelData->Render(mDeviceContext, matrixVsConstBuffer, boneConstBuffer, materialConstBuffer, instancingInfo.worldMatrix, shader, instancingInfo.animationName, instancingInfo.animationTime);
+		}
 	}
 }
 
