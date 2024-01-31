@@ -64,9 +64,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	objCollider->Awake();
 	objRigid->Awake();
+
+	//testObject->Disable();
+
 #pragma endregion
 
-
+	
 #pragma region box1
 	PurahEngine::GameObject* box = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box01");
 	box->AddComponent<PurahEngine::Renderer>();
@@ -74,17 +77,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	auto boxTrans = box->GetComponent<PurahEngine::Transform>();
 	boxTrans->SetLocalPosition({ 2.0f, 3.0f, 0.0f });
 	boxTrans->SetLocalScale({ 1.0f, 1.0f, 1.0f });
+	boxTrans->Rotate(boxTrans->up, 30.0f);
+	boxTrans->Rotate(boxTrans->right, 30.0f);
 
 	auto boxCollider = box->AddComponent<PurahEngine::BoxCollider>();
-	boxCollider->SetSize({ 0.5f, 0.5f, 0.5f });
+	//boxCollider->SetSize({ 0.5f, 0.5f, 0.5f });
 
 	auto rigid = box->AddComponent<PurahEngine::RigidBody>();
-	rigid->SetMass(10.f);
-	rigid->UseGravity(true);
-	rigid->SetKinematic(false);
+	//rigid->SetMass(10.f);
+	//rigid->UseGravity(true);
+	//rigid->SetKinematic(false);
 
-	boxCollider->Awake();
-	rigid->Awake();
+	//boxCollider->Awake();
+	//rigid->Awake();
 #pragma endregion
 
 #pragma region plane
@@ -105,6 +110,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	box2Collider->Awake();
 	rigid2->Awake();
+
+	//box2->Disable();
 #pragma endregion
 
 #pragma region box3
@@ -112,33 +119,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	box3->AddComponent<PurahEngine::Renderer>();
 
 	auto box3Trans = box3->GetComponent<PurahEngine::Transform>();
+	box3Trans->SetParent(objTrans);
 	box3Trans->SetLocalPosition({ -2.0f, 0.0f, 0.0f });
 	box3Trans->SetLocalScale({ 1.0f, 1.0f, 1.0f });
-	box3Trans->SetParent(objTrans);
 
 	auto box3Collider = box3->AddComponent<PurahEngine::BoxCollider>();
-	box3Collider->SetSize({ 0.5f, 0.5f, 0.5f });
+	//box3Collider->SetSize({ 0.5f, 0.5f, 0.5f });
 
 	auto rigid3 = box3->AddComponent<PurahEngine::RigidBody>();
-	rigid3->SetMass(10.f);
-	rigid3->UseGravity(true);
-	rigid3->SetKinematic(false);
+	//rigid3->SetMass(10.f);
+	//rigid3->UseGravity(true);
+	//rigid3->SetKinematic(false);
 
-	box3Collider->Awake();
-	rigid3->Awake();
+	//box3Collider->Awake();
+	//rigid3->Awake();
 #pragma endregion
 
 
+	//objTrans->SetParent(boxTrans);
 
-
-
-	textureID = renderer->CreateTexture(L"scd.jpg");
+	// CreateTexture의 사진파일은 zeldaClient 폴더에 넣어둘 것
+	textureID = renderer->CreateTexture(L"mangGom4.jpg");
 	if (textureID == TextureID::ID_NULL)
 	{
 		assert(0);
 	}
 
 	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
+
+	textureID = renderer->CreateTexture(L"mang.jpg");
+	if (textureID == TextureID::ID_NULL)
+	{
+		assert(0);
+	}
+	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
 
 	//PurahEngine::Run(); 역할

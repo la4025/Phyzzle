@@ -61,11 +61,18 @@ void PurahEngine::GameObject::LateUpdate()
 void PurahEngine::GameObject::Enable()
 {
 	state = State::ENABLE;
+	isEnable = true;
 }
 
 void PurahEngine::GameObject::Disable()
 {
 	state = State::DISABLE;
+	isEnable = false;
+}
+
+bool PurahEngine::GameObject::IsEnable()
+{
+	return isEnable;
 }
 
 void PurahEngine::GameObject::OnCollisionEnter()

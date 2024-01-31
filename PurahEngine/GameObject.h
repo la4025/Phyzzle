@@ -84,6 +84,10 @@ namespace PurahEngine
 		bool isRun = false;
 
 	public:
+		bool IsEnable();
+		bool isEnable;
+
+	public:
 		// ComponentList·Î Component Ãß°¡
 		template<typename T>
 		T* AddComponent() 

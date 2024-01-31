@@ -64,22 +64,17 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	// Graphics dll 초기화(변경 가능성 농후)
 	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
 
+	// InputManager 초기화
+	//PurahEngine::InputManager::Getinstance().Initialize();
+
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
 
 	// PhysicsSysyem 초기화
-
 	PurahEngine::PhysicsSystem::GetInstance().Initialize();
 
 	// SoundManager 초기화
 	PurahEngine::SoundManager::GetInstance().Initialize();
-
-// 	rigidBody = PurahEngine::PhysicsSystem::GetInstance().CreateRigidBody(L"RigidBody");
-// 
-// 	rigidBody->SetPosition({ 0, 50, -70 });
-// 
-// 	collider = PurahEngine::PhysicsSystem::GetInstance().CreateBoxCollider(L"RigidBody", 5,5 ,5);
-// 	
 
 }
 

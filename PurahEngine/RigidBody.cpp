@@ -57,6 +57,32 @@ namespace PurahEngine
 		}
 	}
 
+	void RigidBody::SetRotation(const Eigen::Quaternionf& _rot) noexcept
+	{
+		if (awake)
+		{
+			auto trans = GetGameObject()->GetComponent<Transform>();
+			trans->SetLocalRotation(_rot);
+		}
+		else
+		{
+			body->SetQuaternion(_rot);
+		}
+	}
+
+	const Eigen::Quaternionf& RigidBody::GetRotation() noexcept
+	{
+		if (awake)
+		{
+			auto trans = GetGameObject()->GetComponent<Transform>();
+			return trans->GetLocalRotation();
+		}
+		else
+		{
+			return body->GetQuaternion();
+		}
+	}
+
 	/// \brief 스크립트에서 호출하지 말아라
 	void RigidBody::WakeUp() noexcept
 	{
@@ -290,6 +316,14 @@ namespace PurahEngine
 		auto y = pos.y();
 
 		auto transform = GetGameObject()->GetComponent<Transform>();
+		// matrix4f로 만들어서 보내는걸로 하자
+
+		//transform->GetLocalScale();
+		//transform->GetWorldScale();
+		//Eigen::Matrix4f inverseW = transform->GetWorldMatrix().inverse();
+
+
+
 		transform->SetWorldPosition(pos);
 		transform->SetWorldRotation(rot);
 	}

@@ -36,6 +36,8 @@ namespace PurahEngine
 		std::unordered_map<std::wstring, FMOD::Sound*> bgmSounds;
 		std::unordered_map<std::wstring, FMOD::Sound*> effectSounds;
 
+		FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
+
 	private:
 		SoundManager();
 		~SoundManager();
