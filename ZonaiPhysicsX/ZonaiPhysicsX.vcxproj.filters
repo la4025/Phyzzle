@@ -59,6 +59,9 @@
     <ClCompile Include="JointHelper.cpp">
       <Filter>Joint</Filter>
     </ClCompile>
+    <ClCompile Include="ZnLayer.cpp">
+      <Filter>0. Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h" />

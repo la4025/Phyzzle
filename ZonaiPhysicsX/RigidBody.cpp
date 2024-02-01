@@ -10,8 +10,10 @@
 
 namespace ZonaiPhysics
 {
-	RigidBody::RigidBody() : pxBody()
-	{}
+	RigidBody::RigidBody(physx::PxRigidDynamic * _pxBody, void* _userData) : pxBody(_pxBody), userData(_userData)
+	{
+		_pxBody->userData = this;
+	}
 
 	RigidBody::~RigidBody()
 	{

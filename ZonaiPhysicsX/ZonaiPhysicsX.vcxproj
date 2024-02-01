@@ -61,6 +61,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
     <ClCompile Include="ZnFactoryX.cpp" />
+    <ClCompile Include="ZnLayer.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />
     <ClCompile Include="ZnUtil.cpp" />
     <ClCompile Include="ZnWorld.cpp" />

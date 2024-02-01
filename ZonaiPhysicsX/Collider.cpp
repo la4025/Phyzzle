@@ -2,29 +2,25 @@
 #include "PxPhysicsAPI.h"
 #include "ZnLayer.h"
 
-
 #include "ZnUtil.h"
 #include "ColliderHelper.h"
+#include "RigidBodyHelper.h"
 
 #include "Collider.h"
-
-#include "RigidBodyHelper.h"
 
 namespace ZonaiPhysics
 {
 	Collider::Collider(physx::PxShape* _pxShape, RigidBody* _znBody) :
 		znBody(_znBody), pxShape(_pxShape)
-	{}
-
-	//Collider::Collider(physx::PxPhysics*& _factory, RigidBody* _rigid) :
-	//	znBody(_rigid), pxShape()
-	//{}
+	{
+		ColliderHelper::SetLayer(pxShape, 0);
+	}
 
 	void Collider::SetTrigger(bool _flag)
 	{
-		RigidBodyHelper::Detach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetTrigger(pxShape, _flag);
-		RigidBodyHelper::Attach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 	}
 
 	void Collider::SetLayerData(const uint32_t& _id)
@@ -61,9 +57,9 @@ namespace ZonaiPhysics
 	{
 		assert(pxShape != nullptr);
 
-		RigidBodyHelper::Detach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetLocalPosition(pxShape, _position);
-		RigidBodyHelper::Attach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
 		UpdateInertiaTensor();
 	}
@@ -87,9 +83,9 @@ namespace ZonaiPhysics
 	{
 		assert(pxShape != nullptr);
 
-		RigidBodyHelper::Detach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetLocalQuaternion(pxShape, _quaternion);
-		RigidBodyHelper::Attach(pxShape->getActor(), pxShape);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
 		UpdateInertiaTensor();
 	}

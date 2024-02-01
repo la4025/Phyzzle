@@ -1,5 +1,6 @@
 #include "FilterCallback.h"
 
+#include "RigidBodyHelper.h"
 #include "RigidBody.h"
 
 #include "BoxCollider.h"
@@ -21,6 +22,14 @@
 
 namespace ZonaiPhysics
 {
+	EventCallback ZnFactoryX::eventCallback{};
+	physx::PxDefaultAllocator ZnFactoryX::allocator{};
+	physx::PxDefaultErrorCallback ZnFactoryX::errorCallback{};
+	physx::PxDefaultCpuDispatcher* ZnFactoryX::dispatcher = nullptr;
+	physx::PxFoundation* ZnFactoryX::foundation = nullptr;
+	physx::PxPhysics* ZnFactoryX::pxFactory = nullptr;
+	physx::PxPvd* ZnFactoryX::pxPvd = nullptr;
+
 	void ZnFactoryX::CreatePhysxFactory()
 	{
 		/// SDK »ý¼º
@@ -103,47 +112,50 @@ namespace ZonaiPhysics
 	{
 		assert(_userData != nullptr);
 
-		const auto pxBody = pxFactory->createRigidDynamic(physx::PxTransform());
+		const auto pxBody = pxFactory->createRigidDynamic(physx::PxTransform(physx::PxVec3{0.f, 0.f, 0.f}));
 		assert(pxBody != nullptr, "ZonaiPhysicsX::ZnFactoryX, RigidBody Initialize Error");
 
-		const auto znBody = new RigidBody;
-		znBody->SetUserData(znBody);
-		znBody->userData = _userData;
-
+		const auto znBody = new RigidBody(pxBody, _userData);
 		return znBody;
 	}
 
-	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _userData, const Vector3f& _extend, const physx::PxMaterial* _material)
+	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
-		assert(_userData != nullptr);
+		assert(_znBody != nullptr);
 
-		const auto znBody = static_cast<RigidBody*>(_userData);
+		const auto znBody = static_cast<RigidBody*>(_znBody);
 		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, BoxCollider Initialize Error");
+
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
 		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
 		return znBoxCollider;
 	}
 
-	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _userData, float _radius, const physx::PxMaterial* _material)
+	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _znBody, float _radius, const physx::PxMaterial* _material)
 	{
-		assert(_userData != nullptr);
+		assert(_znBody != nullptr);
 
-		const auto znBody = static_cast<RigidBody*>(_userData);
+		const auto znBody = static_cast<RigidBody*>(_znBody);
 		const auto pxShape = pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, SphereCollider Initialize Error");
+
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
 		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
 		return znSphereCollider;
 	}
 
-	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _userData, float _radius, float _height, const physx::PxMaterial* _material)
+	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _znBody, float _radius, float _height, const physx::PxMaterial* _material)
 	{
-		assert(_userData != nullptr);
+		assert(_znBody != nullptr);
 
-		const auto znBody = static_cast<RigidBody*>(_userData);
+		const auto znBody = static_cast<RigidBody*>(_znBody);
 		const auto pxShape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, Capsule Initialize Error");
+
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
 		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
 		return znCapsuleCollider;
@@ -162,7 +174,6 @@ namespace ZonaiPhysics
 		assert(joint != nullptr, "ZonaiPhysicsX :: Fixed Joint Initialize Error");
 
 		const auto znFixedJoint = new FixedJoint(joint, _znBody0, _znBody1);
-
 		return znFixedJoint;
 	}
 
@@ -179,7 +190,6 @@ namespace ZonaiPhysics
 		assert(joint != nullptr, "ZonaiPhysicsX :: Prismatic Joint Initialize Error");
 
 		const auto znPrismaticJoint = new PrismaticJoint(joint, _znBody0, _znBody1, &pxFactory->getTolerancesScale());
-
 		return znPrismaticJoint;
 	}
 
@@ -196,7 +206,6 @@ namespace ZonaiPhysics
 		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
 
 		const auto znDistanceJoint = new DistanceJoint(joint, _znBody0, _znBody1);
-
 		return znDistanceJoint;
 	}
 
@@ -213,7 +222,6 @@ namespace ZonaiPhysics
 		assert(joint != nullptr, "ZonaiPhysicsX :: Spherical Joint Initialize Error");
 
 		auto znSphericalJoint = new SphericalJoint(joint, _znBody0, _znBody1);
-
 		return znSphericalJoint;
 	}
 
@@ -230,7 +238,6 @@ namespace ZonaiPhysics
 		assert(joint != nullptr, "ZonaiPhysicsX :: Hinge Joint Initialize Error");
 
 		const auto znHingeJoint = new HingeJoint(joint, _znBody0, _znBody1);
-
 		return znHingeJoint;
 	}
 }

@@ -15,7 +15,10 @@
 
 namespace ZonaiPhysics
 {
-	physx::PxScene* ZnWorld::currScene = nullptr;
+	physx::PxScene*										ZnWorld::currScene = nullptr;
+	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
+	std::map<void*, ZnWorld::BodyList>					ZnWorld::bodies{};
+	std::unordered_map<uint32_t, physx::PxMaterial*>	ZnWorld::materials{};
 
 	void ZnWorld::Run(float _dt)
 	{
@@ -81,7 +84,7 @@ namespace ZonaiPhysics
 		auto& scene = sceneList[_userScene];
 		assert(scene != nullptr);
 
-		auto& bodylist = bodies[scene];
+		auto& bodylist = bodies[_userScene];
 
 		for (auto& znBody : bodylist | std::views::values)
 		{
@@ -97,7 +100,7 @@ namespace ZonaiPhysics
 		sceneList.erase(_userScene);
 	}
 
-	void ZnWorld::SetGravity(const Vector3f& _gravity, void* _userScene)
+	void ZnWorld::SetGravity(const Eigen::Vector3f& _gravity, void* _userScene)
 	{
 		assert(currScene != nullptr);
 
@@ -106,7 +109,7 @@ namespace ZonaiPhysics
 			currScene->setGravity(EigenToPhysx(_gravity));
 	}
 
-	bool ZnWorld::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out)
+	bool ZnWorld::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out)
 	{
 		physx::PxRaycastBuffer temp;
 
@@ -150,7 +153,7 @@ namespace ZonaiPhysics
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 		scene->addActor(*pxBody);
 
-		bodies[scene].insert(std::make_pair(znBody->userData, znBody));
+		bodies[_userScene].insert(std::make_pair(znBody->userData, znBody));
 	}
 
 	void ZnWorld::RemoveBody(void* _znBody, void* _userScene)
@@ -163,8 +166,8 @@ namespace ZonaiPhysics
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 		scene->removeActor(*pxBody);
 
+		bodies[_userScene].erase(znBody->userData);
 		delete znBody;
-		bodies[scene].erase(znBody->userData);
 	}
 
 	RigidBody* ZnWorld::GetBody(void* _userData, void* _userScene)

@@ -1,6 +1,5 @@
 #pragma once
 #include <Eigen/Dense>
-
 #include "ForceType.h"
 
 namespace ZonaiPhysics

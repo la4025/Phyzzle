@@ -9,7 +9,7 @@ namespace ZonaiPhysics
 
 	Eigen::Quaternionf PhysxToEigen(const physx::PxQuat& _quat);
 
-	physx::PxVec3 EigenToPhysx(const Eigen::Vector3f _vec);
+	physx::PxVec3 EigenToPhysx(const Eigen::Vector3f& _vec);
 
-	physx::PxQuat EigenToPhysx(const Eigen::Quaternionf _quat);
+	physx::PxQuat EigenToPhysx(const Eigen::Quaternionf& _quat);
 }

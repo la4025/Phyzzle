@@ -82,7 +82,7 @@ namespace ZonaiPhysics
 		/// Create Collider
 		/// </summary>
 		ZnCollider* CreateBoxCollider(
-			void* _userData, const Vector3f& extend, 
+			void* _userData, const Eigen::Vector3f& extend, 
 			uint32_t _material, 
 			void* userScene = nullptr) override;
 
@@ -127,7 +127,7 @@ namespace ZonaiPhysics
 			float _distance,
 			ZnRaycastInfo& _out) override;
 
-		// bool Boxcast(const Vector3f&, const Vector3f&, float, ZnRaycastInfo&) override;
+		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) override;
 
 	private:
 		physx::PxMaterial* defaultMaterial;

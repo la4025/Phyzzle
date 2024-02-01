@@ -38,7 +38,7 @@ namespace ZonaiPhysics
 		/**
 		오브젝트의 포지션
 		*/
-		virtual void SetLocalPosition(ZnJoint::eOBJECT _index, const Vector3f& _localPos) override
+		virtual void SetLocalPosition(ZnJoint::eOBJECT _index, const Eigen::Vector3f& _localPos) override
 		{
 			assert(joint != nullptr);
 
@@ -49,7 +49,7 @@ namespace ZonaiPhysics
 			joint->setLocalPose(index, t);
 		}
 
-		virtual Vector3f GetLocalPosition(ZnJoint::eOBJECT _index) const override
+		virtual Eigen::Vector3f GetLocalPosition(ZnJoint::eOBJECT _index) const override
 		{
 			assert(joint != nullptr);
 
@@ -86,7 +86,7 @@ namespace ZonaiPhysics
 		/**
 		오브젝트0을 기준으로 오브젝트1의 상대 속도를 반환함.
 		*/
-		virtual Vector3f GetRelativeLinearVelocity() const override
+		virtual Eigen::Vector3f GetRelativeLinearVelocity() const override
 		{
 			assert(joint != nullptr);
 
@@ -95,7 +95,7 @@ namespace ZonaiPhysics
 			return {velo.x, velo.y, velo.z};
 		}
 
-		virtual Vector3f GetRelativeAngularVelocity() const override
+		virtual Eigen::Vector3f GetRelativeAngularVelocity() const override
 		{
 			assert(joint != nullptr);
 

@@ -95,7 +95,7 @@ namespace ZonaiPhysics
 		ZnWorld::UnloadScene(_userScene);
 	}
 
-	void ZnPhysicsX::SetGravity(const Vector3f& _gravity, void* _userScene)
+	void ZnPhysicsX::SetGravity(const Eigen::Vector3f& _gravity, void* _userScene)
 	{
 		ZnWorld::SetGravity(_gravity, _userScene);
 	}
@@ -124,7 +124,7 @@ namespace ZonaiPhysics
 	/// <summary>
 	/// 강체를 찾아서 거기에 콜라이더를 붙임.
 	/// </summary>
-	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, const Vector3f& _extend, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, const Eigen::Vector3f& _extend, uint32_t _material, void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
 
@@ -139,39 +139,45 @@ namespace ZonaiPhysics
 			ZnWorld::AddBody(znBody, userScene);
 		}
 
-		const auto collider = ZnFactoryX::CreateBoxCollider(_userData, _extend, material);
+		const auto collider = ZnFactoryX::CreateBoxCollider(znBody, _extend, material);
 
 		return collider;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateSphereCollider(void* _userData, float _radius, uint32_t _material, void* userScene)
 	{
-		const auto znBody = ZnWorld::GetBody(_userData, userScene);
+		auto znBody = ZnWorld::GetBody(_userData, userScene);
 		auto material = ZnWorld::GetMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
 
 		if (!znBody)
-			CreateRigidBody(_userData, userScene);
+		{
+			znBody = ZnFactoryX::CreateRigidBody(_userData);
+			ZnWorld::AddBody(znBody, userScene);
+		}
 
-		const auto collider = ZnFactoryX::CreateSphereCollider(_userData, _radius, material);
+		const auto collider = ZnFactoryX::CreateSphereCollider(znBody, _radius, material);
 
 		return collider;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(void* _userData, float _radius, float _height, uint32_t _material, void* userScene)
 	{
-		const auto znBody = ZnWorld::GetBody(_userData, userScene);
+		auto znBody = ZnWorld::GetBody(_userData, userScene);
 		auto material = ZnWorld::GetMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
 
 		if (!znBody)
-			CreateRigidBody(_userData, userScene);
+		{
+			znBody = ZnFactoryX::CreateRigidBody(_userData);
+			ZnWorld::AddBody(znBody, userScene);
+		}
 
-		const auto collider = ZnFactoryX::CreateCapsuleCollider(_userData, _radius, _height, material);
+		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, _radius, _height, material);
 
 		return collider;
 	}
@@ -231,7 +237,7 @@ namespace ZonaiPhysics
 		return joint;
 	}
 
-	bool ZnPhysicsX::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out)
+	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out)
 	{
 		return ZnWorld::Raycast(_from, _to, _distance, _out);
 	}

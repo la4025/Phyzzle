@@ -48,9 +48,9 @@ namespace ZonaiPhysics
 		static RigidBody*				CreateRigidBody(void* _userData);
 
 		/// collider
-		static BoxCollider*				CreateBoxCollider(void* _userData, const Vector3f& _extend, const physx::PxMaterial* _material);
-		static SphereCollider*			CreateSphereCollider(void* _userData, float _radius, const physx::PxMaterial* _material);
-		static CapsuleCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, const physx::PxMaterial* _material);
+		static BoxCollider*				CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
+		static SphereCollider*			CreateSphereCollider(void* _znBody, float _radius, const physx::PxMaterial* _material);
+		static CapsuleCollider*			CreateCapsuleCollider(void* _znBody, float _radius, float _height, const physx::PxMaterial* _material);
 
 		/// joint
 		static FixedJoint*				CreateFixedJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
@@ -60,7 +60,7 @@ namespace ZonaiPhysics
 		static HingeJoint*				CreateHingeJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
 
 	private:
-		static EventCallback eventCallback;
+		static ZonaiPhysics::EventCallback eventCallback;
 		static physx::PxDefaultAllocator allocator;
 		static physx::PxDefaultErrorCallback  errorCallback;
 		static physx::PxDefaultCpuDispatcher* dispatcher;

@@ -7,7 +7,7 @@
 
 namespace physx
 {
-	class PxPhysics;
+	class PxRigidDynamic;
 }
 
 namespace ZonaiPhysics
@@ -17,7 +17,8 @@ namespace ZonaiPhysics
 	class RigidBody : public ZnRigidBody
 	{
 	public:
-							RigidBody();
+							RigidBody() = delete;
+							RigidBody(physx::PxRigidDynamic* _pxBody, void* _userData = nullptr);
 							~RigidBody() override;
 
 	public:
@@ -78,7 +79,7 @@ namespace ZonaiPhysics
 
 	public:
 		void* userData;
-		void* pxBody;
+		physx::PxRigidDynamic* pxBody;
 		std::list<Collider*> colliders;
 	};
 } // namespace ZonaiPhysics

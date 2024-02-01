@@ -87,53 +87,92 @@ public:
 	}
 };
 
-class 
+class DummyObject
+{
+public:
+
+};
+
+class DummyRigidBody
+{
+public:
+	float c = 3.f;
+};
+
+class DummyCollider
+{
+public:
+	float b = 3.f;
+};
+
+class DummyScene
+{
+public:
+	int a = 3;
+};
 
 int snippetMain(int, const char* const*)
 {
-	std::wstring path = L"../x64/Debug/ZonaiPhysicsX.dll";
 
-	HMODULE physicsDLL = LoadLibraryW(path.c_str());
-	if (!physicsDLL)
+	DummyScene* dscene = new DummyScene;
+	DummyRigidBody* drigid = new DummyRigidBody;
+	DummyRigidBody* drigid2 = new DummyRigidBody;
+	DummyRigidBody* drigid3 = new DummyRigidBody;
+	DummyCollider* dcoll = new DummyCollider;
+
+	ZonaiPhysics::ZnPhysicsBase* physicsEngine = nullptr;
 	{
-		// MessageBox(_hwnd, L"해당 경로에 Physics DLL 파일이 존재하지 않습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
-		return false;
-	}
+		std::wstring path = L"../x64/Debug/ZonaiPhysicsX.dll";
 
-	using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
-	ImportFunction CreateInstance{ reinterpret_cast<ImportFunction>(GetProcAddress(physicsDLL, "CreatePhysics")) };
+		HMODULE physicsDLL = LoadLibraryW(path.c_str());
+		if (!physicsDLL)
+		{
+			// MessageBox(_hwnd, L"해당 경로에 Physics DLL 파일이 존재하지 않습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+			return false;
+		}
 
-	if (CreateInstance == nullptr)
-	{
-		// MessageBox(_hwnd, L"Physics DLL에서 함수 포인터를 받아오지 못했습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
-		return false;
-	}
+		using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
+		ImportFunction CreateInstance{ reinterpret_cast<ImportFunction>(GetProcAddress(physicsDLL, "CreatePhysics")) };
 
-	ZonaiPhysics::ZnPhysicsBase* physicsEngine = CreateInstance();
+		if (CreateInstance == nullptr)
+		{
+			// MessageBox(_hwnd, L"Physics DLL에서 함수 포인터를 받아오지 못했습니다.", L"DLL 오류", MB_OK | MB_ICONWARNING);
+			return false;
+		}
 
-	if (physicsEngine == nullptr)
-	{
-		// MessageBox(_hwnd, L"Graphics Engine 객체 생성 실패", L"DLL 오류", NULL);
-		return false;
+		physicsEngine = CreateInstance();
+
+		if (physicsEngine == nullptr)
+		{
+			// MessageBox(_hwnd, L"Graphics Engine 객체 생성 실패", L"DLL 오류", NULL);
+			return false;
+		}
 	}
 
 	PhysicsEvent event;
 
 	physicsEngine->Initialize(&event);
+	
+	physicsEngine->CreateScene(dscene, { 0.f, 9.81f, 0.f });
+	physicsEngine->LoadScene(dscene);
 
-	auto collider = physicsEngine->CreateBoxCollider(L"rigidBody", 2.f, 0.5f, 6.f);
-	const auto rigid = physicsEngine->CreateRigidBody(L"rigidBody");
+	physicsEngine->AddMaterial(0, 0.4f, 0.5f, 0.1f);
+	physicsEngine->AddMaterial(1, 0.7f, 0.7f, 0.9f);
+	physicsEngine->AddMaterial(2, 0.7f, 0.7f, 0.9f);
+
+	auto collider = physicsEngine->CreateBoxCollider(drigid, { 2.f, 0.5f, 6.f }, 0, dscene);
+	const auto rigid = physicsEngine->CreateRigidBody(drigid, dscene);
 	rigid->SetMaxLinearVelocity(100.f);
 	rigid->SetPosition({0.f, 15.f, 0.f});
 	rigid->UseGravity(false);
 
-	auto collider2 = physicsEngine->CreateSphereCollider(L"rigidBody2", 2.f);
+	auto collider2 = physicsEngine->CreateSphereCollider(drigid2, 2.f, 1, dscene);
+	const auto rigid2 = physicsEngine->CreateRigidBody(drigid2);
 	collider2->SetPosition({ 0.f, 3.f, 0.f });
-	const auto rigid2 = physicsEngine->CreateRigidBody(L"rigidBody2");
 	collider2->SetTrigger(true);
 
-	auto groundCollider = physicsEngine->CreateBoxCollider(L"ground", 1000, 1, 1000);
-	const auto ground = physicsEngine->CreateRigidBody(L"ground");
+	auto groundCollider = physicsEngine->CreateBoxCollider(drigid3, { 1000, 1, 1000 }, 2, dscene);
+	const auto ground = physicsEngine->CreateRigidBody(drigid3);
 	ground->SetPosition({ 0, 0, 0 });
 	ground->SetKinematic(true);
 

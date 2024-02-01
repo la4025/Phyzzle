@@ -31,8 +31,8 @@ namespace ZonaiPhysics
 		static void					LoadScene(void* _userScene);
 		static void					UnloadScene(void* _userScene);
 
-		static void					SetGravity(const Vector3f&, void* _userScene);
-		static bool					Raycast(const Vector3f& _from, const Vector3f& _to, float _distance,
+		static void					SetGravity(const Eigen::Vector3f&, void* _userScene);
+		static bool					Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance,
 											ZnRaycastInfo& _out);
 
 		static bool					Boxcast(float _x, float _y, float _z, const ZnTransform& trans);
