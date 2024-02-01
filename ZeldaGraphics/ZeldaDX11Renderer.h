@@ -102,6 +102,8 @@ public:
 	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a) override;
 	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame) override;
 	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame) override;
+	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring firstAnimationName, std::wstring secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame) override;
+
 	virtual void DrawLight(LightID lightID) override;
 
 	virtual void DrawSprite(const Eigen::Vector2f& position, TextureID texture) override;
@@ -178,7 +180,7 @@ private:
 	ZeldaShader* deferredPointLightShader;
 	ZeldaShader* deferredSpotLightShader;
 	ZeldaShader* deferredFinalShader;
-	ZeldaShader* fowardShader;
+	ZeldaShader* forwardShader;
 
 	DebugMode debugMode;
 	DebugMode debugModeBuffer;
@@ -198,7 +200,7 @@ private:
 
 	// Constant Buffer
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixVsConstBuffer;
-	ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer;
+	ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer;
 	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixVsConstBuffer;
 	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationVsConstBuffer;
 
@@ -218,8 +220,8 @@ private:
 
 	// 오브젝트들을 실제로 그리는 과정에서 WireFrame으로 그리도록 설정된 오브젝트들을 여기에 저장해두고 deferred render 후에 그린다.
 	// 만약 RendererMode가 WireFrameMode라면 사용하지 않는다.
-	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> fowardMeshRenderInfo;
-	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo> fowardModelRenderInfo;
+	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> forwardMeshRenderInfo;
+	std::unordered_map<std::pair<ModelID, bool>, ModelRenderInfo> forwardModelRenderInfo;
 
 #ifdef USE_BEGIN_FLAG
 	bool beginflag = false;

@@ -97,13 +97,23 @@ struct MatrixBufferType
 };
 static_assert(sizeof(MatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
-struct BoneBufferType
+struct AnimationInfo
 {
-	DirectX::XMMATRIX boneTM[BONE_COUNT_MAX];
+	float firstAnimationFrame;
+	float secondAnimationFrame;
+	unsigned int firstAnimationID;
+	unsigned int secondAnimationID;
+	float ratio;
+	float padding[3];
+};
+
+struct AnimationBufferType
+{
+	AnimationInfo animationInfo;
 
 	constexpr static unsigned int registerNumB = 1;
 };
-static_assert(sizeof(BoneBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+static_assert(sizeof(AnimationBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct LightColor
 {
@@ -182,8 +192,7 @@ static_assert(sizeof(InstancingMatrixBufferType) % 16 == 0, "Constant Buffer siz
 
 struct InstancingAnimationBufferType
 {
-	float animationFrame[INSTANCING_MAX];
-	unsigned int animationID[INSTANCING_MAX];
+	AnimationInfo animationInfo[INSTANCING_MAX];
 
 	constexpr static unsigned int registerNumB = 7;
 };
@@ -206,8 +215,11 @@ struct MeshInstancingInfo
 struct ModelInstancingInfo
 {
 	DirectX::XMMATRIX worldMatrix;
-	std::wstring animationName;
-	float animationTime;
+	std::wstring firstAnimationName;
+	std::wstring secondAnimationName;
+	float firstAnimationTime;
+	float secondAnimationTime;
+	float ratio;
 };
 
 struct SpriteInstancingInfo

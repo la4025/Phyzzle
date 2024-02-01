@@ -9,7 +9,7 @@
 
 #define BONE_COUNT_MAX 256u
 
-#define BONE_INSTANCING_MAX 1024u
+#define INSTANCING_MAX 1024u
 
 Texture2D DiffuseMap : register(t0);
 Texture2D NormalMap : register(t1);
@@ -32,9 +32,19 @@ cbuffer MatrixBuffer : register(b0)
     float3 b0padding;
 };
 
-cbuffer BoneBufferType : register(b1)
+struct AnimationInfo
 {
-    matrix boneTM[BONE_COUNT_MAX];
+    float firstAnimationFrame;
+    float secondAnimationFrame;
+    unsigned int firstAnimationID;
+    unsigned int secondAnimationID;
+    float ratio;
+    float3 padding;
+};
+
+cbuffer AnimationBufferType : register(b1)
+{
+    AnimationInfo animationInfo;
 };
 
 struct LightColor
@@ -92,15 +102,14 @@ cbuffer ScreenBufferType : register(b5)
     float2 b5padding;
 }
 
-cbuffer InstancingMatrixBuffer : register(b6)
+cbuffer InstancingMatrixBufferType : register(b6)
 {
-    matrix instancingWorldMatrix[BONE_INSTANCING_MAX];
+    matrix instancingWorldMatrix[INSTANCING_MAX];
 };
 
-cbuffer InstancingAnimationBuffer : register(b7)
+cbuffer InstancingAnimationBufferType : register(b7)
 {
-    float4 animationFrame[BONE_INSTANCING_MAX / 4];
-    uint4 animationID[BONE_INSTANCING_MAX / 4];
+    AnimationInfo instancingAnimationInfo[INSTANCING_MAX];
 }
 
 #endif

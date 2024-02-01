@@ -1,5 +1,4 @@
 #include "Buffers.hlsli"
-#include "Utility.hlsli"
 
 struct VertexInputType
 {
@@ -25,7 +24,7 @@ PixelInputType main(VertexInputType input)
 	
 	// 적절한 행렬 계산을 위해 위치 벡터를 동차 좌표로 변환한다.
     input.position.w = 1.0f;
-    
+        
     matrix animationMatrix[2][4];
     
     animationMatrix[0][0] = matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -120,6 +119,7 @@ PixelInputType main(VertexInputType input)
     
     output.viewPosition = float4(output.position.xyz, 1.0f);
     output.position = mul(output.position, projectionMatrix);
+
     
 	// 입력받은 색상을 그대로 픽셀 셰이더에서 이용하도록 저장한다.
     output.tex = input.tex;

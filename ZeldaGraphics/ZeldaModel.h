@@ -67,12 +67,15 @@ public:
 	void Render(
 		ID3D11DeviceContext* deviceContext,
 		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
-		ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
+		ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 		DirectX::XMMATRIX worldMatrix,
 		ZeldaShader* shader,
-		const std::wstring& animationName,
-		float animationTime
+		const std::wstring& firstAnimationName,
+		const std::wstring& secondAnimationName,
+		float firstAnimationTime,
+		float secondAnimationTime,
+		float ratio
 	);
 
 	void RenderInstanced(
@@ -96,17 +99,6 @@ private:
 	void SetAnimationTexture(ID3D11DeviceContext* deviceContext);
 
 	void CopyNode(Node* node, FBXLoader::Bone* bone, std::map<std::wstring, Node*>& nodeTable);
-
-	void RenderAnimation(
-		ID3D11DeviceContext* deviceContext,
-		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
-		ConstantBuffer<BoneBufferType, ShaderType::VertexShader>* boneConstBuffer,
-		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
-		DirectX::XMMATRIX worldMatrix,
-		ZeldaShader* shader,
-		const std::wstring& animationName,
-		float animationTime
-	);
 
 	Node* root;
 	std::vector<Node*> bones;
