@@ -4,15 +4,17 @@
 
 #include "FixedJoint.h"
 
+#include "JointHelper.h"
+
 namespace ZonaiPhysics
 {
-	FixedJoint::FixedJoint(
+	/*FixedJoint::FixedJoint(
 		physx::PxPhysics*& _factory,
 		RigidBody* _object0, const ZnTransform& _transform0,
 		RigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
-		rigidbody[0] = _object0;
-		rigidbody[1] = _object1;
+		rigidbody0 = _object0;
+		rigidbody1 = _object1;
 
 		using namespace physx;
 
@@ -47,12 +49,20 @@ namespace ZonaiPhysics
 		{
 			joint->setConstraintFlag(PxConstraintFlag::eVISUALIZATION, true);
 		}
+	}*/
+
+	FixedJoint::FixedJoint(physx::PxFixedJoint* _pxJoint, RigidBody* _znBody0, RigidBody* _znBody1) noexcept
+	{
+		joint = _pxJoint;
+		rigidbody0 = _znBody0;
+		rigidbody1 = _znBody1;
 	}
 
 	FixedJoint::~FixedJoint() noexcept
 	{
-		rigidbody[0] = nullptr;
-		rigidbody[1] = nullptr;
-		joint->release();
+		rigidbody0 = nullptr;
+		rigidbody1 = nullptr;
+		JointHelper::Release(joint);
+		joint = nullptr;
 	}
 }

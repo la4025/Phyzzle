@@ -1,4 +1,5 @@
 #pragma once
+#include "EventCallback.h"
 #include "ZnCollider.h"
 #include "ZnJoint.h"
 
@@ -14,60 +15,59 @@ namespace physx
 
 namespace ZonaiPhysics
 {
-	class CapsuleCollider;
+	class ZnSimulationCallback;
+
+	class RigidBody;
+
+	class Collider;
 	class BoxCollider;
+	class SphereCollider;
+	class CapsuleCollider;
+
+
+	class Joint;
+	class FixedJoint;
+	class PrismaticJoint;
+	class DistanceJoint;
+	class SphericalJoint;
+	class HingeJoint;
 }
 
 namespace ZonaiPhysics
 {
-	class SphereCollider;
-	class Joint;
-	class Collider;
-	class RigidBody;
-
 	class ZnFactoryX
 	{
 	public:
 		static void CreatePhysxFactory();
+		static void SetSimulationCallback(ZnSimulationCallback* _instance);
 		static void Release();
 
-	private:
-		static physx::PxScene*			CreateScene(const physx::PxSceneDesc&);
+	public:
+		static physx::PxScene*			CreateScene(void* _userScene, const Eigen::Vector3f& _gravity);
 		static physx::PxMaterial*		CreateMaterial(float _staticFriction, float _dynamicFriction, float _restitution);
 
-		static physx::PxRigidDynamic*	CreateRigidBody(void*);
+		/// rigidbody
+		static RigidBody*				CreateRigidBody(void* _userData);
 
-		static physx::PxShape*			CreateBoxCollider(void*, float, float, float);
-		static physx::PxShape*			CreateSphereCollider(void*, float);
-		static physx::PxShape*			CreateCapsuleCollider(void*, float, float);
+		/// collider
+		static BoxCollider*				CreateBoxCollider(void* _userData, float _x, float _y, float _z, physx::PxMaterial* _material);
+		static SphereCollider*			CreateSphereCollider(void* _userData, float _radius, physx::PxMaterial* _material);
+		static CapsuleCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, physx::PxMaterial* _material);
 
-		static physx::PxFixedJoint*		CreateFixedJoint();
-		static physx::PxPrismaticJoint*	CreatePrismaticJoint();
-		static physx::PxDistanceJoint*	CreateDistanceJoint();
-		static physx::PxSphericalJoint*	CreateSphericalJoint();
-		static physx::PxRevoluteJoint*	CreateRevoluteJointt();
-
-		template <typename JointT> requires (std::is_base_of_v<ZnJoint, JointT>)
-		static JointT* CreateJoint(void* _userData0, void* _userData1, const ZnTransform& _tm0, const ZnTransform& _tm1)
-		{
-			Joint* joint = new JointT(_userData0, _userData1, _tm0, _tm1);
-
-			return joint;
-		}
+		/// joint
+		static FixedJoint*				CreateFixedJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
+		static PrismaticJoint*			CreatePrismaticJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
+		static DistanceJoint*			CreateDistanceJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
+		static SphericalJoint*			CreateSphericalJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
+		static HingeJoint*				CreateHingeJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
 
 	private:
+		static EventCallback eventCallback;
 		static physx::PxDefaultAllocator allocator;
 		static physx::PxDefaultErrorCallback  errorCallback;
-		static physx::PxDefaultCpuDispatcher* dispatcher = nullptr;
-		static physx::PxFoundation* foundation = nullptr;
-		static physx::PxPhysics* pxFactory = nullptr;
-		static physx::PxPvd* pxPvd = nullptr;
+		static physx::PxDefaultCpuDispatcher* dispatcher;
+		static physx::PxFoundation* foundation;
+		static physx::PxPhysics* pxFactory;
+		static physx::PxPvd* pxPvd;
 	};
 }
-
-/*
- * PhysX의 객체를 생성을 도와주는 클래스
- *
- * Rigidbody나 Joint를 이 친구가 만들어줌
- *
- */

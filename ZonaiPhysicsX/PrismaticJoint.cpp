@@ -11,8 +11,8 @@ namespace ZonaiPhysics
 		RigidBody* _object0, const ZnTransform& _transform0,
 		RigidBody* _object1, const ZnTransform& _transform1) noexcept : tolerances()
 	{
-		rigidbody[0] = _object0;
-		rigidbody[1] = _object1;
+		rigidbody0 = _object0;
+		rigidbody1 = _object1;
 
 		using namespace physx;
 

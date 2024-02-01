@@ -54,7 +54,6 @@ namespace ZonaiPhysics
 		virtual float			GetInvMass() const noexcept = 0;
 
 		virtual Eigen::Vector3f	GetInertiaTensor() const noexcept = 0;
-//		virtual void			SetInertiaTensor(const Eigen::Vector3f&) noexcept = 0;
 
 		/**
 		선형 감쇠 계수
@@ -96,8 +95,6 @@ namespace ZonaiPhysics
 		virtual float			GetMaxAngularVelocity() const noexcept = 0;
 		virtual void			SetMaxAngularVelocity(const float&) noexcept = 0;
 
-//		virtual void			SetForceAndTorque(const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type) noexcept = 0;
-
 		/**
 		물체에 힘을 가하거나 지움
 		*/
@@ -109,6 +106,5 @@ namespace ZonaiPhysics
 		*/
 		virtual void			AddTorque(const Eigen::Vector3f& _torque, ForceType _type = ForceType::Force) noexcept = 0;
 		virtual void			ClearTorque() noexcept = 0;
-
 	};
 }

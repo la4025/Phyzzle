@@ -4,32 +4,20 @@
 
 #include "BoxCollider.h"
 
+#include "ColliderHelper.h"
+
 namespace ZonaiPhysics
 {
-	BoxCollider::BoxCollider(
-		physx::PxPhysics*& _factory, 
-		RigidBody*& _body, 
-		const Eigen::Vector3f& _offset, 
-		physx::PxMaterial*& _material
-	) noexcept : Collider(_factory, _body)
+	BoxCollider::BoxCollider(physx::PxShape* _pxShape, RigidBody* _znBody) noexcept:
+		Collider(_pxShape, _znBody)
 	{
-		using namespace physx;
-		rigidbody = _body;
-
-		shape = _factory->createShape(PxBoxGeometry(_offset.x(), _offset.y(), _offset.z()), *_material);
 		shape->userData = this;
-
-		shape->setFlag(PxShapeFlag::eVISUALIZATION, true);
-		shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
-
-		_body->pxBody->attachShape(*shape);
 	}
 
 	BoxCollider::~BoxCollider() noexcept
 	{
-		shape->release();
-		rigidbody->pxBody->detachShape(*shape);
-		
+		ColliderHelper::Release(shape);
+		shape = nullptr;
 		rigidbody = nullptr;
 	}
 }

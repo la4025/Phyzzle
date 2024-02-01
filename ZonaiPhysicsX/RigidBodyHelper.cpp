@@ -2,10 +2,34 @@
 #include <extensions/PxRigidBodyExt.h>
 
 #include "ZnUtil.h"
+#include "RigidBody.h"
+
 #include "RigidBodyHelper.h"
 
 namespace ZonaiPhysics
 {
+	void RigidBodyHelper::Detach(void* _body, void* _shape) noexcept
+	{
+		assert(_body != nullptr);
+		assert(_shape != nullptr);
+
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
+		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+
+		pxBody->detachShape(*pxShape);
+	}
+
+	void RigidBodyHelper::Attach(void* _body, void* _shape) noexcept
+	{
+		assert(_body != nullptr);
+		assert(_shape != nullptr);
+
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
+		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+
+		pxBody->attachShape(*pxShape);
+	}
+
 	void RigidBodyHelper::Release(void* _body) noexcept
 	{
 		assert(_body != nullptr);
@@ -45,10 +69,10 @@ namespace ZonaiPhysics
 	{
 		assert(_body != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body);
+		physx::PxRigidBodyExt::updateMassAndInertia(*static_cast<physx::PxRigidDynamic*>(_body), 1.f);
 	}
 
-	void RigidBodyHelper::CanSimulate(void* _body, bool _value)
+	void RigidBodyHelper::Disable(void* _body, bool _value)
 	{
 		assert(_body != nullptr);
 

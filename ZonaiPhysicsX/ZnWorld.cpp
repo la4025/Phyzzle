@@ -1,81 +1,160 @@
 #include <PxPhysicsAPI.h>
 #include <cassert>
 
-#include "EventCallback.h"
-#include "FilterCallback.h"
 #include "ZnRigidBody.h"
+#include "RigidBody.h"
 #include "ZnCollider.h"
 #include "ZnUtil.h"
 #include "ZnRaycastInfo.h"
 
 #include "ZnWorld.h"
 
+#include <ranges>
+
+#include "ZnTransform.h"
+
 namespace ZonaiPhysics
 {
+	physx::PxScene* ZnWorld::currScene = nullptr;
+
 	void ZnWorld::Run(float _dt)
 	{
+		assert(currScene != nullptr);
+
 		currScene->simulate(_dt);
 		currScene->fetchResults(true);
 	}
 
-	physx::PxScene* ZnWorld::CreateScene(physx::PxPhysics** _physx, physx::PxDefaultCpuDispatcher** _dispatcher, EventCallback* _eventCallback)
+	void ZnWorld::Release()
 	{
-		physx::PxSceneDesc sceneDesc((*_physx)->getTolerancesScale());
-		sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
-		*_dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-		sceneDesc.cpuDispatcher = *_dispatcher;
-
-		sceneDesc.simulationEventCallback = _eventCallback;
-		sceneDesc.filterShader = FilterShader;
-
-		physx::PxScene* scene = nullptr;
-		scene = (*_physx)->createScene(sceneDesc);
-		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 3.f);
-		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
-
-		physx::PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
-		if (pvdClient)
+		for (auto& [scene, bodyList] : bodies)
 		{
-			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+			for(auto& body : bodyList)
+			{
+				body ? delete body : 0;
+				body = nullptr;
+			}
+
+			bodyList.clear();
+			scene->release();
 		}
+
+		bodies.clear();
+
+		for (auto& Scene : sceneList | std::views::values)
+		{
+			Scene ? Scene->release() : 0;
+			Scene = nullptr;
+		}
+
+		sceneList.clear();
 	}
 
-	void ZnWorld::AddScene(physx::PxScene* _scene)
+	void ZnWorld::AddScene(void* _key, physx::PxScene* _scene)
 	{
-		assert(_scene);
+		assert(_key != nullptr && _scene != nullptr);
 
-		sceneList.push_back(_scene);
+		sceneList.insert({ _key, _scene });
 	}
 
-	void ZnWorld::AddBody(void* _scene, void* _body)
+	void ZnWorld::LoadScene(void* _key)
 	{
-		assert(_scene && _body);
+		assert(_key != nullptr && (sceneList.find(_key) == sceneList.end()));
 
-		static_cast<physx::PxScene*>(_scene)->addActor(*static_cast<physx::PxRigidDynamic*>(_body));
+		currScene = sceneList[_key];
 	}
 
-	void ZnWorld::SetGravity(void* _scene, const Eigen::Vector3f& _gravity)
+	void ZnWorld::UnloadScene(void* _key)
 	{
-		assert(_scene);
+		auto& scene = sceneList[_key];
+		assert(scene != nullptr);
 
-		static_cast<physx::PxScene*>(_scene)->setGravity(EigenToPhysx(_gravity));
+		auto& bodylist = bodies[scene];
+
+		for (auto& body : bodylist)
+		{
+			if (body)
+			{
+				delete body;
+				body = nullptr;
+			}
+		}
+
+		bodylist.clear();
+		PX_RELEASE(scene);
+		sceneList.erase(_key);
 	}
 
-	bool ZnWorld::Raycast(void* _scene, const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out)
+	void ZnWorld::SetGravity(const Vector3f& _gravity, void* _scene)
+	{
+		assert(currScene != nullptr);
+
+		_scene ? 
+			currScene->setGravity(EigenToPhysx(_gravity)) :
+			static_cast<physx::PxScene*>(_scene)->setGravity(EigenToPhysx(_gravity));
+	}
+
+	bool ZnWorld::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out)
 	{
 		physx::PxRaycastBuffer temp;
 
-		if (bool hit = static_cast<physx::PxScene*>(_scene)->raycast({ _from.x(), _from.y(), _from.z() }, { _to.x(), _to.y(), _to.z() }, _distance, temp))
+		if (bool hit = currScene->raycast(EigenToPhysx(_from), EigenToPhysx(_to), _distance, temp))
 		{
 			_out.bodyData = static_cast<ZnRigidBody*>(temp.block.actor->userData)->GetUserData();
 			_out.colliderData = static_cast<ZnCollider*>(temp.block.shape->userData)->GetUserData();
-			_out.position = { temp.block.position.x, temp.block.position.y, temp.block.position.z };
+			_out.position = PhysxToEigen(temp.block.position);
 			_out.distance = temp.block.distance;
 
 			return true;
 		}
+
 		return false;
+	}
+
+	/// 구현 필요
+	bool ZnWorld::Boxcast(float _x, float _y, float _z, const ZnTransform& trans)
+	{
+		physx::PxOverlapBuffer temp;
+
+		const physx::PxTransform transform(EigenToPhysx(trans.position), EigenToPhysx(trans.quaternion));
+
+		if (bool hit = currScene->overlap(physx::PxBoxGeometry(_x, _y, _z), transform, temp))
+		{
+			// temp.
+
+			return true;
+		}
+
+		return false;
+	}
+
+	void ZnWorld::AddBody(void* _znBody, void* _scene)
+	{
+		assert(currScene != nullptr);
+		assert(_scene && _znBody);
+
+		const auto body = static_cast<RigidBody*>(_znBody);
+		const auto pxbody = static_cast<physx::PxRigidDynamic*>(body->pxBody);
+		physx::PxScene* scene = _scene ? static_cast<physx::PxScene*>(_scene) : currScene;
+		scene->addActor(*pxbody);
+
+		bodies[scene].push_back(body);
+	}
+
+	RigidBody* ZnWorld::GetBody(void* _znBody, void* _userScene)
+	{
+		const physx::PxScene* scene = nullptr;
+		scene = _userScene ? sceneList[_userScene] : currScene;
+
+		scene;
+	}
+
+	/// 수정 필요
+	void ZnWorld::AddMaterial(void* _material)
+	{
+		assert(_material != nullptr);
+
+		const auto material = static_cast<physx::PxMaterial*>(_material);
+		materials.insert(material);
 	}
 }

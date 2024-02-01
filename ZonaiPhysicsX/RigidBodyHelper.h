@@ -8,6 +8,10 @@ namespace ZonaiPhysics
 	class RigidBodyHelper
 	{
 	public:
+		static void				Detach(void* _body, void* _shape) noexcept;
+		static void				Attach(void* _body, void* _shape) noexcept;
+
+	public:
 		static void				Release(void*) noexcept;
 
 		static void				WakeUp(void*) noexcept;
@@ -19,7 +23,7 @@ namespace ZonaiPhysics
 
 		static void				UpdateInertiaTensor(void*) noexcept;
 
-		static void				CanSimulate(void*, bool);
+		static void				Disable(void*, bool);
 
 		static uint8_t			GetDynamicLockFlags(void*) noexcept;
 		static void				SetDynamicLockFlag(void*, uint8_t flag, bool) noexcept;

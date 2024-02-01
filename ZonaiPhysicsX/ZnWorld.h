@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <set>
 #include <vector>
 #include <Eigen/Dense>
 
@@ -7,6 +8,7 @@ namespace ZonaiPhysics
 {
 	struct ZnRaycastInfo;
 	class EventCallback;
+	class ZnTransform;
 	class RigidBody;
 }
 
@@ -21,27 +23,38 @@ namespace ZonaiPhysics
 	class ZnWorld
 	{
 	public:
-		static void				Run(float _dt);
+		static void					Run(float _dt);
+		static void					Release();
 
-		static physx::PxScene*	CreateScene(physx::PxPhysics** _physx, physx::PxDefaultCpuDispatcher** _dispatcher, EventCallback* _eventCallback);
-		static void				AddScene(physx::PxScene*);
+	public:
+		static void					AddScene(void* _key, physx::PxScene* _scene);
+		static void					LoadScene(void* _key);
+		static void					UnloadScene(void* _key);
 
-		static void				AddBody(void* _scene, void* _body);
-		static void				SetGravity(void* _scene, const Eigen::Vector3f&);
-		static bool				Raycast(void* _scene, const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out);
+		static void					SetGravity(const Vector3f&, void* _scene);
+		static bool					Raycast(const Vector3f& _from, const Vector3f& _to, float _distance,
+											ZnRaycastInfo& _out);
 
-		static void				AddRigidBody(RigidBody* _body);
+		static bool					Boxcast(float _x, float _y, float _z, const ZnTransform& trans);
+
+	public:
+		static void					AddBody(void* _znBody, void* _scene);
+		static RigidBody*			GetBody(void* _znBody, void* _userScene);
+
+		static void					AddMaterial(void*);
+		static physx::PxMaterial*	GetMaterial(void*);
+		
+
+		// static bool Gometrycast();
 
 	private:
 		using BodyList = std::vector<RigidBody*>;
 
 		static physx::PxScene* currScene;
-		static std::map<physx::PxScene*, BodyList> sceneList;
+		static std::unordered_map<void*, physx::PxScene*> sceneList;
+		static std::map<physx::PxScene*, BodyList> bodies;
+		static std::set<physx::PxMaterial*> materials;
 	};
 }
 
-/*
- * Scene을 가진 클래스
- * Raycast와 해당 씬의 RigidBody를 가지고 있음.
- * 
- */
+

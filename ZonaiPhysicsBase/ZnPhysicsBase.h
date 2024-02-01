@@ -40,22 +40,24 @@ namespace ZonaiPhysics
 		virtual void				Simulation(float _dt) noexcept = 0;
 		virtual void				Finalize() noexcept = 0;
 
-		virtual void				SetGravity(const Eigen::Vector3f&) noexcept = 0;
+		virtual void				CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) noexcept = 0;
+		virtual void				LoadScene(void* _userScene) noexcept = 0;
+		virtual void				UnloadScene(void* _userScene) noexcept = 0;
+
+		virtual void				SetGravity(const Eigen::Vector3f&, void* _userScene = nullptr) noexcept = 0;
 
 	public:
-		///	wstring은 void*로 변경될 예정.
-
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
-		virtual ZnRigidBody*		CreateRigidBody(const std::wstring&) noexcept = 0;
+		virtual ZnRigidBody*		CreateRigidBody(void* _userData, void* _userScene = nullptr) noexcept = 0;
 
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		virtual ZnCollider*			CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept = 0;
-		virtual ZnCollider*			CreateSphereCollider(const std::wstring&, float radius) noexcept = 0;
-		virtual ZnCollider*			CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept = 0;
+		virtual ZnCollider*			CreateBoxCollider(void* _userData, float x, float y, float z) noexcept = 0;
+		virtual ZnCollider*			CreateSphereCollider(void* _userData, float radius) noexcept = 0;
+		virtual ZnCollider*			CreateCapsuleCollider(void* _userData, float radius, float height) noexcept = 0;
 		// virtual ZnCollider*		CreateCustomCollider(const std::wstring&) noexcept = 0;
 
 		/// <summary>

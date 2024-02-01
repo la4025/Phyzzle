@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="FreezeFlag.h" />
     <ClInclude Include="ZnBase.h" />
+    <ClInclude Include="ZnBoxcastInfo.h" />
     <ClInclude Include="ZnPrismaticJoint.h" />
     <ClInclude Include="ZnHingeJoint.h" />
     <ClInclude Include="ZnDistanceJoint.h" />

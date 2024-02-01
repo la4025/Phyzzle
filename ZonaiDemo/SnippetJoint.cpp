@@ -87,6 +87,8 @@ public:
 	}
 };
 
+class 
+
 int snippetMain(int, const char* const*)
 {
 	std::wstring path = L"../x64/Debug/ZonaiPhysicsX.dll";

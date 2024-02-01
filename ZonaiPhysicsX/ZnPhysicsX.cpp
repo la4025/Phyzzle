@@ -28,91 +28,33 @@ namespace ZonaiPhysics
 	{
 		assert(_instance);
 
-		using namespace physx;
-
 		// SDK 생성
 		{
 			ZnFactoryX::CreatePhysxFactory();
-		// 	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
-		// 	pvd = PxCreatePvd(*foundation);
-		// 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-		// 	pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-		// 
-		// 	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
-		// 	PxInitExtensions(*physics, pvd);
 		}
 
-		// 씬 생성
 		{
-			PxSceneDesc sceneDesc(physics->getTolerancesScale());
-			sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
-			dispatcher = PxDefaultCpuDispatcherCreate(2);
-			sceneDesc.cpuDispatcher = dispatcher;
-
-			eventCallback.setInstance(_instance);
-			sceneDesc.simulationEventCallback = &eventCallback;
-			sceneDesc.filterShader = FilterShader;
-			// sceneDesc.filterCallback = &filterCallback;
-
-			scene = physics->createScene(sceneDesc);
-			scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 3.f);
-			scene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 3.f);
+			ZnFactoryX::SetSimulationCallback(_instance);
 		}
 
 		// 레이어 설정
 		{
 			ZnLayer::Clear();
-			ZnLayer::SetCollisionData(0, { 0, 1, 2, 3 });
+			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		{
-			PxPvdSceneClient* pvdClient = scene->getScenePvdClient();
-			if (pvdClient)
-			{
-				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-				pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-			}
-			pvdClient->updateCamera()
-		}
-
-		material = physics->createMaterial(0.5f, 0.5f, 0.6f);
+		defaultMaterial = ZnFactoryX::CreateMaterial(0.5f, 0.5f, 0.6f);
 	}
 
 	void ZnPhysicsX::Simulation(float _dt) noexcept
 	{
-		assert(scene);
-
 		ZnWorld::Run(_dt);
-		// scene->simulate(_dt);
-		// scene->fetchResults(true);
 	}
 
 	void ZnPhysicsX::Finalize() noexcept
 	{
-		using namespace physx;
-		for (auto& body : bodies | std::views::values)
-		{
-			delete body;
-			body = nullptr;
-		}
-		bodies.clear();
-
-
-		PX_RELEASE(scene);
-		PX_RELEASE(dispatcher);
-
+		ZnWorld::Release();
 		ZnFactoryX::Release();
-		// PxCloseExtensions();
-		// PX_RELEASE(physics);
-		// if (pvd)
-		// {
-		// 	PxPvdTransport* transport = pvd->getTransport();
-		// 	pvd->release();
-		// 	pvd = nullptr;
-		// 	PX_RELEASE(transport);
-		// }
-		// PX_RELEASE(foundation);
 	}
 
 	ZnPhysicsX* ZnPhysicsX::Instance()
@@ -124,16 +66,31 @@ namespace ZonaiPhysics
 		return instance;
 	}
 
-	void ZnPhysicsX::SetGravity(const Vector3f& _gravity) noexcept
+	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
+	void ZnPhysicsX::CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) noexcept
 	{
-		assert(scene != nullptr);
+		assert(_userScene != nullptr);
 
-		scene->setGravity({ _gravity.x(), _gravity.y(), _gravity.z() });
+		ZnWorld::AddScene(_userScene, ZnFactoryX::CreateScene(_userScene, _gravity));
 	}
 
-	void ZnPhysicsX::SceneClear()
+	void ZnPhysicsX::LoadScene(void* _userScene) noexcept
 	{
+		assert(_userScene != nullptr);
 
+		ZnWorld::LoadScene(_userScene);
+	}
+
+	void ZnPhysicsX::UnloadScene(void* _userScene) noexcept
+	{
+		assert(_userScene != nullptr);
+
+		ZnWorld::UnloadScene(_userScene);
+	}
+
+	void ZnPhysicsX::SetGravity(const Vector3f& _gravity, void* _userScene) noexcept
+	{
+		ZnWorld::SetGravity(_gravity, _userScene);
 	}
 
 	void ZnPhysicsX::SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) noexcept
@@ -144,76 +101,40 @@ namespace ZonaiPhysics
 	/// <summary>
 	/// 강체를 만들어서 반환
 	/// </summary>
-	ZnRigidBody* ZnPhysicsX::CreateRigidBody(const std::wstring& _id) noexcept
+	ZnRigidBody* ZnPhysicsX::CreateRigidBody(void* _userData, void* _userScene) noexcept
 	{
-		RigidBody* result = FindRigidBody(_id);
+		// 유저의 (컴포넌트) 포인터를 키값으로 먼저 생성이 되어있는지 확인하고
+		// 생성이 되어 있으면 반환
+		// 생성이 되어있지 않으면 생성하고 반환
+		// 생성한 다음 World에 추가를 하는데
+		// userScene이 nullptr이면 현재 Scene에 추가하고
+		// nullptr이 아니면 userScene에 해당하는 Scene에 추가함.
+		const auto znBody = ZnFactoryX::CreateRigidBody(_userData);
+		ZnWorld::AddBody(_userScene, znBody);
 
-		if (result == nullptr)
-		{
-			result = new RigidBody();
-			ZnFactoryX::CreateRigidBody(_id);
-			bodies.insert(std::make_pair(_id, result));
-			ZnWorld::AddBody(scene, result->pxBody);
-			// scene->addActor(*result->pxBody);
-		}
-
-		result->CanSimulate(true);
-
-		return result;
+		return znBody;
 	}
 
 	/// <summary>
 	/// 강체를 찾아서 거기에 콜라이더를 붙임.
 	/// </summary>
-	ZnCollider* ZnPhysicsX::CreateBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
+	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, float _x, float _y, float _z) noexcept
 	{
-		RigidBody* body = FindRigidBody(_id);
+		// userData를 키값으로 rigidbody가 생성이 되어있는지 체크하고
+		// 생성이 되어 있으면 rigidbody에 collider를 추가
+		// 생성이 되어 있지 않으면 rigidbody를 생성하고 collider를 추가.
 
-		if (body == nullptr)
-		{
-			body = new RigidBody(physics);
-			body->CanSimulate(false);
-			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->pxBody);
-		}
-
-		Collider* newRigidBody = new BoxCollider(physics, body, Vector3f(x, y, z), material);
-
-		return newRigidBody;
+		auto collider = ZnFactoryX::CreateBoxCollider(_userData, _x, _y, _z, nullptr);
 	}
 
-	ZnCollider* ZnPhysicsX::CreateSphereCollider(const std::wstring& _id, float radius) noexcept
+	ZnCollider* ZnPhysicsX::CreateSphereCollider(void* _userData, float _radius) noexcept
 	{
-		RigidBody* body = FindRigidBody(_id);
-
-		if (body == nullptr)
-		{
-			body = new RigidBody(physics);
-			body->CanSimulate(false);
-			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->pxBody);
-		}
-
-		Collider* newRigidBody = new SphereCollider(physics, body, radius, material);
-
-		return newRigidBody;
+		auto collider = ZnFactoryX::CreateSphereCollider(_userData, _radius, nullptr);
 	}
 
-	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(const std::wstring& _id, float _radius, float _height) noexcept
+	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(void* _userData, float _radius, float _height) noexcept
 	{
-		RigidBody* body = FindRigidBody(_id);
-
-		if (body == nullptr)
-		{
-			body = new RigidBody(physics);
-			body->CanSimulate(false);
-			bodies.insert(std::make_pair(_id, body));
-			scene->addActor(*body->pxBody);
-		}
-
-		Collider* newRigidBody = new CapsuleCollider(physics, body, _radius, _height, material);
-
-		return newRigidBody;
+		auto collider = ZnFactoryX::CreateCapsuleCollider(_userData, _radius, _height, nullptr);
 	}
 
 	// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&) noexcept
@@ -224,11 +145,12 @@ namespace ZonaiPhysics
 	ZnFixedJoint* ZnPhysicsX::CreateFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
 	                                           ZnRigidBody* _object1, const ZnTransform& _transform1) noexcept
 	{
+
+
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
-		auto* joint = new FixedJoint(physics, ob0, _transform0, ob1, _transform1);
-
+		const auto joint = ZnFactoryX::CreateFixedJoint(nullptr, _transform0, nullptr, _transform1);
 		return joint;
 	}
 
@@ -238,7 +160,7 @@ namespace ZonaiPhysics
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
-		auto* joint = new DistanceJoint(physics, ob0, _transform0, ob1, _transform1);
+		const auto joint = ZnFactoryX::CreateDistanceJoint(nullptr, _transform0, nullptr, _transform1);
 
 		return joint;
 	}
@@ -249,8 +171,7 @@ namespace ZonaiPhysics
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
-		auto* joint = new SphericalJoint(physics, ob0, _transform0, ob1, _transform1);
-
+		const auto joint = ZnFactoryX::CreateSphericalJoint(nullptr, _transform0, nullptr, _transform1);
 		return joint;
 	}
 
@@ -260,8 +181,7 @@ namespace ZonaiPhysics
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
-		auto* joint = new HingeJoint(physics, ob0, _transform0, ob1, _transform1);
-
+		const auto joint = ZnFactoryX::CreateHingeJoint(nullptr, _transform0, nullptr, _transform1);
 		return joint;
 	}
 
@@ -271,36 +191,13 @@ namespace ZonaiPhysics
 		auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
-		auto* joint = new PrismaticJoint(physics, ob0, _transform0, ob1, _transform1);
-
+		const auto joint = ZnFactoryX::CreatePrismaticJoint(nullptr, _transform0, nullptr, _transform1);
 		return joint;
 	}
 
 	bool ZnPhysicsX::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out) noexcept
 	{
-		physx::PxRaycastBuffer temp;
-
-		if (bool hit = scene->raycast({_from.x(), _from.y(), _from.z()}, {_to.x(), _to.y(), _to.z()}, _distance, temp))
-		{
-			_out.bodyData = static_cast<ZnRigidBody*>(temp.block.actor->userData)->GetUserData();
-			_out.colliderData = static_cast<ZnCollider*>(temp.block.shape->userData)->GetUserData();
-			_out.position = {temp.block.position.x, temp.block.position.y, temp.block.position.z};
-			_out.distance = temp.block.distance;
-
-			return true;
-		}
-		return false;
-	}
-
-	RigidBody* ZnPhysicsX::FindRigidBody(const std::wstring& _id) noexcept
-	{
-		auto itr = bodies.find(_id);
-		if (itr != bodies.end())
-		{
-			return itr->second;
-		}
-
-		return nullptr;
+		return ZnWorld::Raycast(_from, _to, _distance, _out);
 	}
 
 	extern "C" {

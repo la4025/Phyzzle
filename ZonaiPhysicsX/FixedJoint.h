@@ -19,11 +19,11 @@ namespace ZonaiPhysics
 	class FixedJoint : public TemplateJoint<ZnFixedJoint, physx::PxFixedJoint>
 	{
 	public:
-		FixedJoint() noexcept = delete;
-		FixedJoint(
-			physx::PxPhysics*& _factory,
-			RigidBody* _object0, const ZnTransform& _transform0,
-			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
+		FixedJoint(physx::PxFixedJoint*, RigidBody*, RigidBody*) noexcept;
+		//FixedJoint(
+		//	physx::PxPhysics*& _factory,
+		//	RigidBody* _object0, const ZnTransform& _transform0,
+		//	RigidBody* _object1, const ZnTransform& _transform1) noexcept;
 		~FixedJoint() noexcept override;
 	};
 } // namespace ZonaiPhysics

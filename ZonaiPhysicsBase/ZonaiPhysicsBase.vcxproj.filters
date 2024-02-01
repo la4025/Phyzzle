@@ -55,6 +55,9 @@
     <ClInclude Include="FreezeFlag.h">
       <Filter>02. Enum</Filter>
     </ClInclude>
+    <ClInclude Include="ZnBoxcastInfo.h">
+      <Filter>01. Struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">

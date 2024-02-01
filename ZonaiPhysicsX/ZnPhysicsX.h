@@ -59,65 +59,54 @@ namespace ZonaiPhysics
 		static ZnPhysicsX* Instance();
 
 	public:
-		void SetGravity(const Vector3f&) noexcept override;
-		void SceneClear();
+		void CreateScene(void* _userScene, const Vector3f& _gravity) noexcept override;
+		void LoadScene(void* _userScene) noexcept override;
+		void UnloadScene(void* _userScene) noexcept override;
+
+		void SetGravity(const Vector3f&, void* _userScene = nullptr) noexcept override;
 		void SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) noexcept;
 
 	public:
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
-		ZnRigidBody* CreateRigidBody(const std::wstring&) noexcept override;
+		ZnRigidBody* CreateRigidBody(void* _userData, void* _scene = nullptr) noexcept override;
 
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		ZnCollider* CreateBoxCollider(const std::wstring&, float x, float y, float z) noexcept override;
-		ZnCollider* CreateSphereCollider(const std::wstring&, float radius) noexcept override;
-		ZnCollider* CreateCapsuleCollider(const std::wstring&, float radius, float height) noexcept override;
-		// ZnCollider*				CreateCustomCollider(const std::wstring&) noexcept override;
+		ZnCollider* CreateBoxCollider(void* _userData, float x, float y, float z) noexcept override;
+		ZnCollider* CreateSphereCollider(void* _userData, float radius) noexcept override;
+		ZnCollider* CreateCapsuleCollider(void* _userData, float radius, float height) noexcept override;
 
 		/// <summary>
 		/// Create Joint
 		/// </summary>
 		// 고정 조인트
-		ZnFixedJoint*		CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		ZnFixedJoint* CreateFixedJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*,
+		                               const ZnTransform&) noexcept override;
 		// 거리 조인트
-		ZnDistanceJoint*	CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		ZnDistanceJoint* CreateDistanceJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*,
+		                                     const ZnTransform&) noexcept override;
 		// 구형 조인트
-		ZnSphericalJoint*	CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		ZnSphericalJoint* CreateSphericalJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*,
+		                                       const ZnTransform&) noexcept override;
 		// 회전 조인트
-		ZnHingeJoint*		CreateHingeJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		ZnHingeJoint* CreateHingeJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*,
+		                               const ZnTransform&) noexcept override;
 		// 프리즘 조인트
-		ZnPrismaticJoint*	CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) noexcept override;
+		ZnPrismaticJoint* CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*,
+		                                       const ZnTransform&) noexcept override;
 
 	public:
 		bool Raycast(const Vector3f&, const Vector3f&, float, ZnRaycastInfo&) noexcept override;
+		// bool Boxcast(const Vector3f&, const Vector3f&, float, ZnRaycastInfo&) noexcept override;
 
 	private:
-		RigidBody* FindRigidBody(const std::wstring&) noexcept;
-		Collider* CreateCollider(const std::wstring&) noexcept;
-
-	private:
-		// physx::PxDefaultAllocator allocator;
-		// physx::PxDefaultErrorCallback errorCallback;
-		// physx::PxFoundation* foundation;
-		// physx::PxPhysics* physics;
-		// physx::PxDefaultCpuDispatcher* dispatcher;
-		physx::PxScene* scene;
-		// physx::PxPvd* pvd;
-
-		physx::PxMaterial* material;
+		physx::PxMaterial* defaultMaterial;
 
 	private:
 		static ZnPhysicsX* instance;
-
-	private:
-		std::map<std::wstring, RigidBody*> bodies;
-		EventCallback eventCallback;
-		FilterCallback filterCallback;
-
-		// ZnFactoryX factory;
 	};
 
 

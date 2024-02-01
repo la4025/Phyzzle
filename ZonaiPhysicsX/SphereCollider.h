@@ -24,7 +24,8 @@ namespace ZonaiPhysics
 	{
 	public:
 		SphereCollider() noexcept = delete;
-		SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&) noexcept;
+		SphereCollider(physx::PxShape*, RigidBody*) noexcept;
+		// SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&) noexcept;
 		~SphereCollider() noexcept override;
 	};
 } // ZonaiPhysics

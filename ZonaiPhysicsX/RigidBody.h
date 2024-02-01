@@ -18,7 +18,6 @@ namespace ZonaiPhysics
 	{
 	public:
 							RigidBody() noexcept;
-							RigidBody(physx::PxPhysics*&) noexcept;
 							~RigidBody() noexcept override;
 
 	public:
@@ -26,12 +25,9 @@ namespace ZonaiPhysics
 		bool				IsSleeping() const noexcept override;
 
 		void				UseGravity(bool) noexcept override;
-
 		void				SetKinematic(bool) noexcept override;
 
-		// void				UpdateInertiaTensor() noexcept;
-
-		void				CanSimulate(bool) const noexcept;
+		void				Disable(bool) const noexcept;
 
 		uint8_t				GetDynamicLockFlags() const noexcept override;
 		void				SetDynamicLockFlag(FreezeFlag flag, bool) noexcept override;
@@ -47,7 +43,6 @@ namespace ZonaiPhysics
 		float				GetInvMass() const noexcept override;
 
 		Eigen::Vector3f		GetInertiaTensor() const noexcept override;
-		// void				SetInertiaTensor(const Eigen::Vector3f&) noexcept override;
 
 		float				GetLinearDamping() const noexcept override;
 		void				SetLinearDamping(float) noexcept override;
@@ -75,9 +70,6 @@ namespace ZonaiPhysics
 		Eigen::Quaternionf	GetQuaternion() const noexcept override;
 		void				SetQuaternion(const Eigen::Quaternionf&) noexcept override;
 
-		// Èû
-		// void				SetForceAndTorque(const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type) noexcept override;
-
 		void				AddForce(const Eigen::Vector3f&, ForceType) noexcept override;
 		void				ClearForce() noexcept override;
 	
@@ -85,7 +77,9 @@ namespace ZonaiPhysics
 		void				ClearTorque() noexcept override;
 
 	public:
+		void* ZnObject::userData;
 		void* pxBody;
+		std::list<Collider*> colliders;
 	};
 } // namespace ZonaiPhysics
 

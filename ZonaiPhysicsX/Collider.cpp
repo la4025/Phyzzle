@@ -8,21 +8,23 @@
 
 #include "Collider.h"
 
+#include "RigidBodyHelper.h"
+
 namespace ZonaiPhysics
 {
-	Collider::Collider(physx::PxPhysics*& _factory, RigidBody* _rigid) noexcept :
-		rigidbody(_rigid), shape()
-	{
+	Collider::Collider(physx::PxShape* _pxShape, RigidBody* _znBody) noexcept :
+		rigidbody(_znBody), shape(_pxShape)
+	{}
 
-	}
+	//Collider::Collider(physx::PxPhysics*& _factory, RigidBody* _rigid) noexcept :
+	//	rigidbody(_rigid), shape()
+	//{}
 
 	void Collider::SetTrigger(bool _flag) noexcept
 	{
-		// rigidbody->pxBody->detachShape(*shape);
-
+		RigidBodyHelper::Detach(shape->getActor(), shape);
 		ColliderHelper::SetTrigger(shape, _flag);
-
-		// rigidbody->pxBody->attachShape(*shape);
+		RigidBodyHelper::Attach(shape->getActor(), shape);
 	}
 
 	void Collider::SetLayerData(const uint32_t& _id) noexcept
@@ -38,7 +40,6 @@ namespace ZonaiPhysics
 	{
 		assert(rigidbody != nullptr);
 
-		using namespace physx;
 		return rigidbody->GetPosition();
 	}
 
@@ -46,7 +47,6 @@ namespace ZonaiPhysics
 	{
 		assert(rigidbody != nullptr);
 
-		using namespace physx;
 		rigidbody->SetPosition(_position);
 	}
 
@@ -59,19 +59,11 @@ namespace ZonaiPhysics
 
 	void Collider::SetLocalPosition(const Eigen::Vector3f& _position) noexcept
 	{
-		assert(rigidbody != nullptr);
+		assert(shape != nullptr);
 
-		using namespace physx;
-		rigidbody->pxBody->detachShape(*shape);
-
-		PxTransform t = shape->getLocalPose();
-		// t.p.x = _position.x();
-		// t.p.y = _position.y();
-		// t.p.z = _position.z();
-		t.p = EigenToPhysx(_position);
-		shape->setLocalPose(t);
-
-		rigidbody->pxBody->attachShape(*shape);
+		RigidBodyHelper::Detach(shape->getActor(), shape);
+		ColliderHelper::SetLocalPosition(shape, _position);
+		RigidBodyHelper::Attach(shape->getActor(), shape);
 
 		UpdateInertiaTensor();
 	}
@@ -93,11 +85,11 @@ namespace ZonaiPhysics
 
 	void Collider::SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) noexcept
 	{
-		// rigidbody->pxBody->detachShape(*shape);
+		assert(shape != nullptr);
 
+		RigidBodyHelper::Detach(shape->getActor(), shape);
 		ColliderHelper::SetLocalQuaternion(shape, _quaternion);
-
-		// rigidbody->pxBody->attachShape(*shape);
+		RigidBodyHelper::Attach(shape->getActor(), shape);
 
 		UpdateInertiaTensor();
 	}

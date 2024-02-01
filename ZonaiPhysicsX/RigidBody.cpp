@@ -10,16 +10,8 @@
 
 namespace ZonaiPhysics
 {
-	RigidBody::RigidBody(physx::PxPhysics*& _factory) noexcept :
-		pxBody(nullptr)
-	{
-		using namespace physx;
-		pxBody = _factory->createRigidDynamic(PxTransform(PxVec3(0,0,0)));
-
-		assert(pxBody != nullptr, "ZonaiPhysicsX :: RigidBody Initialize Error");
-
-		pxBody->userData = this;
-	}
+	RigidBody::RigidBody() noexcept : pxBody()
+	{}
 
 	RigidBody::~RigidBody() noexcept
 	{
@@ -47,14 +39,9 @@ namespace ZonaiPhysics
 		RigidBodyHelper::SetKinematic(pxBody, value);
 	}
 
-// 	void RigidBody::UpdateInertiaTensor() noexcept
-// 	{
-// 		RigidBodyHelper::UpdateInertiaTensor(pxBody);
-// 	}
-
-	void RigidBody::CanSimulate(bool value) const noexcept
+	void RigidBody::Disable(bool value) const noexcept
 	{
-		RigidBodyHelper::CanSimulate(pxBody, value);
+		RigidBodyHelper::Disable(pxBody, value);
 	}
 
 	uint8_t RigidBody::GetDynamicLockFlags() const noexcept
@@ -103,11 +90,6 @@ namespace ZonaiPhysics
 	{
 		return RigidBodyHelper::GetInertiaTensor(pxBody);
 	}
-
-// 	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& _I) noexcept
-// 	{
-// 		RigidBodyHelper::SetInertiaTensor(pxBody, _I);
-// 	}
 
 	float RigidBody::GetLinearDamping() const noexcept
 	{
@@ -191,12 +173,6 @@ namespace ZonaiPhysics
 		RigidBodyHelper::SetQuaternion(pxBody, _quaternion);
 	}
 
-// 	void RigidBody::SetForceAndTorque(const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque,
-// 		ForceType _type) noexcept
-// 	{
-// 		RigidBodyHelper::SetForceAndTorque(pxBody, _force, _torque, _type);
-// 	}
-
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ForceType _type) noexcept
 	{
 		RigidBodyHelper::AddForce(pxBody, _force, _type);
@@ -216,9 +192,4 @@ namespace ZonaiPhysics
 	{
 		RigidBodyHelper::ClearTorque(pxBody);
 	}
-
-	//physx::PxRigidDynamic* RigidBody::getRigidDynamic() const noexcept
-	//{
-	//	return pxBody;
-	//}
 } // namespace ZonaiPhysics

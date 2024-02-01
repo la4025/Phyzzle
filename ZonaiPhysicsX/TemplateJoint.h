@@ -24,15 +24,15 @@ namespace ZonaiPhysics
 	class TemplateJoint : public Base
 	{
 	public:
-		TemplateJoint() noexcept : joint(), rigidbody()
-		{
-		}
+		TemplateJoint() noexcept : joint(), rigidbody0(), rigidbody1()
+		{}
 
 		virtual ~TemplateJoint() noexcept = default;
 
 	protected:
 		PhysxJoint* joint;
-		RigidBody* rigidbody[2];
+		RigidBody* rigidbody0;
+		RigidBody* rigidbody1;
 
 	public:
 		/**
