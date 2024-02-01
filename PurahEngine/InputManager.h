@@ -38,6 +38,8 @@ namespace PurahEngine
 
 		/// 게임패드
 		XINPUT_STATE GetState();
+		int deadZone = 5000;
+
 
 		/// 마우스
 

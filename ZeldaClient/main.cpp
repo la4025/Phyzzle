@@ -147,12 +147,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
-	textureID = renderer->CreateTexture(L"mang.jpg");
+	/*textureID = renderer->CreateTexture(L"mang.jpg");
 	if (textureID == TextureID::ID_NULL)
 	{
 		assert(0);
 	}
-	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
+	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);*/
 
 
 	//PurahEngine::Run(); ¿ªÇÒ

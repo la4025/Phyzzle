@@ -12,8 +12,12 @@ PurahEngine::InputManager::~InputManager()
 
 void PurahEngine::InputManager::Initialize()
 {
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	//if (XInputGetState(0, &state) == ERROR_SUCCESS)
+	result = XInputGetState(0, &state);
+
+	if (result == ERROR_SUCCESS)
+	{
+		ZeroMemory(&state, sizeof(XINPUT_STATE));
+	}
 }
 
 void PurahEngine::InputManager::Update()
@@ -27,11 +31,17 @@ void PurahEngine::InputManager::Update()
 	if (result == ERROR_SUCCESS)
 	{
 		XInputGetState(0, &state);
-		//for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
-		//{
-		//}
+
+		if (abs(state.Gamepad.sThumbLX) < deadZone)
+		{
+			state.Gamepad.sThumbLX = 0;
+		}
+
+		if (abs(state.Gamepad.sThumbLY) < deadZone)
+		{
+			state.Gamepad.sThumbLY = 0;
+		}
 	}
-		//ZeroMemory(&state, sizeof(XINPUT_STATE));
 
 }
 

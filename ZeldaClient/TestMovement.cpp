@@ -4,6 +4,7 @@
 
 #define M_PI       3.14159265358979323846
 
+
 PurahEngine::TestMovement::TestMovement()
 {
 
@@ -22,6 +23,12 @@ void PurahEngine::TestMovement::Update()
 
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
 
+	/// 게임패드 관련
+	const int DEADZONE = inputManager.Getinstance().deadZone;
+	int thumbLX = inputManager.Getinstance().GetState().Gamepad.sThumbLX;
+	int thumbLY = inputManager.Getinstance().GetState().Gamepad.sThumbLY;
+
+
 	const auto rigid = GetGameObject()->GetComponent<RigidBody>();
 	const auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
 	auto movement = Eigen::Vector3f{ 0.f, 0.f, 0.f };
@@ -39,22 +46,22 @@ void PurahEngine::TestMovement::Update()
 	}
 
 	if (inputManager.IsKeyPressed('W') == true ||
-		inputManager.Getinstance().GetState().Gamepad.sThumbLY > 5000)
+		thumbLY > 0)
 	{
 		movement += Eigen::Vector3f(0.0f, 0.0f, 0.1f);
 	}
 	if (inputManager.IsKeyPressed('S') == true ||
-		inputManager.Getinstance().GetState().Gamepad.sThumbLY < -5000)
+		thumbLY < 0)
 	{
 		movement += Eigen::Vector3f(0.0f, 0.0f, -0.1f);
 	}
 	if (inputManager.IsKeyPressed('A') == true ||
-		inputManager.Getinstance().GetState().Gamepad.sThumbLX < -5000)
+		thumbLX < 0)
 	{
 		movement += Eigen::Vector3f(-0.1f, 0.0f, 0.0f);
 	}
 	if (inputManager.IsKeyPressed('D') == true ||
-		inputManager.Getinstance().GetState().Gamepad.sThumbLX > 5000)
+		thumbLX > 0)
 	{
 		movement += Eigen::Vector3f(0.1f, 0.0f, 0.0f);
 	}
