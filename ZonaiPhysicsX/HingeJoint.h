@@ -7,6 +7,7 @@
 namespace physx
 {
 	class PxPhysics;
+	class PxRevoluteJoint;
 }
 
 namespace ZonaiPhysics
@@ -18,12 +19,13 @@ namespace ZonaiPhysics
 	class HingeJoint : public TemplateJoint<ZnHingeJoint, physx::PxRevoluteJoint>
 	{
 	public:
-		HingeJoint() noexcept = delete;
-		HingeJoint(
-			physx::PxPhysics*& _factory,
-			RigidBody* _object0, const ZnTransform& _transform0,
-			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
-		~HingeJoint() noexcept override;
+		HingeJoint() = delete;
+		HingeJoint(physx::PxRevoluteJoint*, RigidBody*, RigidBody*);
+		//HingeJoint(
+		//	physx::PxPhysics*& _factory,
+		//	RigidBody* _object0, const ZnTransform& _transform0,
+		//	RigidBody* _object1, const ZnTransform& _transform1);
+		~HingeJoint() override;
 
 	public:
 		float GetAngle() const override;

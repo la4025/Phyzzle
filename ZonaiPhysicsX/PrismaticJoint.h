@@ -7,6 +7,7 @@
 namespace physx
 {
 	class PxPhysics;
+	class PxPrismaticJoint;
 }
 
 namespace ZonaiPhysics
@@ -18,12 +19,13 @@ namespace ZonaiPhysics
 	class PrismaticJoint : public TemplateJoint<ZnPrismaticJoint, physx::PxPrismaticJoint>
 	{
 	public:
-		PrismaticJoint() noexcept = delete;
-		PrismaticJoint(
-			physx::PxPhysics*& _factory,
-			RigidBody* _object0, const ZnTransform& _transform0,
-			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
-		~PrismaticJoint() noexcept override;
+		PrismaticJoint() = delete;
+		PrismaticJoint(physx::PxPrismaticJoint*, RigidBody*, RigidBody*, const physx::PxTolerancesScale*);
+		//PrismaticJoint(
+		//	physx::PxPhysics*& _factory,
+		//	RigidBody* _object0, const ZnTransform& _transform0,
+		//	RigidBody* _object1, const ZnTransform& _transform1);
+		~PrismaticJoint() override;
 
 	public:
 		float GetPosition() const override;

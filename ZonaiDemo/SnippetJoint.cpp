@@ -46,42 +46,42 @@ public:
 class PhysicsEvent : public ZonaiPhysics::ZnSimulationCallback
 {
 public:
-	void OnWake(const ZonaiPhysics::ZnRigidBody*) noexcept override
+	void OnWake(const ZonaiPhysics::ZnRigidBody*) override
 	{
 		std::cout << "OnWake" << std::endl;
 	}
-	void OnSleep(const ZonaiPhysics::ZnRigidBody*) noexcept override
+	void OnSleep(const ZonaiPhysics::ZnRigidBody*) override
 	{
 		std::cout << "OnSleep" << std::endl;
 	}
-	void OnConstraintBreak(const ZonaiPhysics::ZnJoint*) noexcept override
+	void OnConstraintBreak(const ZonaiPhysics::ZnJoint*) override
 	{
 		std::cout << "OnConstraintBreak" << std::endl;
 	}
-	void OnTriggerEnter(const ZonaiPhysics::ZnCollider* _collider0, const ZonaiPhysics::ZnCollider* _collider1) noexcept override
+	void OnTriggerEnter(const ZonaiPhysics::ZnCollider* _collider0, const ZonaiPhysics::ZnCollider* _collider1) override
 	{
 		std::cout << "OnTriggerEnter" << std::endl;
 	}
-	void OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	void OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) override
 	{
 		std::cout << "OnTriggerStay" << std::endl;
 	}
-	void OnTriggerExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) noexcept override
+	void OnTriggerExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) override
 	{
 		std::cout << "OnTriggerExit" << std::endl;
 	}
 	void OnCollisionEnter(const ZonaiPhysics::ZnCollider* _collider0, const ZonaiPhysics::ZnCollider* _collider1,
-		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+		const ZonaiPhysics::ZnCollision& _collision) override
 	{
 		std::cout << "OnCollisionEnter " << _collision.contactCount << std::endl;
 	}
 	void OnCollisionStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
-		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+		const ZonaiPhysics::ZnCollision& _collision) override
 	{
 		std::cout << "OnCollisionStay " << _collision.contactCount << std::endl;
 	}
 	void OnCollisionExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*,
-		const ZonaiPhysics::ZnCollision& _collision) noexcept override
+		const ZonaiPhysics::ZnCollision& _collision) override
 	{
 		std::cout << "OnCollisionExit " << _collision.contactCount << std::endl;
 	}

@@ -9,8 +9,8 @@ namespace ZonaiPhysics
 	class ZnPrismaticJoint : public ZnJoint
 	{
 	public:
-		ZnPrismaticJoint() noexcept = default;
-		~ZnPrismaticJoint() noexcept override = default;
+		ZnPrismaticJoint() = default;
+		~ZnPrismaticJoint() override = default;
 
 	public:
 		virtual float GetPosition() const = 0;

@@ -13,9 +13,9 @@ namespace ZonaiPhysics
 	class CapsuleCollider : public Collider
 	{
 	public:
-		CapsuleCollider() noexcept = delete;
-		CapsuleCollider(physx::PxShape*, RigidBody*) noexcept;
-		~CapsuleCollider() noexcept override;
+		CapsuleCollider() = delete;
+		CapsuleCollider(physx::PxShape*, RigidBody*);
+		~CapsuleCollider() override;
 	};
 } // ZonaiPhysics
 

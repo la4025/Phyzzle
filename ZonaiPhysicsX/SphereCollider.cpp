@@ -6,16 +6,16 @@
 
 namespace ZonaiPhysics
 {
-	SphereCollider::SphereCollider(physx::PxShape* _pxShape, RigidBody* _znBody) noexcept :
+	SphereCollider::SphereCollider(physx::PxShape* _pxShape, RigidBody* _znBody) :
 		Collider(_pxShape, _znBody)
 	{
-		shape->userData = this;
+		pxShape->userData = this;
 	}
 
-	SphereCollider::~SphereCollider() noexcept
+	SphereCollider::~SphereCollider()
 	{
-		ColliderHelper::Release(shape);
-		shape = nullptr;
-		rigidbody = nullptr;
+		ColliderHelper::Release(pxShape);
+		pxShape = nullptr;
+		znBody = nullptr;
 	}
 }

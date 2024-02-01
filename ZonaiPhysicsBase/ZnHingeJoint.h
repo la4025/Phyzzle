@@ -10,8 +10,8 @@ namespace ZonaiPhysics
 	class ZnHingeJoint : public ZnJoint
 	{
 	public:
-		ZnHingeJoint() noexcept = default;
-		~ZnHingeJoint() noexcept override = default;
+		ZnHingeJoint() = default;
+		~ZnHingeJoint() override = default;
 
 	public:
 		// 관절 각도

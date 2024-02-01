@@ -7,8 +7,8 @@ namespace ZonaiPhysics
 	class ZnSphericalJoint : public ZnJoint
 	{
 	public:
-					ZnSphericalJoint() noexcept = default;
-					~ZnSphericalJoint() noexcept override = default;
+					ZnSphericalJoint() = default;
+					~ZnSphericalJoint() override = default;
 
 	public:
 		virtual void GetLimitAngle(float* _outY, float* _outZ) = 0;

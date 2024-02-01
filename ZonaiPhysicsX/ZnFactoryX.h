@@ -1,10 +1,6 @@
 #pragma once
 #include "EventCallback.h"
-#include "ZnCollider.h"
-#include "ZnJoint.h"
-
-#include "ZnMaterial.h"
-#include "ZnTransform.h"
+#include <Eigen/Dense>
 
 #include "PxPhysicsAPI.h"
 
@@ -31,6 +27,8 @@ namespace ZonaiPhysics
 	class DistanceJoint;
 	class SphericalJoint;
 	class HingeJoint;
+
+	class ZnTransform;
 }
 
 namespace ZonaiPhysics
@@ -50,16 +48,16 @@ namespace ZonaiPhysics
 		static RigidBody*				CreateRigidBody(void* _userData);
 
 		/// collider
-		static BoxCollider*				CreateBoxCollider(void* _userData, float _x, float _y, float _z, physx::PxMaterial* _material);
-		static SphereCollider*			CreateSphereCollider(void* _userData, float _radius, physx::PxMaterial* _material);
-		static CapsuleCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, physx::PxMaterial* _material);
+		static BoxCollider*				CreateBoxCollider(void* _userData, const Vector3f& _extend, const physx::PxMaterial* _material);
+		static SphereCollider*			CreateSphereCollider(void* _userData, float _radius, const physx::PxMaterial* _material);
+		static CapsuleCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, const physx::PxMaterial* _material);
 
 		/// joint
-		static FixedJoint*				CreateFixedJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
-		static PrismaticJoint*			CreatePrismaticJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
-		static DistanceJoint*			CreateDistanceJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
-		static SphericalJoint*			CreateSphericalJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
-		static HingeJoint*				CreateHingeJoint(void* _userData0, const ZnTransform& tm0, void* _userData1, const ZnTransform& tm1);
+		static FixedJoint*				CreateFixedJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
+		static PrismaticJoint*			CreatePrismaticJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
+		static DistanceJoint*			CreateDistanceJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
+		static SphericalJoint*			CreateSphericalJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
+		static HingeJoint*				CreateHingeJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
 
 	private:
 		static EventCallback eventCallback;

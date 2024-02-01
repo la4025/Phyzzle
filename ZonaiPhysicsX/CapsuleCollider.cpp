@@ -6,16 +6,16 @@
 
 namespace ZonaiPhysics
 {
-	CapsuleCollider::CapsuleCollider(physx::PxShape* _pxShape, RigidBody* _znBody) noexcept :
+	CapsuleCollider::CapsuleCollider(physx::PxShape* _pxShape, RigidBody* _znBody) :
 		Collider(_pxShape, _znBody)
 	{
-		shape->userData = this;
+		pxShape->userData = this;
 	}
 
-	CapsuleCollider::~CapsuleCollider() noexcept
+	CapsuleCollider::~CapsuleCollider()
 	{
-		ColliderHelper::Release(shape);
-		shape = nullptr;
-		rigidbody = nullptr;
+		ColliderHelper::Release(pxShape);
+		pxShape = nullptr;
+		znBody = nullptr;
 	}
 }

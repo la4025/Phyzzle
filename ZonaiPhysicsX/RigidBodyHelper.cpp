@@ -8,315 +8,315 @@
 
 namespace ZonaiPhysics
 {
-	void RigidBodyHelper::Detach(void* _body, void* _shape) noexcept
+	void RigidBodyHelper::Detach(void* _pxBody, void* _pxShape)
 	{
-		assert(_body != nullptr);
-		assert(_shape != nullptr);
+		assert(_pxBody != nullptr);
+		assert(_pxShape != nullptr);
 
-		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
-		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
+		const auto pxShape = static_cast<physx::PxShape*>(_pxShape);
 
 		pxBody->detachShape(*pxShape);
 	}
 
-	void RigidBodyHelper::Attach(void* _body, void* _shape) noexcept
+	void RigidBodyHelper::Attach(void* _pxBody, void* _pxShape)
 	{
-		assert(_body != nullptr);
-		assert(_shape != nullptr);
+		assert(_pxBody != nullptr);
+		assert(_pxShape != nullptr);
 
-		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
-		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
+		const auto pxShape = static_cast<physx::PxShape*>(_pxShape);
 
 		pxBody->attachShape(*pxShape);
 	}
 
-	void RigidBodyHelper::Release(void* _body) noexcept
+	void RigidBodyHelper::Release(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->release();
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->release();
 	}
 
-	void RigidBodyHelper::WakeUp(void* _body) noexcept
+	void RigidBodyHelper::WakeUp(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->wakeUp();
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->wakeUp();
 	}
 
-	bool RigidBodyHelper::IsSleeping(void* _body) noexcept
+	bool RigidBodyHelper::IsSleeping(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->isSleeping();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->isSleeping();
 	}
 
-	void RigidBodyHelper::UseGravity(void* _body, bool _value) noexcept
+	void RigidBodyHelper::UseGravity(void* _pxBody, bool _value)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !_value);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !_value);
 	}
 
-	void RigidBodyHelper::SetKinematic(void* _body, bool _value) noexcept
+	void RigidBodyHelper::SetKinematic(void* _pxBody, bool _value)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, _value);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, _value);
 	}
 
-	void RigidBodyHelper::UpdateInertiaTensor(void* _body) noexcept
+	void RigidBodyHelper::UpdateInertiaTensor(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		physx::PxRigidBodyExt::updateMassAndInertia(*static_cast<physx::PxRigidDynamic*>(_body), 1.f);
+		physx::PxRigidBodyExt::updateMassAndInertia(*static_cast<physx::PxRigidDynamic*>(_pxBody), 1.f);
 	}
 
-	void RigidBodyHelper::Disable(void* _body, bool _value)
+	void RigidBodyHelper::Disable(void* _pxBody, bool _value)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !_value);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !_value);
 	}
 
-	uint8_t RigidBodyHelper::GetDynamicLockFlags(void* _body) noexcept
+	uint8_t RigidBodyHelper::GetDynamicLockFlags(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getRigidDynamicLockFlags();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getRigidDynamicLockFlags();
 	}
 
-	void RigidBodyHelper::SetDynamicLockFlag(void* _body, uint8_t _flag, bool _value) noexcept
+	void RigidBodyHelper::SetDynamicLockFlag(void* _pxBody, uint8_t _flag, bool _value)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setRigidDynamicLockFlag(
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setRigidDynamicLockFlag(
 			static_cast<physx::PxRigidDynamicLockFlag::Enum>(_flag),
 			_value
 		);
 	}
 
-	void RigidBodyHelper::SetDynamicLockFlags(void* _body, uint8_t _flags) noexcept
+	void RigidBodyHelper::SetDynamicLockFlags(void* _pxBody, uint8_t _flags)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setRigidDynamicLockFlags(
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setRigidDynamicLockFlags(
 			static_cast<physx::PxRigidDynamicLockFlags>(_flags)
 		);
 	}
 
-	void* RigidBodyHelper::GetUserData(void* _body) noexcept
+	void* RigidBodyHelper::GetUserData(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->userData;
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->userData;
 	}
 
-	void RigidBodyHelper::SetUserData(void* _body, void* _userData) noexcept
+	void RigidBodyHelper::SetUserData(void* _pxBody, void* _userData)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->userData = _userData;
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->userData = _userData;
 	}
 
-	float RigidBodyHelper::GetMass(void* _body) noexcept
+	float RigidBodyHelper::GetMass(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getMass();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getMass();
 	}
 
-	void RigidBodyHelper::SetMass(void* _body, float _mass) noexcept
+	void RigidBodyHelper::SetMass(void* _pxBody, float _mass)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		pxBody->setMass(_mass);
 		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass);
 	}
 
-	float RigidBodyHelper::GetInvMass(void* _body) noexcept
+	float RigidBodyHelper::GetInvMass(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getInvMass();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getInvMass();
 	}
 
-	Eigen::Vector3f RigidBodyHelper::GetInertiaTensor(void* _body) noexcept
+	Eigen::Vector3f RigidBodyHelper::GetInertiaTensor(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_body)->getMassSpaceInertiaTensor());
+		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getMassSpaceInertiaTensor());
 	}
 
-	void RigidBodyHelper::SetInertiaTensor(void* _body, const Eigen::Vector3f& _tensor) noexcept
+	void RigidBodyHelper::SetInertiaTensor(void* _pxBody, const Eigen::Vector3f& _tensor)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setMassSpaceInertiaTensor(EigenToPhysx(_tensor));
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setMassSpaceInertiaTensor(EigenToPhysx(_tensor));
 	}
 
-	float RigidBodyHelper::GetLinearDamping(void* _body) noexcept
+	float RigidBodyHelper::GetLinearDamping(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getLinearDamping();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getLinearDamping();
 	}
 
-	void RigidBodyHelper::SetLinearDamping(void* _body, float _damping) noexcept
+	void RigidBodyHelper::SetLinearDamping(void* _pxBody, float _damping)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setLinearDamping(_damping);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setLinearDamping(_damping);
 	}
 
-	float RigidBodyHelper::GetAngularDamping(void* _body) noexcept
+	float RigidBodyHelper::GetAngularDamping(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getAngularDamping();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getAngularDamping();
 	}
 
-	void RigidBodyHelper::SetAngularDamping(void* _body, float _damping) noexcept
+	void RigidBodyHelper::SetAngularDamping(void* _pxBody, float _damping)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setAngularDamping(_damping);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setAngularDamping(_damping);
 	}
 
-	Eigen::Vector3f RigidBodyHelper::GetLinearVelocity(void* _body) noexcept
+	Eigen::Vector3f RigidBodyHelper::GetLinearVelocity(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_body)->getLinearVelocity());
+		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getLinearVelocity());
 	}
 
-	void RigidBodyHelper::SetLinearVelocity(void* _body, const Eigen::Vector3f& _velo) noexcept
+	void RigidBodyHelper::SetLinearVelocity(void* _pxBody, const Eigen::Vector3f& _velo)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setLinearVelocity(EigenToPhysx(_velo));
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setLinearVelocity(EigenToPhysx(_velo));
 	}
 
-	Eigen::Vector3f RigidBodyHelper::GetAngularVelocity(void* _body) noexcept
+	Eigen::Vector3f RigidBodyHelper::GetAngularVelocity(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_body)->getAngularVelocity());
+		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getAngularVelocity());
 	}
 
-	void RigidBodyHelper::SetAngularVelocity(void* _body, const Eigen::Vector3f& _velo) noexcept
+	void RigidBodyHelper::SetAngularVelocity(void* _pxBody, const Eigen::Vector3f& _velo)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setAngularVelocity(EigenToPhysx(_velo));
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setAngularVelocity(EigenToPhysx(_velo));
 	}
 
-	float RigidBodyHelper::GetMaxLinearVelocity(void* _body) noexcept
+	float RigidBodyHelper::GetMaxLinearVelocity(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getMaxLinearVelocity();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getMaxLinearVelocity();
 	}
 
-	void RigidBodyHelper::SetMaxLinearVelocity(void* _body, const float& _velo) noexcept
+	void RigidBodyHelper::SetMaxLinearVelocity(void* _pxBody, const float& _velo)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setMaxLinearVelocity(_velo);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setMaxLinearVelocity(_velo);
 	}
 
-	float RigidBodyHelper::GetMaxAngularVelocity(void* _body) noexcept
+	float RigidBodyHelper::GetMaxAngularVelocity(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return static_cast<physx::PxRigidDynamic*>(_body)->getMaxAngularVelocity();
+		return static_cast<physx::PxRigidDynamic*>(_pxBody)->getMaxAngularVelocity();
 	}
 
-	void RigidBodyHelper::SetMaxAngularVelocity(void* _body, const float& _velo) noexcept
+	void RigidBodyHelper::SetMaxAngularVelocity(void* _pxBody, const float& _velo)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setMaxAngularVelocity(_velo);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setMaxAngularVelocity(_velo);
 	}
 
-	Eigen::Vector3f RigidBodyHelper::GetPosition(void* _body) noexcept
+	Eigen::Vector3f RigidBodyHelper::GetPosition(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_body)->getGlobalPose().p);
+		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getGlobalPose().p);
 	}
 
-	void RigidBodyHelper::SetPosition(void* _body, const Eigen::Vector3f& _pos) noexcept
+	void RigidBodyHelper::SetPosition(void* _pxBody, const Eigen::Vector3f& _pos)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		physx::PxTransform t = pxBody->getGlobalPose();
 		t.p = EigenToPhysx(_pos);
 		pxBody->setGlobalPose(t);
 	}
 
-	Eigen::Quaternionf RigidBodyHelper::GetQuaternion(void* _body) noexcept
+	Eigen::Quaternionf RigidBodyHelper::GetQuaternion(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_body)->getGlobalPose().q);
+		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getGlobalPose().q);
 	}
 
-	void RigidBodyHelper::SetQuaternion(void* _body, const Eigen::Quaternionf& _quat) noexcept
+	void RigidBodyHelper::SetQuaternion(void* _pxBody, const Eigen::Quaternionf& _quat)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_body);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		physx::PxTransform t = pxBody->getGlobalPose();
 		t.q = EigenToPhysx(_quat);
 		pxBody->setGlobalPose(t);
 	}
 
-	void RigidBodyHelper::SetForceAndTorque(void* _body, const Eigen::Vector3f& _force,
-		const Eigen::Vector3f& _torque, ForceType _type) noexcept
+	void RigidBodyHelper::SetForceAndTorque(void* _pxBody, const Eigen::Vector3f& _force,
+		const Eigen::Vector3f& _torque, ForceType _type)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->setForceAndTorque(
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setForceAndTorque(
 			EigenToPhysx(_force),
 			EigenToPhysx(_torque),
 			static_cast<physx::PxForceMode::Enum>(_type)
 		);
 	}
 
-	void RigidBodyHelper::AddForce(void* _body, const Eigen::Vector3f& _force, ForceType _type) noexcept
+	void RigidBodyHelper::AddForce(void* _pxBody, const Eigen::Vector3f& _force, ForceType _type)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->addForce(
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->addForce(
 			EigenToPhysx(_force),
 			static_cast<physx::PxForceMode::Enum>(_type)
 		);
 	}
 
-	void RigidBodyHelper::ClearForce(void* _body) noexcept
+	void RigidBodyHelper::ClearForce(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->clearForce();
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->clearForce();
 	}
 
-	void RigidBodyHelper::AddTorque(void* _body, const Eigen::Vector3f& _torque, ForceType _type) noexcept
+	void RigidBodyHelper::AddTorque(void* _pxBody, const Eigen::Vector3f& _torque, ForceType _type)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->addTorque(
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->addTorque(
 			EigenToPhysx(_torque),
 			static_cast<physx::PxForceMode::Enum>(_type)
 		);
 	}
 
-	void RigidBodyHelper::ClearTorque(void* _body) noexcept
+	void RigidBodyHelper::ClearTorque(void* _pxBody)
 	{
-		assert(_body != nullptr);
+		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_body)->clearTorque();
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->clearTorque();
 	}
 }

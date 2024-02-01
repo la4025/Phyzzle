@@ -1,11 +1,9 @@
-
 #include <PxShape.h>
 
-#include "ColliderHelper.h"
-
-#include "RigidBodyHelper.h"
 #include "ZnLayer.h"
 #include "ZnUtil.h"
+
+#include "ColliderHelper.h"
 
 namespace ZonaiPhysics
 {
@@ -23,7 +21,8 @@ namespace ZonaiPhysics
 		assert(_shape != nullptr);
 
 		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		_value ? _pxShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !_value) : 0;
+
+		_pxShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !_value);
 		_pxShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, _value);
 	}
 

@@ -8,16 +8,16 @@
 
 namespace ZonaiPhysics
 {
-	BoxCollider::BoxCollider(physx::PxShape* _pxShape, RigidBody* _znBody) noexcept:
+	BoxCollider::BoxCollider(physx::PxShape* _pxShape, RigidBody* _znBody):
 		Collider(_pxShape, _znBody)
 	{
-		shape->userData = this;
+		pxShape->userData = this;
 	}
 
-	BoxCollider::~BoxCollider() noexcept
+	BoxCollider::~BoxCollider()
 	{
-		ColliderHelper::Release(shape);
-		shape = nullptr;
-		rigidbody = nullptr;
+		ColliderHelper::Release(pxShape);
+		pxShape = nullptr;
+		znBody = nullptr;
 	}
 }

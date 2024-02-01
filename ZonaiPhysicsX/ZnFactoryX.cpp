@@ -1,5 +1,3 @@
-#include <PxPhysics.h>
-
 #include "FilterCallback.h"
 
 #include "RigidBody.h"
@@ -15,6 +13,8 @@
 #include "HingeJoint.h"
 
 #include "ZnUtil.h"
+
+#include "ZnTransform.h"
 
 #include "ZnFactoryX.h"
 
@@ -113,19 +113,19 @@ namespace ZonaiPhysics
 		return znBody;
 	}
 
-	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _userData, float _x, float _y, float _z, physx::PxMaterial* _material)
+	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _userData, const Vector3f& _extend, const physx::PxMaterial* _material)
 	{
 		assert(_userData != nullptr);
 
 		const auto znBody = static_cast<RigidBody*>(_userData);
-		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_x, _y, _z), *_material);
+		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, BoxCollider Initialize Error");
 
 		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
 		return znBoxCollider;
 	}
 
-	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _userData, float _radius, physx::PxMaterial* _material)
+	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _userData, float _radius, const physx::PxMaterial* _material)
 	{
 		assert(_userData != nullptr);
 
@@ -137,7 +137,7 @@ namespace ZonaiPhysics
 		return znSphereCollider;
 	}
 
-	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _userData, float _radius, float _height, physx::PxMaterial* _material)
+	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _userData, float _radius, float _height, const physx::PxMaterial* _material)
 	{
 		assert(_userData != nullptr);
 
@@ -149,75 +149,88 @@ namespace ZonaiPhysics
 		return znCapsuleCollider;
 	}
 
-	FixedJoint* ZnFactoryX::CreateFixedJoint(void* _znBody0, const ZnTransform& tm0, void* _znBody1, const ZnTransform& tm1)
+	FixedJoint* ZnFactoryX::CreateFixedJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<RigidBody*>(_znBody0)->pxBody;
-		const auto pxbody1 = static_cast<RigidBody*>(_znBody1)->pxBody;
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
-		auto joint = physx::PxFixedJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
-		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
+		const auto joint = physx::PxFixedJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
+		assert(joint != nullptr, "ZonaiPhysicsX :: Fixed Joint Initialize Error");
 
-		auto znFixedJoint = new FixedJoint(joint, );
-		znFixedJoint->joint = 
+		const auto znFixedJoint = new FixedJoint(joint, _znBody0, _znBody1);
+
+		return znFixedJoint;
 	}
 
-	PrismaticJoint* ZnFactoryX::CreatePrismaticJoint(void* _pxBody0, const ZnTransform& tm0, void* _pxBody1, const ZnTransform& tm1)
+	PrismaticJoint* ZnFactoryX::CreatePrismaticJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_pxBody0);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_pxBody1);
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
-		auto joint = physx::PxPrismaticJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
-		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
+		const auto joint = physx::PxPrismaticJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
+		assert(joint != nullptr, "ZonaiPhysicsX :: Prismatic Joint Initialize Error");
 
+		const auto znPrismaticJoint = new PrismaticJoint(joint, _znBody0, _znBody1, &pxFactory->getTolerancesScale());
+
+		return znPrismaticJoint;
 	}
 
-	DistanceJoint* ZnFactoryX::CreateDistanceJoint(void* _pxBody0, const ZnTransform& tm0, void* _pxBody1, const ZnTransform& tm1)
+	DistanceJoint* ZnFactoryX::CreateDistanceJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_pxBody0);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_pxBody1);
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
-		auto joint = physx::PxDistanceJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
+		const auto joint = physx::PxDistanceJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
 		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
 
+		const auto znDistanceJoint = new DistanceJoint(joint, _znBody0, _znBody1);
+
+		return znDistanceJoint;
 	}
 
-	SphericalJoint* ZnFactoryX::CreateSphericalJoint(void* _pxBody0, const ZnTransform& tm0, void* _pxBody1, const ZnTransform& tm1)
+	SphericalJoint* ZnFactoryX::CreateSphericalJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_pxBody0);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_pxBody1);
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
-		auto joint = physx::PxSphericalJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
-		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
+		const auto joint = physx::PxSphericalJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
+		assert(joint != nullptr, "ZonaiPhysicsX :: Spherical Joint Initialize Error");
 
+		auto znSphericalJoint = new SphericalJoint(joint, _znBody0, _znBody1);
+
+		return znSphericalJoint;
 	}
 
-	HingeJoint* ZnFactoryX::CreateHingeJoint(void* _pxBody0, const ZnTransform& tm0, void* _pxBody1, const ZnTransform& tm1)
+	HingeJoint* ZnFactoryX::CreateHingeJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_pxBody0);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_pxBody1);
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
-		auto joint = physx::PxRevoluteJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
-		assert(joint != nullptr, "ZonaiPhysicsX :: Distance Joint Initialize Error");
+		const auto joint = physx::PxRevoluteJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
+		assert(joint != nullptr, "ZonaiPhysicsX :: Hinge Joint Initialize Error");
 
+		const auto znHingeJoint = new HingeJoint(joint, _znBody0, _znBody1);
+
+		return znHingeJoint;
 	}
 }

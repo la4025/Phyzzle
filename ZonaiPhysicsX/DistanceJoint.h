@@ -7,7 +7,7 @@
 namespace physx
 {
 	class PxPhysics;
-	class PxFixedJoint;
+	class PxDistanceJoint;
 }
 
 namespace ZonaiPhysics
@@ -19,12 +19,13 @@ namespace ZonaiPhysics
 	class DistanceJoint : public TemplateJoint<ZnDistanceJoint, physx::PxDistanceJoint>
 	{
 	public:
-		DistanceJoint() noexcept = delete;
-		DistanceJoint(
-			physx::PxPhysics*& _factory,
-			RigidBody* _object0, const ZnTransform& _transform0,
-			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
-		~DistanceJoint() noexcept override;
+		DistanceJoint() = delete;
+		DistanceJoint(physx::PxDistanceJoint*, RigidBody*, RigidBody*);
+		//DistanceJoint(
+		//	physx::PxPhysics*& _factory,
+		//	RigidBody* _object0, const ZnTransform& _transform0,
+		//	RigidBody* _object1, const ZnTransform& _transform1);
+		~DistanceJoint() override;
 
 	public:
 		float GetDistance() const override;

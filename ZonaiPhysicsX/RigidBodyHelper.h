@@ -8,73 +8,73 @@ namespace ZonaiPhysics
 	class RigidBodyHelper
 	{
 	public:
-		static void				Detach(void* _body, void* _shape) noexcept;
-		static void				Attach(void* _body, void* _shape) noexcept;
+		static void				Detach(void* _body, void* _shape);
+		static void				Attach(void* _body, void* _shape);
 
 	public:
-		static void				Release(void*) noexcept;
+		static void				Release(void*);
 
-		static void				WakeUp(void*) noexcept;
-		static bool				IsSleeping(void*) noexcept;
+		static void				WakeUp(void*);
+		static bool				IsSleeping(void*);
 
-		static void				UseGravity(void*, bool) noexcept;
+		static void				UseGravity(void*, bool);
 
-		static void				SetKinematic(void*, bool) noexcept;
+		static void				SetKinematic(void*, bool);
 
-		static void				UpdateInertiaTensor(void*) noexcept;
+		static void				UpdateInertiaTensor(void*);
 
 		static void				Disable(void*, bool);
 
-		static uint8_t			GetDynamicLockFlags(void*) noexcept;
-		static void				SetDynamicLockFlag(void*, uint8_t flag, bool) noexcept;
-		static void				SetDynamicLockFlags(void*, uint8_t flags) noexcept;
+		static uint8_t			GetDynamicLockFlags(void*);
+		static void				SetDynamicLockFlag(void*, uint8_t flag, bool);
+		static void				SetDynamicLockFlags(void*, uint8_t flags);
 
-		static void*			GetUserData(void*) noexcept;
-		static void				SetUserData(void*, void*) noexcept;
+		static void*			GetUserData(void*);
+		static void				SetUserData(void*, void*);
 
 	public:
 		// Áú·®
-		static float			GetMass(void*) noexcept;
-		static void				SetMass(void*,float) noexcept;
-		static float			GetInvMass(void*) noexcept;
+		static float			GetMass(void*);
+		static void				SetMass(void*,float);
+		static float			GetInvMass(void*);
 
-		static Eigen::Vector3f	GetInertiaTensor(void*) noexcept;
-		static void				SetInertiaTensor(void*, const Eigen::Vector3f&) noexcept;
+		static Eigen::Vector3f	GetInertiaTensor(void*);
+		static void				SetInertiaTensor(void*, const Eigen::Vector3f&);
 
-		static float			GetLinearDamping(void*) noexcept;
-		static void				SetLinearDamping(void*, float) noexcept;
+		static float			GetLinearDamping(void*);
+		static void				SetLinearDamping(void*, float);
 
-		static float			GetAngularDamping(void*) noexcept;
-		static void				SetAngularDamping(void*, float) noexcept;
+		static float			GetAngularDamping(void*);
+		static void				SetAngularDamping(void*, float);
 
 	public:
 		// ¼Óµµ
-		static Eigen::Vector3f	GetLinearVelocity(void*) noexcept;
-		static void				SetLinearVelocity(void*, const Eigen::Vector3f&) noexcept;
+		static Eigen::Vector3f	GetLinearVelocity(void*);
+		static void				SetLinearVelocity(void*, const Eigen::Vector3f&);
 
-		static Eigen::Vector3f	GetAngularVelocity(void*) noexcept;
-		static void				SetAngularVelocity(void*, const Eigen::Vector3f&) noexcept;
+		static Eigen::Vector3f	GetAngularVelocity(void*);
+		static void				SetAngularVelocity(void*, const Eigen::Vector3f&);
 
-		static float			GetMaxLinearVelocity(void*) noexcept;
-		static void				SetMaxLinearVelocity(void*, const float&) noexcept;
+		static float			GetMaxLinearVelocity(void*);
+		static void				SetMaxLinearVelocity(void*, const float&);
 
-		static float			GetMaxAngularVelocity(void*) noexcept;
-		static void				SetMaxAngularVelocity(void*, const float&) noexcept;
+		static float			GetMaxAngularVelocity(void*);
+		static void				SetMaxAngularVelocity(void*, const float&);
 
-		static Eigen::Vector3f	GetPosition(void*) noexcept;
-		static void				SetPosition(void*, const Eigen::Vector3f&) noexcept;
+		static Eigen::Vector3f	GetPosition(void*);
+		static void				SetPosition(void*, const Eigen::Vector3f&);
 
-		static Eigen::Quaternionf	GetQuaternion(void*) noexcept;
-		static void				SetQuaternion(void*, const Eigen::Quaternionf&) noexcept;
+		static Eigen::Quaternionf	GetQuaternion(void*);
+		static void				SetQuaternion(void*, const Eigen::Quaternionf&);
 
 		// Èû
-		static void				SetForceAndTorque(void*, const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type) noexcept;
+		static void				SetForceAndTorque(void*, const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type);
 
-		static void				AddForce(void*, const Eigen::Vector3f&, ForceType) noexcept;
-		static void				ClearForce(void*) noexcept;
+		static void				AddForce(void*, const Eigen::Vector3f&, ForceType);
+		static void				ClearForce(void*);
 
-		static void				AddTorque(void*, const Eigen::Vector3f&, ForceType) noexcept;
-		static void				ClearTorque(void*) noexcept;
+		static void				AddTorque(void*, const Eigen::Vector3f&, ForceType);
+		static void				ClearTorque(void*);
 	};
 }
 

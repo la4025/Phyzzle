@@ -29,69 +29,81 @@ namespace ZonaiPhysics
 	{
 		for (auto& [scene, bodyList] : bodies)
 		{
-			for(auto& body : bodyList)
+			for(auto& znBody : bodyList | std::views::values)
 			{
-				body ? delete body : 0;
-				body = nullptr;
+				if (znBody)
+				{
+					delete znBody;
+					znBody = nullptr;
+				}
 			}
 
 			bodyList.clear();
-			scene->release();
+			sceneList[scene]->release();
 		}
 
 		bodies.clear();
 
 		for (auto& Scene : sceneList | std::views::values)
 		{
-			Scene ? Scene->release() : 0;
+			Scene->release();
 			Scene = nullptr;
 		}
 
 		sceneList.clear();
+
+		for (auto& material : materials | std::views::values)
+		{
+			material->release();
+			material = nullptr;
+		}
+
+		materials.clear();
 	}
 
-	void ZnWorld::AddScene(void* _key, physx::PxScene* _scene)
+	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
 	{
-		assert(_key != nullptr && _scene != nullptr);
+		assert(_userScene != nullptr && _pxScene != nullptr);
 
-		sceneList.insert({ _key, _scene });
+		sceneList.insert({ _userScene, _pxScene });
 	}
 
-	void ZnWorld::LoadScene(void* _key)
+	void ZnWorld::LoadScene(void* _userScene)
 	{
-		assert(_key != nullptr && (sceneList.find(_key) == sceneList.end()));
+		assert(_userScene != nullptr);
 
-		currScene = sceneList[_key];
+		currScene = sceneList[_userScene];
 	}
 
-	void ZnWorld::UnloadScene(void* _key)
+	void ZnWorld::UnloadScene(void* _userScene)
 	{
-		auto& scene = sceneList[_key];
+		assert(_userScene != nullptr);
+		auto& scene = sceneList[_userScene];
 		assert(scene != nullptr);
 
 		auto& bodylist = bodies[scene];
 
-		for (auto& body : bodylist)
+		for (auto& znBody : bodylist | std::views::values)
 		{
-			if (body)
+			if (znBody)
 			{
-				delete body;
-				body = nullptr;
+				delete znBody;
+				znBody = nullptr;
 			}
 		}
 
 		bodylist.clear();
 		PX_RELEASE(scene);
-		sceneList.erase(_key);
+		sceneList.erase(_userScene);
 	}
 
-	void ZnWorld::SetGravity(const Vector3f& _gravity, void* _scene)
+	void ZnWorld::SetGravity(const Vector3f& _gravity, void* _userScene)
 	{
 		assert(currScene != nullptr);
 
-		_scene ? 
-			currScene->setGravity(EigenToPhysx(_gravity)) :
-			static_cast<physx::PxScene*>(_scene)->setGravity(EigenToPhysx(_gravity));
+		_userScene ?
+			sceneList[_userScene]->setGravity(EigenToPhysx(_gravity)) :
+			currScene->setGravity(EigenToPhysx(_gravity));
 	}
 
 	bool ZnWorld::Raycast(const Vector3f& _from, const Vector3f& _to, float _distance, ZnRaycastInfo& _out)
@@ -128,33 +140,60 @@ namespace ZonaiPhysics
 		return false;
 	}
 
-	void ZnWorld::AddBody(void* _znBody, void* _scene)
+	void ZnWorld::AddBody(void* _znBody, void* _userScene)
 	{
 		assert(currScene != nullptr);
-		assert(_scene && _znBody);
+		assert(_znBody != nullptr);
 
-		const auto body = static_cast<RigidBody*>(_znBody);
-		const auto pxbody = static_cast<physx::PxRigidDynamic*>(body->pxBody);
-		physx::PxScene* scene = _scene ? static_cast<physx::PxScene*>(_scene) : currScene;
-		scene->addActor(*pxbody);
+		const auto znBody = static_cast<RigidBody*>(_znBody);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(znBody->pxBody);
+		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
+		scene->addActor(*pxBody);
 
-		bodies[scene].push_back(body);
+		bodies[scene].insert(std::make_pair(znBody->userData, znBody));
 	}
 
-	RigidBody* ZnWorld::GetBody(void* _znBody, void* _userScene)
+	void ZnWorld::RemoveBody(void* _znBody, void* _userScene)
 	{
-		const physx::PxScene* scene = nullptr;
+		assert(currScene != nullptr);
+		assert(_znBody != nullptr);
+
+		const auto znBody = static_cast<RigidBody*>(_znBody);
+		const auto pxBody = static_cast<physx::PxRigidDynamic*>(znBody->pxBody);
+		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
+		scene->removeActor(*pxBody);
+
+		delete znBody;
+		bodies[scene].erase(znBody->userData);
+	}
+
+	RigidBody* ZnWorld::GetBody(void* _userData, void* _userScene)
+	{
+		assert(currScene != nullptr);
+		assert(_userData != nullptr);
+
+		physx::PxScene* scene = nullptr;
 		scene = _userScene ? sceneList[_userScene] : currScene;
 
-		scene;
+		auto& bodyList = bodies[scene];
+		if (bodyList.contains(_userData))
+			return bodyList[_userData];
+		
+		return nullptr;
 	}
 
-	/// 수정 필요
-	void ZnWorld::AddMaterial(void* _material)
+	void ZnWorld::AddMaterial(uint32_t _id, physx::PxMaterial* _material)
 	{
 		assert(_material != nullptr);
 
-		const auto material = static_cast<physx::PxMaterial*>(_material);
-		materials.insert(material);
+		materials.insert(std::make_pair(_id, _material));
+	}
+
+	physx::PxMaterial* ZnWorld::GetMaterial(uint32_t _id)
+	{
+		if (materials.contains(_id))
+			return materials[_id];
+
+		return nullptr;
 	}
 }

@@ -23,10 +23,10 @@ namespace ZonaiPhysics
 	class SphereCollider : public Collider
 	{
 	public:
-		SphereCollider() noexcept = delete;
-		SphereCollider(physx::PxShape*, RigidBody*) noexcept;
-		// SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&) noexcept;
-		~SphereCollider() noexcept override;
+		SphereCollider() = delete;
+		SphereCollider(physx::PxShape*, RigidBody*);
+		// SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&);
+		~SphereCollider() override;
 	};
 } // ZonaiPhysics
 

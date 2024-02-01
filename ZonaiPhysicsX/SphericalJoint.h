@@ -19,12 +19,13 @@ namespace ZonaiPhysics
 	class SphericalJoint : public TemplateJoint<ZnSphericalJoint, physx::PxSphericalJoint>
 	{
 	public:
-		SphericalJoint() noexcept = delete;
-		SphericalJoint(
-			physx::PxPhysics*& _factory,
-			RigidBody* _object0, const ZnTransform& _transform0,
-			RigidBody* _object1, const ZnTransform& _transform1) noexcept;
-		~SphericalJoint() noexcept override;
+		SphericalJoint() = delete;
+		SphericalJoint(physx::PxSphericalJoint*, RigidBody*, RigidBody*);
+		//SphericalJoint(
+		//	physx::PxPhysics*& _factory,
+		//	RigidBody* _object0, const ZnTransform& _transform0,
+		//	RigidBody* _object1, const ZnTransform& _transform1);
+		~SphericalJoint() override;
 
 	public:
 		void GetLimitAngle(float* _outY, float* _outZ) override;

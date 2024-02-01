@@ -11,7 +11,7 @@ namespace ZonaiPhysics
 	/*FixedJoint::FixedJoint(
 		physx::PxPhysics*& _factory,
 		RigidBody* _object0, const ZnTransform& _transform0,
-		RigidBody* _object1, const ZnTransform& _transform1) noexcept
+		RigidBody* _object1, const ZnTransform& _transform1)
 	{
 		rigidbody0 = _object0;
 		rigidbody1 = _object1;
@@ -51,14 +51,14 @@ namespace ZonaiPhysics
 		}
 	}*/
 
-	FixedJoint::FixedJoint(physx::PxFixedJoint* _pxJoint, RigidBody* _znBody0, RigidBody* _znBody1) noexcept
+	FixedJoint::FixedJoint(physx::PxFixedJoint* _pxJoint, RigidBody* _znBody0, RigidBody* _znBody1)
 	{
 		joint = _pxJoint;
 		rigidbody0 = _znBody0;
 		rigidbody1 = _znBody1;
 	}
 
-	FixedJoint::~FixedJoint() noexcept
+	FixedJoint::~FixedJoint()
 	{
 		rigidbody0 = nullptr;
 		rigidbody1 = nullptr;

@@ -4,10 +4,10 @@
 
 namespace ZonaiPhysics
 {
-	void JointHelper::Release(void* _joint)
+	void JointHelper::Release(void* _pxJoint)
 	{
-		assert(_joint != nullptr);
+		assert(_pxJoint != nullptr);
 
-		static_cast<physx::PxJoint*>(_joint)->release();
+		static_cast<physx::PxJoint*>(_pxJoint)->release();
 	}
 }

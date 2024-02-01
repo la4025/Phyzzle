@@ -389,18 +389,18 @@ class PxScene : public PxSceneSQSystem
 	virtual	bool				addActors(const PxPruningStructure& pruningStructure) = 0;
 
 	/**
-	\brief Removes an actor from this scene.
+	\brief 이 장면에서 액터를 제거합니다.
 
-	\note If the actor is not part of this scene (see #PxActor::getScene), the call is ignored and an error is issued.
+	\note 만약 액터가 이 장면의 일부가 아닌 경우 (참조: #PxActor::getScene), 호출은 무시되고 오류가 발생합니다.
 
-	\note You can not remove individual articulation links (see #PxArticulationLink) from the scene. Use #removeArticulation() instead.
+	\note 개별 관절 링크 (참조: #PxArticulationLink)를 장면에서 제거할 수 없습니다. 대신 #removeArticulation()을 사용하세요.
 
-	\note If the actor is a PxRigidActor then all assigned PxConstraint objects will get removed from the scene automatically.
+	\note 만약 액터가 PxRigidActor인 경우 모든 할당된 PxConstraint 객체가 자동으로 장면에서 제거됩니다.
 
-	\note If the actor is in an aggregate it will be removed from the aggregate.
+	\note 액터가 어그리게이트에 속해 있다면 어그리게이트에서 제거됩니다.
 
-	\param[in] actor Actor to remove from scene.
-	\param[in] wakeOnLostTouch Specifies whether touching objects from the previous frame should get woken up in the next frame. Only applies to PxArticulationReducedCoordinate and PxRigidActor types.
+	\param[in] actor 장면에서 제거할 액터입니다.
+	\param[in] wakeOnLostTouch 지난 프레임에서의 접촉이 끊긴 객체를 다음 프레임에 깨울 지 여부를 지정합니다. PxArticulationReducedCoordinate 및 PxRigidActor 유형에만 적용됩니다.
 
 	@see PxActor, PxAggregate
 	*/
