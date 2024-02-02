@@ -153,21 +153,21 @@ int snippetMain(int, const char* const*)
 
 	physicsEngine->Initialize(&event);
 	
-	physicsEngine->CreateScene(dscene, { 0.f, 9.81f, 0.f });
+	physicsEngine->CreateScene(dscene, { 0.f, -9.81f, 0.f });
 	physicsEngine->LoadScene(dscene);
 
 	physicsEngine->AddMaterial(0, 0.4f, 0.5f, 0.1f);
-	physicsEngine->AddMaterial(1, 0.7f, 0.7f, 0.9f);
+	physicsEngine->AddMaterial(1, 0.7f, 0.7f, 0.2f);
 	physicsEngine->AddMaterial(2, 0.7f, 0.7f, 0.9f);
 
 	auto collider = physicsEngine->CreateBoxCollider(drigid, { 2.f, 0.5f, 6.f }, 0, dscene);
-	const auto rigid = physicsEngine->CreateRigidBody(drigid, dscene);
-	rigid->SetMaxLinearVelocity(100.f);
+	const auto rigid = physicsEngine->CreateRigidBody(drigid);
+	rigid->SetMaxLinearVelocity(10.f);
 	rigid->SetPosition({0.f, 15.f, 0.f});
-	rigid->UseGravity(false);
+	rigid->UseGravity(true);
 
 	auto collider2 = physicsEngine->CreateSphereCollider(drigid2, 2.f, 1, dscene);
-	const auto rigid2 = physicsEngine->CreateRigidBody(drigid2);
+	// const auto rigid2 = physicsEngine->CreateRigidBody(drigid2);
 	collider2->SetPosition({ 0.f, 3.f, 0.f });
 	collider2->SetTrigger(true);
 

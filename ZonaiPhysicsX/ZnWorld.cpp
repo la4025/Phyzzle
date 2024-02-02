@@ -153,7 +153,7 @@ namespace ZonaiPhysics
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 		scene->addActor(*pxBody);
 
-		bodies[_userScene].insert(std::make_pair(znBody->userData, znBody));
+		bodies[scene].insert(std::make_pair(znBody->userData, znBody));
 	}
 
 	void ZnWorld::RemoveBody(void* _znBody, void* _userScene)
@@ -166,7 +166,7 @@ namespace ZonaiPhysics
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 		scene->removeActor(*pxBody);
 
-		bodies[_userScene].erase(znBody->userData);
+		bodies[scene].erase(znBody->userData);
 		delete znBody;
 	}
 

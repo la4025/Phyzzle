@@ -127,9 +127,9 @@ namespace ZonaiPhysics
 		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, BoxCollider Initialize Error");
 
+		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
 		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
-		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
 		return znBoxCollider;
 	}
 
@@ -141,9 +141,9 @@ namespace ZonaiPhysics
 		const auto pxShape = pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, SphereCollider Initialize Error");
 
+		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
 		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
-		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
 		return znSphereCollider;
 	}
 
@@ -155,9 +155,9 @@ namespace ZonaiPhysics
 		const auto pxShape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
 		assert(pxShape != nullptr, "ZonaiPhysicsX::ZnFactoryX, Capsule Initialize Error");
 
+		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
 		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 
-		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
 		return znCapsuleCollider;
 	}
 

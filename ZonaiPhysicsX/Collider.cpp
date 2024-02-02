@@ -25,7 +25,9 @@ namespace ZonaiPhysics
 
 	void Collider::SetLayerData(const uint32_t& _id)
 	{
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetLayer(pxShape, _id);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
 	}
 
 	/// <summary>
