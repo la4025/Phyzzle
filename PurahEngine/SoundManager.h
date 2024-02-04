@@ -31,6 +31,7 @@ namespace PurahEngine
 		FMOD::System* system;
 
 		FMOD::Channel* bgmChannel;
+		FMOD::Channel* effectChannel;
 		FMOD::ChannelGroup* effectChannelGroup;
 
 		std::unordered_map<std::wstring, FMOD::Sound*> bgmSounds;

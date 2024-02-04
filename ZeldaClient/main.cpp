@@ -34,6 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	static TextureID textureID = TextureID::ID_NULL;
 	static ModelID modelID = ModelID::ID_NULL;
 	static CameraID cameraID = CameraID::ID_NULL;
+	static LightID lightID = LightID::ID_NULL;
 
 	// camera
 	{
@@ -147,13 +148,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
-	/*textureID = renderer->CreateTexture(L"mang.jpg");
+	textureID = renderer->CreateTexture(L"mang.jpg");
 	if (textureID == TextureID::ID_NULL)
 	{
 		assert(0);
 	}
-	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);*/
+	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
 
+
+	PurahEngine::GameObject* light = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"light");
+	light->AddComponent<PurahEngine::Renderer>();
+
+	lightID = renderer->CreateDirectionalLight(Eigen::Vector3f(0.2f, 0.2f, 0.2f), Eigen::Vector3f(1.0f, 1.0f, 1.0f), Eigen::Vector3f(1.0f, 1.0f, 1.0f), Eigen::Vector3f(1.0f, 1.0f, 1.0f));
+
+	light->GetComponent<PurahEngine::Renderer>()->AddLight(lightID);
 
 	//PurahEngine::Run(); ¿ªÇÒ
 	CreateRun(nCmdShow);

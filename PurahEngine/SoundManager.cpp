@@ -30,14 +30,14 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const s
 	FMOD::Sound* sound;
 	FMOD_RESULT result;
 
+	// wstring을 string으로 변환하는 방법
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+	std::string str = converter.to_bytes(filePath);
+
 	switch (type)
 	{
 		case SoundType::BGM:
 		{
-			// wstring을 string으로 변환하는 방법
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-			std::string str = converter.to_bytes(filePath);
-
 			result = system->createSound(str.c_str(), FMOD_LOOP_NORMAL, 0, &sound);
 
 			assert(result == FMOD_OK);
@@ -49,6 +49,11 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const s
 
 		case SoundType::EFFECT:
 		{
+			result = system->createSound(str.c_str(), FMOD_DEFAULT, 0, &sound);
+
+			assert(result == FMOD_OK);
+
+			effectSounds[soundName] = sound;
 
 			break;
 		}
@@ -67,7 +72,7 @@ void PurahEngine::SoundManager::Play(const std::wstring& soundName)
 
 		bool isPlaying;
 		bgmChannel->isPlaying(&isPlaying);
-		
+
 		if (isPlaying)
 		{
 			bgmChannel->stop();
@@ -75,6 +80,14 @@ void PurahEngine::SoundManager::Play(const std::wstring& soundName)
 
 		system->playSound(sound, 0, false, &bgmChannel);
 	}
+
+	iter = effectSounds.find(soundName);
+	if (iter != effectSounds.end())
+	{
+		sound = iter->second;
+		system->playSound(sound, 0, false, &effectChannel);
+	}
+
 }
 
 void PurahEngine::SoundManager::Update()
@@ -85,7 +98,7 @@ void PurahEngine::SoundManager::Update()
 PurahEngine::SoundManager::SoundManager()
 	: system(nullptr), bgmChannel(nullptr), effectChannelGroup(nullptr)
 {
-	
+
 }
 
 PurahEngine::SoundManager::~SoundManager()

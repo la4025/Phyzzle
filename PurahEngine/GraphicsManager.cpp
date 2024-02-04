@@ -56,7 +56,6 @@ void PurahEngine::GraphicsManager::Run()
 		render->Render(renderer);
 	}
 
-
 	renderer->EndDraw();
 }
 
