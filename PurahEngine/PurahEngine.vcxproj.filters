@@ -104,6 +104,9 @@
     <ClCompile Include="FixedJoint.cpp">
       <Filter>Physics\Component\Joint</Filter>
     </ClCompile>
+    <ClCompile Include="EventCallbackSystem.cpp">
+      <Filter>Physics\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -159,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="FixedJoint.h">
       <Filter>Physics\Component\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="EventCallbackSystem.h">
+      <Filter>Physics\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

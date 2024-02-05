@@ -2,6 +2,7 @@
 #include "../ZonaiPhysicsBase/ZnPhysicsBase.h"
 #include <cassert>
 
+#include "EventCallbackSystem.h"
 #include "RigidBody.h"
 
 namespace PurahEngine
@@ -32,7 +33,9 @@ namespace PurahEngine
 			assert(0);
 		}
 
-		physics->Initialize();
+		callbackSystem = new EventCallbackSystem;
+
+		physics->Initialize(callbackSystem);
 	}
 
 	void PhysicsSystem::Simulation(float _dt) noexcept
@@ -56,14 +59,24 @@ namespace PurahEngine
 		FreeLibrary(ZonaiPhysicsXDLL);
 	}
 
-	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(const std::wstring& _id) noexcept
+	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(void* _gameObject) const noexcept
 	{
-		return physics->CreateRigidBody(_id);
+		return physics->CreateRigidBody(_gameObject);
 	}
 
-	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateBoxCollider(const std::wstring& _id, float x, float y, float z) noexcept
+	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateBoxCollider(void* _gameObject, float x, float y, float z) const noexcept
 	{
-		return physics->CreateBoxCollider(_id, x, y, z);
+		return physics->CreateBoxCollider(_gameObject, { x, y, z }, 0);
+	}
+
+	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateSphereCollider(void* _gameObject, float radius) const noexcept
+	{
+		return physics->CreateSphereCollider(_gameObject, radius, 0);
+	}
+
+	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateCapsuleCollider(void* _gameObject, float radius, float height) const noexcept
+	{
+		return physics->CreateCapsuleCollider(_gameObject, radius, height, 0);
 	}
 
 	PurahEngine::PhysicsSystem& PurahEngine::PhysicsSystem::GetInstance()

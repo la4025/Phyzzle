@@ -58,6 +58,10 @@ namespace ZonaiPhysics
 			const Eigen::Vector3f& _gravity, 
 			void* _userScene = nullptr) = 0;
 
+		virtual void				SetCollisionLayerData(
+			uint32_t _layer,
+			const std::initializer_list<uint32_t>& _data) = 0;
+
 	public:
 		/// <summary>
 		/// Create RigidBoby

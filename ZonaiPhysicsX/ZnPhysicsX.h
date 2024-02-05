@@ -68,7 +68,7 @@ namespace ZonaiPhysics
 
 		void SetCollisionLayerData(
 			uint32_t _layer, 
-			const std::initializer_list<uint32_t>& _data);
+			const std::initializer_list<uint32_t>& _data) override;
 
 	public:
 		/// <summary>

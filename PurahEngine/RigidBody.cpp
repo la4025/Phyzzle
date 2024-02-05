@@ -18,8 +18,7 @@ namespace PurahEngine
 
 	void RigidBody::Awake()
 	{
-		auto name = GetGameObject()->GetName();
-		body = PhysicsSystem::GetInstance().CreateRigidBody(name);
+		body = PhysicsSystem::GetInstance().CreateRigidBody(GetGameObject());
 		PhysicsSystem::GetInstance().bodies.push_back(this);
 		awake = false;
 		auto trans = GetGameObject()->GetComponent<Transform>();
@@ -69,17 +68,17 @@ namespace PurahEngine
 	}
 
 	/// 
-	ZonaiPhysics::DynamicLocks RigidBody::GetDynamicLockFlags() const noexcept
+	uint32_t RigidBody::GetDynamicLockFlags() const noexcept
 	{
 		return body->GetDynamicLockFlags();
 	}
 
-	void RigidBody::SetDynamicLockFlag(ZonaiPhysics::DynamicLock flag, bool value) noexcept
+	void RigidBody::SetDynamicLockFlag(ZonaiPhysics::FreezeFlag flag, bool value) noexcept
 	{
 		body->SetDynamicLockFlag(flag, value);
 	}
 
-	void RigidBody::SetDynamicLockFlags(ZonaiPhysics::DynamicLocks flags) noexcept
+	void RigidBody::SetDynamicLockFlags(uint32_t flags) noexcept
 	{
 		body->SetDynamicLockFlags(flags);
 	}

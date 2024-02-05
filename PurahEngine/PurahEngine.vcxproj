@@ -40,6 +40,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Componentmanager.h" />
+    <ClInclude Include="EventCallbackSystem.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
@@ -62,6 +63,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
+    <ClCompile Include="EventCallbackSystem.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="GameObject.cpp" />
