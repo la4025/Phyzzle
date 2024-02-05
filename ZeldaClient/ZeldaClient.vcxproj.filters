@@ -13,6 +13,9 @@
     <Filter Include="Component\CameraMovement">
       <UniqueIdentifier>{ee3c4eb7-3b80-4f6a-8109-ea0cc854be8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Controller">
+      <UniqueIdentifier>{d1ebaa5d-2b20-429b-9cba-be0bb0fc9586}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +27,7 @@
     <ClCompile Include="CameraMovement.cpp">
       <Filter>Component\CameraMovement</Filter>
     </ClCompile>
+    <ClCompile Include="Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
@@ -32,5 +36,6 @@
     <ClInclude Include="CameraMovement.h">
       <Filter>Component\CameraMovement</Filter>
     </ClInclude>
+    <ClInclude Include="Controller.h" />
   </ItemGroup>
 </Project>
