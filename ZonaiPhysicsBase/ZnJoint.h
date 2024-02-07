@@ -22,9 +22,6 @@ namespace ZonaiPhysics
 							ZnJoint() = default;
 		virtual				~ZnJoint() = default;
 
-	protected:
-		// physx::PxJoint* joint;
-
 	public:
 		/**
 		오브젝트의 포지션
