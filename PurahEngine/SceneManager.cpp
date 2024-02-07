@@ -58,7 +58,6 @@ void PurahEngine::SceneManager::Update()
 		{
 			object->Awake();
 			object->Start();
-			object->isRun = true;
 		}
 		if (physicsTime >= 0.02f)
 		{
@@ -72,10 +71,13 @@ void PurahEngine::SceneManager::Update()
 			object->OnTriggerStay();
 			object->OnTriggerExit();
 		}
-		object->Update();
-		object->LateUpdate();
+		if (object->isRun == true)
+		{
+			object->Update();
+			object->LateUpdate();
+		}
+		object->isRun = true;
 	}
-
 	if (physicsTime >= 0.02f)
 	{
 		physicsTime = 0.0f;
