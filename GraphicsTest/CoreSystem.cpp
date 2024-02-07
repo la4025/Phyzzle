@@ -80,7 +80,7 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	renderer = createZeldaRenderer();
 #endif
 
-	renderer->Initialize(1920, 1080, true, hWnd, false, 1000.0f, 1.0f);
+	renderer->Initialize(1920, 1080, true, hWnd, false);
 }
 
 void CoreSystem::Finalize()
@@ -258,7 +258,7 @@ void CoreSystem::run()
 	static float pointLightRange = 10.0f;
 	static Eigen::Vector3f pointLightPos = { 0.0f, 50.0f, 0.0f };
 
-	const static float cameraFarInit = 1000.0f;
+	const static float cameraFarInit = 10000.0f;
 
 	static bool firstRun = true;
 	if (firstRun)
@@ -268,6 +268,7 @@ void CoreSystem::run()
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
 		hnsTextureID = renderer->CreateTexture(L"hns.jpg");
 		msTextureID = renderer->CreateTexture(L"exit_cursor.png");
+		cubeMapID = renderer->CreateTexture(L"cubeMapTest.dds");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
@@ -445,7 +446,7 @@ void CoreSystem::run()
 	// 애니메이션 테스트 코드
 	const static int repeatPlay = 5;
 	const static float cutTime = 0.0f; // cutTime에서 애니메이션을 중지하고 다시 시작합니다. 0보다 작거나 같은 값이라면 원래시간까지 전부 재생합니다.
-	const static float resetTime = 0.0f; // 처음 상태로 돌아가는데 걸리는 시간을 설정합니다. 0보다 작거나 같다면 즉시 되돌아갑니다.
+	const static float resetTime = 2.0f; // 처음 상태로 돌아가는데 걸리는 시간을 설정합니다. 0보다 작거나 같다면 즉시 되돌아갑니다.
 
 	static float animationTime = 0.0f;
 	static int animationNumber = 0;
@@ -563,7 +564,7 @@ void CoreSystem::run()
 	instMatrix(2, 2) = 0.1f;
 
 	instMatrix(0, 3) = 0.0f;
-	instMatrix(1, 3) = 0.0f;
+	instMatrix(1, 3) = 1.0f;
 	instMatrix(2, 3) = 0.0f;
 	//for (int i = 0; i < 1000; i++)
 	//{
@@ -580,46 +581,46 @@ void CoreSystem::run()
 	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], d, false);
 	//}
 
-	//if (isReset)
-	//{
-	//	if (cutTime > 0.0f)
-	//	{
-	//		instMatrix(0, 3) = 0.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+	if (isReset)
+	{
+		if (cutTime > 0.0f)
+		{
+			instMatrix(0, 3) = 0.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
 
-	//		instMatrix(0, 3) = 100.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+			instMatrix(0, 3) = 100.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
 
-	//		instMatrix(0, 3) = 200.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
-	//	}
-	//	else
-	//	{
-	//		instMatrix(0, 3) = 0.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+			instMatrix(0, 3) = 200.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+		}
+		else
+		{
+			instMatrix(0, 3) = 0.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
 
-	//		instMatrix(0, 3) = 100.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+			instMatrix(0, 3) = 100.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
 
-	//		instMatrix(0, 3) = 200.0f;
-	//		renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
-	//	}
-	//}
-	//else
-	//{
-	//	instMatrix(0, 3) = 0.0f;
-	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+			instMatrix(0, 3) = 200.0f;
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+		}
+	}
+	else
+	{
+		instMatrix(0, 3) = 0.0f;
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
 
-	//	instMatrix(0, 3) = 100.0f;
-	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+		instMatrix(0, 3) = 100.0f;
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
 
-	//	instMatrix(0, 3) = 200.0f;
-	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
-	//}
-
-	renderer->DrawModel(ganonMatrix, fbxID, false);
+		instMatrix(0, 3) = 200.0f;
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+	}
 
 	//renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false, 0.0f, 1.0f, 1.0f, 1.0f);
+
+	renderer->DrawCubeMap(cubeMapID);
 
 	renderer->EndDraw();
 }
