@@ -268,7 +268,7 @@ void CoreSystem::run()
 		scdTextureID = renderer->CreateTexture(L"scd.jpg");
 		hnsTextureID = renderer->CreateTexture(L"hns.jpg");
 		msTextureID = renderer->CreateTexture(L"exit_cursor.png");
-		cubeMapID = renderer->CreateTexture(L"cubeMapTest.dds");
+		cubeMapID = TextureID::ID_NULL;
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");

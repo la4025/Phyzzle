@@ -468,6 +468,11 @@ void ZeldaDX11Renderer::Finalize()
 		alphaBlendState->Release();
 		alphaBlendState = nullptr;
 	}
+	if (cubeMapDepthStencilState)
+	{
+		cubeMapDepthStencilState->Release();
+		cubeMapDepthStencilState = nullptr;
+	}
 	if (matrixVsConstBuffer)
 	{
 		delete matrixVsConstBuffer;
@@ -617,6 +622,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		pointLightRasterState->Release();
 		pointLightRasterState = nullptr;
+	}
+	if (cubeMapRasterState)
+	{
+		cubeMapRasterState->Release();
+		cubeMapRasterState = nullptr;
 	}
 	if (currentRasterState)
 	{

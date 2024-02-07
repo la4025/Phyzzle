@@ -629,6 +629,12 @@ void ZeldaModel::CreateAnimationResourceView(ID3D11Device* device)
 		MessageBox(0, L"Failed to Create Animation Resource View", L"Model Error", MB_OK);
 		assert(0);
 	}
+
+	if (tex2d != nullptr)
+	{
+		tex2d->Release();
+		tex2d = nullptr;
+	}
 }
 
 void ZeldaModel::SetAnimationTexture(ID3D11DeviceContext* deviceContext)
