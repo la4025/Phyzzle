@@ -190,6 +190,48 @@ namespace ZonaiPhysics
 		return collider;
 	}
 
+	ZnCollider* ZnPhysicsX::CreateMeshCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene)
+	{
+		auto znBody = ZnWorld::GetBody(_userData, userScene);
+		auto material = ZnWorld::GetMaterial(_material);
+
+		if (!material)
+			material = defaultMaterial;
+
+		if (!znBody)
+		{
+			znBody = ZnFactoryX::CreateRigidBody(_userData);
+			ZnWorld::AddBody(znBody, userScene);
+		}
+
+		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, material);
+		znBody->UseGravity(false);
+		znBody->SetKinematic(true);
+
+		return collider;
+	}
+
+	ZnCollider* ZnPhysicsX::CreateConvexCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene)
+	{
+		auto znBody = ZnWorld::GetBody(_userData, userScene);
+		auto material = ZnWorld::GetMaterial(_material);
+
+		if (!material)
+			material = defaultMaterial;
+
+		if (!znBody)
+		{
+			znBody = ZnFactoryX::CreateRigidBody(_userData);
+			ZnWorld::AddBody(znBody, userScene);
+		}
+
+		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, material);
+		znBody->UseGravity(false);
+		znBody->SetKinematic(true);
+
+		return collider;
+	}
+
 	// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&)
 	// 	{
 	// 

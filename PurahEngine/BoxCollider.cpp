@@ -8,6 +8,7 @@ namespace PurahEngine
 	BoxCollider::BoxCollider()
 	{
 	}
+
 	BoxCollider::~BoxCollider()
 	{
 	}

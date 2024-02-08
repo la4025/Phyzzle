@@ -10,9 +10,13 @@ namespace PurahEngine
 	{
 	public:
 		Renderer();
-		~Renderer();
+		~Renderer() override;
+		Renderer(const Renderer&) = default;
+		Renderer(Renderer&&) noexcept = default;
+		Renderer& operator=(const Renderer&) = default;
+		Renderer& operator=(Renderer&&) noexcept = default;
 
-		virtual void Render(IZeldaRenderer* renderer) override;
+		void Render(IZeldaRenderer* renderer) override;
 
 		void AddTexture(TextureID textureID);
 	private:

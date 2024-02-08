@@ -13,19 +13,13 @@ namespace PurahEngine
 
 		void Update() override;
 		void FixedUpdate() override;
-		void LateUpdate() override;
 
-		void OnCollisionEnter() override;
-		void OnCollisionStay() override;
-		void OnCollisionExit() override;
+	public:
+		float speed;
+		float drag;
 
-		void OnTriggerEnter() override;
-		void OnTriggerStay() override;
-		void OnTriggerExit() override;
-
-		void OnMouseEnter() override;
-		void OnMouseStay() override;
-		void OnMouseExit() override;
+		RigidBody* rigidbody;
+		Transform* transform;
 	};
 }
 

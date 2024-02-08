@@ -1,6 +1,6 @@
 #include "GameLoop.h"
 #include "SceneManager.h"
-#include "GraphicsManager.h"
+#include "GraphicsSystem.h"
 #include "Transform.h"
 #include "GameObject.h"
 #include "InputManager.h"
@@ -56,7 +56,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	SetMenu(hWnd, NULL);
 
 	// Graphics dll 초기화(변경 가능성 농후)
-	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
+	PurahEngine::GraphicsSystem::GetInstance().Initialize(hWnd);
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -106,7 +106,7 @@ void PurahEngine::GameLoop::run()
 	PurahEngine::InputManager::Getinstance().Update();
 	PurahEngine::SceneManager::GetInstance().Update();
 
-	PurahEngine::GraphicsManager::GetInstance().Run();
+	PurahEngine::GraphicsSystem::GetInstance().Render(TODO);
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

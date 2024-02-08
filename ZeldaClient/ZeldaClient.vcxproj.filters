@@ -27,7 +27,9 @@
     <ClCompile Include="CameraMovement.cpp">
       <Filter>Component\CameraMovement</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Controller.cpp">
+      <Filter>Component\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
@@ -36,6 +38,8 @@
     <ClInclude Include="CameraMovement.h">
       <Filter>Component\CameraMovement</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="Controller.h">
+      <Filter>Component\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,9 +6,7 @@ PurahEngine::Component::Component() : gameObject(nullptr)
 }
 
 PurahEngine::Component::~Component()
-{
-
-}
+= default;
 
 void PurahEngine::Component::Awake()
 {

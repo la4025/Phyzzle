@@ -36,6 +36,8 @@ namespace PurahEngine
 		callbackSystem = new EventCallbackSystem;
 
 		physics->Initialize(callbackSystem);
+		physics->CreateScene(this, {0, -9.81, 0});
+		physics->LoadScene(this);
 	}
 
 	void PhysicsSystem::Simulation(float _dt) noexcept

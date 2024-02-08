@@ -2,7 +2,7 @@
 #include "PurahEngineAPI.h"
 
 #include "Component.h"
-#include "GraphicsManager.h"
+#include "GraphicsSystem.h"
 
 namespace PurahEngine
 {

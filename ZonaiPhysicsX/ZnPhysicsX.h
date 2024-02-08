@@ -1,7 +1,11 @@
 #pragma once
 #include "ZnPhysicsBase.h"
+
+#pragma warning(push)
+#pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
+#pragma warning (pop)
 
 #include "ZnLayer.h"
 
@@ -95,6 +99,9 @@ namespace ZonaiPhysics
 			void* _userData, float radius, float height, 
 			uint32_t _material,
 			void* userScene = nullptr) override;
+
+		ZnCollider* CreateMeshCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene = nullptr) override;
+		ZnCollider* CreateConvexCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene = nullptr) override;
 
 		/// <summary>
 		/// Create Joint

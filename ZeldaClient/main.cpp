@@ -5,6 +5,7 @@
 
 #include "TestMovement.h"
 #include "CameraMovement.h"
+#include "../ZeldaGraphics/ZeldaGraphicsDefine.h"
 
 namespace PurahEngine
 {
@@ -30,13 +31,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); ¿ªÇÒ
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
 
-	auto renderer = PurahEngine::GraphicsManager::GetInstance().GetRenderer();
+	auto renderer = PurahEngine::GraphicsSystem::GetInstance().GetRenderer();
 	static TextureID textureID = TextureID::ID_NULL;
 	static ModelID modelID = ModelID::ID_NULL;
 	static CameraID cameraID = CameraID::ID_NULL;
 
+	const auto light = renderer->CreateDirectionalLight(
+		{ 0.2f, 0.2f, 0.2f },
+		{ 1.f, 1.f, 1.f },
+		{ 1.f, 1.f,1.f },
+		{ 1.f, -1.f, 1.f }
+	);
 
+	renderer->DrawLight(light);
 
+	// const auto light = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Light");
 
 	//PurahEngine::GameObject* box = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box01");
 
@@ -89,12 +98,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 
 	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
-	camera->AddComponent<PurahEngine::Camera>();
 	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
-	camera->GetComponent<PurahEngine::Camera>()->SetRenderer(renderer);
-	camera->GetComponent<PurahEngine::Camera>()->CreateCamera();
-	camera->GetComponent<PurahEngine::Camera>()->SetMainCamera();
 	camera->AddComponent<PurahEngine::CameraMovement>();
+
+	const auto cameraComponent = camera->AddComponent<PurahEngine::Camera>();
+	cameraComponent->SetRenderer(renderer);
+	cameraComponent->CreateCamera();
+	cameraComponent->SetMainCamera();
 
 	textureID = renderer->CreateTexture(L"scd.jpg");
 	if (textureID == TextureID::ID_NULL)

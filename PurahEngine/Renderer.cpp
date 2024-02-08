@@ -1,21 +1,19 @@
 #include "Renderer.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "GraphicsManager.h"
+#include "GraphicsSystem.h"
 
-PurahEngine::Renderer::Renderer()
+PurahEngine::Renderer::Renderer() : texture()
 {
-	PurahEngine::GraphicsManager::GetInstance().AddRenderer(this);
+	GraphicsSystem::GetInstance().AddRenderer(this);
 }
 
 PurahEngine::Renderer::~Renderer()
-{
-
-}
+= default;
 
 void PurahEngine::Renderer::Render(IZeldaRenderer* renderer)
 {
-	Eigen::Matrix4f position = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldMatrix();
+	const Eigen::Matrix4f position = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldMatrix();
 
 	renderer->DrawCube(position, texture, false, 0, 1, 0, 1);
 }
