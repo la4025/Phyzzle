@@ -145,7 +145,11 @@
   <ItemGroup>
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="KiHoon.cpp" />
+=======
+    <ClCompile Include="Controller.cpp" />
+>>>>>>> ZonaiPhysics
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
     <ClCompile Include="TestMovement.cpp" />
@@ -154,9 +158,13 @@
   <ItemGroup>
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
+<<<<<<< HEAD
     <ClInclude Include="IMaker.h" />
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
+=======
+    <ClInclude Include="Controller.h" />
+>>>>>>> ZonaiPhysics
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>

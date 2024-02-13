@@ -54,7 +54,7 @@ namespace PurahEngine
 
 		GameObject* GetGameObject() const;
 
-	private:
+	protected:
 		GameObject* gameObject;
 
 		friend GameObject;

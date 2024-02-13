@@ -1,20 +1,19 @@
 #include "Renderer.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "GraphicsManager.h"
+#include "GraphicsSystem.h"
 
-PurahEngine::Renderer::Renderer()
+PurahEngine::Renderer::Renderer() : texture()
 {
-	PurahEngine::GraphicsManager::GetInstance().AddRenderer(this);
+	GraphicsSystem::GetInstance().AddRenderer(this);
 }
 
 PurahEngine::Renderer::~Renderer()
-{
-
-}
+= default;
 
 void PurahEngine::Renderer::Render(IZeldaRenderer* renderer)
 {
+<<<<<<< HEAD
 	if (GetGameObject()->IsEnable())
 	{
 
@@ -27,6 +26,9 @@ void PurahEngine::Renderer::Render(IZeldaRenderer* renderer)
 	{
 		renderer->DrawLight(light);
 	}
+=======
+	const Eigen::Matrix4f position = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldMatrix();
+>>>>>>> ZonaiPhysics
 
 }
 

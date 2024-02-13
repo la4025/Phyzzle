@@ -23,11 +23,13 @@
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderHelper.h" />
+    <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="DistanceJoint.h" />
     <ClInclude Include="EventCallback.h" />
     <ClInclude Include="FilterCallback.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="JointHelper.h" />
+    <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="PrismaticJoint.h" />
     <ClInclude Include="HingeJoint.h" />
     <ClInclude Include="QueryFilterCallback.h" />
@@ -39,6 +41,7 @@
     <ClInclude Include="ZnFactoryX.h" />
     <ClInclude Include="ZnLayer.h" />
     <ClInclude Include="ZnPhysicsX.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ZnUtil.h" />
     <ClInclude Include="ZnWorld.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />
@@ -48,11 +51,13 @@
     <ClCompile Include="CapsuleCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderHelper.cpp" />
+    <ClCompile Include="ConvexCollider.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />
     <ClCompile Include="EventCallback.cpp" />
     <ClCompile Include="FilterCallback.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="JointHelper.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="PrismaticJoint.cpp" />
     <ClCompile Include="HingeJoint.cpp" />
     <ClCompile Include="QueryFilterCallback.cpp" />
@@ -63,6 +68,7 @@
     <ClCompile Include="ZnFactoryX.cpp" />
     <ClCompile Include="ZnLayer.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ZnUtil.cpp" />
     <ClCompile Include="ZnWorld.cpp" />
   </ItemGroup>

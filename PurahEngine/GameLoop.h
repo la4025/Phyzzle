@@ -5,7 +5,7 @@
 namespace PurahEngine
 {
 	class SceneManager;
-	class GraphicsManager;
+	class GraphicsSystem;
 
 	class GameLoop
 	{

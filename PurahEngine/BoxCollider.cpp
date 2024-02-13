@@ -8,13 +8,14 @@ namespace PurahEngine
 	BoxCollider::BoxCollider()
 	{
 	}
+
 	BoxCollider::~BoxCollider()
 	{
 	}
 	void BoxCollider::Awake()
 	{
 		collider = PhysicsSystem::GetInstance().CreateBoxCollider(
-			GetGameObject()->GetName(),
+			GetGameObject(),
 			size.x(), size.y(), size.z()
 		);
 
