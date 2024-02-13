@@ -1,6 +1,6 @@
 #pragma once
-#include <map>
 #include <string>
+#include <unordered_map>
 
 namespace FBXLoader
 {
@@ -9,13 +9,16 @@ namespace FBXLoader
 
 namespace ZonaiPhysics
 {
+	using ResourceID = std::size_t;
+
 	class ResourceManager
 	{
 	private:
-		static std::map<std::wstring, FBXLoader::Model*> 
+		static std::unordered_map<ResourceID, FBXLoader::Model*>  loadedResources;
 
 	public:
-		static FBXLoader::Model* LoadFBXFile(const std::wstring& _path);
-		static void UnloadFBXFile(const std::wstring& _path);
+		static ResourceID LoadFBXFile(const std::wstring& _path);
+		static FBXLoader::Model* GetModel(ResourceID resourceID);
+		static void UnloadFBXFile(ResourceID resourceID);
 	};
 }

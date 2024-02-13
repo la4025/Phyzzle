@@ -33,7 +33,7 @@ namespace ZonaiPhysics
 	physx::PxFoundation* ZnFactoryX::foundation = nullptr;
 	physx::PxPhysics* ZnFactoryX::pxFactory = nullptr;
 	physx::PxPvd* ZnFactoryX::pxPvd = nullptr;
-	physx::PxCookingParams* ZnFactoryX::pxCooking = nullptr;
+	// physx::PxCookingParams* ZnFactoryX::pxCooking = nullptr;
 
 	void ZnFactoryX::CreatePhysxFactory()
 	{
@@ -53,7 +53,7 @@ namespace ZonaiPhysics
 			PxInitExtensions(*pxFactory, pxPvd);
 #endif
 
-			pxCooking = PxCreate
+			// pxCooking = PxCreate
 		}
 	}
 
