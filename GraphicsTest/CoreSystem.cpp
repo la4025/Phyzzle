@@ -399,10 +399,10 @@ void CoreSystem::run()
 
 	Eigen::Matrix4f fallingMatrix;
 	fallingMatrix <<
-		1, 0, 0, 0,
-		0, 1, 0, falling,
-		0, 0, 1, 0,
-		0, 0, 0, 1;
+		10, 0, 0, 0,
+		0, 10, 0, falling,
+		0, 0, 10, 0,
+		0, 0, 0, 10;
 
 	static float rotation = 0.0f;
 
@@ -618,7 +618,7 @@ void CoreSystem::run()
 	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
 	//}
 
-	//renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false, 0.0f, 1.0f, 1.0f, 1.0f);
+	renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
 	renderer->DrawCubeMap(cubeMapID);
 
