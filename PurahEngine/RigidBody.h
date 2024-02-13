@@ -39,9 +39,9 @@ namespace PurahEngine
 		/**
 		강체의 움직임을 제한하는 플래그
 		*/
-		uint32_t GetDynamicLockFlags() const noexcept;
+		uint8_t GetDynamicLockFlags() const noexcept;
 		void		SetDynamicLockFlag(ZonaiPhysics::FreezeFlag flag, bool) noexcept;
-		void		SetDynamicLockFlags(uint32_t flags) noexcept;
+		void		SetDynamicLockFlags(uint8_t flags) noexcept;
 
 	public:
 		/**
