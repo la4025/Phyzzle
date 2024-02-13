@@ -47,7 +47,7 @@
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GraphicsSystem.h" />
+    <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Joint.h" />
@@ -75,7 +75,7 @@
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GraphicsSystem.cpp" />
+    <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />

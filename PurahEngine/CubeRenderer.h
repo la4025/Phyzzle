@@ -2,10 +2,10 @@
 
 namespace PurahEngine
 {
-	class CubeRenderer : public 
-	{
-		CubeRenderer();
+	//class CubeRenderer : public 
+	//{
+	//	CubeRenderer();
 
-	};
+	//};
 }
 

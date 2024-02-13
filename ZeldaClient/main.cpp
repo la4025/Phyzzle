@@ -5,7 +5,6 @@
 
 #include "TestMovement.h"
 #include "CameraMovement.h"
-#include "../ZeldaGraphics/ZeldaGraphicsDefine.h"
 
 /// 각자 만드는 것들
 #include "NaDong.h"
@@ -37,7 +36,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
 
-<<<<<<< HEAD
 	int BJ = 0;
 	int KH = 1;
 	int DH = 2;
@@ -48,89 +46,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	IMaker* iMaker = nullptr;
 
 	if (play == DH)
-=======
-	auto renderer = PurahEngine::GraphicsSystem::GetInstance().GetRenderer();
-	static TextureID textureID = TextureID::ID_NULL;
-	static ModelID modelID = ModelID::ID_NULL;
-	static CameraID cameraID = CameraID::ID_NULL;
-
-	const auto light = renderer->CreateDirectionalLight(
-		{ 0.2f, 0.2f, 0.2f },
-		{ 1.f, 1.f, 1.f },
-		{ 1.f, 1.f,1.f },
-		{ 1.f, -1.f, 1.f }
-	);
-
-	renderer->DrawLight(light);
-
-	// const auto light = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Light");
-
-	//PurahEngine::GameObject* box = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box01");
-
-	//auto boxTrans = box->GetComponent<PurahEngine::Transform>();
-	//boxTrans->SetLocalPosition({ 0, 5, 0 });
-
-	//auto boxCollider = box->AddComponent<PurahEngine::BoxCollider>();
-	//boxCollider->SetSize({ 0.5f, 0.5f, 0.5f });
-
-	//auto rigid = box->AddComponent<PurahEngine::RigidBody>();
-	//rigid->SetMass(10.f);
-	//rigid->UseGravity(true);
-
-
-	PurahEngine::GameObject* box2 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box02");
-
-	auto box2Trans = box2->GetComponent<PurahEngine::Transform>();
-	box2Trans->SetLocalPosition({0.f, -5.f, 0.f});
-
-	auto box2Collider = box2->AddComponent<PurahEngine::BoxCollider>();
-	box2Collider->SetSize({ 100, 0.5f, 100 });
-
-	auto rigid2 = box2->AddComponent<PurahEngine::RigidBody>();
-	rigid2->SetMass(10.f);
-	rigid2->UseGravity(false);
-	rigid2->SetKinematic(true);
-
-
-
-	PurahEngine::GameObject* testObject = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject");
-	testObject->AddComponent<PurahEngine::Renderer>();
-	testObject->AddComponent<PurahEngine::TestMovement>();
-
-	auto boxTrans = testObject->GetComponent<PurahEngine::Transform>();
-	boxTrans->SetLocalPosition({ 0, 5, 0 });
-
-	auto boxCollider = testObject->AddComponent<PurahEngine::BoxCollider>();
-	boxCollider->SetSize({ 0.5f, 0.5f, 0.5f });
-
-	auto rigid = testObject->AddComponent<PurahEngine::RigidBody>();
-	rigid->SetMass(10.f);
-	rigid->UseGravity(true);
-
-	boxCollider->Awake();
-	box2Collider->Awake();
-	rigid->Awake();
-	rigid2->Awake();
-
-
-
-
-	PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
-	camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
-	camera->AddComponent<PurahEngine::CameraMovement>();
-
-	const auto cameraComponent = camera->AddComponent<PurahEngine::Camera>();
-	cameraComponent->SetRenderer(renderer);
-	cameraComponent->CreateCamera();
-	cameraComponent->SetMainCamera();
-
-	textureID = renderer->CreateTexture(L"scd.jpg");
-	if (textureID == TextureID::ID_NULL)
->>>>>>> ZonaiPhysics
 	{
 		iMaker = new NaDong();
 	}
-	else if(play == BJ)
+	else if (play == BJ)
 	{
 		iMaker = new BeomJoon();
 	}
@@ -151,7 +70,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
 	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
 
-	
+
 	//PurahEngine::Run(); 역할
 	CreateRun(nCmdShow);
 	//PurahEngine::Finalize(); 역할

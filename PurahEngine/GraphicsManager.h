@@ -22,16 +22,16 @@ namespace PurahEngine
 	class Camera;
 	class Renderer;
 
-	class PURAHENGINE_API GraphicsSystem
+	class PURAHENGINE_API GraphicsManager
 	{
 	public:
 		void Initialize(HWND hWnd);
 
-		void Render(float _dt);
+		void Run();
 
 
 		void AddRenderer(Renderer* render);
-		void RemoveRenderer(Renderer* render);
+		void RemoveRenderer();
 
 		IZeldaRenderer* GetRenderer();
 
@@ -42,13 +42,13 @@ namespace PurahEngine
 		std::vector<Renderer*> rendererList;
 
 	private:
-		GraphicsSystem();
-		~GraphicsSystem();
-		GraphicsSystem(const GraphicsSystem& ref) = delete;
-		GraphicsSystem& operator=(const GraphicsSystem& ref) = delete;
+		GraphicsManager();
+		~GraphicsManager();
+		GraphicsManager(const GraphicsManager& ref) = delete;
+		GraphicsManager& operator=(const GraphicsManager& ref) = delete;
 
 	public:
-		static GraphicsSystem& GetInstance();
+		static GraphicsManager& GetInstance();
 	};
 
 }

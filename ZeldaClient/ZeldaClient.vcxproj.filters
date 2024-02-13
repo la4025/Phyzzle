@@ -13,7 +13,6 @@
     <Filter Include="Component\CameraMovement">
       <UniqueIdentifier>{ee3c4eb7-3b80-4f6a-8109-ea0cc854be8b}</UniqueIdentifier>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="00. EntryPoint\maker">
       <UniqueIdentifier>{570166fb-bea4-4fa0-89d9-614aed3a7b34}</UniqueIdentifier>
     </Filter>
@@ -28,10 +27,6 @@
     </Filter>
     <Filter Include="00. EntryPoint\maker\YH">
       <UniqueIdentifier>{3c513026-206a-410e-a0ff-68cf8fe2c216}</UniqueIdentifier>
-=======
-    <Filter Include="Component\Controller">
-      <UniqueIdentifier>{d1ebaa5d-2b20-429b-9cba-be0bb0fc9586}</UniqueIdentifier>
->>>>>>> ZonaiPhysics
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,7 +39,6 @@
     <ClCompile Include="CameraMovement.cpp">
       <Filter>Component\CameraMovement</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="BeomJoon.cpp">
       <Filter>00. EntryPoint\maker\BeomJoon</Filter>
     </ClCompile>
@@ -56,10 +50,6 @@
     </ClCompile>
     <ClCompile Include="YongHun.cpp">
       <Filter>00. EntryPoint\maker\YH</Filter>
-=======
-    <ClCompile Include="Controller.cpp">
-      <Filter>Component\Controller</Filter>
->>>>>>> ZonaiPhysics
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +59,6 @@
     <ClInclude Include="CameraMovement.h">
       <Filter>Component\CameraMovement</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="BeomJoon.h">
       <Filter>00. EntryPoint\maker\BeomJoon</Filter>
     </ClInclude>
@@ -84,10 +73,6 @@
     </ClInclude>
     <ClInclude Include="IMaker.h">
       <Filter>00. EntryPoint\maker</Filter>
-=======
-    <ClInclude Include="Controller.h">
-      <Filter>Component\Controller</Filter>
->>>>>>> ZonaiPhysics
     </ClInclude>
   </ItemGroup>
 </Project>

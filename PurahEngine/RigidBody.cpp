@@ -95,7 +95,7 @@ namespace PurahEngine
 	}
 
 	/// 
-	uint32_t RigidBody::GetDynamicLockFlags() const noexcept
+	uint8_t RigidBody::GetDynamicLockFlags() const noexcept
 	{
 		return body->GetDynamicLockFlags();
 	}
@@ -105,7 +105,7 @@ namespace PurahEngine
 		body->SetDynamicLockFlag(flag, value);
 	}
 
-	void RigidBody::SetDynamicLockFlags(uint32_t flags) noexcept
+	void RigidBody::SetDynamicLockFlags(uint8_t flags) noexcept
 	{
 		body->SetDynamicLockFlags(flags);
 	}

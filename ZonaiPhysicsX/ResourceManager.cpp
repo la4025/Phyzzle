@@ -1,7 +1,8 @@
 #include "ResourceManager.h"
 
-#include "../ZeldaFBXLoader/FBXData.h"
-#include "../ZeldaFBXLoader/FBXLoader.h"
+#include "JointHelper.h"
+#include "FBXData.h"
+#include "FBXLoader.h"
 
 namespace ZonaiPhysics
 {
@@ -33,7 +34,6 @@ namespace ZonaiPhysics
 	{
 		FBXLoader::FBXLoader loader;
 		FBXLoader::Model* model = loadedResources[resourceID];
-
 		loader.ReleaseModel(model);
 	}
 }

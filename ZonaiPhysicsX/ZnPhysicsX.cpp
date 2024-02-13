@@ -204,11 +204,11 @@ namespace ZonaiPhysics
 			ZnWorld::AddBody(znBody, userScene);
 		}
 
-		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, material);
+		const auto collider = ZnFactoryX::CreateMeshCollider(znBody, material);
 		znBody->UseGravity(false);
 		znBody->SetKinematic(true);
 
-		return collider;
+		return nullptr;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateConvexCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene)
@@ -225,11 +225,11 @@ namespace ZonaiPhysics
 			ZnWorld::AddBody(znBody, userScene);
 		}
 
-		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, material);
+		const auto collider = ZnFactoryX::CreateConvexCollider(znBody, material);
 		znBody->UseGravity(false);
 		znBody->SetKinematic(true);
 
-		return collider;
+		return nullptr;
 	}
 
 	// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&)
