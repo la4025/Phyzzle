@@ -143,13 +143,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
+    <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NaDong.cpp" />
     <ClCompile Include="TestMovement.cpp" />
+    <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
+    <ClInclude Include="IMaker.h" />
+    <ClInclude Include="KiHoon.h" />
+    <ClInclude Include="NaDong.h" />
     <ClInclude Include="TestMovement.h" />
+    <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

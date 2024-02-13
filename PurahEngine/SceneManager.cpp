@@ -80,7 +80,7 @@ void PurahEngine::SceneManager::Update()
 	}
 	if (physicsTime >= 0.02f)
 	{
-		physicsTime = 0.0f;
+		physicsTime -= 0.02f;
 	}
 
 }
