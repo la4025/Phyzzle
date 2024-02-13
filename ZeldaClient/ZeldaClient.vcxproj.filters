@@ -51,6 +51,9 @@
     <ClCompile Include="YongHun.cpp">
       <Filter>00. EntryPoint\maker\YH</Filter>
     </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="IMaker.h">
       <Filter>00. EntryPoint\maker</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
