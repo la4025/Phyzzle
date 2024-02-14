@@ -1,65 +1,14 @@
 #include "DirectionalLight.h"
 
-PurahEngine::DirectionalLight::DirectionalLight()
-= default;
-
-PurahEngine::DirectionalLight::~DirectionalLight()
-= default;
-
-void PurahEngine::DirectionalLight::Awake()
+namespace PurahEngine
 {
-	
-}
-
-void PurahEngine::DirectionalLight::Update()
-{
-
-}
-
-void PurahEngine::DirectionalLight::SetLightAmbient(const Eigen::Vector3f& _ambient)
-{
-	if (awake)
+	DirectionalLight::DirectionalLight()
 	{
-
+		CreateDirectionalLight();
 	}
-	else
-	{
-		ambient = _ambient;
-	}
-}
 
-void PurahEngine::DirectionalLight::SetLightDiffuse(const Eigen::Vector3f& _diffuse)
-{
-	if (awake)
+	DirectionalLight::~DirectionalLight()
 	{
-		
-	}
-	else
-	{
-		diffuse = _diffuse;
-	}
-}
-
-void PurahEngine::DirectionalLight::SetLightSpecular(const Eigen::Vector3f& _specular)
-{
-	if (awake)
-	{
-		
-	}
-	else
-	{
-		specular = _specular;
-	}
-}
-
-void PurahEngine::DirectionalLight::SetLightDirection(const Eigen::Vector3f& _direction)
-{
-	if (awake)
-	{
-
-	}
-	else
-	{
-		direction = _direction;
+		ReleaseLight();
 	}
 }

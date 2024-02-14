@@ -121,9 +121,6 @@
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Core\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="CubeRenderer.cpp">
-      <Filter>Component\3. Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="ModelRenderer.cpp">
       <Filter>Component\3. Renderer</Filter>
     </ClCompile>
@@ -133,6 +130,15 @@
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="GraphicsManager.cpp">
       <Filter>Core\Manager\GraphicsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsResourceManager.cpp">
+      <Filter>Core\Manager\GraphicsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>Component\3. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Component\3. Renderer\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -198,9 +204,6 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Core\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="CubeRenderer.h">
-      <Filter>Component\3. Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="ModelRenderer.h">
       <Filter>Component\3. Renderer</Filter>
     </ClInclude>
@@ -208,5 +211,14 @@
       <Filter>SoundManager</Filter>
     </ClInclude>
     <ClInclude Include="AudioListener.h" />
+    <ClInclude Include="GraphicsResourceManager.h">
+      <Filter>Core\Manager\GraphicsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Component\3. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Component\3. Renderer\Light</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

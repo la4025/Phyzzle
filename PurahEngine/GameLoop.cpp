@@ -109,7 +109,7 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 
 void PurahEngine::GameLoop::Finalize()
 {
-
+	PurahEngine::GraphicsManager::GetInstance().Finalize();
 }
 
 void PurahEngine::GameLoop::run()
@@ -123,7 +123,7 @@ void PurahEngine::GameLoop::run()
 	PurahEngine::SceneManager::GetInstance().Update();
 	PurahEngine::SoundManager::GetInstance().Update();
 
-	PurahEngine::GraphicsManager::GetInstance().Run();
+	PurahEngine::GraphicsManager::GetInstance().Run(deltaTime);
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
