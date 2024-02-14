@@ -91,6 +91,8 @@ namespace PurahEngine
 		bool IsRootEnable();
 		bool isEnable;
 
+		Transform* GetTransform();
+
 	public:
 		// ComponentList·Î Component Ãß°¡
 		template<typename T>

@@ -93,6 +93,11 @@ bool PurahEngine::GameObject::IsRootEnable()
 	return ownEnable;
 }
 
+PurahEngine::Transform* PurahEngine::GameObject::GetTransform()
+{
+	return trans;
+}
+
 void PurahEngine::GameObject::OnCollisionEnter()
 {
 	for (PurahEngine::Component* component : componentList)
