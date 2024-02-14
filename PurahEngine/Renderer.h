@@ -14,17 +14,12 @@ namespace PurahEngine
 		Renderer();
 		virtual ~Renderer();
 
-		void Awake() override;
-
 		//void AddTexture(TextureID textureID);
 		//void AddLight(LightID lightID);
 
 	protected:
 		TextureID GetTextureID(std::wstring textureName);
 		ModelID GetModelID(std::wstring modelName);
-
-	protected:
-		Transform* transform;
 	};
 }
 

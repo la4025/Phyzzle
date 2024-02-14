@@ -38,7 +38,7 @@ namespace PurahEngine
 	void Light::Render(IZeldaRenderer* renderer)
 	{
 		// 게임오브젝트가 활성화 되어 있는 경우에만 작동한다.
-		if (GetGameObject()->IsEnable())
+		if (GetGameObject()->IsRootEnable())
 		{
 			renderer->DrawLight(lightID);
 		}
@@ -49,6 +49,8 @@ namespace PurahEngine
 		assert(lightID == LightID::ID_NULL);
 
 		Eigen::Vector3f direction = { 0.0f , 0.0f, 1.0f };
+		direction = GetGameObject()->GetTransform()->GetWorldMatrix().block<3, 3>(0, 0) * direction;
+		direction.normalize();
 
 		lightID = GraphicsManager::GetInstance().resourceManager->CreateDirectionalLight(ambient, diffuse, specular, direction);
 	}
@@ -57,7 +59,7 @@ namespace PurahEngine
 	{
 		assert(lightID == LightID::ID_NULL);
 
-		Eigen::Vector3f position = { 0.0f , 0.0f, 0.0f };
+		Eigen::Vector3f position = GetGameObject()->GetTransform()->GetWorldPosition();
 
 		lightID = GraphicsManager::GetInstance().resourceManager->CreatePointLight(ambient, diffuse, specular, position, range);
 	}
@@ -67,7 +69,9 @@ namespace PurahEngine
 		assert(lightID == LightID::ID_NULL);
 
 		Eigen::Vector3f direction = { 0.0f , 0.0f, 1.0f };
-		Eigen::Vector3f position = { 0.0f , 0.0f, 0.0f };
+		direction = GetGameObject()->GetTransform()->GetWorldMatrix().block<3, 3>(0, 0) * direction;
+		direction.normalize();
+		Eigen::Vector3f position = GetGameObject()->GetTransform()->GetWorldPosition();
 
 		lightID = GraphicsManager::GetInstance().resourceManager->CreateSpotLight(ambient, diffuse, specular, direction, position, range, angle);
 	}
