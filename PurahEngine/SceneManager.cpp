@@ -20,7 +20,7 @@ PurahEngine::GameObject* PurahEngine::SceneManager::CreateGameObject(std::wstrin
 {
 	GameObject* object = new GameObject(objectName);
 	objectList.push_back(object);
-	object->AddComponent<Transform>();
+	object->trans = object->AddComponent<Transform>();
 	return object;
 }
 

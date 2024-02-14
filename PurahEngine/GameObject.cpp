@@ -75,6 +75,24 @@ bool PurahEngine::GameObject::IsEnable()
 	return isEnable;
 }
 
+bool PurahEngine::GameObject::IsRootEnable()
+{
+	bool rootEnable = true;
+
+	if (trans->GetParent() != nullptr)
+	{
+		rootEnable = trans->GetParent()->GetGameObject()->IsRootEnable();
+	}
+	else
+	{
+		rootEnable = IsEnable();
+	}
+
+	bool ownEnable = IsEnable() && rootEnable;
+
+	return ownEnable;
+}
+
 void PurahEngine::GameObject::OnCollisionEnter()
 {
 	for (PurahEngine::Component* component : componentList)

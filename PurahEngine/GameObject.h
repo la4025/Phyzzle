@@ -1,5 +1,6 @@
 #pragma once
 #include "PurahEngineAPI.h"
+#include "Transform.h"
 
 #include <vector>
 #include <string>
@@ -83,8 +84,11 @@ namespace PurahEngine
 		bool isActive;
 		bool isRun = false;
 
+		Transform* trans;
+
 	public:
 		bool IsEnable();
+		bool IsRootEnable();
 		bool isEnable;
 
 	public:
