@@ -84,7 +84,7 @@ namespace PurahEngine
 		bool isActive;
 		bool isRun = false;
 
-		Transform* trans = this->GetComponent<Transform>();
+		Transform* trans;
 
 	public:
 		bool IsEnable();
