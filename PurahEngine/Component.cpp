@@ -78,6 +78,11 @@ void PurahEngine::Component::OnMouseExit()
 
 }
 
+void PurahEngine::Component::Initialize()
+{
+
+}
+
 PurahEngine::GameObject* PurahEngine::Component::GetGameObject() const
 {
 	return gameObject;
