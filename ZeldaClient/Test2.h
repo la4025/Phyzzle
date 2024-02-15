@@ -3,7 +3,6 @@
 
 namespace PurahEngine
 {
-
 	class Test2 : public Component
 	{
 	public:

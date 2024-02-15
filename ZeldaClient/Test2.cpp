@@ -1,5 +1,5 @@
 #include "Test2.h"
-#include "InputManager.h"
+#include "TestSingleton.h"
 
 PurahEngine::Test2::Test2()
 {
@@ -25,40 +25,46 @@ void PurahEngine::Test2::Update()
 {
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
 	const auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
+	const auto name = GetGameObject()->GetName();
+	bool isRootable = GetGameObject()->IsRootEnable();
 
-	if (inputManager.IsKeyPressed('N') == true)
+	if (inputManager.IsKeyDown('N') == true)
 	{
 		if (trans->GetParent() != nullptr)
 		{
-			if (GetGameObject()->IsRootEnable() == true)
+			if (isRootable == false)
 			{
-				trans->GetParent()->GetGameObject()->Disable();
+				GetGameObject()->Disable();
+				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"			             Disable"));
 			}
 		}
 		else
 		{
-			if (GetGameObject()->IsRootEnable() == true)
+			if (isRootable == true)
 			{
 				GetGameObject()->Disable();
+				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				         Disable"));
 			}
 		}
 
 	}
 
-	if (inputManager.IsKeyPressed('M') == true)
+	if (inputManager.IsKeyDown('M') == true)
 	{
 		if (trans->GetParent() != nullptr)
 		{
-			if (GetGameObject()->IsRootEnable() == true)
+			if (isRootable == true)
 			{
-				trans->GetParent()->GetGameObject()->Enable();
+				GetGameObject()->Enable();
+				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
 		}
 		else
 		{
-			if (GetGameObject()->IsRootEnable() == true)
+			if (isRootable == false)
 			{
 				GetGameObject()->Enable();
+				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
 		}
 	}
