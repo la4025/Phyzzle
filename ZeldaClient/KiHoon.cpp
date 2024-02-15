@@ -18,7 +18,6 @@ void KiHoon::Run()
 	GameObject* light = SceneManager::GetInstance().CreateGameObject(L"Light");
 	{
 		DirectionalLight* directional = light->AddComponent<DirectionalLight>();
-		directional.
 	}
 
 	GameObject* camera = SceneManager::GetInstance().CreateGameObject(L"Camera");
