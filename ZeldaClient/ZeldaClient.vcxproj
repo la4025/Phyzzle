@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="IMaker.h" />
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />

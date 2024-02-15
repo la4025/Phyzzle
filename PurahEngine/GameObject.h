@@ -11,6 +11,9 @@ namespace PurahEngine
 	class SceneManager;
 	class Transform;
 
+	template <typename T>
+	concept componentType = std::is_base_of_v<Component, T>;
+
 	class PURAHENGINE_API GameObject
 	{
 	public:
@@ -95,7 +98,7 @@ namespace PurahEngine
 
 	public:
 		// ComponentList로 Component 추가
-		template<typename T>
+		template<componentType T>
 		T* AddComponent() 
 		{
 			T* t = new T;
@@ -106,7 +109,7 @@ namespace PurahEngine
 			return t; // 추가된 컴포넌트 포인터를 반환
 		}
 
-		template<typename T>
+		template<componentType T>
 		T* GetComponent() const
 		{
 			for (auto component : componentList)

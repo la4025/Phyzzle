@@ -21,7 +21,7 @@ namespace PurahEngine
 		body = PhysicsSystem::GetInstance().CreateRigidBody(GetGameObject());
 		PhysicsSystem::GetInstance().bodies.push_back(this);
 		awake = false;
-		auto trans = GetGameObject()->GetComponent<Transform>();
+		const auto trans = GetGameObject()->GetComponent<Transform>();
 
 		body->SetPosition(trans->GetWorldPosition());
 		body->SetQuaternion(trans->GetWorldRotation());
@@ -312,7 +312,6 @@ namespace PurahEngine
 	{
 		auto pos = body->GetPosition();
 		auto rot = body->GetQuaternion();
-		auto y = pos.y();
 
 		auto transform = GetGameObject()->GetComponent<Transform>();
 		// matrix4f로 만들어서 보내는걸로 하자

@@ -50,6 +50,9 @@ namespace ZonaiPhysics
 		virtual void				SetCollisionLayerData(uint32_t _layer,const std::initializer_list<uint32_t>& _data) = 0;
 
 	public:
+		virtual void				FreeObject(void*) = 0;
+
+	public:
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>
