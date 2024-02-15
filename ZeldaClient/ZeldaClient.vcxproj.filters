@@ -28,6 +28,9 @@
     <Filter Include="00. EntryPoint\maker\YH">
       <UniqueIdentifier>{3c513026-206a-410e-a0ff-68cf8fe2c216}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Test">
+      <UniqueIdentifier>{490b49e5-b19e-4add-b4dd-ac03880bc1d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,9 +54,16 @@
     <ClCompile Include="YongHun.cpp">
       <Filter>00. EntryPoint\maker\YH</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Controller.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="Test.cpp">
+      <Filter>Component\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSingleton.cpp" />
+>>>>>>> master
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
@@ -77,8 +87,15 @@
     <ClInclude Include="IMaker.h">
       <Filter>00. EntryPoint\maker</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Controller.h">
       <Filter>Component</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="Test.h">
+      <Filter>Component\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSingleton.h" />
+>>>>>>> master
   </ItemGroup>
 </Project>

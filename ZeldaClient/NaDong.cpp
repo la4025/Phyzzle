@@ -5,140 +5,72 @@
 
 #include "TestMovement.h"
 #include "CameraMovement.h"
+#include "Test.h"
+
+using namespace PurahEngine;
 
 void NaDong::Run()
 {
-	auto renderer = PurahEngine::GraphicsManager::GetInstance().GetRenderer();
-	static TextureID textureID = TextureID::ID_NULL;
-	static ModelID modelID = ModelID::ID_NULL;
-	static CameraID cameraID = CameraID::ID_NULL;
-	static LightID lightID = LightID::ID_NULL;
+	//// 카메라 생성
+	//GameObject* mainCameraObject = SceneManager::GetInstance().CreateGameObject(L"MainCamera");
+	//Camera* mainCamera = mainCameraObject->AddComponent<Camera>();
 
-	// camera
-	{
-		PurahEngine::GameObject* camera = PurahEngine::SceneManager::GetInstance().GetMainCamera()->GetGameObject();
-		camera->AddComponent<PurahEngine::Camera>();
-		camera->GetComponent<PurahEngine::Transform>()->SetLocalPosition(Eigen::Vector3f(0, 0, -10));
-		camera->GetComponent<PurahEngine::Camera>()->SetRenderer(renderer);
-		camera->GetComponent<PurahEngine::Camera>()->CreateCamera();
-		camera->GetComponent<PurahEngine::Camera>()->SetMainCamera();
-		camera->AddComponent<PurahEngine::CameraMovement>();
-	}
+	//// 메인 카메라로 설정
+	//SceneManager::GetInstance().SetMainCamera(mainCamera);
 
-#pragma region testObject
-	PurahEngine::GameObject* testObject = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"testObject");
-	testObject->AddComponent<PurahEngine::Renderer>();
-	testObject->AddComponent<PurahEngine::TestMovement>();
+	//// 라이트 생성
+	//GameObject* lightObject = SceneManager::GetInstance().CreateGameObject(L"Light");
+	//DirectionalLight* light = lightObject->AddComponent<DirectionalLight>();
+	//
+	//// 라이트의 방향을 왼쪽 위에서 들여다 보는 방향으로 설정
 
-	auto objTrans = testObject->GetComponent<PurahEngine::Transform>();
-	objTrans->SetLocalPosition({ 0.0f, 3.0f, 0.0f });
+	//// 큐브 생성
+	//GameObject* cubeObject = SceneManager::GetInstance().CreateGameObject(L"Cube");
+	//MeshRenderer* cube = cubeObject->AddComponent<MeshRenderer>();
 
+	//// MeshRenderer의 타입을 Cube로 설정한다.
+	//// 기본값은 None으로 이 경우 아무것도 화면에 뜨지 않는다.(Debug 모드의 경우 런타임 에러를 발생시킨다.)
+	//cube->SetMesh(MeshRenderer::MeshType::Cube);
 
-	auto objCollider = testObject->AddComponent<PurahEngine::BoxCollider>();
-	objCollider->SetSize({ 0.5f, 0.5f, 0.5f });
+	GameObject* object1 = SceneManager::GetInstance().CreateGameObject(L"1");
+	GameObject* object2 = SceneManager::GetInstance().CreateGameObject(L"2");
+	GameObject* object3 = SceneManager::GetInstance().CreateGameObject(L"3");
+	GameObject* object4 = SceneManager::GetInstance().CreateGameObject(L"4");
 
-	auto objRigid = testObject->AddComponent<PurahEngine::RigidBody>();
-	objRigid->SetMass(10.0f);
-	objRigid->UseGravity(true);
+	//GameObject* cObject1 = SceneManager::GetInstance().CreateGameObject(L"c1");
+	//GameObject* cObject2 = SceneManager::GetInstance().CreateGameObject(L"c2");
+	//GameObject* cObject3 = SceneManager::GetInstance().CreateGameObject(L"c3");
+	//GameObject* cObject4 = SceneManager::GetInstance().CreateGameObject(L"c4");
+	//
+	//GameObject* ccObject1 = SceneManager::GetInstance().CreateGameObject(L"cc1");
+	//GameObject* ccObject2 = SceneManager::GetInstance().CreateGameObject(L"cc2");
+	//GameObject* ccObject3 = SceneManager::GetInstance().CreateGameObject(L"cc3");
+	//GameObject* ccObject4 = SceneManager::GetInstance().CreateGameObject(L"cc4");
 
-	objCollider->Awake();
-	objRigid->Awake();
-
-	//testObject->Disable();
-
-#pragma endregion
-
-
-#pragma region box1
-	PurahEngine::GameObject* box = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box01");
-	box->AddComponent<PurahEngine::Renderer>();
-
-	auto boxTrans = box->GetComponent<PurahEngine::Transform>();
-	boxTrans->SetLocalPosition({ 2.0f, 3.0f, 0.0f });
-	boxTrans->SetLocalScale({ 1.0f, 1.0f, 1.0f });
-	boxTrans->Rotate(boxTrans->up, 30.0f);
-	boxTrans->Rotate(boxTrans->right, 30.0f);
-
-	auto boxCollider = box->AddComponent<PurahEngine::BoxCollider>();
-	//boxCollider->SetSize({ 0.5f, 0.5f, 0.5f });
-
-	auto rigid = box->AddComponent<PurahEngine::RigidBody>();
-	//rigid->SetMass(10.f);
-	//rigid->UseGravity(true);
-	//rigid->SetKinematic(false);
-
-	//boxCollider->Awake();
-	//rigid->Awake();
-#pragma endregion
-
-#pragma region plane
-	PurahEngine::GameObject* box2 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box02");
-	box2->AddComponent<PurahEngine::Renderer>();
-
-	auto box2Trans = box2->GetComponent<PurahEngine::Transform>();
-	box2Trans->SetLocalPosition({ 0.f, -5.f, 0.f });
-	box2Trans->SetLocalScale({ 50.0f, 1.0f, 50.0f });
-
-	auto box2Collider = box2->AddComponent<PurahEngine::BoxCollider>();
-	box2Collider->SetSize({ 100, 0.5f, 100 });
-
-	auto rigid2 = box2->AddComponent<PurahEngine::RigidBody>();
-	rigid2->SetMass(10.f);
-	rigid2->UseGravity(false);
-	rigid2->SetKinematic(true);
-
-	box2Collider->Awake();
-	rigid2->Awake();
-
-	//box2->Disable();
-#pragma endregion
-
-#pragma region box3
-	PurahEngine::GameObject* box3 = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"Box03");
-	box3->AddComponent<PurahEngine::Renderer>();
-
-	auto box3Trans = box3->GetComponent<PurahEngine::Transform>();
-	box3Trans->SetParent(objTrans);
-	box3Trans->SetLocalPosition({ -2.0f, 0.0f, 0.0f });
-	box3Trans->SetLocalScale({ 1.0f, 1.0f, 1.0f });
-
-	auto box3Collider = box3->AddComponent<PurahEngine::BoxCollider>();
-	//box3Collider->SetSize({ 0.5f, 0.5f, 0.5f });
-
-	auto rigid3 = box3->AddComponent<PurahEngine::RigidBody>();
-	//rigid3->SetMass(10.f);
-	//rigid3->UseGravity(true);
-	//rigid3->SetKinematic(false);
-
-	//box3Collider->Awake();
-	//rigid3->Awake();
-#pragma endregion
+	//cObject1->GetComponent<Transform>()->SetParent(object1->GetComponent<Transform>());
+	//cObject2->GetComponent<Transform>()->SetParent(object2->GetComponent<Transform>());
+	//cObject3->GetComponent<Transform>()->SetParent(object3->GetComponent<Transform>());
+	//cObject4->GetComponent<Transform>()->SetParent(object4->GetComponent<Transform>());
+	//
+	//ccObject1->GetComponent<Transform>()->SetParent(cObject1->GetComponent<Transform>());
+	//ccObject2->GetComponent<Transform>()->SetParent(cObject2->GetComponent<Transform>());
+	//ccObject3->GetComponent<Transform>()->SetParent(cObject3->GetComponent<Transform>());
+	//ccObject4->GetComponent<Transform>()->SetParent(cObject4->GetComponent<Transform>());
 
 
-	//objTrans->SetParent(boxTrans);
+	object1->AddComponent<Test>();
+	object2->AddComponent<Test>();
+	object3->AddComponent<Test>();
+	object4->AddComponent<Test>();
 
-	// CreateTexture의 사진파일은 zeldaClient 폴더에 넣어둘 것
-	textureID = renderer->CreateTexture(L"mangGom4.jpg");
-	if (textureID == TextureID::ID_NULL)
-	{
-		assert(0);
-	}
-
-	testObject->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
-
-	textureID = renderer->CreateTexture(L"mang.jpg");
-	if (textureID == TextureID::ID_NULL)
-	{
-		assert(0);
-	}
-	box3->GetComponent<PurahEngine::Renderer>()->AddTexture(textureID);
-
-
-	PurahEngine::GameObject* light = PurahEngine::SceneManager::GetInstance().CreateGameObject(L"light");
-	light->AddComponent<PurahEngine::Renderer>();
-
-	lightID = renderer->CreateDirectionalLight(Eigen::Vector3f(0.2f, 0.2f, 0.2f), Eigen::Vector3f(1.0f, 1.0f, 1.0f), Eigen::Vector3f(1.0f, 1.0f, 1.0f), Eigen::Vector3f(1.0f, 1.0f, 1.0f));
-
-	light->GetComponent<PurahEngine::Renderer>()->AddLight(lightID);
+	//cObject1->AddComponent<Test>();
+	//cObject2->AddComponent<Test>();
+	//cObject3->AddComponent<Test>();
+	//cObject4->AddComponent<Test>();
+	//
+	//ccObject1->AddComponent<Test>();
+	//ccObject2->AddComponent<Test>();
+	//ccObject3->AddComponent<Test>();
+	//ccObject4->AddComponent<Test>();
 
 }

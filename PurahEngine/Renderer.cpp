@@ -2,37 +2,33 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "GraphicsManager.h"
+#include "GraphicsResourceManager.h"
 
-PurahEngine::Renderer::Renderer() : texture()
+namespace PurahEngine
 {
-	GraphicsManager::GetInstance().AddRenderer(this);
-}
-
-PurahEngine::Renderer::~Renderer()
-= default;
-
-void PurahEngine::Renderer::Render(IZeldaRenderer* renderer)
-{
-	if (GetGameObject()->IsEnable())
+	Renderer::Renderer() :
+		transform(nullptr)
 	{
-
-		Eigen::Matrix4f position = GetGameObject()->GetComponent<PurahEngine::Transform>()->GetWorldMatrix();
-
-		renderer->DrawCube(position, texture, false, 0.1, 0.6, 0.6, 1);
-
+		GraphicsManager::GetInstance().AddRenderer(this);
 	}
-	if (light != LightID::ID_NULL)
+
+	Renderer::~Renderer()
 	{
-		renderer->DrawLight(light);
+		GraphicsManager::GetInstance().RemoveRenderer(this);
 	}
-}
 
-void PurahEngine::Renderer::AddTexture(TextureID textureID)
-{
-	texture = textureID;
-}
+	void Renderer::Awake()
+	{
+		transform = GetGameObject()->GetComponent<Transform>();
+	}
 
-void PurahEngine::Renderer::AddLight(LightID lightID)
-{
-	light = lightID;
+	TextureID Renderer::GetTextureID(std::wstring textureName)
+	{
+		return GraphicsManager::GetInstance().resourceManager->GetTextureID(textureName);
+	}
+
+	ModelID Renderer::GetModelID(std::wstring modelName)
+	{
+		return GraphicsManager::GetInstance().resourceManager->GetModelID(modelName);
+	}
 }

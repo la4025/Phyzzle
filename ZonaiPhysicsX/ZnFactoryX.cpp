@@ -115,7 +115,7 @@ namespace ZonaiPhysics
 		return pxFactory->createMaterial(_dynamicFriction, _staticFriction, _restitution);
 	}
 
-	RigidBody* ZnFactoryX::CreateRigidBody(void* _userData)
+	RigidBody* ZnFactoryX::CreateDynamicRigidBody(void* _userData)
 	{
 		assert(_userData != nullptr);
 
@@ -124,6 +124,18 @@ namespace ZonaiPhysics
 
 		const auto znBody = new RigidBody(pxBody, _userData);
 		return znBody;
+	}
+
+	RigidBody* ZnFactoryX::CreateStaticRigidBody(void* _userData)
+	{
+		assert(_userData != nullptr);
+
+		const auto pxBody = pxFactory->createRigidStatic(physx::PxTransform(physx::PxVec3{ 0.f, 0.f, 0.f }));
+		assert(pxBody != nullptr);
+
+		// const auto znBody = new RigidBody(pxBody, _userData);
+		// return znBody;
+		return nullptr;
 	}
 
 	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)

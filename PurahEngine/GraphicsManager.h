@@ -21,25 +21,33 @@ namespace PurahEngine
 {
 	class Camera;
 	class Renderer;
+	class Light;
+	class IRenderer;
+	class GraphicsResourceManager;
 
 	class PURAHENGINE_API GraphicsManager
 	{
 	public:
 		void Initialize(HWND hWnd);
+		void Finalize();
 
-		void Run();
+		void Run(float deltaTime);
 
+	private:
+		void AddRenderer(IRenderer* renderer);
+		void RemoveRenderer(IRenderer* renderer);
 
-		void AddRenderer(Renderer* render);
-		void RemoveRenderer();
-
-		IZeldaRenderer* GetRenderer();
+		void AddLight(IRenderer* renderer);
+		void RemoveLight(IRenderer* renderer);
 
 	private:
 		HMODULE zeldaGraphicsDLL;
-		IZeldaRenderer* renderer;
+		IZeldaRenderer* graphicsModule;
+		
+		std::vector<IRenderer*> lightList;
+		std::vector<IRenderer*> rendererList;
 
-		std::vector<Renderer*> rendererList;
+		GraphicsResourceManager* resourceManager;
 
 	private:
 		GraphicsManager();
@@ -49,7 +57,10 @@ namespace PurahEngine
 
 	public:
 		static GraphicsManager& GetInstance();
-	};
 
+		friend Renderer;
+		friend Light;
+		friend Camera;
+	};
 }
 
