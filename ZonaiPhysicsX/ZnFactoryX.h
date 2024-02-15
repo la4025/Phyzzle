@@ -49,7 +49,8 @@ namespace ZonaiPhysics
 		static physx::PxMaterial*		CreateMaterial(float _staticFriction, float _dynamicFriction, float _restitution);
 
 		/// rigidbody
-		static RigidBody*				CreateRigidBody(void* _userData);
+		static RigidBody*				CreateDynamicRigidBody(void* _userData);
+		static RigidBody*				CreateStaticRigidBody(void* _userData);
 
 		/// collider
 		static BoxCollider*				CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
