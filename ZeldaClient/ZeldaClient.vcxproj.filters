@@ -58,6 +58,9 @@
       <Filter>Component\Test</Filter>
     </ClCompile>
     <ClCompile Include="TestSingleton.cpp" />
+    <ClCompile Include="Test2.cpp">
+      <Filter>Component\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestMovement.h">
@@ -85,5 +88,8 @@
       <Filter>Component\Test</Filter>
     </ClInclude>
     <ClInclude Include="TestSingleton.h" />
+    <ClInclude Include="Test2.h">
+      <Filter>Component\Test</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

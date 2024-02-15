@@ -6,6 +6,7 @@
 #include "TestMovement.h"
 #include "CameraMovement.h"
 #include "Test.h"
+#include "Test2.h"
 
 using namespace PurahEngine;
 
@@ -33,9 +34,9 @@ void NaDong::Run()
 	//cube->SetMesh(MeshRenderer::MeshType::Cube);
 
 	GameObject* object1 = SceneManager::GetInstance().CreateGameObject(L"1");
-	GameObject* object2 = SceneManager::GetInstance().CreateGameObject(L"2");
-	GameObject* object3 = SceneManager::GetInstance().CreateGameObject(L"3");
-	GameObject* object4 = SceneManager::GetInstance().CreateGameObject(L"4");
+	//GameObject* object2 = SceneManager::GetInstance().CreateGameObject(L"2");
+	//GameObject* object3 = SceneManager::GetInstance().CreateGameObject(L"3");
+	//GameObject* object4 = SceneManager::GetInstance().CreateGameObject(L"4");
 
 	//GameObject* cObject1 = SceneManager::GetInstance().CreateGameObject(L"c1");
 	//GameObject* cObject2 = SceneManager::GetInstance().CreateGameObject(L"c2");
@@ -59,11 +60,13 @@ void NaDong::Run()
 
 
 	object1->AddComponent<Test>();
-	object2->AddComponent<Test>();
-	object3->AddComponent<Test>();
-	object4->AddComponent<Test>();
+	object1->AddComponent<Test2>();
+	//object2->AddComponent<Test>();
+	//object3->AddComponent<Test>();
+	//object4->AddComponent<Test>();
 
 	//cObject1->AddComponent<Test>();
+	//cObject1->AddComponent<Test2>();
 	//cObject2->AddComponent<Test>();
 	//cObject3->AddComponent<Test>();
 	//cObject4->AddComponent<Test>();

@@ -57,16 +57,16 @@ void PurahEngine::SceneManager::Update()
 		for (PurahEngine::GameObject* object : objectList)
 		{
 			object->AwakeEvent();
-			state = RunningState::START;
 		}
+		state = RunningState::START;
 	}
 	else if (state == RunningState::START)
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
 			object->StartEvent();
-			state = RunningState::UPDATE;
 		}
+		state = RunningState::UPDATE;
 	}
 	else if (state == RunningState::UPDATE)
 	{
