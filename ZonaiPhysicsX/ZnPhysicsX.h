@@ -44,7 +44,8 @@ namespace ZonaiPhysics
 		ZnPhysicsX() = default;
 		~ZnPhysicsX() override = default;
 
-		static ZnPhysicsX* Instance();
+		static ZnPhysicsX*&		Instance();
+		static void				Release();
 
 	public:
 		void Initialize(ZnSimulationCallback*) override;
@@ -134,6 +135,8 @@ namespace ZonaiPhysics
 			float _distance,
 			ZnRaycastInfo& _out) override;
 
+		void FreeObject(void*) override;
+
 		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) override;
 
 	private:
@@ -144,7 +147,9 @@ namespace ZonaiPhysics
 	};
 
 
-	extern "C" {
-	__declspec(dllexport) ZnPhysicsBase* CreatePhysics();
+	extern "C"
+	{
+		__declspec(dllexport) ZnPhysicsBase* CreatePhysics();
+		__declspec(dllexport) void ReleasePhysics();
 	}
 } // namespace ZonaiPhysics

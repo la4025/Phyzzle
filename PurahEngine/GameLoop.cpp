@@ -65,7 +65,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
 
 	// InputManager 초기화
-	PurahEngine::InputManager::Getinstance().Initialize();
+	PurahEngine::InputManager::Getinstance().Initialize(hWnd);
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -116,8 +116,9 @@ void PurahEngine::GameLoop::run()
 {
 	PurahEngine::TimeController::GetInstance().Update(timeInit);
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(timeInit);
-	PurahEngine::PhysicsSystem::GetInstance().Simulation(0.02f);
 
+	PurahEngine::PhysicsSystem::GetInstance().PreStep();
+	PurahEngine::PhysicsSystem::GetInstance().Simulation(0.02f);
 
 	PurahEngine::InputManager::Getinstance().Update();
 	PurahEngine::SceneManager::GetInstance().Update();

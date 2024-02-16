@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "EventCallbackSystem.h"
+#include "Collider.h"
 #include "RigidBody.h"
 
 namespace PurahEngine
@@ -20,7 +21,16 @@ namespace PurahEngine
 		using ImportFunction = ZonaiPhysics::ZnPhysicsBase* (*) ();
 		ImportFunction createZonaiPhysics{ reinterpret_cast<ImportFunction>(GetProcAddress(ZonaiPhysicsXDLL, "CreatePhysics")) };
 
+
 		if (createZonaiPhysics == nullptr)
+		{
+			// DLL 함수를 찾을 수 없습니다.
+			assert(0);
+		}
+
+		releaseFuntion = { reinterpret_cast<void (*) ()>(GetProcAddress(ZonaiPhysicsXDLL, "ReleasePhysics")) };
+
+		if (releaseFuntion == nullptr)
 		{
 			// DLL 함수를 찾을 수 없습니다.
 			assert(0);
@@ -40,25 +50,41 @@ namespace PurahEngine
 		physics->LoadScene(this);
 	}
 
-	void PhysicsSystem::Simulation(float _dt) noexcept
+	void PhysicsSystem::PreStep() const
 	{
-		physics->Simulation(_dt);
-		//
+		for (const auto& e : dynamicColliders)
+		{
+			e->PreStep();
+		}
 	}
 
-	void PhysicsSystem::SimulateResult()
+	void PhysicsSystem::Simulation(float _dt) const noexcept
 	{
-		for (auto& e : bodies)
+		physics->Simulation(_dt);
+	}
+
+	void PhysicsSystem::SimulateResult() const
+	{
+		for (const auto& e : bodies)
 		{
 			e->SimulateResult();
 		}
 	}
 
-	void PhysicsSystem::Finalize() noexcept
+	void PhysicsSystem::Finalize() const noexcept
 	{
 		physics->Finalize();
 
+		/// Release 함수
+		releaseFuntion();
+
 		FreeLibrary(ZonaiPhysicsXDLL);
+	}
+
+	void PhysicsSystem::FreeObject(void* _object) const
+	{
+		assert(_object != nullptr);
+		physics->FreeObject(_object);
 	}
 
 	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(void* _gameObject) const noexcept
