@@ -2,6 +2,8 @@
 
 #include "PurahEngine.h"
 
+#include "CameraMovement.h"
+
 using namespace PurahEngine;
 
 void BeomJoon::Run()
@@ -9,6 +11,7 @@ void BeomJoon::Run()
 	// 카메라 생성
 	GameObject* mainCameraObject = SceneManager::GetInstance().CreateGameObject(L"MainCamera");
 	Camera* mainCamera = mainCameraObject->AddComponent<Camera>();
+	mainCameraObject->AddComponent<CameraMovement>();
 
 	mainCameraObject->GetTransform()->SetLocalPosition({ 0.0f, 0.0f, -10.0f });
 
@@ -17,9 +20,10 @@ void BeomJoon::Run()
 
 	// 라이트 생성
 	GameObject* lightObject = SceneManager::GetInstance().CreateGameObject(L"Light");
-	DirectionalLight* light = lightObject->AddComponent<DirectionalLight>();
 	
 	// 라이트의 방향을 왼쪽 위에서 들여다 보는 방향으로 설정
+	lightObject->GetTransform()->Rotate({ 0.0f, 1.0f, 0.0f }, 45.0f);
+	DirectionalLight* light = lightObject->AddComponent<DirectionalLight>();
 
 	// 큐브 생성
 	GameObject* cubeObject = SceneManager::GetInstance().CreateGameObject(L"Cube");
@@ -28,4 +32,13 @@ void BeomJoon::Run()
 	// MeshRenderer의 타입을 Cube로 설정한다.
 	// 기본값은 None으로 이 경우 아무것도 화면에 뜨지 않는다.(Debug 모드의 경우 런타임 에러를 발생시킨다.)
 	cube->SetMesh(MeshRenderer::MeshType::Cube);
+	cube->SetTexture(L"scd.jpg");
+
+
+	// 캐릭터 생성
+	GameObject* characterObject = SceneManager::GetInstance().CreateGameObject(L"Character");
+	ModelRenderer* character = characterObject->AddComponent<ModelRenderer>();
+	character->SetModelName(L"Character\\Character.fbx");
+
+	characterObject->GetTransform()->SetLocalScale({ 0.02f, 0.02f, 0.02f });
 }

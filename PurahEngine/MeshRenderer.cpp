@@ -19,7 +19,11 @@ namespace PurahEngine
 		if (GetGameObject()->IsRootEnable())
 		{
 			Eigen::Matrix4f worldTM = GetGameObject()->GetTransform()->GetWorldMatrix();
-			TextureID textureID = GetTextureID(textureName);
+			TextureID textureID = TextureID::ID_NULL;
+			if (textureName != L"")
+			{
+				textureID = GetTextureID(textureName);
+			}
 			
 			switch (meshType)
 			{
