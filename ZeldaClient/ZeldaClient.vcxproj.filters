@@ -32,6 +32,9 @@
     <ClCompile Include="TestSingleton.cpp">
       <Filter>Component\TestSingleton</Filter>
     </ClCompile>
+    <ClCompile Include="Test3.cpp">
+      <Filter>Component\TestComponent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BeomJoon.h">
@@ -66,6 +69,9 @@
     </ClInclude>
     <ClInclude Include="TestSingleton.h">
       <Filter>Component\TestSingleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Test3.h">
+      <Filter>Component\TestComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

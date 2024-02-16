@@ -3,16 +3,16 @@
 
 namespace PurahEngine
 {
-	class Test2 : public Component
+	class Test3 : public Component
 	{
 	public:
-		Test2();
-		~Test2();
+		Test3();
+		~Test3();
 
 		void Awake();
 		void Start();
 		void Update();
-		void FixedUpdate();
+
 
 	};
 }

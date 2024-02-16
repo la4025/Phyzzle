@@ -119,6 +119,11 @@ PurahEngine::Transform* PurahEngine::Transform::GetParent()
 	return parentTransform;
 }
 
+std::vector<Transform>& PurahEngine::Transform::GetChildren() const
+{
+	return children;
+}
+
 void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
 {
 	position = setPosition;

@@ -6,7 +6,7 @@
 #include "TimeController.h"
 
 PurahEngine::SceneManager::SceneManager()
-	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE)
+	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE), physicsTime(0.0f)
 {
 
 }
