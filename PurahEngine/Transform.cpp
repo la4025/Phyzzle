@@ -119,7 +119,7 @@ PurahEngine::Transform* PurahEngine::Transform::GetParent()
 	return parentTransform;
 }
 
-std::vector<Transform>& PurahEngine::Transform::GetChildren() const
+std::vector<PurahEngine::Transform*> PurahEngine::Transform::GetChildren() const
 {
 	return children;
 }

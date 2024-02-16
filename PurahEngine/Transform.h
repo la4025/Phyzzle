@@ -43,7 +43,7 @@ namespace PurahEngine
 
 		Transform* GetParent();
 
-		std::vector<Transform*>& GetChildren() const;
+		std::vector<PurahEngine::Transform*> GetChildren() const;
 
 		/// set
 		// Local

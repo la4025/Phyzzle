@@ -76,7 +76,11 @@ void PurahEngine::GameObject::Disable()
 	}
 	else
 	{
-		
+		for (PurahEngine::Transform* test : trans->GetChildren())
+		{
+			test->GetGameObject()->state = ObjectState::DISABLE;
+			test->GetGameObject()->isEnable = false;
+		}
 	}
 }
 

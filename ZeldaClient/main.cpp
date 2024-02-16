@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	int DH = 2;
 	int YH = 3;
 
-	int play = BJ;
+	int play = DH;
 
 	IMaker* iMaker = nullptr;
 
