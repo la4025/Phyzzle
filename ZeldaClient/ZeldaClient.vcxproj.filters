@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
@@ -49,6 +50,114 @@
     </Filter>
     <Filter Include="Tween">
       <UniqueIdentifier>{979bd621-82fe-498d-9055-b023b1cbc1ea}</UniqueIdentifier>
+=======
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="BeomJoon.cpp">
+      <Filter>Maker\BJ</Filter>
+    </ClCompile>
+    <ClCompile Include="KiHoon.cpp">
+      <Filter>Maker\KH</Filter>
+    </ClCompile>
+    <ClCompile Include="NaDong.cpp">
+      <Filter>Maker\Dh</Filter>
+    </ClCompile>
+    <ClCompile Include="YongHun.cpp">
+      <Filter>Maker\YH</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMovement.cpp">
+      <Filter>Component\CameraMovement</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Component\TestComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Test2.cpp">
+      <Filter>Component\TestComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMovement.cpp">
+      <Filter>Component\TestMovement</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Component\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSingleton.cpp">
+      <Filter>Component\TestSingleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Test3.cpp">
+      <Filter>Component\TestComponent</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BeomJoon.h">
+      <Filter>Maker\BJ</Filter>
+    </ClInclude>
+    <ClInclude Include="KiHoon.h">
+      <Filter>Maker\KH</Filter>
+    </ClInclude>
+    <ClInclude Include="NaDong.h">
+      <Filter>Maker\Dh</Filter>
+    </ClInclude>
+    <ClInclude Include="YongHun.h">
+      <Filter>Maker\YH</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMovement.h">
+      <Filter>Component\CameraMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Component\TestComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Test2.h">
+      <Filter>Component\TestComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMovement.h">
+      <Filter>Component\TestMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Component\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="IMaker.h">
+      <Filter>Maker</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSingleton.h">
+      <Filter>Component\TestSingleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Test3.h">
+      <Filter>Component\TestComponent</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Maker">
+      <UniqueIdentifier>{ab56d61c-8dd0-4ad4-addc-c88b732d7c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maker\KH">
+      <UniqueIdentifier>{81b865ae-0f85-4d53-85a5-df196ae2e5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maker\BJ">
+      <UniqueIdentifier>{6094e695-9aca-4fda-bffc-1f4573a8c992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maker\Dh">
+      <UniqueIdentifier>{8b412372-73bc-43e1-a507-502a7fa25d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{84e3b54d-c1e3-47ab-b1a3-056d981249bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Maker\YH">
+      <UniqueIdentifier>{2eac87f6-c5f8-4407-9ddb-6409baac3e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\CameraMovement">
+      <UniqueIdentifier>{4cc2aeb4-fce1-4d15-bfd9-ffd9d33ad043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\TestComponent">
+      <UniqueIdentifier>{911a6a79-6ace-4607-a110-292f06488422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\TestMovement">
+      <UniqueIdentifier>{a49196e1-9dda-4d01-b016-bed28d59d013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Controller">
+      <UniqueIdentifier>{89ae7aa4-bd2e-47e8-ace1-234799477a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\TestSingleton">
+      <UniqueIdentifier>{2e7bd5ce-77b3-404c-8a5b-8c0909032ac0}</UniqueIdentifier>
+>>>>>>> master
     </Filter>
   </ItemGroup>
 </Project>
