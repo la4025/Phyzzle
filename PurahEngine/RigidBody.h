@@ -126,6 +126,7 @@ namespace PurahEngine
 		// float maxAngularVelocity{ 0.f };
 		// Eigen::Vector3f position{ 0.f, 0.f, 0.f };
 		// Eigen::Quaternionf rotation{ Eigen::Quaternionf::Identity() };
+		uint8_t freeze{ 0 };
 		Eigen::Vector3f LinearVelocity{ 0.f, 0.f, 0.f };
 		Eigen::Vector3f angularVelocity{ 0.f, 0.f, 0.f };
 		float mass;

@@ -20,6 +20,12 @@ namespace PurahEngine
 
 		RigidBody* rigidbody;
 		Transform* transform;
+
+	private:
+		Eigen::Vector3f startPosition;
+		Eigen::Vector3f startLinearVelocity;
+		Eigen::Vector3f startAngularVelocity;
+		Eigen::Quaternionf startRotation;
 	};
 }
 

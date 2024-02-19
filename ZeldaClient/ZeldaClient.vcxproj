@@ -149,9 +149,12 @@
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
+    <ClCompile Include="Tween.cpp" />
     <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +164,13 @@
     <ClInclude Include="IMaker.h" />
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
+    <ClInclude Include="ObjectProperty.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
+    <ClInclude Include="Tween.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

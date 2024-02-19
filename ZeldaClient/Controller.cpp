@@ -1,6 +1,3 @@
-
-
-
 #include "Controller.h"
 
 
@@ -13,33 +10,36 @@ namespace PurahEngine
 	{
 		rigidbody = gameObject->GetComponent<RigidBody>();
 		transform = gameObject->GetComponent<Transform>();
-		speed = 10.f;
-		drag = 0.1f;
+		speed = 5.f;
+		drag = 0.7f;
 	}
 
 	void Controller::Start()
 	{
-
+		startPosition = transform->GetWorldPosition();
+		startRotation = transform->GetWorldRotation();
+		startLinearVelocity = rigidbody->GetLinearVelocity();
+		startAngularVelocity = rigidbody->GetAngularVelocity();
 	}
 
 	void Controller::Update()
 	{
 		InputManager& instance = InputManager::Getinstance();
+		const bool w = instance.IsKeyPressed('W');
+		const bool s = instance.IsKeyPressed('S');
+		const bool a = instance.IsKeyPressed('A');
+		const bool d = instance.IsKeyPressed('D');
 
-		const bool w = instance.IsKeyDown('W');
-		const bool s = instance.IsKeyDown('S');
-		const bool a = instance.IsKeyDown('A');
-		const bool d = instance.IsKeyDown('D');
+		const bool q = instance.IsKeyPressed('Q');
+		const bool e = instance.IsKeyPressed('E');
 
-		const bool q = instance.IsKeyDown('Q');
-		const bool e = instance.IsKeyDown('E');
+		const bool r = instance.IsKeyDown('R');
 
-		const bool space = instance.IsKeyDown('E');
+		const bool space = instance.IsKeyPressed(VK_SPACE);
 
-		auto velo = rigidbody->GetLinearVelocity();
-		rigidbody->SetLinearVelocity(velo * drag);
+		Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
 
-		if (w || s || a || d || q || e)
+		if (w || s || a || d || q || e || r)
 		{
 			Eigen::Vector3f direction{ 0.f, 0.f, 0.f };
 
@@ -73,8 +73,18 @@ namespace PurahEngine
 				direction += transform->up;
 			}
 
-			rigidbody->SetLinearVelocity(direction * speed);
+			if (r)
+			{
+				transform->SetWorldPosition(startPosition);
+				transform->SetWorldRotation(startRotation);
+				rigidbody->SetLinearVelocity(startLinearVelocity);
+				rigidbody->SetAngularVelocity(startAngularVelocity);
+			}
+
+			velo += direction * speed;
 		}
+
+		rigidbody->SetLinearVelocity(velo * drag);
 	}
 
 	void Controller::FixedUpdate()
