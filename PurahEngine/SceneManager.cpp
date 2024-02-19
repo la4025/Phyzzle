@@ -60,7 +60,7 @@ void PurahEngine::SceneManager::Update()
 		}
 		state = RunningState::START;
 	}
-	else if (state == RunningState::START)
+	if (state == RunningState::START)
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
@@ -68,7 +68,7 @@ void PurahEngine::SceneManager::Update()
 		}
 		state = RunningState::UPDATE;
 	}
-	else if (state == RunningState::UPDATE)
+	if (state == RunningState::UPDATE)
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
