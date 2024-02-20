@@ -16,6 +16,7 @@
 #include "DirectionalLight.h"
 #include "ModelRenderer.h"
 #include "MeshRenderer.h"
+#include "Animator.h"
 
 namespace PurahEngine
 {

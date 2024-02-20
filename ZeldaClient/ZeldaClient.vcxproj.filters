@@ -37,6 +37,9 @@
     <ClCompile Include="IObject.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationTestController.cpp">
+      <Filter>Maker\BJ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="IObject.h">
       <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTestController.h">
+      <Filter>Maker\BJ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

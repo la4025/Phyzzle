@@ -6,8 +6,9 @@
 namespace PurahEngine
 {
 	MeshRenderer::MeshRenderer() :
-		meshType(MeshType::None),
 		textureName(L""),
+		meshType(MeshType::None),
+		wireFrame(false),
 		meshColor(White)
 	{
 
@@ -35,7 +36,7 @@ namespace PurahEngine
 				}
 				case PurahEngine::MeshRenderer::MeshType::Cube:
 				{
-					renderer->DrawCube(worldTM, textureID, false, meshColor.r, meshColor.g, meshColor.b, meshColor.a);
+					renderer->DrawCube(worldTM, textureID, wireFrame, meshColor.r, meshColor.g, meshColor.b, meshColor.a);
 
 					break;
 				}
@@ -55,5 +56,23 @@ namespace PurahEngine
 	void MeshRenderer::SetMesh(MeshType type)
 	{
 		meshType = type;
+	}
+
+	void MeshRenderer::SetWireFrame(bool value)
+	{
+		wireFrame = value;
+	}
+
+	void MeshRenderer::SetColor(float r, float g, float b, float a)
+	{
+		meshColor.r = r;
+		meshColor.r = g;
+		meshColor.r = b;
+		meshColor.r = a;
+	}
+
+	void MeshRenderer::SetColor(Color color)
+	{
+		meshColor = color;
 	}
 }
