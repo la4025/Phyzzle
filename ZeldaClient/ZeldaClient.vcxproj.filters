@@ -32,8 +32,8 @@
     <ClCompile Include="TestSingleton.cpp">
       <Filter>Component\TestSingleton</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationTestController.cpp">
-      <Filter>Maker\BJ</Filter>
+    <ClCompile Include="Test3.cpp">
+      <Filter>Component\TestComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,8 +70,8 @@
     <ClInclude Include="TestSingleton.h">
       <Filter>Component\TestSingleton</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationTestController.h">
-      <Filter>Maker\BJ</Filter>
+    <ClInclude Include="Test3.h">
+      <Filter>Component\TestComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

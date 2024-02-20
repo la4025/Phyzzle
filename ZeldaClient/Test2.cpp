@@ -28,7 +28,7 @@ void PurahEngine::Test2::Update()
 	const auto name = GetGameObject()->GetName();
 	bool isRootable = GetGameObject()->IsRootEnable();
 
-	if (inputManager.IsKeyDown('N') == true)
+	if (inputManager.IsKeyPressed('N') == true)
 	{
 		if (trans->GetParent() != nullptr)
 		{
@@ -48,13 +48,22 @@ void PurahEngine::Test2::Update()
 		}
 
 	}
+}
 
-	if (inputManager.IsKeyDown('M') == true)
+void PurahEngine::Test2::FixedUpdate()
+{
+	auto& inputManager = PurahEngine::InputManager::Getinstance();
+	const auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
+	const auto name = GetGameObject()->GetName();
+	bool isRootable = GetGameObject()->IsRootEnable();
+
+	if (inputManager.IsKeyPressed('M') == true)
 	{
 		if (trans->GetParent() != nullptr)
 		{
 			if (isRootable == true)
 			{
+				GetGameObject()->SetEnable(true);
 				GetGameObject()->Enable();
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
@@ -69,3 +78,4 @@ void PurahEngine::Test2::Update()
 		}
 	}
 }
+
