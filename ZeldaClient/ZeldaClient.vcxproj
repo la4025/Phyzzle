@@ -146,6 +146,7 @@
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="IObject.cpp" />
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
@@ -163,12 +164,16 @@
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="EasingFunction.h" />
+    <ClInclude Include="eEasing.h" />
     <ClInclude Include="IMaker.h" />
+    <ClInclude Include="IObject.h" />
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
     <ClInclude Include="ObjectProperty.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Test2.h" />
     <ClInclude Include="Test3.h" />

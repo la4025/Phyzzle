@@ -132,7 +132,10 @@ namespace ZonaiPhysics
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		pxBody->setMass(_mass);
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass);
+		const auto pos = pxBody->getCMassLocalPose();
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass, &pos.p);
+		// auto iner = GetInertiaTensor(_pxBody);
+		// iner = iner;
 	}
 
 	float RigidBodyHelper::GetInvMass(void* _pxBody)

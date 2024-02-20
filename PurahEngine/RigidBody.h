@@ -118,9 +118,8 @@ namespace PurahEngine
 
 	private:
 		bool awake{ true };
-		bool lock[3]{ false, false, false };
 		bool isKinematic{ false };
-		bool useGravity{ false };
+		bool useGravity{ true };
 
 		// float maxLinearVelocity{ 0.f };
 		// float maxAngularVelocity{ 0.f };
@@ -129,11 +128,11 @@ namespace PurahEngine
 		uint8_t freeze{ 0 };
 		Eigen::Vector3f LinearVelocity{ 0.f, 0.f, 0.f };
 		Eigen::Vector3f angularVelocity{ 0.f, 0.f, 0.f };
-		float mass;
-		float linearDamping;
-		float angularDamping;
-		Eigen::Vector3f force{};
-		Eigen::Vector3f torque{};
+		float mass{ 1.f };
+		float linearDamping{ 0.1f };
+		float angularDamping{ 0.1f };
+		Eigen::Vector3f force{0.f, 0.f, 0.f};
+		Eigen::Vector3f torque{0.f, 0.f, 0.f};
 		ZonaiPhysics::ZnRigidBody* body{};
 
 		friend class Transform;

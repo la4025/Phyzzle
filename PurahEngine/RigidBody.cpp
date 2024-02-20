@@ -27,9 +27,16 @@ namespace PurahEngine
 		body->SetQuaternion(trans->GetWorldRotation());
 		trans->SetRigidBody(this);
 
+		SetDynamicLockFlags(freeze);
 		SetKinematic(isKinematic);
 		UseGravity(useGravity);
-		SetDynamicLockFlags(freeze);
+		// SetLinearVelocity(LinearVelocity);
+		// SetAngularVelocity(angularVelocity);
+		SetMass(mass);
+		// SetLinearDamping(linearDamping);
+		// SetAngularDamping(angularDamping);
+		// AddForce(force);
+		// AddTorque(torque);
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept

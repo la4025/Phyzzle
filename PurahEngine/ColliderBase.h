@@ -30,6 +30,7 @@ namespace PurahEngine
 
 	protected:
 		bool awake = false;
+		uint32_t layer = 0;
 		ZonaiPhysics::ZnCollider* znCollider = nullptr;
 		Eigen::Vector3f positionOffset{ Eigen::Vector3f::Zero() };
 		Eigen::Quaternionf rotationOffset{ Eigen::Quaternionf::Identity() };

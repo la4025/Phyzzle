@@ -64,11 +64,37 @@ namespace PurahEngine
             default:
                 throw"";
             }
+
+            awake = false;
+            SetTrigger(isTrigger);
+            SetLayer(layer);
         }
 
         void SetDynamic(bool _value)
         {
             type = _value ? ColliderType::DYNAMIC : ColliderType::STATIC;
+        }
+        void SetTrigger(bool _value)
+        {
+	        if (awake)
+	        {
+                isTrigger = _value;
+	        }
+            else
+            {
+                znCollider->SetTrigger(_value);
+            }
+        }
+        void SetLayer(uint32_t _value)
+        {
+            if (awake)
+            {
+                layer = _value;
+            }
+            else
+            {
+                znCollider->SetLayerData(_value);
+            }
         }
 
     public:
@@ -79,6 +105,8 @@ namespace PurahEngine
         }
 
     protected:
+        bool isTrigger = false;
+
         Transform* transform = nullptr;
         ColliderType type = ColliderType::STATIC;
     };

@@ -1,5 +1,7 @@
 #include "Controller.h"
 
+#include "TimeController.h"
+
 
 namespace PurahEngine
 {
@@ -8,8 +10,8 @@ namespace PurahEngine
 
 	void Controller::Awake()
 	{
-		rigidbody = gameObject->GetComponent<RigidBody>();
-		transform = gameObject->GetComponent<Transform>();
+		rigidbody = player->GetComponent<RigidBody>();
+		transform = gameObject->GetTransform();
 		speed = 5.f;
 		drag = 0.7f;
 	}
@@ -25,6 +27,9 @@ namespace PurahEngine
 	void Controller::Update()
 	{
 		InputManager& instance = InputManager::Getinstance();
+		TimeController& time = TimeController::GetInstance();
+
+		// player 이동
 		const bool w = instance.IsKeyPressed('W');
 		const bool s = instance.IsKeyPressed('S');
 		const bool a = instance.IsKeyPressed('A');
@@ -33,44 +38,53 @@ namespace PurahEngine
 		const bool q = instance.IsKeyPressed('Q');
 		const bool e = instance.IsKeyPressed('E');
 
+		const bool up = instance.IsKeyPressed(VK_UP);
+		const bool down = instance.IsKeyPressed(VK_DOWN);
+		const bool left = instance.IsKeyPressed(VK_LEFT);
+		const bool right = instance.IsKeyPressed(VK_RIGHT);
+
 		const bool r = instance.IsKeyDown('R');
 
 		const bool space = instance.IsKeyPressed(VK_SPACE);
 
 		Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
 
+		// 속도로 이동하고 drag로 멈추려고 하는데
+		// drag가 크면 떨어지는 속도도 느려짐
+		// drag로 멈추는건 수정해야할듯
 		if (w || s || a || d || q || e || r)
 		{
 			Eigen::Vector3f direction{ 0.f, 0.f, 0.f };
+			const auto world = transform->GetWorldRotation();
 
 			if (w)
 			{
-				direction += transform->front;
+				direction += world * transform->front;
 			}
 
 			if (s)
 			{
-				direction -= transform->front;
+				direction -= world * transform->front;
 			}
 
 			if (a)
 			{
-				direction -= transform->right;
+				direction -= world * transform->right;
 			}
 
 			if (d)
 			{
-				direction += transform->right;
+				direction += world * transform->right;
 			}
 
 			if (q)
 			{
-				direction -= transform->up;
+				direction -= world * transform->up;
 			}
 
 			if (e)
 			{
-				direction += transform->up;
+				direction += world * transform->up;
 			}
 
 			if (r)
@@ -81,14 +95,53 @@ namespace PurahEngine
 				rigidbody->SetAngularVelocity(startAngularVelocity);
 			}
 
+			direction.normalize();
 			velo += direction * speed;
+
+			const auto playerT = player->GetTransform();
+			// playerT->SetWorldRotation({ 0.f, direction.x(), direction.y(), direction.z() });
+			transform->SetWorldRotation(world);
 		}
 
 		rigidbody->SetLinearVelocity(velo * drag);
+
+		if (up | down | left | right)
+		{
+			const float dt = time.GetDeltaTime("Simulate");
+			const float angle = 45.f * dt;
+			const auto world = transform->GetWorldRotation();
+
+			if (up)
+			{
+				transform->Rotate(world * transform->right, -angle);
+			}
+
+			if (down)
+			{
+				transform->Rotate(world * transform->right, angle);
+			}
+
+			if (left)
+			{
+				transform->Rotate(transform->up, -angle);
+			}
+
+			if (right)
+			{
+				transform->Rotate(transform->up, angle);
+			}
+		}
 	}
 
 	void Controller::FixedUpdate()
 	{
 
+	}
+
+	void Controller::SetPlayer(GameObject* _player)
+	{
+		assert(_player != nullptr);
+
+		player = _player;
 	}
 }
