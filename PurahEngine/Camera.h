@@ -9,7 +9,7 @@ namespace PurahEngine
 {
 	class GameObject;
 
-	class PURAHENGINE_API Camera : public Component, IRenderer
+	class PURAHENGINE_API Camera final : public Component, IRenderer
 	{
 	public:
 		Camera();

@@ -124,7 +124,8 @@ void PurahEngine::GameLoop::run()
 	PurahEngine::SceneManager::GetInstance().Update();
 	PurahEngine::SoundManager::GetInstance().Update();
 
-	PurahEngine::GraphicsManager::GetInstance().Run(deltaTime);
+	PurahEngine::GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
+	PurahEngine::GraphicsManager::GetInstance().Render(deltaTime);
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
