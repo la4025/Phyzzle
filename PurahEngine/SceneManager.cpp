@@ -82,14 +82,6 @@ void PurahEngine::SceneManager::Update()
 		for (PurahEngine::GameObject* object : objectList)
 		{
 			object->FixedUpdateEvent();
-
-			object->OnCollisionEnter();
-			object->OnCollisionStay();
-			object->OnCollisionExit();
-
-			object->OnTriggerEnter();
-			object->OnTriggerStay();
-			object->OnTriggerExit();
 		}
 	}
 
