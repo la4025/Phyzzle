@@ -112,7 +112,7 @@ PurahEngine::Transform* PurahEngine::GameObject::GetTransform()
 	return trans;
 }
 
-void PurahEngine::GameObject::OnCollisionEnter()
+void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const GameObject*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -120,7 +120,7 @@ void PurahEngine::GameObject::OnCollisionEnter()
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionStay()
+void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision&, const GameObject*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -128,7 +128,7 @@ void PurahEngine::GameObject::OnCollisionStay()
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionExit()
+void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision&, const GameObject*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -136,7 +136,7 @@ void PurahEngine::GameObject::OnCollisionExit()
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerEnter()
+void PurahEngine::GameObject::OnTriggerEnter(const ZonaiPhysics::ZnCollider*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -144,7 +144,7 @@ void PurahEngine::GameObject::OnTriggerEnter()
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerStay()
+void PurahEngine::GameObject::OnTriggerStay(const ZonaiPhysics::ZnCollider*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -152,7 +152,7 @@ void PurahEngine::GameObject::OnTriggerStay()
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerExit()
+void PurahEngine::GameObject::OnTriggerExit(const ZonaiPhysics::ZnCollider*)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
