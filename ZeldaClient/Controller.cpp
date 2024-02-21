@@ -10,7 +10,7 @@ namespace PurahEngine
 
 	void Controller::Awake()
 	{
-		rigidbody = player->GetComponent<RigidBody>();
+		rigidbody = playerBody->GetComponent<RigidBody>();
 		transform = gameObject->GetTransform();
 		speed = 5.f;
 		drag = 0.7f;
@@ -26,10 +26,15 @@ namespace PurahEngine
 
 	void Controller::Update()
 	{
+		Move();
+	}
+
+	void Controller::Move()
+	{
 		InputManager& instance = InputManager::Getinstance();
 		TimeController& time = TimeController::GetInstance();
 
-		// player 이동
+		// playerBody 이동
 		const bool w = instance.IsKeyPressed('W');
 		const bool s = instance.IsKeyPressed('S');
 		const bool a = instance.IsKeyPressed('A');
@@ -98,7 +103,7 @@ namespace PurahEngine
 			direction.normalize();
 			velo += direction * speed;
 
-			const auto playerT = player->GetTransform();
+			const auto playerT = playerBody->GetTransform();
 			// playerT->SetWorldRotation({ 0.f, direction.x(), direction.y(), direction.z() });
 			transform->SetWorldRotation(world);
 		}
@@ -133,7 +138,7 @@ namespace PurahEngine
 		}
 	}
 
-	void Controller::FixedUpdate()
+	void Controller::HandsUp()
 	{
 
 	}
@@ -142,6 +147,6 @@ namespace PurahEngine
 	{
 		assert(_player != nullptr);
 
-		player = _player;
+		playerBody = _player;
 	}
 }

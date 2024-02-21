@@ -48,8 +48,8 @@ namespace PurahEngine
 		auto user1 = _c1->GetUserData();
 		const auto g1 = static_cast<GameObject*>(user1);
 
-		// g0->OnTriggerEnter(user1);
-		// g1->OnTriggerEnter(user0);
+		// g0->OnTriggerExit(user1);
+		// g1->OnTriggerExit(user0);
 	}
 
 	void EventCallbackSystem::OnCollisionEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
@@ -61,19 +61,33 @@ namespace PurahEngine
 		auto user1 = _c1->GetUserData();
 		const auto g1 = static_cast<GameObject*>(user1);
 
-		// g0->OnTriggerEnter(user1);
-		// g1->OnTriggerEnter(user0);
+		// g0->OnCollisionExit(user1, _collision);
+		// g1->OnCollisionExit(user0, _collision);
 	}
 
 	void EventCallbackSystem::OnCollisionStay(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
 		const ZonaiPhysics::ZnCollision& _collision)
 	{
-		// 
+		auto user0 = _c0->GetUserData();
+		const auto g0 = static_cast<GameObject*>(user0);
+
+		auto user1 = _c1->GetUserData();
+		const auto g1 = static_cast<GameObject*>(user1);
+
+		// g0->OnCollisionExit(user1, _collision);
+		// g1->OnCollisionExit(user0, _collision);
 	}
 
 	void EventCallbackSystem::OnCollisionExit(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
 		const ZonaiPhysics::ZnCollision& _collision)
 	{
-		// 
+		auto user0 = _c0->GetUserData();
+		const auto g0 = static_cast<GameObject*>(user0);
+
+		auto user1 = _c1->GetUserData();
+		const auto g1 = static_cast<GameObject*>(user1);
+
+		// g0->OnCollisionExit(user1, _collision);
+		// g1->OnCollisionExit(user0, _collision);
 	}
 }

@@ -10,9 +10,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>KH\PLAYER</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCamera.cpp">
-      <Filter>KH\PLAYER</Filter>
-    </ClCompile>
     <ClCompile Include="KiHoon.cpp">
       <Filter>KH\SCENE</Filter>
     </ClCompile>
@@ -37,8 +34,21 @@
     <ClCompile Include="IObject.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationTestController.cpp">
-      <Filter>Maker\BJ</Filter>
+    <ClCompile Include="AnimationTestController.cpp" />
+    <ClCompile Include="PlayerSystem.cpp">
+      <Filter>KH\PLAYER</Filter>
+    </ClCompile>
+    <ClCompile Include="UltraHand.cpp">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClCompile>
+    <ClCompile Include="Rewind.cpp">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClCompile>
+    <ClCompile Include="IAbility.cpp">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClCompile>
+    <ClCompile Include="Hold.cpp">
+      <Filter>KH\PLAYER\Ability</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -49,13 +59,7 @@
     <ClInclude Include="Test3.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
-    <ClInclude Include="ObjectProperty.h">
-      <Filter>KH</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>KH\PLAYER</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerCamera.h">
       <Filter>KH\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="KiHoon.h">
@@ -88,8 +92,27 @@
     <ClInclude Include="IObject.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationTestController.h">
-      <Filter>Maker\BJ</Filter>
+    <ClInclude Include="AnimationTestController.h" />
+    <ClInclude Include="PlayerSystem.h">
+      <Filter>KH\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="UltraHand.h">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewind.h">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClInclude>
+    <ClInclude Include="IAbility.h">
+      <Filter>KH\PLAYER\Ability</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectProperty.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TemplateFlag.h">
+      <Filter>KH\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="Hold.h">
+      <Filter>KH\PLAYER\Ability</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +145,9 @@
     </Filter>
     <Filter Include="KH\Object">
       <UniqueIdentifier>{0095cd59-04b0-4218-b5d5-e6a72052ab37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\Ability">
+      <UniqueIdentifier>{6452ba17-f6c7-4808-9efa-26bba6abd277}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

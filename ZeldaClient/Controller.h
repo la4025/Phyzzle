@@ -14,14 +14,20 @@ namespace PurahEngine
 		void Update() override;
 		void FixedUpdate() override;
 
+	private:
+		void Move();
+		void HandsUp();
+
+
 	public:
 		void SetPlayer(GameObject*);
 
 	private:
+		bool detect;
 		float speed;
 		float drag;
 
-		GameObject* player;
+		GameObject* playerBody;
 		RigidBody* rigidbody;
 		Transform* transform;
 

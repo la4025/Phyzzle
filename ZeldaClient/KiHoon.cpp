@@ -38,19 +38,30 @@ void KiHoon::Run()
 		trans->Rotate(Eigen::Vector3f{ -1.f, -1.f,-1.f }.normalized(), 45.f);
 	}
 
+
+	// 플레이어는
+	// 플레이어의 자식 객체로 Body와 Camera가 있을 예정
 	GameObject* player = SceneManager::GetInstance().CreateGameObject(L"Player");
 	{
-		MeshRenderer* renderer = player->AddComponent<MeshRenderer>();
-		renderer->SetMesh(MeshRenderer::MeshType::Cube);
-		renderer->SetTexture(L"PlayerTextureTest.png");
-
 		Transform* trans = player->GetTransform();
 		trans->SetLocalPosition({ 0.0f, 3.0f, 0.0f });
 
-		BoxCollider* collider = player->AddComponent<BoxCollider>();
+		Controller* controller = player->AddComponent<Controller>();
+	}
+
+	GameObject* playerBody = SceneManager::GetInstance().CreateGameObject(L"PlayerBody");
+	{
+		MeshRenderer* renderer = playerBody->AddComponent<MeshRenderer>();
+		renderer->SetMesh(MeshRenderer::MeshType::Cube);
+		renderer->SetTexture(L"PlayerTextureTest.png");
+
+		Transform* trans = playerBody->GetTransform();
+		trans->SetParent(player->GetTransform());
+
+		BoxCollider* collider = playerBody->AddComponent<BoxCollider>();
 		collider->SetSize({ 0.5f, 0.5f, 0.5f });
 
-		RigidBody* rigid = player->AddComponent<RigidBody>();
+		RigidBody* rigid = playerBody->AddComponent<RigidBody>();
 		rigid->SetMass(10.0f);
 		rigid->SetDynamicLockFlag(ZonaiPhysics::LOCK_ANGULAR_X, true);
 		rigid->SetDynamicLockFlag(ZonaiPhysics::LOCK_ANGULAR_Y, true);
@@ -67,22 +78,13 @@ void KiHoon::Run()
 		collider->SetTrigger(true);
 	}
 
-	GameObject* controllerObject = SceneManager::GetInstance().CreateGameObject(L"Controller");
-	{
-		Transform* trans = controllerObject->GetTransform();
-		trans->SetParent(player->GetTransform());
-
-		Controller* controller = controllerObject->AddComponent<Controller>();
-		controller->SetPlayer(player);
-	}
-
 	GameObject* camera = SceneManager::GetInstance().CreateGameObject(L"Camera");
 	{
 		Camera* cameraObject = camera->AddComponent<Camera>();
 		cameraObject->SetMainCamera();
 
 		Transform* transform = camera->GetTransform();
-		transform->SetParent(controllerObject->GetTransform());
+		transform->SetParent(player->GetTransform());
 		transform->SetLocalPosition({ 0.f, 3.f, -15.f });
 
 		auto cameraCollider = camera->AddComponent<BoxCollider>();
