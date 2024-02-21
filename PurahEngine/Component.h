@@ -1,9 +1,12 @@
 #pragma once
 #include "PurahEngineAPI.h"
+#include "ZnCollider.h"
+#include "ZnCollision.h"
 
 namespace ZonaiPhysics
 {
 	class ZnCollision;
+	class ZnCollider;
 }
 
 namespace PurahEngine
@@ -36,19 +39,19 @@ namespace PurahEngine
 
 		/// OnCollision
 			// 충돌체가 충돌했을 때 호출
-		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
+		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
 		// 충돌체가 충돌을 유지할 때 호출
-		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
+		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
 		// 충돌체가 충돌을 벗어났을 때 호출
-		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
+		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
 
 		/// OnTrigger
 		// 트리거가 충돌했을 때 호출
-		virtual void OnTriggerEnter(const PurahEngine::Collider*);
+		virtual void OnTriggerEnter(const ZonaiPhysics::ZnCollider*);
 		// 트리거가 충돌율 유지할 때 호출
-		virtual void OnTriggerStay(const PurahEngine::Collider*);
+		virtual void OnTriggerStay(const ZonaiPhysics::ZnCollider*);
 		// 트리거가 충돌을 벗어났을 때 호출
-		virtual void OnTriggerExit(const PurahEngine::Collider*);
+		virtual void OnTriggerExit(const ZonaiPhysics::ZnCollider*);
 
 		/// OnMouse
 		// 마우스가 오브젝트 위에 올라갔을 때 호출

@@ -23,33 +23,3 @@ void Hold::Update()
 {
 
 }
-
-void Hold::OnCollisionEnter()
-{
-
-}
-
-void Hold::OnCollisionStay()
-{
-	
-}
-
-void Hold::OnCollisionExit()
-{
-	
-}
-
-void Hold::OnTriggerEnter()
-{
-	
-}
-
-void Hold::OnTriggerStay()
-{
-	
-}
-
-void Hold::OnTriggerExit()
-{
-	
-}

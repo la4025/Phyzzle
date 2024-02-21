@@ -45,23 +45,21 @@ void KiHoon::Run()
 	{
 		Transform* trans = player->GetTransform();
 		trans->SetLocalPosition({ 0.0f, 3.0f, 0.0f });
-
-		Controller* controller = player->AddComponent<Controller>();
 	}
 
-	GameObject* playerBody = SceneManager::GetInstance().CreateGameObject(L"PlayerBody");
+	GameObject* body = SceneManager::GetInstance().CreateGameObject(L"PlayerBody");
 	{
-		MeshRenderer* renderer = playerBody->AddComponent<MeshRenderer>();
+		MeshRenderer* renderer = body->AddComponent<MeshRenderer>();
 		renderer->SetMesh(MeshRenderer::MeshType::Cube);
 		renderer->SetTexture(L"PlayerTextureTest.png");
 
-		Transform* trans = playerBody->GetTransform();
+		Transform* trans = body->GetTransform();
 		trans->SetParent(player->GetTransform());
 
-		BoxCollider* collider = playerBody->AddComponent<BoxCollider>();
+		BoxCollider* collider = body->AddComponent<BoxCollider>();
 		collider->SetSize({ 0.5f, 0.5f, 0.5f });
 
-		RigidBody* rigid = playerBody->AddComponent<RigidBody>();
+		RigidBody* rigid = body->AddComponent<RigidBody>();
 		rigid->SetMass(10.0f);
 		rigid->SetDynamicLockFlag(ZonaiPhysics::LOCK_ANGULAR_X, true);
 		rigid->SetDynamicLockFlag(ZonaiPhysics::LOCK_ANGULAR_Y, true);
@@ -76,6 +74,11 @@ void KiHoon::Run()
 		BoxCollider* collider = playerDitection->AddComponent<BoxCollider>();
 		collider->SetSize({ 0.2f, 0.2f, 0.2f });
 		collider->SetTrigger(true);
+	}
+
+	{
+		//Controller* controller = player->AddComponent<Controller>();
+		//controller->SetPlayer(body);
 	}
 
 	GameObject* camera = SceneManager::GetInstance().CreateGameObject(L"Camera");

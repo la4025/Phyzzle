@@ -1,7 +1,7 @@
-#include "Component.h"
-
-#include "Collider.h"
+#include "ZnCollider.h"
 #include "ZnCollision.h"
+
+#include "Component.h"
 
 #include "GameObject.h"
 
@@ -102,7 +102,7 @@ PurahEngine::Transform* PurahEngine::GameObject::GetTransform()
 	return trans;
 }
 
-void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -110,7 +110,7 @@ void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& 
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -118,7 +118,7 @@ void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& c
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -126,7 +126,7 @@ void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& c
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerEnter(const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnTriggerEnter(const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -134,7 +134,7 @@ void PurahEngine::GameObject::OnTriggerEnter(const PurahEngine::Collider* collid
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerStay(const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnTriggerStay(const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -142,7 +142,7 @@ void PurahEngine::GameObject::OnTriggerStay(const PurahEngine::Collider* collide
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerExit(const PurahEngine::Collider* collider)
+void PurahEngine::GameObject::OnTriggerExit(const ZonaiPhysics::ZnCollider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
