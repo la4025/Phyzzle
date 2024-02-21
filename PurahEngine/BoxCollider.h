@@ -19,6 +19,8 @@ namespace PurahEngine
 				size.x(), size.y(), size.z()
 			);
 
+			znCollider->SetUserData(this);
+
 			this->awake = true;
 
 			this->znCollider->SetLocalPosition(this->positionOffset);

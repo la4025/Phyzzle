@@ -5,6 +5,8 @@
 
 namespace PurahEngine
 {
+	class Collider;
+
 	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody*)
 	{
 		// 구현 안 함
@@ -26,13 +28,15 @@ namespace PurahEngine
 	void EventCallbackSystem::OnTriggerEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
 	{
 		auto user0 =  _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
+		assert(user0 != nullptr);
+		const auto g0 = static_cast<Collider*>(user0);
 
 		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		assert(user1 != nullptr);
+		const auto g1 = static_cast<Collider*>(user1);
 
-		// g0->OnTriggerEnter(user1);
-		// g1->OnTriggerEnter(user0);
+		g0->OnTriggerEnter(g0);
+		g1->OnTriggerEnter(g1);
 	}
 
 	void EventCallbackSystem::OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*)
@@ -43,10 +47,12 @@ namespace PurahEngine
 	void EventCallbackSystem::OnTriggerExit(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
 	{
 		auto user0 = _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
+		assert(user0 != nullptr);
+		const auto g0 = static_cast<Collider*>(user0);
 
 		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		assert(user1 != nullptr);
+		const auto g1 = static_cast<Collider*>(user1);
 
 		// g0->OnTriggerExit(user1);
 		// g1->OnTriggerExit(user0);
@@ -56,10 +62,12 @@ namespace PurahEngine
 		const ZonaiPhysics::ZnCollision& _collision)
 	{
 		auto user0 = _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
+		assert(user0 != nullptr);
+		const auto g0 = static_cast<Collider*>(user0);
 
 		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		assert(user1 != nullptr);
+		const auto g1 = static_cast<Collider*>(user1);
 
 		// g0->OnCollisionExit(user1, _collision);
 		// g1->OnCollisionExit(user0, _collision);
@@ -69,10 +77,12 @@ namespace PurahEngine
 		const ZonaiPhysics::ZnCollision& _collision)
 	{
 		auto user0 = _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
+		assert(user0 != nullptr);
+		const auto g0 = static_cast<Collider*>(user0);
 
 		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		assert(user1 != nullptr);
+		const auto g1 = static_cast<Collider*>(user1);
 
 		// g0->OnCollisionExit(user1, _collision);
 		// g1->OnCollisionExit(user0, _collision);
@@ -82,10 +92,12 @@ namespace PurahEngine
 		const ZonaiPhysics::ZnCollision& _collision)
 	{
 		auto user0 = _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
+		assert(user0 != nullptr);
+		const auto g0 = static_cast<Collider*>(user0);
 
 		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		assert(user1 != nullptr);
+		const auto g1 = static_cast<Collider*>(user1);
 
 		// g0->OnCollisionExit(user1, _collision);
 		// g1->OnCollisionExit(user0, _collision);
