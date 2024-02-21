@@ -5,15 +5,19 @@
 
 #include "ZnCollider.h"
 
-#include "ColliderBase.h"
-
 #include "PhysicsSystem.h"
 
 namespace PurahEngine
 {
     class Transform;
 
-    class PURAHENGINE_API Collider : public ColliderBase
+    enum class ColliderType
+    {
+        DYNAMIC,
+        STATIC,
+    };
+
+    class PURAHENGINE_API Collider : public Component
     {
     public:
         Collider() = default;
@@ -29,7 +33,7 @@ namespace PurahEngine
             case ColliderType::DYNAMIC:
             {
 				auto& colliders = physicsSystem.dynamicColliders;
-				colliders.erase(std::remove(colliders.begin(), colliders.end(), this));
+				colliders.erase(std::ranges::remove(colliders, this).begin());
                 physicsSystem.FreeObject(znCollider);
             }
             break;
@@ -37,7 +41,7 @@ namespace PurahEngine
             case ColliderType::STATIC:
             {
                 auto& colliders = physicsSystem.staticColliders;
-                colliders.erase(std::remove(colliders.begin(), colliders.end(), this));
+                colliders.erase(std::ranges::remove(colliders, this).begin());
                 physicsSystem.FreeObject(znCollider);
             }
             break;
@@ -64,12 +68,30 @@ namespace PurahEngine
             default:
                 throw"";
             }
-
-            awake = false;
-            SetTrigger(isTrigger);
-            SetLayer(layer);
         }
 
+        void SetPositionOffset(const Eigen::Vector3f& _pos)
+        {
+            if (awake)
+            {
+                positionOffset = _pos;
+            }
+            else
+            {
+                znCollider->SetLocalPosition(positionOffset);
+            }
+        }
+        void SetRotationOffset(const Eigen::Quaternionf& _quat)
+        {
+            if (awake)
+            {
+                rotationOffset = _quat;
+            }
+            else
+            {
+                znCollider->SetLocalQuaternion(rotationOffset);
+            }
+        }
         void SetDynamic(bool _value)
         {
             type = _value ? ColliderType::DYNAMIC : ColliderType::STATIC;
@@ -98,16 +120,22 @@ namespace PurahEngine
         }
 
     public:
-        void PreStep() override
+        virtual void PreStep()
         {
             znCollider->SetPosition(transform->GetWorldPosition());
             znCollider->SetQuaternion(transform->GetWorldRotation());
         }
 
     protected:
-        bool isTrigger = false;
-
+        bool awake = false;
         Transform* transform = nullptr;
         ColliderType type = ColliderType::STATIC;
+
+    protected:
+        bool isTrigger = false;
+        uint32_t layer = 0;
+        ZonaiPhysics::ZnCollider* znCollider = nullptr;
+        Eigen::Vector3f positionOffset{ Eigen::Vector3f::Zero() };
+        Eigen::Quaternionf rotationOffset{ Eigen::Quaternionf::Identity() };
     };
 }

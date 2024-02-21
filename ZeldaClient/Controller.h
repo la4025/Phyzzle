@@ -12,7 +12,6 @@ namespace PurahEngine
 		void Start() override;
 
 		void Update() override;
-		void FixedUpdate() override;
 
 	private:
 		void Move();

@@ -21,10 +21,12 @@ namespace PurahEngine
 
 			znCollider->SetUserData(this);
 
-			this->awake = true;
+			awake = false;
 
-			this->znCollider->SetLocalPosition(this->positionOffset);
-			this->znCollider->SetLocalQuaternion(this->rotationOffset);
+			SetTrigger(isTrigger);
+			SetLayer(layer);
+			SetPositionOffset(positionOffset);
+			SetRotationOffset(rotationOffset);
 		}
 
 	public:

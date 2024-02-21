@@ -35,8 +35,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto g1 = static_cast<Collider*>(user1);
 
-		g0->OnTriggerEnter(g0);
-		g1->OnTriggerEnter(g1);
+		// g0->OnTriggerEnter(g0);
+		// g1->OnTriggerEnter(g1);
 	}
 
 	void EventCallbackSystem::OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*)
