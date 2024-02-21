@@ -1,11 +1,14 @@
 #pragma once
 #include "PurahEngineAPI.h"
 #include "Transform.h"
-#include "ZnCollider.h"
-#include "ZnCollision.h"
 
 #include <vector>
 #include <string>
+
+namespace ZonaiPhysics
+{
+	class ZnCollision;
+}
 
 
 namespace PurahEngine
@@ -13,6 +16,7 @@ namespace PurahEngine
 	class Component;
 	class SceneManager;
 	class Transform;
+	class Collider;
 
 	template <typename T>
 	concept componentType = std::is_base_of_v<Component, T>;
@@ -41,19 +45,19 @@ namespace PurahEngine
 
 		/// OnCollision
 		// 충돌체가 충돌했을 때 호출
-		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const GameObject*);
+		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
 		// 충돌체가 충돌을 유지할 때 호출
-		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const GameObject*);
+		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
 		// 충돌체가 충돌을 벗어났을 때 호출
-		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const GameObject*);
+		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*);
 
 		/// OnTrigger
 		// 트리거가 충돌했을 때 호출
-		virtual void OnTriggerEnter(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerEnter(const PurahEngine::Collider*);
 		// 트리거가 충돌율 유지할 때 호출
-		virtual void OnTriggerStay(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerStay(const PurahEngine::Collider*);
 		// 트리거가 충돌을 벗어났을 때 호출
-		virtual void OnTriggerExit(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerExit(const PurahEngine::Collider*);
 
 		/// OnMouse
 		// 마우스가 오브젝트 위에 올라갔을 때 호출
@@ -102,7 +106,7 @@ namespace PurahEngine
 	public:
 		// ComponentList로 Component 추가
 		template<componentType T>
-		T* AddComponent() 
+		T* AddComponent()
 		{
 			T* t = new T;
 			componentList.push_back(t);

@@ -42,6 +42,7 @@ namespace PurahEngine
 			AWAKE,
 			START,
 			UPDATE,
+			LATEUPDATE,
 			DESTROY
 		};
 
