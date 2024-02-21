@@ -10,6 +10,7 @@
 #include "RigidBody.h"
 #include "BoxCollider.h"
 #include "SoundManager.h"
+#include "TimeController.h"
 
 // Graphics
 #include "Camera.h"

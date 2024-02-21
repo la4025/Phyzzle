@@ -1,7 +1,8 @@
-#include "EventCallbackSystem.h"
-
 #include "GameObject.h"
 #include "ZnCollider.h"
+#include "ZnCollision.h"
+
+#include "EventCallbackSystem.h"
 
 namespace PurahEngine
 {
@@ -25,11 +26,11 @@ namespace PurahEngine
 
 	void EventCallbackSystem::OnTriggerEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
 	{
-		auto user0 =  _c0->GetUserData();
-		const auto g0 = static_cast<GameObject*>(user0);
-
-		auto user1 = _c1->GetUserData();
-		const auto g1 = static_cast<GameObject*>(user1);
+		// auto user0 =  _c0->GetUserData();
+		// const auto g0 = static_cast<GameObject*>(user0);
+		// 
+		// auto user1 = _c1->GetUserData();
+		// const auto g1 = static_cast<GameObject*>(user1);
 
 		// g0->OnTriggerEnter(user1);
 		// g1->OnTriggerEnter(user0);

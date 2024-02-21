@@ -72,9 +72,23 @@ void PurahEngine::SceneManager::Update()
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
-			object->UpdateEvent();
-			object->LateUpdateEvent();
+			if (object->IsRootEnable() == true)
+			{
+				object->UpdateEvent();
+			}
 		}
+		state = RunningState::LATEUPDATE;
+	}
+	if (state == RunningState::LATEUPDATE)
+	{
+		for (PurahEngine::GameObject* object : objectList)
+		{
+			if (object->IsRootEnable() == true)
+			{
+				object->LateUpdateEvent();
+			}
+		}
+		state = RunningState::UPDATE;
 	}
 
 	if (physicsTime >= 0.02f)
