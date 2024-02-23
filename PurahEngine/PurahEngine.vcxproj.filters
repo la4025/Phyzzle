@@ -64,6 +64,9 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{0505cefc-87c2-4209-ae57-1b47cad691ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Manager\FileManager">
+      <UniqueIdentifier>{7d806f8f-3739-4237-9b82-8f56fd98b236}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Component\3. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Core\Manager\FileManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Component\3. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Core\Manager\FileManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

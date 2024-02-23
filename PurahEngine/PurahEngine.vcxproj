@@ -44,6 +44,7 @@
     <ClInclude Include="Componentmanager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="EventCallbackSystem.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
@@ -75,6 +76,7 @@
     <ClCompile Include="Componentmanager.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="EventCallbackSystem.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="GameObject.cpp" />
