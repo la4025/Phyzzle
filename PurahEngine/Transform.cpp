@@ -252,6 +252,41 @@ void PurahEngine::Transform::SetWorldMatrix(Eigen::Matrix4f targetMatrix)
 
 }
 
+void PurahEngine::Transform::PreSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::Transform::PreDeserialize(const json& jsonData)
+{
+	PREDESERIALIZE_BASE();
+	PREDESERIALIZE_VECTOR3F(position);
+	PREDESERIALIZE_QUATERNIONF(rotation);
+	PREDESERIALIZE_VECTOR3F(scale);
+}
+
+void PurahEngine::Transform::PostSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::Transform::PostDeserialize(const json& jsonData)
+{
+	auto& fManager = FileManager::GetInstance();
+
+	for (int i = 0; i < jsonData["__ID__children"].size(); i++)
+	{
+		Transform* child = static_cast<Transform*>(fManager.GetAddress(jsonData["__ID__children"][i]));
+		children.push_back(child);
+	}
+
+	if (jsonData["__ID__parent"].size() != 0)
+	{
+		Transform* parent = static_cast<Transform*>(fManager.GetAddress(jsonData["__ID__parent"][0]));
+		parentTransform = parent;
+	}
+}
+
 void PurahEngine::Transform::SetRigidBody(RigidBody* rigid)
 {
 	assert(rigidbody == nullptr || (rigid == nullptr && rigidbody != nullptr));

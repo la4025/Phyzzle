@@ -132,6 +132,48 @@ void PurahEngine::SceneManager::Update()
 
 }
 
+void PurahEngine::SceneManager::LoadScene()
+{
+	auto& fManager = PurahEngine::FileManager::GetInstance();
+	fManager.clear();
+
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		delete objectList[i];
+	}
+	objectList.clear();
+	sceneData = fManager.LoadData(L"SampleSceneObjectInfo.json");
+	Deserialize(sceneData);
+}
+
+void PurahEngine::SceneManager::PreSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::SceneManager::PreDeserialize(const json& jsonData)
+{
+	for (int i = 0; i < jsonData["gameObjects"].size(); i++)
+	{
+		std::string name = jsonData["gameObjects"][i]["name"];
+		GameObject* object = CreateGameObject(std::wstring(name.begin(),name.end()));
+		object->PreDeserialize(jsonData["gameObjects"][i]);
+	}
+}
+
+void PurahEngine::SceneManager::PostSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::SceneManager::PostDeserialize(const json& jsonData)
+{
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		objectList[i]->PostDeserialize(jsonData["gameObjects"][i]);
+	}
+}
+
 void PurahEngine::SceneManager::Initialize()
 {
 	// 씬을 초기화할때 카메라를 씬에 생성해둔다.

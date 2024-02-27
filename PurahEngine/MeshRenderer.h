@@ -22,13 +22,20 @@ namespace PurahEngine
 		void SetMesh(MeshType type);
 		void SetWireFrame(bool value);
 		void SetColor(float r, float g, float b, float a);
-		void SetColor(Color color);
+
+	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
 
 	private:
 		std::wstring textureName;
 		MeshType meshType;
 		bool wireFrame;
-
-		Color meshColor;
+		float r;
+		float g;
+		float b;
+		float a;
 	};
 }

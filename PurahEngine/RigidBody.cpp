@@ -347,4 +347,25 @@ namespace PurahEngine
 		transform->SetWorldPosition(pos);
 		transform->SetWorldRotation(rot);
 	}
+
+	void RigidBody::PreSerialize(json& jsonData) const
+	{
+
+	}
+
+	void RigidBody::PreDeserialize(const json& jsonData)
+	{
+
+	}
+
+	void RigidBody::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void RigidBody::PostDeserialize(const json& jsonData)
+	{
+
+	}
+
 }

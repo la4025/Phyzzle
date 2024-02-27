@@ -27,6 +27,12 @@ namespace PurahEngine
 
 		void Render(IZeldaRenderer* renderer) override;
 
+	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
+
 	private:
 		float cameraNear;	// 최소 거리
 		float cameraFar;	// 최대 거리

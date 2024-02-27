@@ -184,6 +184,42 @@ std::wstring PurahEngine::GameObject::GetName()
 	return name;
 }
 
+void PurahEngine::GameObject::PreSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::GameObject::PreDeserialize(const json& jsonData)
+{
+	auto& fManager = FileManager::GetInstance();
+	fManager.SetAddress(jsonData["__Base__instanceID"], this);
+	trans->PreDeserialize(jsonData["transform"]);
+	for (int i = 0; i < jsonData["components"].size(); i++)
+	{
+		Component* component = AddComponentToString(jsonData["components"][i]["__Base__Component"]);
+		component->PreDeserialize(jsonData["components"][i]);
+	}
+}
+
+void PurahEngine::GameObject::PostSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::GameObject::PostDeserialize(const json& jsonData)
+{
+	int count = 0;
+	trans->PostDeserialize(jsonData["transform"]);
+	for (int i = 0; i < componentList.size(); i++)
+	{
+		if (dynamic_cast<Transform*>(componentList[i]) == nullptr)
+		{
+			componentList[i]->PostDeserialize(jsonData["components"][count]);
+			count++;
+		}
+	}
+}
+
 PurahEngine::GameObject::GameObject(std::wstring objectname)
 	: trans(nullptr)
 {
@@ -202,5 +238,19 @@ PurahEngine::GameObject::GameObject(std::wstring objectname, bool isenable)
 
 PurahEngine::GameObject::~GameObject()
 {
+	for (int i = 0; i < componentList.size(); i++)
+	{
+		delete componentList[i];
+	}
 	componentList.clear();
+}
+
+PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)
+{
+	Component* component = ComponentFactory::GetInstance().componentFactory[componentName]();
+	componentList.push_back(component);
+	component->gameObject = this;
+	component->Initialize();
+
+	return component; // 추가된 컴포넌트 포인터를 반환
 }

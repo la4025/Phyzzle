@@ -1,5 +1,6 @@
 #pragma once
 #include "PurahEngineAPI.h"
+#include "SerializableDefine.h"
 #include "ZnCollider.h"
 #include "ZnCollision.h"
 
@@ -14,7 +15,7 @@ namespace PurahEngine
 	class GameObject;
 	class Collider;
 
-	class PURAHENGINE_API Component
+	class PURAHENGINE_API Component : public Serializable
 	{
 	protected:
 		Component();

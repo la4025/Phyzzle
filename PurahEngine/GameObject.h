@@ -1,6 +1,8 @@
 #pragma once
 #include "PurahEngineAPI.h"
+#include "SerializableDefine.h"
 #include "Transform.h"
+#include "ComponentFactory.h"
 
 #include <vector>
 #include <string>
@@ -22,7 +24,7 @@ namespace PurahEngine
 	template <typename T>
 	concept componentType = std::is_base_of_v<Component, T>;
 
-	class PURAHENGINE_API GameObject
+	class PURAHENGINE_API GameObject : public Serializable
 	{
 	public:
 
@@ -78,6 +80,12 @@ namespace PurahEngine
 
 		std::wstring GetName();
 
+	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
+
 
 	private:
 		// ComponentList로 Component 관리
@@ -131,6 +139,11 @@ namespace PurahEngine
 
 			return nullptr; // 해당 타입의 컴포넌트를 찾지 못했을 때 nullptr 반환
 		}
+
+	private:
+		// DeSerialize한 Component 추가하기 위한 함수.
+		Component* AddComponentToString(std::string componentName);
+
 		friend SceneManager;
 		friend Transform;
 	};

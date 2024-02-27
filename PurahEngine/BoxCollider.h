@@ -16,6 +16,12 @@ namespace PurahEngine
 		void SetSize(const Eigen::Vector3f& _size);
 
 	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
+
+	public:
 		Eigen::Vector3f size{ 1.f, 1.f, 1.f };
 	};
 }

@@ -2,6 +2,7 @@
 /// 외부에는 이부분만 보여지게 하기 위하도록 설계
 #include <Windows.h>
 #include "PurahEngineAPI.h"
+#include "Serializable.h"
 #include "Component.h"
 #include "Transform.h"
 #include "SceneManager.h"

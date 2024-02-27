@@ -29,4 +29,25 @@ namespace PurahEngine
 	{
 		this->size = _size;
 	}
+
+	void BoxCollider::PreSerialize(json& jsonData) const
+	{
+
+	}
+
+	void BoxCollider::PreDeserialize(const json& jsonData)
+	{
+
+	}
+
+	void BoxCollider::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void BoxCollider::PostDeserialize(const json& jsonData)
+	{
+
+	}
+
 }

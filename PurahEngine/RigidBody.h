@@ -116,6 +116,12 @@ namespace PurahEngine
 	public:
 		void SimulateResult();
 
+	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
+
 	private:
 		bool awake{ true };
 		bool isKinematic{ false };
@@ -131,8 +137,8 @@ namespace PurahEngine
 		float mass{ 1.f };
 		float linearDamping{ 0.1f };
 		float angularDamping{ 0.1f };
-		Eigen::Vector3f force{0.f, 0.f, 0.f};
-		Eigen::Vector3f torque{0.f, 0.f, 0.f};
+		Eigen::Vector3f force{ 0.f, 0.f, 0.f };
+		Eigen::Vector3f torque{ 0.f, 0.f, 0.f };
 		ZonaiPhysics::ZnRigidBody* body{};
 
 		friend class Transform;

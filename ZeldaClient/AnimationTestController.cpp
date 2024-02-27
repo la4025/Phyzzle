@@ -29,3 +29,23 @@ void AnimationTestController::Update()
 		timer -= playTime;
 	}
 }
+
+void AnimationTestController::PreSerialize(json& jsonData) const
+{
+
+}
+
+void AnimationTestController::PreDeserialize(const json& jsonData)
+{
+
+}
+
+void AnimationTestController::PostSerialize(json& jsonData) const
+{
+
+}
+
+void AnimationTestController::PostDeserialize(const json& jsonData)
+{
+
+}
