@@ -39,10 +39,10 @@ void BeomJoon::Run()
 	// 캐릭터 생성
 	GameObject* characterObject = SceneManager::GetInstance().CreateGameObject(L"Character");
 	ModelRenderer* character = characterObject->AddComponent<ModelRenderer>();
-	//character->SetModelName(L"Character\\Character.fbx");
-	character->SetModelName(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
+	character->SetModelName(L"Character\\Character.fbx");
+	//character->SetModelName(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
 
-	characterObject->GetTransform()->SetLocalScale({ 0.02f, 0.02f, 0.02f });
+	characterObject->GetTransform()->SetLocalScale({ 0.2f, 0.2f, 0.2f });
 
 	// 애니메이션을 테스트하기 위한 컴포넌트 추가
 	characterObject->AddComponent<Animator>();

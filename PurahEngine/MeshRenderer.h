@@ -9,10 +9,10 @@ namespace PurahEngine
 	public:
 		MeshRenderer();
 
-		enum class MeshType
+		enum class MeshType : int
 		{
-			None,
-			Cube
+			None = 0,
+			Cube = 1
 		};
 
 		// Renderer을(를) 통해 상속됨
@@ -25,9 +25,9 @@ namespace PurahEngine
 		void SetColor(Color color);
 
 	private:
-		std::wstring textureName;
 		MeshType meshType;
 		bool wireFrame;
+		std::wstring textureName;
 
 		Color meshColor;
 	};

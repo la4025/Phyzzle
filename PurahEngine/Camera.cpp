@@ -64,7 +64,22 @@ namespace PurahEngine
 	{
 		renderer->SetMainCamera(cameraID);
 
-		auto worldTM = GetGameObject()->GetComponent<Transform>()->GetWorldMatrix();
+		Eigen::Quaternionf rotation = GetGameObject()->GetTransform()->GetWorldRotation();
+		Eigen::Vector3f position = GetGameObject()->GetTransform()->GetWorldPosition();
+
+		// 회전 행렬을 만듭니다.
+		Eigen::Matrix4f rotationMatrix = Eigen::Matrix4f::Identity();
+		rotationMatrix.block<3, 3>(0, 0) = rotation.toRotationMatrix();
+
+		// 위치 행렬을 만듭니다.
+		Eigen::Matrix4f translationMatrix = Eigen::Matrix4f::Identity();
+		translationMatrix.block<3, 1>(0, 3) = position;
+
+		// 변환 행렬을 결합합니다.
+		Eigen::Matrix4f worldTM = translationMatrix * rotationMatrix;
+
+		Eigen::Translation3f(GetGameObject()->GetTransform()->GetWorldPosition());
+
 		renderer->UpdateCamera(cameraID, worldTM, fieldOfView, cameraNear, cameraFar);
 	}
 }
