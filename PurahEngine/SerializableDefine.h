@@ -32,3 +32,22 @@
 {\
 	value = Eigen::Quaternionf(jsonData[#value]["w"], jsonData[#value]["x"], jsonData[#value]["y"], jsonData[#value]["z"]); \
 }
+
+/// Transform children 전용 매크로 함수..뭔가 애매하다..
+/// decltype(value)::value_type 으로 자료형을 가져온다.
+#define POSTDESERIALIZE_VECTOR_PTR(value)\
+{\
+	for(int i = 0; i < jsonData[std::string("__ID__") + #value].size() ; i++)\
+	{\
+		value.push_back(static_cast<decltype(value)::value_type>(PurahEngine::FileManager::GetInstance().GetAddress(jsonData[std::string("__ID__") + #value][i]))); \
+	}\
+}
+
+/// 범용적으로 벡터를 담을 매크로함수 만들기가 좀 어렵다. 더 고민해보는중.
+#define POSTDESERIALIZE_VECTOR(value)\
+{\
+	for(int i = 0; i < jsonData[#value].size() ; i++)\
+	{\
+		value.push_back(static_cast<decltype(value)::value_type>(PurahEngine::FileManager::GetInstance().GetAddress(jsonData[#value][i]))); \
+	}\
+}

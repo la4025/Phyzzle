@@ -37,7 +37,8 @@ namespace PurahEngine
 
 	void BoxCollider::PreDeserialize(const json& jsonData)
 	{
-
+		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VECTOR3F(size);
 	}
 
 	void BoxCollider::PostSerialize(json& jsonData) const

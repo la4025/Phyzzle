@@ -53,26 +53,6 @@ namespace PurahEngine
 		Play(animationName, animationNumber);
 	}
 
-	void Animator::PreSerialize(json& jsonData) const
-	{
-
-	}
-
-	void Animator::PreDeserialize(const json& jsonData)
-	{
-
-	}
-
-	void Animator::PostSerialize(json& jsonData) const
-	{
-
-	}
-
-	void Animator::PostDeserialize(const json& jsonData)
-	{
-
-	}
-
 	void Animator::CheckModelRenderer()
 	{
 		ModelRenderer* modelRenderer = GetGameObject()->GetComponent<ModelRenderer>();
@@ -338,5 +318,25 @@ namespace PurahEngine
 			animationName2 = targetAnimationName;
 			time1 = 0.0f;
 		}
+	}
+
+	void Animator::PreSerialize(json& jsonData) const
+	{
+
+	}
+
+	void Animator::PreDeserialize(const json& jsonData)
+	{
+		PREDESERIALIZE_BASE();
+	}
+
+	void Animator::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void Animator::PostDeserialize(const json& jsonData)
+	{
+
 	}
 }
