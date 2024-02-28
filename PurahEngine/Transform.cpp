@@ -159,7 +159,7 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 		localT.block<3, 1>(0, 3) = position;
 		Eigen::Affine3f a;
 		Eigen::Matrix4f setT = Eigen::Matrix4f::Identity();
-		localT.block<3, 1>(0, 3) = setPosition;
+		setT.block<3, 1>(0, 3) = setPosition;
 
 		position = (inverseC * localT * inverseP * setT).block<3, 1>(0, 3);
 	}

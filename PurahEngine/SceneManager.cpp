@@ -142,7 +142,7 @@ void PurahEngine::SceneManager::LoadScene()
 		delete objectList[i];
 	}
 	objectList.clear();
-	sceneData = fManager.LoadData(L"SampleSceneObjectInfo.json");
+	sceneData = fManager.LoadData(L"DataExportTestWorldObjectInfo.json");
 	Deserialize(sceneData);
 }
 

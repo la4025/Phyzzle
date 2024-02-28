@@ -33,8 +33,9 @@ namespace PurahEngine
 		// SetLinearVelocity(LinearVelocity);
 		// SetAngularVelocity(angularVelocity);
 		SetMass(mass);
-		// SetLinearDamping(linearDamping);
-		// SetAngularDamping(angularDamping);
+		SetLinearDamping(linearDamping);
+		SetAngularDamping(angularDamping);
+		WakeUp();
 		// AddForce(force);
 		// AddTorque(torque);
 	}
@@ -44,7 +45,7 @@ namespace PurahEngine
 		if (awake)
 		{
 			auto trans = GetGameObject()->GetTransform();
-			trans->SetLocalPosition(_pos);
+			trans->SetWorldPosition(_pos);
 		}
 		else
 		{
@@ -57,7 +58,7 @@ namespace PurahEngine
 		if (awake)
 		{
 			auto trans = GetGameObject()->GetTransform();
-			return trans->GetLocalPosition();
+			return trans->GetWorldPosition();
 		}
 		else
 		{
@@ -70,7 +71,7 @@ namespace PurahEngine
 		if (awake)
 		{
 			auto trans = GetGameObject()->GetTransform();
-			trans->SetLocalRotation(_rot);
+			trans->SetWorldRotation(_rot);
 		}
 		else
 		{
@@ -83,7 +84,7 @@ namespace PurahEngine
 		if (awake)
 		{
 			auto trans = GetGameObject()->GetTransform();
-			return trans->GetLocalRotation();
+			return trans->GetWorldRotation();
 		}
 		else
 		{
@@ -216,7 +217,7 @@ namespace PurahEngine
 	{
 		if (awake)
 		{
-			return LinearVelocity;
+			return linearVelocity;
 		}
 		else
 		{
@@ -228,7 +229,7 @@ namespace PurahEngine
 	{
 		if (awake)
 		{
-			LinearVelocity = _velocity;
+			linearVelocity = _velocity;
 		}
 		else
 		{
@@ -350,12 +351,22 @@ namespace PurahEngine
 
 	void RigidBody::PreSerialize(json& jsonData) const
 	{
-
+		
 	}
 
 	void RigidBody::PreDeserialize(const json& jsonData)
 	{
+		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(isKinematic);
+		PREDESERIALIZE_VALUE(useGravity);
 
+		int dynamicLock = 0;
+		PREDESERIALIZE_VALUE(dynamicLock);
+		this->freeze = (uint8_t)dynamicLock;
+
+		PREDESERIALIZE_VALUE(mass);
+		PREDESERIALIZE_VALUE(linearDamping);
+		PREDESERIALIZE_VALUE(angularDamping);
 	}
 
 	void RigidBody::PostSerialize(json& jsonData) const
