@@ -46,6 +46,12 @@ namespace PurahEngine
 	private:
 		void Play(const std::wstring& animationName, unsigned int animationID);
 
+	public:
+		virtual void PreSerialize(json& jsonData) const override;
+		virtual void PreDeserialize(const json& jsonData) override;
+		virtual void PostSerialize(json& jsonData) const override;
+		virtual void PostDeserialize(const json& jsonData) override;
+
 		ModelRenderer* targetRenderer;
 
 		std::vector<float> playTime;

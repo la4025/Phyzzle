@@ -67,4 +67,25 @@ namespace PurahEngine
 	{
 		this->modelName = modelName;
 	}
+
+	void ModelRenderer::PreSerialize(json& jsonData) const
+	{
+
+	}
+
+	void ModelRenderer::PreDeserialize(const json& jsonData)
+	{
+
+	}
+
+	void ModelRenderer::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void ModelRenderer::PostDeserialize(const json& jsonData)
+	{
+
+	}
+
 }

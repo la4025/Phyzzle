@@ -319,4 +319,24 @@ namespace PurahEngine
 			time1 = 0.0f;
 		}
 	}
+
+	void Animator::PreSerialize(json& jsonData) const
+	{
+
+	}
+
+	void Animator::PreDeserialize(const json& jsonData)
+	{
+		PREDESERIALIZE_BASE();
+	}
+
+	void Animator::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void Animator::PostDeserialize(const json& jsonData)
+	{
+
+	}
 }
