@@ -253,9 +253,9 @@ void PurahEngine::Transform::PostDeserialize(const json& jsonData)
 	//}
 	POSTDESERIALIZE_VECTOR_PTR(children);
 
-	if (jsonData["__ID__parent"].size() != 0)
+	if (jsonData["__ID__parentTransform"].size() != 0)
 	{
-		parentTransform = static_cast<Transform*>(fManager.GetAddress(jsonData["__ID__parent"][0]));
+		parentTransform = static_cast<Transform*>(fManager.GetAddress(jsonData["__ID__parentTransform"][0]));
 	}
 }
 
