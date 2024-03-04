@@ -345,8 +345,8 @@ namespace PurahEngine
 		auto rot = body->GetQuaternion();
 
 		const auto transform = GetGameObject()->GetTransform();
-		transform->SetWorldPosition(pos);
 		transform->SetWorldRotation(rot);
+		transform->SetWorldPosition(pos);
 	}
 
 	void RigidBody::PreSerialize(json& jsonData) const

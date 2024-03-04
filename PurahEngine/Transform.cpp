@@ -153,15 +153,11 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 	// matrix inverse ·Î ¹Ù²ã¶ó
 	if (parentTransform != nullptr)
 	{
-		Eigen::Matrix4f inverseP = parentTransform->GetWorldMatrix().inverse();
-		Eigen::Matrix4f inverseC = GetWorldMatrix().inverse();
-		Eigen::Matrix4f localT = Eigen::Matrix4f::Identity();
-		localT.block<3, 1>(0, 3) = position;
-		Eigen::Affine3f a;
-		Eigen::Matrix4f setT = Eigen::Matrix4f::Identity();
-		setT.block<3, 1>(0, 3) = setPosition;
-
-		position = (inverseC * localT * inverseP * setT).block<3, 1>(0, 3);
+		Eigen::Matrix4f parentWorldMatrix = parentTransform->GetWorldMatrix();
+		Eigen::Matrix4f parentInverse = parentWorldMatrix.inverse();
+		Eigen::Vector4f localPosition = parentInverse * Eigen::Vector4f(setPosition.x(), setPosition.y(), setPosition.z(), 1.0f);
+		localPosition.w() = 1.0f; // Ensure it's a position, not a direction
+		SetLocalPosition(localPosition.head<3>());
 	}
 	else
 	{
