@@ -18,6 +18,8 @@ void PurahEngine::SoundManager::Initialize()
 
 	assert(result == FMOD_OK);
 
+	result = system->set3DSettings(1.0, 1.0, 1.0);
+
 	system->createChannelGroup("effectChannelGroup", &effectChannelGroup);
 
 	LoadSound(L"BGM_Test001", L"../Sound/BGM/Test/BGMTest001.mp3", SoundType::BGM);
@@ -96,7 +98,7 @@ void PurahEngine::SoundManager::Update()
 }
 
 PurahEngine::SoundManager::SoundManager()
-	: system(nullptr), bgmChannel(nullptr), effectChannelGroup(nullptr)
+	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr)
 {
 
 }
