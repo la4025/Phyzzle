@@ -97,6 +97,11 @@ void PurahEngine::SoundManager::Update()
 	system->update();
 }
 
+void PurahEngine::SoundManager::SetListenerPosition(FMOD_VECTOR lPosition)
+{
+	listenerPosition = lPosition;
+}
+
 PurahEngine::SoundManager::SoundManager()
 	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr)
 {

@@ -70,6 +70,9 @@
     <Filter Include="Core\Serialize">
       <UniqueIdentifier>{bcd01ca1-98c4-4146-8609-8336a90e438b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\4. Sound">
+      <UniqueIdentifier>{8f6a5657-ce33-49e5-a5c7-15deb8373eab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -133,7 +136,6 @@
     <ClCompile Include="SoundManager.cpp">
       <Filter>SoundManager</Filter>
     </ClCompile>
-    <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="GraphicsManager.cpp">
       <Filter>Core\Manager\GraphicsManager</Filter>
     </ClCompile>
@@ -154,6 +156,9 @@
     </ClCompile>
     <ClCompile Include="Serializable.cpp">
       <Filter>Core\Serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioListener.cpp">
+      <Filter>Component\4. Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,7 +229,6 @@
     <ClInclude Include="SoundManager.h">
       <Filter>SoundManager</Filter>
     </ClInclude>
-    <ClInclude Include="AudioListener.h" />
     <ClInclude Include="GraphicsResourceManager.h">
       <Filter>Core\Manager\GraphicsManager</Filter>
     </ClInclude>
@@ -254,6 +258,9 @@
     </ClInclude>
     <ClInclude Include="SerializableDefine.h">
       <Filter>Core\Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioListener.h">
+      <Filter>Component\4. Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

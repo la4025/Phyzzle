@@ -12,6 +12,9 @@ namespace PurahEngine
 		~AudioListener();
 
 	public:
+		void Initialize();
+		void Update();
+	public:
 		virtual void PreSerialize(json& jsonData) const override;
 		virtual void PreDeserialize(const json& jsonData) override;
 		virtual void PostSerialize(json& jsonData) const override;
@@ -21,4 +24,8 @@ namespace PurahEngine
 		Transform* listenerTransform;
 	};
 }
+
+class AudioListener
+{
+};
 
