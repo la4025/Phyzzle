@@ -27,22 +27,32 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 	renderer = new IZeldaRendererAdapter();
 #else
 	zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
+	OutputDebugStringW(std::to_wstring(GetLastError()).c_str());
 	if (zeldaGraphicsDLL == nullptr)
 	{
 		// DLL 로드 실패
 		assert(0);
+		return;
 	}
 	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
+
 	if (createZeldaRenderer == nullptr)
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
+		return;
 	}
 	graphicsModule = createZeldaRenderer();
 #endif
 
 	graphicsModule->Initialize(1920, 1080, true, hWnd, false);
 
+	int count = 0;
+	while (true)
+	{
+		OutputDebugStringW(std::to_wstring(count).c_str());
+		count++;
+	}
 	resourceManager = new GraphicsResourceManager(graphicsModule);
 }
 
