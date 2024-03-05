@@ -62,6 +62,9 @@ namespace PurahEngine
 		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;
 
 	public:
+		bool Raycast();
+
+	public:
 		static PhysicsSystem& GetInstance();
 	};
 }
