@@ -9,11 +9,11 @@
 #include "GraphicsResourceID.h"
 
 // 암시적 링크 사용
-#define ZELDA_GRAPHICS_IMPLICIT_LINK
+//#define ZELDA_GRAPHICS_IMPLICIT_LINK
 
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 #include "ZeldaGraphics.h"
-#pragma comment(lib, "ZeldaGraphics.lib")
+//#pragma comment(lib, "ZeldaGraphics.lib")
 #endif // ZELDA_GRAPHICS_IMPLICIT_LINK
 
 void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned int width, unsigned int height, bool screenresizeable, bool notitlebar, bool minimizable, bool maximizable)
@@ -63,11 +63,15 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 	renderer = ZeldaGraphics::CreateZeldaRenderer();
 #else
-	zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
+	zeldaGraphicsDLL = LoadLibrary(L"C:\\Users\\KOCCA62\\Desktop\\qwer\\ZeldaGraphics.dll");
 	if (zeldaGraphicsDLL == nullptr)
 	{
 		// DLL 로드 실패
 		assert(0);
+		OutputDebugString(L"DLL 로드 실패\n");
+		DWORD err = GetLastError();
+		OutputDebugString((L"ErrorCode: " + std::to_wstring(err) + L"\n").c_str());
+		return;
 	}
 
 	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
@@ -75,6 +79,8 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
+		OutputDebugString(L"DLL 함수를 찾을 수 없습니다.\n");
+		return;
 	}
 
 	renderer = createZeldaRenderer();
@@ -95,6 +101,7 @@ void CoreSystem::Finalize()
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
+		return;
 	}
 
 	releaseZeldaRenderer(renderer);
