@@ -63,7 +63,7 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 	renderer = ZeldaGraphics::CreateZeldaRenderer();
 #else
-	zeldaGraphicsDLL = LoadLibrary(L"C:\\Users\\KOCCA20\\Desktop\\qwer\\ZeldaGraphics.dll");
+	zeldaGraphicsDLL = LoadLibrary(L"ZeldaGraphics.dll");
 	if (zeldaGraphicsDLL == nullptr)
 	{
 		// DLL 로드 실패
