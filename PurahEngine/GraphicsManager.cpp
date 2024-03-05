@@ -46,13 +46,6 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 #endif
 
 	graphicsModule->Initialize(1920, 1080, true, hWnd, false);
-
-	int count = 0;
-	while (true)
-	{
-		OutputDebugStringW(std::to_wstring(count).c_str());
-		count++;
-	}
 	resourceManager = new GraphicsResourceManager(graphicsModule);
 }
 
