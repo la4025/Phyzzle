@@ -29,6 +29,9 @@ namespace PurahEngine
 
 		void Initialize() override;
 
+		void Awake() override;
+		void Start() override;
+
 		void Play(const std::wstring& animationName);
 		void Play(unsigned int animationID);
 
@@ -62,6 +65,8 @@ namespace PurahEngine
 		std::vector<float> playSpeed;
 		std::vector<bool> animationLoop;
 		bool animationBlend;
+		bool playWithStart;
+		unsigned int playWithStartAnimation;
 
 		void CheckModelRenderer();
 		void Initialize_Animator(ModelRenderer* modelRenderer);
