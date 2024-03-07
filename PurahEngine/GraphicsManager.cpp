@@ -72,6 +72,11 @@ void PurahEngine::GraphicsManager::Finalize()
 	}
 }
 
+void PurahEngine::GraphicsManager::RegisterDefaultModelFile(const std::wstring& fileName)
+{
+	resourceManager->GetModelID(fileName);
+}
+
 void PurahEngine::GraphicsManager::UpdateAnimator(float deltaTime)
 {
 	for (auto iter = animatorList.begin(); iter != animatorList.end(); iter++)

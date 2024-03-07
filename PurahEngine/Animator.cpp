@@ -12,7 +12,9 @@ namespace PurahEngine
 
 	Animator::Animator() :
 		targetRenderer(nullptr),
-		animationBlend(false)
+		animationBlend(false),
+		playWithStart(false),
+		playWithStartAnimation(0u)
 	{
 		GraphicsManager::GetInstance().AddAnimator(this);
 	}
@@ -31,8 +33,19 @@ namespace PurahEngine
 	{
 		targetRenderer = nullptr;
 		animationBlend = false;
+	}
 
+	void Animator::Awake()
+	{
 		CheckModelRenderer();
+	}
+
+	void Animator::Start()
+	{
+		if (playWithStart)
+		{
+			Play(playWithStartAnimation);
+		}
 	}
 
 	void Animator::Play(const std::wstring& animationName)
@@ -328,6 +341,8 @@ namespace PurahEngine
 	void Animator::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(playWithStart);
+		PREDESERIALIZE_VALUE(playWithStartAnimation);
 	}
 
 	void Animator::PostSerialize(json& jsonData) const

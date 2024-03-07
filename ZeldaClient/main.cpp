@@ -73,7 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 	else if (play == loadScene)
 	{
-		PurahEngine::SceneManager::GetInstance().LoadScene();
+		PurahEngine::SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
 	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마

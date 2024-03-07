@@ -37,7 +37,7 @@ void AnimationTestController::PreSerialize(json& jsonData) const
 
 void AnimationTestController::PreDeserialize(const json& jsonData)
 {
-
+	PREDESERIALIZE_BASE();
 }
 
 void AnimationTestController::PostSerialize(json& jsonData) const
