@@ -27,7 +27,7 @@ namespace PurahEngine
 
 		void Update();
 
-		void SetListenerPosition(FMOD_VECTOR lPosition);
+		void SetListenerPosition(FMOD_VECTOR lPosition, FMOD_VECTOR lFront, FMOD_VECTOR lUp);
 
 	private:
 		FMOD::System* system;
@@ -41,6 +41,12 @@ namespace PurahEngine
 
 		FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
 		FMOD_VECTOR listenerPosition = { 0.0f, 0.0f, 0.0f };
+
+		FMOD_VECTOR soundPosition = { 0.0f, 0.0f, 0.0f };
+
+		FMOD_VECTOR forward = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR up = { 0.0f, 0.0f, 0.0f };
+
 
 	private:
 		SoundManager();

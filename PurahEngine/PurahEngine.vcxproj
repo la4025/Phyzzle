@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="AudioListener.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
@@ -73,6 +74,7 @@
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AudioListener.cpp" />
+    <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />

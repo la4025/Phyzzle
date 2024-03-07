@@ -25,6 +25,9 @@ void PurahEngine::SoundManager::Initialize()
 	LoadSound(L"BGM_Test001", L"../Sound/BGM/Test/BGMTest001.mp3", SoundType::BGM);
 	LoadSound(L"BGM_Test002", L"../Sound/BGM/Test/BGMTest002.mp3", SoundType::BGM);
 	LoadSound(L"BGM_Test003", L"../Sound/BGM/Test/BGMTest003.mp3", SoundType::BGM);
+	LoadSound(L"Effect_Test001", L"../Sound/Effect/Test/EffectTest001.mp3", SoundType::EFFECT);
+	LoadSound(L"Effect_Test002", L"../Sound/Effect/Test/EffectTest002.mp3", SoundType::EFFECT);
+	LoadSound(L"Effect_Test003", L"../Sound/Effect/Test/EffectTest003.mp3", SoundType::EFFECT);
 }
 
 void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const std::wstring& filePath, SoundType type)
@@ -41,7 +44,7 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const s
 		case SoundType::BGM:
 		{
 			result = system->createSound(str.c_str(), FMOD_LOOP_NORMAL, 0, &sound);
-
+			
 			assert(result == FMOD_OK);
 
 			bgmSounds[soundName] = sound;
@@ -51,9 +54,10 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const s
 
 		case SoundType::EFFECT:
 		{
-			result = system->createSound(str.c_str(), FMOD_DEFAULT, 0, &sound);
-
+			result = system->createSound(str.c_str(), FMOD_3D, 0, &sound);
 			assert(result == FMOD_OK);
+
+			result = sound->set3DMinMaxDistance(0.5f, 100.0f);
 
 			effectSounds[soundName] = sound;
 
@@ -66,6 +70,7 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const s
 void PurahEngine::SoundManager::Play(const std::wstring& soundName)
 {
 	FMOD::Sound* sound;
+	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 
 	auto iter = bgmSounds.find(soundName);
 	if (iter != bgmSounds.end())
@@ -94,12 +99,23 @@ void PurahEngine::SoundManager::Play(const std::wstring& soundName)
 
 void PurahEngine::SoundManager::Update()
 {
+	FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
+	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+	vel.x = (listenerPosition.x - lastPos.x);
+	vel.y = (listenerPosition.y - lastPos.y);
+	vel.z = (listenerPosition.z - lastPos.z);
+
+	//FMOD_VECTOR forward = PurahEngine::Transform::GetFront();
+	system->set3DListenerAttributes(0, &listenerPosition, &vel, &forward, &up);
 	system->update();
+	lastPos = listenerPosition;
 }
 
-void PurahEngine::SoundManager::SetListenerPosition(FMOD_VECTOR lPosition)
+void PurahEngine::SoundManager::SetListenerPosition(FMOD_VECTOR lPosition, FMOD_VECTOR lFront, FMOD_VECTOR lUp)
 {
 	listenerPosition = lPosition;
+	forward = lFront;
+	up = lUp;
 }
 
 PurahEngine::SoundManager::SoundManager()

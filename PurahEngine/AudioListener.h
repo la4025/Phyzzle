@@ -1,11 +1,17 @@
 #pragma once
-#include "PurahEngine.h"
+#include "PurahEngineAPI.h"
+#include "Component.h"
+
+#include "Transform.h"
+
 
 namespace PurahEngine
 {
+	class Transform;
 	class GameObject;
+	class SoundManager;
 
-	class AudioListener : public Component
+	class PURAHENGINE_API AudioListener : public Component
 	{
 	public:
 		AudioListener();
@@ -24,8 +30,3 @@ namespace PurahEngine
 		Transform* listenerTransform;
 	};
 }
-
-class AudioListener
-{
-};
-
