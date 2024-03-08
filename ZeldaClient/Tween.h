@@ -32,7 +32,7 @@ public:
         // 경과 시간을 보간 함수에 전달하여 현재 값 계산
         const float t = std::min(1.0f, elapsedTime / duration);   // 경과 시간을 0부터 1까지의 값으로 정규화
         const float interpolatedT = EasingFunc[easing](t);                    // 보간 함수를 통해 t값을 변환하여 반환
-        return startValue + (endValue - startValue) * interpolatedT;    // 시작 값과 끝 값 사이를 보간
+        return startValue + (endValue - startValue) * interpolatedT;          // 시작 값과 끝 값 사이를 보간
     }
 };
 

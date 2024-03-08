@@ -73,6 +73,12 @@
     <Filter Include="Component\4. Sound">
       <UniqueIdentifier>{8f6a5657-ce33-49e5-a5c7-15deb8373eab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Time\Timer">
+      <UniqueIdentifier>{24b2084d-d0f1-432d-8bcd-e90e10a74d3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time\Timer\Tween">
+      <UniqueIdentifier>{795b88ff-a9e5-4baf-a025-ca764011308f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -159,6 +165,18 @@
     </ClCompile>
     <ClCompile Include="AudioListener.cpp">
       <Filter>Component\4. Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePad.cpp">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePadManager.cpp">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Core\Time\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Tween.cpp">
+      <Filter>Core\Time\Timer\Tween</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +279,24 @@
     </ClInclude>
     <ClInclude Include="AudioListener.h">
       <Filter>Component\4. Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="eKey.h">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePad.h">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ePad.h">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePadManager.h">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Core\Time\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tween.h">
+      <Filter>Core\Time\Timer\Tween</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

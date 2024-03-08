@@ -15,27 +15,27 @@ void PurahEngine::CameraMovement::Update()
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
 	auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
 
-	if (inputManager.IsKeyPressed(VK_UP) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_UP))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.1f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(VK_DOWN) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_DOWN) == true)
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, -0.1f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(VK_LEFT) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_LEFT) == true)
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(-0.1f, 0.0f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(VK_RIGHT) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_RIGHT) == true)
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.1f, 0.0f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed('O') == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_Q) == true)
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, -0.1f));
 	}	
-	if (inputManager.IsKeyPressed('P') == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_P) == true)
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, 0.1f));
 	}

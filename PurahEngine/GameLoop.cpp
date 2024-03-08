@@ -13,6 +13,7 @@
 /// <summary>
 ///  임시
 /// </summary>
+#include "GamePadManager.h"
 #include "../ZonaiPhysicsBase/ZnCollider.h"
 #include "../ZonaiPhysicsBase/ZnRigidBody.h"
 #include "../ZonaiMath/ZonaiMath.h"
@@ -65,7 +66,23 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	PurahEngine::GraphicsManager::GetInstance().Initialize(hWnd);
 
 	// InputManager 초기화
-	PurahEngine::InputManager::Getinstance().Initialize(hWnd);
+	eKey key[] =
+	{
+		eKey::eKEY_W,
+		eKey::eKEY_A,
+		eKey::eKEY_S,
+		eKey::eKEY_D,
+
+		eKey::eKEY_LEFT,
+		eKey::eKEY_RIGHT,
+		eKey::eKEY_UP,
+		eKey::eKEY_DOWN,
+
+		eKey::eKEY_ESCAPE,
+		eKey::eKEY_LSHIFT,
+	};
+	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
+	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -111,29 +128,32 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 
 void PurahEngine::GameLoop::Finalize()
 {
-	PurahEngine::GraphicsManager::GetInstance().Finalize();
+	GraphicsManager::GetInstance().Finalize();
+	PhysicsSystem::GetInstance().Finalize();
+	GamePadManager::Instance().Release();
 }
 
 void PurahEngine::GameLoop::run()
 {
-	PurahEngine::TimeController::GetInstance().Update(timeInit);
-	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(timeInit);
+	TimeController::GetInstance().Update(timeInit);
+	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
-	PurahEngine::PhysicsSystem::GetInstance().PreStep();
-	PurahEngine::PhysicsSystem::GetInstance().Simulation(deltaTime);
+	PhysicsSystem::GetInstance().PreStep();
+	PhysicsSystem::GetInstance().Simulation(deltaTime);
 
-	PurahEngine::InputManager::Getinstance().Update();
+	InputManager::Getinstance().Update();
+	GamePadManager::Instance().Update();
 
-	if (InputManager::Getinstance().IsKeyPressed(VK_SHIFT) && InputManager::Getinstance().IsKeyDown(VK_ESCAPE))
+	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_ESCAPE))
 	{
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
-	PurahEngine::SceneManager::GetInstance().Update();
-	PurahEngine::SoundManager::GetInstance().Update();
+	SceneManager::GetInstance().Update();
+	SoundManager::GetInstance().Update();
 
-	PurahEngine::GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
-	PurahEngine::GraphicsManager::GetInstance().Render(deltaTime);
+	GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
+	GraphicsManager::GetInstance().Render(deltaTime);
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

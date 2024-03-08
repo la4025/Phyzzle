@@ -44,11 +44,14 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Componentmanager.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="eKey.h" />
+    <ClInclude Include="ePad.h" />
     <ClInclude Include="EventCallbackSystem.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GamePadManager.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="GraphicsResourceManager.h" />
     <ClInclude Include="InputManager.h" />
@@ -58,6 +61,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="ModelRenderer.h" />
+    <ClInclude Include="GamePad.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />
@@ -68,7 +72,9 @@
     <ClInclude Include="SerializableDefine.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TimeController.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Tween.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
@@ -84,6 +90,7 @@
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GamePadManager.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="GraphicsResourceManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -91,6 +98,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
+    <ClCompile Include="GamePad.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -99,7 +107,9 @@
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TimeController.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Tween.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

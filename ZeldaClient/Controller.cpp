@@ -35,22 +35,22 @@ namespace PurahEngine
 		TimeController& time = TimeController::GetInstance();
 
 		// playerBody ÀÌµ¿
-		const bool w = instance.IsKeyPressed('W');
-		const bool s = instance.IsKeyPressed('S');
-		const bool a = instance.IsKeyPressed('A');
-		const bool d = instance.IsKeyPressed('D');
+		const bool w = instance.IsKeyPressed(eKey::eKEY_W);
+		const bool s = instance.IsKeyPressed(eKey::eKEY_S);
+		const bool a = instance.IsKeyPressed(eKey::eKEY_A);
+		const bool d = instance.IsKeyPressed(eKey::eKEY_D);
 
-		const bool q = instance.IsKeyPressed('Q');
-		const bool e = instance.IsKeyPressed('E');
+		const bool q = instance.IsKeyPressed(eKey::eKEY_Q);
+		const bool e = instance.IsKeyPressed(eKey::eKEY_E);
 
-		const bool up = instance.IsKeyPressed(VK_UP);
-		const bool down = instance.IsKeyPressed(VK_DOWN);
-		const bool left = instance.IsKeyPressed(VK_LEFT);
-		const bool right = instance.IsKeyPressed(VK_RIGHT);
+		const bool up = instance.IsKeyPressed(eKey::eKEY_UP);
+		const bool down = instance.IsKeyPressed(eKey::eKEY_DOWN);
+		const bool left = instance.IsKeyPressed(eKey::eKEY_LEFT);
+		const bool right = instance.IsKeyPressed(eKey::eKEY_RIGHT);
 
-		const bool r = instance.IsKeyDown('R');
+		const bool r = instance.IsKeyDown(eKey::eKEY_R);
 
-		const bool space = instance.IsKeyPressed(VK_SPACE);
+		const bool space = instance.IsKeyPressed(eKey::eKEY_SPACE);
 
 		Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
 

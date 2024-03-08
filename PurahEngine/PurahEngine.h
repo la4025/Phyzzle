@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "SceneManager.h"
 #include "InputManager.h"
+#include "GamePadManager.h"
 #include "GameObject.h"
 #include "RigidBody.h"
 #include "BoxCollider.h"
