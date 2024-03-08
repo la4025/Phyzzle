@@ -76,6 +76,8 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	// SoundManager 초기화
 	PurahEngine::SoundManager::GetInstance().Initialize();
 
+	// 모델링 파일 미리 로드
+	//GraphicsManager::GetInstance().RegisterDefaultModelFile(L"");
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -121,6 +123,12 @@ void PurahEngine::GameLoop::run()
 	PurahEngine::PhysicsSystem::GetInstance().Simulation(deltaTime);
 
 	PurahEngine::InputManager::Getinstance().Update();
+
+	if (InputManager::Getinstance().IsKeyPressed(VK_SHIFT) && InputManager::Getinstance().IsKeyDown(VK_ESCAPE))
+	{
+		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
+	}
+
 	PurahEngine::SceneManager::GetInstance().Update();
 	PurahEngine::SoundManager::GetInstance().Update();
 

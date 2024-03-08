@@ -27,6 +27,8 @@ namespace PurahEngine
 
 		void Update();
 
+		void SetListenerPosition(FMOD_VECTOR lPosition);
+
 	private:
 		FMOD::System* system;
 
@@ -38,6 +40,7 @@ namespace PurahEngine
 		std::unordered_map<std::wstring, FMOD::Sound*> effectSounds;
 
 		FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR listenerPosition = { 0.0f, 0.0f, 0.0f };
 
 	private:
 		SoundManager();

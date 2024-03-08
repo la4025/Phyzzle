@@ -9,11 +9,11 @@
 #include "GraphicsResourceID.h"
 
 // 암시적 링크 사용
-#define ZELDA_GRAPHICS_IMPLICIT_LINK
+//#define ZELDA_GRAPHICS_IMPLICIT_LINK
 
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 #include "ZeldaGraphics.h"
-#pragma comment(lib, "ZeldaGraphics.lib")
+//#pragma comment(lib, "ZeldaGraphics.lib")
 #endif // ZELDA_GRAPHICS_IMPLICIT_LINK
 
 void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned int width, unsigned int height, bool screenresizeable, bool notitlebar, bool minimizable, bool maximizable)
@@ -68,6 +68,10 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	{
 		// DLL 로드 실패
 		assert(0);
+		OutputDebugString(L"DLL 로드 실패\n");
+		DWORD err = GetLastError();
+		OutputDebugString((L"ErrorCode: " + std::to_wstring(err) + L"\n").c_str());
+		return;
 	}
 
 	auto createZeldaRenderer = reinterpret_cast<IZeldaRenderer * (*)()>(GetProcAddress(zeldaGraphicsDLL, "CreateZeldaRenderer"));
@@ -75,6 +79,8 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
+		OutputDebugString(L"DLL 함수를 찾을 수 없습니다.\n");
+		return;
 	}
 
 	renderer = createZeldaRenderer();
@@ -95,6 +101,7 @@ void CoreSystem::Finalize()
 	{
 		// DLL 함수를 찾을 수 없습니다.
 		assert(0);
+		return;
 	}
 
 	releaseZeldaRenderer(renderer);
@@ -213,7 +220,7 @@ bool CoreSystem::IsRun()
 {
 	return isRun;
 }
- 
+
 void CoreSystem::run()
 {
 	static auto current_time = std::chrono::high_resolution_clock::now();
@@ -252,7 +259,7 @@ void CoreSystem::run()
 	static std::vector<std::wstring> animationList2;
 	static std::vector<float> animationPlayTimeList;
 	static std::vector<float> animationPlayTimeList2;
-	 
+
 	static float pointLightRange_Max = 200.0f;
 	static float pointLightRange_Min = 10.0f;
 	static float pointLightRange_Speed = 50.0f;
@@ -280,7 +287,7 @@ void CoreSystem::run()
 		//fbxID2 = renderer->CreateModel(L"D:\\GA4th4Q_Project\\Tree\\5_Project\\ZeldaEngine\\Resources\\FBX\\Boss\\Boss.fbx");
 		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
-		
+
 		fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
 
 		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f });
@@ -506,7 +513,7 @@ void CoreSystem::run()
 			}
 		}
 	}
-	
+
 	Eigen::Matrix4f rightPosMatrix;
 	rightPosMatrix <<
 		0.1, 0, 0, 900,
@@ -538,24 +545,24 @@ void CoreSystem::run()
 	//cubeMatrix(2, 3) = 250.0f;
 	//for (int i = 0; i < 10000; i++)
 	//{
-	//	static std::vector<int> cubeInfo(10000, -1);
+	//   static std::vector<int> cubeInfo(10000, -1);
 
-	//	if (cubeInfo[i] == -1)
-	//	{
-	//		cubeInfo[i] = rand() % 4;
-	//	}
+	//   if (cubeInfo[i] == -1)
+	//   {
+	//      cubeInfo[i] = rand() % 4;
+	//   }
 
-	//	bool wire = (cubeInfo[i] == 0);
-	//	float R = (cubeInfo[i] == 1);
-	//	float G = (cubeInfo[i] == 2);
-	//	float B = (cubeInfo[i] == 3);
+	//   bool wire = (cubeInfo[i] == 0);
+	//   float R = (cubeInfo[i] == 1);
+	//   float G = (cubeInfo[i] == 2);
+	//   float B = (cubeInfo[i] == 3);
 
-	//	cubeMatrix(0, 3) = 75 * (i % 100);
-	//	cubeMatrix(1, 3) = 75 * (i / 100);
-	//	//renderer->DrawCube(cubeMatrix, scdTextureID, false, R, G, B, 1.0f);
-	//	//auto finalMatrix = cubeMatrix;
-	//	//if (i % 2 == 0) finalMatrix = cubeMatrix * worldMatrix2;
-	//	renderer->DrawCube(cubeMatrix, TextureID::ID_NULL, wire, R, G, B, 1.0f);
+	//   cubeMatrix(0, 3) = 75 * (i % 100);
+	//   cubeMatrix(1, 3) = 75 * (i / 100);
+	//   //renderer->DrawCube(cubeMatrix, scdTextureID, false, R, G, B, 1.0f);
+	//   //auto finalMatrix = cubeMatrix;
+	//   //if (i % 2 == 0) finalMatrix = cubeMatrix * worldMatrix2;
+	//   renderer->DrawCube(cubeMatrix, TextureID::ID_NULL, wire, R, G, B, 1.0f);
 	//}
 
 
@@ -569,17 +576,17 @@ void CoreSystem::run()
 	instMatrix(2, 3) = 0.0f;
 	//for (int i = 0; i < 1000; i++)
 	//{
-	//	instMatrix(0, 3) = 100.0f * (i % 100);
-	//	instMatrix(1, 3) = 250.0f * (i / 100);
+	//   instMatrix(0, 3) = 100.0f * (i % 100);
+	//   instMatrix(1, 3) = 250.0f * (i / 100);
 
-	//	float d = animationTime + i * 0.2f;
-	//	while (d >= animationPlayTimeList[animationNumber])
-	//	{
-	//		d -= animationPlayTimeList[animationNumber];
-	//	}
+	//   float d = animationTime + i * 0.2f;
+	//   while (d >= animationPlayTimeList[animationNumber])
+	//   {
+	//      d -= animationPlayTimeList[animationNumber];
+	//   }
 
 
-	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], d, false);
+	//   renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], d, false);
 	//}
 
 	if (isReset)

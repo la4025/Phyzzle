@@ -91,11 +91,6 @@ Eigen::Matrix4f PurahEngine::Transform::GetLocalMatrix() const
 	return localTransform.matrix();
 }
 
-//Eigen::Vector3f PurahEngine::Transform::GetFront() const
-//{
-//	Eigen::Vector3f frontdir = front.normalized();
-//}
-
 Eigen::Matrix4f PurahEngine::Transform::GetWorldMatrix() const
 {
 	if (parentTransform != nullptr)
@@ -223,6 +218,27 @@ void PurahEngine::Transform::SetWorldMatrix(Eigen::Matrix4f targetMatrix)
 	scaling[0] = transformation.linear().col(0).norm(); // x 축의 크기
 	scaling[1] = transformation.linear().col(1).norm(); // y 축의 크기
 	scaling[2] = transformation.linear().col(2).norm(); // z 축의 크기
+}
+
+Eigen::Vector3f PurahEngine::Transform::GetFront() const
+{
+	Eigen::Vector3f frontV = GetWorldRotation().toRotationMatrix() * front;
+
+	return frontV.normalized();
+}
+
+Eigen::Vector3f PurahEngine::Transform::GetUp() const
+{
+	Eigen::Vector3f upV = GetWorldRotation().toRotationMatrix() * up;
+
+	return upV.normalized();
+}
+
+Eigen::Vector3f PurahEngine::Transform::GetRight() const
+{
+	Eigen::Vector3f rightV = GetWorldRotation().toRotationMatrix() * right;
+
+	return rightV.normalized();
 }
 
 void PurahEngine::Transform::PreSerialize(json& jsonData) const

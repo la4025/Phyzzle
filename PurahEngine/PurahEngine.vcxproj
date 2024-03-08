@@ -315,7 +315,8 @@ xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\PurahEngine\CompiledShader\"</Co
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)eigen-3.4.0;$(SolutionDir)ZeldaGraphics\header\;$(SolutionDir)Floater\ZeldaGraphicsAdapter\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)eigen-3.4.0;$(SolutionDir)ZeldaGraphics\header\;$(SolutionDir)Floater\ZeldaGraphicsAdapter\;$(SolutionDir)ZonaiPhysicsBase\;$(SolutionDir)json-develop\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
