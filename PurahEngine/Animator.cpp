@@ -14,7 +14,7 @@ namespace PurahEngine
 		targetRenderer(nullptr),
 		animationBlend(false),
 		playWithStart(false),
-		playWithStartAnimation(0u)
+		playWithStartAnimationName(L"")
 	{
 		GraphicsManager::GetInstance().AddAnimator(this);
 	}
@@ -42,9 +42,9 @@ namespace PurahEngine
 
 	void Animator::Start()
 	{
-		if (playWithStart)
+		if (playWithStart && animationIDTable.count(playWithStartAnimationName) != 0)
 		{
-			Play(playWithStartAnimation);
+			Play(playWithStartAnimationName);
 		}
 	}
 
@@ -120,6 +120,15 @@ namespace PurahEngine
 		if (targetRenderer == nullptr)
 		{
 			return;
+		}
+		else
+		{
+			while (!settingQueue.empty())
+			{
+				auto& settingFunc = settingQueue.front();
+				settingFunc();
+				settingQueue.pop();
+			}
 		}
 
 		if (targetRenderer->animationName1 == L"" || targetRenderer->animationName2 == L"")
@@ -227,6 +236,21 @@ namespace PurahEngine
 
 	void Animator::SetPlaySpeed(unsigned int animationNumber, float speed)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					if (playSpeed.size() <= animationNumber)
+					{
+						playSpeed.resize(animationNumber + 1, defaultPlaySpeed);
+					}
+
+					playSpeed[animationNumber] = speed;
+				});
+
+			return;
+		}
+
 		if (playSpeed.size() <= animationNumber)
 		{
 			playSpeed.resize(animationNumber + 1, defaultPlaySpeed);
@@ -237,6 +261,24 @@ namespace PurahEngine
 
 	void Animator::SetPlaySpeed(const std::wstring& animationName, float speed)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					assert(animationIDTable.count(animationName) != 0);
+
+					auto iter = animationIDTable.find(animationName);
+					if (iter != animationIDTable.end())
+					{
+						unsigned int animationNumber = iter->second;
+
+						SetPlaySpeed(animationNumber, speed);
+					}
+				});
+
+			return;
+		}
+
 		assert(animationIDTable.count(animationName) != 0);
 
 		auto iter = animationIDTable.find(animationName);
@@ -250,6 +292,21 @@ namespace PurahEngine
 
 	void Animator::SetLoop(unsigned int animationNumber, bool loop)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					if (animationLoop.size() <= animationNumber)
+					{
+						animationLoop.resize(animationNumber + 1, defaultLoop);
+					}
+
+					animationLoop[animationNumber] = loop;
+				});
+
+			return;
+		}
+
 		if (animationLoop.size() <= animationNumber)
 		{
 			animationLoop.resize(animationNumber + 1, defaultLoop);
@@ -260,6 +317,24 @@ namespace PurahEngine
 
 	void Animator::SetLoop(const std::wstring& animationName, bool loop)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					assert(animationIDTable.count(animationName) != 0);
+
+					auto iter = animationIDTable.find(animationName);
+					if (iter != animationIDTable.end())
+					{
+						unsigned int animationNumber = iter->second;
+
+						SetLoop(animationNumber, loop);
+					}
+				});
+
+			return;
+		}
+
 		assert(animationIDTable.count(animationName) != 0);
 
 		auto iter = animationIDTable.find(animationName);
@@ -273,11 +348,37 @@ namespace PurahEngine
 	
 	void Animator::SetBlendTime(unsigned int firstAnimationNumber, unsigned int secondAnimationNumber, float blendTime)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					blendTimeTable[{ firstAnimationNumber, secondAnimationNumber }] = blendTime;
+				});
+
+			return;
+		}
+
 		blendTimeTable[{ firstAnimationNumber, secondAnimationNumber }] = blendTime;
 	}
 
 	void Animator::SetBlendTime(const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float blendTime)
 	{
+		if (targetRenderer == nullptr)
+		{
+			settingQueue.push([=, this]()
+				{
+					assert(animationIDTable.count(firstAnimationName) > 0);
+					assert(animationIDTable.count(secondAnimationName) > 0);
+
+					unsigned int firstAnimationNumber = animationIDTable[firstAnimationName];
+					unsigned int secondAnimationNumber = animationIDTable[secondAnimationName];
+
+					blendTimeTable[{ firstAnimationNumber, secondAnimationNumber }] = blendTime;
+				});
+
+			return;
+		}
+
 		assert(animationIDTable.count(firstAnimationName) > 0);
 		assert(animationIDTable.count(secondAnimationName) > 0);
 
@@ -342,7 +443,30 @@ namespace PurahEngine
 	{
 		PREDESERIALIZE_BASE();
 		PREDESERIALIZE_VALUE(playWithStart);
-		PREDESERIALIZE_VALUE(playWithStartAnimation);
+		PREDESERIALIZE_WSTRING(playWithStartAnimationName);
+		PREDESERIALIZE_VALUE(animationBlend);
+
+		for (int i = 0; i < jsonData["animationSetting"].size(); i++)
+		{
+			std::string aniName = jsonData["animationSetting"][i]["animationName"];
+			std::wstring wAniName = std::wstring(aniName.begin(), aniName.end());
+			float speed = jsonData["animationSetting"][i]["playSpeed"];
+			bool aniLoop = jsonData["animationSetting"][i]["loop"];
+
+			SetPlaySpeed(wAniName, speed);
+			SetLoop(wAniName, aniLoop);
+		}
+
+		for (int i = 0; i < jsonData["blendSetting"].size(); i++)
+		{
+			std::string aniName1 = jsonData["blendSetting"][i]["firstAnimationName"];
+			std::wstring wAniName1 = std::wstring(aniName1.begin(), aniName1.end());
+			std::string aniName2 = jsonData["blendSetting"][i]["secondAnimationName"];
+			std::wstring wAniName2 = std::wstring(aniName2.begin(), aniName2.end());
+			float aniBlendTime = jsonData["blendSetting"][i]["blendTime"];
+
+			SetBlendTime(wAniName1, wAniName2, aniBlendTime);
+		}
 	}
 
 	void Animator::PostSerialize(json& jsonData) const
