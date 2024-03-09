@@ -1,48 +1,10 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": -7092,
-      "name": "Character",
-      "transform": {
-        "__Base__instanceID": -7094,
-        "position": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 0.02,
-          "y": 0.02,
-          "z": 0.02
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": -7648,
-          "__Base__Component": "Animator",
-          "playWithStart": true,
-          "playWithStartAnimation": 0
-        },
-        {
-          "__Base__instanceID": -7790,
-          "__Base__Component": "ModelRenderer",
-          "modelName": "C:\\\\Users\\\\KOCCA62\\\\Desktop\\\\Ganondorf-3d-model-dl\\\\source\\\\Ganondorf (TotK) 3D Model\\\\Dying6.fbx"
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 23072,
+      "__Base__instanceID": 22906,
       "name": "Directional Light",
       "transform": {
-        "__Base__instanceID": 23076,
+        "__Base__instanceID": 22910,
         "position": {
           "x": 0.0,
           "y": 3.0,
@@ -64,7 +26,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 23078,
+          "__Base__instanceID": 22912,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -87,10 +49,10 @@
       ]
     },
     {
-      "__Base__instanceID": 23080,
-      "name": "Cube",
+      "__Base__instanceID": 22914,
+      "name": "Character",
       "transform": {
-        "__Base__instanceID": 23088,
+        "__Base__instanceID": 22916,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -103,32 +65,57 @@
           "w": 1.0
         },
         "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+          "x": 0.02,
+          "y": 0.02,
+          "z": 0.02
         },
         "__ID__parentTransform": [],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 23090,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "textureName": "scd.jpg",
-          "r": 0.0,
-          "g": 1.0,
-          "b": 0.0,
-          "a": 0.0
+          "__Base__instanceID": 22920,
+          "__Base__Component": "Animator",
+          "playWithStart": true,
+          "playWithStartAnimationName": "Armature|Armature.001|mixamo.com|Layer0",
+          "animationBlend": true,
+          "animationSetting": [
+            {
+              "animationName": "Armature|Armature.001|mixamo.com|Layer0",
+              "playSpeed": 0.2,
+              "loop": true
+            },
+            {
+              "animationName": "Armature|Armature|mixamo.com|Layer0",
+              "playSpeed": 1.0,
+              "loop": true
+            }
+          ],
+          "blendSetting": [
+            {
+              "firstAnimationName": "Armature|Armature.001|mixamo.com|Layer0",
+              "secondAnimationName": "Armature|Armature.001|mixamo.com|Layer0",
+              "blendTime": 5.0
+            },
+            {
+              "firstAnimationName": "Armature|Armature|mixamo.com|Layer0",
+              "secondAnimationName": "Armature|Armature|mixamo.com|Layer0",
+              "blendTime": 5.0
+            }
+          ]
+        },
+        {
+          "__Base__instanceID": 22918,
+          "__Base__Component": "ModelRenderer",
+          "modelName": "C:\\\\Users\\\\KOCCA62\\\\Desktop\\\\Ganondorf-3d-model-dl\\\\source\\\\Ganondorf (TotK) 3D Model\\\\Dying6.fbx"
         }
       ]
     },
     {
-      "__Base__instanceID": 23092,
+      "__Base__instanceID": 22936,
       "name": "Main Camera",
       "transform": {
-        "__Base__instanceID": 23098,
+        "__Base__instanceID": 22942,
         "position": {
           "x": 0.0,
           "y": 1.0,
@@ -150,7 +137,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 23100,
+          "__Base__instanceID": 22944,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
@@ -158,7 +145,7 @@
           "fieldOfView": 1.04719758
         },
         {
-          "__Base__instanceID": -5606,
+          "__Base__instanceID": 22946,
           "__Base__Component": "CameraMovement"
         }
       ]

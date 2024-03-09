@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <queue>
+#include <functional>
 
 namespace std {
 	template <>
@@ -35,15 +37,14 @@ namespace PurahEngine
 		void Play(const std::wstring& animationName);
 		void Play(unsigned int animationID);
 
+		// SettingQueue를 사용할 수 있는 함수
 		void SetPlaySpeed(unsigned int animationNumber, float speed);
 		void SetPlaySpeed(const std::wstring& animationName, float speed);
-
 		void SetLoop(unsigned int animationNumber, bool loop);
 		void SetLoop(const std::wstring& animationName, bool loop);
-
 		void SetBlendTime(unsigned int firstAnimationNumber, unsigned int secondAnimationNumber, float blendTime);
 		void SetBlendTime(const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float blendTime);
-
+		
 		void SetBlend(bool animationBlend);
 
 	private:
@@ -57,6 +58,8 @@ namespace PurahEngine
 
 		ModelRenderer* targetRenderer;
 
+		std::queue<std::function<void()>> settingQueue;
+
 		std::vector<float> playTime;
 		std::vector<std::wstring> animationList;
 		std::unordered_map<std::wstring, unsigned int> animationIDTable;
@@ -66,7 +69,7 @@ namespace PurahEngine
 		std::vector<bool> animationLoop;
 		bool animationBlend;
 		bool playWithStart;
-		unsigned int playWithStartAnimation;
+		std::wstring playWithStartAnimationName;
 
 		void CheckModelRenderer();
 		void Initialize_Animator(ModelRenderer* modelRenderer);
