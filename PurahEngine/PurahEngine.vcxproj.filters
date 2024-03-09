@@ -76,8 +76,20 @@
     <Filter Include="Core\Time\Timer">
       <UniqueIdentifier>{24b2084d-d0f1-432d-8bcd-e90e10a74d3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Time\Timer\Tween">
+    <Filter Include="Core\Manager\InputManager\Keyboard">
+      <UniqueIdentifier>{b45c55c2-0e33-4ddd-81bf-ac0c73eae0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Manager\InputManager\GamePad">
+      <UniqueIdentifier>{579cccf8-652e-4b6b-960e-1e1da6493809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time\Tween">
       <UniqueIdentifier>{795b88ff-a9e5-4baf-a025-ca764011308f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time\Timer\Handler">
+      <UniqueIdentifier>{c2bda3d8-f8fe-4b6c-819c-fa059b3f6527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time\Tween\Handler">
+      <UniqueIdentifier>{cba43b2a-425d-468a-9bf7-bdcf2f46c878}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Core\Manager\SceneManager</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Core\Manager\InputManager</Filter>
     </ClCompile>
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Componentmanager.cpp">
@@ -166,17 +175,38 @@
     <ClCompile Include="AudioListener.cpp">
       <Filter>Component\4. Sound</Filter>
     </ClCompile>
-    <ClCompile Include="GamePad.cpp">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePadManager.cpp">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Core\Time\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Tween.cpp">
-      <Filter>Core\Time\Timer\Tween</Filter>
+      <Filter>Core\Time\Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Component\2. Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Component\2. Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePad.cpp">
+      <Filter>Core\Manager\InputManager\GamePad</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePadManager.cpp">
+      <Filter>Core\Manager\InputManager\GamePad</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Core\Manager\InputManager\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="EasingFunc.cpp">
+      <Filter>Core\Time\Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerHandler.cpp">
+      <Filter>Core\Time\Timer\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="PreTimerHandler.cpp">
+      <Filter>Core\Time\Timer\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="TweenHandler.cpp">
+      <Filter>Core\Time\Tween\Handler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -201,9 +231,6 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Core\Manager\SceneManager</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Core\Manager\InputManager</Filter>
     </ClInclude>
     <ClInclude Include="Componentmanager.h">
       <Filter>Component\1. Manager</Filter>
@@ -280,23 +307,50 @@
     <ClInclude Include="AudioListener.h">
       <Filter>Component\4. Sound</Filter>
     </ClInclude>
-    <ClInclude Include="eKey.h">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePad.h">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="ePad.h">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePadManager.h">
-      <Filter>Core\Manager\InputManager</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Core\Time\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Tween.h">
-      <Filter>Core\Time\Timer\Tween</Filter>
+      <Filter>Core\Time\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Component\2. Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleCollider.h">
+      <Filter>Component\2. Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="ePad.h">
+      <Filter>Core\Manager\InputManager\GamePad</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePad.h">
+      <Filter>Core\Manager\InputManager\GamePad</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePadManager.h">
+      <Filter>Core\Manager\InputManager\GamePad</Filter>
+    </ClInclude>
+    <ClInclude Include="eKey.h">
+      <Filter>Core\Manager\InputManager\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Core\Manager\InputManager\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="EasingFunc.h">
+      <Filter>Core\Time\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="ITimer.h">
+      <Filter>Core\Time\Timer\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerHandler.h">
+      <Filter>Core\Time\Timer\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="PreTimerHandler.h">
+      <Filter>Core\Time\Timer\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="ITween.h">
+      <Filter>Core\Time\Tween\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="TweenHandler.h">
+      <Filter>Core\Time\Tween\Handler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

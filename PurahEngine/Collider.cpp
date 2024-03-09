@@ -68,17 +68,17 @@ namespace PurahEngine
         }
     }
 
-	void Collider::SetRotationOffset(const Eigen::Quaternionf& _quat)
-    {
-        if (awake)
-        {
-            rotationOffset = _quat;
-        }
-        else
-        {
-            znCollider->SetLocalQuaternion(rotationOffset);
-        }
-    }
+	//void Collider::SetRotationOffset(const Eigen::Quaternionf& _quat)
+ //   {
+ //       if (awake)
+ //       {
+ //           rotationOffset = _quat;
+ //       }
+ //       else
+ //       {
+ //           znCollider->SetLocalQuaternion(rotationOffset);
+ //       }
+ //   }
 
 	void Collider::SetDynamic(bool _value)
     {

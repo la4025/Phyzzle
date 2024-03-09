@@ -22,7 +22,6 @@ namespace PurahEngine
 		SetTrigger(isTrigger);
 		SetLayer(layer);
 		SetPositionOffset(positionOffset);
-		SetRotationOffset(rotationOffset);
 	}
 
 	void BoxCollider::SetSize(const Eigen::Vector3f& _size)

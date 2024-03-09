@@ -28,9 +28,6 @@
     <ClCompile Include="YongHun.cpp">
       <Filter>YH</Filter>
     </ClCompile>
-    <ClCompile Include="Tween.cpp">
-      <Filter>KH\Tween</Filter>
-    </ClCompile>
     <ClCompile Include="IObject.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
@@ -79,15 +76,6 @@
     </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>KH\ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="Tween.h">
-      <Filter>KH\Tween</Filter>
-    </ClInclude>
-    <ClInclude Include="eEasing.h">
-      <Filter>KH\Tween</Filter>
-    </ClInclude>
-    <ClInclude Include="EasingFunction.h">
-      <Filter>KH\Tween</Filter>
     </ClInclude>
     <ClInclude Include="IObject.h">
       <Filter>KH\Object</Filter>
@@ -139,9 +127,6 @@
     </Filter>
     <Filter Include="KH\ETC">
       <UniqueIdentifier>{048452e9-c902-4698-9af9-8e4a9122f0c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="KH\Tween">
-      <UniqueIdentifier>{f63bea33-fdba-40b2-9a5d-a0cbb497d2cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="KH\Object">
       <UniqueIdentifier>{0095cd59-04b0-4218-b5d5-e6a72052ab37}</UniqueIdentifier>

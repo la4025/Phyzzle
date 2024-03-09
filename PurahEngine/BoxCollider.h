@@ -10,6 +10,7 @@ namespace PurahEngine
 		BoxCollider() = default;
 		~BoxCollider() override = default;
 
+	public:
 		void Awake() override;
 
 	public:

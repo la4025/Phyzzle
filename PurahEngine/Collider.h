@@ -31,8 +31,6 @@ namespace PurahEngine
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);
 
-        void SetRotationOffset(const Eigen::Quaternionf& _quat);
-
         void SetDynamic(bool _value);
 
         void SetTrigger(bool _value);
