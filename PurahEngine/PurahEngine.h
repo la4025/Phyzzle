@@ -2,17 +2,24 @@
 /// 외부에는 이부분만 보여지게 하기 위하도록 설계
 #include <Windows.h>
 #include "PurahEngineAPI.h"
+
 #include "Serializable.h"
+
+// Object Base
 #include "Component.h"
 #include "Transform.h"
+#include "GameObject.h"
+
+// Manager
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "InputManager.h"
 #include "GamePadManager.h"
-#include "GameObject.h"
+#include "TimeController.h"
+
+// Physics
 #include "RigidBody.h"
 #include "BoxCollider.h"
-#include "SoundManager.h"
-#include "TimeController.h"
 
 // Graphics
 #include "Camera.h"

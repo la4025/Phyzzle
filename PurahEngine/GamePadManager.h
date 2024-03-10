@@ -1,12 +1,15 @@
 #pragma once
+#include "PurahEngineAPI.h"
+
+#include "ePad.h"
 #include "GamePad.h"
-#include <windows.h>
+#include <Windows.h>
 
 namespace PurahEngine
 {
 	class GamePad;
 
-	class GamePadManager
+	class PURAHENGINE_API GamePadManager
 	{
 	private:
 		GamePadManager();
@@ -17,6 +20,11 @@ namespace PurahEngine
 	public:
 		void Initialize(HWND _hwnd, ePad* _keyArr, int _size);
 		void Update() const;
+
+	public:
+		static void AddGamePad(int _id);
+		static void RemoveGamePad(int _id);
+		static GamePad* GetGamePad(int _id);
 
 	private:
 		HWND hWnd;

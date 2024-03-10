@@ -17,6 +17,11 @@ namespace PurahEngine
 		void Move();
 		void HandsUp();
 
+	public:
+		void PreSerialize(json& jsonData) const override;
+		void PreDeserialize(const json& jsonData) override;
+		void PostSerialize(json& jsonData) const override;
+		void PostDeserialize(const json& jsonData) override;
 
 	public:
 		void SetPlayer(GameObject*);
@@ -29,6 +34,8 @@ namespace PurahEngine
 		GameObject* playerBody;
 		RigidBody* rigidbody;
 		Transform* transform;
+
+		GamePad* gamePad;
 
 		/// 사라질 변수들
 	private:

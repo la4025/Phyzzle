@@ -1,12 +1,12 @@
-#include "GamePad.h"
-
 #include <algorithm>
 #include <cmath>
+#include "Timer.h"
+#include "GamePad.h"
 
 
 namespace PurahEngine
 {
-	void GamePad::Initialize(int _id,ePad* _inputArr, int _size)
+	void GamePad::Initialize(int _id, ePad* _inputArr, int _size)
 	{
 		id = _id;
 
@@ -29,6 +29,8 @@ namespace PurahEngine
 
 	void GamePad::UpdateInputMap(const XINPUT_STATE& _state)
 	{
+		_state.dwPacketNumber;
+
 		for (auto& itr : inputMap)
 		{
 			const auto& input = itr.first;
@@ -39,7 +41,7 @@ namespace PurahEngine
 			// 현재 상태 업데이트
 			if (_state.Gamepad.wButtons & button && currentState == State::NONE)
 			{
-				currentState = State::DOWN;
+ 				currentState = State::DOWN;
 			}
 			else if (_state.Gamepad.wButtons & button && currentState == State::DOWN)
 			{
@@ -133,16 +135,16 @@ namespace PurahEngine
 		}
 	}
 
-	void GamePad::Vibrate(int _left, int _right) const
+	bool GamePad::Vibrate(int _left, int _right) const
 	{
 		XINPUT_VIBRATION vibration;
 		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 		vibration.wLeftMotorSpeed = static_cast<unsigned short>(_left);
 		vibration.wRightMotorSpeed = static_cast<unsigned short>(_right);
-		XInputSetState(id, &vibration);
+		return XInputSetState(id, &vibration) == ERROR_SUCCESS;
 	}
 
-	void GamePad::VibrateRatio(float _left, float _right) const
+	bool GamePad::VibrateRatio(float _left, float _right) const
 	{
 		_left = std::clamp(_left, 0.f, 1.f);
 		_right = std::clamp(_right, 0.f, 1.f);
@@ -150,20 +152,32 @@ namespace PurahEngine
 		const auto left = static_cast<int>(_left * static_cast<float>(USHORT_MAX));
 		const auto right = static_cast<int>(_right * static_cast<float>(USHORT_MAX));
 
-		Vibrate(left, right);
+		return Vibrate(left, right);
 	}
 
 	void GamePad::Vibrate(int _left, int _right, float _time) const
 	{
-
-		// Timer를 만들게 된다면 여기에.
+		Timer::Delay(
+			_time, 
+			false, 
+			[this]()
+			{
+				Vibrate(0, 0);
+			}
+		);
 		Vibrate(_left, _right);
 	}
 
 	void GamePad::VibrateRatio(float _left, float _right, float _time) const
 	{
-
-		// Timer를 만들게 된다면 여기에.
+		Timer::Delay(
+			_time,
+			false,
+			[this]()
+			{
+				VibrateRatio(0.f, 0.f);
+			}
+		);
 		VibrateRatio(_left, _right);
 	}
 

@@ -47,5 +47,4 @@ void BeomJoon::Run()
 	// 애니메이션을 테스트하기 위한 컴포넌트 추가
 	characterObject->AddComponent<Animator>();
 	characterObject->AddComponent<AnimationTestController>();
-
 }

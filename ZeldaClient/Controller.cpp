@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 #include "TimeController.h"
-
+#include <iostream>
 
 namespace PurahEngine
 {
@@ -13,15 +13,20 @@ namespace PurahEngine
 		rigidbody = playerBody->GetComponent<RigidBody>();
 		transform = gameObject->GetTransform();
 		speed = 5.f;
-		drag = 0.7f;
+ 		drag = 0.7f;
 	}
 
 	void Controller::Start()
 	{
+		GamePadManager::AddGamePad(0);
+
+		gamePad = GamePadManager::GetGamePad(0);
+		gamePad->SetDeadZone(1000);
+
 		startPosition = transform->GetWorldPosition();
 		startRotation = transform->GetWorldRotation();
 		startLinearVelocity = rigidbody->GetLinearVelocity();
-		startAngularVelocity = rigidbody->GetAngularVelocity();
+ 		startAngularVelocity = rigidbody->GetAngularVelocity();
 	}
 
 	void Controller::Update()
@@ -33,6 +38,22 @@ namespace PurahEngine
 	{
 		InputManager& instance = InputManager::Getinstance();
 		TimeController& time = TimeController::GetInstance();
+
+
+		float LstickX = 0.f , LstickY = 0.f;
+		float RstickX = 0.f , RstickY = 0.f;
+
+		if (gamePad->IsConnected())
+		{
+			std::cout << LstickX << "    " << LstickY << std::endl;
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+			if (gamePad->IsKeyDown(ePad::ePAD_A))
+			{
+			}
+				gamePad->VibrateRatio(0.f, 0.f);
+		
+		}
 
 		// playerBody 이동
 		const bool w = instance.IsKeyPressed(eKey::eKEY_W);
@@ -57,40 +78,43 @@ namespace PurahEngine
 		// 속도로 이동하고 drag로 멈추려고 하는데
 		// drag가 크면 떨어지는 속도도 느려짐
 		// drag로 멈추는건 수정해야할듯
-		if (w || s || a || d || q || e || r)
-		{
+		//if (w || s || a || d || q || e || r)
+		//{
 			Eigen::Vector3f direction{ 0.f, 0.f, 0.f };
 			const auto world = transform->GetWorldRotation();
+			direction += world * transform->front * LstickY;
+			direction += world * transform->right * LstickX;
 
-			if (w)
-			{
-				direction += world * transform->front;
-			}
+			//if (w)
+			//{
+			//	direction += world * transform->front;
+			//}
 
-			if (s)
-			{
-				direction -= world * transform->front;
-			}
+			//if (s)
+			//{
+			//	direction -= world * transform->front;
+			//}
 
-			if (a)
-			{
-				direction -= world * transform->right;
-			}
+			//if (a)
+			//{
+			//	direction -= world * transform->right;
+			//}
 
-			if (d)
-			{
-				direction += world * transform->right;
-			}
+			//if (d)
+			//{
+			//	direction += world * transform->right;
+			//}
 
-			if (q)
-			{
-				direction -= world * transform->up;
-			}
 
-			if (e)
-			{
-				direction += world * transform->up;
-			}
+			//if (q)
+			//{
+			//	direction -= world * transform->up;
+			//}
+
+			//if (e)
+			//{
+			//	direction += world * transform->up;
+			//}
 
 			if (r)
 			{
@@ -100,13 +124,13 @@ namespace PurahEngine
 				rigidbody->SetAngularVelocity(startAngularVelocity);
 			}
 
-			direction.normalize();
+			// direction.normalize();
 			velo += direction * speed;
 
 			const auto playerT = playerBody->GetTransform();
 			// playerT->SetWorldRotation({ 0.f, direction.x(), direction.y(), direction.z() });
 			transform->SetWorldRotation(world);
-		}
+		//}
 
 		rigidbody->SetLinearVelocity(velo * drag);
 
@@ -139,6 +163,25 @@ namespace PurahEngine
 	}
 
 	void Controller::HandsUp()
+	{
+
+	}
+
+	void Controller::PreSerialize(json& jsonData) const
+	{
+	}
+
+	void Controller::PreDeserialize(const json& jsonData)
+	{
+
+	}
+
+	void Controller::PostSerialize(json& jsonData) const
+	{
+
+	}
+
+	void Controller::PostDeserialize(const json& jsonData)
 	{
 
 	}

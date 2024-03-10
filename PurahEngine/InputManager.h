@@ -1,18 +1,11 @@
 #pragma once
+#include "PurahEngineAPI.h"
+
 #include <map>
 #include <vector>
 #include "eKey.h"
 
-#include "PurahEngineAPI.h"
-
 #include <windows.h>
-#include <Xinput.h>
-
-#pragma comment(lib, "xinput.lib")
-
-
-#define KEY_COUNT 0xFF
-#define CONTROLLER_COUNT 0xFFFF
 
 namespace PurahEngine
 {
@@ -43,12 +36,10 @@ namespace PurahEngine
 		/// ¸¶¿ì½º
 
 	private:
-		std::vector<eKey> key;
-		std::map<eKey, int> PrevKeyState;
-		std::map<eKey, int> NowKeyState;
+		std::vector<eKey> keys;
+		std::map<eKey, short> PrevKeyState;
+		std::map<eKey, short> NowKeyState;
 
-		XINPUT_STATE state;
-		DWORD result;
 		HWND hWnd;
 
 	public:

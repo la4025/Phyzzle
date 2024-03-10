@@ -19,27 +19,26 @@ void PurahEngine::CameraMovement::Update()
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.1f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_DOWN) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_DOWN))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, -0.1f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_LEFT) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_LEFT))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(-0.1f, 0.0f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_RIGHT) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_RIGHT))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.1f, 0.0f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_Q) == true)
+	if (inputManager.IsKeyPressed(eKey::eKEY_Q))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, -0.1f));
-	}	
-	if (inputManager.IsKeyPressed(eKey::eKEY_P) == true)
+	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_P))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, 0.1f));
 	}
-	//if(inputManager.IsKeyPressed(VK_WHEEL))
 }
 
 void PurahEngine::CameraMovement::PreSerialize(json& jsonData) const

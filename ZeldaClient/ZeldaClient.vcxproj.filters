@@ -93,7 +93,7 @@
     <ClInclude Include="IAbility.h">
       <Filter>KH\PLAYER\Ability</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectProperty.h">
+    <ClInclude Include="eObjectProperty.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="TemplateFlag.h">

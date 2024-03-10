@@ -178,7 +178,7 @@
     <ClInclude Include="IObject.h" />
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
-    <ClInclude Include="ObjectProperty.h" />
+    <ClInclude Include="eObjectProperty.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="Rewind.h" />

@@ -1,11 +1,14 @@
 #pragma once
 #include <map>
+
+// 순서 중요함.
+#include <Windows.h>
 #include <Xinput.h>
-#include <windows.h>
+//
 
 #include "ePad.h"
 #include "PurahEngineAPI.h"
-#pragma comment(lib, "xinput.lib")
+#pragma comment(lib, "Xinput.lib")
 
 namespace PurahEngine
 {
@@ -52,8 +55,8 @@ namespace PurahEngine
 		void				GetStickRatio(ePadStick _index, float&, float&) const;
 
 		/// 진동
-		void				Vibrate(int, int) const;
-		void				VibrateRatio(float, float) const;
+		bool				Vibrate(int _left, int _right) const;
+		bool				VibrateRatio(float _left, float _right) const;
 		void				Vibrate(int, int, float _time) const;
 		void				VibrateRatio(float, float, float _time) const;
 
@@ -65,6 +68,7 @@ namespace PurahEngine
 		bool				IsConnected();
 
 	private:
+		bool			enable;
 		int				id;
 		HWND			hWnd;
 		DWORD			result;
