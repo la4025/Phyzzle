@@ -107,11 +107,11 @@ namespace PurahEngine
 		}
 
 	private:
-		static std::function<TweenHandler<Type>*> cycleFunc[6];
+		static std::function<void(TweenHandler<Type>*)> cycleFunc[6];
 	};
 
 	template <typename Type>
-	std::function<TweenHandler<Type>*> TweenHandler<Type>::cycleFunc[6] =
+	std::function<void(TweenHandler<Type>*)> TweenHandler<Type>::cycleFunc[6] =
 	{
 		Once,
 		Loop,

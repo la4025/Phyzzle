@@ -1,15 +1,18 @@
+#include "TimeController.h"
+
 #include "Timer.h"
 #include "TimerHandler.h"
 
 void PurahEngine::TimerHandler::Update()
 {
-	accumulation += 0.016f;
+	accumulation += TimeController::GetInstance().GetDeltaTime("Simulate");
+	// accumulation += 0.1f;
 
-	if (accumulation <= delay)
+	if (std::fabs(delay - accumulation) <= timerEpsilon)
 	{
 		callback();
 
-		if (loop)
+		if (loop) 
 		{
 			accumulation = 0.f;
 		}

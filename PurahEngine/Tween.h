@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include "EasingFunc.h"
+#include "TweenHandler.h"
 
 namespace PurahEngine
 {
@@ -30,17 +31,17 @@ namespace PurahEngine
 	public:
 		template <Arithmetic Type>
 		static ITween* DoTween(
-			Type& _start,
-			eCycleMode _cycleMode,
-			const Type& _end,
-			eEasing _easing,
-			float _durationSec,
-			float _delay = 0.f,
-			std::function<void()> _callback = nullptr
+			Type&					_start,
+			eCycleMode				_cycleMode,
+			const Type&				_end,
+			eEasing					_easing,
+			float					_durationSec,
+			float					_delay = 0.f,
+			std::function<void()>	_callback = nullptr
 		)
 		{
-			std::function<void(TweenHandler<Type>*)> stepFunc = TweenHandler<Type>::step[_cycleMode];
-			TweenHandler* handler = Create<Type>(_start, _end, _easing, _durationSec, _callback);
+			std::function<void(TweenHandler<Type>*)> stepFunc = TweenHandler<Type>::cycleFunc[_cycleMode];
+			ITween* handler = Create<Type>(_start, _end, _easing, _durationSec, _callback);
 
 			if (_delay > 0)
 			{
@@ -63,13 +64,13 @@ namespace PurahEngine
 	public:
 		template <Arithmetic Type>
 		static ITween* Create(
-			Type& _start, const Type& _end,							// 시작점, 끝점
+			Type& _start, const Type& _end,					// 시작점, 끝점
 			eEasing _easing,								// 그래프
 			float _durationSec,								// 지속시간
 			std::function<void()> _callback = nullptr		// 콜백
 		)
 		{
-			ITween* result = new TweenHandler(
+			ITween* result = new TweenHandler<Type>(
 				_start, _end,
 				easingFunc[_easing],
 				_durationSec,

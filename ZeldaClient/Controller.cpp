@@ -1,6 +1,7 @@
 #include "Controller.h"
 
 #include "TimeController.h"
+#include "Tween.h"
 #include <iostream>
 
 namespace PurahEngine
@@ -12,8 +13,8 @@ namespace PurahEngine
 	{
 		rigidbody = playerBody->GetComponent<RigidBody>();
 		transform = gameObject->GetTransform();
-		speed = 5.f;
- 		drag = 0.7f;
+		moveSpeed = 3.f;
+		sensitivity = 45.f;
 	}
 
 	void Controller::Start()
@@ -21,7 +22,7 @@ namespace PurahEngine
 		GamePadManager::AddGamePad(0);
 
 		gamePad = GamePadManager::GetGamePad(0);
-		gamePad->SetDeadZone(1000);
+		gamePad->SetDeadZone(2000);
 
 		startPosition = transform->GetWorldPosition();
 		startRotation = transform->GetWorldRotation();
@@ -31,135 +32,103 @@ namespace PurahEngine
 
 	void Controller::Update()
 	{
+		RotateCamera();
 		Move();
 	}
 
 	void Controller::Move()
 	{
-		InputManager& instance = InputManager::Getinstance();
 		TimeController& time = TimeController::GetInstance();
 
-
 		float LstickX = 0.f , LstickY = 0.f;
-		float RstickX = 0.f , RstickY = 0.f;
 
 		if (gamePad->IsConnected())
 		{
-			std::cout << LstickX << "    " << LstickY << std::endl;
 			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+
+			float LTrigger = 0.f, RTrigger = 0.f;
+			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
+			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
+
 			if (gamePad->IsKeyDown(ePad::ePAD_A))
 			{
+				onVibration = true;
 			}
-				gamePad->VibrateRatio(0.f, 0.f);
-		
+			//if (gamePad->IsKeyDown(ePad::ePAD_B))
+			//{
+			//	onVibration = false;
+			//	if (tween)
+			//	{
+			//		Tween::Release(tween);
+			//	}
+			//}
+
+			//if (onVibration)
+			//{
+			//	tween = Tween::DoTween<float>(
+			//		vibrationL,					// start
+			//		eCycleMode::LOOP,			// cycle
+			//		1.f,						// end
+			//		eEasing::eOutCirc,			// easing
+			//		3.f,						// duration
+			//		0.1f,						// delay
+			//		[this]()					// callback
+			//		{
+			//			vibrationL = 0.f;
+			//			vibrationR = 0.f;
+			//		}
+			//	);
+			//	gamePad->VibrateRatio(vibrationL, vibrationR);
+			//}
 		}
 
-		// playerBody 이동
-		const bool w = instance.IsKeyPressed(eKey::eKEY_W);
-		const bool s = instance.IsKeyPressed(eKey::eKEY_S);
-		const bool a = instance.IsKeyPressed(eKey::eKEY_A);
-		const bool d = instance.IsKeyPressed(eKey::eKEY_D);
-
-		const bool q = instance.IsKeyPressed(eKey::eKEY_Q);
-		const bool e = instance.IsKeyPressed(eKey::eKEY_E);
-
-		const bool up = instance.IsKeyPressed(eKey::eKEY_UP);
-		const bool down = instance.IsKeyPressed(eKey::eKEY_DOWN);
-		const bool left = instance.IsKeyPressed(eKey::eKEY_LEFT);
-		const bool right = instance.IsKeyPressed(eKey::eKEY_RIGHT);
-
-		const bool r = instance.IsKeyDown(eKey::eKEY_R);
-
-		const bool space = instance.IsKeyPressed(eKey::eKEY_SPACE);
-
-		Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
-
-		// 속도로 이동하고 drag로 멈추려고 하는데
-		// drag가 크면 떨어지는 속도도 느려짐
-		// drag로 멈추는건 수정해야할듯
-		//if (w || s || a || d || q || e || r)
-		//{
-			Eigen::Vector3f direction{ 0.f, 0.f, 0.f };
-			const auto world = transform->GetWorldRotation();
-			direction += world * transform->front * LstickY;
-			direction += world * transform->right * LstickX;
-
-			//if (w)
-			//{
-			//	direction += world * transform->front;
-			//}
-
-			//if (s)
-			//{
-			//	direction -= world * transform->front;
-			//}
-
-			//if (a)
-			//{
-			//	direction -= world * transform->right;
-			//}
-
-			//if (d)
-			//{
-			//	direction += world * transform->right;
-			//}
-
-
-			//if (q)
-			//{
-			//	direction -= world * transform->up;
-			//}
-
-			//if (e)
-			//{
-			//	direction += world * transform->up;
-			//}
-
-			if (r)
-			{
-				transform->SetWorldPosition(startPosition);
-				transform->SetWorldRotation(startRotation);
-				rigidbody->SetLinearVelocity(startLinearVelocity);
-				rigidbody->SetAngularVelocity(startAngularVelocity);
-			}
-
-			// direction.normalize();
-			velo += direction * speed;
-
-			const auto playerT = playerBody->GetTransform();
-			// playerT->SetWorldRotation({ 0.f, direction.x(), direction.y(), direction.z() });
-			transform->SetWorldRotation(world);
-		//}
-
-		rigidbody->SetLinearVelocity(velo * drag);
-
-		if (up | down | left | right)
 		{
-			const float dt = time.GetDeltaTime("Simulate");
-			const float angle = 45.f * dt;
-			const auto world = transform->GetWorldRotation();
+			// Calculate movement direction based on the camera's forward vector
+			Eigen::Vector3f cameraForward = transform->GetWorldRotation() * transform->front;
+			Eigen::Vector3f cameraRight = transform->GetWorldRotation() * transform->right;
+			Eigen::Vector3f movementDirection = cameraForward * LstickY + cameraRight * LstickX;
 
-			if (up)
-			{
-				transform->Rotate(world * transform->right, -angle);
-			}
+			movementDirection.y() = 0.f;
 
-			if (down)
-			{
-				transform->Rotate(world * transform->right, angle);
-			}
+			// Calculate velocity based on the movement direction and speed
+			Eigen::Vector3f velocity = movementDirection * moveSpeed;
 
-			if (left)
-			{
-				transform->Rotate(transform->up, -angle);
-			}
+			Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
 
-			if (right)
-			{
-				transform->Rotate(transform->up, angle);
-			}
+			velo += velocity;
+
+			// Apply velocity to the character's rigidbody
+			rigidbody->SetLinearVelocity(velocity);
 		}
+	}
+
+	void Controller::RotateCamera()
+	{
+		TimeController& time = TimeController::GetInstance();
+
+		float RstickX = 0.f, RstickY = 0.f;
+		if (gamePad->IsConnected())
+		{
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+		}
+
+		float deltaTime = time.GetDeltaTime("Simulate");
+
+		// Calculate rotation angles based on input from the right stick
+		float yawAngle = RstickX * sensitivity * deltaTime;
+		float pitchAngle = RstickY * sensitivity * deltaTime;
+
+		// Rotate the character (and thus the camera) around the world's up vector (yaw)
+		transform->Rotate(transform->up, yawAngle);
+
+		// Calculate the camera's forward vector after the yaw rotation
+		Eigen::Vector3f cameraForward = transform->GetWorldRotation() * transform->front;
+
+		// Calculate the camera's right vector based on the updated forward vector and the world's up vector
+		Eigen::Vector3f cameraRight = cameraForward.cross(transform->up).normalized();
+
+		// Rotate the camera around its right vector (pitch)
+		transform->Rotate(cameraRight, pitchAngle);
 	}
 
 	void Controller::HandsUp()

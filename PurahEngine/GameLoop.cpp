@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "PhysicsSystem.h"
 #include "TimeController.h"
+#include "Timer.h"
 #include "SoundManager.h"
 #include <cassert>
 
@@ -136,6 +137,8 @@ void PurahEngine::GameLoop::Finalize()
 void PurahEngine::GameLoop::run()
 {
 	TimeController::GetInstance().Update(timeInit);
+
+	Timer::PreUpdate();
 	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
 	PhysicsSystem::GetInstance().PreStep();
@@ -144,6 +147,7 @@ void PurahEngine::GameLoop::run()
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
 
+	Timer::Update();
 	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_ESCAPE))
 	{
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");

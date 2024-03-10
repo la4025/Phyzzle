@@ -68,12 +68,12 @@ namespace PurahEngine
 		bool				IsConnected();
 
 	private:
-		bool			enable;
-		int				id;
-		HWND			hWnd;
-		DWORD			result;
-		XINPUT_STATE	state;
-		int				deadZone = 1000;
-		std::map<ePad, State> inputMap;
+		bool					enable;
+		int						id;
+		XINPUT_STATE			state;
+		XINPUT_KEYSTROKE		stroke;
+		int						deadZone = 1000;
+		std::map<ePad, State>	inputMap;
+		// std::map<> 진동 관련된 체널을 관리하는 뭔가가 있으면 좋겠음.
 	};
 }

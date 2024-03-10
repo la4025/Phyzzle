@@ -52,16 +52,20 @@ namespace PurahEngine
 		}
 	}
 
-	void GamePadManager::Update() const
+	void GamePadManager::Update()
 	{
-		// if (hWnd == GetFocus())
-		// {
-			for (auto i : pad)
+		//if (hWnd != GetFocus())
+		//{
+		//	return;
+		//}
+
+		for (auto& i : pad)
+		{
+			if (i.enable)
 			{
-				if (i.enable)
-					i.Update();
+				i.Update();
 			}
-		// }
+		}
 	}
 
 	void GamePadManager::AddGamePad(int _id)

@@ -198,7 +198,7 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_pxBody)->setLinearVelocity(EigenToPhysx(_velo), false);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setLinearVelocity(EigenToPhysx(_velo));
 	}
 
 	Eigen::Vector3f RigidBodyHelper::GetAngularVelocity(void* _pxBody)
@@ -212,7 +212,7 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_pxBody)->setAngularVelocity(EigenToPhysx(_velo), false);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setAngularVelocity(EigenToPhysx(_velo));
 	}
 
 	float RigidBodyHelper::GetMaxLinearVelocity(void* _pxBody)

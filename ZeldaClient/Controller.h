@@ -3,6 +3,8 @@
 
 namespace PurahEngine
 {
+	class ITween;
+
 	class Controller : public Component
 	{
 	public:
@@ -15,6 +17,7 @@ namespace PurahEngine
 
 	private:
 		void Move();
+		void RotateCamera();
 		void HandsUp();
 
 	public:
@@ -28,8 +31,12 @@ namespace PurahEngine
 
 	private:
 		bool detect;
-		float speed;
-		float drag;
+		float moveSpeed;
+		float sensitivity;
+		bool onVibration = false;
+		float vibrationL = 0.f;
+		float vibrationR = 0.f;
+		ITween* tween;
 
 		GameObject* playerBody;
 		RigidBody* rigidbody;

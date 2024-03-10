@@ -19,7 +19,7 @@ namespace PurahEngine
 
 	public:
 		void Initialize(HWND _hwnd, ePad* _keyArr, int _size);
-		void Update() const;
+		void Update();
 
 	public:
 		static void AddGamePad(int _id);

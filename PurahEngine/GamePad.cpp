@@ -31,29 +31,30 @@ namespace PurahEngine
 	{
 		_state.dwPacketNumber;
 
-		for (auto& itr : inputMap)
+		for (auto& [keyCode, currState] : inputMap)
 		{
-			const auto& input = itr.first;
-			auto& currentState = itr.second;
-
-			const WORD button = static_cast<WORD>(input);
+			const WORD button = static_cast<WORD>(keyCode);
 
 			// 현재 상태 업데이트
-			if (_state.Gamepad.wButtons & button && currentState == State::NONE)
+			if (_state.Gamepad.wButtons & button && currState == State::NONE)
 			{
- 				currentState = State::DOWN;
+				currState = State::DOWN;
 			}
-			else if (_state.Gamepad.wButtons & button && currentState == State::DOWN)
+			else if (_state.Gamepad.wButtons & button && currState == State::DOWN)
 			{
-				currentState = State::PRESSED;
+				currState = State::PRESSED;
 			}
-			else if (!(_state.Gamepad.wButtons & button) && currentState == State::PRESSED)
+			else if (!(_state.Gamepad.wButtons & button) && currState == State::DOWN)
 			{
-				currentState = State::UP;
+				currState = State::UP;
 			}
-			else if (!(_state.Gamepad.wButtons & button) && currentState == State::UP)
+			else if (!(_state.Gamepad.wButtons & button) && currState == State::PRESSED)
 			{
-				currentState = State::NONE;
+				currState = State::UP;
+			}
+			else if (!(_state.Gamepad.wButtons & button) && currState == State::UP)
+			{
+				currState = State::NONE;
 			}
 		}
 	}
@@ -61,6 +62,7 @@ namespace PurahEngine
 	XINPUT_STATE GamePad::GetState()
 	{
 		XInputGetState(id, &state);
+		XInputGetKeystroke(id, 0, &stroke);
 		return state;
 	}
 
@@ -71,7 +73,7 @@ namespace PurahEngine
 
 	bool GamePad::IsKeyPressed(ePad _input)
 	{
-		return  inputMap[_input] == State::PRESSED;
+		return inputMap[_input] == State::PRESSED;
 	}
 
 	bool GamePad::IsKeyUp(ePad _input)

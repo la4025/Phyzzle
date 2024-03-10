@@ -3,6 +3,8 @@
 
 namespace PurahEngine
 {
+	constexpr float timerEpsilon = 0.001f;
+
 	class ITimer
 	{
 	public:
