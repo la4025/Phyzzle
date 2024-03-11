@@ -18,6 +18,11 @@ namespace PurahEngine
 	private:
 		void Move();
 		void RotateCamera();
+		void UpdateCamera();
+
+		Eigen::Vector3f InterpolatePosition(const Eigen::Vector3f& positionAtNeg90, const Eigen::Vector3f& positionAt0, const Eigen::Vector3f& positionAt90, float t);
+		Eigen::Vector3f Lerp(const Eigen::Vector3f& start, const Eigen::Vector3f& end, float t);
+
 		void HandsUp();
 
 	public:

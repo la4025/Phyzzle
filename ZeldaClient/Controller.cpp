@@ -33,6 +33,7 @@ namespace PurahEngine
 	void Controller::Update()
 	{
 		RotateCamera();
+		UpdateCamera();
 		Move();
 	}
 
@@ -52,16 +53,12 @@ namespace PurahEngine
 
 			if (gamePad->IsKeyDown(ePad::ePAD_A))
 			{
-				onVibration = true;
+				gamePad->VibrateRatio(LTrigger, RTrigger, 3.f);
 			}
-			//if (gamePad->IsKeyDown(ePad::ePAD_B))
-			//{
-			//	onVibration = false;
-			//	if (tween)
-			//	{
-			//		Tween::Release(tween);
-			//	}
-			//}
+			if (gamePad->IsKeyDown(ePad::ePAD_B))
+			{
+				gamePad->VibrateRatio(0.f, 0.f);
+			}
 
 			//if (onVibration)
 			//{
@@ -95,10 +92,11 @@ namespace PurahEngine
 
 			Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
 
-			velo += velocity;
+			velo.x() = velocity.x();
+			velo.z() = velocity.z();
 
 			// Apply velocity to the character's rigidbody
-			rigidbody->SetLinearVelocity(velocity);
+			rigidbody->SetLinearVelocity(velo);
 		}
 	}
 
@@ -129,6 +127,65 @@ namespace PurahEngine
 
 		// Rotate the camera around its right vector (pitch)
 		transform->Rotate(cameraRight, pitchAngle);
+	}
+
+	void Controller::UpdateCamera()
+	{
+		// Get the current local rotation as a Quaternion
+		Eigen::Quaternionf localRotation = transform->GetLocalRotation();
+
+		// Convert the Quaternion to Euler angles
+		Eigen::Vector3f localEulerAngles = localRotation.toRotationMatrix().eulerAngles(0, 1, 2);
+
+		// Extract the pitch angle (rotation around the x-axis)
+		float pitchAngle = localEulerAngles.x();
+
+		// Clamp the pitch angle within the range [-90, 90]
+		pitchAngle = std::clamp(pitchAngle, -90.0f, 90.0f);
+
+		// Define desired camera positions at -90, 0, and 90 degrees pitch
+		Eigen::Vector3f positionAt90(0, 10, 0);
+		Eigen::Vector3f positionAt0(0, 2, -5);
+		Eigen::Vector3f positionAtNeg90(0, 0, 0);
+
+		// Determine the interpolation factor based on the current pitch angle
+		float t;
+		if (pitchAngle < 0) {
+			t = 1 - (pitchAngle + 90) / 90; // Map pitch angle to [0, 1] range
+		}
+		else if (pitchAngle > 0) {
+			t = pitchAngle / 90; // Map pitch angle to [0, 1] range
+		}
+		else {
+			t = 0.5f; // Pitch angle is 0, use the middle position
+		}
+
+		// Interpolate between positions based on the pitch angle
+		Eigen::Vector3f interpolatedPosition = InterpolatePosition(positionAtNeg90, positionAt0, positionAt90, t);
+
+		// Set the camera's position to the interpolated position
+		transform->SetLocalPosition(interpolatedPosition);
+	}
+
+	// Linear interpolation between three positions based on t
+	Eigen::Vector3f Controller::InterpolatePosition(const Eigen::Vector3f& positionAtNeg90, const Eigen::Vector3f& positionAt0, const Eigen::Vector3f& positionAt90, float t)
+	{
+		// Ensure t is clamped within [0, 1]
+		t = std::clamp(t, 0.0f, 1.0f);
+
+		// Interpolate between positions based on t
+		if (t <= 0.5f) {
+			return Lerp(positionAtNeg90, positionAt0, t * 2);
+		}
+		else {
+			return Lerp(positionAt0, positionAt90, (t - 0.5f) * 2);
+		}
+	}
+
+	// Linear interpolation between two vectors based on t
+	Eigen::Vector3f Controller::Lerp(const Eigen::Vector3f& start, const Eigen::Vector3f& end, float t)
+	{
+		return start + (end - start) * t;
 	}
 
 	void Controller::HandsUp()
