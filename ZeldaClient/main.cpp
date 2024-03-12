@@ -8,6 +8,8 @@
 #include "CameraMovement.h"
 #include "TestSingleton.h"
 
+#include "Controller.h"
+
 /// 각자 만드는 것들
 #include "NaDong.h"
 #include "BeomJoon.h"
@@ -43,6 +45,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::CameraMovement>("CameraMovement");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<AnimationTestController>("AnimationTestController");
 
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Controller>("Controller");
+
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
 
@@ -52,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	int YH = 3;
 	int loadScene = 4;
 
-	int play = KH;
+	int play = loadScene;
 
 	IMaker* iMaker = nullptr;
 

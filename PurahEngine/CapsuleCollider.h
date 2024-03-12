@@ -11,7 +11,7 @@ namespace PurahEngine
 		~CapsuleCollider() override = default;
 
 	public:
-		void Awake() override;
+		void OnDataLoadComplete() override;
 
 	public:
 		void SetSize(float _radius, float _halfHeight);

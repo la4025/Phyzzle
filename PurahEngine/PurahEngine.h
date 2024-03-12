@@ -20,6 +20,8 @@
 // Physics
 #include "RigidBody.h"
 #include "BoxCollider.h"
+#include "SphereCollider.h"
+#include "CapsuleCollider.h"
 
 // Graphics
 #include "Camera.h"

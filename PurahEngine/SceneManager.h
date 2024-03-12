@@ -38,6 +38,7 @@ namespace PurahEngine
 
 	private:
 		void LoadScene();
+		void LoadSceneCompleteEvent();
 
 	protected:
 		json sceneData;

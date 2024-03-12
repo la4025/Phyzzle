@@ -6,13 +6,17 @@
 
 namespace PurahEngine
 {
-	void CapsuleCollider::Awake()
+	void CapsuleCollider::OnDataLoadComplete()
 	{
-		Collider::Awake();
+		Collider::OnDataLoadComplete();
+
+		const auto scale = transform->GetWorldScale();
+
+		const float maxScale = max(scale.x(), scale.z());
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateCapsuleCollider(
 			this->GetGameObject(),
-			radius, height
+			radius * maxScale, height * scale.y()
 		);
 
 		znCollider->SetUserData(this);
@@ -22,6 +26,9 @@ namespace PurahEngine
 		SetTrigger(isTrigger);
 		SetLayer(layer);
 		SetPositionOffset(positionOffset);
+
+		znCollider->SetPosition(transform->GetWorldPosition());
+		znCollider->SetQuaternion(transform->GetWorldRotation());
 	}
 
 	void CapsuleCollider::SetSize(float _radius, float _halfHeight)
@@ -37,10 +44,12 @@ namespace PurahEngine
 	void CapsuleCollider::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(cType);
 		PREDESERIALIZE_VALUE(radius);
 		PREDESERIALIZE_VALUE(height);
 		PREDESERIALIZE_VALUE(isTrigger);
 		PREDESERIALIZE_VALUE(layer);
+		PREDESERIALIZE_VECTOR3F(positionOffset);
 	}
 
 	void CapsuleCollider::PostSerialize(json& jsonData) const

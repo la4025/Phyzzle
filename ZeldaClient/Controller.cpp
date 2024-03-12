@@ -2,7 +2,7 @@
 
 #include "TimeController.h"
 #include "Tween.h"
-#include <iostream>
+#include <algorithm>
 
 namespace PurahEngine
 {
@@ -11,8 +11,6 @@ namespace PurahEngine
 
 	void Controller::Awake()
 	{
-		rigidbody = playerBody->GetComponent<RigidBody>();
-		transform = gameObject->GetTransform();
 		moveSpeed = 3.f;
 		sensitivity = 45.f;
 	}
@@ -24,25 +22,24 @@ namespace PurahEngine
 		gamePad = GamePadManager::GetGamePad(0);
 		gamePad->SetDeadZone(2000);
 
-		startPosition = transform->GetWorldPosition();
-		startRotation = transform->GetWorldRotation();
-		startLinearVelocity = rigidbody->GetLinearVelocity();
- 		startAngularVelocity = rigidbody->GetAngularVelocity();
+		startPosition = myTransform->GetWorldPosition();
+		startRotation = myTransform->GetWorldRotation();
+
+		playerRigidbody = gameObject->GetComponent<RigidBody>();
+		startLinearVelocity = playerRigidbody->GetLinearVelocity();
+ 		startAngularVelocity = playerRigidbody->GetAngularVelocity();
 	}
 
 	void Controller::Update()
 	{
+		GamePadInput();
 		RotateCamera();
-		UpdateCamera();
+		// UpdateCamera();
 		Move();
 	}
 
-	void Controller::Move()
+	void Controller::GamePadInput()
 	{
-		TimeController& time = TimeController::GetInstance();
-
-		float LstickX = 0.f , LstickY = 0.f;
-
 		if (gamePad->IsConnected())
 		{
 			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
@@ -59,133 +56,116 @@ namespace PurahEngine
 			{
 				gamePad->VibrateRatio(0.f, 0.f);
 			}
+		}
 
-			//if (onVibration)
-			//{
-			//	tween = Tween::DoTween<float>(
-			//		vibrationL,					// start
-			//		eCycleMode::LOOP,			// cycle
-			//		1.f,						// end
-			//		eEasing::eOutCirc,			// easing
-			//		3.f,						// duration
-			//		0.1f,						// delay
-			//		[this]()					// callback
-			//		{
-			//			vibrationL = 0.f;
-			//			vibrationR = 0.f;
-			//		}
-			//	);
-			//	gamePad->VibrateRatio(vibrationL, vibrationR);
-			//}
+	}
+
+	void Controller::Move()
+	{
+		TimeController& time = TimeController::GetInstance();
+
+		if (gamePad->IsConnected())
+		{
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
+
+			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
+			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
+
+			if (gamePad->IsKeyDown(ePad::ePAD_A))
+			{
+				gamePad->VibrateRatio(LTrigger, RTrigger, 3.f);
+			}
+			if (gamePad->IsKeyDown(ePad::ePAD_B))
+			{
+				gamePad->VibrateRatio(0.f, 0.f);
+			}
 		}
 
 		{
 			// Calculate movement direction based on the camera's forward vector
-			Eigen::Vector3f cameraForward = transform->GetWorldRotation() * transform->front;
-			Eigen::Vector3f cameraRight = transform->GetWorldRotation() * transform->right;
+			Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
+			Eigen::Vector3f cameraRight = myTransform->GetWorldRotation() * myTransform->right;
 			Eigen::Vector3f movementDirection = cameraForward * LstickY + cameraRight * LstickX;
 
 			movementDirection.y() = 0.f;
 
 			// Calculate velocity based on the movement direction and speed
-			Eigen::Vector3f velocity = movementDirection * moveSpeed;
+			Eigen::Vector3f movement = movementDirection * moveSpeed;
 
-			Eigen::Vector3f velo = rigidbody->GetLinearVelocity();
+			Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
 
-			velo.x() = velocity.x();
-			velo.z() = velocity.z();
+			velocity.x() = movement.x();
+			velocity.z() = movement.z();
 
-			// Apply velocity to the character's rigidbody
-			rigidbody->SetLinearVelocity(velo);
+			// Apply velocity to the character's playerRigidbody
+			playerRigidbody->SetLinearVelocity(velocity);
 		}
 	}
 
 	void Controller::RotateCamera()
 	{
-		TimeController& time = TimeController::GetInstance();
-
-		float RstickX = 0.f, RstickY = 0.f;
-		if (gamePad->IsConnected())
 		{
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+			TimeController& time = TimeController::GetInstance();
+
+			float RstickX = 0.f, RstickY = 0.f;
+			if (gamePad->IsConnected())
+			{
+				gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+			}
+
+			float deltaTime = time.GetDeltaTime("Simulate");
+
+			// Calculate rotation angles based on input from the right stick
+			float yawAngle = RstickX * sensitivity * deltaTime;
+			float pitchAngle = RstickY * sensitivity * deltaTime;
+
+			// Rotate the character (and thus the camera) around the world's up vector (yaw)
+			myTransform->Rotate(myTransform->up, yawAngle);
+
+			// Calculate the camera's forward vector after the yaw rotation
+			Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
+
+			// Calculate the camera's right vector based on the updated forward vector and the world's up vector
+			Eigen::Vector3f cameraRight = cameraForward.cross(myTransform->up).normalized();
+
+			// Rotate the camera around its right vector (pitch)
+			myTransform->Rotate(cameraRight, pitchAngle);
 		}
 
-		float deltaTime = time.GetDeltaTime("Simulate");
+		//TimeController& time = TimeController::GetInstance();
 
-		// Calculate rotation angles based on input from the right stick
-		float yawAngle = RstickX * sensitivity * deltaTime;
-		float pitchAngle = RstickY * sensitivity * deltaTime;
+		//float RstickX = 0.f, RstickY = 0.f;
+		//if (gamePad->IsConnected()) {
+		//	gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+		//}
 
-		// Rotate the character (and thus the camera) around the world's up vector (yaw)
-		transform->Rotate(transform->up, yawAngle);
+		//float deltaTime = time.GetDeltaTime("Simulate");
 
-		// Calculate the camera's forward vector after the yaw rotation
-		Eigen::Vector3f cameraForward = transform->GetWorldRotation() * transform->front;
+		//// Calculate rotation angles based on input from the right stick
+		//float yawAngle = RstickX * sensitivity * deltaTime;
+		//float pitchAngle = RstickY * sensitivity * deltaTime;
 
-		// Calculate the camera's right vector based on the updated forward vector and the world's up vector
-		Eigen::Vector3f cameraRight = cameraForward.cross(transform->up).normalized();
+		//// Convert the current rotation quaternion to Euler angles
+		//Eigen::Vector3f currentEulerAngles = myTransform->GetLocalRotation().toRotationMatrix().eulerAngles(0, 1, 2);
 
-		// Rotate the camera around its right vector (pitch)
-		transform->Rotate(cameraRight, pitchAngle);
-	}
+		//// Extract the pitch angle
+		//float currentPitch = currentEulerAngles.x();
 
-	void Controller::UpdateCamera()
-	{
-		// Get the current local rotation as a Quaternion
-		Eigen::Quaternionf localRotation = transform->GetLocalRotation();
+		//// Calculate the new pitch angle and constrain it within -80 and 80 degrees
+		//float newPitch = currentPitch + pitchAngle;
+		//pitchAngle = max(min(newPitch, 80.f * (std::numbers::pi / 180.f)), -80.f * (std::numbers::pi / 180.f)) - currentPitch;
 
-		// Convert the Quaternion to Euler angles
-		Eigen::Vector3f localEulerAngles = localRotation.toRotationMatrix().eulerAngles(0, 1, 2);
+		//// Rotate the character (and thus the camera) around the world's up vector (yaw)
+		//myTransform->Rotate(myTransform->up, yawAngle);
 
-		// Extract the pitch angle (rotation around the x-axis)
-		float pitchAngle = localEulerAngles.x();
+		//// Calculate the camera's forward vector after the yaw rotation
+		//Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
 
-		// Clamp the pitch angle within the range [-90, 90]
-		pitchAngle = std::clamp(pitchAngle, -90.0f, 90.0f);
+		//// Calculate the camera's right vector based on the updated forward vector and the world's up vector
+		//Eigen::Vector3f cameraRight = cameraForward.cross(myTransform->up).normalized();
 
-		// Define desired camera positions at -90, 0, and 90 degrees pitch
-		Eigen::Vector3f positionAt90(0, 10, 0);
-		Eigen::Vector3f positionAt0(0, 2, -5);
-		Eigen::Vector3f positionAtNeg90(0, 0, 0);
-
-		// Determine the interpolation factor based on the current pitch angle
-		float t;
-		if (pitchAngle < 0) {
-			t = 1 - (pitchAngle + 90) / 90; // Map pitch angle to [0, 1] range
-		}
-		else if (pitchAngle > 0) {
-			t = pitchAngle / 90; // Map pitch angle to [0, 1] range
-		}
-		else {
-			t = 0.5f; // Pitch angle is 0, use the middle position
-		}
-
-		// Interpolate between positions based on the pitch angle
-		Eigen::Vector3f interpolatedPosition = InterpolatePosition(positionAtNeg90, positionAt0, positionAt90, t);
-
-		// Set the camera's position to the interpolated position
-		transform->SetLocalPosition(interpolatedPosition);
-	}
-
-	// Linear interpolation between three positions based on t
-	Eigen::Vector3f Controller::InterpolatePosition(const Eigen::Vector3f& positionAtNeg90, const Eigen::Vector3f& positionAt0, const Eigen::Vector3f& positionAt90, float t)
-	{
-		// Ensure t is clamped within [0, 1]
-		t = std::clamp(t, 0.0f, 1.0f);
-
-		// Interpolate between positions based on t
-		if (t <= 0.5f) {
-			return Lerp(positionAtNeg90, positionAt0, t * 2);
-		}
-		else {
-			return Lerp(positionAt0, positionAt90, (t - 0.5f) * 2);
-		}
-	}
-
-	// Linear interpolation between two vectors based on t
-	Eigen::Vector3f Controller::Lerp(const Eigen::Vector3f& start, const Eigen::Vector3f& end, float t)
-	{
-		return start + (end - start) * t;
+		//// Rotate the camera around its right vector (pitch)
+		//myTransform->Rotate(myTransform->right, pitchAngle);
 	}
 
 	void Controller::HandsUp()
@@ -195,11 +175,15 @@ namespace PurahEngine
 
 	void Controller::PreSerialize(json& jsonData) const
 	{
+
 	}
 
 	void Controller::PreDeserialize(const json& jsonData)
 	{
-
+		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(detect);
+		PREDESERIALIZE_VALUE(moveSpeed);
+		PREDESERIALIZE_VALUE(sensitivity);
 	}
 
 	void Controller::PostSerialize(json& jsonData) const
@@ -209,13 +193,15 @@ namespace PurahEngine
 
 	void Controller::PostDeserialize(const json& jsonData)
 	{
-
+		POSTDESERIALIZE_PTR(playerGameObject);
+		POSTDESERIALIZE_PTR(playerRigidbody);
+		POSTDESERIALIZE_PTR(myTransform);
 	}
 
 	void Controller::SetPlayer(GameObject* _player)
 	{
 		assert(_player != nullptr);
 
-		playerBody = _player;
+		playerGameObject = _player;
 	}
 }

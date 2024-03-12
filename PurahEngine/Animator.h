@@ -29,7 +29,7 @@ namespace PurahEngine
 		Animator();
 		~Animator();
 
-		void Initialize() override;
+		void OnDataLoadComplete() override;
 
 		void Awake() override;
 		void Start() override;

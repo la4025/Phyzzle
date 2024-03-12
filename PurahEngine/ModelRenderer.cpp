@@ -15,7 +15,7 @@ namespace PurahEngine
 		}
 	}
 
-	void ModelRenderer::Initialize()
+	void ModelRenderer::OnDataLoadComplete()
 	{
 		animator = nullptr;
 

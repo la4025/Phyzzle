@@ -12,7 +12,7 @@ namespace PurahEngine
 		~AudioListener();
 
 	public:
-		void Initialize();
+		void OnDataLoadComplete();
 		void Update();
 	public:
 		virtual void PreSerialize(json& jsonData) const override;

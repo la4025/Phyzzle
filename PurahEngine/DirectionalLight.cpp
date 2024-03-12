@@ -2,7 +2,7 @@
 
 namespace PurahEngine
 {
-	void DirectionalLight::Initialize()
+	void DirectionalLight::OnDataLoadComplete()
 	{
 		CreateDirectionalLight();
 	}

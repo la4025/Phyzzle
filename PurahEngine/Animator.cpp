@@ -29,7 +29,7 @@ namespace PurahEngine
 		GraphicsManager::GetInstance().RemoveAnimator(this);
 	}
 
-	void Animator::Initialize()
+	void Animator::OnDataLoadComplete()
 	{
 		targetRenderer = nullptr;
 		animationBlend = false;

@@ -157,10 +157,23 @@ void PurahEngine::SceneManager::LoadScene()
 	sceneData = fManager.LoadData(sceneBuffer);
 	Deserialize(sceneData);
 
+	LoadSceneCompleteEvent();
+
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
 	sceneBuffer = L"";
 
 	state = RunningState::AWAKE;
+}
+
+void PurahEngine::SceneManager::LoadSceneCompleteEvent()
+{
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		for (int j = 0; j < objectList[i]->componentList.size(); j++)
+		{
+			objectList[i]->componentList[j]->OnDataLoadComplete();
+		}
+	}
 }
 
 void PurahEngine::SceneManager::PreSerialize(json& jsonData) const

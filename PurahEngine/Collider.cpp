@@ -14,7 +14,7 @@ namespace PurahEngine
 
         auto& physicsSystem = PhysicsSystem::GetInstance();
 
-        switch (type)
+        switch (cType)
         {
         case ColliderType::DYNAMIC:
         {
@@ -37,11 +37,11 @@ namespace PurahEngine
         }
     }
 
-	void Collider::Awake()
-    {
+	void Collider::OnDataLoadComplete()
+	{
         this->transform = gameObject->GetTransform();
 
-        switch (type)
+        switch (cType)
         {
         case ColliderType::DYNAMIC:
             PhysicsSystem::GetInstance().dynamicColliders.push_back(this);
@@ -54,7 +54,7 @@ namespace PurahEngine
         default:
             throw"";
         }
-    }
+	}
 
 	void Collider::SetPositionOffset(const Eigen::Vector3f& _pos)
     {
@@ -82,7 +82,7 @@ namespace PurahEngine
 
 	void Collider::SetDynamic(bool _value)
     {
-        type = _value ? ColliderType::DYNAMIC : ColliderType::STATIC;
+        cType = _value ? ColliderType::DYNAMIC : ColliderType::STATIC;
     }
 
 	void Collider::SetTrigger(bool _value)

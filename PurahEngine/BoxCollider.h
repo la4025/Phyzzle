@@ -11,7 +11,7 @@ namespace PurahEngine
 		~BoxCollider() override = default;
 
 	public:
-		void Awake() override;
+		void OnDataLoadComplete() override;
 
 	public:
 		void SetSize(const Eigen::Vector3f& _size);

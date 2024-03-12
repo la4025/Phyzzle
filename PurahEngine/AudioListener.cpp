@@ -11,7 +11,7 @@ PurahEngine::AudioListener::~AudioListener()
 
 }
 
-void PurahEngine::AudioListener::Initialize()
+void PurahEngine::AudioListener::OnDataLoadComplete()
 {
 	listenerTransform = GetGameObject()->GetTransform();
 

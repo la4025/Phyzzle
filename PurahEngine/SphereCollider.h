@@ -11,7 +11,7 @@ namespace PurahEngine
 		~SphereCollider() override = default;
 
 	public:
-		void Awake() override;
+		void OnDataLoadComplete() override;
 
 	public:
 		void SetSize(float _radius);
