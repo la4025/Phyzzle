@@ -20,12 +20,12 @@ namespace PurahEngine
 		GamePadManager::AddGamePad(0);
 
 		gamePad = GamePadManager::GetGamePad(0);
-		gamePad->SetDeadZone(2000);
+		gamePad->SetDeadZone(5000);
 
-		startPosition = myTransform->GetWorldPosition();
-		startRotation = myTransform->GetWorldRotation();
+		startPosition = modelCore->GetWorldPosition();
+		startRotation = modelCore->GetWorldRotation();
 
-		playerRigidbody = gameObject->GetComponent<RigidBody>();
+		// playerRigidbody = gameObject->GetComponent<RigidBody>();
 		startLinearVelocity = playerRigidbody->GetLinearVelocity();
  		startAngularVelocity = playerRigidbody->GetAngularVelocity();
 	}
@@ -40,11 +40,16 @@ namespace PurahEngine
 
 	void Controller::GamePadInput()
 	{
+		LstickX = 0.f, LstickY = 0.f;
+		RstickX = 0.f, RstickY = 0.f;
+		LTrigger = 0.f, RTrigger = 0.f;
+
 		if (gamePad->IsConnected())
 		{
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
 
-			float LTrigger = 0.f, RTrigger = 0.f;
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
+			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+
 			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
 			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
 
@@ -57,49 +62,45 @@ namespace PurahEngine
 				gamePad->VibrateRatio(0.f, 0.f);
 			}
 		}
-
 	}
 
 	void Controller::Move()
 	{
-		TimeController& time = TimeController::GetInstance();
+		// 카메라의 전방 벡터를 계산
+		Eigen::Vector3f cameraFront = cameraArm->GetFront();
+		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
+		const Eigen::Vector3f right = cameraArm->GetRight();
 
-		if (gamePad->IsConnected())
-		{
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
+		Eigen::Vector3f movementDirection = forward * LstickY + right * LstickX;
 
-			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
-			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
+		movementDirection.y() = 0.f;
 
-			if (gamePad->IsKeyDown(ePad::ePAD_A))
-			{
-				gamePad->VibrateRatio(LTrigger, RTrigger, 3.f);
-			}
-			if (gamePad->IsKeyDown(ePad::ePAD_B))
-			{
-				gamePad->VibrateRatio(0.f, 0.f);
-			}
-		}
+		// 속도 벡터를 계산
+		Eigen::Vector3f movement = movementDirection * moveSpeed;
 
-		{
-			// Calculate movement direction based on the camera's forward vector
-			Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
-			Eigen::Vector3f cameraRight = myTransform->GetWorldRotation() * myTransform->right;
-			Eigen::Vector3f movementDirection = cameraForward * LstickY + cameraRight * LstickX;
+		Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
 
-			movementDirection.y() = 0.f;
+		// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
+		/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
+		velocity.x() = movement.x();
+		velocity.z() = movement.z();
 
-			// Calculate velocity based on the movement direction and speed
-			Eigen::Vector3f movement = movementDirection * moveSpeed;
+		// 속력을 적용시킴
+		playerRigidbody->SetLinearVelocity(velocity);
 
-			Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
+		//if (LstickY == 0.f && LstickX == 0.f)
+		//{
+		//	return;
+		//}
 
-			velocity.x() = movement.x();
-			velocity.z() = movement.z();
+		const Eigen::Quaternionf parentWorld = gameObject->GetTransform()->GetWorldRotation();
+		const Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
 
-			// Apply velocity to the character's playerRigidbody
-			playerRigidbody->SetLinearVelocity(velocity);
-		}
+		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
+		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
+
+		// Set the rotation of the transform to the target rotation
+		modelCore->SetLocalRotation(targetRotation);
 	}
 
 	void Controller::RotateCamera()
@@ -107,65 +108,21 @@ namespace PurahEngine
 		{
 			TimeController& time = TimeController::GetInstance();
 
-			float RstickX = 0.f, RstickY = 0.f;
-			if (gamePad->IsConnected())
-			{
-				gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
-			}
+			const float deltaTime = time.GetDeltaTime("Simulate");
 
-			float deltaTime = time.GetDeltaTime("Simulate");
+			// 스틱 기울기에 따라 회전 각도를 계산
+			const float yawAngle = RstickX * sensitivity * deltaTime;
+			const float pitchAngle = RstickY * sensitivity * deltaTime;
 
-			// Calculate rotation angles based on input from the right stick
-			float yawAngle = RstickX * sensitivity * deltaTime;
-			float pitchAngle = RstickY * sensitivity * deltaTime;
+			// 월드 up 기준으로 카메라를 회전
+			cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
 
-			// Rotate the character (and thus the camera) around the world's up vector (yaw)
-			myTransform->Rotate(myTransform->up, yawAngle);
+			// 카메라 Right 벡터를 기준으로 회전하기 위해서 카메라의 월드 right를 구함.
+			const Eigen::Vector3f cameraRight = cameraArm->GetWorldRotation() * -Eigen::Vector3f::UnitX();
 
-			// Calculate the camera's forward vector after the yaw rotation
-			Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
-
-			// Calculate the camera's right vector based on the updated forward vector and the world's up vector
-			Eigen::Vector3f cameraRight = cameraForward.cross(myTransform->up).normalized();
-
-			// Rotate the camera around its right vector (pitch)
-			myTransform->Rotate(cameraRight, pitchAngle);
+			// 카메라의 right 기준으로 카메라를 회전
+			cameraArm->Rotate(cameraRight, pitchAngle);
 		}
-
-		//TimeController& time = TimeController::GetInstance();
-
-		//float RstickX = 0.f, RstickY = 0.f;
-		//if (gamePad->IsConnected()) {
-		//	gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
-		//}
-
-		//float deltaTime = time.GetDeltaTime("Simulate");
-
-		//// Calculate rotation angles based on input from the right stick
-		//float yawAngle = RstickX * sensitivity * deltaTime;
-		//float pitchAngle = RstickY * sensitivity * deltaTime;
-
-		//// Convert the current rotation quaternion to Euler angles
-		//Eigen::Vector3f currentEulerAngles = myTransform->GetLocalRotation().toRotationMatrix().eulerAngles(0, 1, 2);
-
-		//// Extract the pitch angle
-		//float currentPitch = currentEulerAngles.x();
-
-		//// Calculate the new pitch angle and constrain it within -80 and 80 degrees
-		//float newPitch = currentPitch + pitchAngle;
-		//pitchAngle = max(min(newPitch, 80.f * (std::numbers::pi / 180.f)), -80.f * (std::numbers::pi / 180.f)) - currentPitch;
-
-		//// Rotate the character (and thus the camera) around the world's up vector (yaw)
-		//myTransform->Rotate(myTransform->up, yawAngle);
-
-		//// Calculate the camera's forward vector after the yaw rotation
-		//Eigen::Vector3f cameraForward = myTransform->GetWorldRotation() * myTransform->front;
-
-		//// Calculate the camera's right vector based on the updated forward vector and the world's up vector
-		//Eigen::Vector3f cameraRight = cameraForward.cross(myTransform->up).normalized();
-
-		//// Rotate the camera around its right vector (pitch)
-		//myTransform->Rotate(myTransform->right, pitchAngle);
 	}
 
 	void Controller::HandsUp()
@@ -193,15 +150,9 @@ namespace PurahEngine
 
 	void Controller::PostDeserialize(const json& jsonData)
 	{
-		POSTDESERIALIZE_PTR(playerGameObject);
 		POSTDESERIALIZE_PTR(playerRigidbody);
-		POSTDESERIALIZE_PTR(myTransform);
-	}
-
-	void Controller::SetPlayer(GameObject* _player)
-	{
-		assert(_player != nullptr);
-
-		playerGameObject = _player;
+		POSTDESERIALIZE_PTR(modelCore);
+		POSTDESERIALIZE_PTR(cameraArm);
+		POSTDESERIALIZE_PTR(cameraCore);
 	}
 }

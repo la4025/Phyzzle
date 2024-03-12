@@ -29,7 +29,7 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	public:
-		void SetPlayer(GameObject*);
+		// void SetPlayer(GameObject*);
 
 	private:
 		bool detect;
@@ -39,9 +39,10 @@ namespace PurahEngine
 		ITween* tween;
 
 	private:
-		GameObject* playerGameObject;
 		RigidBody* playerRigidbody;
-		Transform* myTransform;
+		Transform* modelCore;
+		Transform* cameraArm;
+		Transform* cameraCore;
 
 	private:
 		GamePad* gamePad;

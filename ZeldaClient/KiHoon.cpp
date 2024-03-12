@@ -71,7 +71,7 @@ void KiHoon::Run()
 
 	{
 		Controller* controller = player->AddComponent<Controller>();
-		controller->SetPlayer(body);
+		// controller->SetPlayer(body);
 	}
 
 	GameObject* camera = SceneManager::GetInstance().CreateGameObject(L"Camera");

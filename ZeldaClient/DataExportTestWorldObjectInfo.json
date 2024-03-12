@@ -1,10 +1,10 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": 22930,
+      "__Base__instanceID": 32884,
       "name": "Player",
       "transform": {
-        "__Base__instanceID": 22932,
+        "__Base__instanceID": 32886,
         "position": {
           "x": -1.74,
           "y": 0.0,
@@ -23,23 +23,34 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          23032,
-          23024
+          32974,
+          32966
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 22940,
+          "__Base__instanceID": 32892,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
-          "dynamicLock": 40,
+          "dynamicLock": 56,
           "mass": 1.0,
           "linearDamping": 0.0,
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -46324,
+          "__Base__instanceID": -57500,
+          "__Base__Component": "Controller",
+          "detect": false,
+          "moveSpeed": 0.0,
+          "sensitivity": 0.0,
+          "__ID__playerRigidbody": 32892,
+          "__ID__modelCore": 32974,
+          "__ID__cameraArm": 32966,
+          "__ID__cameraCore": 32950
+        },
+        {
+          "__Base__instanceID": -57540,
           "__Base__Component": "CapsuleCollider",
           "cType": 1,
           "isTrigger": false,
@@ -51,28 +62,18 @@
           },
           "radius": 1.0,
           "height": 1.0
-        },
-        {
-          "__Base__instanceID": -48680,
-          "__Base__Component": "Controller",
-          "detect": false,
-          "moveSpeed": 3.0,
-          "sensitivity": 45.0,
-          "__ID__playerGameObject": 22930,
-          "__ID__playerRigidbody": 22940,
-          "__ID__myTransform": 23024
         }
       ]
     },
     {
-      "__Base__instanceID": 22946,
+      "__Base__instanceID": 32898,
       "name": "Ball",
       "transform": {
-        "__Base__instanceID": 22956,
+        "__Base__instanceID": 32906,
         "position": {
-          "x": -6.32,
+          "x": -4.23,
           "y": 2.92,
-          "z": 7.05
+          "z": 1.13
         },
         "rotation": {
           "x": 0.0,
@@ -90,20 +91,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 22948,
-          "__Base__Component": "SphereCollider",
-          "cType": 1,
-          "isTrigger": false,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "radius": 1.0
-        },
-        {
-          "__Base__instanceID": -35458,
+          "__Base__instanceID": 32908,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -113,23 +101,36 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -74938,
+          "__Base__instanceID": -58660,
+          "__Base__Component": "SphereCollider",
+          "cType": 1,
+          "isTrigger": false,
+          "layer": 0,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "radius": 0.5
+        },
+        {
+          "__Base__instanceID": -58818,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
           "textureName": "",
-          "r": 0.21764861,
-          "g": 0.398282737,
-          "b": 0.6320754,
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
           "a": 0.0
         }
       ]
     },
     {
-      "__Base__instanceID": 22966,
+      "__Base__instanceID": 32910,
       "name": "Directional Light",
       "transform": {
-        "__Base__instanceID": 22970,
+        "__Base__instanceID": 32914,
         "position": {
           "x": 0.0,
           "y": 3.0,
@@ -151,7 +152,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": -44506,
+          "__Base__instanceID": 32916,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -174,14 +175,14 @@
       ]
     },
     {
-      "__Base__instanceID": 22972,
+      "__Base__instanceID": 32918,
       "name": "Box",
       "transform": {
-        "__Base__instanceID": 22984,
+        "__Base__instanceID": 32928,
         "position": {
-          "x": 3.56,
+          "x": 0.0,
           "y": 1.881,
-          "z": 10.73
+          "z": 3.462
         },
         "rotation": {
           "x": 0.0,
@@ -199,7 +200,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 22976,
+          "__Base__instanceID": 32922,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "isTrigger": false,
@@ -216,7 +217,7 @@
           }
         },
         {
-          "__Base__instanceID": 22974,
+          "__Base__instanceID": 32920,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -226,23 +227,23 @@
           "angularDamping": 0.5
         },
         {
-          "__Base__instanceID": -74580,
+          "__Base__instanceID": -58996,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
           "textureName": "",
-          "r": 0.6698113,
-          "g": 0.635057,
-          "b": 0.635057,
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
           "a": 0.0
         }
       ]
     },
     {
-      "__Base__instanceID": 22996,
+      "__Base__instanceID": 32930,
       "name": "Graund",
       "transform": {
-        "__Base__instanceID": 23002,
+        "__Base__instanceID": 32936,
         "position": {
           "x": 0.0,
           "y": -0.5,
@@ -264,7 +265,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": -36186,
+          "__Base__instanceID": 32942,
           "__Base__Component": "BoxCollider",
           "cType": 0,
           "isTrigger": false,
@@ -281,7 +282,7 @@
           }
         },
         {
-          "__Base__instanceID": -37280,
+          "__Base__instanceID": 32940,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -294,10 +295,10 @@
       ]
     },
     {
-      "__Base__instanceID": 23006,
+      "__Base__instanceID": 32944,
       "name": "Camera",
       "transform": {
-        "__Base__instanceID": 23012,
+        "__Base__instanceID": 32950,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -315,43 +316,26 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          23024
+          32966
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -41160,
+          "__Base__instanceID": 32952,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
           "cameraFar": 1000.0,
           "fieldOfView": 1.04719758
-        },
-        {
-          "__Base__instanceID": -72490,
-          "__Base__Component": "BoxCollider",
-          "cType": 0,
-          "isTrigger": true,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "size": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          }
         }
       ]
     },
     {
-      "__Base__instanceID": 23014,
+      "__Base__instanceID": 32954,
       "name": "Eye",
       "transform": {
-        "__Base__instanceID": 23016,
+        "__Base__instanceID": 32956,
         "position": {
           "x": 0.0,
           "y": 0.4,
@@ -369,13 +353,13 @@
           "z": 0.6
         },
         "__ID__parentTransform": [
-          23032
+          32974
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -47546,
+          "__Base__instanceID": 32962,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -388,10 +372,10 @@
       ]
     },
     {
-      "__Base__instanceID": 23022,
+      "__Base__instanceID": 32964,
       "name": "CameraArm",
       "transform": {
-        "__Base__instanceID": 23024,
+        "__Base__instanceID": 32966,
         "position": {
           "x": 0.0,
           "y": 3.0,
@@ -409,19 +393,19 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          22932
+          32886
         ],
         "__ID__children": [
-          23012
+          32950
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": 23026,
+      "__Base__instanceID": 32968,
       "name": "Model",
       "transform": {
-        "__Base__instanceID": 23032,
+        "__Base__instanceID": 32974,
         "position": {
           "x": 0.0,
           "y": 2.0,
@@ -439,15 +423,15 @@
           "z": 2.0
         },
         "__ID__parentTransform": [
-          22932
+          32886
         ],
         "__ID__children": [
-          23016
+          32956
         ]
       },
       "components": [
         {
-          "__Base__instanceID": -45874,
+          "__Base__instanceID": 32976,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
