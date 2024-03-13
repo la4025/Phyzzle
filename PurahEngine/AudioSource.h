@@ -3,11 +3,20 @@
 #include "Component.h"
 
 #include "Transform.h"
+#include "SoundManager.h"
 
 namespace PurahEngine
 {
-	class AudioSource : public Component
+	class Transform;
+	class GameObject;
+	class SoundManager;
+
+	class PURAHENGINE_API AudioSource : public Component
 	{
+	public:
+		AudioSource();
+		~AudioSource();
+
 	public:
 		void Awake();
 		void Initialize();
@@ -21,6 +30,8 @@ namespace PurahEngine
 
 	private:
 		Transform* soundTransform;
+		std::wstring soundName;
+		std::wstring filePath;
 	};
 }
 

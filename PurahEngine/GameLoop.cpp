@@ -130,6 +130,7 @@ void PurahEngine::GameLoop::run()
 	}
 
 	PurahEngine::SceneManager::GetInstance().Update();
+
 	PurahEngine::SoundManager::GetInstance().Update();
 
 	PurahEngine::GraphicsManager::GetInstance().UpdateAnimator(deltaTime);

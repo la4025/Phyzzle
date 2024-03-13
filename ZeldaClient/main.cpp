@@ -51,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	int YH = 3;
 	int loadScene = 4;
 
-	int play = loadScene;
+	int play = DH;
 
 	IMaker* iMaker = nullptr;
 

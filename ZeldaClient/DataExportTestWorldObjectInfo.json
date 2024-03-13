@@ -102,6 +102,10 @@
           "cameraNear": 0.3,
           "cameraFar": 1000.0,
           "fieldOfView": 1.04719758
+        },
+        {
+          "__Base__instanceID": -1756,
+          "__Base__Component": "CameraMovement"
         }
       ]
     },
@@ -175,22 +179,14 @@
           "g": 1.0,
           "b": 0.0,
           "a": 0.0
-        },
-        {
-          "__Base__instanceID": -1570,
-          "__Base__Component": "testND",
-          "r": 0.350569576,
-          "g": 0.4480801,
-          "b": 0.735849,
-          "a": 0.0
         }
       ]
     },
     {
-      "__Base__instanceID": 22958,
+      "__Base__instanceID": 22960,
       "name": "Directional Light",
       "transform": {
-        "__Base__instanceID": 22964,
+        "__Base__instanceID": 22966,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -212,7 +208,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 22960,
+          "__Base__instanceID": 22962,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -235,10 +231,10 @@
       ]
     },
     {
-      "__Base__instanceID": 22966,
+      "__Base__instanceID": 22968,
       "name": "Camera (2)",
       "transform": {
-        "__Base__instanceID": 22974,
+        "__Base__instanceID": 22976,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -260,7 +256,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 22968,
+          "__Base__instanceID": 22970,
           "__Base__Component": "Camera",
           "mainCamera": false,
           "cameraNear": 0.3,

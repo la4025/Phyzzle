@@ -265,5 +265,8 @@
     <ClInclude Include="AudioSource.h">
       <Filter>Component\4. Sound</Filter>
     </ClInclude>
+    <ClInclude Include="PurahSound.h">
+      <Filter>Core\Manager\SoundManager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

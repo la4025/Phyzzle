@@ -202,20 +202,20 @@ void PurahEngine::TestMovement::Update()
 	}
 
 	/// Sound Test-----------------------------------------------------------
-	if (inputManager.IsKeyPressed('8') == true)
-	{
-		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test001");
-	}
-
-	if (inputManager.IsKeyPressed('9') == true)
-	{
-		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test002");
-	}
-
-	if (inputManager.IsKeyPressed('0') == true)
-	{
-		PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test003");
-	}
+	//if (inputManager.IsKeyPressed('8') == true)
+	//{
+	//	PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test001");
+	//}
+	//
+	//if (inputManager.IsKeyPressed('9') == true)
+	//{
+	//	PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test002");
+	//}
+	//
+	//if (inputManager.IsKeyPressed('0') == true)
+	//{
+	//	PurahEngine::SoundManager::GetInstance().Play(L"BGM_Test003");
+	//}
 
 	//OutputDebugStringW((std::to_wstring(j) + L" ").c_str());
 }
