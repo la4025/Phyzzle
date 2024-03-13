@@ -45,7 +45,6 @@ namespace ZonaiPhysics
 	{
 		assert(znBody != nullptr);
 
-		znBody->WakeUp();
 		znBody->SetPosition(_position);
 	}
 
@@ -76,7 +75,6 @@ namespace ZonaiPhysics
 	{
 		assert(znBody != nullptr);
 
-		znBody->WakeUp();
 		znBody->SetQuaternion(_quaternion);
 	}
 
