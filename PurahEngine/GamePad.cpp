@@ -172,8 +172,8 @@ namespace PurahEngine
 			// 거리 클립
 			magnitude = std::sqrtf(distanceSquared);
 
-			_outX = LX / (32767 - deadZone);
-			_outY = LX / (32767 - deadZone);
+			_outX = LX / magnitude;
+			_outY = LX / magnitude;
 
 			// 크기 클립
 			if (magnitude > 32767)
