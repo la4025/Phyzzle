@@ -139,20 +139,23 @@ void PurahEngine::SoundManager::Update()
 	vel.y = (listenerPosition.y - lastPos.y);
 	vel.z = (listenerPosition.z - lastPos.z);
 
-	Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
-	listenerPosition.x = pos.x();
-	listenerPosition.y = pos.y();
-	listenerPosition.z = pos.z();
+	if(listenerTransform != nullptr)
+	{ 
+		Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
+		listenerPosition.x = pos.x();
+		listenerPosition.y = pos.y();
+		listenerPosition.z = pos.z();
 
-	Eigen::Vector3f forward = listenerTransform->GetFront();
-	listenerForward.x = forward.x();
-	listenerForward.y = forward.y();
-	listenerForward.z = forward.z();
+		Eigen::Vector3f forward = listenerTransform->GetFront();
+		listenerForward.x = forward.x();
+		listenerForward.y = forward.y();
+		listenerForward.z = forward.z();
 
-	Eigen::Vector3f up = listenerTransform->GetUp();
-	listenerUp.x = up.x();
-	listenerUp.y = up.y();
-	listenerUp.z = up.z();
+		Eigen::Vector3f up = listenerTransform->GetUp();
+		listenerUp.x = up.x();
+		listenerUp.y = up.y();
+		listenerUp.z = up.z();
+	}
 
 	SetObject3DAttributes();
 	system->set3DListenerAttributes(0, &listenerPosition, &vel, &listenerForward, &listenerUp);
