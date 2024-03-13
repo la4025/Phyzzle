@@ -3,6 +3,8 @@
 #include "Timer.h"
 #include "GamePad.h"
 
+#include <cassert>
+
 
 namespace PurahEngine
 {
@@ -93,39 +95,171 @@ namespace PurahEngine
 		}
 	}
 
+	int GamePad::GetTriggerRawValue(ePadTrigger _index) const
+	{
+		if (_index == ePadTrigger::ePAD_TRIGGER_L)
+		{
+			return state.Gamepad.bLeftTrigger;
+		}
+		else
+		{
+			return state.Gamepad.bRightTrigger;
+		}
+	}
+
 	float GamePad::GetTriggerRatio(ePadTrigger _index) const
 	{
 		return inv255 * static_cast<float>(GetTriggerValue(_index));
 	}
 
-	void GamePad::GetStickValue(ePadStick _index, int& _outX, int& _outY) const
+	void GamePad::ApplyDeadZone(int& _value, float _deadZone) const
 	{
-		int xValue = 0, yValue = 0;
-
-		// 좌측 스틱의 경우
-		if (_index == ePadStick::ePAD_STICK_L)
+		if (std::abs(_value) < deadZone)
 		{
-			xValue = state.Gamepad.sThumbLX;
-			yValue = state.Gamepad.sThumbLY;
+			_value = 0;
 		}
-		// 우측 스틱의 경우
-		else if (_index == ePadStick::ePAD_STICK_R)
-		{
-			xValue = state.Gamepad.sThumbRX;
-			yValue = state.Gamepad.sThumbRY;
-		}
-
-		// 데드존 체크 및 값 할당
-		_outX = std::abs(xValue) < deadZone ? 0 : xValue;
-		_outY = std::abs(yValue) < deadZone ? 0 : yValue;
 	}
 
-	void GamePad::GetStickRatio(ePadStick _index, float& _outX, float& _outY) const
+	void GamePad::StickValueNormalize(int _xValue, int _yValue, float& _outX, float& _outY, float _deadZone)
+	{
+		const float LX = static_cast<float>(_xValue);
+		const float LY = static_cast<float>(_yValue);
+
+		float magnitude = sqrtf(LX * LX + LY * LY);
+		if (magnitude > deadZone) 
+		{
+			if (magnitude > 32767) 
+			{
+				magnitude = 32767;
+			}
+
+			magnitude -= deadZone;
+
+			const float normalizedLX = LX / magnitude;
+			const float normalizedLY = LY / magnitude;
+
+			_outX = normalizedLX;
+			_outY = normalizedLY;
+		}
+		else {
+			magnitude = 0.0;
+			_outX = 0.f;
+			_outY = 0.f;
+		}
+	}
+
+	int GamePad::GetStickInput(ePadStick _index)
+	{
+		return 0;
+	}
+
+	int GamePad::GetStickValue(ePadStick _index, int& _outX, int& _outY) const
 	{
 		// X, Y 값을 각각 변수로 설정
 		int xValue = 0, yValue = 0;
 
-		GetStickValue(_index, xValue, yValue);
+		GetStickRawValue(_index, xValue, yValue);
+
+		const auto LX = static_cast<float>(xValue);
+		const auto LY = static_cast<float>(yValue);
+
+		const float distanceSquared = LX * LX + LY * LY;
+
+		float magnitude = 0.0f;
+
+		if (distanceSquared > static_cast<float>(deadZone * deadZone))
+		{
+			// 거리 클립
+			magnitude = std::sqrtf(distanceSquared);
+
+			_outX = LX / (32767 - deadZone);
+			_outY = LX / (32767 - deadZone);
+
+			// 크기 클립
+			if (magnitude > 32767)
+				magnitude = 32767;
+
+			// 데드존부터 입력을 받기 시작하니 크기도 조절함.
+			magnitude -= deadZone;
+		}
+		else
+		{
+			magnitude = 0.0;
+			_outY = 0.f;
+			_outX = 0.f;
+		}
+
+		return magnitude;
+	}
+
+	void GamePad::GetStickRawValue(ePadStick _index, int& _outX, int& _outY) const
+	{
+		// 좌측 스틱의 경우
+		if (_index == ePadStick::ePAD_STICK_L)
+		{
+			_outX = state.Gamepad.sThumbLX;
+			_outY = state.Gamepad.sThumbLY;
+		}
+		// 우측 스틱의 경우
+		else if (_index == ePadStick::ePAD_STICK_R)
+		{
+			_outX = state.Gamepad.sThumbRX;
+			_outY = state.Gamepad.sThumbRY;
+		}
+		else
+		{
+			assert(0);
+		}
+	}
+
+	float GamePad::GetStickRatio(ePadStick _index, float& _outX, float& _outY) const
+	{
+		int xValue = 0, yValue = 0;
+
+		GetStickRawValue(_index, xValue, yValue);
+
+		const auto LX = static_cast<float>(xValue);
+		const auto LY = static_cast<float>(yValue);
+
+		const float distanceSquared = LX * LX + LY * LY;
+
+		float magnitude = 0.0f;
+		float normalizedMagnitude = 0.0f;
+
+		// 거리의 제곱이 데드존보다 큰지 비교하여 분기 최적화
+		if (distanceSquared > deadZone * deadZone)
+		{
+			// 거리 클립
+			magnitude = std::sqrtf(distanceSquared);
+
+			_outX = LX / magnitude;
+			_outY = LY / magnitude;
+
+			if (magnitude > 32767.0f)
+				magnitude = 32767.0f;
+
+			magnitude -= static_cast<float>(deadZone);
+
+			// 1 / (32767 - deadZone) 값을 한 번만 계산
+			const float inv = 1.0f / (32767.0f - static_cast<float>(deadZone));
+
+			normalizedMagnitude = magnitude * inv;
+		}
+		else // 컨트롤러가 데드존 안에 있는 경우
+		{
+			_outX = 0.0f;
+			_outY = 0.0f;
+		}
+
+		return normalizedMagnitude;
+	}
+
+	void GamePad::GetStickRawRatio(ePadStick _index, float& _outX, float& _outY) const
+	{
+		// X, Y 값을 각각 변수로 설정
+		int xValue = 0, yValue = 0;
+
+		GetStickRawValue(_index, xValue, yValue);
 
 		if (xValue != 0)
 		{
@@ -183,7 +317,7 @@ namespace PurahEngine
 		VibrateRatio(_left, _right);
 	}
 
-	void GamePad::SetDeadZone(int _value)
+	void GamePad::SetDeadZone(unsigned int _value)
 	{
 		deadZone = _value; // 데드존 값을 설정합니다.
 	}
