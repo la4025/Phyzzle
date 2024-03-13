@@ -20,7 +20,7 @@ namespace PurahEngine
 		GamePadManager::AddGamePad(0);
 
 		gamePad = GamePadManager::GetGamePad(0);
-		gamePad->SetDeadZone(5000);
+		gamePad->SetDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
 		startPosition = modelCore->GetWorldPosition();
 		startRotation = modelCore->GetWorldRotation();
@@ -46,9 +46,8 @@ namespace PurahEngine
 
 		if (gamePad->IsConnected())
 		{
-
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
-			gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+			LstickSize = gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
+			RstickSize = gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
 
 			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
 			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
@@ -73,10 +72,14 @@ namespace PurahEngine
 
 		Eigen::Vector3f movementDirection = forward * LstickY + right * LstickX;
 
+		std::wstring WString = std::to_wstring(LstickX) + L", " + std::to_wstring(LstickY) + L"\n";
+
+		OutputDebugStringW(WString.c_str());
+
 		movementDirection.y() = 0.f;
 
 		// 속도 벡터를 계산
-		Eigen::Vector3f movement = movementDirection * moveSpeed;
+		Eigen::Vector3f movement = movementDirection * moveSpeed * LstickSize;
 
 		Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
 
@@ -88,31 +91,32 @@ namespace PurahEngine
 		// 속력을 적용시킴
 		playerRigidbody->SetLinearVelocity(velocity);
 
-		//if (LstickY == 0.f && LstickX == 0.f)
-		//{
-		//	return;
-		//}
-
 		const Eigen::Quaternionf parentWorld = gameObject->GetTransform()->GetWorldRotation();
-		const Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
 
-		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
-		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
+		// Eigen::Vector3f localForward = modelCore->GetLocalRotation() * Eigen::Vector3f::UnitZ();
 
-		// Set the rotation of the transform to the target rotation
-		modelCore->SetLocalRotation(targetRotation);
+		if (!movementDirection.isZero())
+		{
+			Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
+
+			// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
+			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
+
+			// Set the rotation of the transform to the target rotation
+			modelCore->SetLocalRotation(targetRotation);
+		}
 	}
 
 	void Controller::RotateCamera()
 	{
-		{
+
 			TimeController& time = TimeController::GetInstance();
 
 			const float deltaTime = time.GetDeltaTime("Simulate");
 
 			// 스틱 기울기에 따라 회전 각도를 계산
-			const float yawAngle = RstickX * sensitivity * deltaTime;
-			const float pitchAngle = RstickY * sensitivity * deltaTime;
+			const float yawAngle = RstickX * sensitivity * deltaTime * RstickSize;
+			const float pitchAngle = RstickY * sensitivity * deltaTime * RstickSize;
 
 			// 월드 up 기준으로 카메라를 회전
 			cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
@@ -122,7 +126,6 @@ namespace PurahEngine
 
 			// 카메라의 right 기준으로 카메라를 회전
 			cameraArm->Rotate(cameraRight, pitchAngle);
-		}
 	}
 
 	void Controller::HandsUp()

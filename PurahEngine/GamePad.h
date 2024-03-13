@@ -48,11 +48,20 @@ namespace PurahEngine
 
 		/// 트리거 값
 		int					GetTriggerValue(ePadTrigger _index) const;
+		int					GetTriggerRawValue(ePadTrigger _index) const;
 		float				GetTriggerRatio(ePadTrigger _index) const;
 
 		/// 스틱 값
-		void				GetStickValue(ePadStick _index, int&, int&) const;
-		void				GetStickRatio(ePadStick _index, float&, float&) const;
+	private:
+		void				ApplyDeadZone(int& _value, float _deadZone) const;
+		void				StickValueNormalize(int _xValue, int _yValue, float& _outX, float& _outY, float _deadZone);
+
+	public:
+		int					GetStickInput(ePadStick _index);
+		int					GetStickValue(ePadStick _index, int&, int&) const;
+		void				GetStickRawValue(ePadStick _index, int& _outX, int& _outY) const;
+		float				GetStickRatio(ePadStick _index, float& _outX, float& _outY) const;
+		void				GetStickRawRatio(ePadStick _index, float& _outX, float& _outY) const;
 
 		/// 진동
 		bool				Vibrate(int _left, int _right) const;
@@ -61,7 +70,7 @@ namespace PurahEngine
 		void				VibrateRatio(float, float, float _time) const;
 
 		/// 데드존 설정
-		void				SetDeadZone(int);
+		void				SetDeadZone(unsigned int);
 		void				SetDeadZoneRatio(float _ratio);
 
 		/// 연결 여부

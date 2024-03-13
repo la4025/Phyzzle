@@ -49,6 +49,8 @@ namespace PurahEngine
 		bool onVibration = false;
 		float LstickX;
 		float LstickY;
+		float LstickSize;
+		float RstickSize;
 		float RstickX;
 		float RstickY;
 		float LTrigger;
