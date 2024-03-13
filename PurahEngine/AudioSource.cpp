@@ -37,7 +37,7 @@ void PurahEngine::AudioSource::Update()
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
 
-	if (inputManager.IsKeyDown('0') == true)
+	if (inputManager.IsKeyDown(eKey::eKEY_0) == true)
 	{
 		soundManager.PlayEffect(L"Effect_Test003", this);
 	}

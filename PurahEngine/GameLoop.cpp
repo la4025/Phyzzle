@@ -81,6 +81,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 		eKey::eKEY_ESCAPE,
 		eKey::eKEY_LSHIFT,
+		eKey::eKEY_0
 	};
 	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
 	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
