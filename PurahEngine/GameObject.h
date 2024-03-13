@@ -105,6 +105,8 @@ namespace PurahEngine
 			DESTROY
 		};
 
+		std::vector<std::wstring> tag;
+
 		ObjectState state;
 		std::wstring name;
 		bool isEnable;
