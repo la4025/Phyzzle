@@ -9,11 +9,11 @@
 #include "GraphicsResourceID.h"
 
 // 암시적 링크 사용
-//#define ZELDA_GRAPHICS_IMPLICIT_LINK
+#define ZELDA_GRAPHICS_IMPLICIT_LINK
 
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 #include "ZeldaGraphics.h"
-//#pragma comment(lib, "ZeldaGraphics.lib")
+#pragma comment(lib, "ZeldaGraphics.lib")
 #endif // ZELDA_GRAPHICS_IMPLICIT_LINK
 
 void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned int width, unsigned int height, bool screenresizeable, bool notitlebar, bool minimizable, bool maximizable)
@@ -279,7 +279,8 @@ void CoreSystem::run()
 		cubeMapID = TextureID::ID_NULL;
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
-		fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
+		fbxID = renderer->CreateModel(L"D:\\Sheikah_Project\\GraphicsTest\\Player\\Player2.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Sponza\\sponza.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
@@ -625,6 +626,8 @@ void CoreSystem::run()
 		instMatrix(0, 3) = 200.0f;
 		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
 	}
+
+	renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false);
 
 	renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false, 0.0f, 1.0f, 1.0f, 1.0f);
 
