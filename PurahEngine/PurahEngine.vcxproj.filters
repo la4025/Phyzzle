@@ -58,9 +58,6 @@
     <Filter Include="Component\3. Renderer\Camera">
       <UniqueIdentifier>{b029a29e-d767-4deb-a584-ef7958d355ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SoundManager">
-      <UniqueIdentifier>{4db416fc-8637-40c4-8896-de7558706be2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{0505cefc-87c2-4209-ae57-1b47cad691ff}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,15 @@
     </Filter>
     <Filter Include="Core\Time\Tween\Handler">
       <UniqueIdentifier>{cba43b2a-425d-468a-9bf7-bdcf2f46c878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\4. Sound\AudioListener">
+      <UniqueIdentifier>{d7268312-7453-41fa-8a58-06871a92fad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\4. Sound\AudioSource">
+      <UniqueIdentifier>{cc2616fa-2d1e-4a91-bf85-a2cb78e5807d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Manager\SoundManager">
+      <UniqueIdentifier>{4db416fc-8637-40c4-8896-de7558706be2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -149,7 +155,7 @@
       <Filter>Component\3. Renderer</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp">
-      <Filter>SoundManager</Filter>
+      <Filter>Core\Manager\SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsManager.cpp">
       <Filter>Core\Manager\GraphicsManager</Filter>
@@ -171,9 +177,6 @@
     </ClCompile>
     <ClCompile Include="Serializable.cpp">
       <Filter>Core\Serialize</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioListener.cpp">
-      <Filter>Component\4. Sound</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Core\Time\Timer</Filter>
@@ -207,6 +210,12 @@
     </ClCompile>
     <ClCompile Include="TweenHandler.cpp">
       <Filter>Core\Time\Tween\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioListener.cpp">
+      <Filter>Component\4. Sound\AudioListener</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSource.cpp">
+      <Filter>Component\4. Sound\AudioSource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,7 +281,7 @@
       <Filter>Component\3. Renderer</Filter>
     </ClInclude>
     <ClInclude Include="SoundManager.h">
-      <Filter>SoundManager</Filter>
+      <Filter>Core\Manager\SoundManager</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsResourceManager.h">
       <Filter>Core\Manager\GraphicsManager</Filter>
@@ -303,9 +312,6 @@
     </ClInclude>
     <ClInclude Include="SerializableDefine.h">
       <Filter>Core\Serialize</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioListener.h">
-      <Filter>Component\4. Sound</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Core\Time\Timer</Filter>
@@ -351,6 +357,15 @@
     </ClInclude>
     <ClInclude Include="TweenHandler.h">
       <Filter>Core\Time\Tween\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioListener.h">
+      <Filter>Component\4. Sound\AudioListener</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Component\4. Sound\AudioSource</Filter>
+    </ClInclude>
+    <ClInclude Include="PurahSound.h">
+      <Filter>Core\Manager\SoundManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
