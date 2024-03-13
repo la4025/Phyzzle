@@ -2,6 +2,7 @@
 #include <functional>
 #include <vector>
 #include <windows.h>
+#include "ZnRaycastInfo.h"
 
 namespace ZonaiPhysics
 {
@@ -60,6 +61,9 @@ namespace PurahEngine
 		ZonaiPhysics::ZnCollider*	CreateSphereCollider(void* _gameObject, float radius) const noexcept;
 		ZonaiPhysics::ZnCollider*	CreateCapsuleCollider(void* _gameObject, float radius, float height) const noexcept;
 		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;
+
+	public:
+		bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZonaiPhysics::ZnRaycastInfo& _out);
 
 	public:
 		static PhysicsSystem& GetInstance();

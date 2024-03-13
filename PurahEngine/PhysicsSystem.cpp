@@ -108,6 +108,12 @@ namespace PurahEngine
 		return physics->CreateCapsuleCollider(_gameObject, radius, height, 0);
 	}
 
+	bool PhysicsSystem::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance,
+		ZonaiPhysics::ZnRaycastInfo& _out)
+	{
+		return physics->Raycast(_from, _to, _distance, _out);
+	}
+
 	PurahEngine::PhysicsSystem& PurahEngine::PhysicsSystem::GetInstance()
 	{
 		static PhysicsSystem instance;

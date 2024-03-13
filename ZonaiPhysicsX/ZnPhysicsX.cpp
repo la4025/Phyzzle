@@ -168,11 +168,11 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			znBody->UseGravity(false);
+			znBody->SetKinematic(true);
 		}
 
 		const auto collider = ZnFactoryX::CreateSphereCollider(znBody, _radius, material);
-		znBody->UseGravity(false);
-		znBody->SetKinematic(true);
 
 		return collider;
 	}
@@ -189,11 +189,11 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			znBody->UseGravity(false);
+			znBody->SetKinematic(true);
 		}
 
 		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, _radius, _height, material);
-		znBody->UseGravity(false);
-		znBody->SetKinematic(true);
 
 		return collider;
 	}

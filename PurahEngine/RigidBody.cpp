@@ -16,7 +16,7 @@ namespace PurahEngine
 		GetGameObject()->GetTransform()->SetRigidBody(nullptr);
 	}
 
-	void RigidBody::Awake()
+	void RigidBody::OnDataLoadComplete()
 	{
 		body = PhysicsSystem::GetInstance().CreateRigidBody(GetGameObject());
 		PhysicsSystem::GetInstance().bodies.push_back(this);
@@ -27,15 +27,15 @@ namespace PurahEngine
 		body->SetQuaternion(trans->GetWorldRotation());
 		trans->SetRigidBody(this);
 
-		SetDynamicLockFlags(freeze);
-		SetKinematic(isKinematic);
-		UseGravity(useGravity);
+		this->SetDynamicLockFlags(freeze);
+		this->SetKinematic(isKinematic);
+		this->UseGravity(useGravity);
 		// SetLinearVelocity(LinearVelocity);
 		// SetAngularVelocity(angularVelocity);
-		SetMass(mass);
-		SetLinearDamping(linearDamping);
-		SetAngularDamping(angularDamping);
-		WakeUp();
+		this->SetMass(mass);
+		this->SetLinearDamping(linearDamping);
+		this->SetAngularDamping(angularDamping);
+		this->WakeUp();
 		// AddForce(force);
 		// AddTorque(torque);
 	}

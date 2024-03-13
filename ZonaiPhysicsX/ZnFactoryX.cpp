@@ -158,6 +158,7 @@ namespace ZonaiPhysics
 
 		const auto znBody = static_cast<RigidBody*>(_znBody);
 		const auto pxShape = pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
+
 		assert(pxShape != nullptr);
 
 		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
@@ -171,8 +172,13 @@ namespace ZonaiPhysics
 		assert(_znBody != nullptr);
 
 		const auto znBody = static_cast<RigidBody*>(_znBody);
+
 		const auto pxShape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
+
 		assert(pxShape != nullptr);
+
+		const physx::PxQuat rotation(physx::PxPi / 2.f, physx::PxVec3(0.f, 0.f, 1.f));
+		pxShape->setLocalPose(physx::PxTransform(rotation));
 
 		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
 		RigidBodyHelper::Attach(znBody->pxBody, pxShape);

@@ -26,12 +26,10 @@ namespace PurahEngine
         ~Collider() override;
 
     public:
-        void Awake() override;
+        void OnDataLoadComplete() override;
 
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);
-
-        void SetRotationOffset(const Eigen::Quaternionf& _quat);
 
         void SetDynamic(bool _value);
 
@@ -45,7 +43,7 @@ namespace PurahEngine
     protected:
         bool awake = true;
         Transform* transform = nullptr;
-        ColliderType type = ColliderType::STATIC;
+        ColliderType cType = ColliderType::STATIC;
 
     protected:
         bool isTrigger = false;
