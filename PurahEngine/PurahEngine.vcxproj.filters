@@ -97,6 +97,12 @@
     <Filter Include="Core\Manager\SoundManager">
       <UniqueIdentifier>{4db416fc-8637-40c4-8896-de7558706be2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\2. Physics\Joint\Base">
+      <UniqueIdentifier>{80212ab9-314a-4a63-abf7-42b3d2558294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\2. Physics\Collider\Base">
+      <UniqueIdentifier>{ea38ca8f-c084-4d33-890a-edced291833b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -107,9 +113,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Component\3. Renderer\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider.cpp">
-      <Filter>Component\2. Physics\Collider</Filter>
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>Component\2. Physics\Rigidbody</Filter>
@@ -123,9 +126,6 @@
     </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Component\2. Physics\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Joint.cpp">
-      <Filter>Component\2. Physics\Joint</Filter>
     </ClCompile>
     <ClCompile Include="FixedJoint.cpp">
       <Filter>Component\2. Physics\Joint</Filter>
@@ -217,6 +217,24 @@
     <ClCompile Include="AudioSource.cpp">
       <Filter>Component\4. Sound\AudioSource</Filter>
     </ClCompile>
+    <ClCompile Include="SpringJoint.cpp">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="DistanceJoint.cpp">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>Component\2. Physics\Joint\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Component\2. Physics\Collider\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="BallJoint.cpp">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="HingeJoint.cpp">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -232,9 +250,6 @@
       <Filter>Core\dll</Filter>
     </ClInclude>
     <ClInclude Include="PurahEngine.h" />
-    <ClInclude Include="Collider.h">
-      <Filter>Component\2. Physics\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Component\2. Physics\Rigidbody</Filter>
     </ClInclude>
@@ -246,9 +261,6 @@
     </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Component\2. Physics\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Joint.h">
-      <Filter>Component\2. Physics\Joint</Filter>
     </ClInclude>
     <ClInclude Include="FixedJoint.h">
       <Filter>Component\2. Physics\Joint</Filter>
@@ -366,6 +378,24 @@
     </ClInclude>
     <ClInclude Include="PurahSound.h">
       <Filter>Core\Manager\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringJoint.h">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="DistanceJoint.h">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Component\2. Physics\Joint\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Component\2. Physics\Collider\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BallJoint.h">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="HingeJoint.h">
+      <Filter>Component\2. Physics\Joint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

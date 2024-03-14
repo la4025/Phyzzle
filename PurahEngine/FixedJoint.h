@@ -11,10 +11,10 @@ namespace PurahEngine
 		~FixedJoint() override;
 
 	public:
-		virtual void PreSerialize(json& jsonData) const override;
-		virtual void PreDeserialize(const json& jsonData) override;
-		virtual void PostSerialize(json& jsonData) const override;
-		virtual void PostDeserialize(const json& jsonData) override;
+		void PreSerialize(json& jsonData) const override;
+		void PreDeserialize(const json& jsonData) override;
+		void PostSerialize(json& jsonData) const override;
+		void PostDeserialize(const json& jsonData) override;
 	};
 }
 

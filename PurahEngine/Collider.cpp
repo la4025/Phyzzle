@@ -19,22 +19,22 @@ namespace PurahEngine
         case ColliderType::DYNAMIC:
         {
             auto& colliders = physicsSystem.dynamicColliders;
-            colliders.erase(std::ranges::remove(colliders, this).begin());
-            physicsSystem.FreeObject(znCollider);
+            colliders.erase(std::ranges::find(colliders, this));
         }
         break;
 
         case ColliderType::STATIC:
         {
             auto& colliders = physicsSystem.staticColliders;
-            colliders.erase(std::ranges::remove(colliders, this).begin());
-            physicsSystem.FreeObject(znCollider);
+            colliders.erase(std::ranges::find(colliders, this));
         }
         break;
 
         default:
             throw"";
         }
+           
+        physicsSystem.FreeObject(znCollider, GetGameObject());
     }
 
 	void Collider::OnDataLoadComplete()

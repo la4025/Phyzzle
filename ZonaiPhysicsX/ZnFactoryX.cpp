@@ -147,7 +147,7 @@ namespace ZonaiPhysics
 		assert(pxShape != nullptr);
 
 		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape); 
 
 		return znBoxCollider;
 	}

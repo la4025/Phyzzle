@@ -1,7 +1,5 @@
 #include "FixedJoint.h"
 
-#include "ZnFixedJoint.h"
-
 namespace PurahEngine
 {
 	void FixedJoint::PreSerialize(json& jsonData) const
@@ -23,5 +21,4 @@ namespace PurahEngine
 	{
 
 	}
-
 }

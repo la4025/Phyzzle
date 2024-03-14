@@ -14,6 +14,7 @@ namespace PurahEngine
 	RigidBody::~RigidBody()
 	{
 		GetGameObject()->GetTransform()->SetRigidBody(nullptr);
+		PhysicsSystem::GetInstance().FreeObject(body, GetGameObject());
 	}
 
 	void RigidBody::OnDataLoadComplete()

@@ -125,6 +125,8 @@ namespace ZonaiPhysics
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, _userScene);
 		}
+
+		ZnWorld::SetHasBody(_userData, true, _userScene);
 		znBody->UseGravity(true);
 		znBody->SetKinematic(false);
 
@@ -134,9 +136,9 @@ namespace ZonaiPhysics
 	/// <summary>
 	/// 강체를 찾아서 거기에 콜라이더를 붙임.
 	/// </summary>
-	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, const Eigen::Vector3f& _extend, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, const Eigen::Vector3f& _extend, uint32_t _material, void* _userScene)
 	{
-		auto znBody = ZnWorld::GetBody(_userData, userScene);
+		auto znBody = ZnWorld::GetBody(_userData, _userScene);
 
 		auto material = ZnWorld::GetMaterial(_material);
 
@@ -146,12 +148,14 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::AddBody(znBody, _userScene);
+			ZnWorld::SetHasBody(_userData, false, _userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
 		}
 
 		const auto collider = ZnFactoryX::CreateBoxCollider(znBody, _extend, material);
+		ZnWorld::AddCollider(collider, _userData, _userScene);
 
 		return collider;
 	}
@@ -168,11 +172,13 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
 		}
 
 		const auto collider = ZnFactoryX::CreateSphereCollider(znBody, _radius, material);
+		ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return collider;
 	}
@@ -189,11 +195,13 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
 		}
 
 		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, _radius, _height, material);
+		ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return collider;
 	}
@@ -210,11 +218,13 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::SetHasBody(_userData, false, userScene);
+			znBody->UseGravity(false);
+			znBody->SetKinematic(true);
 		}
 
-		const auto collider = ZnFactoryX::CreateMeshCollider(znBody, material);
-		znBody->UseGravity(false);
-		znBody->SetKinematic(true);
+		// const auto collider = ZnFactoryX::CreateMeshCollider(znBody, material);
+		// ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return nullptr;
 	}
@@ -231,11 +241,12 @@ namespace ZonaiPhysics
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
 			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::SetHasBody(_userData, false, userScene);
+			znBody->UseGravity(false);
+			znBody->SetKinematic(true);
 		}
 
-		const auto collider = ZnFactoryX::CreateConvexCollider(znBody, material);
-		znBody->UseGravity(false);
-		znBody->SetKinematic(true);
+		// const auto collider = ZnFactoryX::CreateConvexCollider(znBody, material);
 
 		return nullptr;
 	}
@@ -300,11 +311,33 @@ namespace ZonaiPhysics
 		return ZnWorld::Raycast(_from, _to, _distance, _out);
 	}
 
-	void ZnPhysicsX::FreeObject(void* p)
+	void ZnPhysicsX::ReleaseRigidBody(ZnRigidBody* _body, void* _userData, void* _userScene)
 	{
-		assert(p != nullptr);
+		assert(_body != nullptr);
+		assert(_userData != nullptr);
 
-		delete static_cast<ZnBase*>(p);
+		auto rigidbody = static_cast<RigidBody*>(_body);
+
+		ZnWorld::RemoveBody(rigidbody, _userData, _userScene);
+	}
+
+	void ZnPhysicsX::ReleaseCollider(ZnCollider* _shape, void* _userData, void* _userScene)
+	{
+		assert(_shape != nullptr);
+		assert(_userData != nullptr);
+
+		auto collider = static_cast<Collider*>(_shape);
+
+		ZnWorld::RemoveCollider(collider, _userData, _userScene);
+	}
+
+	void ZnPhysicsX::ReleaseJoint(ZnJoint* _joint, void* _userData, void* _userScene)
+	{
+		// assert(_joint != nullptr);
+
+		// auto rigidbody = static_cast<Joint*>(_joint);
+
+		// jointRemoveList.push(rigidbody);
 	}
 
 	extern "C"
