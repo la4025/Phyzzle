@@ -73,8 +73,36 @@ namespace PurahEngine
 		}
 	}
 
-	void PhysicsSystem::Finalize() const noexcept
+	void PhysicsSystem::Finalize() noexcept
 	{
+		for (auto& joint : joints)
+		{
+			delete joint;
+		}
+
+		joints.clear();
+
+		for (auto& collider : dynamicColliders)
+		{
+			delete collider;
+		}
+
+		dynamicColliders.clear();
+
+		for (auto& collider : staticColliders)
+		{
+			delete collider;
+		}
+
+		staticColliders.clear();
+
+		for (auto& body : bodies)
+		{
+			delete body;
+		}
+
+		bodies.clear();
+
 		physics->Finalize();
 
 		/// Release ÇÔ¼ö

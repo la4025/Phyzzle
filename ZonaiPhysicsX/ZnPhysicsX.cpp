@@ -123,7 +123,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, _userScene);
+			ZnWorld::AddBody(znBody, _userData, _userScene);
 		}
 
 		ZnWorld::SetHasBody(_userData, true, _userScene);
@@ -148,7 +148,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, _userScene);
+			ZnWorld::AddBody(znBody, _userData, _userScene);
 			ZnWorld::SetHasBody(_userData, false, _userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
@@ -171,7 +171,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::AddBody(znBody, _userData, userScene);
 			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
@@ -194,7 +194,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::AddBody(znBody, _userData, userScene);
 			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
@@ -217,7 +217,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::AddBody(znBody, _userData, userScene);
 			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);
@@ -240,7 +240,7 @@ namespace ZonaiPhysics
 		if (!znBody)
 		{
 			znBody = ZnFactoryX::CreateDynamicRigidBody(_userData);
-			ZnWorld::AddBody(znBody, userScene);
+			ZnWorld::AddBody(znBody, _userData, userScene);
 			ZnWorld::SetHasBody(_userData, false, userScene);
 			znBody->UseGravity(false);
 			znBody->SetKinematic(true);

@@ -42,7 +42,7 @@ namespace PurahEngine
 		void PreStep() const;
 		void Simulation(float _dt) const noexcept;
 		void SimulateResult() const;
-		void Finalize() const noexcept;
+		void Finalize() noexcept;
 
 	public:
 		void FreeObject(ZonaiPhysics::ZnRigidBody*, void* _gameObject) const;
