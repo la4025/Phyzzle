@@ -80,6 +80,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_DOWN,
 
 		eKey::eKEY_ESCAPE,
+		eKey::eKEY_SHIFT,
 		eKey::eKEY_LSHIFT,
 		eKey::eKEY_0
 	};

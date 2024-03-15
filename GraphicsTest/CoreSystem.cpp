@@ -280,7 +280,7 @@ void CoreSystem::run()
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
-		fbxID = renderer->CreateModel(L"D:\\Sheikah_Project\\GraphicsTest\\Player\\Player2.fbx");
+		fbxID = renderer->CreateModel(L"Player\\Player.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Sponza\\sponza.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
