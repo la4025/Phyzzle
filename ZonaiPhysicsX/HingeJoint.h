@@ -36,16 +36,16 @@ namespace ZonaiPhysics
 		float GetVelocity() const override;
 
 		void SetLimit(float _upper, float _lower) override;
-		void SetLimit(float _upper, float _lower, float restitution = 0.f, float _bounceThreshold = 0.5f);
-		void SetLimitWithSpring(float _upper, float _lower, float _stiffness, float _damping) override;
+		void GetLimit(float& _upper, float& _lower) const override;
 
-		float GetRestitution() const;
-		void SetRestitution() const;
-		float GetBounceThreshold() const;
-		float SetBounceThreshold() const;
+		void SetRestitution(float _restitution) const override;
+		float GetRestitution() const override;
 
-		void GetLimit(float& _upper, float& _lower) const;
-		void GetLimit(float& _upper, float& _lower, float& _stiffness, float& _damping) const;
+		void SetBounceThreshold(float _bounceThreshold) const override;
+		float GetBounceThreshold() const override;
+
+		void SetSpringArg(float _stiffness, float _damping) override;
+		void GetSpringArg(float& _stiffness, float& _damping) override;
 
 		void SetDriveVelocity(float _velocity) override;
 		float GetDriveVelocity() const override;
