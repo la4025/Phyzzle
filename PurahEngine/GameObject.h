@@ -77,8 +77,10 @@ namespace PurahEngine
 
 		Transform* GetTransform();
 
-
 		std::wstring GetName();
+
+		void SetTag(std::wstring tagName);
+		std::vector<std::wstring> GetTag();
 
 	public:
 		virtual void PreSerialize(json& jsonData) const override;

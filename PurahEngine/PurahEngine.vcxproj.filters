@@ -97,6 +97,9 @@
     <Filter Include="Core\Manager\SoundManager">
       <UniqueIdentifier>{4db416fc-8637-40c4-8896-de7558706be2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\EngineSetting">
+      <UniqueIdentifier>{fc4e6f9f-99f2-4ced-b40c-903af227d300}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -216,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="AudioSource.cpp">
       <Filter>Component\4. Sound\AudioSource</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSetting.cpp">
+      <Filter>Core\EngineSetting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +372,9 @@
     </ClInclude>
     <ClInclude Include="PurahSound.h">
       <Filter>Core\Manager\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSetting.h">
+      <Filter>Core\EngineSetting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
