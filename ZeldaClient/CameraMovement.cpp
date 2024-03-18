@@ -31,7 +31,7 @@ void PurahEngine::CameraMovement::Update()
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.1f, 0.0f, 0.0f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_Q))
+	if (inputManager.IsKeyPressed(eKey::eKEY_O))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, -0.1f));
 	}

@@ -73,6 +73,8 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_A,
 		eKey::eKEY_S,
 		eKey::eKEY_D,
+		eKey::eKEY_O,
+		eKey::eKEY_P,
 
 		eKey::eKEY_LEFT,
 		eKey::eKEY_RIGHT,
@@ -80,6 +82,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_DOWN,
 
 		eKey::eKEY_ESCAPE,
+		eKey::eKEY_SHIFT,
 		eKey::eKEY_LSHIFT,
 		eKey::eKEY_0
 	};
