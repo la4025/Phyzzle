@@ -1,136 +1,10 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": 32884,
-      "name": "Player",
-      "transform": {
-        "__Base__instanceID": 32886,
-        "position": {
-          "x": -1.74,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": [
-          32974,
-          32966
-        ]
-      },
-      "components": [
-        {
-          "__Base__instanceID": 32892,
-          "__Base__Component": "RigidBody",
-          "isKinematic": false,
-          "useGravity": true,
-          "dynamicLock": 56,
-          "mass": 1.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.05
-        },
-        {
-          "__Base__instanceID": -57500,
-          "__Base__Component": "Controller",
-          "detect": false,
-          "moveSpeed": 0.0,
-          "sensitivity": 0.0,
-          "__ID__playerRigidbody": 32892,
-          "__ID__modelCore": 32974,
-          "__ID__cameraArm": 32966,
-          "__ID__cameraCore": 32950
-        },
-        {
-          "__Base__instanceID": -57540,
-          "__Base__Component": "CapsuleCollider",
-          "cType": 1,
-          "isTrigger": false,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 2.0,
-            "z": 0.0
-          },
-          "radius": 1.0,
-          "height": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 32898,
-      "name": "Ball",
-      "transform": {
-        "__Base__instanceID": 32906,
-        "position": {
-          "x": -4.23,
-          "y": 2.92,
-          "z": 1.13
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 32908,
-          "__Base__Component": "RigidBody",
-          "isKinematic": false,
-          "useGravity": true,
-          "dynamicLock": 0,
-          "mass": 1.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.05
-        },
-        {
-          "__Base__instanceID": -58660,
-          "__Base__Component": "SphereCollider",
-          "cType": 1,
-          "isTrigger": false,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "radius": 0.5
-        },
-        {
-          "__Base__instanceID": -58818,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "textureName": "",
-          "r": 0.0,
-          "g": 0.0,
-          "b": 0.0,
-          "a": 0.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 32910,
+      "__Base__instanceID": 23044,
       "name": "Directional Light",
       "transform": {
-        "__Base__instanceID": 32914,
+        "__Base__instanceID": 23048,
         "position": {
           "x": 0.0,
           "y": 3.0,
@@ -152,7 +26,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 32916,
+          "__Base__instanceID": 23050,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -160,14 +34,14 @@
             "z": 0.2
           },
           "diffuse": {
-            "x": 0.5849056,
-            "y": 0.444197178,
-            "z": 0.444197178
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
           },
           "specular": {
-            "x": 0.6320754,
-            "y": 0.5575382,
-            "z": 0.5575382
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
           },
           "range": 0.0,
           "angle": 0.0
@@ -175,78 +49,13 @@
       ]
     },
     {
-      "__Base__instanceID": 32918,
-      "name": "Box",
+      "__Base__instanceID": 23052,
+      "name": "Cube",
       "transform": {
-        "__Base__instanceID": 32928,
+        "__Base__instanceID": 23060,
         "position": {
-          "x": 0.0,
-          "y": 1.881,
-          "z": 3.462
-        },
-        "rotation": {
           "x": 0.0,
           "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 32922,
-          "__Base__Component": "BoxCollider",
-          "cType": 1,
-          "isTrigger": false,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "size": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          }
-        },
-        {
-          "__Base__instanceID": 32920,
-          "__Base__Component": "RigidBody",
-          "isKinematic": false,
-          "useGravity": true,
-          "dynamicLock": 0,
-          "mass": 1.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.5
-        },
-        {
-          "__Base__instanceID": -58996,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "textureName": "",
-          "r": 0.0,
-          "g": 0.0,
-          "b": 0.0,
-          "a": 0.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 32930,
-      "name": "Graund",
-      "transform": {
-        "__Base__instanceID": 32936,
-        "position": {
-          "x": 0.0,
-          "y": -0.5,
           "z": 0.0
         },
         "rotation": {
@@ -256,190 +65,74 @@
           "w": 1.0
         },
         "scale": {
-          "x": 100.0,
+          "x": 1.0,
           "y": 1.0,
-          "z": 100.0
+          "z": 1.0
         },
         "__ID__parentTransform": [],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 32942,
-          "__Base__Component": "BoxCollider",
-          "cType": 0,
-          "isTrigger": false,
-          "layer": 0,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "size": {
-            "x": 1.0,
-            "y": 0.5,
-            "z": 1.0
-          }
-        },
-        {
-          "__Base__instanceID": 32940,
+          "__Base__instanceID": 23062,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
           "textureName": "",
-          "r": 0.200000018,
-          "g": 0.21960786,
-          "b": 0.247058839,
-          "a": 1.0
+          "r": 0.0,
+          "g": 1.0,
+          "b": 0.0,
+          "a": 0.0
+        },
+        {
+          "__Base__instanceID": -11652,
+          "__Base__Component": "AudioSource",
+          "__ID__soundTransform": 23060,
+          "soundName": "EffectTest003.mp3"
         }
       ]
     },
     {
-      "__Base__instanceID": 32944,
-      "name": "Camera",
+      "__Base__instanceID": 23068,
+      "name": "Main Camera",
       "transform": {
-        "__Base__instanceID": 32950,
+        "__Base__instanceID": 23074,
         "position": {
           "x": 0.0,
-          "y": 0.0,
-          "z": -15.0
+          "y": 1.0,
+          "z": -4.11
         },
         "rotation": {
-          "x": 0.0,
+          "x": 0.1829456,
           "y": 0.0,
           "z": 0.0,
-          "w": 1.0
+          "w": 0.983123064
         },
         "scale": {
           "x": 1.0,
           "y": 1.0,
           "z": 1.0
         },
-        "__ID__parentTransform": [
-          32966
-        ],
+        "__ID__parentTransform": [],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 32952,
+          "__Base__instanceID": 23076,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
           "cameraFar": 1000.0,
           "fieldOfView": 1.04719758
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 32954,
-      "name": "Eye",
-      "transform": {
-        "__Base__instanceID": 32956,
-        "position": {
-          "x": 0.0,
-          "y": 0.4,
-          "z": 0.4
         },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 0.6,
-          "y": 0.22,
-          "z": 0.6
-        },
-        "__ID__parentTransform": [
-          32974
-        ],
-        "__ID__children": []
-      },
-      "components": [
         {
-          "__Base__instanceID": 32962,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "textureName": "",
-          "r": 0.0,
-          "g": 0.0,
-          "b": 0.0,
-          "a": 0.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 32964,
-      "name": "CameraArm",
-      "transform": {
-        "__Base__instanceID": 32966,
-        "position": {
-          "x": 0.0,
-          "y": 3.0,
-          "z": 0.0
+          "__Base__instanceID": -8982,
+          "__Base__Component": "AudioListener",
+          "__ID__listenerTransform": 23074
         },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          32886
-        ],
-        "__ID__children": [
-          32950
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": 32968,
-      "name": "Model",
-      "transform": {
-        "__Base__instanceID": 32974,
-        "position": {
-          "x": 0.0,
-          "y": 2.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 2.0,
-          "y": 2.0,
-          "z": 2.0
-        },
-        "__ID__parentTransform": [
-          32886
-        ],
-        "__ID__children": [
-          32956
-        ]
-      },
-      "components": [
         {
-          "__Base__instanceID": 32976,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "textureName": "",
-          "r": 0.745283,
-          "g": 0.5709017,
-          "b": 0.2988163,
-          "a": 0.0
+          "__Base__instanceID": -33250,
+          "__Base__Component": "CameraMovement"
         }
       ]
     }

@@ -24,6 +24,8 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 	ComponentFactory::GetInstance().RegisterComponent<ModelRenderer>("ModelRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<MeshRenderer>("MeshRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<Animator>("Animator");
+	ComponentFactory::GetInstance().RegisterComponent<AudioSource>("AudioSource");
+	ComponentFactory::GetInstance().RegisterComponent<AudioListener>("AudioListener");
 
 	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }

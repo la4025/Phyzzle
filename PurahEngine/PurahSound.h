@@ -15,7 +15,6 @@ namespace PurahEngine
 	struct PurahSound
 	{
 	public:
-		std::wstring filePath;
 		std::wstring soundName;
 		Transform* transform;
 		FMOD::Sound* sound;

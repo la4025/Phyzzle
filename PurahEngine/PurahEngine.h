@@ -9,6 +9,8 @@
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "AudioListener.h"
+#include "AudioSource.h"
 
 // Manager
 #include "SceneManager.h"
