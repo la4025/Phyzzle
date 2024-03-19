@@ -157,6 +157,8 @@ void PurahEngine::SceneManager::LoadScene()
 	sceneData = fManager.LoadData(sceneBuffer);
 	Deserialize(sceneData);
 
+
+
 	LoadSceneCompleteEvent();
 
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가

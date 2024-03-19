@@ -256,10 +256,7 @@ PurahEngine::GameObject::~GameObject()
 	}
 	componentList.clear();
 
-	for (int i = 0; i < tag.size(); i++)
-	{
-		tag.clear();
-	}
+	tag.clear();
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)
