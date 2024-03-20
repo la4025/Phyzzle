@@ -6,10 +6,13 @@
 
 namespace PurahEngine
 {
+	void CapsuleCollider::Initialize()
+	{
+		Collider::Initialize();
+	}
+
 	void CapsuleCollider::OnDataLoadComplete()
 	{
-		Collider::OnDataLoadComplete();
-
 		const auto scale = transform->GetWorldScale();
 
 		const float maxScale = max(scale.x(), scale.z());
@@ -33,6 +36,12 @@ namespace PurahEngine
 
 	void CapsuleCollider::SetSize(float _radius, float _halfHeight)
 	{
+		if (awake)
+		{
+			OutputDebugStringW(L"실행 도중에 Collider size 변경은 불가능 합니다.");
+			return;
+		}
+
 		radius = _radius;
 		height = _halfHeight;
 	}
@@ -44,6 +53,7 @@ namespace PurahEngine
 	void CapsuleCollider::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+
 		PREDESERIALIZE_VALUE(cType);
 		PREDESERIALIZE_VALUE(radius);
 		PREDESERIALIZE_VALUE(height);

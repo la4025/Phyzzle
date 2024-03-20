@@ -223,9 +223,6 @@
     <ClCompile Include="DistanceJoint.cpp">
       <Filter>Component\2. Physics\Joint</Filter>
     </ClCompile>
-    <ClCompile Include="Joint.cpp">
-      <Filter>Component\2. Physics\Joint\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>Component\2. Physics\Collider\Base</Filter>
     </ClCompile>
@@ -233,6 +230,9 @@
       <Filter>Component\2. Physics\Joint</Filter>
     </ClCompile>
     <ClCompile Include="HingeJoint.cpp">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="SlideJoint.cpp">
       <Filter>Component\2. Physics\Joint</Filter>
     </ClCompile>
   </ItemGroup>
@@ -385,7 +385,7 @@
     <ClInclude Include="DistanceJoint.h">
       <Filter>Component\2. Physics\Joint</Filter>
     </ClInclude>
-    <ClInclude Include="Joint.h">
+    <ClInclude Include="JointT.h">
       <Filter>Component\2. Physics\Joint\Base</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
@@ -396,6 +396,12 @@
     </ClInclude>
     <ClInclude Include="HingeJoint.h">
       <Filter>Component\2. Physics\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="SlideJoint.h">
+      <Filter>Component\2. Physics\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Component\2. Physics\Joint\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

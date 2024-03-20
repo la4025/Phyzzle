@@ -7,7 +7,7 @@ void PurahEngine::PreTimerHandler::Update()
 {
 	accumulation += TimeController::GetInstance().GetDeltaTime("Simulate");
 
-	if (std::fabs(delay - accumulation) <= timerEpsilon)
+	if (delay <= accumulation)
 	{
 		callback();
 

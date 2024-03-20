@@ -65,6 +65,7 @@
     <ClInclude Include="ITimer.h" />
     <ClInclude Include="ITween.h" />
     <ClInclude Include="Joint.h" />
+    <ClInclude Include="JointT.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="ModelRenderer.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="SerializableDefine.h" />
+    <ClInclude Include="SlideJoint.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="BallJoint.h" />
@@ -113,7 +115,6 @@
     <ClCompile Include="GraphicsResourceManager.cpp" />
     <ClCompile Include="HingeJoint.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Serializable.cpp" />
+    <ClCompile Include="SlideJoint.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="BallJoint.cpp" />

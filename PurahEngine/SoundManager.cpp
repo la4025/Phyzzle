@@ -133,32 +133,32 @@ void PurahEngine::SoundManager::PlayEffect(const std::wstring& soundName, AudioS
 
 void PurahEngine::SoundManager::Update()
 {
-	FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
-	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-	vel.x = (listenerPosition.x - lastPos.x);
-	vel.y = (listenerPosition.y - lastPos.y);
-	vel.z = (listenerPosition.z - lastPos.z);
+	//FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
+	//FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+	//vel.x = (listenerPosition.x - lastPos.x);
+	//vel.y = (listenerPosition.y - lastPos.y);
+	//vel.z = (listenerPosition.z - lastPos.z);
 
-	Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
-	listenerPosition.x = pos.x();
-	listenerPosition.y = pos.y();
-	listenerPosition.z = pos.z();
+	//Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
+	//listenerPosition.x = pos.x();
+	//listenerPosition.y = pos.y();
+	//listenerPosition.z = pos.z();
 
-	Eigen::Vector3f forward = listenerTransform->GetFront();
-	listenerForward.x = forward.x();
-	listenerForward.y = forward.y();
-	listenerForward.z = forward.z();
+	//Eigen::Vector3f forward = listenerTransform->GetFront();
+	//listenerForward.x = forward.x();
+	//listenerForward.y = forward.y();
+	//listenerForward.z = forward.z();
 
-	Eigen::Vector3f up = listenerTransform->GetUp();
-	listenerUp.x = up.x();
-	listenerUp.y = up.y();
-	listenerUp.z = up.z();
+	//Eigen::Vector3f up = listenerTransform->GetUp();
+	//listenerUp.x = up.x();
+	//listenerUp.y = up.y();
+	//listenerUp.z = up.z();
 
-	SetObject3DAttributes();
-	system->set3DListenerAttributes(0, &listenerPosition, &vel, &listenerForward, &listenerUp);
+	//SetObject3DAttributes();
+	//system->set3DListenerAttributes(0, &listenerPosition, &vel, &listenerForward, &listenerUp);
 
-	system->update();
-	lastPos = listenerPosition;
+	//system->update();
+	//lastPos = listenerPosition;
 }
 
 void PurahEngine::SoundManager::SetListenerTransform(PurahEngine::Transform* transform)

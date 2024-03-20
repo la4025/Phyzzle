@@ -8,6 +8,9 @@
 
 #include "PhysicsSystem.h"
 
+#include "Transform.h"
+#include "ZnTransform.h"
+
 namespace PurahEngine
 {
 	void PhysicsSystem::Initialize() noexcept
@@ -75,6 +78,8 @@ namespace PurahEngine
 
 	void PhysicsSystem::Finalize() noexcept
 	{
+		// 강제 종료 되는 경우 아니면
+		// 여기서 컴포넌트를 삭제하는 일은 없을 것임.
 		for (auto& joint : joints)
 		{
 			delete joint;
@@ -156,13 +161,59 @@ namespace PurahEngine
 		return physics->CreateCapsuleCollider(_gameObject, radius, height, 0);
 	}
 
-	// ZonaiPhysics::ZnJoint* PhysicsSystem::CreateFixedJoint(
-	// 	ZonaiPhysics::ZnRigidBody*, Transform*,
-	// 	ZonaiPhysics::ZnRigidBody*, Transform*)
-	// {
-	// 	// return physics->CreateFixedJoint()
-	// 	return nullptr;
-	// }
+	ZonaiPhysics::ZnFixedJoint* PhysicsSystem::CreateFixedJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreateFixedJoint(_body0, _localTm0, _body1, _localTm1);
+	}
+
+	ZonaiPhysics::ZnPrismaticJoint* PhysicsSystem::CreateSlideJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreatePrismaticJoint(_body0, _localTm0, _body1, _localTm1);
+	}
+
+	ZonaiPhysics::ZnHingeJoint* PhysicsSystem::CreateHingeJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreateHingeJoint(_body0, _localTm0, _body1, _localTm1);
+	}
+
+	ZonaiPhysics::ZnSphericalJoint* PhysicsSystem::CreateBallJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreateSphericalJoint(_body0, _localTm0, _body1, _localTm1);
+	}
+
+	ZonaiPhysics::ZnDistanceJoint* PhysicsSystem::CreateDistanceJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreateDistanceJoint(_body0, _localTm0, _body1, _localTm1);
+	}
+
+	ZonaiPhysics::ZnDistanceJoint* PhysicsSystem::CreateSpringJoint(
+		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
+	{
+		assert(_body0 != nullptr && _body1 != nullptr);
+
+		return physics->CreateDistanceJoint(_body0, _localTm0, _body1, _localTm1);
+	}
 
 	bool PhysicsSystem::Raycast(
 		const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, 

@@ -1,6 +1,8 @@
 #pragma once
 #include "PurahEngine.h"
 
+// #define PROPERTY(type, value) type #value; \ 
+
 namespace PurahEngine
 {
 	class ITween;
@@ -32,6 +34,7 @@ namespace PurahEngine
 		// void SetPlayer(GameObject*);
 
 	private:
+		// __declspec(property(get = , put = ));
 		bool detect;
 		float moveSpeed;
 		float sensitivity;

@@ -1,28 +1,28 @@
-#include "SpringJoint.h"
+#include "SlideJoint.h"
 
 
 namespace PurahEngine
 {
-	SpringJoint::~SpringJoint()
+	SlideJoint::~SlideJoint()
 	{
 	}
 
-	void SpringJoint::Initialize()
+	void SlideJoint::Initialize()
 	{
-		JointT<ZonaiPhysics::ZnDistanceJoint>::Initialize();
+		JointT<ZonaiPhysics::ZnPrismaticJoint>::Initialize();
 	}
 
-	void SpringJoint::OnDataLoadComplete()
+	void SlideJoint::OnDataLoadComplete()
 	{
-		JointT<ZonaiPhysics::ZnDistanceJoint>::OnDataLoadComplete();
+		JointT<ZonaiPhysics::ZnPrismaticJoint>::OnDataLoadComplete();
 	}
 
-	void SpringJoint::PreSerialize(json& jsonData) const
+	void SlideJoint::PreSerialize(json& jsonData) const
 	{
 
 	}
 
-	void SpringJoint::PreDeserialize(const json& jsonData)
+	void SlideJoint::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
 
@@ -46,12 +46,12 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(enablePreprocessing);
 	}
 
-	void SpringJoint::PostSerialize(json& jsonData) const
+	void SlideJoint::PostSerialize(json& jsonData) const
 	{
 
 	}
 
-	void SpringJoint::PostDeserialize(const json& jsonData)
+	void SlideJoint::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(connectedBody);
 	}

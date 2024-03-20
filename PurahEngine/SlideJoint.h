@@ -1,15 +1,15 @@
 #pragma once
 #include "PurahEngineAPI.h"
 #include "JointT.h"
-#include "ZnDistanceJoint.h"
+#include "ZnPrismaticJoint.h"	
 
 namespace PurahEngine
 {
-	class PURAHENGINE_API SpringJoint : public JointT<ZonaiPhysics::ZnDistanceJoint>
+	class PURAHENGINE_API SlideJoint : public JointT<ZonaiPhysics::ZnPrismaticJoint>
 	{
 	public:
-		SpringJoint() = default;
-		~SpringJoint() override;
+		SlideJoint() = default;
+		~SlideJoint() override;
 
 	public:
 		void Initialize() override;
@@ -37,4 +37,3 @@ namespace PurahEngine
 		float Tolerance = 0.025f;
 	};
 }
-

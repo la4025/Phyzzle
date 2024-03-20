@@ -37,7 +37,7 @@ namespace PurahEngine
         physicsSystem.FreeObject(znCollider, GetGameObject());
     }
 
-	void Collider::OnDataLoadComplete()
+	void Collider::Initialize()
 	{
         this->transform = gameObject->GetTransform();
 
@@ -82,31 +82,37 @@ namespace PurahEngine
 
 	void Collider::SetDynamic(bool _value)
     {
+	    if (awake)
+	    {
+            OutputDebugStringW(L"실행 도중에 Collider Type 변경은 불가능 합니다.");
+            return;
+	    }
+        
         cType = _value ? ColliderType::DYNAMIC : ColliderType::STATIC;
     }
 
-	void Collider::SetTrigger(bool _value)
-    {
-        if (awake)
-        {
-            isTrigger = _value;
-        }
-        else
-        {
+	void Collider::SetTrigger(bool _value) const
+	{
+        // if (awake)
+        // {
+        //     isTrigger = _value;
+        // }
+        // else
+        // {
             znCollider->SetTrigger(_value);
-        }
+        // }
     }
 
-	void Collider::SetLayer(uint32_t _value)
-    {
-        if (awake)
-        {
-            layer = _value;
-        }
-        else
-        {
+	void Collider::SetLayer(uint32_t _value) const
+	{
+        // if (awake)
+        // {
+        //     layer = _value;
+        // }
+        // else
+        // {
             znCollider->SetLayerData(_value);
-        }
+        // }
     }
 
 	void Collider::PreStep()

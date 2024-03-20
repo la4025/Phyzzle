@@ -6,11 +6,20 @@
 
 namespace ZonaiPhysics
 {
-	class Joint;
 	class ZnPhysicsBase;
+
 	class ZnRigidBody;
+
 	class ZnCollider;
+
 	class ZnJoint;
+	class ZnFixedJoint;
+	class ZnPrismaticJoint;
+	class ZnHingeJoint;
+	class ZnSphericalJoint;
+	class ZnDistanceJoint;
+
+	class ZnTransform;
 }
 
 namespace PurahEngine
@@ -67,13 +76,23 @@ namespace PurahEngine
 		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;
 
 	public:
-		// ZonaiPhysics::ZnJoint*		CreateFixedJoint(
-		// 	ZonaiPhysics::ZnRigidBody* , Transform*, 
-		// 	ZonaiPhysics::ZnRigidBody*, Transform*);
-		// ZonaiPhysics::ZnJoint*		CreateHingeJoint();
-		// ZonaiPhysics::ZnJoint*		CreateBallJoint();
-		// ZonaiPhysics::ZnJoint*		CreateDistanceJoint();
-		// ZonaiPhysics::ZnJoint*		CreateSpringJoint();
+		ZonaiPhysics::ZnFixedJoint*			CreateFixedJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
+
+		ZonaiPhysics::ZnPrismaticJoint*		CreateSlideJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
+
+		ZonaiPhysics::ZnHingeJoint*			CreateHingeJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
+
+		ZonaiPhysics::ZnSphericalJoint*		CreateBallJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
+
+		ZonaiPhysics::ZnDistanceJoint*		CreateDistanceJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
+
+		ZonaiPhysics::ZnDistanceJoint*		CreateSpringJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
 	public:
 		bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZonaiPhysics::ZnRaycastInfo& _out);
