@@ -13,9 +13,6 @@
     <ClCompile Include="KiHoon.cpp">
       <Filter>KH\SCENE</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>KH\PLAYER</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>EntryPoint</Filter>
     </ClCompile>
@@ -44,8 +41,11 @@
     <ClCompile Include="IAbility.cpp">
       <Filter>KH\PLAYER\Ability</Filter>
     </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClCompile>
     <ClCompile Include="Hold.cpp">
-      <Filter>KH\PLAYER\Ability</Filter>
+      <Filter>KH\PLAYER\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,9 +61,6 @@
     </ClInclude>
     <ClInclude Include="KiHoon.h">
       <Filter>KH\SCENE</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>KH\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="NaDong.h">
       <Filter>DH</Filter>
@@ -99,8 +96,11 @@
     <ClInclude Include="TemplateFlag.h">
       <Filter>KH\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClInclude>
     <ClInclude Include="Hold.h">
-      <Filter>KH\PLAYER\Ability</Filter>
+      <Filter>KH\PLAYER\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +133,12 @@
     </Filter>
     <Filter Include="KH\PLAYER\Ability">
       <UniqueIdentifier>{6452ba17-f6c7-4808-9efa-26bba6abd277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\Controller">
+      <UniqueIdentifier>{3eab93c0-5124-4361-9b20-d32a1781124c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\Action">
+      <UniqueIdentifier>{d4d26c7f-1f90-4d57-875b-dc19b8d6d244}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

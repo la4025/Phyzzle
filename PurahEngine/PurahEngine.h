@@ -24,6 +24,12 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
+#include "FixedJoint.h"
+#include "HingeJoint.h"
+#include "BallJoint.h"
+#include "DistanceJoint.h"
+#include "SpringJoint.h"
+#include "SlideJoint.h"
 
 // Graphics
 #include "Camera.h"

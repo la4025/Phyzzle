@@ -29,16 +29,16 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEn
 {
 	switch (type)
 	{
-		case SoundType::BGM:
-		{
-			LoadBGMSound(soundName, audioSource);
-			break;
-		}
-		case SoundType::EFFECT:
-		{
-			LoadEffectSound(soundName, transform, audioSource);
-			break;
-		}
+	case SoundType::BGM:
+	{
+		LoadBGMSound(soundName, audioSource);
+		break;
+	}
+	case SoundType::EFFECT:
+	{
+		LoadEffectSound(soundName, transform, audioSource);
+		break;
+	}
 	}
 }
 
@@ -98,7 +98,7 @@ void PurahEngine::SoundManager::PlayBGM(const std::wstring& soundName, AudioSour
 	{
 		bool isBGMPlaying = true;
 		purahSound.channel->isPlaying(&isBGMPlaying);
-		
+
 		if (isBGMPlaying)
 		{
 			purahSound.channel->stop();
@@ -139,8 +139,8 @@ void PurahEngine::SoundManager::Update()
 	vel.y = (listenerPosition.y - lastPos.y);
 	vel.z = (listenerPosition.z - lastPos.z);
 
-	if(listenerTransform != nullptr)
-	{ 
+	if (listenerTransform != nullptr)
+	{
 		Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
 		listenerPosition.x = pos.x();
 		listenerPosition.y = pos.y();
@@ -171,7 +171,7 @@ void PurahEngine::SoundManager::SetListenerTransform(PurahEngine::Transform* tra
 
 void PurahEngine::SoundManager::SetObject3DAttributes()
 {
-	for(auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
 	{
 		auto purahSound = soundMap.at(iter->first);
 

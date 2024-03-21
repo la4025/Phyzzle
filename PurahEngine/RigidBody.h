@@ -19,6 +19,7 @@ namespace PurahEngine
 		~RigidBody() override;
 
 	public:
+		void		Initialize() override;
 		void		OnDataLoadComplete() override;
 
 	private:
@@ -123,7 +124,7 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		bool awake{ true };
+		// bool awake{ true };
 		bool isKinematic{ false };
 		bool useGravity{ true };
 
@@ -132,16 +133,24 @@ namespace PurahEngine
 		// Eigen::Vector3f position{ 0.f, 0.f, 0.f };
 		// Eigen::Quaternionf rotation{ Eigen::Quaternionf::Identity() };
 		uint8_t freeze{ 0 };
-		// int dynamicLock{ 0 };
 		Eigen::Vector3f linearVelocity{ 0.f, 0.f, 0.f };
 		Eigen::Vector3f angularVelocity{ 0.f, 0.f, 0.f };
 		float mass{ 1.f };
 		float linearDamping{ 0.1f };
 		float angularDamping{ 0.1f };
-		Eigen::Vector3f force{ 0.f, 0.f, 0.f };
-		Eigen::Vector3f torque{ 0.f, 0.f, 0.f };
+		// Eigen::Vector3f force{ 0.f, 0.f, 0.f };
+		// Eigen::Vector3f torque{ 0.f, 0.f, 0.f };
+
+	private:
 		ZonaiPhysics::ZnRigidBody* body{};
 
+	private:
 		friend class Transform;
+
+		friend class DistanceJoint;
+		friend class SpringJoint;
+		friend class HingeJoint;
+		friend class SlideJoint;
+		friend class FixedJoint;
 	};
 }
