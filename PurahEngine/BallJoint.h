@@ -24,8 +24,10 @@ namespace PurahEngine
 		void LimitEnable(bool _value) const;
 
 		// 회전 '각도' 제한
-		void SetLimitCone(float _yAngle, float _zAngle) const;
+		void SetLimitAngle(float _yAngle, float _zAngle) const;
+		void SetLimitRadian(float _yAngle, float _zAngle) const;
 		void SetSpringArg(float _stiffness, float _damping) const;
+		void SetBounciness(float _bounciness) const;
 
 	public:
 		void PreSerialize(json& jsonData) const override;

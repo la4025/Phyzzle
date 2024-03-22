@@ -151,6 +151,7 @@ namespace PurahEngine
 		friend class SpringJoint;
 		friend class HingeJoint;
 		friend class SlideJoint;
+		friend class BallJoint;
 		friend class FixedJoint;
 	};
 }

@@ -15,6 +15,7 @@ namespace PurahEngine
 		void OnDataLoadComplete() override;
 
 	public:
+		// 현재 조인트 거리
 		float GetDistance() const;
 
 		// 조인트 최소 거리
@@ -42,8 +43,9 @@ namespace PurahEngine
 
 	private:
 		Eigen::Vector3f LocalAnchor;
-
+		Eigen::Quaternionf LocalAnchorRotation;
 		Eigen::Vector3f connectedLocalAnchor;
+		Eigen::Quaternionf connectedLocalAnchorRotation;
 
 		bool useMinDistance = false;
 		float minDistance = 0.f;

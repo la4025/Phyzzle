@@ -39,9 +39,11 @@ namespace ZonaiPhysics
 		void SetLimit(float _lower, float _upper) override;
 		void SetSpringArg(float _stiffness, float _damping) override;
 
-		void SetLimitEnable(bool) override;
+		void SetRestitution(float _restitution) const override;
+		float GetRestitution() const override;
 
-		bool IsLimitEnalbed() const override;
+		void SetLimitEnable(bool) override;
+		bool IsLimitEnabled() const override;
 
 	public:
 		const physx::PxTolerancesScale* tolerances;

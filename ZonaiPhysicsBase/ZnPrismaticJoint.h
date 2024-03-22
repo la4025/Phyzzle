@@ -20,7 +20,10 @@ namespace ZonaiPhysics
 		virtual void SetLimit(float _lower, float _upper) = 0;
 		virtual void SetSpringArg(float _stiffness, float _damping) = 0;
 
+		virtual void SetRestitution(float _restitution) const = 0;
+		virtual float GetRestitution() const = 0;
+
 		virtual void SetLimitEnable(bool) = 0;
-		virtual bool IsLimitEnalbed() const = 0;
+		virtual bool IsLimitEnabled() const = 0;
 	};
 }

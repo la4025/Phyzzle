@@ -1,3 +1,9 @@
+#include "GameObject.h"
+#include "PhysicsSystem.h"
+#include "ZnTransform.h"
+#include "RigidBody.h"
+#include "ZnRigidBody.h"
+
 #include "SpringJoint.h"
 
 
@@ -9,12 +15,107 @@ namespace PurahEngine
 
 	void SpringJoint::Initialize()
 	{
-		JointT<ZonaiPhysics::ZnDistanceJoint>::Initialize();
+
 	}
 
 	void SpringJoint::OnDataLoadComplete()
 	{
-		JointT<ZonaiPhysics::ZnDistanceJoint>::OnDataLoadComplete();
+		const auto& instance = PhysicsSystem::GetInstance();
+
+		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
+
+		assert(body0 != nullptr);
+
+		joint = instance.CreateDistanceJoint(
+			body0->body, { LocalAnchor },
+			connectedBody->body, { connectedLocalAnchor }
+		);
+
+		SetSpringEnable(useSpring);
+		SetSpringArg(spring, damper);
+
+		SetMinDistanceEnable(useMinDistance);
+		SetMinDistance(minDistance);
+		SetMaxDistanceEnable(useMaxDistance);
+		SetMaxDistance(maxDistance);
+		SetTolerance(Tolerance);
+
+		JointT::OnDataLoadComplete();
+	}
+
+	float SpringJoint::GetDistance() const
+	{
+		return joint->GetDistance();
+	}
+
+	void SpringJoint::SetMinDistance(float _distance) const
+	{
+		joint->SetMinDistance(_distance);
+	}
+
+	float SpringJoint::GetMinDistance() const
+	{
+		return joint->GetMinDistance();
+	}
+
+	void SpringJoint::SetMaxDistance(float _distance) const
+	{
+		joint->SetMaxDistance(_distance);
+	}
+
+	float SpringJoint::GetMaxDistance() const
+	{
+		return joint->GetMaxDistance();
+	}
+
+	void SpringJoint::SetTolerance(float _tolerance) const
+	{
+		joint->SetTolerance(_tolerance);
+	}
+
+	float SpringJoint::GetTolerance() const
+	{
+		return joint->GetTolerance();
+	}
+
+	void SpringJoint::SetStiffness(float _stiffness) const
+	{
+		joint->SetStiffness(_stiffness);
+	}
+
+	float SpringJoint::GetStiffness() const
+	{
+		return joint->GetStiffness();
+	}
+
+	void SpringJoint::SetDamping(float _damping) const
+	{
+		joint->SetDamping(_damping);
+	}
+
+	float SpringJoint::GetDamping() const
+	{
+		return joint->GetDamping();
+	}
+
+	void SpringJoint::SetSpringArg(float _stiffness, float _damping) const
+	{
+		joint->SetSpringArg(_stiffness, _damping);
+	}
+
+	void SpringJoint::SetMinDistanceEnable(bool _value) const
+	{
+		joint->SetMinDistanceEnable(_value);
+	}
+
+	void SpringJoint::SetMaxDistanceEnable(bool _value) const
+	{
+		joint->SetMaxDistanceEnable(_value);
+	}
+
+	void SpringJoint::SetSpringEnable(bool _value) const
+	{
+		joint->SetSpringEnable(_value);
 	}
 
 	void SpringJoint::PreSerialize(json& jsonData) const

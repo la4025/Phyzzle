@@ -1,6 +1,10 @@
-#include "BallJoint.h"
-
+#include "GameObject.h"
 #include "PhysicsSystem.h"
+#include "ZnTransform.h"
+#include "RigidBody.h"
+#include "ZnRigidBody.h"
+
+#include "BallJoint.h"
 
 
 namespace PurahEngine
@@ -17,7 +21,36 @@ namespace PurahEngine
 
 	void BallJoint::OnDataLoadComplete()
 	{
+		auto& instance = PhysicsSystem::GetInstance();
 
+		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
+
+		assert(body0 != nullptr);
+
+		joint = instance.CreateBallJoint(
+			body0->body, { LocalAnchor },
+			connectedBody->body, { connectedLocalAnchor }
+		);
+
+		LimitEnable(useLimit);
+		SetLimitAngle(swingLimitY, swingLimitZ);
+
+		// pring
+		{
+			float setSpring = 0.f;
+			float setDamper = 0.f;
+			float setBounce = 0.f;
+			if (useSpring)
+			{
+				setSpring = spring;
+				setDamper = damping;
+				setBounce = bounciness;
+			}
+			SetSpringArg(setSpring, setDamper);
+			SetBounciness(setBounce);
+		}
+
+		JointT::OnDataLoadComplete();
 	}
 
 	void BallJoint::GetLimitAngle(float& _outY, float& _outZ) const
@@ -40,14 +73,24 @@ namespace PurahEngine
 		joint->LimitEnable(_value);
 	}
 
-	void BallJoint::SetLimitCone(float _yAngle, float _zAngle) const
+	void BallJoint::SetLimitAngle(float _yAngle, float _zAngle) const
 	{
-		joint->SetLimitCone(_yAngle, _zAngle);
+		joint->SetLimitAngle(_yAngle, _zAngle);
+	}
+
+	void BallJoint::SetLimitRadian(float _yRadian, float _zRadian) const
+	{
+		joint->SetLimitRadian(_yRadian, _zRadian);
 	}
 
 	void BallJoint::SetSpringArg(float _stiffness, float _damping) const
 	{
 		joint->SetSpringArg(_stiffness, _damping);
+	}
+
+	void BallJoint::SetBounciness(float _bounciness) const
+	{
+		joint->SetRestitution(_bounciness);
 	}
 
 	void BallJoint::PreSerialize(json& jsonData) const

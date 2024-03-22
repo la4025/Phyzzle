@@ -16,6 +16,18 @@ namespace PurahEngine
 		void OnDataLoadComplete() override;
 
 	public:
+		float GetPosition() const;
+
+		float GetVelocity() const;
+
+		void SetLimit(float _lower, float _upper) const;
+		void SetSpringArg(float _stiffness, float _damping) const;
+		void SetBounciness(float _bounciness) const;
+
+		void SetLimitEnable(bool) const;
+		bool IsLimitEnabled() const;
+
+	public:
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
 		void PostSerialize(json& jsonData) const override;
@@ -34,6 +46,6 @@ namespace PurahEngine
 		float minDistance = 0.f;
 		bool useMaxDistance = true;
 		float maxDistance = 0.f;
-		float Tolerance = 0.025f;
+		float bounciness = 0.f;
 	};
 }
