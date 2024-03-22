@@ -32,7 +32,7 @@ void PurahEngine::AudioSource::Initialize()
 void PurahEngine::AudioSource::OnDataLoadComplete()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.LoadEffectSound(soundName, soundTransform, this);
+	soundManager.LoadSound(soundName, soundTransform, this, SoundType::EFFECT);
 }
 
 void PurahEngine::AudioSource::Update()
