@@ -42,6 +42,7 @@ namespace PurahEngine
 		float spring = 10.0f;
 		float damper = 0.2f;
 
+		bool useLimit = true;
 		bool useMinDistance = true;
 		float minDistance = 0.f;
 		bool useMaxDistance = true;

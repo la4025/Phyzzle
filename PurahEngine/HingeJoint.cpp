@@ -32,8 +32,8 @@ namespace PurahEngine
 
 		if (useSpring)
 		{
+			SetSpringArg(spring, damper);
 		}
-		SetSpringArg(spring, damper);
 
 		SetLimitEnable(useLimit);
 		SetLimit(angleLower, angleUpper);
@@ -41,8 +41,6 @@ namespace PurahEngine
 		SetDriveEnable(setMotor);
 		SetDriveVelocity(velocity);
 		SetDriveFreespin(freeSpin);
-
-
 
 		JointT::OnDataLoadComplete();
 	}

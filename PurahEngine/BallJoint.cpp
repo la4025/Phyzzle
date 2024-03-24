@@ -28,8 +28,8 @@ namespace PurahEngine
 		assert(body0 != nullptr);
 
 		joint = instance.CreateBallJoint(
-			body0->body, { LocalAnchor },
-			connectedBody->body, { connectedLocalAnchor }
+			body0->body, { LocalAnchor, LocalAnchorRotation },
+			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
 		LimitEnable(useLimit);

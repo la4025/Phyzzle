@@ -32,34 +32,48 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor }
 		);
 
-		// pring
+		// spring
+		if (useSpring)
 		{
 			float setSpring = 0.f;
 			float setDamper = 0.f;
+
 			if (useSpring)
 			{
 				setSpring = spring;
 				setDamper = damper;
 			}
+
 			SetSpringArg(setSpring, setDamper);
 		}
 
 		// limit
-		{
-			float setMinLimit = FLT_MAX / 3.f;
-			float setMaxLimit = -FLT_MAX / 3.f;
-			float bounce = 0.f;
-			if (useMinDistance)
-			{
-				setMinLimit = minDistance;
-			}
-			if (useMaxDistance)
-			{
-				setMaxLimit = maxDistance;
-			}
-			SetLimit(setMinLimit, setMaxLimit);
-			SetBounciness(bounciness);
-		}
+		SetLimitEnable(useLimit);
+		//if (useLimit)
+		//{
+		//	float setMinLimit = -FLT_MAX / 3.f;
+		//	float setMaxLimit = FLT_MAX / 3.f;
+		//	float bounce = 0.f;
+
+		//	if (useMinDistance)
+		//	{
+		//		setMinLimit = minDistance;
+		//	}
+		//	if (useMaxDistance)
+		//	{
+		//		setMaxLimit = maxDistance;
+		//	}
+
+		//	if (bounciness != 0.f)
+		//	{
+		//		bounce = bounciness;
+		//	}
+			
+			// SetLimit(setMinLimit, setMaxLimit);
+		SetLimit(minDistance, maxDistance);
+			// SetBounciness(bounce);
+		SetBounciness(bounciness);
+		//}
 
 		JointT::OnDataLoadComplete();
 	}
@@ -116,6 +130,7 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(spring);
 		PREDESERIALIZE_VALUE(damper);
 
+		PREDESERIALIZE_VALUE(useLimit);
 		PREDESERIALIZE_VALUE(useMinDistance);
 		PREDESERIALIZE_VALUE(minDistance);
 		PREDESERIALIZE_VALUE(useMaxDistance);

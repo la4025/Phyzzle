@@ -87,7 +87,12 @@ namespace ZonaiPhysics
 	{
 		assert(joint != nullptr);
 
-		joint->setLimit({*tolerances, _lower, _upper});
+		auto limit = joint->getLimit();
+
+		limit.lower = _lower;
+		limit.upper = _upper;
+
+		joint->setLimit(limit);
 	}
 
 	void PrismaticJoint::SetSpringArg(float _stiffness, float _damping)
