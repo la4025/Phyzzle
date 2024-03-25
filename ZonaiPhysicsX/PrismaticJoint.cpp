@@ -87,7 +87,12 @@ namespace ZonaiPhysics
 	{
 		assert(joint != nullptr);
 
-		joint->setLimit({*tolerances, _lower, _upper});
+		auto limit = joint->getLimit();
+
+		limit.lower = _lower;
+		limit.upper = _upper;
+
+		joint->setLimit(limit);
 	}
 
 	void PrismaticJoint::SetSpringArg(float _stiffness, float _damping)
@@ -102,6 +107,26 @@ namespace ZonaiPhysics
 		joint->setLimit(limit);
 	}
 
+	void PrismaticJoint::SetRestitution(float _restitution) const
+	{
+		assert(joint != nullptr);
+
+		auto limit = joint->getLimit();
+
+		limit.restitution = _restitution;
+
+		joint->setLimit(limit);
+	}
+
+	float PrismaticJoint::GetRestitution() const
+	{
+		assert(joint != nullptr);
+
+		const auto limit = joint->getLimit();
+
+		return limit.restitution;
+	}
+
 	void PrismaticJoint::SetLimitEnable(bool _value)
 	{
 		assert(joint != nullptr);
@@ -109,7 +134,7 @@ namespace ZonaiPhysics
 		joint->setPrismaticJointFlag(physx::PxPrismaticJointFlag::eLIMIT_ENABLED, _value);
 	}
 
-	bool PrismaticJoint::IsLimitEnalbed() const
+	bool PrismaticJoint::IsLimitEnabled() const
 	{
 		assert(joint != nullptr);
 

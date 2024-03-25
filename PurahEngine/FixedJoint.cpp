@@ -30,9 +30,9 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
-		SetBreakForce(breakForce, breakTorque);
-		EnableCollision(enableCollision);
-		EnablePreprocessing(enablePreprocessing);
+		joint->SetUserData(this);
+
+		JointT::OnDataLoadComplete();
 	}
 
 	void FixedJoint::PreSerialize(json& jsonData) const

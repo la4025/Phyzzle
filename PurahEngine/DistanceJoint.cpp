@@ -15,7 +15,7 @@ namespace PurahEngine
 
 	void DistanceJoint::OnDataLoadComplete()
 	{
-		auto& instance = PhysicsSystem::GetInstance();
+		const auto& instance = PhysicsSystem::GetInstance();
 
 		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
 
@@ -26,11 +26,17 @@ namespace PurahEngine
             connectedBody->body, { connectedLocalAnchor }
         );
 
+        joint->SetUserData(this);
+
+        joint->SetSpringEnable(false);
+
         SetMinDistanceEnable(true);
         SetMinDistance(minDistance);
         SetMaxDistanceEnable(true);
         SetMaxDistance(maxDistance);
         SetTolerance(Tolerance);
+
+        JointT::OnDataLoadComplete();
 	}
 
     float DistanceJoint::GetDistance() const

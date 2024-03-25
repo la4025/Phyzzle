@@ -53,5 +53,7 @@ namespace ZonaiPhysics
 		virtual void		EnableCollision(bool) = 0;
 
 		virtual void		EnablePreprocessing(bool) = 0;
+
+		virtual void		SetUserData(void* _userData) = 0;
 	};
 }
