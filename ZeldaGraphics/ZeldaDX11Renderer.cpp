@@ -425,7 +425,6 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	cubeMapShader = new ZeldaShader(mDevice, L"CubeMapVS.cso", L"CubeMapPS.cso", L"");
 	shadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapVS.cso", L"DirectionalShadowMapPS.cso", L"DirectionalShadowMapInstancingVS.cso");
 	blendingAnimationShadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapBlendingAnimationVS.cso", L"DirectionalShadowMapPS.cso", L"");
-	shadowShader = new ZeldaShader(mDevice, L"DirectionalShadowVS.cso", L"DirectionalShadowPS.cso", L"");
 	spriteShader = new ZeldaShader(mDevice, L"SpriteVS.cso", L"SpritePS.cso", L"");
 
 #pragma endregion Deferred Rendering
@@ -716,11 +715,6 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete blendingAnimationShadowMapShader;
 		blendingAnimationShadowMapShader = nullptr;
-	}
-	if (shadowShader)
-	{
-		delete shadowShader;
-		shadowShader = nullptr;
 	}
 	if (spriteShader)
 	{
