@@ -81,6 +81,7 @@ private:
 	ModelID fbxID;
 	ModelID fbxID2;
 	LightID dirLightID;
+	LightID dirLightID2;
 	LightID pointLightID;
 
 

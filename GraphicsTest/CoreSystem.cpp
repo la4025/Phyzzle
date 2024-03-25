@@ -9,7 +9,7 @@
 #include "GraphicsResourceID.h"
 
 // 암시적 링크 사용
-#define ZELDA_GRAPHICS_IMPLICIT_LINK
+//#define ZELDA_GRAPHICS_IMPLICIT_LINK
 
 #ifdef ZELDA_GRAPHICS_IMPLICIT_LINK
 #include "ZeldaGraphics.h"
@@ -291,7 +291,8 @@ void CoreSystem::run()
 
 		fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
 
-		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f });
+		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID2 = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
 		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, pointLightPos, pointLightRange);
 
 		mainCameraID = renderer->CreateCamera();
@@ -531,7 +532,8 @@ void CoreSystem::run()
 	}
 
 	renderer->DrawLight(dirLightID);
-	renderer->DrawLight(pointLightID);
+	renderer->DrawLight(dirLightID2);
+	//renderer->DrawLight(pointLightID);
 
 	//renderer->DrawSprite({ scdX, 0 }, msTextureID);
 	//renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);
@@ -595,41 +597,64 @@ void CoreSystem::run()
 		if (cutTime > 0.0f)
 		{
 			instMatrix(0, 3) = 0.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true);
 
-			instMatrix(0, 3) = 100.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+			//instMatrix(0, 3) = 100.0f;
+			//renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true);
 
-			instMatrix(0, 3) = 200.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false);
+			//instMatrix(0, 3) = 200.0f;
+			//renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true);
 		}
 		else
 		{
 			instMatrix(0, 3) = 0.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true);
 
-			instMatrix(0, 3) = 100.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+			//instMatrix(0, 3) = 100.0f;
+			//renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true);
 
-			instMatrix(0, 3) = 200.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false);
+			//instMatrix(0, 3) = 200.0f;
+			//renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true);
 		}
 	}
 	else
 	{
 		instMatrix(0, 3) = 0.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true);
 
-		instMatrix(0, 3) = 100.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+		//instMatrix(0, 3) = 100.0f;
+		//renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true);
 
-		instMatrix(0, 3) = 200.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false);
+		//instMatrix(0, 3) = 200.0f;
+		//renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true);
 	}
 
-	renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false);
+	//renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false, true);
 
-	renderer->DrawCube(fallingMatrix * worldMatrix2, scdTextureID, false, 0.0f, 1.0f, 1.0f, 1.0f);
+	Eigen::Matrix4f floatingMatrix[5];
+	for (int i = 0; i < 5; i++)
+	{
+		floatingMatrix[i] <<
+			15, 0, 0, -100 - (30 * i),
+			0, 15, 0, 7.5f * (i + 1),
+			0, 0, 15, 0,
+			0, 0, 0, 1;
+	}
+	
+	renderer->DrawCube(floatingMatrix[0], scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->DrawCube(floatingMatrix[1], scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->DrawCube(floatingMatrix[2], scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->DrawCube(floatingMatrix[3], scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->DrawCube(floatingMatrix[4], scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+
+	Eigen::Matrix4f floorMatrix;
+	floorMatrix <<
+		500,	0,		0,		0,
+		0,		1,		0,		0,
+		0,		0,		500,	0,
+		0,		0,		0,		1;
+
+	renderer->DrawCube(floorMatrix, scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
 
 	renderer->DrawCubeMap(cubeMapID);
 

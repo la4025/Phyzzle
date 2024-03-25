@@ -6,13 +6,15 @@
 #include <fstream>
 #include <Windows.h>
 
+#include "ZeldaGraphicsDefine.h"
+
 class ZeldaMesh;
 class ZeldaTexture;
 
 class ZeldaShader
 {
 public:
-	ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName = L"");
+	ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName = L"", Shader::Type shaderType = Shader::Type::Default);
 	ZeldaShader(const ZeldaShader& zeldaShader) = delete;
 	~ZeldaShader();
 
@@ -21,7 +23,7 @@ public:
 	ID3D11SamplerState* GetSamplerState();
 
 private:
-	bool Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName);
+	bool Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName, Shader::Type shaderType);
 
 private:
 	ID3D11VertexShader* vertexShader;
@@ -30,5 +32,6 @@ private:
 	ID3D11InputLayout* layout;
 	ID3D11InputLayout* instancingLayout;
 	ID3D11SamplerState* samplerState;
+	ID3D11SamplerState* shadowSamplerState;
 };
 

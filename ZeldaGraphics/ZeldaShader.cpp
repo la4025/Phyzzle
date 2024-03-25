@@ -5,15 +5,16 @@
 
 #include "ZeldaGraphicsDefine.h"
 
-ZeldaShader::ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName) :
+ZeldaShader::ZeldaShader(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName, Shader::Type shaderType) :
 	vertexShader(nullptr),
 	instancingVertexShader(nullptr),
 	pixelShader(nullptr),
 	layout(nullptr),
 	instancingLayout(nullptr),
-	samplerState(nullptr)
+	samplerState(nullptr),
+	shadowSamplerState(nullptr)
 {
-	Initialize(device, vsFileName, psFileName, instVSFileName);
+	Initialize(device, vsFileName, psFileName, instVSFileName, shaderType);
 }
 
 ZeldaShader::~ZeldaShader()
@@ -22,7 +23,12 @@ ZeldaShader::~ZeldaShader()
 	if (samplerState)
 	{
 		samplerState->Release();
-		samplerState = 0;
+		samplerState = nullptr;
+	}
+	if (shadowSamplerState)
+	{
+		shadowSamplerState->Release();
+		shadowSamplerState = nullptr;
 	}
 	// Release the layout.
 	if (layout)
@@ -54,7 +60,7 @@ ZeldaShader::~ZeldaShader()
 	}
 }
 
-bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName)
+bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileName, const std::wstring& psFileName, const std::wstring& instVSFileName, Shader::Type shaderType)
 {
 	HRESULT result;
 	ID3DBlob* errorMessage;
@@ -153,7 +159,7 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 		//	auto size = bufferDesc.Size;
 
 		//}
-		
+
 		// ÇØÁ¦
 		instVertexShaderBuffer->Release();
 		instVertexShaderBuffer = nullptr;
@@ -173,18 +179,57 @@ bool ZeldaShader::Initialize(ID3D11Device* device, const std::wstring& vsFileNam
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.MaxAnisotropy = 1u;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
-	samplerDesc.MinLOD = 0;
+	samplerDesc.BorderColor[0] = 0.0f;
+	samplerDesc.BorderColor[1] = 0.0f;
+	samplerDesc.BorderColor[2] = 0.0f;
+	samplerDesc.BorderColor[3] = 0.0f;
+	samplerDesc.MinLOD = 0.0f;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the texture sampler state.
 	result = device->CreateSamplerState(&samplerDesc, &samplerState);
 	if (FAILED(result)) return false;
+
+
+	switch (shaderType)
+	{
+		case Shader::Type::Default:
+		{
+			
+
+			break;
+		}
+		case Shader::Type::Shadow:
+		{
+			// Create a texture sampler state description.
+			samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+			samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+			samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+			samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+			samplerDesc.MipLODBias = 0.0f;
+			samplerDesc.MaxAnisotropy = 1u;
+			samplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+			samplerDesc.BorderColor[0] = 0.0f;
+			samplerDesc.BorderColor[1] = 0.0f;
+			samplerDesc.BorderColor[2] = 0.0f;
+			samplerDesc.BorderColor[3] = 0.0f;
+			samplerDesc.MinLOD = 0.0f;
+			samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+			// Create the texture sampler state.
+			result = device->CreateSamplerState(&samplerDesc, &shadowSamplerState);
+			if (FAILED(result)) return false;
+
+			break;
+		}
+		default:
+		{
+			assert(0);
+			break;
+		}
+	}
 
 	return true;
 }
@@ -200,6 +245,10 @@ void ZeldaShader::Render(ID3D11DeviceContext* deviceContext, unsigned int indexC
 
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &samplerState);
+	if (shadowSamplerState != nullptr)
+	{
+		deviceContext->PSSetSamplers(1, 1, &shadowSamplerState);
+	}
 
 	// Render the triangle.
 	deviceContext->DrawIndexed(indexCount, 0, 0);
@@ -218,6 +267,10 @@ void ZeldaShader::RenderInstanced(ID3D11DeviceContext* deviceContext, unsigned i
 
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &samplerState);
+	if (shadowSamplerState != nullptr)
+	{
+		deviceContext->PSSetSamplers(1, 1, &shadowSamplerState);
+	}
 
 	// Render the triangle.
 	deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, instanceStart);

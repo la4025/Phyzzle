@@ -48,6 +48,12 @@
     <Filter Include="Shader\Header">
       <UniqueIdentifier>{961e2cde-e460-440d-9049-9db05b295a57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Shadow">
+      <UniqueIdentifier>{2baacd8d-9fc6-4748-a706-5246b09d58ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Sprite">
+      <UniqueIdentifier>{11c3291d-0660-4592-88db-0d7f4883db18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\IZeldaRenderer.h">
@@ -224,6 +230,24 @@
     </FxCompile>
     <FxCompile Include="ForwardBlendingAnimationVS.hlsl">
       <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalShadowMapVS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalShadowMapPS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalShadowMapInstancingVS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="SpriteVS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="SpritePS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectionalShadowMapBlendingAnimationVS.hlsl">
+      <Filter>Shader\Shadow</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

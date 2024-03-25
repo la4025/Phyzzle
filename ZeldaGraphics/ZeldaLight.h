@@ -19,6 +19,9 @@ public:
 	DirectX::XMFLOAT4 GetDiffuseColor();
 	DirectX::XMFLOAT4 GetSpecular();
 
+	DirectX::XMMATRIX GetViewMatrix();
+	DirectX::XMMATRIX GetOrthoMatrix();
+
 	// Directional Light
 	void SetDirection(float x, float y, float z);
 

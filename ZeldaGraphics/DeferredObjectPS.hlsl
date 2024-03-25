@@ -64,7 +64,7 @@ PixelOutputType main(PixelInputType input)
     float3x3 matTBN = { input.tangent, input.biNormal, input.normal };
     float3 viewNormal = normalize(mul(tangentSpaceNormal, matTBN));
     
-    output.position = float4(input.viewPosition.xyz, 1.0f);
+    output.position = input.viewPosition;
     
     if (useNormal)
     {

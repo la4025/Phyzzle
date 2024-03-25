@@ -16,6 +16,7 @@
 
 #ifdef _DEBUG
 #define USE_BEGIN_FLAG
+#define USE_INIT_FLAG
 #endif
 
 class ZeldaCamera;
@@ -106,16 +107,19 @@ public:
 	virtual bool Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen) override;
 	virtual void Finalize() override;
 
+	virtual void SetExtraInitOption(float shadowAreaRange, unsigned int shadowMapSize) override;
+	virtual void SetExtraOption(float shadowMapDepthBias) override;
+
 	virtual void SetDebugMode(DebugMode mode) override;
 	virtual void SetRendererMode(RendererMode mode) override;
 
 	virtual void BeginDraw(float deltaTime) override;
 	virtual void EndDraw() override;
 
-	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, float r, float g, float b, float a) override;
-	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame) override;
-	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame) override;
-	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame) override;
+	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, float r, float g, float b, float a) override;
+	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow) override;
+	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow) override;
+	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow) override;
 
 	virtual void DrawLight(LightID lightID) override;
 
@@ -154,11 +158,18 @@ private:
 	void DrawSprite();
 	void EndDrawSprite();
 
+	void CreateShadowMap(ZeldaLight* light);
+	void DrawDefferredLight(ZeldaLight* light, unsigned int lightIndex);
+
 	void DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShader* shader);
 	void DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaShader* shader);
 	void DrawBlendingAnimationRenderInfo(BlendingAnimationRenderInfo renderInfo, ZeldaShader* shader);
 	void DrawSpriteRenderInfo(SpriteRenderInfo renderInfo);
 	void DrawCubeMapRenderInfo();
+
+	void DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader);
+	void DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader);
+	void DrawDirectionalShadow(BlendingAnimationRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader);
 
 	void ClearRenderInfo();
 
@@ -185,15 +196,22 @@ private:
 	ID3D11RasterizerState* wireFrameRasterState;
 	ID3D11RasterizerState* pointLightRasterState;
 	ID3D11RasterizerState* cubeMapRasterState;
+	ID3D11RasterizerState* shadowRasterState;
 	ID3D11RasterizerState* currentRasterState;
 
 	ID3D11BlendState* alphaBlendState;
 
 	ID3D11DepthStencilState* cubeMapDepthStencilState;
 
+	D3D11_VIEWPORT defaultViewPort;
+
 	// Deferred Rendering
 	ID3D11RenderTargetView* deferredRenderTargets[Deferred::BufferCount];
 	ID3D11ShaderResourceView* deferredShaderResources[Deferred::BufferCount];
+
+	// Shadow Mapping
+	ID3D11DepthStencilView* directionalShadowDepthStencilView;
+	ID3D11ShaderResourceView* directionalShadowShaderResource;
 
 	ZeldaShader* deferredBlendingObjectShader;
 	ZeldaShader* deferredObjectShader;
@@ -204,6 +222,10 @@ private:
 	ZeldaShader* forwardShader;
 	ZeldaShader* forwardBlendingShader;
 	ZeldaShader* cubeMapShader;
+	ZeldaShader* shadowMapShader;
+	ZeldaShader* blendingAnimationShadowMapShader;
+	ZeldaShader* shadowShader;
+	ZeldaShader* spriteShader;
 
 	DebugMode debugMode;
 	DebugMode debugModeBuffer;
@@ -234,6 +256,7 @@ private:
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer;
 	
 	ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>* screenConstBuffer;
+	ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>* lightMatrixConstBuffer;
 
 
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.
@@ -251,9 +274,18 @@ private:
 
 	std::vector<BlendingAnimationRenderInfo> forwardBlendingAnimationRenderInfo;
 
+	// 그림자
+	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> shadowMeshRenderInfo;
+	std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> shadowModelRenderInfo;
+	std::vector<BlendingAnimationRenderInfo> shadowBlendingAnimationRenderInfo;
+
 	TextureID cubeMapRenderInfo;
 
 #ifdef USE_BEGIN_FLAG
 	bool beginflag = false;
+#endif
+
+#ifdef USE_INIT_FLAG
+	bool initflag = false;
 #endif
 };
