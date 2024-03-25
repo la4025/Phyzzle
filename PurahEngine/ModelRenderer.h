@@ -19,6 +19,7 @@ namespace PurahEngine
 		void Render(IZeldaRenderer* renderer) override;
 
 		void SetModelName(const std::wstring& modelName);
+		void SetShadow(bool value);
 
 	public:
 		virtual void PreSerialize(json& jsonData) const override;
@@ -30,6 +31,7 @@ namespace PurahEngine
 		Animator* animator;
 		
 		std::wstring modelName;
+		bool shadow;
 		
 		bool isBlending;
 		std::wstring animationName1;

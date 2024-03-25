@@ -52,6 +52,71 @@ DirectX::XMFLOAT4 ZeldaLight::GetSpecular()
 	return specular;
 }
 
+DirectX::XMMATRIX ZeldaLight::GetViewMatrix()
+{
+	DirectX::XMMATRIX worldMatrix;
+	switch (type)
+	{
+		case LightType::Directional:
+		{
+			DirectX::XMVECTOR lightDirection = DirectX::XMVectorSet(direction.x, direction.y, direction.z, 0.0f);
+			DirectX::XMVECTOR zVector = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+
+			if (DirectX::XMVector4Equal(zVector, lightDirection)) {
+				worldMatrix = DirectX::XMMatrixIdentity();
+			}
+			else
+			{
+				// 두 벡터의 내적을 계산하여 코사인 각도를 구함
+				float cosTheta = DirectX::XMVector4Dot(zVector, lightDirection).m128_f32[0];
+
+				// v1과 targetV가 평행하거나 반대 방향인 경우 아무런 회전도 필요하지 않음
+				if (cosTheta >= 0.999999f || cosTheta <= -0.999999f) {
+					worldMatrix = DirectX::XMMatrixIdentity();
+				}
+				else
+				{
+					// 각도를 계산
+					float theta = std::acos(cosTheta);
+
+					// 회전 축을 계산
+					DirectX::XMVECTOR rotationAxis = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(zVector, lightDirection));
+
+					// 회전 행렬 생성
+					worldMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, theta);
+				}
+			}
+			
+			worldMatrix = worldMatrix * DirectX::XMMatrixTranslationFromVector(-ShadowMap::Range * DirectX::XMVector3Normalize({ direction.x, direction.y, direction.z, 0.0f }));
+
+			break;
+		}
+
+		case LightType::Point:
+		{
+			assert(0);
+			break;
+		}
+
+		case LightType::Spot:
+		{
+			assert(0);
+			break;
+		}
+
+		default:
+			assert(0);
+			break;
+	}
+
+	return DirectX::XMMatrixInverse(nullptr, worldMatrix);
+}
+
+DirectX::XMMATRIX ZeldaLight::GetOrthoMatrix()
+{
+	return DirectX::XMMatrixOrthographicLH(2.0f * ShadowMap::Range, 2.0f * ShadowMap::Range, 0.0f, 2.0f * ShadowMap::Range);
+}
+
 void ZeldaLight::SetDirection(float x, float y, float z)
 {
 	assert(type == LightType::Directional);

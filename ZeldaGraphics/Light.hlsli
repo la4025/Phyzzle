@@ -2,6 +2,86 @@
 #define _LIGHT_HLSLI_
 
 #include "Buffers.hlsli"
+#include "Matrix.hlsli"
+
+float Median(float d0, float d1, float d2)
+{
+    if ((d0 >= d1 && d0 <= d2) || (d0 <= d1 && d0 >= d2))
+    {
+        // d0이 중앙값인 경우
+        return d0;
+    }
+    else if ((d1 >= d0 && d1 <= d2) || (d1 <= d0 && d1 >= d2))
+    {
+        // d1이 중앙값인 경우
+        return d1;
+    }
+    else
+    {
+        // d2가 중앙값인 경우
+        return d2;
+    }
+}
+
+float MedianFilter(
+    float d0, float d1, float d2,
+    float d3, float d4, float d5,
+    float d6, float d7, float d8)
+{
+    return Median(Median(d0, d1, d2), Median(d3, d4, d5), Median(d6, d7, d8));
+}
+
+float CalculateShadowFactor(SamplerComparisonState shadowsampler, Texture2D positionMap, Texture2D shadowMap, float4 shadowPos, float mapSize)
+{
+    float depth = shadowPos.z;
+    
+    const float delta = 1.0f / mapSize;
+    
+    const float2 offsets[9] =
+    {
+        float2(-delta, -delta), float2(0.0f, -delta), float2(delta, -delta),
+		float2(-delta, 0.0f), float2(0.0f, 0.0f), float2(delta, 0.0f),
+		float2(-delta, +delta), float2(0.0f, +delta), float2(delta, +delta)
+    };
+    
+    float2 uv = shadowPos.xy;
+    uv.y = -uv.y;
+    uv = uv * 0.5f + 0.5f;
+    
+    const float depthBias = 0.001f;
+    
+    float result[9];
+    for (int i = 0; i < 9; i++)
+    {
+        float shadowDepth = shadowMap.Sample(Sampler, uv + offsets[i]).r;
+        result[i] = (shadowDepth + depthBias) >= depth;
+    }
+    
+    float interpolatedResult =
+        /*
+        MedianFilter(
+            result[0], result[1], result[2],
+            result[3], result[4], result[5],
+            result[6], result[7], result[8]
+        );
+        //*/
+        
+        //*
+        (
+            result[0] + result[1] + result[2] +
+            result[3] + result[4] + result[5] +
+            result[6] + result[7] + result[8]
+        ) / 9.0f;
+        //*/
+    
+        ///*
+        //result[5];
+        //*/
+    
+    return interpolatedResult;
+    
+    //return 1.0f;
+}
 
 void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 diffuse, out float4 ambient, out float4 specular)
 {
@@ -30,6 +110,14 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 di
         //float specFactor = pow(NdotH, 16.0f);
         //diffuse = diffuseFactor * lights[lightIndex].color.diffuse;
         //specular = specFactor * lights[lightIndex].color.specular;
+        
+        float4 worldPos = mul(float4(viewPos, 1.0f), inverse(viewMatrix));
+        float4 shadowClipPos = mul(mul(worldPos, lightViewMatrix), lightProjectionMatrix);
+        
+        float shadow = CalculateShadowFactor(ShadowSampler, Temp0Map, Temp2Map, shadowClipPos, shadowMapSize);
+        
+        diffuse *= shadow;
+        specular *= shadow;
     }
     else if (lights[lightIndex].type == LIGHT_TYPE_POINT)
     {

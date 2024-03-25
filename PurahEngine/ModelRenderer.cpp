@@ -40,18 +40,18 @@ namespace PurahEngine
 			// Animator가 없는 경우 DrawModel함수를 이용한다.
 			if (animator == nullptr)
 			{
-				renderer->DrawModel(worldTM, modelID, false);
+				renderer->DrawModel(worldTM, modelID, false, shadow);
 			}
 			// Animator가 있는 경우 DrawAnimation, DrawChangingAnimation 함수를 이용한다.
 			else
 			{
 				if (isBlending)
 				{
-					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, false);
+					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, false, shadow);
 				}
 				else
 				{
-					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, false);
+					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, false, shadow);
 				}
 			}
 		}
@@ -60,6 +60,11 @@ namespace PurahEngine
 	void ModelRenderer::SetModelName(const std::wstring& modelName)
 	{
 		this->modelName = modelName;
+	}
+
+	void ModelRenderer::SetShadow(bool value)
+	{
+		shadow = value;
 	}
 
 	void ModelRenderer::PreSerialize(json& jsonData) const
@@ -72,6 +77,7 @@ namespace PurahEngine
 		PREDESERIALIZE_BASE();
 
 		PREDESERIALIZE_WSTRING(modelName);
+		PREDESERIALIZE_VALUE(shadow);
 	}
 
 	void ModelRenderer::PostSerialize(json& jsonData) const

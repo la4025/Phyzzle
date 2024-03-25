@@ -12,6 +12,21 @@ constexpr unsigned int INSTANCING_MAX = 1024u;
 constexpr unsigned int TEXTURE_SLOT_ANIMATION = 8u;
 constexpr unsigned int TEXTURE_SLOT_CUBEMAP = 9u;
 
+namespace Shader
+{
+	enum class Type : unsigned int
+	{
+		Default,
+		Shadow
+	};
+}
+
+namespace ShadowMap
+{
+	extern float Range; // 텍스쳐화 되는 오브젝트들의 범위, (0, 0, 0)에서 Range안쪽의 거리는 그림자 출력이 보장된다.
+	extern unsigned int Size; // 빛의 방향에서 본 오브젝트들을 텍스쳐화 할 때, 텍스쳐의 크기(너비와 높이가 같음)
+}
+
 namespace Texture
 {
 	namespace Slot
@@ -237,6 +252,17 @@ struct BlendingAnimationBufferType
 	constexpr static unsigned int registerNumB = 8;
 };
 static_assert(sizeof(BlendingAnimationBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+
+struct LightMatrixBufferType
+{
+	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX projection;
+	float shadowMapSize;
+	float padding[3];
+
+	constexpr static unsigned int registerNumB = 9;
+};
+static_assert(sizeof(LightMatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 #pragma endregion
 

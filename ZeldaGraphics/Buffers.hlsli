@@ -26,6 +26,7 @@ Texture2D AnimationMap : register(t8);
 TextureCube cubeMap : register(t9);
 
 SamplerState Sampler : register(s0);
+SamplerComparisonState ShadowSampler : register(s1);
 
 cbuffer MatrixBuffer : register(b0)
 {
@@ -115,6 +116,14 @@ cbuffer InstancingAnimationBufferType : register(b7)
 cbuffer BlendingAnimationBufferType : register(b8)
 {
     matrix finalTM[BONE_COUNT_MAX];
+}
+
+cbuffer LightMatrixBufferType : register(b9)
+{
+    matrix lightViewMatrix;
+    matrix lightProjectionMatrix;
+    float shadowMapSize;
+    float3 b9padding;
 }
 
 #endif

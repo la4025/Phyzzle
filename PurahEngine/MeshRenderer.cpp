@@ -35,7 +35,7 @@ namespace PurahEngine
 				}
 				case PurahEngine::MeshRenderer::MeshType::Cube:
 				{
-					renderer->DrawCube(worldTM, textureID, wireFrame, r, g, b, a);
+					renderer->DrawCube(worldTM, textureID, wireFrame, shadow, r, g, b, a);
 
 					break;
 				}
@@ -70,6 +70,11 @@ namespace PurahEngine
 		this->a = a;
 	}
 
+	void MeshRenderer::SetShadow(bool value)
+	{
+		shadow = value;
+	}
+
 	void MeshRenderer::PreSerialize(json& jsonData) const
 	{
 
@@ -81,6 +86,7 @@ namespace PurahEngine
 		PREDESERIALIZE_WSTRING(textureName);
 		PREDESERIALIZE_VALUE(meshType);
 		PREDESERIALIZE_VALUE(wireFrame);
+		PREDESERIALIZE_VALUE(shadow);
 		PREDESERIALIZE_VALUE(r);
 		PREDESERIALIZE_VALUE(g);
 		PREDESERIALIZE_VALUE(b);
