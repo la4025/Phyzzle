@@ -31,6 +31,8 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor }
 		);
 
+		joint->SetUserData(this);
+
 		SetSpringEnable(useSpring);
 		SetSpringArg(spring, damper);
 
@@ -39,6 +41,7 @@ namespace PurahEngine
 		SetMaxDistanceEnable(useMaxDistance);
 		SetMaxDistance(maxDistance);
 		SetTolerance(Tolerance);
+
 
 		JointT::OnDataLoadComplete();
 	}

@@ -32,6 +32,8 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
+		joint->SetUserData(this);
+
 		LimitEnable(useLimit);
 		SetLimitAngle(swingLimitY, swingLimitZ);
 

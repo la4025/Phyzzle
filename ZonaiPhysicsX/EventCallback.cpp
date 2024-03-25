@@ -26,7 +26,14 @@ namespace ZonaiPhysics
 	{
 		// 파괴된 제약의 정보를 넘겨줌
 		for (physx::PxU32 i = 0; i < count; i++)
-			callback->OnConstraintBreak(static_cast<ZnJoint*>(constraints[i].constraint->userData));
+		{
+			auto constrain = constraints[i];
+			constrain.externalReference;
+
+			ZnJoint* joint = static_cast<ZnJoint*>(constraints[i].constraint->userData);
+
+			callback->OnConstraintBreak(joint);
+		}
 	}
 
 	void EventCallback::onWake(physx::PxActor** actors, physx::PxU32 count)

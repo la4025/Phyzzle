@@ -137,5 +137,12 @@ namespace ZonaiPhysics
 
 			joint->setConstraintFlag(physx::PxConstraintFlag::eDISABLE_PREPROCESSING, !_value);
 		}
+
+		void SetUserData(void* _userData) override
+		{
+			assert(joint != nullptr);
+
+			joint->userData = _userData;
+		}
 	};
 }

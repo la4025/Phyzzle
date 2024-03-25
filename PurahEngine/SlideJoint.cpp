@@ -32,6 +32,8 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor }
 		);
 
+		joint->SetUserData(this);
+
 		// spring
 		if (useSpring)
 		{

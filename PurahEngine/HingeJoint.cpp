@@ -30,6 +30,8 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
+		joint->SetUserData(this);
+
 		if (useSpring)
 		{
 			SetSpringArg(spring, damper);

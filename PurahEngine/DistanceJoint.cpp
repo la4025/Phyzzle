@@ -26,6 +26,8 @@ namespace PurahEngine
             connectedBody->body, { connectedLocalAnchor }
         );
 
+        joint->SetUserData(this);
+
         joint->SetSpringEnable(false);
 
         SetMinDistanceEnable(true);
