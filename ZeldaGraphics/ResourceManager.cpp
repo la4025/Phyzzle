@@ -667,6 +667,11 @@ ModelID ResourceManager::CreateModelFromModelingFile(const std::wstring& filePat
 	FBXLoader::FBXLoader fbxloader;
 	FBXLoader::Model* fbxmodel = fbxloader.CreateModelFromFBX(filePath);
 
+	if (fbxmodel == nullptr)
+	{
+		MessageBox(0, L"Failed to load FBXfile.", L"ResourceManager Error", MB_OK);
+	}
+
 	ModelID resourceID = IDGenerator::CreateID<ResourceType::Model>();
 
 	while (modelTable.count(resourceID) != 0 || resourceID == ModelID::ID_NULL)
