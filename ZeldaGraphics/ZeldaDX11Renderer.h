@@ -224,7 +224,6 @@ private:
 	ZeldaShader* cubeMapShader;
 	ZeldaShader* shadowMapShader;
 	ZeldaShader* blendingAnimationShadowMapShader;
-	ZeldaShader* shadowShader;
 	ZeldaShader* spriteShader;
 
 	DebugMode debugMode;
