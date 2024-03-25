@@ -10,11 +10,10 @@ namespace PurahEngine
 {
 	FixedJoint::~FixedJoint()
 	{
-	}
+		auto& instance = PhysicsSystem::GetInstance();
 
-	void FixedJoint::Initialize()
-	{
-
+		instance.FreeObject(joint, GetGameObject());
+		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
 	void FixedJoint::OnDataLoadComplete()
@@ -30,6 +29,7 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
+		PhysicsSystem::GetInstance().joints.push_back(this);
 		joint->SetUserData(this);
 
 		JointT::OnDataLoadComplete();

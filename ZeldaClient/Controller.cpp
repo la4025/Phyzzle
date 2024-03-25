@@ -3,6 +3,7 @@
 #include "TimeController.h"
 #include "Tween.h"
 #include <algorithm>
+#include <iostream>
 
 namespace PurahEngine
 {
@@ -36,6 +37,11 @@ namespace PurahEngine
 		RotateCamera();
 		// UpdateCamera();
 		Move();
+	}
+
+	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const Collider* collider)
+	{
+		std::cout << "Enter" << std::endl;
 	}
 
 	void Controller::GamePadInput()

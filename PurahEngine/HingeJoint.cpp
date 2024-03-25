@@ -10,11 +10,10 @@ namespace PurahEngine
 {
 	HingeJoint::~HingeJoint()
 	{
-	}
+		auto& instance = PhysicsSystem::GetInstance();
 
-	void HingeJoint::Initialize()
-	{
-		JointT<ZonaiPhysics::ZnHingeJoint>::Initialize();
+		instance.FreeObject(joint, GetGameObject());
+		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
 	void HingeJoint::OnDataLoadComplete()
@@ -30,6 +29,7 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
+		PhysicsSystem::GetInstance().joints.push_back(this);
 		joint->SetUserData(this);
 
 		if (useSpring)

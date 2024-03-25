@@ -33,7 +33,26 @@ namespace PurahEngine
 		float breakTorque = FLT_MAX;
 		bool enableCollision = false;
 		bool enablePreprocessing = true;
+		std::function<void()> callback = nullptr;
 
+	public:
+		void		SetBreakCallback(const std::function<void()>& _callback) override
+		{
+			callback = _callback;
+		}
+
+	protected:
+		void		BreakCallback() override
+		{
+			if (callback)
+			{
+				callback();
+			}
+		}
+		void*		GetZnJoint() override
+		{
+			return joint;
+		}
 	public:
 		/**
 		오브젝트를 조인트로 연결함.

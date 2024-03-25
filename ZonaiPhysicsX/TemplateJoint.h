@@ -30,12 +30,13 @@ namespace ZonaiPhysics
 		TemplateJoint() : joint(), rigidbody0(), rigidbody1()
 		{}
 
-		virtual ~TemplateJoint() = default;
+		~TemplateJoint() override = default;
 
 	protected:
 		PhysxJoint* joint;
 		RigidBody* rigidbody0;
 		RigidBody* rigidbody1;
+		void* userData;
 
 	public:
 		/**
@@ -142,7 +143,14 @@ namespace ZonaiPhysics
 		{
 			assert(joint != nullptr);
 
-			joint->userData = _userData;
+			userData = _userData;
+		}
+
+		void* GetUserData() override
+		{
+			assert(joint != nullptr);
+
+			return userData;
 		}
 	};
 }

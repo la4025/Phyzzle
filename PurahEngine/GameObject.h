@@ -48,19 +48,19 @@ namespace PurahEngine
 
 		/// OnCollision
 		// 충돌체가 충돌했을 때 호출
-		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
+		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*);
 		// 충돌체가 충돌을 유지할 때 호출
-		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
+		virtual void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const Collider*);
 		// 충돌체가 충돌을 벗어났을 때 호출
-		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollider*);
+		virtual void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const Collider*);
 
 		/// OnTrigger
 		// 트리거가 충돌했을 때 호출
-		virtual void OnTriggerEnter(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerEnter(const Collider*);
 		// 트리거가 충돌율 유지할 때 호출
-		virtual void OnTriggerStay(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerStay(const Collider*);
 		// 트리거가 충돌을 벗어났을 때 호출
-		virtual void OnTriggerExit(const ZonaiPhysics::ZnCollider*);
+		virtual void OnTriggerExit(const Collider*);
 
 		/// OnMouse
 		// 마우스가 오브젝트 위에 올라갔을 때 호출

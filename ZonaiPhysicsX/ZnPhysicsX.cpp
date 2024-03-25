@@ -263,6 +263,8 @@ namespace ZonaiPhysics
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		const auto joint = ZnFactoryX::CreateFixedJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
 		return joint;
 	}
 
@@ -273,6 +275,8 @@ namespace ZonaiPhysics
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		const auto joint = ZnFactoryX::CreateDistanceJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
 		return joint;
 	}
 
@@ -283,6 +287,8 @@ namespace ZonaiPhysics
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		const auto joint = ZnFactoryX::CreateSphericalJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
 		return joint;
 	}
 
@@ -293,6 +299,9 @@ namespace ZonaiPhysics
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		const auto joint = ZnFactoryX::CreateHingeJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
+
 		return joint;
 	}
 
@@ -303,6 +312,8 @@ namespace ZonaiPhysics
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
 
 		const auto joint = ZnFactoryX::CreatePrismaticJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
 		return joint;
 	}
 
@@ -333,11 +344,9 @@ namespace ZonaiPhysics
 
 	void ZnPhysicsX::ReleaseJoint(ZnJoint* _joint, void* _userData, void* _userScene)
 	{
-		// assert(_joint != nullptr);
+		assert(_joint != nullptr);
 
-		// auto rigidbody = static_cast<Joint*>(_joint);
-
-		// jointRemoveList.push(rigidbody);
+		ZnWorld::RemoveJoint(_joint, _userData, _userScene);
 	}
 
 	extern "C"
