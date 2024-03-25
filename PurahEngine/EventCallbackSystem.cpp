@@ -77,8 +77,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		// purahCollider0->GetGameObject()->OnCollisionEnter(_collision, purahCollider1);
-		// purahCollider1->GetGameObject()->OnCollisionEnter(_collision, purahCollider0);
+		purahCollider0->GetGameObject()->OnCollisionEnter(_collision, purahCollider1);
+		purahCollider1->GetGameObject()->OnCollisionEnter(_collision, purahCollider0);
 	}
 
 	void EventCallbackSystem::OnCollisionStay(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
@@ -107,7 +107,7 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		// purahCollider0->GetGameObject()->OnCollisionExit(_collision, purahCollider1);
-		// purahCollider1->GetGameObject()->OnCollisionExit(_collision, purahCollider0);
+		purahCollider0->GetGameObject()->OnCollisionExit(_collision, purahCollider1);
+		purahCollider1->GetGameObject()->OnCollisionExit(_collision, purahCollider0);
 	}
 }

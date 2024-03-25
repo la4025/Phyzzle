@@ -41,7 +41,9 @@ namespace PurahEngine
 
 	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const Collider* collider)
 	{
-		std::cout << "Enter" << std::endl;
+		// std::cout << "Enter" << std::endl;
+
+		std::cout << zn_collision.otherLinearVelocity << std::endl;
 	}
 
 	void Controller::GamePadInput()
