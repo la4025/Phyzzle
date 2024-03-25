@@ -17,6 +17,14 @@ namespace PurahEngine
 		~JointT() override = default;
 
 	protected:
+		void OnDataLoadComplete() override
+		{
+			SetBreakForce(breakForce, breakTorque);
+			EnableCollision(enableCollision);
+			EnablePreprocessing(enablePreprocessing);
+		}
+
+	protected:
 		ZonaiJoint* joint;
 
 	protected:

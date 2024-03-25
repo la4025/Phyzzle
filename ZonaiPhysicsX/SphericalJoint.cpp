@@ -97,7 +97,7 @@ namespace ZonaiPhysics
 		joint->setSphericalJointFlag(physx::PxSphericalJointFlag::eLIMIT_ENABLED, _value);
 	}
 
-	void SphericalJoint::SetLimitCone(float _yAngle, float _zAngle)
+	void SphericalJoint::SetLimitAngle(float _yAngle, float _zAngle)
 	{
 		assert(joint != nullptr);
 
@@ -105,6 +105,11 @@ namespace ZonaiPhysics
 		float zAngleRad = (physx::PxPi / 180.f * _zAngle);
 
 		joint->setLimitCone({ yAngleRad, zAngleRad });
+	}
+
+	void SphericalJoint::SetLimitRadian(float _yRadian, float _zRadian)
+	{
+		joint->setLimitCone({ _yRadian, _zRadian });
 	}
 
 	void SphericalJoint::SetSpringArg(float _stiffness, float _damping)
@@ -128,5 +133,14 @@ namespace ZonaiPhysics
 		limit.restitution = _restitution;
 
 		joint->setLimitCone(limit);
+	}
+
+	float SphericalJoint::GetRestitution() const
+	{
+		assert(joint != nullptr);
+
+		const auto limit = joint->getLimitCone();
+
+		return limit.restitution;
 	}
 }

@@ -7,7 +7,7 @@ namespace PurahEngine
 {
 	class Collider;
 
-	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody*)
+	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody* _body)
 	{
 		// 구현 안 함
 		return;

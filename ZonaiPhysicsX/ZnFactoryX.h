@@ -5,6 +5,16 @@
 #pragma warning(disable: 33010 26495 4819)
 #include <Eigen/Dense>
 #include "PxPhysicsAPI.h"
+#include "omnipvd/PxOmniPvd.h"
+
+#define PX_SUPPORT_PVD 1
+#define PX_SUPPORT_OMNI_PVD 0
+
+#if PX_SUPPORT_OMNI_PVD
+#include "../pvdruntime/include/OmniPvdWriter.h"
+#include "../pvdruntime/include/OmniPvdFileWriteStream.h"
+#endif
+
 #pragma warning (pop)
 
 namespace physx
@@ -41,6 +51,7 @@ namespace ZonaiPhysics
 	{
 	public:
 		static void CreatePhysxFactory();
+		static void PhysicsWithOmniPvd();
 		static void SetSimulationCallback(ZnSimulationCallback* _instance);
 		static void Release();
 
@@ -74,6 +85,7 @@ namespace ZonaiPhysics
 		static physx::PxFoundation* foundation;
 		static physx::PxPhysics* pxFactory;
 		static physx::PxPvd* pxPvd;
+		static physx::PxOmniPvd* omniPvd;
 		// static PxCooking* pxCooking;
 	};
 }

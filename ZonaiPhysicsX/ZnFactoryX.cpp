@@ -23,7 +23,6 @@
 #include "ConvexCollider.h"
 #include "../ZeldaFBXLoader/FBXLoader.h"
 
-
 namespace ZonaiPhysics
 {
 	EventCallback ZnFactoryX::eventCallback{};
@@ -33,6 +32,7 @@ namespace ZonaiPhysics
 	physx::PxFoundation* ZnFactoryX::foundation = nullptr;
 	physx::PxPhysics* ZnFactoryX::pxFactory = nullptr;
 	physx::PxPvd* ZnFactoryX::pxPvd = nullptr;
+	physx::PxOmniPvd* ZnFactoryX::omniPvd = nullptr;
 	// physx::PxCookingParams* ZnFactoryX::pxCooking = nullptr;
 
 	void ZnFactoryX::CreatePhysxFactory()
@@ -40,17 +40,54 @@ namespace ZonaiPhysics
 		/// SDK »ý¼º
 		{
 			foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
-
-#ifdef _DEBUG
+#if PX_SUPPORT_PVD
 			pxPvd = PxCreatePvd(*foundation);
 			physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 			pxPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
-#endif
 
 			pxFactory = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, physx::PxTolerancesScale(), true, pxPvd);
 
-#ifdef _DEBUG
 			PxInitExtensions(*pxFactory, pxPvd);
+#endif
+
+#if PX_SUPPORT_OMNI_PVD
+			omniPvd = PxCreateOmniPvd(*foundation);
+			if (!omniPvd)
+			{
+				printf("Error : could not create PxOmniPvd!");
+				return;
+			}
+			OmniPvdWriter* omniWriter = omniPvd->getWriter();
+			if (!omniWriter)
+			{
+				printf("Error : could not get an instance of PxOmniPvdWriter!");
+				return;
+			}
+			OmniPvdFileWriteStream* fStream = omniPvd->getFileWriteStream();
+			if (!fStream)
+			{
+				printf("Error : could not get an instance of PxOmniPvdFileWriteStream!");
+				return;
+			}
+			fStream->setFileName("gOmniPvdName");
+			omniWriter->setWriteStream(static_cast<OmniPvdWriteStream&>(*fStream));
+
+			pxFactory = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, physx::PxTolerancesScale(), true, NULL, omniPvd);
+			if (!pxFactory)
+			{
+				printf("Error : could not create a PhysX instance!");
+				return;
+			}
+
+			if (pxFactory->getOmniPvd())
+			{
+				pxFactory->getOmniPvd()->startSampling();
+			}
+			else
+			{
+				printf("Error : could not start OmniPvd sampling!");
+				return;
+			}
 #endif
 
 			// pxCooking = PxCreate

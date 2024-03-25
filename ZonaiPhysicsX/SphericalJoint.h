@@ -39,9 +39,11 @@ namespace ZonaiPhysics
 
 		void LimitEnable(bool) override;
 
-		void SetLimitCone(float _yAngle, float _zAngle) override;
-		void SetSpringArg(float _stiffness, float _damping) override;
+		void SetLimitAngle(float _yAngle, float _zAngle) override;
+		void SetLimitRadian(float _yRadian, float _zRadian) override;
 
-		void SetRestitution(float _restitution) const;
+		void SetSpringArg(float _stiffness, float _damping) override;
+		void SetRestitution(float _restitution) const override;
+		float GetRestitution() const override;
 	};
 }

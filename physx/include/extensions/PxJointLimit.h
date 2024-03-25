@@ -52,44 +52,42 @@ class PxJointLimitParameters
 {
 public:
 	/**
-	\brief Controls the amount of bounce when the joint hits a limit.
+	\brief 조인트가 한계에 도달했을 때 튕김의 양을 제어합니다.
 
-	A restitution value of 1.0 causes the joint to bounce back with the velocity which it hit the limit.
-	A value of zero causes the joint to stop dead.
+	복원 값이 1.0인 경우 조인트가 한계에 도달할 때의 속도로 다시 튕깁니다.
+	값이 0이면 조인트가 즉시 멈춥니다.
 
-	In situations where the joint has many locked DOFs (e.g. 5) the restitution may not be applied 
-	correctly. This is due to a limitation in the solver which causes the restitution velocity to become zero 
-	as the solver enforces constraints on the other DOFs.
+	조인트가 많은 잠긴 DOF(예: 5개)을 가지고 있는 상황에서는 복원이 올바르게 적용되지 않을 수 있습니다.
+	이는 솔버가 다른 DOF에 대한 제약을 강제하는 동안 복원 속도가 0이 되기 때문인 제한으로 인한 것입니다.
 
-	This limitation applies to both angular and linear limits, however it is generally most apparent with limited
-	angular DOFs. Disabling joint projection and increasing the solver iteration count may improve this behavior 
-	to some extent.
+	이 한계는 각도 및 선형 제한 모두에 적용되지만, 일반적으로 각도 DOF가 제한될 때 가장 뚜렷하게 나타납니다.
+	조인트 프로젝션을 비활성화하고 솔버 반복 횟수를 늘리면 이 동작을 어느 정도 개선할 수 있습니다.
 
-	Also, combining soft joint limits with joint drives driving against those limits may affect stability.
+	또한, 소프트 조인트 제한과 해당 제한을 향해 구동되는 조인트 드라이브를 결합할 경우 안정성에 영향을 줄 수 있습니다.
 
-	<b>Range:</b> [0,1]<br>
-	<b>Default:</b> 0.0
+	<b>범위:</b> [0,1]<br>
+	<b>기본값:</b> 0.0
 	*/
 	PxReal restitution;
 
 	/**
-	determines the minimum impact velocity which will cause the joint to bounce
+	조인트가 튕기게 할 최소 충격 속도를 결정합니다.
 	*/
 	PxReal bounceThreshold;
 
 	/**
-	\brief if greater than zero, the limit is soft, i.e. a spring pulls the joint back to the limit
+	\brief 값이 0보다 크면, 제한이 소프트하며, 즉, 스프링이 조인트를 제한으로 다시 끌어당깁니다.
 
-	<b>Range:</b> [0, PX_MAX_F32)<br>
-	<b>Default:</b> 0.0
+	<b>범위:</b> [0, PX_MAX_F32)<br>
+	<b>기본값:</b> 0.0
 	*/
 	PxReal stiffness;
 
 	/**
-	\brief if spring is greater than zero, this is the damping of the limit spring
+	\brief spring이 0보다 크면, 이것은 제한 스프링의 감쇠입니다.
 
-	<b>Range:</b> [0, PX_MAX_F32)<br>
-	<b>Default:</b> 0.0
+	<b>범위:</b> [0, PX_MAX_F32)<br>
+	<b>기본값:</b> 0.0
 	*/
 	PxReal damping;
 
