@@ -1,4 +1,5 @@
 #include "CameraMovement.h"
+#include <iostream>
 
 PurahEngine::CameraMovement::CameraMovement()
 {
@@ -39,6 +40,9 @@ void PurahEngine::CameraMovement::Update()
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, 0.1f));
 	}
+
+	std::wcout << GetGameObject()->GetName() << std::endl;
+	std::cout << trans->GetLocalPosition() << std::endl << std::endl;
 }
 
 void PurahEngine::CameraMovement::PreSerialize(json& jsonData) const

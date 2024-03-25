@@ -25,28 +25,29 @@ void PurahEngine::SoundManager::Initialize()
 	system->createChannelGroup("effectChannelGroup", &effectChannelGroup);
 }
 
-void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, const std::wstring& filePath, PurahEngine::Transform* position, AudioSource* audioSource, SoundType type)
+void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type)
 {
 	switch (type)
 	{
-		case SoundType::BGM:
-		{
-			LoadBGMSound(soundName, filePath, audioSource);
-			break;
-		}
-		case SoundType::EFFECT:
-		{
-			LoadEffectSound(soundName, filePath, position, audioSource);
-			break;
-		}
+	case SoundType::BGM:
+	{
+		LoadBGMSound(soundName, audioSource);
+		break;
+	}
+	case SoundType::EFFECT:
+	{
+		LoadEffectSound(soundName, transform, audioSource);
+		break;
+	}
 	}
 }
 
-void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, const std::wstring& filePath, AudioSource* audioSource)
+void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource)
 {
 	FMOD_RESULT result;
 
 	PurahEngine::PurahSound newSound;
+	std::wstring filePath = L"../Sound/Effect/Test/" + soundName;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -55,7 +56,6 @@ void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, cons
 	result = system->createSound(str.c_str(), FMOD_LOOP_NORMAL, 0, &(newSound.sound));
 	assert(result == FMOD_OK);
 
-	newSound.filePath = filePath;
 	newSound.soundName = soundName;
 	newSound.isPlaying = false;
 	newSound.channel = bgmChannel;
@@ -64,11 +64,12 @@ void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, cons
 	soundMap[audioSource] = newSound;
 }
 
-void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, const std::wstring& filePath, Transform* transform, AudioSource* audioSource)
+void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, Transform* transform, AudioSource* audioSource)
 {
 	FMOD_RESULT result;
 
 	PurahEngine::PurahSound newSound;
+	std::wstring filePath = L"../Sound/Effect/Test/" + soundName;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -77,7 +78,6 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, c
 	result = system->createSound(str.c_str(), FMOD_3D, 0, &(newSound.sound));
 	assert(result == FMOD_OK);
 
-	newSound.filePath = filePath;
 	newSound.soundName = soundName;
 	newSound.transform = transform;
 	newSound.isPlaying = false;
@@ -98,7 +98,7 @@ void PurahEngine::SoundManager::PlayBGM(const std::wstring& soundName, AudioSour
 	{
 		bool isBGMPlaying = true;
 		purahSound.channel->isPlaying(&isBGMPlaying);
-		
+
 		if (isBGMPlaying)
 		{
 			purahSound.channel->stop();
@@ -139,8 +139,8 @@ void PurahEngine::SoundManager::Update()
 	vel.y = (listenerPosition.y - lastPos.y);
 	vel.z = (listenerPosition.z - lastPos.z);
 
-	if(listenerTransform != nullptr)
-	{ 
+	if (listenerTransform != nullptr)
+	{
 		Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
 		listenerPosition.x = pos.x();
 		listenerPosition.y = pos.y();
@@ -171,7 +171,7 @@ void PurahEngine::SoundManager::SetListenerTransform(PurahEngine::Transform* tra
 
 void PurahEngine::SoundManager::SetObject3DAttributes()
 {
-	for(auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
 	{
 		auto purahSound = soundMap.at(iter->first);
 

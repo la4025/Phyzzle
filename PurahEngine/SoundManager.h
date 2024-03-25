@@ -19,11 +19,11 @@ namespace PurahEngine
 	public:
 		void Initialize();
 
-		void LoadSound(const std::wstring& soundName, const std::wstring& filePath, PurahEngine::Transform* position, AudioSource* audioSource, SoundType type);
+		void LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type);
 		
-		void LoadBGMSound(const std::wstring& soundName, const std::wstring& filePath, AudioSource* audioSource);
+		void LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource);
 
-		void LoadEffectSound(const std::wstring& soundName, const std::wstring& filePath, Transform* transform, AudioSource* audioSource);
+		void LoadEffectSound(const std::wstring& soundName, Transform* transform, AudioSource* audioSource);
 
 		void PlayBGM(const std::wstring& soundName, AudioSource* audioSource);
 

@@ -6,15 +6,18 @@
 
 namespace PurahEngine
 {
+	void BoxCollider::Initialize()
+	{
+		Collider::Initialize();
+	}
+
 	void BoxCollider::OnDataLoadComplete()
 	{
-		Collider::OnDataLoadComplete();
-
 		const auto scale = transform->GetWorldScale();
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateBoxCollider(
 			this->GetGameObject(),
-			size.x() * scale.x(), size.y() * scale.y(), size.z() * scale.z()
+			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z()
 		);
 
 		znCollider->SetUserData(this);
@@ -31,6 +34,12 @@ namespace PurahEngine
 
 	void BoxCollider::SetSize(const Eigen::Vector3f& _size)
 	{
+		if (awake)
+		{
+			OutputDebugStringW(L"실행 도중에 Collider size 변경은 불가능 합니다.");
+			return;
+		}
+
 		this->size = _size;
 	}
 

@@ -9,6 +9,8 @@
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "AudioListener.h"
+#include "AudioSource.h"
 
 // Manager
 #include "SceneManager.h"
@@ -22,6 +24,12 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
+#include "FixedJoint.h"
+#include "HingeJoint.h"
+#include "BallJoint.h"
+#include "DistanceJoint.h"
+#include "SpringJoint.h"
+#include "SlideJoint.h"
 
 // Graphics
 #include "Camera.h"

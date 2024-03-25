@@ -17,6 +17,13 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 		ComponentFactory::GetInstance().RegisterComponent<SphereCollider>("SphereCollider");
 		ComponentFactory::GetInstance().RegisterComponent<CapsuleCollider>("CapsuleCollider");
 
+		ComponentFactory::GetInstance().RegisterComponent<FixedJoint>("FixedJoint");
+		ComponentFactory::GetInstance().RegisterComponent<SlideJoint>("SlideJoint");
+		ComponentFactory::GetInstance().RegisterComponent<HingeJoint>("HingeJoint");
+		ComponentFactory::GetInstance().RegisterComponent<BallJoint>("BallJoint");
+		ComponentFactory::GetInstance().RegisterComponent<DistanceJoint>("DistanceJoint");
+		ComponentFactory::GetInstance().RegisterComponent<SpringJoint>("SpringJoint");
+
 	}
 
 	ComponentFactory::GetInstance().RegisterComponent<Camera>("Camera");
@@ -24,6 +31,8 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 	ComponentFactory::GetInstance().RegisterComponent<ModelRenderer>("ModelRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<MeshRenderer>("MeshRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<Animator>("Animator");
+	ComponentFactory::GetInstance().RegisterComponent<AudioSource>("AudioSource");
+	ComponentFactory::GetInstance().RegisterComponent<AudioListener>("AudioListener");
 
 	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }

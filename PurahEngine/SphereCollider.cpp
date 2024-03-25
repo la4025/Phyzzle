@@ -7,10 +7,13 @@
 
 namespace PurahEngine
 {
+	void SphereCollider::Initialize()
+	{
+		Collider::Initialize();
+	}
+
 	void SphereCollider::OnDataLoadComplete()
 	{
-		Collider::OnDataLoadComplete();
-
 		const auto scale = transform->GetWorldScale();
 
 		const float maxScale = max(max(scale.x(), scale.y()), scale.z());
@@ -34,6 +37,12 @@ namespace PurahEngine
 
 	void SphereCollider::SetSize(float _radius)
 	{
+		if (awake)
+		{
+			OutputDebugStringW(L"실행 도중에 Collider size 변경은 불가능 합니다.");
+			return;
+		}
+
 		radius = _radius;
 	}
 

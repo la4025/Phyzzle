@@ -26,16 +26,16 @@ namespace PurahEngine
         ~Collider() override;
 
     public:
-        void OnDataLoadComplete() override;
+        void Initialize() override;
 
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);
 
         void SetDynamic(bool _value);
 
-        void SetTrigger(bool _value);
+        void SetTrigger(bool _value) const;
 
-        void SetLayer(uint32_t _value);
+        void SetLayer(uint32_t _value) const;
 
     public:
         virtual void PreStep();

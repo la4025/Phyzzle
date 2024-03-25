@@ -7,7 +7,7 @@
 namespace PurahEngine
 {
 	Controller::~Controller()
-	= default;
+		= default;
 
 	void Controller::Awake()
 	{
@@ -27,7 +27,7 @@ namespace PurahEngine
 
 		// playerRigidbody = gameObject->GetComponent<RigidBody>();
 		startLinearVelocity = playerRigidbody->GetLinearVelocity();
- 		startAngularVelocity = playerRigidbody->GetAngularVelocity();
+		startAngularVelocity = playerRigidbody->GetAngularVelocity();
 	}
 
 	void Controller::Update()
@@ -109,23 +109,72 @@ namespace PurahEngine
 
 	void Controller::RotateCamera()
 	{
+		TimeController& time = TimeController::GetInstance();
 
-			TimeController& time = TimeController::GetInstance();
+		const float deltaTime = time.GetDeltaTime("Simulate");
 
-			const float deltaTime = time.GetDeltaTime("Simulate");
-
-			// 스틱 기울기에 따라 회전 각도를 계산
-			const float yawAngle = RstickX * sensitivity * deltaTime * RstickSize;
-			const float pitchAngle = RstickY * sensitivity * deltaTime * RstickSize;
-
+		// 스틱 기울기에 따라 회전 각도를 계산
+		const float yawAngle = RstickX * sensitivity * deltaTime * RstickSize;
+		{
 			// 월드 up 기준으로 카메라를 회전
 			cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
+		}
+
+		// 스틱 기울기에 따라 회전 각도를 계산
+		const float pitchAngle = RstickY * sensitivity * deltaTime * RstickSize;
+		{
+			auto cameraRotationQuat = cameraArm->GetLocalRotation();
+			Eigen::Vector3f cameraEulerAngles = cameraRotationQuat.toRotationMatrix().eulerAngles(0, 1, 2);
+
+			// Get the current pitch angle in degrees
+			float currentPitchDegrees = cameraEulerAngles(0) * 180.0f / std::numbers::pi;
+
+			// Calculate the new pitch angle
+			float newPitchDegrees = currentPitchDegrees + pitchAngle;
+
+			if (newPitchDegrees < 180.f)
+			{
+				newPitchDegrees = std::clamp(newPitchDegrees, -1.f, 88.f);
+			}
+			else
+			{
+				newPitchDegrees = std::clamp(newPitchDegrees, 335.f, 361.f);
+			}
 
 			// 카메라 Right 벡터를 기준으로 회전하기 위해서 카메라의 월드 right를 구함.
-			const Eigen::Vector3f cameraRight = cameraArm->GetWorldRotation() * -Eigen::Vector3f::UnitX();
+			 const Eigen::Vector3f cameraRight = cameraArm->GetWorldRotation() * -Eigen::Vector3f::UnitX();
+
+			//// 제한된 각도만큼 카메라 회전
+			// float deltaPitch = newPitchDegrees - cameraEulerAngles(0);
 
 			// 카메라의 right 기준으로 카메라를 회전
-			cameraArm->Rotate(cameraRight, pitchAngle);
+			 cameraArm->Rotate(cameraRight, pitchAngle);
+
+			//// If the new pitch angle exceeds the limit, prevent further rotation
+			//if (newPitchDegrees != currentPitchDegrees) 
+			//{
+			//	// Calculate the amount of rotation allowed
+			//	//// float allowedRotation = newPitchDegrees - currentPitchDegrees;
+
+			//	// Convert allowed rotation back to std::numbers::pi
+			//	//// float allowedRotationRadians = allowedRotation * std::numbers::pi / 180.0f;
+
+			//	// Rotate the camera by the allowed amount
+			//	//// cameraArm->Rotate(cameraRight, allowedRotationRadians);
+
+			//	Eigen::Quaternionf q;
+
+			//	// Convert Euler angles to quaternions
+			//	Eigen::AngleAxisf rollAngle(cameraEulerAngles.z(), Eigen::Vector3f::UnitX());
+			//	Eigen::AngleAxisf pitchAngle(cameraEulerAngles.x(), Eigen::Vector3f::UnitY());
+			//	Eigen::AngleAxisf yawAngle(cameraEulerAngles.y(), Eigen::Vector3f::UnitZ());
+
+			//	// Combine the individual quaternions
+			//	q = yawAngle * pitchAngle * rollAngle;
+
+			//	cameraArm->SetLocalRotation(q);
+			//}
+		}
 	}
 
 	void Controller::HandsUp()

@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "GameLoop.h"
 #include "SceneManager.h"
 #include "GraphicsManager.h"
@@ -57,6 +59,14 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	// 弊 扩档快甫 积己
 	hWnd = CreateWindowW(gameName, gameName, WS_OVERLAPPEDWINDOW,
 		0, 0, width, height, NULL, NULL, hInstance, NULL);
+
+#ifdef _DEBUG
+	{
+		// 能贾芒 积己
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+	}
+#endif
 
 	SetMenu(hWnd, NULL);
 
@@ -136,6 +146,10 @@ void PurahEngine::GameLoop::Finalize()
 	GraphicsManager::GetInstance().Finalize();
 	PhysicsSystem::GetInstance().Finalize();
 	GamePadManager::Instance().Release();
+
+#ifdef _DEBUG
+	FreeConsole();
+#endif
 }
 
 void PurahEngine::GameLoop::run()

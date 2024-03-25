@@ -20,6 +20,7 @@ namespace PurahEngine
 	public:
 		void Awake();
 		void Initialize();
+		void OnDataLoadComplete();
 		void Update();
 
 	public:
@@ -31,7 +32,6 @@ namespace PurahEngine
 	private:
 		Transform* soundTransform;
 		std::wstring soundName;
-		std::wstring filePath;
 	};
 }
 

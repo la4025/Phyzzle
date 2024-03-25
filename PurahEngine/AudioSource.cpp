@@ -26,7 +26,13 @@ void PurahEngine::AudioSource::Initialize()
 
 	soundTransform = GetGameObject()->GetTransform();
 
-	soundManager.LoadEffectSound(L"Effect_Test003", L"../Sound/Effect/Test/EffectTest003.mp3", soundTransform, this);
+	
+}
+
+void PurahEngine::AudioSource::OnDataLoadComplete()
+{
+	auto& soundManager = PurahEngine::SoundManager::GetInstance();
+	soundManager.LoadSound(soundName, soundTransform, this, SoundType::EFFECT);
 }
 
 void PurahEngine::AudioSource::Update()
@@ -39,7 +45,7 @@ void PurahEngine::AudioSource::Update()
 
 	if (inputManager.IsKeyDown(eKey::eKEY_0) == true)
 	{
-		soundManager.PlayEffect(L"Effect_Test003", this);
+		soundManager.PlayEffect(L"EffectTest003.mp3", this);
 	}
 }
 
@@ -52,7 +58,6 @@ void PurahEngine::AudioSource::PreDeserialize(const json& jsonData)
 {
 	PREDESERIALIZE_BASE();
 	PREDESERIALIZE_WSTRING(soundName);
-	PREDESERIALIZE_WSTRING(filePath);
 }
 
 void PurahEngine::AudioSource::PostSerialize(json& jsonData) const

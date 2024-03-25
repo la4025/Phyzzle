@@ -281,6 +281,7 @@ namespace ZonaiPhysics
 		pxBody->setGlobalPose(t, false);
 	}
 
+
 	void RigidBodyHelper::SetForceAndTorque(void* _pxBody, const Eigen::Vector3f& _force,
 		const Eigen::Vector3f& _torque, ForceType _type)
 	{
