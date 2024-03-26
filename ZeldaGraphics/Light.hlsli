@@ -51,6 +51,7 @@ float CalculateShadowFactor(SamplerComparisonState shadowsampler, Texture2D posi
     const float depthBias = 0.001f;
     
     float result[9];
+    [unroll]
     for (int i = 0; i < 9; i++)
     {
         float shadowDepth = shadowMap.Sample(Sampler, uv + offsets[i]).r;
