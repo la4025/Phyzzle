@@ -56,7 +56,12 @@ namespace ZonaiPhysics
 	PrismaticJoint::PrismaticJoint(physx::PxPrismaticJoint* _pxJoint, RigidBody* _znBody0, RigidBody* _znBody1, const physx::PxTolerancesScale* _pxScale):
 		tolerances(_pxScale)
 	{
+		assert(_pxJoint != nullptr);
 		joint = _pxJoint;
+
+		const auto constrain = joint->getConstraint();
+		constrain->userData = this;
+
 		rigidbody0 = _znBody0;
 		rigidbody1 = _znBody1;
 	}

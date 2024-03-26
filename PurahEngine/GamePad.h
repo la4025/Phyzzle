@@ -6,6 +6,8 @@
 #include <Xinput.h>
 //
 
+#include <set>
+
 #include "ePad.h"
 #include "PurahEngineAPI.h"
 #pragma comment(lib, "Xinput.lib")
@@ -66,8 +68,11 @@ namespace PurahEngine
 		/// 진동
 		bool				Vibrate(int _left, int _right) const;
 		bool				VibrateRatio(float _left, float _right) const;
+
 		void				Vibrate(int, int, float _time) const;
 		void				VibrateRatio(float, float, float _time) const;
+
+		void				VibrateOff() const;
 
 		/// 데드존 설정
 		void				SetDeadZone(unsigned int);

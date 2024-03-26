@@ -26,7 +26,7 @@ namespace PurahEngine
         ~Collider() override;
 
     public:
-        void Initialize() override;
+        void OnDataLoadComplete() override;
 
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);

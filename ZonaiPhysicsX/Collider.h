@@ -60,6 +60,8 @@ namespace ZonaiPhysics
 		friend class ZnPhysicsX;
 
 		RigidBody* znBody;
+
+	public:
 		physx::PxShape* pxShape;
 	};
 } // namespace ZonaiPhysics

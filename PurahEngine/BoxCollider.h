@@ -11,7 +11,6 @@ namespace PurahEngine
 		~BoxCollider() override = default;
 
 	public:
-		void Initialize() override;
 		void OnDataLoadComplete() override;
 
 	public:

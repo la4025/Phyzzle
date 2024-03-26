@@ -6,13 +6,10 @@
 
 namespace PurahEngine
 {
-	void BoxCollider::Initialize()
-	{
-		Collider::Initialize();
-	}
-
 	void BoxCollider::OnDataLoadComplete()
 	{
+		Collider::OnDataLoadComplete();
+
 		const auto scale = transform->GetWorldScale();
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateBoxCollider(
@@ -51,6 +48,7 @@ namespace PurahEngine
 	void BoxCollider::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+
 		PREDESERIALIZE_VALUE(cType);
 		PREDESERIALIZE_VECTOR3F(size);
 		PREDESERIALIZE_VALUE(isTrigger);

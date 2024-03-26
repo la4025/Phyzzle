@@ -301,6 +301,7 @@ namespace PurahEngine
 				Vibrate(0, 0);
 			}
 		);
+
 		Vibrate(_left, _right);
 	}
 
@@ -314,7 +315,13 @@ namespace PurahEngine
 				VibrateRatio(0.f, 0.f);
 			}
 		);
+
 		VibrateRatio(_left, _right);
+	}
+
+	void GamePad::VibrateOff() const
+	{
+		VibrateRatio(0.f, 0.f);
 	}
 
 	void GamePad::SetDeadZone(unsigned int _value)

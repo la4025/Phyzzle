@@ -6,13 +6,10 @@
 
 namespace PurahEngine
 {
-	void CapsuleCollider::Initialize()
-	{
-		Collider::Initialize();
-	}
-
 	void CapsuleCollider::OnDataLoadComplete()
 	{
+		Collider::OnDataLoadComplete();
+
 		const auto scale = transform->GetWorldScale();
 
 		const float maxScale = max(scale.x(), scale.z());

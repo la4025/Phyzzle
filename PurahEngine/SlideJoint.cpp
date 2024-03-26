@@ -13,10 +13,10 @@ namespace PurahEngine
 {
 	SlideJoint::~SlideJoint()
 	{
-	}
+		auto& instance = PhysicsSystem::GetInstance();
 
-	void SlideJoint::Initialize()
-	{
+		instance.FreeObject(joint, GetGameObject());
+		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
 	void SlideJoint::OnDataLoadComplete()
@@ -32,6 +32,7 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor }
 		);
 
+		PhysicsSystem::GetInstance().joints.push_back(this);
 		joint->SetUserData(this);
 
 		// spring

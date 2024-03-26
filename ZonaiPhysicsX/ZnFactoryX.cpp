@@ -131,7 +131,7 @@ namespace ZonaiPhysics
 		const auto scene = pxFactory->createScene(sceneDesc);
 		scene->userData = _userScene;
 
-#ifdef _DEBUG
+#ifdef PX_SUPPORT_PVD
 		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 10.f);
 		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 10.f);
 
@@ -320,8 +320,8 @@ namespace ZonaiPhysics
 	{
 		assert(_znBody0 != nullptr && _znBody1 != nullptr);
 
-		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		const auto pxbody0 = _znBody0->pxBody;
+		const auto pxbody1 = _znBody1->pxBody;
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 

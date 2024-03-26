@@ -11,12 +11,10 @@ namespace PurahEngine
 {
 	BallJoint::~BallJoint()
 	{
+		auto& instance = PhysicsSystem::GetInstance();
 
-	}
-
-	void BallJoint::Initialize()
-	{
-
+		instance.FreeObject(joint, GetGameObject());
+		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
 	void BallJoint::OnDataLoadComplete()
@@ -32,12 +30,13 @@ namespace PurahEngine
 			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
+		PhysicsSystem::GetInstance().joints.push_back(this);
 		joint->SetUserData(this);
 
 		LimitEnable(useLimit);
 		SetLimitAngle(swingLimitY, swingLimitZ);
 
-		// pring
+		// spring
 		{
 			float setSpring = 0.f;
 			float setDamper = 0.f;
