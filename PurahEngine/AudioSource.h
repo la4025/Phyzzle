@@ -22,6 +22,7 @@ namespace PurahEngine
 		void Initialize();
 		void OnDataLoadComplete();
 		void Update();
+		std::wstring GetSoundName();
 
 	public:
 		void PreSerialize(json& jsonData) const override;

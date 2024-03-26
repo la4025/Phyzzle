@@ -3,6 +3,7 @@
 #include "GameObject.h"
 
 #include "InputManager.h"
+#include "GamePadManager.h"
 
 PurahEngine::AudioSource::AudioSource()
 	: soundTransform(nullptr)
@@ -12,6 +13,8 @@ PurahEngine::AudioSource::AudioSource()
 
 PurahEngine::AudioSource::~AudioSource()
 {
+	auto& soundManager = PurahEngine::SoundManager::GetInstance();
+	soundManager.ReleaseSound(this);
 
 }
 
@@ -26,7 +29,7 @@ void PurahEngine::AudioSource::Initialize()
 
 	soundTransform = GetGameObject()->GetTransform();
 
-	
+
 }
 
 void PurahEngine::AudioSource::OnDataLoadComplete()
@@ -39,14 +42,14 @@ void PurahEngine::AudioSource::Update()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
-
+	auto pad = PurahEngine::GamePadManager::GetGamePad(0);
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
+}
 
-	if (inputManager.IsKeyDown(eKey::eKEY_0) == true)
-	{
-		soundManager.PlayEffect(soundName, this);
-	}
+std::wstring PurahEngine::AudioSource::GetSoundName()
+{
+	return soundName;
 }
 
 void PurahEngine::AudioSource::PreSerialize(json& jsonData) const

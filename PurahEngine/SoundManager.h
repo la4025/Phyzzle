@@ -21,6 +21,8 @@ namespace PurahEngine
 
 		void LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type);
 		
+		void ReleaseSound(AudioSource* audioSource);
+
 		void LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource);
 
 		void LoadEffectSound(const std::wstring& soundName, Transform* transform, AudioSource* audioSource);
