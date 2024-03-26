@@ -45,7 +45,7 @@ void PurahEngine::AudioSource::Update()
 
 	if (inputManager.IsKeyDown(eKey::eKEY_0) == true)
 	{
-		soundManager.PlayEffect(L"EffectTest003.mp3", this);
+		soundManager.PlayEffect(soundName, this);
 	}
 }
 
