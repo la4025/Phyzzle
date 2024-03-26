@@ -12,8 +12,6 @@ namespace PurahEngine
 
 	void Controller::Awake()
 	{
-		moveSpeed = 3.f;
-		sensitivity = 45.f;
 	}
 
 	void Controller::Start()

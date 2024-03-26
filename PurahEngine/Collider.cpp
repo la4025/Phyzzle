@@ -31,13 +31,14 @@ namespace PurahEngine
         break;
 
         default:
-            throw"";
+            assert(false);
+            break;
         }
            
         physicsSystem.FreeObject(znCollider, GetGameObject());
     }
 
-	void Collider::Initialize()
+	void Collider::OnDataLoadComplete()
 	{
         this->transform = gameObject->GetTransform();
 
@@ -52,7 +53,8 @@ namespace PurahEngine
             break;
 
         default:
-            throw"";
+            assert(false);
+            break;
         }
 	}
 

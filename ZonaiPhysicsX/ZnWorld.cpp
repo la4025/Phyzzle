@@ -232,9 +232,10 @@ namespace ZonaiPhysics
 			const auto pxBody = static_cast<physx::PxRigidDynamic*>(_znBody->pxBody);
 			scene->removeActor(*pxBody);
 
-			bodies.erase(_userData);
-
 			delete znBody;
+
+			bodies.erase(_userData);
+			znBody = nullptr;
 		}
 		// 안 비어있으면 삭제시키면 안됨
 		else
@@ -256,9 +257,10 @@ namespace ZonaiPhysics
 		auto& colliders = colliderList[scene];
 		auto& shapes = colliders[_userData];
 
-		shapes.erase(std::ranges::find(shapes, _znShape));
-
 		delete _znShape;
+
+		shapes.erase(std::ranges::find(shapes, _znShape));
+		_znShape = nullptr;
 
 		// 콜라이더가 비어있네?
 		if (shapes.empty())
@@ -273,9 +275,10 @@ namespace ZonaiPhysics
 				const auto pxBody = static_cast<physx::PxRigidDynamic*>(znBody->pxBody);
 				scene->removeActor(*pxBody);
 
-				bodies.erase(_userData);
-
 				delete znBody;
+
+				bodies.erase(_userData);
+				znBody = nullptr;
 			}
 		}
 	}
@@ -323,9 +326,10 @@ namespace ZonaiPhysics
 	{
 		assert(_znJoint != nullptr);
 
+		delete _znJoint;
 		jointList.erase(std::ranges::find(jointList, _znJoint));
 
-		delete _znJoint;
+		_znJoint = nullptr;
 	}
 
 	void ZnWorld::AddMaterial(uint32_t _id, physx::PxMaterial* _material)

@@ -1,13 +1,59 @@
 {
   "gameObjects": [
     {
+      "__Base__instanceID": -10464,
+      "name": "Hand",
+      "transform": {
+        "__Base__instanceID": -10466,
+        "position": {
+          "x": 0.0,
+          "y": -1.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5
+        },
+        "__ID__parentTransform": [
+          23266
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -10868,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "isTrigger": true,
+          "layer": 0,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 1.04,
+            "z": 1.44
+          },
+          "size": {
+            "x": 1.93,
+            "y": 1.97,
+            "z": 1.39
+          }
+        }
+      ]
+    },
+    {
       "__Base__instanceID": 22994,
       "name": "Player",
       "transform": {
         "__Base__instanceID": 22996,
         "position": {
           "x": -1.74,
-          "y": 0.0,
+          "y": 0.06,
           "z": 0.0
         },
         "rotation": {
@@ -42,7 +88,7 @@
           "__Base__instanceID": 23006,
           "__Base__Component": "Controller",
           "detect": false,
-          "moveSpeed": 5.0,
+          "moveSpeed": 50.0,
           "sensitivity": 90.0,
           "__ID__playerRigidbody": 23002,
           "__ID__modelCore": 23266,
@@ -119,7 +165,7 @@
       "transform": {
         "__Base__instanceID": 23034,
         "position": {
-          "x": -5.02000046,
+          "x": -5.481001,
           "y": 12.1999979,
           "z": 16.710001
         },
@@ -216,7 +262,7 @@
       "transform": {
         "__Base__instanceID": 23054,
         "position": {
-          "x": -4.1,
+          "x": -4.561,
           "y": 11.17,
           "z": 16.52
         },
@@ -348,7 +394,7 @@
       "transform": {
         "__Base__instanceID": 23090,
         "position": {
-          "x": -2.65,
+          "x": -3.1110003,
           "y": 14.06,
           "z": 14.74
         },
@@ -451,16 +497,16 @@
           }
         },
         {
-          "__Base__instanceID": 23102,
+          "__Base__instanceID": -9412,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
-          "shadow": true,
-          "textureName": "",
-          "r": 0.200000018,
-          "g": 0.21960786,
-          "b": 0.247058839,
-          "a": 1.0
+          "shadow": false,
+          "textureName": "Grid/Grid.jpg",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0
         }
       ]
     },
@@ -536,7 +582,7 @@
       "transform": {
         "__Base__instanceID": 23142,
         "position": {
-          "x": -1.56899977,
+          "x": -2.03,
           "y": 14.0800009,
           "z": 14.76
         },
@@ -744,22 +790,22 @@
           },
           "__ID__connectedBody": 23192,
           "connectedLocalAnchor": {
-            "x": 0.276446819,
-            "y": 1.91144562,
+            "x": 0.03394424,
+            "y": 1.93756783,
             "z": 0.0
           },
           "connectedLocalAnchorRotation": {
-            "w": -0.382683456,
+            "w": 0.6755902,
             "x": 0.0,
             "y": 0.0,
-            "z": 0.9238795
+            "z": -0.7372773
           },
           "useSpring": false,
           "spring": 0.0,
           "damping": 0.0,
           "useLimit": true,
-          "swingLimitY": 60.0,
-          "swingLimitZ": 60.0,
+          "swingLimitY": 30.0,
+          "swingLimitZ": 30.0,
           "bounciness": 0.0,
           "breakForce": 3.40282347E+38,
           "breakTorque": 3.40282347E+38,
@@ -815,15 +861,15 @@
       "transform": {
         "__Base__instanceID": 23204,
         "position": {
-          "x": -4.05,
-          "y": 15.535,
+          "x": -5.045,
+          "y": 15.984,
           "z": 16.0
         },
         "rotation": {
           "x": 0.0,
           "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
+          "z": -0.3420201,
+          "w": 0.9396927
         },
         "scale": {
           "x": 1.0,
@@ -935,8 +981,8 @@
             "z": 0.0
           },
           "useSpring": true,
-          "spring": 10.0,
-          "damper": 0.2,
+          "spring": 5.0,
+          "damper": 20.0,
           "useMinDistance": true,
           "minDistance": 3.0,
           "useMaxDistance": true,
@@ -1180,7 +1226,7 @@
           "damper": 0.0,
           "targetPosition": 0.0,
           "setMotor": true,
-          "velocity": -3.0,
+          "velocity": -10.0,
           "force": 50.0,
           "freeSpin": false,
           "useLimit": false,
@@ -1220,7 +1266,8 @@
           22996
         ],
         "__ID__children": [
-          23180
+          23180,
+          -10466
         ]
       },
       "components": [
