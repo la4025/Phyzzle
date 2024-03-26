@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZeldaFBXLoader", "ZeldaFBXLoader\ZeldaFBXLoader.vcxproj", "{00DD1113-33FA-44D8-847A-027EE8CBC5D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Mt|x64 = Mt|x64
+		Mt|x86 = Mt|x86
+		Mtd|x64 = Mtd|x64
+		Mtd|x86 = Mtd|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Debug|x64.ActiveCfg = Debug|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Debug|x64.Build.0 = Debug|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Debug|x86.Build.0 = Debug|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mt|x64.ActiveCfg = Mt|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mt|x64.Build.0 = Mt|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mt|x86.ActiveCfg = Mt|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mt|x86.Build.0 = Mt|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mtd|x64.ActiveCfg = Mtd|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mtd|x64.Build.0 = Mtd|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mtd|x86.ActiveCfg = Mtd|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Mtd|x86.Build.0 = Mtd|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Release|x64.ActiveCfg = Release|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Release|x64.Build.0 = Release|x64
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Release|x86.ActiveCfg = Release|Win32
+		{00DD1113-33FA-44D8-847A-027EE8CBC5D6}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5CC2C22-D021-4B67-8FA7-E96F96736E17}
+	EndGlobalSection
+EndGlobal

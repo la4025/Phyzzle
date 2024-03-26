@@ -24,7 +24,6 @@ namespace PurahEngine
 		startPosition = modelCore->GetWorldPosition();
 		startRotation = modelCore->GetWorldRotation();
 
-		// playerRigidbody = gameObject->GetComponent<RigidBody>();
 		startLinearVelocity = playerRigidbody->GetLinearVelocity();
 		startAngularVelocity = playerRigidbody->GetAngularVelocity();
 	}
@@ -39,9 +38,6 @@ namespace PurahEngine
 
 	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const Collider* collider)
 	{
-		// std::cout << "Enter" << std::endl;
-
-		std::cout << zn_collision.otherLinearVelocity << std::endl;
 	}
 
 	void Controller::GamePadInput()
@@ -101,16 +97,18 @@ namespace PurahEngine
 
 		// Eigen::Vector3f localForward = modelCore->GetLocalRotation() * Eigen::Vector3f::UnitZ();
 
-		if (!movementDirection.isZero())
+		if (movementDirection.isZero())
 		{
-			Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
-
-			// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
-			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
-
-			// Set the rotation of the transform to the target rotation
-			modelCore->SetLocalRotation(targetRotation);
+			return;
 		}
+
+		Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
+
+		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
+		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
+
+		// Set the rotation of the transform to the target rotation
+		modelCore->SetLocalRotation(targetRotation);
 	}
 
 	void Controller::RotateCamera()
@@ -155,31 +153,6 @@ namespace PurahEngine
 
 			// 카메라의 right 기준으로 카메라를 회전
 			 cameraArm->Rotate(cameraRight, pitchAngle);
-
-			//// If the new pitch angle exceeds the limit, prevent further rotation
-			//if (newPitchDegrees != currentPitchDegrees) 
-			//{
-			//	// Calculate the amount of rotation allowed
-			//	//// float allowedRotation = newPitchDegrees - currentPitchDegrees;
-
-			//	// Convert allowed rotation back to std::numbers::pi
-			//	//// float allowedRotationRadians = allowedRotation * std::numbers::pi / 180.0f;
-
-			//	// Rotate the camera by the allowed amount
-			//	//// cameraArm->Rotate(cameraRight, allowedRotationRadians);
-
-			//	Eigen::Quaternionf q;
-
-			//	// Convert Euler angles to quaternions
-			//	Eigen::AngleAxisf rollAngle(cameraEulerAngles.z(), Eigen::Vector3f::UnitX());
-			//	Eigen::AngleAxisf pitchAngle(cameraEulerAngles.x(), Eigen::Vector3f::UnitY());
-			//	Eigen::AngleAxisf yawAngle(cameraEulerAngles.y(), Eigen::Vector3f::UnitZ());
-
-			//	// Combine the individual quaternions
-			//	q = yawAngle * pitchAngle * rollAngle;
-
-			//	cameraArm->SetLocalRotation(q);
-			//}
 		}
 	}
 

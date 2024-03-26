@@ -131,7 +131,7 @@ namespace ZonaiPhysics
 		const auto scene = pxFactory->createScene(sceneDesc);
 		scene->userData = _userScene;
 
-#ifdef _DEBUG
+#ifdef PX_SUPPORT_PVD
 		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 10.f);
 		scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 10.f);
 
