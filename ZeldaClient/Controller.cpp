@@ -1,9 +1,12 @@
-#include "Controller.h"
 
 #include "TimeController.h"
 #include "Tween.h"
 #include <algorithm>
 #include <iostream>
+
+#include "PhysicsSystem.h"
+
+#include "Controller.h"
 
 namespace PurahEngine
 {
@@ -32,7 +35,29 @@ namespace PurahEngine
 	{
 		GamePadInput();
 		RotateCamera();
-		// UpdateCamera();
+
+		switch (state)
+		{
+		case State::IDLE:
+		{
+			
+		}
+		break;
+
+
+		case State::RUNNING:
+		{
+			
+		}
+		break;
+
+		default:
+		{
+			
+		}
+		break;
+		}
+
 		Move();
 	}
 
@@ -74,14 +99,10 @@ namespace PurahEngine
 
 		Eigen::Vector3f movementDirection = forward * LstickY + right * LstickX;
 
-		std::wstring WString = std::to_wstring(LstickX) + L", " + std::to_wstring(LstickY) + L"\n";
-
-		OutputDebugStringW(WString.c_str());
-
 		movementDirection.y() = 0.f;
 
 		// 속도 벡터를 계산
-		Eigen::Vector3f movement = movementDirection * moveSpeed * LstickSize;
+		movement = movementDirection * moveSpeed * LstickSize;
 
 		Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
 
@@ -97,11 +118,31 @@ namespace PurahEngine
 
 		// Eigen::Vector3f localForward = modelCore->GetLocalRotation() * Eigen::Vector3f::UnitZ();
 
-		if (movementDirection.isZero())
+		static bool lastbool = false;
+		static bool currentbool = false;
+
+		lastbool = currentbool;
+		currentbool = movementDirection.isZero();
+
+		if (lastbool != currentbool)
+		{
+			if (currentbool)
+			{
+				animator->Play(L"Armature|Armature|Armature|idle");
+			}
+			else
+			{
+				animator->Play(L"Armature|Armature|Armature|running");
+			}
+			return;
+		}
+
+		if (currentbool)
 		{
 			return;
 		}
 
+		animator->SetPlaySpeed(L"Armature|Armature|Armature|running", LstickSize);
 		Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
 
 		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
@@ -185,5 +226,6 @@ namespace PurahEngine
 		POSTDESERIALIZE_PTR(modelCore);
 		POSTDESERIALIZE_PTR(cameraArm);
 		POSTDESERIALIZE_PTR(cameraCore);
+		POSTDESERIALIZE_PTR(animator);
 	}
 }

@@ -52,7 +52,7 @@ namespace PurahEngine
 		callbackSystem = new EventCallbackSystem;
 
 		physics->Initialize(callbackSystem);
-		physics->CreateScene(this, {0, -9.81, 0});
+		physics->CreateScene(this, {0, -9.81f * 10.f, 0});
 		physics->LoadScene(this);
 	}
 

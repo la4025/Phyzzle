@@ -7,9 +7,17 @@ namespace PurahEngine
 {
 	class ITween;
 
+
+
 	class Controller : public Component
 	{
 	public:
+		enum class State
+		{
+			IDLE,
+			RUNNING,
+		};
+
 		~Controller() override;
 
 		void Awake() override;
@@ -48,6 +56,11 @@ namespace PurahEngine
 		Transform* modelCore;
 		Transform* cameraArm;
 		Transform* cameraCore;
+		Animator* animator;
+
+	private:
+		State state = State::IDLE;
+		Eigen::Vector3f movement = Eigen::Vector3f::Zero();
 
 	private:
 		GamePad* gamePad;

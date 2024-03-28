@@ -1,4 +1,5 @@
 #pragma once
+#include "PurahEngineAPI.h"
 #include <functional>
 #include <queue>
 #include <vector>
@@ -30,7 +31,7 @@ namespace PurahEngine
 	class RigidBody;
 	class Joint;
 
-	class PhysicsSystem
+	class PURAHENGINE_API PhysicsSystem
 	{
 	public:
 		PhysicsSystem() noexcept = default;
@@ -53,6 +54,8 @@ namespace PurahEngine
 		void Simulation(float _dt) const noexcept;
 		void SimulateResult() const;
 		void Finalize() noexcept;
+
+		void SetReverse(bool _value);
 
 	public:
 		void FreeObject(ZonaiPhysics::ZnRigidBody*, void* _gameObject) const;

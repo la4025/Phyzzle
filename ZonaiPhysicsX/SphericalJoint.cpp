@@ -109,12 +109,22 @@ namespace ZonaiPhysics
 		float yAngleRad = (physx::PxPi / 180.f * _yAngle);
 		float zAngleRad = (physx::PxPi / 180.f * _zAngle);
 
-		joint->setLimitCone({ yAngleRad, zAngleRad });
+		auto limit = joint->getLimitCone();
+
+		limit.yAngle = yAngleRad;
+		limit.zAngle = zAngleRad;
+
+		joint->setLimitCone(limit);
 	}
 
 	void SphericalJoint::SetLimitRadian(float _yRadian, float _zRadian)
 	{
-		joint->setLimitCone({ _yRadian, _zRadian });
+		auto limit = joint->getLimitCone();
+
+		limit.yAngle = _yRadian;
+		limit.zAngle = _zRadian;
+
+		joint->setLimitCone(limit);
 	}
 
 	void SphericalJoint::SetSpringArg(float _stiffness, float _damping)
