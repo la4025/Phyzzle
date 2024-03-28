@@ -15,7 +15,6 @@ PurahEngine::AudioSource::~AudioSource()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	soundManager.ReleaseSound(this);
-
 }
 
 void PurahEngine::AudioSource::Awake()
@@ -28,8 +27,6 @@ void PurahEngine::AudioSource::Initialize()
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 
 	soundTransform = GetGameObject()->GetTransform();
-
-
 }
 
 void PurahEngine::AudioSource::OnDataLoadComplete()
@@ -41,8 +38,6 @@ void PurahEngine::AudioSource::OnDataLoadComplete()
 void PurahEngine::AudioSource::Update()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	auto& inputManager = PurahEngine::InputManager::Getinstance();
-	auto pad = PurahEngine::GamePadManager::GetGamePad(0);
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
 }

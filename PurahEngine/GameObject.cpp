@@ -185,17 +185,6 @@ std::wstring PurahEngine::GameObject::GetName()
 	return name;
 }
 
-void PurahEngine::GameObject::SetTag(std::wstring tagName)
-{
-	tag.push_back(tagName);
-	PurahEngine::EngineSetting::GetInstance().SetTag(tagName, this);
-}
-
-std::vector<std::wstring> PurahEngine::GameObject::GetTag()
-{
-	return tag;
-}
-
 void PurahEngine::GameObject::PreSerialize(json& jsonData) const
 {
 
@@ -211,6 +200,15 @@ void PurahEngine::GameObject::PreDeserialize(const json& jsonData)
 		Component* component = AddComponentToString(jsonData["components"][i]["__Base__Component"]);
 		component->PreDeserialize(jsonData["components"][i]);
 	}
+
+	std::vector<std::wstring> tags;
+	for (int i = 0; i < jsonData["tag"].size(); i++)
+	{
+		std::string tagName = jsonData["tag"][i];
+		std::wstring wtagName(tagName.begin(), tagName.end());
+		tags.push_back(wtagName);
+	}
+	tag = tags;
 }
 
 void PurahEngine::GameObject::PostSerialize(json& jsonData) const
@@ -255,8 +253,6 @@ PurahEngine::GameObject::~GameObject()
 		delete componentList[i];
 	}
 	componentList.clear();
-
-	tag.clear();
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)

@@ -86,6 +86,7 @@
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="BallJoint.h" />
     <ClInclude Include="SpringJoint.h" />
+    <ClInclude Include="Tag.h" />
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimerHandler.h" />
@@ -133,6 +134,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="BallJoint.cpp" />
     <ClCompile Include="SpringJoint.cpp" />
+    <ClCompile Include="Tag.cpp" />
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerHandler.cpp" />

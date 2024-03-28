@@ -3,6 +3,7 @@
 #include "SerializableDefine.h"
 #include "Transform.h"
 #include "ComponentFactory.h"
+#include "Tag.h"
 
 #include <vector>
 #include <string>
@@ -79,9 +80,6 @@ namespace PurahEngine
 
 		std::wstring GetName();
 
-		void SetTag(std::wstring tagName);
-		std::vector<std::wstring> GetTag();
-
 	public:
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
@@ -92,6 +90,7 @@ namespace PurahEngine
 	private:
 		// ComponentList·Î Component °ü¸®
 		std::vector<Component*> componentList;
+		Tag tag;
 
 	private:
 		GameObject(std::wstring objectname);
@@ -106,8 +105,6 @@ namespace PurahEngine
 			DISABLE,
 			DESTROY
 		};
-
-		std::vector<std::wstring> tag;
 
 		ObjectState state;
 		std::wstring name;

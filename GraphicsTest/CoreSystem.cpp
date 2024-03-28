@@ -277,6 +277,7 @@ void CoreSystem::run()
 		hnsTextureID = renderer->CreateTexture(L"hns.jpg");
 		msTextureID = renderer->CreateTexture(L"exit_cursor.png");
 		cubeMapID = TextureID::ID_NULL;
+		//cubeMapID = renderer->CreateTexture(L"earth-cubemap.dds");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Building\\Building.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
@@ -291,8 +292,8 @@ void CoreSystem::run()
 
 		fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
 
-		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
-		dirLightID2 = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID2 = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
 		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, pointLightPos, pointLightRange);
 
 		mainCameraID = renderer->CreateCamera();
@@ -655,6 +656,7 @@ void CoreSystem::run()
 		0,		0,		0,		1;
 
 	renderer->DrawCube(floorMatrix, scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f);
+	//renderer->DrawCube(floorMatrix, TextureID::ID_NULL, false, true, 0.3f, 0.3f, 0.3f, 1.0f);
 
 	renderer->DrawCubeMap(cubeMapID);
 

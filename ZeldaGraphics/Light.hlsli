@@ -48,13 +48,21 @@ float CalculateShadowFactor(SamplerComparisonState shadowsampler, Texture2D posi
     uv.y = -uv.y;
     uv = uv * 0.5f + 0.5f;
     
-    const float depthBias = 0.001f;
+    if (uv.x < 0)
+        return 1.0f;
+    if (uv.x > 1)
+        return 1.0f;
+    if (uv.y < 0)
+        return 1.0f;
+    if (uv.y > 1)
+        return 1.0f;
     
     float result[9];
+    [unroll]
     for (int i = 0; i < 9; i++)
     {
         float shadowDepth = shadowMap.Sample(Sampler, uv + offsets[i]).r;
-        result[i] = (shadowDepth + depthBias) >= depth;
+        result[i] = shadowDepth >= depth;
     }
     
     float interpolatedResult =
@@ -111,8 +119,11 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 di
         //diffuse = diffuseFactor * lights[lightIndex].color.diffuse;
         //specular = specFactor * lights[lightIndex].color.specular;
         
+        
         float4 worldPos = mul(float4(viewPos, 1.0f), inverse(viewMatrix));
-        float4 shadowClipPos = mul(mul(worldPos, lightViewMatrix), lightProjectionMatrix);
+        float4 lightViewPos = mul(worldPos, lightViewMatrix);
+        lightViewPos.z -= shadowMapDepthBias; // View좌표계에서 Depth Bias 적용
+        float4 shadowClipPos = mul(lightViewPos, lightProjectionMatrix);
         
         float shadow = CalculateShadowFactor(ShadowSampler, Temp0Map, Temp2Map, shadowClipPos, shadowMapSize);
         

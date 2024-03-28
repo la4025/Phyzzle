@@ -778,7 +778,7 @@ void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, unsigned int s
 
 void ZeldaDX11Renderer::SetExtraOption(float shadowMapDepthBias)
 {
-
+	ShadowMap::DepthBias = shadowMapDepthBias;
 }
 
 void ZeldaDX11Renderer::SetDebugMode(DebugMode mode)
@@ -1758,6 +1758,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLi
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	// Instancing 사용
@@ -1842,6 +1843,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaL
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	// Instancing 사용
@@ -1874,6 +1876,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(BlendingAnimationRenderInfo render
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	UseWireFrameRasterState(renderInfo.wireFrame);
