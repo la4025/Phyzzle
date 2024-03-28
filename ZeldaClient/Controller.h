@@ -17,6 +17,8 @@ namespace PurahEngine
 
 		void Update() override;
 
+		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*) override;
+
 	private:
 		void GamePadInput();
 		void Move();

@@ -22,7 +22,7 @@ namespace ZonaiPhysics
 		virtual void OnSleep(ZnRigidBody const*) = 0;
 
 		// Á¦¾à ÆÄ±«
-		virtual void OnConstraintBreak(ZnJoint const*) = 0;
+		virtual void OnConstraintBreak(ZnJoint*) = 0;
 
 		virtual void OnTriggerEnter(ZnCollider const*, ZnCollider const*) = 0;
 		virtual void OnTriggerStay(ZnCollider const*, ZnCollider const*) = 0;

@@ -55,5 +55,6 @@ namespace ZonaiPhysics
 		virtual void		EnablePreprocessing(bool) = 0;
 
 		virtual void		SetUserData(void* _userData) = 0;
+		virtual void*		GetUserData() = 0;
 	};
 }

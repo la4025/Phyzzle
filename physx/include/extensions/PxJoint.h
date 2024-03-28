@@ -1,4 +1,4 @@
-// Redistribution and use in source and binary forms, with or without
+ï»¿// Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
 //  * Redistributions of source code must retain the above copyright
@@ -106,110 +106,110 @@ class PxJoint : public PxBase
 public:
 
 	/**
-	\brief ÀÌ Á¶ÀÎÆ®ÀÇ ¾×ÅÍ¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	\brief ì´ ì¡°ì¸íŠ¸ì˜ ì•¡í„°ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	¾×ÅÍ´Â ¿ùµå ÇÁ·¹ÀÓÀ» ³ªÅ¸³»±â À§ÇØ NULLÀÏ ¼ö ÀÖ½À´Ï´Ù. ¾×ÅÍ Áß ÃÖ´ë ÇÏ³ª¸¸ NULLÀÏ ¼ö ÀÖ½À´Ï´Ù.
+	ì•¡í„°ëŠ” ì›”ë“œ í”„ë ˆìž„ì„ ë‚˜íƒ€ë‚´ê¸° ìœ„í•´ NULLì¼ ìˆ˜ ìžˆìŠµë‹ˆë‹¤. ì•¡í„° ì¤‘ ìµœëŒ€ í•˜ë‚˜ë§Œ NULLì¼ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
 
-	\param[in] actor0 Ã¹ ¹øÂ° ¾×ÅÍ.
-	\param[in] actor1 µÎ ¹øÂ° ¾×ÅÍ
+	\param[in] actor0 ì²« ë²ˆì§¸ ì•¡í„°.
+	\param[in] actor1 ë‘ ë²ˆì§¸ ì•¡í„°
 
 	@see getActors()
 	*/
 	virtual void				setActors(PxRigidActor* actor0, PxRigidActor* actor1)	= 0;
 
 	/**
-	\brief ÀÌ Á¶ÀÎÆ®ÀÇ ¾×ÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+	\brief ì´ ì¡°ì¸íŠ¸ì˜ ì•¡í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
 
-	\param[out] actor0 Ã¹ ¹øÂ° ¾×ÅÍ.
-	\param[out] actor1 µÎ ¹øÂ° ¾×ÅÍ
+	\param[out] actor0 ì²« ë²ˆì§¸ ì•¡í„°.
+	\param[out] actor1 ë‘ ë²ˆì§¸ ì•¡í„°
 
 	@see setActors()
 	*/
 	virtual void				getActors(PxRigidActor*& actor0, PxRigidActor*& actor1)	const	= 0;
 
 	/**
-	\brief ¾×ÅÍÀÇ Á¶ÀÎÆ® ·ÎÄÃ Æ÷Áî¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	\brief ì•¡í„°ì˜ ì¡°ì¸íŠ¸ ë¡œì»¬ í¬ì¦ˆë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	ÀÌ°ÍÀº Á¶ÀÎÆ® ÇÁ·¹ÀÓÀ» ¾×ÅÍ¿¡ »ó´ëÀûÀ¸·Î ¹èÄ¡ÇÏ´Â »ó´ëÀûÀÎ Æ÷ÁîÀÔ´Ï´Ù.
+	ì´ê²ƒì€ ì¡°ì¸íŠ¸ í”„ë ˆìž„ì„ ì•¡í„°ì— ìƒëŒ€ì ìœ¼ë¡œ ë°°ì¹˜í•˜ëŠ” ìƒëŒ€ì ì¸ í¬ì¦ˆìž…ë‹ˆë‹¤.
 
-	\param[in] actor Ã¹ ¹øÂ° ¾×ÅÍ´Â 0, µÎ ¹øÂ° ¾×ÅÍ´Â 1ÀÔ´Ï´Ù.
-	\param[in] localPose ÀÌ Á¶ÀÎÆ®ÀÇ ¾×ÅÍ¿¡ ´ëÇÑ ·ÎÄÃ Æ÷ÁîÀÔ´Ï´Ù.
+	\param[in] actor ì²« ë²ˆì§¸ ì•¡í„°ëŠ” 0, ë‘ ë²ˆì§¸ ì•¡í„°ëŠ” 1ìž…ë‹ˆë‹¤.
+	\param[in] localPose ì´ ì¡°ì¸íŠ¸ì˜ ì•¡í„°ì— ëŒ€í•œ ë¡œì»¬ í¬ì¦ˆìž…ë‹ˆë‹¤.
 
 	@see getLocalPose()
 	*/
 	virtual void				setLocalPose(PxJointActorIndex::Enum actor, const PxTransform& localPose) = 0;
 
 	/**
-	\brief ¾×ÅÍÀÇ Á¶ÀÎÆ® ·ÎÄÃ Æ÷Áî¸¦ ¾ò½À´Ï´Ù.
+	\brief ì•¡í„°ì˜ ì¡°ì¸íŠ¸ ë¡œì»¬ í¬ì¦ˆë¥¼ ì–»ìŠµë‹ˆë‹¤.
 
-	\param[in] actor Ã¹ ¹øÂ° ¾×ÅÍ´Â 0, µÎ ¹øÂ° ¾×ÅÍ´Â 1ÀÔ´Ï´Ù.
+	\param[in] actor ì²« ë²ˆì§¸ ì•¡í„°ëŠ” 0, ë‘ ë²ˆì§¸ ì•¡í„°ëŠ” 1ìž…ë‹ˆë‹¤.
 
-	Á¶ÀÎÆ®ÀÇ ÀÌ ·ÎÄÃ Æ÷Áî¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+	ì¡°ì¸íŠ¸ì˜ ì´ ë¡œì»¬ í¬ì¦ˆë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 
 	@see setLocalPose()
 	*/
 	virtual PxTransform			getLocalPose(PxJointActorIndex::Enum actor) const = 0;
 
 	/**
-	\brief ÀÌ Á¶ÀÎÆ®ÀÇ »ó´ëÀûÀÎ Æ÷Áî¸¦ ¾ò½À´Ï´Ù.
+	\brief ì´ ì¡°ì¸íŠ¸ì˜ ìƒëŒ€ì ì¸ í¬ì¦ˆë¥¼ ì–»ìŠµë‹ˆë‹¤.
 
-	ÀÌ ÇÔ¼ö´Â actor1ÀÇ Á¶ÀÎÆ® ÇÁ·¹ÀÓÀÇ Æ÷Áî¸¦ actor0¿¡ »ó´ëÀûÀ¸·Î ¹ÝÈ¯ÇÕ´Ï´Ù.
+	ì´ í•¨ìˆ˜ëŠ” actor1ì˜ ì¡°ì¸íŠ¸ í”„ë ˆìž„ì˜ í¬ì¦ˆë¥¼ actor0ì— ìƒëŒ€ì ìœ¼ë¡œ ë°˜í™˜í•©ë‹ˆë‹¤.
 
 	@see setLocalPose()
 	*/
 	virtual PxTransform			getRelativeTransform()	const	= 0;
 
 	/**
-	\brief Á¶ÀÎÆ®ÀÇ »ó´ëÀûÀÎ ¼±Çü ¼Óµµ¸¦ ¾ò½À´Ï´Ù.
+	\brief ì¡°ì¸íŠ¸ì˜ ìƒëŒ€ì ì¸ ì„ í˜• ì†ë„ë¥¼ ì–»ìŠµë‹ˆë‹¤.
 
-	ÀÌ ÇÔ¼ö´Â actor0ÀÇ Á¦¾à Á¶ÀÎÆ® ÇÁ·¹ÀÓÀÇ ¿øÁ¡¿¡ »ó´ëÀûÀÎ actor1ÀÇ Á¦¾à Á¶ÀÎÆ® ÇÁ·¹ÀÓÀÇ ¼±Çü ¼Óµµ¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
-	ÀÌ °ªÀº actor0ÀÇ Á¦¾à Á¶ÀÎÆ® ÇÁ·¹ÀÓ ³»¿¡¼­ ¹ÝÈ¯µË´Ï´Ù.
+	ì´ í•¨ìˆ˜ëŠ” actor0ì˜ ì œì•½ ì¡°ì¸íŠ¸ í”„ë ˆìž„ì˜ ì›ì ì— ìƒëŒ€ì ì¸ actor1ì˜ ì œì•½ ì¡°ì¸íŠ¸ í”„ë ˆìž„ì˜ ì„ í˜• ì†ë„ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+	ì´ ê°’ì€ actor0ì˜ ì œì•½ ì¡°ì¸íŠ¸ í”„ë ˆìž„ ë‚´ì—ì„œ ë°˜í™˜ë©ë‹ˆë‹¤.
 	*/
 	virtual PxVec3				getRelativeLinearVelocity()	const	= 0;
 
 	/**
-	\brief Á¶ÀÎÆ®ÀÇ »ó´ëÀûÀÎ °¢ ¼Óµµ¸¦ ¾ò½À´Ï´Ù.
+	\brief ì¡°ì¸íŠ¸ì˜ ìƒëŒ€ì ì¸ ê° ì†ë„ë¥¼ ì–»ìŠµë‹ˆë‹¤.
 
-	ÀÌ ÇÔ¼ö´Â actor0ÀÇ Á¦¾à Á¶ÀÎÆ® ÇÁ·¹ÀÓ ³»¿¡¼­ ¹ÝÈ¯µÈ °ªÀ» »ç¿ëÇÏ¿© actor1ÀÇ °¢ ¼Óµµ¸¦ actor0¿¡ »ó´ëÀûÀ¸·Î ¹ÝÈ¯ÇÕ´Ï´Ù.
+	ì´ í•¨ìˆ˜ëŠ” actor0ì˜ ì œì•½ ì¡°ì¸íŠ¸ í”„ë ˆìž„ ë‚´ì—ì„œ ë°˜í™˜ëœ ê°’ì„ ì‚¬ìš©í•˜ì—¬ actor1ì˜ ê° ì†ë„ë¥¼ actor0ì— ìƒëŒ€ì ìœ¼ë¡œ ë°˜í™˜í•©ë‹ˆë‹¤.
 	*/
 	virtual PxVec3				getRelativeAngularVelocity()	const	= 0;
 
 	/**
-	\brief ÀÌ Á¶ÀÎÆ®ÀÇ ÆÄ´Ü ÈûÀ» ¼³Á¤ÇÕ´Ï´Ù.
+	\brief ì´ ì¡°ì¸íŠ¸ì˜ íŒŒë‹¨ íž˜ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	Á¶ÀÎÆ®¿¡ °¡ÇØÁö´Â Á¦¾à ÈûÀÌ³ª ÅäÅ©°¡ ÁöÁ¤µÈ °ªº¸´Ù Å©¸é Á¶ÀÎÆ®°¡ ÆÄ´ÜµÇ¸ç,
-	±× ½ÃÁ¡¿¡¼­ µÎ ¾×ÅÍ¸¦ Á¦¾àÇÏÁö ¾ÊÀ¸¸ç PxConstraintFlag::eBROKEN ÇÃ·¡±×°¡ ¼³Á¤µË´Ï´Ù.
-	Èû°ú ÅäÅ©´Â Ã¹ ¹øÂ° ¾×ÅÍÀÇ Á¶ÀÎÆ® ÇÁ·¹ÀÓ¿¡¼­ ÃøÁ¤µË´Ï´Ù.
+	ì¡°ì¸íŠ¸ì— ê°€í•´ì§€ëŠ” ì œì•½ íž˜ì´ë‚˜ í† í¬ê°€ ì§€ì •ëœ ê°’ë³´ë‹¤ í¬ë©´ ì¡°ì¸íŠ¸ê°€ íŒŒë‹¨ë˜ë©°,
+	ê·¸ ì‹œì ì—ì„œ ë‘ ì•¡í„°ë¥¼ ì œì•½í•˜ì§€ ì•Šìœ¼ë©° PxConstraintFlag::eBROKEN í”Œëž˜ê·¸ê°€ ì„¤ì •ë©ë‹ˆë‹¤.
+	íž˜ê³¼ í† í¬ëŠ” ì²« ë²ˆì§¸ ì•¡í„°ì˜ ì¡°ì¸íŠ¸ í”„ë ˆìž„ì—ì„œ ì¸¡ì •ë©ë‹ˆë‹¤.
 
-	\param[in] force ÆÄ´ÜµÇ±â Àü¿¡ Á¶ÀÎÆ®°¡ °¡ÇÒ ¼ö ÀÖ´Â ÃÖ´ë Èû
-	\param[in] torque ÆÄ´ÜµÇ±â Àü¿¡ Á¶ÀÎÆ®°¡ °¡ÇÒ ¼ö ÀÖ´Â ÃÖ´ë ÅäÅ©
+	\param[in] force íŒŒë‹¨ë˜ê¸° ì „ì— ì¡°ì¸íŠ¸ê°€ ê°€í•  ìˆ˜ ìžˆëŠ” ìµœëŒ€ íž˜
+	\param[in] torque íŒŒë‹¨ë˜ê¸° ì „ì— ì¡°ì¸íŠ¸ê°€ ê°€í•  ìˆ˜ ìžˆëŠ” ìµœëŒ€ í† í¬
 	*/
 	virtual void				setBreakForce(PxReal force, PxReal torque)	= 0;
 
 	/**
-	\brief ÀÌ °üÀýÀÇ ÆÄ´Ü ÈûÀ» °¡Á®¿É´Ï´Ù.
+	\brief ì´ ê´€ì ˆì˜ íŒŒë‹¨ íž˜ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
 
-	\param[out] force ÆÄ´ÜÇÏ±â Àü¿¡ °üÀýÀÌ Àû¿ëÇÒ ¼ö ÀÖ´Â ÃÖ´ë Èû
-	\param[out] torque ÆÄ´ÜÇÏ±â Àü¿¡ °üÀýÀÌ Àû¿ëÇÒ ¼ö ÀÖ´Â ÃÖ´ë ÅäÅ©
+	\param[out] force íŒŒë‹¨í•˜ê¸° ì „ì— ê´€ì ˆì´ ì ìš©í•  ìˆ˜ ìžˆëŠ” ìµœëŒ€ íž˜
+	\param[out] torque íŒŒë‹¨í•˜ê¸° ì „ì— ê´€ì ˆì´ ì ìš©í•  ìˆ˜ ìžˆëŠ” ìµœëŒ€ í† í¬
 
 	@see setBreakForce()
 	*/
 	virtual void				getBreakForce(PxReal& force, PxReal& torque)	const	= 0;
 
 	/**
-	\brief ÀÌ °üÀý¿¡ ´ëÇÑ Á¦¾à Á¶°Ç ÇÃ·¡±×¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	\brief ì´ ê´€ì ˆì— ëŒ€í•œ ì œì•½ ì¡°ê±´ í”Œëž˜ê·¸ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	\param[in] flags Á¦¾à Á¶°Ç ÇÃ·¡±×
+	\param[in] flags ì œì•½ ì¡°ê±´ í”Œëž˜ê·¸
 
 	@see PxConstraintFlag
 	*/
 	virtual void				setConstraintFlags(PxConstraintFlags flags)	= 0;
 
 	/**
-	\brief ÀÌ °üÀý¿¡ ´ëÇÑ Á¦¾à Á¶°Ç ÇÃ·¡±×¸¦ ÁöÁ¤µÈ °ªÀ¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+	\brief ì´ ê´€ì ˆì— ëŒ€í•œ ì œì•½ ì¡°ê±´ í”Œëž˜ê·¸ë¥¼ ì§€ì •ëœ ê°’ìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	\param[in] flag Á¦¾à Á¶°Ç ÇÃ·¡±×
-	\param[in] value ÇÃ·¡±×¸¦ ¼³Á¤ÇÒ °ª
+	\param[in] flag ì œì•½ ì¡°ê±´ í”Œëž˜ê·¸
+	\param[in] value í”Œëž˜ê·¸ë¥¼ ì„¤ì •í•  ê°’
 
 	@see PxConstraintFlag
 	*/
@@ -225,36 +225,36 @@ public:
 	virtual PxConstraintFlags	getConstraintFlags()	const	= 0;
 	
 	/**
-	\brief actor0ÀÇ ¿ªÁú·® ½ºÄÉÀÏÀ» ¼³Á¤ÇÕ´Ï´Ù.
+	\brief actor0ì˜ ì—­ì§ˆëŸ‰ ìŠ¤ì¼€ì¼ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	\param[in] invMassScale ÀÌ °üÀýÀ» ÇØ°áÇÏ±â À§ÇØ actor 0ÀÇ ¿ªÁú·®¿¡ Àû¿ëÇÒ ½ºÄÉÀÏ
+	\param[in] invMassScale ì´ ê´€ì ˆì„ í•´ê²°í•˜ê¸° ìœ„í•´ actor 0ì˜ ì—­ì§ˆëŸ‰ì— ì ìš©í•  ìŠ¤ì¼€ì¼
 
 	@see getInvMassScale0
 	*/
 	virtual void				setInvMassScale0(PxReal invMassScale)	= 0;
 
 	/**
-	\brief actor0ÀÇ ¿ªÁú·® ½ºÄÉÀÏÀ» °¡Á®¿É´Ï´Ù.
+	\brief actor0ì˜ ì—­ì§ˆëŸ‰ ìŠ¤ì¼€ì¼ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
 
-	\return actor0ÀÇ ¿ªÁú·® ½ºÄÉÀÏ
+	\return actor0ì˜ ì—­ì§ˆëŸ‰ ìŠ¤ì¼€ì¼
 
 	@see setInvMassScale0
 	*/
 	virtual PxReal				getInvMassScale0()	const	= 0;
 
 	/**
-	\brief actor0ÀÇ ¿ª°ü¼º ½ºÄÉÀÏÀ» ¼³Á¤ÇÕ´Ï´Ù.
+	\brief actor0ì˜ ì—­ê´€ì„± ìŠ¤ì¼€ì¼ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	\param[in] invInertiaScale ÀÌ Á¦¾àÀ» ÇØ°áÇÏ´Â µ¥¿¡ actor0ÀÇ ¿ª°ü¼º¿¡ Àû¿ëÇÒ ½ºÄÉÀÏ
+	\param[in] invInertiaScale ì´ ì œì•½ì„ í•´ê²°í•˜ëŠ” ë°ì— actor0ì˜ ì—­ê´€ì„±ì— ì ìš©í•  ìŠ¤ì¼€ì¼
 
 	@see getInvMassScale0
 	*/
 	virtual void				setInvInertiaScale0(PxReal invInertiaScale)	= 0;
 
 	/**
-	\brief actor0ÀÇ ¿ª°ü¼º ½ºÄÉÀÏÀ» °¡Á®¿É´Ï´Ù.
+	\brief actor0ì˜ ì—­ê´€ì„± ìŠ¤ì¼€ì¼ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
 
-	\return actor0¿¡ ´ëÇÑ ¿ª°ü¼º ½ºÄÉÀÏ
+	\return actor0ì— ëŒ€í•œ ì—­ê´€ì„± ìŠ¤ì¼€ì¼
 
 	@see setInvInertiaScale0
 	*/
@@ -297,30 +297,30 @@ public:
 	virtual PxReal				getInvInertiaScale1()	const	= 0;
 
 	/**
-	\brief Retrieves the PxConstraint corresponding to this joint.
-	
-	This can be used to determine, among other things, the force applied at the joint.
+	\brief ì´ ì¡°ì¸íŠ¸ì— í•´ë‹¹í•˜ëŠ” PxConstraintë¥¼ ê²€ìƒ‰í•©ë‹ˆë‹¤.
 
-	\return the constraint
+	ì´ë¥¼ í†µí•´ ì¡°ì¸íŠ¸ì— ì ìš©ëœ íž˜ì„ í¬í•¨í•˜ì—¬ ì—¬ëŸ¬ ê°€ì§€ë¥¼ ê²°ì •í•˜ëŠ” ë° ì‚¬ìš©í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
+
+	\return ì œì•½ ì¡°ê±´
 	*/
 	virtual PxConstraint*		getConstraint()	const	= 0;
 
 	/**
-	\brief getName()·Î °Ë»öÇÒ ¼ö ÀÖ´Â °³Ã¼ÀÇ ÀÌ¸§ ¹®ÀÚ¿­À» ¼³Á¤ÇÕ´Ï´Ù.
+	\brief getName()ë¡œ ê²€ìƒ‰í•  ìˆ˜ ìžˆëŠ” ê°œì²´ì˜ ì´ë¦„ ë¬¸ìžì—´ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	ÀÌ°ÍÀº µð¹ö±ë¿ëÀÌ¸ç SDK¿¡¼­´Â »ç¿ëµÇÁö ¾Ê½À´Ï´Ù.
-	ÀÌ ¹®ÀÚ¿­Àº SDK¿¡ ÀÇÇØ º¹»çµÇÁö ¾ÊÀ¸¸ç Æ÷ÀÎÅÍ¸¸ ÀúÀåµË´Ï´Ù.
+	ì´ê²ƒì€ ë””ë²„ê¹…ìš©ì´ë©° SDKì—ì„œëŠ” ì‚¬ìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
+	ì´ ë¬¸ìžì—´ì€ SDKì— ì˜í•´ ë³µì‚¬ë˜ì§€ ì•Šìœ¼ë©° í¬ì¸í„°ë§Œ ì €ìž¥ë©ë‹ˆë‹¤.
 
-	\param[in] name °´Ã¼ÀÇ ÀÌ¸§À» ¼³Á¤ÇÒ ¹®ÀÚ¿­ÀÔ´Ï´Ù.
+	\param[in] name ê°ì²´ì˜ ì´ë¦„ì„ ì„¤ì •í•  ë¬¸ìžì—´ìž…ë‹ˆë‹¤.
 
 	@see getName()
 	*/
 	virtual void				setName(const char* name)	= 0;
 
 	/**
-	\brief setName()À¸·Î ¼³Á¤ÇÑ ÀÌ¸§ ¹®ÀÚ¿­À» °Ë»öÇÕ´Ï´Ù.
+	\brief setName()ìœ¼ë¡œ ì„¤ì •í•œ ì´ë¦„ ë¬¸ìžì—´ì„ ê²€ìƒ‰í•©ë‹ˆë‹¤.
 
-	\return °³Ã¼¿Í °ü·ÃµÈ ÀÌ¸§ ¹®ÀÚ¿­ÀÔ´Ï´Ù.
+	\return ê°œì²´ì™€ ê´€ë ¨ëœ ì´ë¦„ ë¬¸ìžì—´ìž…ë‹ˆë‹¤.
 
 	@see setName()
 	*/
@@ -380,8 +380,8 @@ class PxSpring
 {
 public:
 
-	PxReal stiffness; //!< µå¶óÀÌºêÀÇ ½ºÇÁ¸µ °­µµ: Áï, À§Ä¡ ¿ÀÂ÷¿¡ ºñ·ÊÇÏ´Â Èû
-	PxReal damping;   //!< µå¶óÀÌºêÀÇ ´ïÇÎ °­µµ: Áï, ¼Óµµ ¿ÀÂ÷¿¡ ºñ·ÊÇÏ´Â Èû
+	PxReal stiffness; //!< ë“œë¼ì´ë¸Œì˜ ìŠ¤í”„ë§ ê°•ë„: ì¦‰, ìœ„ì¹˜ ì˜¤ì°¨ì— ë¹„ë¡€í•˜ëŠ” íž˜
+	PxReal damping;   //!< ë“œë¼ì´ë¸Œì˜ ëŒí•‘ ê°•ë„: ì¦‰, ì†ë„ ì˜¤ì°¨ì— ë¹„ë¡€í•˜ëŠ” íž˜
 
 	PxSpring(PxReal stiffness_, PxReal damping_): stiffness(stiffness_), damping(damping_) {}
 };
@@ -391,18 +391,18 @@ public:
 } // namespace physx
 #endif
 
-/** \brief Á¶ÀÎÀÇ Àü¿ª ÇÁ·¹ÀÓÀ» ¼³Á¤ÇÏ´Â ÇïÆÛ ÇÔ¼ö
+/** \brief ì¡°ì¸ì˜ ì „ì—­ í”„ë ˆìž„ì„ ì„¤ì •í•˜ëŠ” í—¬í¼ í•¨ìˆ˜
 
-	ÀÌ ÇÔ¼ö´Â ÀÌÀü SDK ¹öÀü¿¡¼­ ´ÙÀ½ ÇÔ¼öµéÀ» ´ëÃ¼ÇÕ´Ï´Ù:
+	ì´ í•¨ìˆ˜ëŠ” ì´ì „ SDK ë²„ì „ì—ì„œ ë‹¤ìŒ í•¨ìˆ˜ë“¤ì„ ëŒ€ì²´í•©ë‹ˆë‹¤:
 
 	void NxJointDesc::setGlobalAnchor(const NxVec3& wsAnchor);
 	void NxJointDesc::setGlobalAxis(const NxVec3& wsAxis);
 
-	ÀÌ ÇÔ¼ö´Â ¿ùµå °ø°£ ÀÔ·Â ¸Å°³º¯¼ö¸¦ »ç¿ëÇÏ¿© Á¶ÀÎÀÇ ·ÎÄÃ Æ÷Áî¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	ì´ í•¨ìˆ˜ëŠ” ì›”ë“œ ê³µê°„ ìž…ë ¥ ë§¤ê°œë³€ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì—¬ ì¡°ì¸ì˜ ë¡œì»¬ í¬ì¦ˆë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	\param[in] wsAnchor Àü¿ª ÇÁ·¹ÀÓ ±âÁØÀÇ ¾ÞÄ¿ ÁöÁ¡. <b>¹üÀ§:</b> À§Ä¡ º¤ÅÍ
-	\param[in] wsAxis Àü¿ª ÇÁ·¹ÀÓ ±âÁØÀÇ Ãà. <b>¹üÀ§:</b> ¹æÇâ º¤ÅÍ
-	\param[in,out] joint Àü¿ª ÇÁ·¹ÀÓÀ» ¼³Á¤ÇÏ´Â Á¶ÀÎ.
+	\param[in] wsAnchor ì „ì—­ í”„ë ˆìž„ ê¸°ì¤€ì˜ ì•µì»¤ ì§€ì . <b>ë²”ìœ„:</b> ìœ„ì¹˜ ë²¡í„°
+	\param[in] wsAxis ì „ì—­ í”„ë ˆìž„ ê¸°ì¤€ì˜ ì¶•. <b>ë²”ìœ„:</b> ë°©í–¥ ë²¡í„°
+	\param[in,out] joint ì „ì—­ í”„ë ˆìž„ì„ ì„¤ì •í•˜ëŠ” ì¡°ì¸.
 */
 
 PX_C_EXPORT void PX_CALL_CONV PxSetJointGlobalFrame(physx::PxJoint& joint, const physx::PxVec3* wsAnchor, const physx::PxVec3* wsAxis);

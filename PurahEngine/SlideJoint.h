@@ -12,7 +12,6 @@ namespace PurahEngine
 		~SlideJoint() override;
 
 	public:
-		void Initialize() override;
 		void OnDataLoadComplete() override;
 
 	public:

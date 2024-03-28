@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <functional>
 
 namespace PurahEngine
 {
@@ -8,6 +9,15 @@ namespace PurahEngine
 	public:
 		Joint() = default;
 		~Joint() override = default;
+
+	public:
+		virtual void				SetBreakCallback(const std::function<void()>& _callback) = 0;
+
+	protected:
+		friend class EventCallbackSystem;
+		friend class PhysicsSystem;
+		virtual void				BreakCallback() = 0;
+		virtual void*				GetZnJoint() = 0;
 
 	public:
 		/**

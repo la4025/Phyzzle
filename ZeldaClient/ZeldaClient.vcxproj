@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
+    <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
+    <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />

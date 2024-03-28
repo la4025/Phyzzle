@@ -103,7 +103,7 @@ PurahEngine::Transform* PurahEngine::GameObject::GetTransform()
 	return trans;
 }
 
-void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -111,7 +111,7 @@ void PurahEngine::GameObject::OnCollisionEnter(const ZonaiPhysics::ZnCollision& 
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -119,7 +119,7 @@ void PurahEngine::GameObject::OnCollisionStay(const ZonaiPhysics::ZnCollision& c
 	}
 }
 
-void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -127,7 +127,7 @@ void PurahEngine::GameObject::OnCollisionExit(const ZonaiPhysics::ZnCollision& c
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerEnter(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnTriggerEnter(const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -135,7 +135,7 @@ void PurahEngine::GameObject::OnTriggerEnter(const ZonaiPhysics::ZnCollider* col
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerStay(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnTriggerStay(const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{
@@ -143,7 +143,7 @@ void PurahEngine::GameObject::OnTriggerStay(const ZonaiPhysics::ZnCollider* coll
 	}
 }
 
-void PurahEngine::GameObject::OnTriggerExit(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::GameObject::OnTriggerExit(const Collider* collider)
 {
 	for (PurahEngine::Component* component : componentList)
 	{

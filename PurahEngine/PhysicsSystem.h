@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <queue>
 #include <vector>
 #include <windows.h>
 #include "ZnRaycastInfo.h"
@@ -48,7 +49,7 @@ namespace PurahEngine
 
 	public:
 		void Initialize() noexcept;
-		void PreStep() const;
+		void PreStep();
 		void Simulation(float _dt) const noexcept;
 		void SimulateResult() const;
 		void Finalize() noexcept;
@@ -59,10 +60,11 @@ namespace PurahEngine
 		void FreeObject(ZonaiPhysics::ZnJoint*, void* _gameObject) const;
 
 	public:
-		std::vector<RigidBody*> bodies;
-		std::vector<Collider*> dynamicColliders;
-		std::vector<Collider*> staticColliders;
-		std::vector<Joint*> joints;
+		std::vector<PurahEngine::RigidBody*> bodies;
+		std::vector<PurahEngine::Collider*> dynamicColliders;
+		std::vector<PurahEngine::Collider*> staticColliders;
+		std::vector<PurahEngine::Joint*> joints;
+		std::queue<PurahEngine::Joint*> removejointBuffer;
 		EventCallbackSystem* callbackSystem;
 
 	public:
@@ -70,7 +72,6 @@ namespace PurahEngine
 
 	public:
 		ZonaiPhysics::ZnCollider*	CreateBoxCollider(void* _gameObject, float x, float y, float z) const noexcept;
-		// ZonaiPhysics::ZnCollider*	CreatPlaneCollider(void* _gameObject, float x, float y) noexcept;
 		ZonaiPhysics::ZnCollider*	CreateSphereCollider(void* _gameObject, float radius) const noexcept;
 		ZonaiPhysics::ZnCollider*	CreateCapsuleCollider(void* _gameObject, float radius, float height) const noexcept;
 		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;

@@ -47,6 +47,7 @@
     <ClCompile Include="Hold.cpp">
       <Filter>KH\PLAYER\Action</Filter>
     </ClCompile>
+    <ClCompile Include="AudioTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Hold.h">
       <Filter>KH\PLAYER\Action</Filter>
     </ClInclude>
+    <ClInclude Include="AudioTest.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">

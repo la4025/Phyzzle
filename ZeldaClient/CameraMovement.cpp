@@ -15,30 +15,50 @@ void PurahEngine::CameraMovement::Update()
 {
 	auto& inputManager = PurahEngine::InputManager::Getinstance();
 	auto trans = GetGameObject()->GetComponent<PurahEngine::Transform>();
-
+	
+	// rotation
 	if (inputManager.IsKeyPressed(eKey::eKEY_UP))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.1f, 0.0f));
+		trans->Rotate(trans->GetWorldRotation() * Eigen::Vector3f::UnitX(), -0.5f);
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_DOWN))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, -0.1f, 0.0f));
+		trans->Rotate(trans->GetWorldRotation() * Eigen::Vector3f::UnitX(), 0.5f);
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_LEFT))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(-0.1f, 0.0f, 0.0f));
+		trans->Rotate(Eigen::Vector3f::UnitY(), -0.5f);
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_RIGHT))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.1f, 0.0f, 0.0f));
+		trans->Rotate(Eigen::Vector3f::UnitY(), 0.5f);
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_O))
+
+	
+	// position
+	if (inputManager.IsKeyPressed(eKey::eKEY_W))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, -0.1f));
+		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetFront() * 0.1f));
 	}
-	if (inputManager.IsKeyPressed(eKey::eKEY_P))
+	if (inputManager.IsKeyPressed(eKey::eKEY_A))
 	{
-		trans->SetLocalPosition(trans->GetLocalPosition() + Eigen::Vector3f(0.0f, 0.0f, 0.1f));
+		trans->SetLocalPosition(trans->GetLocalPosition() - (trans->GetRight() * 0.1f));
+	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_S))
+	{
+		trans->SetLocalPosition(trans->GetLocalPosition() - (trans->GetFront() * 0.1f));
+	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_D))
+	{
+		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetRight() * 0.1f));
+	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_Q))
+	{
+		trans->SetLocalPosition(trans->GetLocalPosition() - (trans->GetUp() * 0.1f));
+	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_E))
+	{
+		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetUp() * 0.1f));
 	}
 
 	std::wcout << GetGameObject()->GetName() << std::endl;

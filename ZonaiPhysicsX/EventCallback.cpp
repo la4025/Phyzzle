@@ -28,9 +28,8 @@ namespace ZonaiPhysics
 		for (physx::PxU32 i = 0; i < count; i++)
 		{
 			auto constrain = constraints[i];
-			constrain.externalReference;
 
-			ZnJoint* joint = static_cast<ZnJoint*>(constraints[i].constraint->userData);
+			const auto joint = static_cast<ZnJoint*>(constrain.constraint->userData);
 
 			callback->OnConstraintBreak(joint);
 		}

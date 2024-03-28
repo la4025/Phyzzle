@@ -38,32 +38,32 @@ void PurahEngine::Component::LateUpdate()
 
 }
 
-void PurahEngine::Component::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 
 }
 
-void PurahEngine::Component::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnCollisionStay(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 
 }
 
-void PurahEngine::Component::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnCollisionExit(const ZonaiPhysics::ZnCollision& collision, const Collider* collider)
 {
 
 }
 
-void PurahEngine::Component::OnTriggerEnter(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnTriggerEnter(const Collider* collider)
 {
 
 }
 
-void PurahEngine::Component::OnTriggerStay(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnTriggerStay(const Collider* collider)
 {
 
 }
 
-void PurahEngine::Component::OnTriggerExit(const ZonaiPhysics::ZnCollider* collider)
+void PurahEngine::Component::OnTriggerExit(const Collider* collider)
 {
 
 }

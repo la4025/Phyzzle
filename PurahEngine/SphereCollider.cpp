@@ -7,13 +7,10 @@
 
 namespace PurahEngine
 {
-	void SphereCollider::Initialize()
-	{
-		Collider::Initialize();
-	}
-
 	void SphereCollider::OnDataLoadComplete()
 	{
+		Collider::OnDataLoadComplete();
+
 		const auto scale = transform->GetWorldScale();
 
 		const float maxScale = max(max(scale.x(), scale.y()), scale.z());

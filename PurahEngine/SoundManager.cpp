@@ -42,6 +42,11 @@ void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEn
 	}
 }
 
+void PurahEngine::SoundManager::ReleaseSound(AudioSource* audioSource)
+{
+	soundMap.erase(audioSource);
+}
+
 void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource)
 {
 	FMOD_RESULT result;
@@ -86,7 +91,7 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, T
 	newSound.lastPos = { 0.0f, 0.0f, 0.0f };
 
 	newSound.channel->setChannelGroup(effectChannelGroup);
-	newSound.sound->set3DMinMaxDistance(0.5f, 1000.0f);
+	newSound.sound->set3DMinMaxDistance(5.0f, 10000.0f);
 
 	soundMap[audioSource] = newSound;
 }

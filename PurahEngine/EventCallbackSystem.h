@@ -16,7 +16,7 @@ namespace PurahEngine
 
 		void OnSleep(const ZonaiPhysics::ZnRigidBody*) override;
 
-		void OnConstraintBreak(const ZonaiPhysics::ZnJoint*) override;
+		void OnConstraintBreak(ZonaiPhysics::ZnJoint*) override;
 
 		void OnTriggerEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) override;
 

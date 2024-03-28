@@ -7,6 +7,7 @@
 #include "TestMovement.h"
 #include "CameraMovement.h"
 #include "TestSingleton.h"
+#include "AudioTest.h"
 
 #include "Controller.h"
 
@@ -44,6 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::TestMovement>("TestMovement");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::CameraMovement>("CameraMovement");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<AnimationTestController>("AnimationTestController");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::AudioTest>("AudioTest");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Controller>("Controller");
 

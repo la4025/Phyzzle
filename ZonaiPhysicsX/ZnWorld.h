@@ -16,7 +16,8 @@ namespace ZonaiPhysics
 	class ZnTransform;
 	class RigidBody;
 	class Collider;
-	class Joint;
+
+	class ZnJoint;
 }
 
 namespace physx
@@ -53,6 +54,9 @@ namespace ZonaiPhysics
 		static RigidBody*			GetBody(void* _znBody, void* _userScene = nullptr);
 		static void					SetHasBody(void* _userData, bool _hasBody, void* _userScene = nullptr);
 
+		static void					AddJoint(ZnJoint* znJoint);
+		static void					RemoveJoint(ZnJoint* _znJoint, void* _userData, void* _userScene = nullptr);
+
 		static void					AddMaterial(uint32_t, physx::PxMaterial*);
 		static physx::PxMaterial*	GetMaterial(uint32_t);
 		
@@ -71,9 +75,7 @@ namespace ZonaiPhysics
 
 		static std::unordered_map<uint32_t, physx::PxMaterial*> materials;	// [id, pxMaterial]
 
-		// static std::queue<RigidBody*>	rigidbodyRemoveList;
-		// static std::queue<Collider*>		colliderRemoveList;
-		// static std::queue<Joint*>		jointRemoveList;
+		static std::vector<ZnJoint*> jointList;
 	};
 }
 
