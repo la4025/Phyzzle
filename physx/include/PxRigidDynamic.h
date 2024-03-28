@@ -89,26 +89,29 @@ public:
 */
 
 	/**
-	\brief Moves kinematically controlled dynamic actors through the game world.
+	\brief 게임 세계에서 동적으로 제어되는 액터를 이동시킵니다.
 
-	You set a dynamic actor to be kinematic using the PxRigidBodyFlag::eKINEMATIC flag
-	with setRigidBodyFlag().
-	
-	The move command will result in a velocity that will move the body into 
-	the desired pose. After the move is carried out during a single time step, 
-	the velocity is returned to zero. Thus, you must continuously call 
-	this in every time step for kinematic actors so that they move along a path.
-	
-	This function simply stores the move destination until the next simulation
-	step is processed, so consecutive calls will simply overwrite the stored target variable.
+	PxRigidBodyFlag::eKINEMATIC 플래그를 사용하여 동적 액터를 키네마틱으로 설정합니다.
+	setRigidBodyFlag()를 사용하세요.
 
-	The motion is always fully carried out.	
+	이동 명령은 몸체를 원하는 자세로 이동시키는 속도를 결과로 합니다.
+	이동이 단일 시간 단계 동안 수행된 후 속도가 0으로 반환됩니다.
+	따라서 키네마틱 액터를 계속해서 호출하여 경로를 따라 이동하도록해야 합니다.
 
-	\note It is invalid to use this method if the actor has not been added to a scene already or if PxActorFlag::eDISABLE_SIMULATION is set.
+	이 함수는 다음 시뮬레이션 단계가 처리될 때까지 이동 대상을 저장하기만 합니다.
+	연속 호출은 단순히 저장된 대상 변수를 덮어씁니다.
 
-	<b>Sleeping:</b> This call wakes the actor if it is sleeping and will set the wake counter to #PxSceneDesc::wakeCounterResetValue.
+	운동은 항상 완전히 수행됩니다.
 
-	\param[in] destination The desired pose for the kinematic actor, in the global frame. <b>Range:</b> rigid body transform.
+	\note:	이 메소드를 사용하는 것은 액터가 이미 씬에 추가되어 있지 않거나
+			PxActorFlag::eDISABLE_SIMULATION 플래그가 설정된 경우에는 잘못됩니다.
+
+	<b>슬리핑:</b>
+			이 호출은 액터가 잠들어 있으면 깨우고
+			wake 카운터를 #PxSceneDesc::wakeCounterResetValue로 설정합니다.
+
+	\param[in]	destination 
+				키네마틱 액터의 원하는 자세입니다. 전역 프레임 내에서. <b>범위:</b> 강체 변환.
 
 	@see getKinematicTarget() PxRigidBodyFlag setRigidBodyFlag()
 	*/

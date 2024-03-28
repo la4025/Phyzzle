@@ -15,13 +15,11 @@ namespace PurahEngine
 
 	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody* _body)
 	{
-		// 구현 안 함
 		return;
 	}
 
-	void EventCallbackSystem::OnSleep(const ZonaiPhysics::ZnRigidBody*)
+	void EventCallbackSystem::OnSleep(const ZonaiPhysics::ZnRigidBody* _body)
 	{
-		// 구현 안 함
 		return;
 	}
 

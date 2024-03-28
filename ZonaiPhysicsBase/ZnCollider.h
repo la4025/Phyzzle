@@ -11,6 +11,13 @@ namespace ZonaiPhysics
 		virtual				~ZnCollider() = default;
 
 	public:
+		// 쿼리에서 제외
+		virtual void		DisableQuery(bool) = 0;
+
+		// 충돌 설정
+		// (리지드 바디를 달아놓고 시뮬레이션을 끄면 )
+		virtual void		DisableSimulation(bool) = 0;
+
 		// 트리거 설정
 		virtual void		SetTrigger(bool) = 0;
 

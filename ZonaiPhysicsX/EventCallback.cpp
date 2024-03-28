@@ -38,6 +38,12 @@ namespace ZonaiPhysics
 	void EventCallback::onWake(physx::PxActor** actors, physx::PxU32 count)
 	{
 		// 구현 안 함
+		for (physx::PxU32 i = 0; i < count; i++)
+		{
+			auto actor = actors[i];
+
+			actor->userData;
+		}
 	}
 
 	void EventCallback::onSleep(physx::PxActor** actors, physx::PxU32 count)
