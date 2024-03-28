@@ -44,5 +44,5 @@ void PurahEngine::Run(_In_ int nCmdShow)
 
 void PurahEngine::Finalize()
 {
-
+	PurahEngine::GameLoop::GetInstance().Finalize();
 }

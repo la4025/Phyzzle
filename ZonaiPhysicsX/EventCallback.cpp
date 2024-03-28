@@ -37,18 +37,26 @@ namespace ZonaiPhysics
 
 	void EventCallback::onWake(physx::PxActor** actors, physx::PxU32 count)
 	{
-		// 구현 안 함
 		for (physx::PxU32 i = 0; i < count; i++)
 		{
 			auto actor = actors[i];
 
-			actor->userData;
+			const auto body = static_cast<ZnRigidBody*>(actor->userData);
+
+			callback->OnWake(body);
 		}
 	}
 
 	void EventCallback::onSleep(physx::PxActor** actors, physx::PxU32 count)
 	{
-		// 구현 안 함
+		for (physx::PxU32 i = 0; i < count; i++)
+		{
+			auto actor = actors[i];
+
+			const auto body = static_cast<ZnRigidBody*>(actor->userData);
+
+			callback->OnSleep(body);
+		}
 	}
 
 	void EventCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs,
@@ -176,8 +184,6 @@ namespace ZonaiPhysics
 	{
 		return static_cast<ZnCollider*>(_shape->userData);
 	}
-
-
 
 	bool CharacterControllerCallback::filter(const physx::PxController& a, const physx::PxController& b)
 	{

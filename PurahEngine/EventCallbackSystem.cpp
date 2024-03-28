@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "PhysicsSystem.h"
+#include "ZnRigidBody.h"
 #include "ZnCollider.h"
 #include "ZnJoint.h"
 
@@ -15,11 +16,21 @@ namespace PurahEngine
 
 	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody* _body)
 	{
+		auto user0 = _body->GetUserData();
+		const auto pBody = static_cast<PurahEngine::RigidBody*>(user0);
+
+		// 
+
 		return;
 	}
 
 	void EventCallbackSystem::OnSleep(const ZonaiPhysics::ZnRigidBody* _body)
 	{
+		auto user0 = _body->GetUserData();
+		const auto pBody = static_cast<PurahEngine::RigidBody*>(user0);
+
+		// Àá¿¡¼­ ±ú¾î³µÀ¸´Ï
+
 		return;
 	}
 
@@ -29,6 +40,8 @@ namespace PurahEngine
 		const auto pJoint = static_cast<PurahEngine::Joint*>(joint);
 
 		pJoint->BreakCallback();
+
+		// ÄÄÆ÷³ÍÆ® ÆÄ±« ÇØ¾ßÇÔ.
 	}
 
 	void EventCallbackSystem::OnTriggerEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
@@ -41,8 +54,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		//purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
-		//purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
+		purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
+		purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
 	}
 
 	void EventCallbackSystem::OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*)
@@ -60,8 +73,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		//purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
-		//purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
+		purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
+		purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
 	}
 
 	void EventCallbackSystem::OnCollisionEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,

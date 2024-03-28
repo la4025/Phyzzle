@@ -71,5 +71,8 @@
       true
     ]
   ],
-  "preLoadModels": []
+  "preLoadModels": [
+    "Primitive/Sphere.fbx",
+    "Primitive/Capsule.fbx"
+  ]
 }
