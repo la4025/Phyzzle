@@ -21,6 +21,7 @@ namespace PurahEngine
 	public:
 		void		Initialize() override;
 		void		OnDataLoadComplete() override;
+		void		Awake() override;
 
 	private:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;

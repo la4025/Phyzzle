@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <functional>
 #include "EasingFunc.h"
 #include "TweenHandler.h"

@@ -39,12 +39,16 @@ namespace PurahEngine
 		this->UseGravity(useGravity);
 		// SetLinearVelocity(LinearVelocity);
 		// SetAngularVelocity(angularVelocity);
-		this->SetMass(mass);
 		this->SetLinearDamping(linearDamping);
 		this->SetAngularDamping(angularDamping);
 		this->WakeUp();
 		// AddForce(force);
 		// AddTorque(torque);
+	}
+
+	void RigidBody::Awake()
+	{
+		this->SetMass(mass);
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept
