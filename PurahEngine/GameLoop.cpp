@@ -10,6 +10,7 @@
 #include "TimeController.h"
 #include "Timer.h"
 #include "SoundManager.h"
+#include "EngineSetting.h"
 #include <cassert>
 
 
@@ -70,6 +71,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	SetMenu(hWnd, NULL);
 
+	// Engine Setting 초기화 (GraphicsManager, Physics Manager의 초기화보다 먼저 되어야 한다.)
+	EngineSetting::GetInstance().Initialize();
+
 	// 시간관리자 초기화
 	PurahEngine::TimeController::GetInstance().Initialize(timeInit);
 
@@ -107,9 +111,6 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// SoundManager 초기화
 	PurahEngine::SoundManager::GetInstance().Initialize();
-
-	// 모델링 파일 미리 로드
-	//GraphicsManager::GetInstance().RegisterDefaultModelFile(L"");
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)

@@ -99,7 +99,7 @@
     </Filter>
     <Filter Include="Core\EngineSetting">
       <UniqueIdentifier>{fc4e6f9f-99f2-4ced-b40c-903af227d300}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Component\2. Physics\Joint\Base">
       <UniqueIdentifier>{80212ab9-314a-4a63-abf7-42b3d2558294}</UniqueIdentifier>
     </Filter>
@@ -240,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="SlideJoint.cpp">
       <Filter>Component\2. Physics\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="Tag.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="Joint.h">
       <Filter>Component\2. Physics\Joint\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Tag.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

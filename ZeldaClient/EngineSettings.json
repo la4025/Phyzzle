@@ -1,0 +1,75 @@
+{
+  "shadowAreaRange": 1024.0,
+  "shadowMapSize": 16384,
+  "shadowMapDepthBias": 0.3,
+  "gravity": 9.8,
+  "tag": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "4",
+    "5",
+    "111"
+  ],
+  "layer": [
+    "Default",
+    "TransparentFX",
+    "Ignore Raycast",
+    "Floor",
+    "Water",
+    "UI"
+  ],
+  "collisionSetting": [
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  ],
+  "preLoadModels": []
+}

@@ -36,4 +36,5 @@ namespace ShadowMap
 {
 	float Range = 1024.0f;
 	unsigned int Size = 16384u;
+	float DepthBias = 0.1f;
 }

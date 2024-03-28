@@ -123,7 +123,8 @@ cbuffer LightMatrixBufferType : register(b9)
     matrix lightViewMatrix;
     matrix lightProjectionMatrix;
     float shadowMapSize;
-    float3 b9padding;
+    float shadowMapDepthBias;
+    float2 b9padding;
 }
 
 #endif

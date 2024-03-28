@@ -10,6 +10,7 @@
 #include "Animator.h"
 #include "Camera.h"
 #include "GraphicsResourceManager.h"
+#include "EngineSetting.h"
 
 #include <Eigen/Dense>
 #include <cassert>
@@ -45,8 +46,19 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 	graphicsModule = createZeldaRenderer();
 #endif
 
+	EngineSetting& setting = EngineSetting::GetInstance();
+
+	graphicsModule->SetExtraInitOption(setting.GetShadowAreaRange(), setting.GetShadowMapSize());
+
 	graphicsModule->Initialize(1920, 1080, true, hWnd, false);
 	resourceManager = new GraphicsResourceManager(graphicsModule);
+
+	// 모델링 파일 미리 로드
+	std::vector<std::wstring> preloadmodels = setting.GetPreLoadModels();
+	for (int i = 0; i < preloadmodels.size(); i++)
+	{
+		RegisterDefaultModelFile(preloadmodels[i]);
+	}
 }
 
 void PurahEngine::GraphicsManager::Finalize()
@@ -88,6 +100,10 @@ void PurahEngine::GraphicsManager::UpdateAnimator(float deltaTime)
 
 void PurahEngine::GraphicsManager::Render(float deltaTime)
 {
+	EngineSetting& setting = EngineSetting::GetInstance();
+
+	graphicsModule->SetExtraOption(setting.GetShadowMapDepthBias());
+
 	graphicsModule->BeginDraw(deltaTime);
 
 	// Camera
