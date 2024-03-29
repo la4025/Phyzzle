@@ -81,33 +81,33 @@ namespace PurahEngine
 	{
 		// 강제 종료 되는 경우 아니면
 		// 여기서 컴포넌트를 삭제하는 일은 없을 것임.
-		for (auto& joint : joints)
-		{
-			delete joint;
-		}
+		//for (auto& joint : joints)
+		//{
+		//		delete joint;
+		//}
 
-		joints.clear();
+		//joints.clear();
 
-		for (auto& collider : dynamicColliders)
-		{
-			delete collider;
-		}
+		//for (auto& collider : dynamicColliders)
+		//{
+		//	delete collider;
+		//}
 
-		dynamicColliders.clear();
+		//dynamicColliders.clear();
 
-		for (auto& collider : staticColliders)
-		{
-			delete collider;
-		}
+		//for (auto& collider : staticColliders)
+		//{
+		//	delete collider;
+		//}
 
-		staticColliders.clear();
+		//staticColliders.clear();
 
-		for (auto& body : bodies)
-		{
-			delete body;
-		}
+		//for (auto& body : bodies)
+		//{
+		//	delete body;
+		//}
 
-		bodies.clear();
+		//bodies.clear();
 
 		physics->Finalize();
 
