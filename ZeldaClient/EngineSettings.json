@@ -1,5 +1,5 @@
 {
-  "shadowAreaRange": 1024.0,
+  "shadowAreaRange": 500.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.3,
   "gravity": 9.8,
@@ -71,8 +71,5 @@
       true
     ]
   ],
-  "preLoadModels": [
-    "Primitive/Sphere.fbx",
-    "Primitive/Capsule.fbx"
-  ]
+  "preLoadModels": []
 }
