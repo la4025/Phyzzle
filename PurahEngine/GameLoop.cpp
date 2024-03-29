@@ -174,6 +174,9 @@ void PurahEngine::GameLoop::run()
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
+	SceneManager::GetInstance().LoadScene();
+	SceneManager::GetInstance().InitializationEvent();
+
 	SceneManager::GetInstance().Update();
 	SoundManager::GetInstance().Update();
 

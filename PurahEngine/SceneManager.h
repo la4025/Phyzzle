@@ -38,6 +38,10 @@ namespace PurahEngine
 
 		void DeleteGameObject(GameObject* gameObject);
 
+		void InitializationEvent();
+
+		void DecommissionEvent();
+
 	private:
 		void LoadScene();
 		void LoadSceneCompleteEvent();

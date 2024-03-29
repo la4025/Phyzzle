@@ -41,8 +41,6 @@ void PurahEngine::SceneManager::SetName(std::wstring name)
 
 void PurahEngine::SceneManager::Update()
 {
-	LoadScene();
-
 	PurahEngine::TimeController::GetInstance().Update("Simulate");
 	float SdeltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("Simulate");
 	static float SimuleTime = 0;
@@ -53,23 +51,7 @@ void PurahEngine::SceneManager::Update()
 	PurahEngine::TimeController::GetInstance().Update("physics");
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("physics");
 	physicsTime += deltaTime;
-
-	if (state == RunningState::AWAKE)
-	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			object->AwakeEvent();
-		}
-		state = RunningState::START;
-	}
-	if (state == RunningState::START)
-	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			object->StartEvent();
-		}
-		state = RunningState::UPDATE;
-	}
+	
 	if (state == RunningState::UPDATE)
 	{
 		for (PurahEngine::GameObject* object : objectList)
@@ -123,6 +105,43 @@ void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 			objectList.erase(objectPosition);
 		}
 	}
+}
+
+void PurahEngine::SceneManager::InitializationEvent()
+{
+	// Awake
+	if (state == RunningState::AWAKE)
+	{
+		for (PurahEngine::GameObject* object : objectList)
+		{
+			object->AwakeEvent();
+		}
+		state = RunningState::START;
+	}
+
+	// OnEnable(활성화 직 후)
+
+
+	// Start
+	if (state == RunningState::START)
+	{
+		for (PurahEngine::GameObject* object : objectList)
+		{
+			object->StartEvent();
+		}
+		state = RunningState::UPDATE;
+	}
+	
+	
+}
+
+void PurahEngine::SceneManager::DecommissionEvent()
+{
+	// OnDisable (비활성화 상태)
+
+
+	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
+
 }
 
 void PurahEngine::SceneManager::LoadScene()

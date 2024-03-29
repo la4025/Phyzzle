@@ -28,6 +28,11 @@ namespace PurahEngine
 		virtual void Start();
 		virtual void OnDataLoadComplete();
 
+		virtual void OnEnable();
+		virtual void OnDisable();
+
+		virtual void OnDestroy();
+
 		/// Update
 		// 물리 관련 업데이트
 		virtual void FixedUpdate();

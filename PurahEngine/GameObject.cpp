@@ -63,6 +63,14 @@ void PurahEngine::GameObject::LateUpdateEvent()
 	}
 }
 
+void PurahEngine::GameObject::Destroy()
+{
+	for (PurahEngine::Component* component : componentList)
+	{
+		component->OnDestroy();
+	}
+}
+
 void PurahEngine::GameObject::Enable()
 {
 	state = ObjectState::ENABLE;

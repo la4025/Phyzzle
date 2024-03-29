@@ -32,3 +32,4 @@ private:
 	Singleton& operator=(Singleton&&) noexcept = delete;
 };
 
+

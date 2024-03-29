@@ -32,6 +32,7 @@ namespace PurahEngine
 		virtual void AwakeEvent();
 		virtual void StartEvent();
 
+
 		/// Update
 		// 물리 관련 업데이트
 		virtual void FixedUpdateEvent();
@@ -42,6 +43,9 @@ namespace PurahEngine
 
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdateEvent();
+
+		virtual void Destroy();
+		
 
 		void Enable();
 		void Disable();
