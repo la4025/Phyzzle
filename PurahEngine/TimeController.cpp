@@ -58,6 +58,14 @@ void PurahEngine::TimeController::Update(std::string timeName)
 	timeTable[timeName] = currentTime;
 }
 
+void PurahEngine::TimeController::MoveWindow()
+{
+	for (auto iter = timeTable.begin(); iter != timeTable.end(); iter++)
+	{
+		Update((*iter).first);
+	}
+}
+
 PurahEngine::TimeController& PurahEngine::TimeController::GetInstance()
 {
 	static TimeController instance;
