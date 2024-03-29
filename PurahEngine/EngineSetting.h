@@ -22,6 +22,7 @@ namespace PurahEngine
 		int LayerSize();
 
 		float GetShadowAreaRange();
+		float GetShadowAreaOffset();
 		int GetShadowMapSize();
 		float GetShadowMapDepthBias();
 		float GetGravity();
@@ -40,6 +41,7 @@ namespace PurahEngine
 		unsigned int layerSize;
 
 		float shadowAreaRange;
+		float shadowAreaOffset;
 		int shadowMapSize;
 
 		std::vector<std::wstring> preLoadModels;

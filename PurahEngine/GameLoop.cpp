@@ -100,7 +100,20 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_ESCAPE,
 		eKey::eKEY_SHIFT,
 		eKey::eKEY_LSHIFT,
-		eKey::eKEY_0
+		eKey::eKEY_0,
+
+		eKey::eKEY_CONTROL,
+		eKey::eKEY_F1,
+		eKey::eKEY_F2,
+		eKey::eKEY_F3,
+		eKey::eKEY_F4,
+		eKey::eKEY_F5,
+		eKey::eKEY_F6,
+		eKey::eKEY_F7,
+		eKey::eKEY_F8,
+
+		eKey::eKEY_F11,
+		eKey::eKEY_F12
 	};
 	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
 	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
@@ -189,6 +202,13 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 		{
 			PostQuitMessage(0);
 			break;
+		}
+
+		case WM_ENTERSIZEMOVE:
+		case WM_MOVE:
+		case WM_EXITSIZEMOVE:
+		{
+			TimeController::GetInstance().MoveWindow();
 		}
 
 		default:

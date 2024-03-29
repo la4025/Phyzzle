@@ -19,7 +19,7 @@ public:
 	DirectX::XMFLOAT4 GetDiffuseColor();
 	DirectX::XMFLOAT4 GetSpecular();
 
-	DirectX::XMMATRIX GetViewMatrix();
+	DirectX::XMMATRIX GetViewMatrix(ZeldaCamera* maincamera);
 	DirectX::XMMATRIX GetOrthoMatrix();
 
 	// Directional Light

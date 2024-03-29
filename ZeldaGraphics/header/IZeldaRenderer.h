@@ -38,9 +38,10 @@ public:
 	/// <summary>
 	/// 추가 옵션을 설정한다. Initialize가 호출되기 이전에 호출되어야 설정된 옵션을 적용할 수 있다.
 	/// </summary>
-	/// <param name="[shadowAreaRange] :"> 그림자영역의 범위, 이 영역안에 있는 오브젝트만 그림자가 그려지며 (0, 0, 0)에서 shadowAreaRange를 반지름으로 가지는 구의 바깥에 접하는 정육면체 공간이 그림자 영역이된다. (이 값이 커질수록 그림자의 품질이 낮아진다.) </param>
+	/// <param name="[shadowAreaRange] :"> 그림자영역의 범위, 이 영역안에 있는 오브젝트만 그림자가 그려지며 메인카메라위치에서 메인카메라가 바라보는 방향으로 shadowAreaRange만큼 떨어진 위치에서 shadowAreaRange를 반지름으로 가지는 구의 바깥에 접하는 정육면체 공간이 그림자 영역이된다. (이 값이 커질수록 그림자의 품질이 낮아진다.) </param>
+	/// <param name="[shadowAreaOffset] :"> 그림자영역의 범위를 카메라 방향으로 shadowAreaOffset의 크기만큼 당긴다.</param>
 	/// <param name="[shadowMapSize] :"> shadowMap의 크기, width, height를 모두 이 값으로 사용한다. (이 값이 커질수록 그림자의 품질이 높아진다.) </param>
-	virtual void SetExtraInitOption(float shadowAreaRange, unsigned int shadowMapSize) abstract;
+	virtual void SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize) abstract;
 
 	/// <summary>
 	/// 추가 옵션을 설정한다. BeginDraw 이전에 호출되어야 정상적으로 작동한다.

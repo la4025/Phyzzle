@@ -107,7 +107,7 @@ public:
 	virtual bool Initialize(unsigned int screenWidth, unsigned int screenHeight, bool vsync, HWND hwnd, bool fullScreen) override;
 	virtual void Finalize() override;
 
-	virtual void SetExtraInitOption(float shadowAreaRange, unsigned int shadowMapSize) override;
+	virtual void SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize) override;
 	virtual void SetExtraOption(float shadowMapDepthBias) override;
 
 	virtual void SetDebugMode(DebugMode mode) override;
