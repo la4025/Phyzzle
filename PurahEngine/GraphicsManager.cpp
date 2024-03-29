@@ -48,7 +48,7 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 
 	EngineSetting& setting = EngineSetting::GetInstance();
 
-	graphicsModule->SetExtraInitOption(setting.GetShadowAreaRange(), setting.GetShadowMapSize());
+	graphicsModule->SetExtraInitOption(setting.GetShadowAreaRange(), setting.GetShadowAreaOffset(), setting.GetShadowMapSize());
 
 	graphicsModule->Initialize(1920, 1080, true, hWnd, false);
 	resourceManager = new GraphicsResourceManager(graphicsModule);
@@ -101,6 +101,24 @@ void PurahEngine::GraphicsManager::UpdateAnimator(float deltaTime)
 
 void PurahEngine::GraphicsManager::Render(float deltaTime)
 {
+	InputManager& inputManager = InputManager::Getinstance();
+	if (inputManager.IsKeyPressed(eKey::eKEY_CONTROL))
+	{
+		if (inputManager.IsKeyDown(eKey::eKEY_F1)) graphicsModule->SetDebugMode(DebugMode::Normal);
+		if (inputManager.IsKeyDown(eKey::eKEY_F2)) graphicsModule->SetDebugMode(DebugMode::DeferredDebugAll);
+		if (inputManager.IsKeyDown(eKey::eKEY_F3)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug0);
+		if (inputManager.IsKeyDown(eKey::eKEY_F4)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug1);
+		if (inputManager.IsKeyDown(eKey::eKEY_F5)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug2);
+		if (inputManager.IsKeyDown(eKey::eKEY_F6)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug3);
+		if (inputManager.IsKeyDown(eKey::eKEY_F7)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug4);
+		if (inputManager.IsKeyDown(eKey::eKEY_F8)) graphicsModule->SetDebugMode(DebugMode::DeferredDebug5);
+
+
+		if (inputManager.IsKeyDown(eKey::eKEY_F11)) graphicsModule->SetRendererMode(RendererMode::OffWireFrameMode);
+		if (inputManager.IsKeyDown(eKey::eKEY_F12)) graphicsModule->SetRendererMode(RendererMode::OnWireFrameMode);
+
+	}
+
 	EngineSetting& setting = EngineSetting::GetInstance();
 
 	graphicsModule->SetExtraOption(setting.GetShadowMapDepthBias());
