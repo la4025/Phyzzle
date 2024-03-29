@@ -1,6 +1,8 @@
 #pragma once
 
-class IAbility
+namespace Phyzzle
 {
-};
-
+	class IAbility
+	{
+	};
+}

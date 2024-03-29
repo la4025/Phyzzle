@@ -47,23 +47,4 @@ namespace PurahEngine
 			OutBounce,
 			InOutBounce
 	};
-
-	//ITween* Tween::Create(float _start, float _end, eEasing _easing, float _durationSec, std::function<void()> _callback)
-	//{
-	//	ITween* result = new TweenHandler(
-	//		_start, _end,
-	//		easingFunc[_easing],
-	//		_durationSec,
-	//		_callback
-	//	);
-
-	//	return result;
-	//}
-
-	//void Tween::Release(ITween* _tween)
-	//{
-	//	assert(_tween != nullptr);
-
-	//	delete _tween;
-	//}
 }

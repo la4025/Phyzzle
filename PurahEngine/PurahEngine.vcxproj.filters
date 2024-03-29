@@ -244,6 +244,9 @@
     <ClCompile Include="Tag.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="MomentumManager.cpp">
+      <Filter>Core\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -417,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="Tag.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="MomentumManager.h">
+      <Filter>Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

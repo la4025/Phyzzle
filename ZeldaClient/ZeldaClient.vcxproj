@@ -150,9 +150,11 @@
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="Hold.cpp" />
     <ClCompile Include="IAbility.cpp" />
     <ClCompile Include="IObject.cpp" />
+    <ClCompile Include="JointSystem.cpp" />
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
@@ -173,7 +175,9 @@
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="Hold.h" />
+    <ClInclude Include="JointSystem.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IAbility.h" />
     <ClInclude Include="IMaker.h" />

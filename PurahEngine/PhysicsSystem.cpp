@@ -56,7 +56,7 @@ namespace PurahEngine
 		physics->LoadScene(this);
 	}
 
-	void PhysicsSystem::PreStep()
+	void PhysicsSystem::PreStep() const
 	{
 		for (const auto& e : dynamicColliders)
 		{

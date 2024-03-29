@@ -70,7 +70,7 @@ void KiHoon::Run()
 	}
 
 	{
-		Controller* controller = player->AddComponent<Controller>();
+		Phyzzle::Controller* controller = player->AddComponent<Phyzzle::Controller>();
 		// controller->SetPlayer(body);
 	}
 

@@ -1,9 +1,14 @@
 #pragma once
+#include "Singleton.h"
 
 
-class PlayerSystem
+namespace Phyzzle
 {
-public:
-	static void HandsUp();
-};
+	class PlayerSystem final : public Singleton<PlayerSystem>
+	{
+	public:
+		~PlayerSystem() override;
 
+	public:
+	};
+}

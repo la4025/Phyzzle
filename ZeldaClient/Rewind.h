@@ -1,9 +1,11 @@
 #pragma once
 #include "IAbility.h"
 
-class Rewind : public IAbility
+namespace Phyzzle
 {
-public:
+	class Rewind : public IAbility
+	{
+	public:
 
-};
-
+	};
+}

@@ -47,7 +47,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<AnimationTestController>("AnimationTestController");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::AudioTest>("AudioTest");
 
-	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Controller>("Controller");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); ¿ªÇÒ
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);

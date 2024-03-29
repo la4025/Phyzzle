@@ -1,25 +1,28 @@
 #include "Hold.h"
 
-Hold::~Hold()
+namespace Phyzzle
 {
-}
+	Hold::~Hold()
+	{
+	}
 
-void Hold::Awake()
-{
+	void Hold::Awake()
+	{
 
-}
+	}
 
-void Hold::Start()
-{
+	void Hold::Start()
+	{
 
-}
+	}
 
-void Hold::FixedUpdate()
-{
+	void Hold::FixedUpdate()
+	{
 
-}
+	}
 
-void Hold::Update()
-{
+	void Hold::Update()
+	{
 
+	}
 }

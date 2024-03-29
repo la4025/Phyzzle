@@ -1,6 +1,43 @@
 {
   "gameObjects": [
     {
+      "__Base__instanceID": -341378,
+      "name": "ColliderDebug",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -341380,
+        "position": {
+          "x": 0.0,
+          "y": 1.7,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 2.0,
+          "y": 1.7,
+          "z": 2.0
+        },
+        "__ID__parentTransform": [
+          47144
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -341972,
+          "__Base__Component": "ModelRenderer",
+          "modelName": "Primitive/Capsule.fbx",
+          "shadow": false,
+          "wireFrame": true
+        }
+      ]
+    },
+    {
       "__Base__instanceID": -327148,
       "name": "mainchar",
       "tag": [],
@@ -680,7 +717,7 @@
       "transform": {
         "__Base__instanceID": 47144,
         "position": {
-          "x": -1.74,
+          "x": 0.0,
           "y": 0.0,
           "z": 0.0
         },
@@ -698,7 +735,8 @@
         "__ID__parentTransform": [],
         "__ID__children": [
           47368,
-          47422
+          47422,
+          -341380
         ]
       },
       "components": [
@@ -1301,7 +1339,8 @@
           "__Base__instanceID": 47304,
           "__Base__Component": "ModelRenderer",
           "modelName": "Primitive/Sphere.fbx",
-          "shadow": true
+          "shadow": true,
+          "wireFrame": false
         },
         {
           "__Base__instanceID": 47302,
@@ -1897,7 +1936,8 @@
           "__Base__instanceID": 47410,
           "__Base__Component": "ModelRenderer",
           "modelName": "Primitive/Sphere.fbx",
-          "shadow": true
+          "shadow": true,
+          "wireFrame": false
         }
       ]
     },
@@ -1933,7 +1973,8 @@
           "__Base__instanceID": 47416,
           "__Base__Component": "ModelRenderer",
           "modelName": "Player/Player.fbx",
-          "shadow": true
+          "shadow": true,
+          "wireFrame": false
         },
         {
           "__Base__instanceID": 47418,

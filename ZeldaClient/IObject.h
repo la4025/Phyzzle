@@ -1,9 +1,10 @@
 #pragma once
 
-
-class IObject
+namespace Phyzzle
 {
-public:
+	class IObject
+	{
+	public:
 
-};
-
+	};
+}
