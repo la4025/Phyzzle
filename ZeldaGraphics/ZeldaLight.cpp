@@ -52,8 +52,29 @@ DirectX::XMFLOAT4 ZeldaLight::GetSpecular()
 	return specular;
 }
 
-DirectX::XMMATRIX ZeldaLight::GetViewMatrix()
+DirectX::XMMATRIX ZeldaLight::GetViewMatrix(ZeldaCamera* maincamera)
 {
+	DirectX::XMMATRIX cameraTM = maincamera->GetTransformMatrix();
+	DirectX::XMMATRIX cameraRotation = cameraTM;
+	DirectX::XMMATRIX cameraTranslation = cameraTM;
+	
+	cameraRotation.r[3].m128_f32[0] = 0.0f;
+	cameraRotation.r[3].m128_f32[1] = 0.0f;
+	cameraRotation.r[3].m128_f32[2] = 0.0f;
+
+	cameraTranslation.r[0].m128_f32[0] = 1.0f;
+	cameraTranslation.r[0].m128_f32[1] = 0.0f;
+	cameraTranslation.r[0].m128_f32[2] = 0.0f;
+	cameraTranslation.r[1].m128_f32[0] = 0.0f;
+	cameraTranslation.r[1].m128_f32[1] = 1.0f;
+	cameraTranslation.r[1].m128_f32[2] = 0.0f;
+	cameraTranslation.r[2].m128_f32[0] = 0.0f;
+	cameraTranslation.r[2].m128_f32[1] = 0.0f;
+	cameraTranslation.r[2].m128_f32[2] = 1.0f;
+	
+	DirectX::XMVECTOR cameraDirection = DirectX::XMVector3Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 1.0f }, cameraRotation));
+	DirectX::XMVECTOR cameraPosition = { cameraTM.r[3].m128_f32[0], cameraTM.r[3].m128_f32[1], cameraTM.r[3].m128_f32[2], 0.0f };
+
 	DirectX::XMMATRIX worldMatrix;
 	switch (type)
 	{
@@ -87,7 +108,11 @@ DirectX::XMMATRIX ZeldaLight::GetViewMatrix()
 				}
 			}
 			
-			worldMatrix = worldMatrix * DirectX::XMMatrixTranslationFromVector(-ShadowMap::Range * DirectX::XMVector3Normalize({ direction.x, direction.y, direction.z, 0.0f }));
+			worldMatrix =
+				worldMatrix *
+				DirectX::XMMatrixTranslationFromVector(-ShadowMap::Range * DirectX::XMVector3Normalize({ direction.x, direction.y, direction.z, 0.0f })) *
+				DirectX::XMMatrixTranslationFromVector((ShadowMap::Range - ShadowMap::Offset) * DirectX::XMVector3Normalize({ cameraDirection.m128_f32[0], cameraDirection.m128_f32[1], cameraDirection.m128_f32[2], 0.0f})) *
+				DirectX::XMMatrixTranslationFromVector(cameraPosition);
 
 			break;
 		}

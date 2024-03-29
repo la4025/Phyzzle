@@ -1,7 +1,8 @@
 {
-  "shadowAreaRange": 500.0,
+  "shadowAreaRange": 64.0,
+  "shadowAreaOffset": 0.0,
   "shadowMapSize": 16384,
-  "shadowMapDepthBias": 0.3,
+  "shadowMapDepthBias": 0.1,
   "gravity": 9.8,
   "tag": [
     "A",

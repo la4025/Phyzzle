@@ -765,7 +765,7 @@ void ZeldaDX11Renderer::Finalize()
 	ResourceManager::GetInstance().Finalize();
 }
 
-void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, unsigned int shadowMapSize)
+void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize)
 {
 #ifdef USE_INIT_FLAG
 	// 이 함수는 Initialize 이후에 호출하면 예상치 못한 오류를 일으킬 수 있다.
@@ -773,6 +773,7 @@ void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, unsigned int s
 #endif
 
 	ShadowMap::Range = shadowAreaRange;
+	ShadowMap::Offset = shadowAreaOffset;
 	ShadowMap::Size = shadowMapSize;
 }
 
@@ -1755,7 +1756,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLi
 	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
 
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
@@ -1837,10 +1838,12 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLi
 
 void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
 {
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
 
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
@@ -1870,10 +1873,12 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaL
 
 void ZeldaDX11Renderer::DrawDirectionalShadow(BlendingAnimationRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
 {
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
 	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
 
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix());
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
 	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;

@@ -35,6 +35,7 @@ const D3D11_INPUT_ELEMENT_DESC InstancingVertexType::layout[] =
 namespace ShadowMap
 {
 	float Range = 1024.0f;
+	float Offset = 0.0f;
 	unsigned int Size = 16384u;
 	float DepthBias = 0.1f;
 }

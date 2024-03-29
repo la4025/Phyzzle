@@ -23,7 +23,8 @@ namespace Shader
 
 namespace ShadowMap
 {
-	extern float Range; // 텍스쳐화 되는 오브젝트들의 범위, (0, 0, 0)에서 Range안쪽의 거리는 그림자 출력이 보장된다.
+	extern float Range; // 텍스쳐화 되는 오브젝트들의 범위, 메인 카메라의 위치에서 카메라가 바라보는 방향으로 Range만큼 떨어진 위치와의 거리가 Range보다 짧은 위치는 그림자 출력이 보장된다.
+	extern float Offset; // 텍스쳐화 되는 오브젝트의 범위를 카메라 방향으로 Offset 크기만큼 당긴다.
 	extern unsigned int Size; // 빛의 방향에서 본 오브젝트들을 텍스쳐화 할 때, 텍스쳐의 크기(너비와 높이가 같음)
 	extern float DepthBias;
 }

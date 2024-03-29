@@ -86,6 +86,11 @@ float PurahEngine::EngineSetting::GetShadowAreaRange()
 	return shadowAreaRange;
 }
 
+float PurahEngine::EngineSetting::GetShadowAreaOffset()
+{
+	return shadowAreaOffset;
+}
+
 int PurahEngine::EngineSetting::GetShadowMapSize()
 {
 	return shadowMapSize;
@@ -168,6 +173,7 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 	}
 
 	shadowAreaRange = jsonData["shadowAreaRange"];
+	shadowAreaOffset = jsonData["shadowAreaOffset"];
 	shadowMapSize = jsonData["shadowMapSize"];
 	shadowMapDepthBias = jsonData["shadowMapDepthBias"];
 	gravity = jsonData["gravity"];
@@ -191,6 +197,7 @@ PurahEngine::EngineSetting& PurahEngine::EngineSetting::GetInstance()
 
 PurahEngine::EngineSetting::EngineSetting() :
 	shadowAreaRange(1024.0f),
+	shadowAreaOffset(0.0f),
 	shadowMapSize(16384u),
 	shadowMapDepthBias(0.01f)
 {
