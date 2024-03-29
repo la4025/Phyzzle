@@ -59,7 +59,7 @@
           "__Base__instanceID": 47154,
           "__Base__Component": "Controller",
           "detect": false,
-          "moveSpeed": 100.0,
+          "moveSpeed": 10.0,
           "sensitivity": 90.0,
           "__ID__playerRigidbody": 47150,
           "__ID__modelCore": 47422,
