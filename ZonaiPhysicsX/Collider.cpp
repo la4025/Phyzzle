@@ -20,8 +20,7 @@ namespace ZonaiPhysics
 	Collider::~Collider()
 	{
 		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
-		ColliderHelper::Release(pxShape);
-		pxShape = nullptr;
+		ColliderHelper::Release(&pxShape);
 		znBody = nullptr;
 	}
 

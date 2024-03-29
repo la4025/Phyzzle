@@ -34,7 +34,9 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_pxBody)->release();
+		const auto pxBody = static_cast<physx::PxRigidDynamic**>(_pxBody);
+		(*pxBody)->release();
+		*pxBody = nullptr;
 	}
 
 	void RigidBodyHelper::WakeUp(void* _pxBody)

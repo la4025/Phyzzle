@@ -8,7 +8,7 @@ namespace PurahEngine
 	{
 	public:
 		CapsuleCollider() = default;
-		~CapsuleCollider() override = default;
+		~CapsuleCollider() override;
 
 	public:
 		void OnDataLoadComplete() override;
@@ -17,10 +17,10 @@ namespace PurahEngine
 		void SetSize(float _radius, float _halfHeight);
 
 	public:
-		virtual void PreSerialize(json& jsonData) const override;
-		virtual void PreDeserialize(const json& jsonData) override;
-		virtual void PostSerialize(json& jsonData) const override;
-		virtual void PostDeserialize(const json& jsonData) override;
+		void PreSerialize(json& jsonData) const override;
+		void PreDeserialize(const json& jsonData) override;
+		void PostSerialize(json& jsonData) const override;
+		void PostDeserialize(const json& jsonData) override;
 
 	public:
 		float radius;

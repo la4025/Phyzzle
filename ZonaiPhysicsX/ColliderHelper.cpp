@@ -11,8 +11,9 @@ namespace ZonaiPhysics
 	{
 		assert(_shape != nullptr);
 
-		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		_pxShape->release();
+		const auto _pxShape = static_cast<physx::PxShape**>(_shape);
+		(*_pxShape)->release();
+		*_pxShape = nullptr;
 	}
 
 	void ColliderHelper::DisableQuery(void* _shape, bool _value)

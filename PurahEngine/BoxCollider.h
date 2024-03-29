@@ -8,7 +8,7 @@ namespace PurahEngine
 	{
 	public:
 		BoxCollider() = default;
-		~BoxCollider() override = default;
+		~BoxCollider() override;
 
 	public:
 		void OnDataLoadComplete() override;

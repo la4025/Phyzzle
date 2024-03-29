@@ -6,6 +6,13 @@
 
 namespace PurahEngine
 {
+	CapsuleCollider::~CapsuleCollider()
+	{
+		auto& physicsSystem = PhysicsSystem::GetInstance();
+
+		physicsSystem.FreeObject(znCollider, this->GetGameObject());
+	}
+
 	void CapsuleCollider::OnDataLoadComplete()
 	{
 		Collider::OnDataLoadComplete();

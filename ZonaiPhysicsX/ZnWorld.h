@@ -51,6 +51,8 @@ namespace ZonaiPhysics
 
 		static void					AddCollider(Collider* _znShape, void* _userData, void* _userScene = nullptr);
 		static void					RemoveCollider(Collider* _znShape, void* _userData, void* _userScene = nullptr);
+
+
 		static RigidBody*			GetBody(void* _znBody, void* _userScene = nullptr);
 		static void					SetHasBody(void* _userData, bool _hasBody, void* _userScene = nullptr);
 
@@ -64,6 +66,10 @@ namespace ZonaiPhysics
 		// static bool Gometrycast();
 
 	private:
+		static void					ReleaseBody(RigidBody**, void* _data, physx::PxScene*, bool);
+
+
+
 		static physx::PxScene* currScene;
 		static std::unordered_map<void*, physx::PxScene*> sceneList;					// [userScene, pxScene]
 
