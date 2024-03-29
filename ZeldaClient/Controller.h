@@ -65,7 +65,6 @@ namespace Phyzzle
 		PurahEngine::Animator* animator;
 
 	private:
-		State state = State::IDLE;
 		Eigen::Vector3f movement = Eigen::Vector3f::Zero();
 
 	private:

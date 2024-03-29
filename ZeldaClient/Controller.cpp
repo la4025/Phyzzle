@@ -36,28 +36,6 @@ namespace Phyzzle
 		GamePadInput();
 		RotateCamera();
 
-		switch (state)
-		{
-		case State::IDLE:
-		{
-			
-		}
-		break;
-
-
-		case State::RUNNING:
-		{
-			
-		}
-		break;
-
-		default:
-		{
-			
-		}
-		break;
-		}
-
 		Move();
 	}
 

@@ -6,6 +6,7 @@ namespace Phyzzle
 	class Rewind : public IAbility
 	{
 	public:
-
+		Rewind();
+		~Rewind() override;
 	};
 }

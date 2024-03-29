@@ -150,8 +150,6 @@
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="FSM.cpp" />
-    <ClCompile Include="Hold.cpp" />
     <ClCompile Include="IAbility.cpp" />
     <ClCompile Include="IObject.cpp" />
     <ClCompile Include="JointSystem.cpp" />
@@ -161,12 +159,13 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="Rewind.cpp" />
+    <ClCompile Include="RewindSystem.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
-    <ClCompile Include="UltraHand.cpp" />
+    <ClCompile Include="Weld.cpp" />
     <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,8 +175,8 @@
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="FSM.h" />
-    <ClInclude Include="Hold.h" />
     <ClInclude Include="JointSystem.h" />
+    <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IAbility.h" />
     <ClInclude Include="IMaker.h" />
@@ -194,7 +193,7 @@
     <ClInclude Include="Test3.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
-    <ClInclude Include="UltraHand.h" />
+    <ClInclude Include="Weld.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
