@@ -10,6 +10,12 @@ PurahEngine::AudioTest::~AudioTest()
 
 }
 
+void PurahEngine::AudioTest::Awake()
+{
+	auto& soundManager = PurahEngine::SoundManager::GetInstance();
+	soundManager.PlayBGM(audioSource->GetSoundName(), audioSource)
+}
+
 void PurahEngine::AudioTest::OnDataLoadComplete()
 {
 

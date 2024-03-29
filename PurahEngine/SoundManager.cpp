@@ -52,7 +52,7 @@ void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, Audi
 	FMOD_RESULT result;
 
 	PurahEngine::PurahSound newSound;
-	std::wstring filePath = L"../Sound/Effect/Test/" + soundName;
+	std::wstring filePath = L"../Sound/BGM/Test/" + soundName;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;

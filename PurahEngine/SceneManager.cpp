@@ -101,32 +101,6 @@ void PurahEngine::SceneManager::Update()
 		}
 	}
 
-
-	/*for (PurahEngine::GameObject* object : objectList)
-	{
-		if (state == RunningState::START)
-		{
-			object->StartEvent();
-		}
-		if (physicsTime >= 0.02f)
-		{
-			object->FixedUpdateEvent();
-
-			object->OnCollisionEnter();
-			object->OnCollisionStay();
-			object->OnCollisionExit();
-
-			object->OnTriggerEnter();
-			object->OnTriggerStay();
-			object->OnTriggerExit();
-		}
-		if (object->isRun == true)
-		{
-			object->UpdateEvent();
-			object->LateUpdateEvent();
-		}
-		object->isRun = true;
-	}*/
 	if (physicsTime >= 0.02f)
 	{
 		physicsTime -= 0.02f;
@@ -137,6 +111,18 @@ void PurahEngine::SceneManager::Update()
 void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
 {
 	sceneBuffer = fileName;
+}
+
+void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
+{
+	auto objectPosition = std::find(objectList.begin(), objectList.end(), gameObject);
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		if (objectList[i] == gameObject)
+		{
+			objectList.erase(objectPosition);
+		}
+	}
 }
 
 void PurahEngine::SceneManager::LoadScene()
@@ -188,7 +174,7 @@ void PurahEngine::SceneManager::PreDeserialize(const json& jsonData)
 	for (int i = 0; i < jsonData["gameObjects"].size(); i++)
 	{
 		std::string name = jsonData["gameObjects"][i]["name"];
-		GameObject* object = CreateGameObject(std::wstring(name.begin(),name.end()));
+		GameObject* object = CreateGameObject(std::wstring(name.begin(), name.end()));
 		object->PreDeserialize(jsonData["gameObjects"][i]);
 	}
 }
