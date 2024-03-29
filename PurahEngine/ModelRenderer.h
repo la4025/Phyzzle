@@ -32,6 +32,7 @@ namespace PurahEngine
 		
 		std::wstring modelName;
 		bool shadow;
+		bool wireFrame;
 		
 		bool isBlending;
 		std::wstring animationName1;
