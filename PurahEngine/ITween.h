@@ -13,8 +13,8 @@ namespace PurahEngine
 		// 		virtual ITween* To(float value) = 0;				// Set the target value
 		// 		virtual ITween* Easing(eEasing easingFunc) = 0;		// Set the easing function
 		// 		virtual ITween* Duration(float durationSec) = 0;	// Set the duration
-		// 		virtual ITween* Play() = 0;	// Set the duration
-		// 		virtual ITween* Pause() = 0;	// Set the duration
+		// 		virtual ITween* Play() = 0;							// Set the duration
+		// 		virtual ITween* Pause() = 0;						// Set the duration
 		// 
 		// 		// Callbacks
 		// 		virtual ITween* OnPlay(std::function<void()> callback) = 0;		// Callback when the tween starts playing

@@ -12,6 +12,8 @@ namespace ZonaiPhysics
 	public:
 		static void					Release(void* _shape);
 
+		static void					DisableQuery(void* _shape, bool _value);
+		static void					DisableSimulation(void* _shape, bool _value);
 		static void					SetTrigger(void* _shape, bool _value);
 		static void					SetLayer(void* _shape, uint32_t _layer);
 

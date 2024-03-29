@@ -1,6 +1,7 @@
 #pragma once
 #include "Timer.h"
 #include "ITween.h"
+#include "TimeController.h"
 
 namespace PurahEngine
 {
@@ -54,7 +55,7 @@ namespace PurahEngine
 								_tween->accumulation / _tween->duration
 							);
 
-						// _tween->accumulation += Time::deltaTime;
+						_tween->accumulation += TimeController::GetInstance().GetDeltaTime();
 
 						if (_tween->accumulation >= _tween->duration)
 						{
@@ -85,7 +86,7 @@ namespace PurahEngine
 								_tween->accumulation / _tween->duration
 							);
 
-						// _tween->accumulation += (float)Time::deltaTime;
+						_tween->accumulation += TimeController::GetInstance().GetDeltaTime();
 
 						if (_tween->accumulation >= _tween->duration)
 						{

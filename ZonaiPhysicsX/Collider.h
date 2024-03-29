@@ -27,7 +27,10 @@ namespace ZonaiPhysics
 							~Collider() override;
 
 	public:
+		void				DisableQuery(bool) final;
+		void				DisableSimulation(bool) final;
 		void				SetTrigger(bool) final;
+		
 		void				SetLayerData(const uint32_t&) final;
 
 		/**

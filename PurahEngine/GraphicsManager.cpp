@@ -63,6 +63,12 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 
 void PurahEngine::GraphicsManager::Finalize()
 {
+	// 리소스 매니저가 먼저 해제된 후에, graphicsModule이 해제되어야한다.
+	if (resourceManager != nullptr)
+	{
+		delete resourceManager;
+	}
+
 #ifdef YH_RENDERER
 	assert(0); // Not implement to delete YH Renderer 
 #else
@@ -77,11 +83,6 @@ void PurahEngine::GraphicsManager::Finalize()
 
 	FreeLibrary(zeldaGraphicsDLL);
 #endif
-
-	if (resourceManager != nullptr)
-	{
-		delete resourceManager;
-	}
 }
 
 void PurahEngine::GraphicsManager::RegisterDefaultModelFile(const std::wstring& fileName)

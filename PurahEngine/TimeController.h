@@ -28,6 +28,8 @@ namespace PurahEngine
 
 		void Update(std::string timeName);
 
+		void MoveWindow();
+
 	private:
 		std::unordered_map<std::string, std::chrono::system_clock::time_point> timeTable;
 		std::unordered_map<std::string, float> deltaTime;

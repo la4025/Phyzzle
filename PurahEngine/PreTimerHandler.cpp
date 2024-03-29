@@ -5,7 +5,7 @@
 
 void PurahEngine::PreTimerHandler::Update()
 {
-	accumulation += TimeController::GetInstance().GetDeltaTime("Simulate");
+	accumulation += TimeController::GetInstance().GetDeltaTime();
 
 	if (delay <= accumulation)
 	{

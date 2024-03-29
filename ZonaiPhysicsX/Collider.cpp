@@ -25,6 +25,20 @@ namespace ZonaiPhysics
 		znBody = nullptr;
 	}
 
+	void Collider::DisableQuery(bool _flag)
+	{
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
+		ColliderHelper::DisableQuery(pxShape, _flag);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
+	}
+
+	void Collider::DisableSimulation(bool _flag)
+	{
+		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
+		ColliderHelper::DisableSimulation(pxShape, _flag);
+		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
+	}
+
 	void Collider::SetTrigger(bool _flag)
 	{
 		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
