@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "PhysicsSystem.h"
+#include "ZnRigidBody.h"
 #include "ZnCollider.h"
 #include "ZnJoint.h"
 
@@ -15,13 +16,21 @@ namespace PurahEngine
 
 	void EventCallbackSystem::OnWake(const ZonaiPhysics::ZnRigidBody* _body)
 	{
-		// 구현 안 함
+		auto user0 = _body->GetUserData();
+		const auto pBody = static_cast<PurahEngine::RigidBody*>(user0);
+
+		// 
+
 		return;
 	}
 
-	void EventCallbackSystem::OnSleep(const ZonaiPhysics::ZnRigidBody*)
+	void EventCallbackSystem::OnSleep(const ZonaiPhysics::ZnRigidBody* _body)
 	{
-		// 구현 안 함
+		auto user0 = _body->GetUserData();
+		const auto pBody = static_cast<PurahEngine::RigidBody*>(user0);
+
+		// 잠에서 깨어났으니
+
 		return;
 	}
 
@@ -31,6 +40,8 @@ namespace PurahEngine
 		const auto pJoint = static_cast<PurahEngine::Joint*>(joint);
 
 		pJoint->BreakCallback();
+
+		// 컴포넌트 파괴 해야함.
 	}
 
 	void EventCallbackSystem::OnTriggerEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
@@ -43,8 +54,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		//purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
-		//purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
+		purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
+		purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
 	}
 
 	void EventCallbackSystem::OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*)
@@ -62,8 +73,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		//purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
-		//purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
+		purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
+		purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
 	}
 
 	void EventCallbackSystem::OnCollisionEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,

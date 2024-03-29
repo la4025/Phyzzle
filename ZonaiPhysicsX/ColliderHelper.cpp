@@ -12,8 +12,28 @@ namespace ZonaiPhysics
 		assert(_shape != nullptr);
 
 		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		// const auto _pxBody = static_cast<physx::PxRigidDynamic*>(_pxShape->getActor());
 		_pxShape->release();
+	}
+
+	void ColliderHelper::DisableQuery(void* _shape, bool _value)
+	{
+		assert(_shape != nullptr);
+
+		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+
+		_pxShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, !_value);
+	}
+
+	void ColliderHelper::DisableSimulation(void* _shape, bool _value)
+	{
+		assert(_shape != nullptr);
+
+		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+
+		if (_value)
+			_pxShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, !_value);
+		
+		_pxShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, _value);
 	}
 
 	void ColliderHelper::SetTrigger(void* _shape, bool _value)
@@ -22,7 +42,9 @@ namespace ZonaiPhysics
 
 		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
 
-		_pxShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !_value);
+		if (_value)
+			_pxShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !_value);
+
 		_pxShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, _value);
 	}
 
