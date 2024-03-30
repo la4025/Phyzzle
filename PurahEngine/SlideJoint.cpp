@@ -28,8 +28,8 @@ namespace PurahEngine
 		assert(body0 != nullptr);
 
 		joint = instance.CreateSlideJoint(
-			body0->body, { LocalAnchor },
-			connectedBody->body, { connectedLocalAnchor }
+			body0->body, { LocalAnchor, LocalAnchorRotation },
+			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);
@@ -126,8 +126,10 @@ namespace PurahEngine
 		PREDESERIALIZE_BASE();
 
 		PREDESERIALIZE_VECTOR3F(LocalAnchor);
+		PREDESERIALIZE_QUATERNIONF(LocalAnchorRotation);
 
 		PREDESERIALIZE_VECTOR3F(connectedLocalAnchor);
+		PREDESERIALIZE_QUATERNIONF(connectedLocalAnchorRotation);
 
 		PREDESERIALIZE_VALUE(useSpring);
 		PREDESERIALIZE_VALUE(spring);
