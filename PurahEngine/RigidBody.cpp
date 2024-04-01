@@ -41,7 +41,10 @@ namespace PurahEngine
 		// SetAngularVelocity(angularVelocity);
 		this->SetLinearDamping(linearDamping);
 		this->SetAngularDamping(angularDamping);
-		this->WakeUp();
+		if (!isKinematic)
+		{
+			this->WakeUp();
+		}
 		// AddForce(force);
 		// AddTorque(torque);
 	}

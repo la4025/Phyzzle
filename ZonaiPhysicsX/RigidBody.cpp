@@ -18,8 +18,7 @@ namespace ZonaiPhysics
 
 	RigidBody::~RigidBody()
 	{
-		RigidBodyHelper::Release(pxBody);
-		pxBody = nullptr;
+		RigidBodyHelper::Release(&pxBody);
 	}
 
 	void RigidBody::WakeUp()

@@ -7,6 +7,13 @@
 
 namespace PurahEngine
 {
+	SphereCollider::~SphereCollider()
+	{
+		auto& physicsSystem = PhysicsSystem::GetInstance();
+
+		physicsSystem.FreeObject(znCollider, this->GetGameObject());
+	}
+
 	void SphereCollider::OnDataLoadComplete()
 	{
 		Collider::OnDataLoadComplete();

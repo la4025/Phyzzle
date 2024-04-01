@@ -9,6 +9,7 @@ namespace PurahEngine
 	class Timer
 	{
 	private:
+	// public:
 		friend class GameLoop;
 		static void		PreUpdate();
 		static void		Update();

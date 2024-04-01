@@ -29,9 +29,6 @@
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="PlayerSystem.cpp">
-      <Filter>KH\PLAYER</Filter>
-    </ClCompile>
     <ClCompile Include="UltraHand.cpp">
       <Filter>KH\PLAYER\Ability</Filter>
     </ClCompile>
@@ -48,6 +45,18 @@
       <Filter>KH\PLAYER\Action</Filter>
     </ClCompile>
     <ClCompile Include="AudioTest.cpp" />
+    <ClCompile Include="JointSystem.cpp">
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSystem.cpp">
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM.cpp">
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="LauncherPlatform.cpp">
+      <Filter>Apparatus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -57,9 +66,6 @@
     <ClInclude Include="Test3.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
-    <ClInclude Include="Player.h">
-      <Filter>KH\PLAYER</Filter>
-    </ClInclude>
     <ClInclude Include="KiHoon.h">
       <Filter>KH\SCENE</Filter>
     </ClInclude>
@@ -79,9 +85,6 @@
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="PlayerSystem.h">
-      <Filter>KH\PLAYER</Filter>
-    </ClInclude>
     <ClInclude Include="UltraHand.h">
       <Filter>KH\PLAYER\Ability</Filter>
     </ClInclude>
@@ -104,6 +107,21 @@
       <Filter>KH\PLAYER\Action</Filter>
     </ClInclude>
     <ClInclude Include="AudioTest.h" />
+    <ClInclude Include="JointSystem.h">
+      <Filter>KH\System</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSystem.h">
+      <Filter>KH\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>KH\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.h">
+      <Filter>KH\System</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherPlatform.h">
+      <Filter>Apparatus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -141,6 +159,12 @@
     </Filter>
     <Filter Include="KH\PLAYER\Action">
       <UniqueIdentifier>{d4d26c7f-1f90-4d57-875b-dc19b8d6d244}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\System">
+      <UniqueIdentifier>{f261e56a-a180-4a83-9048-508b0f8b4365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Apparatus">
+      <UniqueIdentifier>{7cd738f5-ece7-48a9-a588-7373c98ef873}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

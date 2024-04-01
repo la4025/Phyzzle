@@ -24,8 +24,8 @@ public:
 	}
 
 private:
-	Singleton();
-	~Singleton();
+	Singleton() {}
+	virtual ~Singleton() {}
 	Singleton(const Singleton&) = delete;
 	Singleton(Singleton&&) noexcept = delete;
 	Singleton& operator=(const Singleton&) = delete;

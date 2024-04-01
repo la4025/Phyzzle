@@ -8,7 +8,7 @@ namespace PurahEngine
 	{
 	public:
 		SphereCollider() = default;
-		~SphereCollider() override = default;
+		~SphereCollider() override;
 
 	public:
 		void OnDataLoadComplete() override;

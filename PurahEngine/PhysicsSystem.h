@@ -50,7 +50,7 @@ namespace PurahEngine
 
 	public:
 		void Initialize() noexcept;
-		void PreStep();
+		void PreStep() const;
 		void Simulation(float _dt) const noexcept;
 		void SimulateResult() const;
 		void Finalize() noexcept;

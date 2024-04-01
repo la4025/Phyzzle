@@ -8,7 +8,7 @@
 
 #include "Controller.h"
 
-namespace PurahEngine
+namespace Phyzzle
 {
 	Controller::~Controller()
 		= default;
@@ -19,9 +19,9 @@ namespace PurahEngine
 
 	void Controller::Start()
 	{
-		GamePadManager::AddGamePad(0);
+		PurahEngine::GamePadManager::AddGamePad(0);
 
-		gamePad = GamePadManager::GetGamePad(0);
+		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
 		gamePad->SetDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
 		startPosition = modelCore->GetWorldPosition();
@@ -61,7 +61,7 @@ namespace PurahEngine
 		Move();
 	}
 
-	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const Collider* collider)
+	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
 	}
 
@@ -73,17 +73,17 @@ namespace PurahEngine
 
 		if (gamePad->IsConnected())
 		{
-			LstickSize = gamePad->GetStickRatio(ePadStick::ePAD_STICK_L, LstickX, LstickY);
-			RstickSize = gamePad->GetStickRatio(ePadStick::ePAD_STICK_R, RstickX, RstickY);
+			LstickSize = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, LstickX, LstickY);
+			RstickSize = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, RstickX, RstickY);
 
-			LTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_L);
-			RTrigger = gamePad->GetTriggerRatio(ePadTrigger::ePAD_TRIGGER_R);
+			LTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
+			RTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
 
-			if (gamePad->IsKeyDown(ePad::ePAD_A))
+			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
 			{
 				gamePad->VibrateRatio(LTrigger, RTrigger, 3.f);
 			}
-			if (gamePad->IsKeyDown(ePad::ePAD_B))
+			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_B))
 			{
 				gamePad->VibrateRatio(0.f, 0.f);
 			}
@@ -143,6 +143,8 @@ namespace PurahEngine
 		}
 
 		animator->SetPlaySpeed(L"Armature|Armature|Armature|running", LstickSize);
+
+
 		Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
 
 		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
@@ -154,9 +156,9 @@ namespace PurahEngine
 
 	void Controller::RotateCamera()
 	{
-		TimeController& time = TimeController::GetInstance();
+		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
 
-		const float deltaTime = time.GetDeltaTime("Simulate");
+		const float deltaTime = time.GetDeltaTime();
 
 		// 스틱 기울기에 따라 회전 각도를 계산
 		const float yawAngle = RstickX * sensitivity * deltaTime * RstickSize;

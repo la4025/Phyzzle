@@ -220,30 +220,62 @@ namespace ZonaiPhysics
 
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 
-		auto& colliders = colliderList[scene];
-		auto& shapes = colliders[_userData];
+		// 씬의 강체 리스트를 가져옴
+		const auto bodiesItr = bodyList.find(scene);
+		if (bodiesItr == bodyList.end())
+		{
+			assert(0);
+			return;
+		}
 
-		auto& bodies = bodyList[scene];
-		auto& [znBody, hasBody] = bodies[_userData];
+		auto& bodies = bodiesItr->second;
 
-		// 콜라이더가 비어있으면 리지드바디도 아예 삭제시켜야함
+		// 강체 리스트에서 유저 데이터에 해당하는 강체를 가져옴
+		const auto bodyItr = bodies.find(_userData);
+		if (bodyItr == bodies.end())
+		{
+			assert(0);
+			return;
+		}
+
+		auto& [znBody, hasBody] = bodyItr->second;
+
+		// 씬의 콜라이더 리스트를 가져옴
+		const auto colliderItr = colliderList.find(scene);
+		if (colliderItr == colliderList.end())
+		{
+			assert(0);
+			return;
+		}
+
+		auto& colliders = colliderItr->second;
+
+		// 콜라이더 리스트에서 유저 데이터에 해당하는 콜라이더를 가져옴
+		const auto shapeItr = colliders.find(_userData);
+		if (shapeItr == colliders.end())
+		{
+			// shape가 비어있으면 삭제시킴
+			hasBody = false;
+			ReleaseBody(&znBody, _userData, scene, hasBody);
+			return;
+		}
+
+		const auto& shapes = shapeItr->second;
 		if (shapes.empty())
 		{
-			const auto pxBody = static_cast<physx::PxRigidDynamic*>(_znBody->pxBody);
-			scene->removeActor(*pxBody);
-
-			delete znBody;
-
-			bodies.erase(_userData);
-			znBody = nullptr;
+			// shape가 비어있음.
+			// body도 지움
+			hasBody = false;
+			ReleaseBody(&znBody, _userData, scene, hasBody);
 		}
-		// 안 비어있으면 삭제시키면 안됨
 		else
 		{
+			// shape가 비어있지 않음.
+			// body는 지워짐
 			hasBody = false;
 
-			_znBody->SetKinematic(true);
-			_znBody->UseGravity(false);
+			znBody->SetKinematic(true);
+			znBody->UseGravity(false);
 		}
 	}
 
@@ -254,32 +286,57 @@ namespace ZonaiPhysics
 
 		physx::PxScene* scene = _userScene ? sceneList[_userScene] : currScene;
 
-		auto& colliders = colliderList[scene];
-		auto& shapes = colliders[_userData];
+		const auto collidersItr = colliderList.find(scene);
+		if (collidersItr == colliderList.end())
+		{
+			// 씬도 없음.
+			assert(0);
+			return;
+		}
+		auto& colliders = collidersItr->second;
 
-		delete _znShape;
+		const auto shapesItr = colliders.find(_userData);
+		if (shapesItr == colliders.end())
+		{
+			// 유저 데이터에 해당하는 콜라이더 리스트가 없다?
+			// 지울 콜라이더도 없는 거임.
+			assert(0);
+			return;
+		}
+		auto& shapes = shapesItr->second;
 
-		shapes.erase(std::ranges::find(shapes, _znShape));
-		_znShape = nullptr;
+		const auto shapeItr = std::ranges::find(shapes, _znShape);
+		if (shapeItr != shapes.end())
+		{
+			// 콜라이더를 지움
+			shapes.erase(shapeItr);
+			delete _znShape;
+		}
 
-		// 콜라이더가 비어있네?
+		// 콜라이더가 비어있는가?
 		if (shapes.empty())
 		{
-			auto& bodies = bodyList[scene];
-			auto& [znBody, hasBody] = bodies[_userData];
+			colliders.erase(_userData);
 
-			// 근데 바디도 없네?
-			if (znBody && !hasBody)
+			const auto bodiesItr = bodyList.find(scene);
+			if (bodiesItr == bodyList.end())
 			{
-				// 바디 삭제
-				const auto pxBody = static_cast<physx::PxRigidDynamic*>(znBody->pxBody);
-				scene->removeActor(*pxBody);
-
-				delete znBody;
-
-				bodies.erase(_userData);
-				znBody = nullptr;
+				assert(0);
+				return;
 			}
+			auto& bodies = bodiesItr->second;
+
+			const auto bodyItr = bodies.find(_userData);
+			if (bodyItr == bodies.end())
+			{
+				assert(0);
+				return;
+			}
+
+			RigidBody* znBody = bodyItr->second.first;
+			const bool hasBody = bodyItr->second.second;
+
+			ReleaseBody(&znBody, _userData, scene, hasBody);
 		}
 	}
 
@@ -345,5 +402,26 @@ namespace ZonaiPhysics
 			return materials[_id];
 
 		return nullptr;
+	}
+
+	void ZnWorld::ReleaseBody(RigidBody** _znBody, void* _data, physx::PxScene* _scene, bool _hasBody)
+	{
+		const auto bodiesItr = bodyList.find(_scene);
+		if (bodiesItr == bodyList.end())
+		{
+			assert(0);
+		}
+
+		auto& bodies = bodiesItr->second;
+
+		if (!_hasBody)
+		{
+			const auto pxBody = static_cast<physx::PxRigidDynamic*>((*_znBody)->pxBody);
+			_scene->removeActor(*pxBody);
+
+			delete *_znBody;
+			bodies.erase(_data);
+			*_znBody = nullptr;
+		}
 	}
 }

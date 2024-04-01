@@ -3,13 +3,19 @@
 
 // #define PROPERTY(type, value) type #value; \ 
 
+namespace ZonaiPhysics
+{
+	class Collider;
+}
+
 namespace PurahEngine
 {
 	class ITween;
+}
 
-
-
-	class Controller : public Component
+namespace Phyzzle
+{
+	class Controller : public PurahEngine::Component
 	{
 	public:
 		enum class State
@@ -25,7 +31,7 @@ namespace PurahEngine
 
 		void Update() override;
 
-		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*) override;
+		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 	private:
 		void GamePadInput();
@@ -49,21 +55,21 @@ namespace PurahEngine
 		float moveSpeed;
 		float sensitivity;
 
-		ITween* tween;
+		PurahEngine::ITween* tween;
 
 	private:
-		RigidBody* playerRigidbody;
-		Transform* modelCore;
-		Transform* cameraArm;
-		Transform* cameraCore;
-		Animator* animator;
+		PurahEngine::RigidBody* playerRigidbody;
+		PurahEngine::Transform* modelCore;
+		PurahEngine::Transform* cameraArm;
+		PurahEngine::Transform* cameraCore;
+		PurahEngine::Animator* animator;
 
 	private:
 		State state = State::IDLE;
 		Eigen::Vector3f movement = Eigen::Vector3f::Zero();
 
 	private:
-		GamePad* gamePad;
+		PurahEngine::GamePad* gamePad;
 		bool onVibration = false;
 		float LstickX;
 		float LstickY;

@@ -1,7 +1,7 @@
 #pragma once
 #include "TemplateFlag.h"
 
-namespace PurahEngine
+namespace Phyzzle
 {
 	enum class eObjectProperty : unsigned int
 	{

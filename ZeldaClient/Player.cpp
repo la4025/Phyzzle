@@ -1,21 +1,26 @@
 #include "Player.h"
 
-void Player::Awake()
+namespace Phyzzle
 {
-}
 
-void Player::Start()
-{
-}
+	void Player::Awake()
+	{
+	}
 
-void Player::FixedUpdate()
-{
-}
+	void Player::Start()
+	{
+	}
 
-void Player::Update()
-{
-}
+	void Player::FixedUpdate()
+	{
+	}
 
-void Player::Initialize()
-{
+	void Player::Update()
+	{
+	}
+
+	void Player::Initialize()
+	{
+	}
+
 }

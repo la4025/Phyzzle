@@ -34,23 +34,29 @@ namespace PurahEngine
             assert(false);
             break;
         }
-           
-        physicsSystem.FreeObject(znCollider, GetGameObject());
     }
 
 	void Collider::OnDataLoadComplete()
 	{
         this->transform = gameObject->GetTransform();
 
+		auto& physicsSystem = PhysicsSystem::GetInstance();
+
         switch (cType)
         {
         case ColliderType::DYNAMIC:
-            PhysicsSystem::GetInstance().dynamicColliders.push_back(this);
-            break;
+        {
+            auto& collisers = physicsSystem.dynamicColliders;
+            collisers.push_back(this);
+        }
+        break;
 
         case ColliderType::STATIC:
-            PhysicsSystem::GetInstance().staticColliders.push_back(this);
-            break;
+        {
+            auto& collisers = physicsSystem.staticColliders;
+            collisers.push_back(this);
+        }
+        break;
 
         default:
             assert(false);
