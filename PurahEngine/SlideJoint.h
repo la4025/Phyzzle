@@ -34,8 +34,10 @@ namespace PurahEngine
 
 	private:
 		Eigen::Vector3f LocalAnchor;
+		Eigen::Quaternionf LocalAnchorRotation;
 
 		Eigen::Vector3f connectedLocalAnchor;
+		Eigen::Quaternionf connectedLocalAnchorRotation;
 
 		bool useSpring = false;
 		float spring = 10.0f;
