@@ -10,6 +10,7 @@
 #include "AudioTest.h"
 
 #include "Controller.h"
+#include "LauncherPlatform.h"
 
 /// 각자 만드는 것들
 #include "NaDong.h"
@@ -46,6 +47,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::CameraMovement>("CameraMovement");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<AnimationTestController>("AnimationTestController");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<PurahEngine::AudioTest>("AudioTest");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<LauncherPlatform>("LauncherPlatform");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
 

@@ -54,6 +54,9 @@
     <ClCompile Include="FSM.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
+    <ClCompile Include="LauncherPlatform.cpp">
+      <Filter>Apparatus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -116,6 +119,9 @@
     <ClInclude Include="FSM.h">
       <Filter>KH\System</Filter>
     </ClInclude>
+    <ClInclude Include="LauncherPlatform.h">
+      <Filter>Apparatus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -156,6 +162,9 @@
     </Filter>
     <Filter Include="KH\System">
       <UniqueIdentifier>{f261e56a-a180-4a83-9048-508b0f8b4365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Apparatus">
+      <UniqueIdentifier>{7cd738f5-ece7-48a9-a588-7373c98ef873}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

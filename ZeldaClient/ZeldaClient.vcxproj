@@ -156,6 +156,7 @@
     <ClCompile Include="IObject.cpp" />
     <ClCompile Include="JointSystem.cpp" />
     <ClCompile Include="KiHoon.cpp" />
+    <ClCompile Include="LauncherPlatform.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="FSM.h" />
     <ClInclude Include="Hold.h" />
     <ClInclude Include="JointSystem.h" />
+    <ClInclude Include="LauncherPlatform.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IAbility.h" />
     <ClInclude Include="IMaker.h" />
