@@ -247,6 +247,9 @@
     <ClCompile Include="MomentumManager.cpp">
       <Filter>Core\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Core\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -422,6 +425,9 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="MomentumManager.h">
+      <Filter>Core\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
       <Filter>Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>

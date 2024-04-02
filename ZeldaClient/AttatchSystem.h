@@ -8,10 +8,10 @@ namespace PurahEngine
 
 namespace Phyzzle
 {
-	class JointSystem final : public Singleton<JointSystem>
+	class AttatchSystem final : public Singleton<AttatchSystem>
 	{
 	public:
-		~JointSystem() override;
+		~AttatchSystem() override;
 
 	public:
 		void Attatch(PurahEngine::RigidBody* _base, PurahEngine::RigidBody* _target);

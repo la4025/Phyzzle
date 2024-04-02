@@ -1,18 +1,16 @@
 #pragma once
-#include "Component.h"
-#include "IAbility.h"
+#include "IState.h"
 
 namespace Phyzzle
 {
-	class Hold final : public IAbility, public PurahEngine::Component
+	class Hold final : public IState
 	{
 	public:
 		~Hold() override;
 
 	public:
-		void Awake() override;
-		void Start() override;
-		void FixedUpdate() override;
-		void Update() override;
+		void Reset() override;
+		void Play() override;
+		void Button() override;
 	};
 }

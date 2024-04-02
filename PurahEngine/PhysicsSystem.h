@@ -5,6 +5,7 @@
 #include <vector>
 #include <windows.h>
 #include "ZnRaycastInfo.h"
+#include "MaterialEnum.h"
 
 namespace ZonaiPhysics
 {
@@ -55,7 +56,16 @@ namespace PurahEngine
 		void SimulateResult() const;
 		void Finalize() noexcept;
 
-		void SetReverse(bool _value);
+	private:
+		friend class Physics;
+		Eigen::Vector3f GetGravity() const;
+		void SetGravity(const Eigen::Vector3f&) const;
+		void AddMaterial(uint32_t _id,
+			float staticFriction,
+			float dynamicFriction,
+			float _restitution,
+			ZonaiPhysics::eCombineMode _eFriction,
+			ZonaiPhysics::eCombineMode _eRestitution) const;
 
 	public:
 		void FreeObject(ZonaiPhysics::ZnRigidBody*, void* _gameObject) const;
@@ -98,7 +108,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnDistanceJoint*		CreateSpringJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-	public:
+	private:
 		bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZonaiPhysics::ZnRaycastInfo& _out);
 
 	public:

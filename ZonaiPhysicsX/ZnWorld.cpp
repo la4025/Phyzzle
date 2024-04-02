@@ -144,6 +144,15 @@ namespace ZonaiPhysics
 		sceneList.erase(_userScene);
 	}
 
+	Eigen::Vector3f ZnWorld::GetGravity(void* _userScene)
+	{
+		assert(currScene != nullptr);
+
+		return PhysxToEigen(_userScene ?
+			sceneList[_userScene]->getGravity() :
+			currScene->getGravity());
+	}
+
 	void ZnWorld::SetGravity(const Eigen::Vector3f& _gravity, void* _userScene)
 	{
 		assert(currScene != nullptr);
