@@ -3,7 +3,7 @@
   "shadowAreaOffset": 0.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": 9.8,
+  "gravity": -9.8,
   "tag": [
     "A",
     "B",

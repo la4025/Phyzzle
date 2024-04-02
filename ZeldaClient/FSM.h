@@ -5,28 +5,23 @@
 
 namespace Phyzzle
 {
-	template <typename Type, typename Enum>
 	class FSM
 	{
-	private:
-		friend typename Type;
+	public:
+		FSM();
+		~FSM();
 
-		// 상태와 함수만 엮어놓음
-		std::unordered_map<Enum, std::function<Enum()>> stateFunc;
+	private:
+		std::unordered_map<int, std::function<void()>> stateMap;
+		int prevState;
+		int currState;
 
 	public:
-		FSM() : currState() {}
-
-		Enum currState;
-
-		void Add(Enum _state, std::function<Enum()> _func) noexcept
+		int Excute()
 		{
-			stateFunc.insert(std::make_pair(_state, _func));
+			return 0;
 		}
 
-		void Excute() noexcept
-		{
-			currState = stateFunc[currState]();
-		}
+
 	};
 }

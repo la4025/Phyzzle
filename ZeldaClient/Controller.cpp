@@ -1,53 +1,71 @@
+#include "GameObject.h"
+#include "GamePadManager.h"
 
+
+#include "InputManager.h"
 #include "TimeController.h"
-#include "Tween.h"
-#include <algorithm>
-#include <iostream>
-
-#include "PhysicsSystem.h"
 
 #include "Controller.h"
 
 namespace Phyzzle
 {
+	std::vector<PurahEngine::Transform*> Controller::controllerable{};
+
 	Controller::~Controller()
-		= default;
+	{
+		controllerable.erase(std::ranges::find(controllerable, transform));
+	}
 
 	void Controller::Awake()
 	{
-	}
+		transform = GetGameObject()->GetTransform();
+		controllerable.push_back(transform);
 
-	void Controller::Start()
-	{
 		PurahEngine::GamePadManager::AddGamePad(0);
 
 		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
 		gamePad->SetDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-
-		startPosition = modelCore->GetWorldPosition();
-		startRotation = modelCore->GetWorldRotation();
-
-		startLinearVelocity = playerRigidbody->GetLinearVelocity();
-		startAngularVelocity = playerRigidbody->GetAngularVelocity();
 	}
 
 	void Controller::Update()
 	{
-		GamePadInput();
-		RotateCamera();
-
+		Input();
 		Move();
+		Around();
 	}
 
-	void Controller::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	void Controller::Input()
 	{
-	}
+		auto& input = PurahEngine::InputManager::Getinstance();
 
-	void Controller::GamePadInput()
-	{
-		LstickX = 0.f, LstickY = 0.f;
-		RstickX = 0.f, RstickY = 0.f;
-		LTrigger = 0.f, RTrigger = 0.f;
+		if (input.IsKeyDown(PurahEngine::eKey::eKEY_1))
+		{
+			auto itr = std::ranges::find(controllerable, transform);
+			if (itr != controllerable.begin() && itr != controllerable.end())
+			{
+				--itr;
+				if (itr != controllerable.begin() && itr != controllerable.end())
+				{
+					transform = *itr;
+				}
+			}
+		}
+		if (input.IsKeyDown(PurahEngine::eKey::eKEY_2))
+		{
+			auto itr = std::ranges::find(controllerable, transform);
+			if (itr != controllerable.begin() && itr != controllerable.end())
+			{
+				++itr;
+				if (itr != controllerable.begin() && itr != controllerable.end())
+				{
+					transform = *itr;
+				}
+			}
+		}
+		if (input.IsKeyDown(PurahEngine::eKey::eKEY_F1))
+		{
+			Keybord = Keybord ? false : true;
+		}
 
 		if (gamePad->IsConnected())
 		{
@@ -56,83 +74,79 @@ namespace Phyzzle
 
 			LTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
 			RTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
+		}
 
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
+		if (Keybord)
+		{
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_W))
 			{
-				gamePad->VibrateRatio(LTrigger, RTrigger, 3.f);
+				LstickSize = 1.f;
+				LstickY = 1.f;
 			}
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_B))
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_S))
 			{
-				gamePad->VibrateRatio(0.f, 0.f);
+				LstickSize = 1.f;
+				LstickY = -1.0f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_A))
+			{
+				LstickSize = 1.f;
+				LstickX = -1.0f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_D))
+			{
+				LstickSize = 1.f;
+				LstickX = 1.0f;
+			}
+
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_Q))
+			{
+				LTrigger = 1.f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_E))
+			{
+				RTrigger = 1.f;
+			}
+
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_UP))
+			{
+				RstickSize = 1.f;
+				RstickY = 1.0f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_DOWN))
+			{
+				RstickSize = 1.f;
+				RstickY = -1.0f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_LEFT))
+			{
+				RstickSize = 1.f;
+				RstickX = -1.0f;
+			}
+			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_RIGHT))
+			{
+				RstickSize = 1.f;
+				RstickX = 1.0f;
 			}
 		}
 	}
 
 	void Controller::Move()
 	{
+		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
+
+		const float deltaTime = time.GetDeltaTime();
+
 		// 카메라의 전방 벡터를 계산
-		Eigen::Vector3f cameraFront = cameraArm->GetFront();
-		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
-		const Eigen::Vector3f right = cameraArm->GetRight();
+		const Eigen::Vector3f front = transform->GetFront();
+		const Eigen::Vector3f right = transform->GetRight();
+		const Eigen::Vector3f up = transform->GetUp();
 
-		Eigen::Vector3f movementDirection = forward * LstickY + right * LstickX;
-
-		movementDirection.y() = 0.f;
-
-		// 속도 벡터를 계산
-		movement = movementDirection * moveSpeed * LstickSize;
-
-		Eigen::Vector3f velocity = playerRigidbody->GetLinearVelocity();
-
-		// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
-		/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
-		velocity.x() = movement.x();
-		velocity.z() = movement.z();
-
-		// 속력을 적용시킴
-		playerRigidbody->SetLinearVelocity(velocity);
-
-		const Eigen::Quaternionf parentWorld = gameObject->GetTransform()->GetWorldRotation();
-
-		// Eigen::Vector3f localForward = modelCore->GetLocalRotation() * Eigen::Vector3f::UnitZ();
-
-		static bool lastbool = false;
-		static bool currentbool = false;
-
-		lastbool = currentbool;
-		currentbool = movementDirection.isZero();
-
-		if (lastbool != currentbool)
-		{
-			if (currentbool)
-			{
-				animator->Play(L"Armature|Armature|Armature|idle");
-			}
-			else
-			{
-				animator->Play(L"Armature|Armature|Armature|running");
-			}
-			return;
-		}
-
-		if (currentbool)
-		{
-			return;
-		}
-
-		animator->SetPlaySpeed(L"Armature|Armature|Armature|running", LstickSize);
-
-
-		Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
-
-		// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
-		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
-
-		// Set the rotation of the transform to the target rotation
-		modelCore->SetLocalRotation(targetRotation);
+		const Eigen::Vector3f movementDirection = front * LstickY + right * LstickX + up * (-LTrigger + RTrigger);
+		transform->SetLocalPosition(transform->GetLocalPosition() + movementDirection * moveSpeed * deltaTime);
 	}
 
-	void Controller::RotateCamera()
+	void Controller::Around()
 	{
 		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
 
@@ -142,70 +156,54 @@ namespace Phyzzle
 		const float yawAngle = RstickX * sensitivity * deltaTime * RstickSize;
 		{
 			// 월드 up 기준으로 카메라를 회전
-			cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
+			transform->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
 		}
 
 		// 스틱 기울기에 따라 회전 각도를 계산
-		const float pitchAngle = RstickY * sensitivity * deltaTime * RstickSize;
+		const float pitchAngle = -RstickY * sensitivity * deltaTime * RstickSize;
 		{
-			auto cameraRotationQuat = cameraArm->GetLocalRotation();
-			Eigen::Vector3f cameraEulerAngles = cameraRotationQuat.toRotationMatrix().eulerAngles(0, 1, 2);
+			float deltaAngle = 0.f;
 
-			// Get the current pitch angle in degrees
-			float currentPitchDegrees = cameraEulerAngles(0) * 180.0f / std::numbers::pi;
+			xAngle += pitchAngle;
 
-			// Calculate the new pitch angle
-			float newPitchDegrees = currentPitchDegrees + pitchAngle;
-
-			if (newPitchDegrees < 180.f)
+			if (xAngle > 80.f)
 			{
-				newPitchDegrees = std::clamp(newPitchDegrees, -1.f, 88.f);
+				deltaAngle = 0.f;
+				xAngle = 80.f;
+			}
+			else if (xAngle < -80.f)
+			{
+				deltaAngle = 0.f;
+				xAngle = -80.f;
 			}
 			else
 			{
-				newPitchDegrees = std::clamp(newPitchDegrees, 335.f, 361.f);
+				deltaAngle = pitchAngle;
 			}
 
 			// 카메라 Right 벡터를 기준으로 회전하기 위해서 카메라의 월드 right를 구함.
-			 const Eigen::Vector3f cameraRight = cameraArm->GetWorldRotation() * -Eigen::Vector3f::UnitX();
-
-			//// 제한된 각도만큼 카메라 회전
-			// float deltaPitch = newPitchDegrees - cameraEulerAngles(0);
+			const Eigen::Vector3f cameraRight = transform->GetWorldRotation() * Eigen::Vector3f::UnitX();
 
 			// 카메라의 right 기준으로 카메라를 회전
-			 cameraArm->Rotate(cameraRight, pitchAngle);
+			transform->Rotate(cameraRight, deltaAngle);
 		}
-	}
-
-	void Controller::HandsUp()
-	{
-
 	}
 
 	void Controller::PreSerialize(json& jsonData) const
 	{
-
 	}
 
 	void Controller::PreDeserialize(const json& jsonData)
 	{
-		PREDESERIALIZE_BASE();
-		PREDESERIALIZE_VALUE(detect);
-		PREDESERIALIZE_VALUE(moveSpeed);
 		PREDESERIALIZE_VALUE(sensitivity);
+		PREDESERIALIZE_VALUE(moveSpeed);
 	}
 
 	void Controller::PostSerialize(json& jsonData) const
 	{
-
 	}
 
 	void Controller::PostDeserialize(const json& jsonData)
 	{
-		POSTDESERIALIZE_PTR(playerRigidbody);
-		POSTDESERIALIZE_PTR(modelCore);
-		POSTDESERIALIZE_PTR(cameraArm);
-		POSTDESERIALIZE_PTR(cameraCore);
-		POSTDESERIALIZE_PTR(animator);
 	}
 }

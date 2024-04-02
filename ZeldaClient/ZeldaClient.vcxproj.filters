@@ -7,9 +7,6 @@
     <ClCompile Include="Test3.cpp" />
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
-    <ClCompile Include="Player.cpp">
-      <Filter>KH\01. Player</Filter>
-    </ClCompile>
     <ClCompile Include="KiHoon.cpp">
       <Filter>KH\SCENE</Filter>
     </ClCompile>
@@ -26,30 +23,42 @@
       <Filter>YH</Filter>
     </ClCompile>
     <ClCompile Include="IObject.cpp">
-      <Filter>KH\02. Object</Filter>
+      <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="Weld.cpp">
-      <Filter>KH\01. Player\Ability</Filter>
+    <ClCompile Include="AttatchState.cpp">
+      <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
-    <ClCompile Include="Rewind.cpp">
-      <Filter>KH\01. Player\Ability</Filter>
-    </ClCompile>
-    <ClCompile Include="IAbility.cpp">
-      <Filter>KH\01. Player\Ability</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>KH\01. Player\Controller</Filter>
+    <ClCompile Include="RewindState.cpp">
+      <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="AudioTest.cpp" />
-    <ClCompile Include="JointSystem.cpp">
-      <Filter>KH\00. System</Filter>
+    <ClCompile Include="AttatchSystem.cpp">
+      <Filter>KH\System</Filter>
     </ClCompile>
     <ClCompile Include="PlayerSystem.cpp">
-      <Filter>KH\00. System</Filter>
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM.cpp">
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="LauncherPlatform.cpp">
+      <Filter>Apparatus</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultState.cpp">
+      <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="RewindSystem.cpp">
-      <Filter>KH\00. System</Filter>
+      <Filter>KH\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Hold.cpp">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,45 +82,54 @@
       <Filter>YH</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
-      <Filter>KH\99. etc</Filter>
+      <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="IObject.h">
-      <Filter>KH\02. Object</Filter>
+      <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="Weld.h">
-      <Filter>KH\01. Player\Ability</Filter>
+    <ClInclude Include="AttatchState.h">
+      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
-    <ClInclude Include="Rewind.h">
-      <Filter>KH\01. Player\Ability</Filter>
+    <ClInclude Include="RewindState.h">
+      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
-    <ClInclude Include="IAbility.h">
-      <Filter>KH\01. Player\Ability</Filter>
+    <ClInclude Include="IState.h">
+      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="eObjectProperty.h">
-      <Filter>KH\02. Object</Filter>
+      <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="TemplateFlag.h">
-      <Filter>KH\99. etc</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>KH\01. Player\Controller</Filter>
+      <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="AudioTest.h" />
-    <ClInclude Include="JointSystem.h">
-      <Filter>KH\00. System</Filter>
+    <ClInclude Include="AttatchSystem.h">
+      <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="PlayerSystem.h">
-      <Filter>KH\00. System</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>KH\01. Player</Filter>
+      <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="FSM.h">
-      <Filter>KH\00. System</Filter>
+      <Filter>KH\System</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherPlatform.h">
+      <Filter>Apparatus</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultState.h">
+      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="RewindSystem.h">
-      <Filter>KH\00. System</Filter>
+      <Filter>KH\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Hold.h">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>KH\PLAYER\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +138,9 @@
     </Filter>
     <Filter Include="KH\SCENE">
       <UniqueIdentifier>{37249a48-b695-43b3-b122-742d33c69569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER">
+      <UniqueIdentifier>{2bca997a-4dfd-4f5e-b7f0-be07c5f10356}</UniqueIdentifier>
     </Filter>
     <Filter Include="EntryPoint">
       <UniqueIdentifier>{4d62666c-da44-4bd4-9655-21e82a2cbd6f}</UniqueIdentifier>
@@ -133,23 +154,26 @@
     <Filter Include="YH">
       <UniqueIdentifier>{4673e658-65bd-4ea5-9228-e1d498ecad54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KH\99. etc">
+    <Filter Include="KH\ETC">
       <UniqueIdentifier>{048452e9-c902-4698-9af9-8e4a9122f0c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KH\02. Object">
+    <Filter Include="KH\Object">
       <UniqueIdentifier>{0095cd59-04b0-4218-b5d5-e6a72052ab37}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KH\01. Player">
-      <UniqueIdentifier>{2bca997a-4dfd-4f5e-b7f0-be07c5f10356}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="KH\01. Player\Ability">
-      <UniqueIdentifier>{6452ba17-f6c7-4808-9efa-26bba6abd277}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="KH\01. Player\Controller">
+    <Filter Include="KH\PLAYER\Controller">
       <UniqueIdentifier>{3eab93c0-5124-4361-9b20-d32a1781124c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KH\00. System">
+    <Filter Include="KH\System">
       <UniqueIdentifier>{f261e56a-a180-4a83-9048-508b0f8b4365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Apparatus">
+      <UniqueIdentifier>{7cd738f5-ece7-48a9-a588-7373c98ef873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State">
+      <UniqueIdentifier>{6452ba17-f6c7-4808-9efa-26bba6abd277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\player">
+      <UniqueIdentifier>{47d937ba-85a6-4d65-82a3-edc8a443434f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

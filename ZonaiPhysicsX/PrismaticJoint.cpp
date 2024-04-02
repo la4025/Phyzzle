@@ -100,6 +100,28 @@ namespace ZonaiPhysics
 		joint->setLimit(limit);
 	}
 
+	void PrismaticJoint::SetMinDistance(float _lower)
+	{
+		assert(joint != nullptr);
+
+		auto limit = joint->getLimit();
+
+		limit.lower = _lower;
+
+		joint->setLimit(limit);
+	}
+
+	void PrismaticJoint::SetMaxDistance(float _upper)
+	{
+		assert(joint != nullptr);
+
+		auto limit = joint->getLimit();
+
+		limit.upper = _upper;
+
+		joint->setLimit(limit);
+	}
+
 	void PrismaticJoint::SetSpringArg(float _stiffness, float _damping)
 	{
 		assert(joint != nullptr);

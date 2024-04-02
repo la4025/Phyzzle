@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <Eigen/Dense>
+
+#include "MaterialEnum.h"
 #include "ZnBase.h"
 
 namespace ZonaiPhysics
@@ -39,13 +41,21 @@ namespace ZonaiPhysics
 		virtual void				Simulation(float _dt) = 0;
 		virtual void				Finalize() = 0;
 
-		virtual void				AddMaterial(uint32_t _id, float staticFriction,	float dynamicFriction, float _restitution) = 0;
+		virtual void				AddMaterial(
+			uint32_t _id, 
+			float staticFriction,	
+			float dynamicFriction, 
+			float _restitution,
+			eCombineMode _eFriction,
+			eCombineMode _eRestitution
+		) = 0;
 
 		virtual void				CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) = 0;
 		virtual void				LoadScene(void* _userScene) = 0;
 		virtual void				UnloadScene(void* _userScene) = 0;
 
 	public:
+		virtual Eigen::Vector3f		GetGravity(void* _userScene = nullptr) = 0;
 		virtual void				SetGravity(const Eigen::Vector3f& _gravity, void* _userScene = nullptr) = 0;
 		virtual void				SetCollisionLayerData(uint32_t _layer,const std::initializer_list<uint32_t>& _data) = 0;
 

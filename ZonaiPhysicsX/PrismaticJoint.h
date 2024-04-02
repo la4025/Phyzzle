@@ -37,6 +37,8 @@ namespace ZonaiPhysics
 		float GetVelocity() const override;
 
 		void SetLimit(float _lower, float _upper) override;
+		void SetMinDistance(float _lower) override;
+		void SetMaxDistance(float _upper) override;
 		void SetSpringArg(float _stiffness, float _damping) override;
 
 		void SetRestitution(float _restitution) const override;
