@@ -1,6 +1,679 @@
 {
   "gameObjects": [
     {
+      "__Base__instanceID": -361554,
+      "name": "mainchar",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361556,
+        "position": {
+          "x": 8.534589E-09,
+          "y": 1.99910577E-08,
+          "z": -4.8278963E-09
+        },
+        "rotation": {
+          "x": -0.7071068,
+          "y": 5.050991E-13,
+          "z": 1.34876164E-08,
+          "w": 0.7071067
+        },
+        "scale": {
+          "x": 100.0,
+          "y": 100.0,
+          "z": 99.9999847
+        },
+        "__ID__parentTransform": [
+          -361472
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361550,
+      "name": "leg_lower.R_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361552,
+        "position": {
+          "x": 0.0,
+          "y": 0.00544630038,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361548
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361546,
+      "name": "leg_lower.R",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361548,
+        "position": {
+          "x": -4.656613E-10,
+          "y": 0.005446299,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": -0.002490731,
+          "y": 0.2605401,
+          "z": 0.000922956329,
+          "w": 0.9654594
+        },
+        "scale": {
+          "x": 1.00000024,
+          "y": 1.00000119,
+          "z": 0.9999987
+        },
+        "__ID__parentTransform": [
+          -361544
+        ],
+        "__ID__children": [
+          -361552
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361542,
+      "name": "leg_upper.R",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361544,
+        "position": {
+          "x": 0.00254925224,
+          "y": -0.00132407155,
+          "z": 0.0003674035
+        },
+        "rotation": {
+          "x": 0.0437471978,
+          "y": -0.0724826,
+          "z": 0.989582956,
+          "w": -0.116439134
+        },
+        "scale": {
+          "x": 1.00000143,
+          "y": 0.9999998,
+          "z": 1.00000072
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361548
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361538,
+      "name": "leg_lower.L_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361540,
+        "position": {
+          "x": 0.0,
+          "y": 0.005446301,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361536
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361534,
+      "name": "leg_lower.L",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361536,
+        "position": {
+          "x": -3.16649679E-10,
+          "y": 0.0054463,
+          "z": -2.98023217E-10
+        },
+        "rotation": {
+          "x": -0.304083318,
+          "y": -0.106533587,
+          "z": 0.132052854,
+          "w": 0.9374145
+        },
+        "scale": {
+          "x": 0.9999999,
+          "y": 0.9999998,
+          "z": 0.9999996
+        },
+        "__ID__parentTransform": [
+          -361532
+        ],
+        "__ID__children": [
+          -361540
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361530,
+      "name": "leg_upper.L",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361532,
+        "position": {
+          "x": -0.00254641729,
+          "y": -0.00132568576,
+          "z": 0.000367457978
+        },
+        "rotation": {
+          "x": -0.282347381,
+          "y": 0.306379229,
+          "z": 0.895362556,
+          "w": 0.157281831
+        },
+        "scale": {
+          "x": 0.999999464,
+          "y": 1.0,
+          "z": 1.00000012
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361536
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361526,
+      "name": "head_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361528,
+        "position": {
+          "x": 0.0,
+          "y": 0.00483586546,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361524
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361522,
+      "name": "head",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361524,
+        "position": {
+          "x": 0.0,
+          "y": 0.00627080724,
+          "z": 3.329478E-10
+        },
+        "rotation": {
+          "x": -0.0565807745,
+          "y": -0.05808366,
+          "z": -0.0172771383,
+          "w": 0.9965573
+        },
+        "scale": {
+          "x": 0.9999998,
+          "y": 1.00000012,
+          "z": 0.9999998
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361528
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361518,
+      "name": "arm_lower.R_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361520,
+        "position": {
+          "x": 0.0,
+          "y": 0.00451607676,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361516
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361514,
+      "name": "arm_lower.R",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361516,
+        "position": {
+          "x": 4.47034826E-10,
+          "y": 0.0045160763,
+          "z": 2.66336425E-10
+        },
+        "rotation": {
+          "x": 0.00293511618,
+          "y": -4.79989467E-05,
+          "z": 0.0007080482,
+          "w": 0.99999547
+        },
+        "scale": {
+          "x": 0.99999994,
+          "y": 1.00000036,
+          "z": 0.9999999
+        },
+        "__ID__parentTransform": [
+          -361512
+        ],
+        "__ID__children": [
+          -361520
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361510,
+      "name": "arm_upper.R",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361512,
+        "position": {
+          "x": 0.00372022274,
+          "y": 0.00501932437,
+          "z": -0.000596007449
+        },
+        "rotation": {
+          "x": -0.528901637,
+          "y": -0.339896441,
+          "z": -0.481401026,
+          "w": 0.6107263
+        },
+        "scale": {
+          "x": 1.00000012,
+          "y": 1.00000012,
+          "z": 0.99999994
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361516
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361506,
+      "name": "arm_lower.L_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361508,
+        "position": {
+          "x": 0.0,
+          "y": 0.00451608,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361504
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361502,
+      "name": "arm_lower.L",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361504,
+        "position": {
+          "x": 1.9324943E-10,
+          "y": 0.00451608,
+          "z": -3.5157427E-10
+        },
+        "rotation": {
+          "x": -0.003236711,
+          "y": 0.208326221,
+          "z": 0.000434103626,
+          "w": 0.978054
+        },
+        "scale": {
+          "x": 0.999999642,
+          "y": 1.00000024,
+          "z": 0.9999999
+        },
+        "__ID__parentTransform": [
+          -361500
+        ],
+        "__ID__children": [
+          -361508
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361498,
+      "name": "arm_upper.L",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361500,
+        "position": {
+          "x": -0.003721435,
+          "y": 0.00504826,
+          "z": -0.000127954627
+        },
+        "rotation": {
+          "x": -0.0339982547,
+          "y": 0.13081257,
+          "z": 0.84529686,
+          "w": 0.5169192
+        },
+        "scale": {
+          "x": 1.00000012,
+          "y": 0.99999994,
+          "z": 0.999999762
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361504
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361494,
+      "name": "apron.R_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361496,
+        "position": {
+          "x": 0.0,
+          "y": 0.00483586546,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361492
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361490,
+      "name": "apron.R",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361492,
+        "position": {
+          "x": 0.00191640086,
+          "y": 0.001046052,
+          "z": 0.00399985071
+        },
+        "rotation": {
+          "x": -0.0578763224,
+          "y": 0.44586584,
+          "z": 0.8668755,
+          "w": -0.215362266
+        },
+        "scale": {
+          "x": 1.00000024,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361496
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361486,
+      "name": "apron.L_end",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361488,
+        "position": {
+          "x": 0.0,
+          "y": 0.004835865,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361484
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361482,
+      "name": "apron.L",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361484,
+        "position": {
+          "x": -0.00191481214,
+          "y": 0.0004884366,
+          "z": 0.00417715
+        },
+        "rotation": {
+          "x": -0.0273365118,
+          "y": 0.381656051,
+          "z": 0.8857118,
+          "w": 0.262880176
+        },
+        "scale": {
+          "x": 1.00000167,
+          "y": 1.00000024,
+          "z": 1.00000012
+        },
+        "__ID__parentTransform": [
+          -361480
+        ],
+        "__ID__children": [
+          -361488
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361478,
+      "name": "body_upper",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361480,
+        "position": {
+          "x": -9.936873E-07,
+          "y": 0.00104895444,
+          "z": 0.0122707663
+        },
+        "rotation": {
+          "x": 0.6330041,
+          "y": 0.0636744,
+          "z": 0.03219818,
+          "w": 0.7708532
+        },
+        "scale": {
+          "x": 0.9999999,
+          "y": 1.00000012,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -361476
+        ],
+        "__ID__children": [
+          -361484,
+          -361492,
+          -361500,
+          -361512,
+          -361524,
+          -361532,
+          -361544
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361474,
+      "name": "Armature",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361476,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": -0.7071068,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.7071067
+        },
+        "scale": {
+          "x": 100.0,
+          "y": 100.0,
+          "z": 100.0
+        },
+        "__ID__parentTransform": [
+          -361472
+        ],
+        "__ID__children": [
+          -361480
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -361470,
+      "name": "Koo",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -361472,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          49866
+        ],
+        "__ID__children": [
+          -361476,
+          -361556
+        ]
+      },
+      "components": []
+    },
+    {
       "__Base__instanceID": -345008,
       "name": "ColliderDebug",
       "tag": [],
@@ -136,679 +809,6 @@
       ]
     },
     {
-      "__Base__instanceID": -344994,
-      "name": "mainchar",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344996,
-        "position": {
-          "x": 8.534589E-09,
-          "y": 1.99910577E-08,
-          "z": -4.8278963E-09
-        },
-        "rotation": {
-          "x": -0.7071068,
-          "y": 5.050991E-13,
-          "z": 1.34876164E-08,
-          "w": 0.7071067
-        },
-        "scale": {
-          "x": 100.0,
-          "y": 100.0,
-          "z": 99.9999847
-        },
-        "__ID__parentTransform": [
-          -344912
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344990,
-      "name": "leg_lower.R_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344992,
-        "position": {
-          "x": 0.0,
-          "y": 0.00544630038,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344988
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344986,
-      "name": "leg_lower.R",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344988,
-        "position": {
-          "x": -4.656613E-10,
-          "y": 0.005446299,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": -0.002490731,
-          "y": 0.2605401,
-          "z": 0.000922956329,
-          "w": 0.9654594
-        },
-        "scale": {
-          "x": 1.00000024,
-          "y": 1.00000119,
-          "z": 0.9999987
-        },
-        "__ID__parentTransform": [
-          -344984
-        ],
-        "__ID__children": [
-          -344992
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344982,
-      "name": "leg_upper.R",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344984,
-        "position": {
-          "x": 0.00254925224,
-          "y": -0.00132407155,
-          "z": 0.0003674035
-        },
-        "rotation": {
-          "x": 0.0437471978,
-          "y": -0.0724826,
-          "z": 0.989582956,
-          "w": -0.116439134
-        },
-        "scale": {
-          "x": 1.00000143,
-          "y": 0.9999998,
-          "z": 1.00000072
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344988
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344978,
-      "name": "leg_lower.L_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344980,
-        "position": {
-          "x": 0.0,
-          "y": 0.005446301,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344976
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344974,
-      "name": "leg_lower.L",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344976,
-        "position": {
-          "x": -3.16649679E-10,
-          "y": 0.0054463,
-          "z": -2.98023217E-10
-        },
-        "rotation": {
-          "x": -0.304083318,
-          "y": -0.106533587,
-          "z": 0.132052854,
-          "w": 0.9374145
-        },
-        "scale": {
-          "x": 0.9999999,
-          "y": 0.9999998,
-          "z": 0.9999996
-        },
-        "__ID__parentTransform": [
-          -344972
-        ],
-        "__ID__children": [
-          -344980
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344970,
-      "name": "leg_upper.L",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344972,
-        "position": {
-          "x": -0.00254641729,
-          "y": -0.00132568576,
-          "z": 0.000367457978
-        },
-        "rotation": {
-          "x": -0.282347381,
-          "y": 0.306379229,
-          "z": 0.895362556,
-          "w": 0.157281831
-        },
-        "scale": {
-          "x": 0.999999464,
-          "y": 1.0,
-          "z": 1.00000012
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344976
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344966,
-      "name": "head_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344968,
-        "position": {
-          "x": 0.0,
-          "y": 0.00483586546,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344964
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344962,
-      "name": "head",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344964,
-        "position": {
-          "x": 0.0,
-          "y": 0.00627080724,
-          "z": 3.329478E-10
-        },
-        "rotation": {
-          "x": -0.0565807745,
-          "y": -0.05808366,
-          "z": -0.0172771383,
-          "w": 0.9965573
-        },
-        "scale": {
-          "x": 0.9999998,
-          "y": 1.00000012,
-          "z": 0.9999998
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344968
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344958,
-      "name": "arm_lower.R_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344960,
-        "position": {
-          "x": 0.0,
-          "y": 0.00451607676,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344956
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344954,
-      "name": "arm_lower.R",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344956,
-        "position": {
-          "x": 4.47034826E-10,
-          "y": 0.0045160763,
-          "z": 2.66336425E-10
-        },
-        "rotation": {
-          "x": 0.00293511618,
-          "y": -4.79989467E-05,
-          "z": 0.0007080482,
-          "w": 0.99999547
-        },
-        "scale": {
-          "x": 0.99999994,
-          "y": 1.00000036,
-          "z": 0.9999999
-        },
-        "__ID__parentTransform": [
-          -344952
-        ],
-        "__ID__children": [
-          -344960
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344950,
-      "name": "arm_upper.R",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344952,
-        "position": {
-          "x": 0.00372022274,
-          "y": 0.00501932437,
-          "z": -0.000596007449
-        },
-        "rotation": {
-          "x": -0.528901637,
-          "y": -0.339896441,
-          "z": -0.481401026,
-          "w": 0.6107263
-        },
-        "scale": {
-          "x": 1.00000012,
-          "y": 1.00000012,
-          "z": 0.99999994
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344956
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344946,
-      "name": "arm_lower.L_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344948,
-        "position": {
-          "x": 0.0,
-          "y": 0.00451608,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344944
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344942,
-      "name": "arm_lower.L",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344944,
-        "position": {
-          "x": 1.9324943E-10,
-          "y": 0.00451608,
-          "z": -3.5157427E-10
-        },
-        "rotation": {
-          "x": -0.003236711,
-          "y": 0.208326221,
-          "z": 0.000434103626,
-          "w": 0.978054
-        },
-        "scale": {
-          "x": 0.999999642,
-          "y": 1.00000024,
-          "z": 0.9999999
-        },
-        "__ID__parentTransform": [
-          -344940
-        ],
-        "__ID__children": [
-          -344948
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344938,
-      "name": "arm_upper.L",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344940,
-        "position": {
-          "x": -0.003721435,
-          "y": 0.00504826,
-          "z": -0.000127954627
-        },
-        "rotation": {
-          "x": -0.0339982547,
-          "y": 0.13081257,
-          "z": 0.84529686,
-          "w": 0.5169192
-        },
-        "scale": {
-          "x": 1.00000012,
-          "y": 0.99999994,
-          "z": 0.999999762
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344944
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344934,
-      "name": "apron.R_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344936,
-        "position": {
-          "x": 0.0,
-          "y": 0.00483586546,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344932
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344930,
-      "name": "apron.R",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344932,
-        "position": {
-          "x": 0.00191640086,
-          "y": 0.001046052,
-          "z": 0.00399985071
-        },
-        "rotation": {
-          "x": -0.0578763224,
-          "y": 0.44586584,
-          "z": 0.8668755,
-          "w": -0.215362266
-        },
-        "scale": {
-          "x": 1.00000024,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344936
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344926,
-      "name": "apron.L_end",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344928,
-        "position": {
-          "x": 0.0,
-          "y": 0.004835865,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344924
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344922,
-      "name": "apron.L",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344924,
-        "position": {
-          "x": -0.00191481214,
-          "y": 0.0004884366,
-          "z": 0.00417715
-        },
-        "rotation": {
-          "x": -0.0273365118,
-          "y": 0.381656051,
-          "z": 0.8857118,
-          "w": 0.262880176
-        },
-        "scale": {
-          "x": 1.00000167,
-          "y": 1.00000024,
-          "z": 1.00000012
-        },
-        "__ID__parentTransform": [
-          -344920
-        ],
-        "__ID__children": [
-          -344928
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344918,
-      "name": "body_upper",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344920,
-        "position": {
-          "x": -9.936873E-07,
-          "y": 0.00104895444,
-          "z": 0.0122707663
-        },
-        "rotation": {
-          "x": 0.6330041,
-          "y": 0.0636744,
-          "z": 0.03219818,
-          "w": 0.7708532
-        },
-        "scale": {
-          "x": 0.9999999,
-          "y": 1.00000012,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -344916
-        ],
-        "__ID__children": [
-          -344924,
-          -344932,
-          -344940,
-          -344952,
-          -344964,
-          -344972,
-          -344984
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344914,
-      "name": "Armature",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344916,
-        "position": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": -0.7071068,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 0.7071067
-        },
-        "scale": {
-          "x": 100.0,
-          "y": 100.0,
-          "z": 100.0
-        },
-        "__ID__parentTransform": [
-          -344912
-        ],
-        "__ID__children": [
-          -344920
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -344910,
-      "name": "Player",
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -344912,
-        "position": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 100.0,
-          "y": 100.0,
-          "z": 100.0
-        },
-        "__ID__parentTransform": [
-          49866
-        ],
-        "__ID__children": [
-          -344916,
-          -344996
-        ]
-      },
-      "components": []
-    },
-    {
       "__Base__instanceID": -344904,
       "name": "Body",
       "tag": [],
@@ -834,8 +834,8 @@
           -344876
         ],
         "__ID__children": [
-          -344912,
-          -345002
+          -345002,
+          -361472
         ]
       },
       "components": []
@@ -971,9 +971,8 @@
           "height": 0.5
         },
         {
-          "__Base__instanceID": -344886,
-          "__Base__Component": "Controller",
-          "detect": false,
+          "__Base__instanceID": -364132,
+          "__Base__Component": "Player",
           "moveSpeed": 10.0,
           "sensitivity": 90.0,
           "jumpPower": 10.0,
@@ -1408,7 +1407,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 1,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,

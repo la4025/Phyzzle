@@ -11,6 +11,12 @@ namespace Phyzzle
 	public:
 		void Reset() override;
 		void Play() override;
+
 		void Button() override;
+
+	private:
+		void Jump();
+		void Move();
+		void Around();
 	};
 }

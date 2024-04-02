@@ -3,14 +3,15 @@
 
 namespace Phyzzle
 {
-	class Hold final : public IState
+	class HoldState final : public IState
 	{
 	public:
-		~Hold() override;
+		~HoldState() override;
 
 	public:
 		void Reset() override;
 		void Play() override;
+
 		void Button() override;
 	};
 }

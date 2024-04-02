@@ -39,9 +39,6 @@
     <ClCompile Include="PlayerSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
-    <ClCompile Include="FSM.cpp">
-      <Filter>KH\System</Filter>
-    </ClCompile>
     <ClCompile Include="LauncherPlatform.cpp">
       <Filter>Apparatus</Filter>
     </ClCompile>
@@ -51,7 +48,7 @@
     <ClCompile Include="RewindSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
-    <ClCompile Include="Hold.cpp">
+    <ClCompile Include="HoldState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -94,9 +91,6 @@
     <ClInclude Include="RewindState.h">
       <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
-    <ClInclude Include="IState.h">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClInclude>
     <ClInclude Include="eObjectProperty.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
@@ -110,9 +104,6 @@
     <ClInclude Include="PlayerSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
-    <ClInclude Include="FSM.h">
-      <Filter>KH\System</Filter>
-    </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
       <Filter>Apparatus</Filter>
     </ClInclude>
@@ -122,7 +113,7 @@
     <ClInclude Include="RewindSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
-    <ClInclude Include="Hold.h">
+    <ClInclude Include="HoldState.h">
       <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -130,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>KH\PLAYER\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="IState.h">
+      <Filter>KH\PLAYER\State\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +168,9 @@
     </Filter>
     <Filter Include="KH\PLAYER\player">
       <UniqueIdentifier>{47d937ba-85a6-4d65-82a3-edc8a443434f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State\Base">
+      <UniqueIdentifier>{f6c2598c-888c-4205-9a79-ac89b2ee3273}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

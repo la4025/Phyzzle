@@ -152,8 +152,7 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DefaultState.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="FSM.cpp" />
-    <ClCompile Include="Hold.cpp" />
+    <ClCompile Include="HoldState.cpp" />
     <ClCompile Include="IObject.cpp" />
     <ClCompile Include="AttatchSystem.cpp" />
     <ClCompile Include="KiHoon.cpp" />
@@ -179,8 +178,7 @@
     <ClInclude Include="Controller.h" />
     <ClInclude Include="DefaultState.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="FSM.h" />
-    <ClInclude Include="Hold.h" />
+    <ClInclude Include="HoldState.h" />
     <ClInclude Include="AttatchSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
     <ClInclude Include="RewindSystem.h" />

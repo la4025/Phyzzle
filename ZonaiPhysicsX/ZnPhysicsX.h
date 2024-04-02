@@ -78,6 +78,10 @@ namespace ZonaiPhysics
 			const Eigen::Vector3f& _gravity,
 			void* _userScene) override;
 
+		void SetCollisionLayer(
+			uint32_t _layer, 
+			uint32_t _collision, bool _value) override;
+
 		void SetCollisionLayerData(
 			uint32_t _layer, 
 			const std::initializer_list<uint32_t>& _data) override;

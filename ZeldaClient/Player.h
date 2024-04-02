@@ -23,50 +23,47 @@ namespace Phyzzle
 
 		~Player() override;
 
-		void Awake() override;
+	public:
 		void Start() override;
-
 		void Update() override;
-
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 	private:
 		void GamePadInput();
-		void Move();
-		void RotateCamera();
-
-		void Jump();
-
-		void HandsUp();
 
 	public:
-		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
-		void PostSerialize(json& jsonData) const override;
 		void PostDeserialize(const json& jsonData) override;
 
-	public:
-		// void SetPlayer(GameObject*);
-
 	private:
-		// __declspec(property(get = , put = ));
-		bool detect;
-		float moveSpeed;
-		float sensitivity;
+		float moveSpeed = 10.f;
+		float sensitivity = 90.f;
 
-		float jumpPower;
-
+		float jumpPower = 10.f;
 		bool jumping = false;
 
 	private:
-		PurahEngine::RigidBody* playerRigidbody;
-		PurahEngine::Transform* modelCore;
-		PurahEngine::Transform* cameraArm;
-		PurahEngine::Transform* cameraCore;
-		PurahEngine::Animator* animator;
+		struct PlayerData
+		{
+			PurahEngine::RigidBody* playerRigidbody;
+			PurahEngine::Transform* modelCore;
+			PurahEngine::Transform* cameraArm;
+			PurahEngine::Transform* cameraCore;
+			PurahEngine::Animator* animator;
 
-	private:
-		Eigen::Vector3f movement = Eigen::Vector3f::Zero();
+			float xAngle = 0.f;
+			const float limitHighAngle = 80.f;
+			const float limitLowAngle = -70.f;
+
+			float moveSpeed = 10.f;
+			float sensitivity = 90.f;
+
+			float jumpPower = 10.f;
+			bool jumping = false;
+		};
+
+		State state;
+		PlayerData data;
 
 	private:
 		PurahEngine::GamePad* gamePad;
@@ -81,11 +78,6 @@ namespace Phyzzle
 		float RTrigger;
 		float vibrationL = 0.f;
 		float vibrationR = 0.f;
-
-		float xAngle = 0.f;
-		const float limitHighAngle = 80.f;
-		const float limitLowAngle = -70.f;
-
 
 	private:
 		/// 사라질 변수들

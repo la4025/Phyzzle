@@ -13,7 +13,7 @@ namespace Phyzzle
 
 	Controller::~Controller()
 	{
-		controllerable.erase(std::ranges::find(controllerable, transform));
+		std::ranges::remove(controllerable, transform);
 	}
 
 	void Controller::Awake()
@@ -40,11 +40,11 @@ namespace Phyzzle
 
 		if (input.IsKeyDown(PurahEngine::eKey::eKEY_1))
 		{
-			auto itr = std::ranges::find(controllerable, transform);
-			if (itr != controllerable.begin() && itr != controllerable.end())
+			auto itr = std::find(controllerable.begin(), controllerable.end(), transform);
+			if (itr != controllerable.end())
 			{
 				--itr;
-				if (itr != controllerable.begin() && itr != controllerable.end())
+				if (itr != controllerable.begin())
 				{
 					transform = *itr;
 				}
@@ -52,11 +52,11 @@ namespace Phyzzle
 		}
 		if (input.IsKeyDown(PurahEngine::eKey::eKEY_2))
 		{
-			auto itr = std::ranges::find(controllerable, transform);
-			if (itr != controllerable.begin() && itr != controllerable.end())
+			auto itr = std::find(controllerable.begin(), controllerable.end(), transform);
+			if (itr != controllerable.end())
 			{
 				++itr;
-				if (itr != controllerable.begin() && itr != controllerable.end())
+				if (itr != controllerable.end())
 				{
 					transform = *itr;
 				}
@@ -98,7 +98,7 @@ namespace Phyzzle
 				LstickSize = 1.f;
 				LstickX = 1.0f;
 			}
-
+			
 			if (input.IsKeyPressed(PurahEngine::eKey::eKEY_Q))
 			{
 				LTrigger = 1.f;
