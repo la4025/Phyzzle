@@ -58,6 +58,9 @@
     <ClInclude Include="ZnJoint.h">
       <Filter>00. Base\joint</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialEnum.h">
+      <Filter>02. Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">

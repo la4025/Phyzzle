@@ -96,6 +96,16 @@ namespace PurahEngine
 		joint->SetLimit(_lower, _upper);
 	}
 
+	void SlideJoint::SetMinDistance(float _lower) const
+	{
+		joint->SetMinDistance(_lower);
+	}
+
+	void SlideJoint::SetMaxDistance(float _upper) const
+	{
+		joint->SetMinDistance(_upper);
+	}
+
 	void SlideJoint::SetSpringArg(float _stiffness, float _damping) const
 	{
 		joint->SetSpringArg(_stiffness, _damping);

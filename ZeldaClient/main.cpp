@@ -9,7 +9,9 @@
 #include "TestSingleton.h"
 #include "AudioTest.h"
 
+#include "Player.h"
 #include "Controller.h"
+
 #include "LauncherPlatform.h"
 
 #include "Button.h"
@@ -56,6 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<LauncherPlatform>("LauncherPlatform");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Button>("Button");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");

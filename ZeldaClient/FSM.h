@@ -15,5 +15,13 @@ namespace Phyzzle
 		std::unordered_map<int, std::function<void()>> stateMap;
 		int prevState;
 		int currState;
+
+	public:
+		int Excute()
+		{
+			return 0;
+		}
+
+
 	};
 }

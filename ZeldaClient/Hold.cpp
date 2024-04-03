@@ -3,26 +3,17 @@
 namespace Phyzzle
 {
 	Hold::~Hold()
+	= default;
+
+	void Hold::Reset()
 	{
 	}
 
-	void Hold::Awake()
+	void Hold::Play()
 	{
-
 	}
 
-	void Hold::Start()
+	void Hold::Button()
 	{
-
-	}
-
-	void Hold::FixedUpdate()
-	{
-
-	}
-
-	void Hold::Update()
-	{
-
 	}
 }

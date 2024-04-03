@@ -20,6 +20,8 @@ namespace PurahEngine
 		float GetVelocity() const;
 
 		void SetLimit(float _lower, float _upper) const;
+		void SetMinDistance(float _lower) const;
+		void SetMaxDistance(float _upper) const;
 		void SetSpringArg(float _stiffness, float _damping) const;
 		void SetBounciness(float _bounciness) const;
 
