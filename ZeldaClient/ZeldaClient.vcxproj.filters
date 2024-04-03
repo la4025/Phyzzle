@@ -57,6 +57,9 @@
     <ClCompile Include="Controller.cpp">
       <Filter>KH\PLAYER\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Holder.cpp">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="IState.h">
       <Filter>KH\PLAYER\State\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Holder.h">
+      <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

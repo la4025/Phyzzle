@@ -54,8 +54,8 @@ namespace PurahEngine
 		assert(user1 != nullptr);
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
-		purahCollider0->GetGameObject()->OnTriggerExit(purahCollider1);
-		purahCollider1->GetGameObject()->OnTriggerExit(purahCollider0);
+		purahCollider0->GetGameObject()->OnTriggerEnter(purahCollider1);
+		purahCollider1->GetGameObject()->OnTriggerEnter(purahCollider0);
 	}
 
 	void EventCallbackSystem::OnTriggerStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*)

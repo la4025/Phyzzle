@@ -151,6 +151,7 @@
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DefaultState.cpp" />
+    <ClCompile Include="Holder.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HoldState.cpp" />
     <ClCompile Include="IObject.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="DefaultState.h" />
+    <ClInclude Include="Holder.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="HoldState.h" />
     <ClInclude Include="AttatchSystem.h" />

@@ -1,6 +1,59 @@
 {
   "gameObjects": [
     {
+      "__Base__instanceID": -366638,
+      "name": "HoldArea",
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -366640,
+        "position": {
+          "x": 0.0,
+          "y": 100.0,
+          "z": 100.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 100.0,
+          "y": 100.0,
+          "z": 100.0
+        },
+        "__ID__parentTransform": [
+          49866
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -367998,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 0,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.42,
+            "y": 1.55,
+            "z": 0.8
+          }
+        },
+        {
+          "__Base__instanceID": -371898,
+          "__Base__Component": "Holder"
+        }
+      ]
+    },
+    {
       "__Base__instanceID": -361554,
       "name": "mainchar",
       "tag": [],
@@ -659,9 +712,9 @@
           "w": 1.0
         },
         "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+          "x": 120.0,
+          "y": 120.0,
+          "z": 120.0
         },
         "__ID__parentTransform": [
           49866
@@ -835,7 +888,8 @@
         ],
         "__ID__children": [
           -345002,
-          -361472
+          -361472,
+          -366640
         ]
       },
       "components": []
@@ -980,7 +1034,8 @@
           "__ID__modelCore": 49866,
           "__ID__cameraArm": -344890,
           "__ID__cameraCore": -344894,
-          "__ID__animator": -345006
+          "__ID__animator": -345006,
+          "__ID__holder": -371898
         }
       ]
     },
@@ -1205,7 +1260,9 @@
     {
       "__Base__instanceID": 49670,
       "name": "Box",
-      "tag": [],
+      "tag": [
+        "A"
+      ],
       "transform": {
         "__Base__instanceID": 49680,
         "position": {
@@ -1274,7 +1331,9 @@
     {
       "__Base__instanceID": 49692,
       "name": "fixedTest11",
-      "tag": [],
+      "tag": [
+        "A"
+      ],
       "transform": {
         "__Base__instanceID": 49708,
         "position": {
@@ -1516,7 +1575,9 @@
     {
       "__Base__instanceID": 49754,
       "name": "fixedTest1",
-      "tag": [],
+      "tag": [
+        "B"
+      ],
       "transform": {
         "__Base__instanceID": 49766,
         "position": {
