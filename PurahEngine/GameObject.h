@@ -90,6 +90,8 @@ namespace PurahEngine
 	private:
 		// ComponentList·Î Component °ü¸®
 		std::vector<Component*> componentList;
+
+	public:
 		Tag tag;
 
 	private:

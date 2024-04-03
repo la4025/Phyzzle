@@ -15,11 +15,15 @@ namespace PurahEngine
 		Tag(const std::initializer_list<std::wstring>& elements);
 		~Tag();
 
+		bool IsContain(const std::wstring& element) const;
+
 		bool operator==(const Tag& right) const;
 		bool operator!=(const Tag& right) const;
 
 		Tag operator&(const Tag& right) const;
 		Tag operator|(const Tag& right) const;
+
+		bool operator==(const std::wstring& right) const;
 
 		Tag& operator=(const std::vector<std::wstring>& right);
 

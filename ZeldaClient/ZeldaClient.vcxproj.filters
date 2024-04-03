@@ -55,7 +55,22 @@
       <Filter>KH\System</Filter>
     </ClCompile>
     <ClCompile Include="LauncherPlatform.cpp">
-      <Filter>Apparatus</Filter>
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="ElectricWire.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorParts.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
+    <ClCompile Include="DisconnectedWire.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Device\Electrical Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +135,28 @@
       <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
-      <Filter>Apparatus</Filter>
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="IElectricalDevice.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectricWire.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorParts.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="DisconnectedWire.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="ElectricalDevice.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -163,8 +199,11 @@
     <Filter Include="KH\System">
       <UniqueIdentifier>{f261e56a-a180-4a83-9048-508b0f8b4365}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Apparatus">
+    <Filter Include="Device">
       <UniqueIdentifier>{7cd738f5-ece7-48a9-a588-7373c98ef873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\Electrical Device">
+      <UniqueIdentifier>{e7cf815f-cb0a-44b0-8f1b-71201b6bde88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ void PurahEngine::Transform::Rotate(Eigen::Vector3f axis, float angle)
 
 	if (rigidbody != nullptr)
 	{
-		rigidbody->SetRotation(rotation);
+		rigidbody->SetRotation(GetWorldRotation());
 	}
 }
 
@@ -124,7 +124,7 @@ void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
 
 	if (rigidbody != nullptr)
 	{
-		rigidbody->SetPosition(position);
+		rigidbody->SetPosition(GetWorldPosition());
 	}
 }
 

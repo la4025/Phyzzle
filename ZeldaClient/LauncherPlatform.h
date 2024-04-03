@@ -9,6 +9,7 @@ public:
 
     void Awake();
     void Start();
+    void FixedUpdate();
     void Update();
 
 private:
