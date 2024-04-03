@@ -3,14 +3,14 @@
 
 namespace Phyzzle
 {
-	class RewindState final : public IState
+	class HoldState final : public IState
 	{
 	public:
-		RewindState() = delete;
-		explicit RewindState(Player* _player)
+		HoldState() = delete;
+		explicit HoldState(Player* _player)
 			: IState(_player)
 		{}
-		~RewindState() override;
+		~HoldState() override;
 
 	private:
 		void operator()() override;
@@ -30,10 +30,5 @@ namespace Phyzzle
 		void Click_Y() override;
 		void Click_LB() override;
 		void Click_RB() override;
-
-	private:
-		void Aim();
-		void Cancel();
-		void Select();
 	};
 }

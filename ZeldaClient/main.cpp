@@ -23,6 +23,7 @@
 /// 각자 만드는 것들
 #include "NaDong.h"
 #include "BeomJoon.h"
+#include "Holder.h"
 #include "KiHoon.h"
 #include "YongHun.h"
 
@@ -59,6 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Button>("Button");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");

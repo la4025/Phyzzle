@@ -101,6 +101,8 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_SHIFT,
 		eKey::eKEY_LSHIFT,
 		eKey::eKEY_0,
+		eKey::eKEY_1,
+		eKey::eKEY_2,
 
 		eKey::eKEY_CONTROL,
 		eKey::eKEY_F1,

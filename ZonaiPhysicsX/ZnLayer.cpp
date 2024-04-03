@@ -33,8 +33,16 @@ namespace ZonaiPhysics
 		ValidateLayer(_layerID);
 		ValidateLayer(_collisionLayerID);
 
-		_value ? layerData[_layerID].set(_collisionLayerID) : layerData[_layerID].reset(_collisionLayerID);
-		_value ? layerData[_collisionLayerID].set(_layerID) : layerData[_collisionLayerID].reset(_layerID);
+		if (_value)
+		{
+			layerData[_layerID].set(_collisionLayerID);
+			layerData[_collisionLayerID].set(_layerID);
+		}
+		else
+		{
+			layerData[_layerID].reset(_collisionLayerID);
+			layerData[_collisionLayerID].reset(_layerID);
+		}
 	}
 
 	bool ZnLayer::CanCollide(uint32_t _layerID0, uint32_t _layerID1)

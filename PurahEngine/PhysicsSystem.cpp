@@ -59,6 +59,15 @@ namespace PurahEngine
 
 		const Eigen::Vector3f gravity (0.f, EngineSetting::GetInstance().GetGravity(), 0.f);
 		physics->SetGravity(gravity);
+
+		auto LayerData(EngineSetting::GetInstance().GetCollsionSetting());
+		for (size_t i = 0; i < LayerData.size(); i++)
+		{
+			for (size_t j = 0; j < LayerData[i].size(); j++)
+			{
+				physics->SetCollisionLayer(i, j, LayerData[i][j]);
+			}
+		}
 	}
 
 	void PhysicsSystem::PreStep() const
