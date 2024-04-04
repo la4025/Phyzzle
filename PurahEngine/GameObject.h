@@ -5,6 +5,7 @@
 #include "ComponentFactory.h"
 #include "Tag.h"
 
+#include <queue>
 #include <vector>
 #include <string>
 
@@ -29,8 +30,9 @@ namespace PurahEngine
 	{
 	public:
 
-		virtual void AwakeEvent();
-		virtual void StartEvent();
+		virtual void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
+		virtual void OnEnable();
+		virtual void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
 
 
 		/// Update
@@ -44,8 +46,12 @@ namespace PurahEngine
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdateEvent();
 
-		virtual void Destroy();
+		virtual void OnDisable();
+		virtual void OnDestroy();
 		
+		void DeleteChild(GameObject* child);
+
+		void Destroy();
 
 		void Enable();
 		void Disable();
