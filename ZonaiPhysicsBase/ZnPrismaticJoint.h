@@ -18,6 +18,8 @@ namespace ZonaiPhysics
 		virtual float GetVelocity() const = 0;
 
 		virtual void SetLimit(float _lower, float _upper) = 0;
+		virtual void SetMinDistance(float _lower) = 0;
+		virtual void SetMaxDistance(float _upper) = 0;
 		virtual void SetSpringArg(float _stiffness, float _damping) = 0;
 
 		virtual void SetRestitution(float _restitution) const = 0;

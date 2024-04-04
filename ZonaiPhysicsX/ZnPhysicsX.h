@@ -10,6 +10,8 @@
 #include "ZnLayer.h"
 #include <queue>
 
+#include "MaterialEnum.h"
+
 namespace physx
 {
 	class PxFoundation;
@@ -55,10 +57,12 @@ namespace ZonaiPhysics
 
 	public:
 		void AddMaterial(
-			uint32_t _id, 
-			float staticFriction, 
-			float dynamicFriction, 
-			float _restitution) override;
+			uint32_t _id,
+			float staticFriction,
+			float dynamicFriction,
+			float _restitution,
+			eCombineMode _eFriction = eAVERAGE,
+			eCombineMode _eRestitution = eAVERAGE) override;
 
 		void CreateScene(
 			void* _userScene, 
@@ -68,9 +72,15 @@ namespace ZonaiPhysics
 
 		void UnloadScene(void* _userScene) override;
 
+		Eigen::Vector3f GetGravity(void* _userScene) override;
+
 		void SetGravity(
 			const Eigen::Vector3f& _gravity,
 			void* _userScene) override;
+
+		void SetCollisionLayer(
+			uint32_t _layer, 
+			uint32_t _collision, bool _value) override;
 
 		void SetCollisionLayerData(
 			uint32_t _layer, 

@@ -42,6 +42,13 @@ namespace PurahEngine
 
 	}
 
+	bool Tag::IsContain(const std::wstring& element) const
+	{
+		int id = EngineSetting::GetInstance().TagtoTagID(element);
+
+		return tagElements[id];
+	}
+
 	bool Tag::operator==(const Tag& right) const
 	{
 		assert(tagElements.size() == right.tagElements.size());

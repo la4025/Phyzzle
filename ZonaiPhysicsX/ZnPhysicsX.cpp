@@ -43,7 +43,7 @@ namespace ZonaiPhysics
 			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		defaultMaterial = ZnFactoryX::CreateMaterial(0.5f, 0.5f, 0.6f);
+		defaultMaterial = ZnFactoryX::CreateMaterial(0.5f, 0.5f, 0.6f, eAVERAGE, eAVERAGE);
 	}
 
 	void ZnPhysicsX::Simulation(float _dt)
@@ -74,9 +74,11 @@ namespace ZonaiPhysics
 		delete instance;
 	}
 
-	void ZnPhysicsX::AddMaterial(uint32_t _id, float staticFriction, float dynamicFriction, float _restitution)
+	void ZnPhysicsX::AddMaterial(uint32_t _id, 
+		float staticFriction, float dynamicFriction, float _restitution, 
+		eCombineMode _eFriction, eCombineMode _eRestitution)
 	{
-		const auto material = ZnFactoryX::CreateMaterial(staticFriction, dynamicFriction, _restitution);
+		const auto material = ZnFactoryX::CreateMaterial(staticFriction, dynamicFriction, _restitution, _eFriction, _eRestitution);
 
 		ZnWorld::AddMaterial(_id, material);
 	}
@@ -103,9 +105,19 @@ namespace ZonaiPhysics
 		ZnWorld::UnloadScene(_userScene);
 	}
 
+	Eigen::Vector3f ZnPhysicsX::GetGravity(void* _userScene)
+	{
+		return ZnWorld::GetGravity(_userScene);
+	}
+
 	void ZnPhysicsX::SetGravity(const Eigen::Vector3f& _gravity, void* _userScene)
 	{
 		ZnWorld::SetGravity(_gravity, _userScene);
+	}
+
+	void ZnPhysicsX::SetCollisionLayer(uint32_t _layer, uint32_t _collision, bool _value)
+	{
+		ZnLayer::SetCollisionLayer(_layer, _collision, _value);
 	}
 
 	void ZnPhysicsX::SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data)

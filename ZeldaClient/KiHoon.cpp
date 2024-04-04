@@ -7,7 +7,7 @@
 
 #include "TestMovement.h"
 #include "CameraMovement.h"
-#include "Controller.h"
+#include "Player.h"
 
 void KiHoon::Run()
 {
@@ -70,7 +70,7 @@ void KiHoon::Run()
 	}
 
 	{
-		Phyzzle::Controller* controller = player->AddComponent<Phyzzle::Controller>();
+		Phyzzle::Player* controller = player->AddComponent<Phyzzle::Player>();
 		// controller->SetPlayer(body);
 	}
 

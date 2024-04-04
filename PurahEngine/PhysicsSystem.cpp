@@ -7,10 +7,12 @@
 #include "Joint.h"
 #include "ZnJoint.h"
 
-#include "PhysicsSystem.h"
-
 #include "Transform.h"
 #include "ZnTransform.h"
+
+#include "EngineSetting.h"
+
+#include "PhysicsSystem.h"
 
 namespace PurahEngine
 {
@@ -54,6 +56,18 @@ namespace PurahEngine
 		physics->Initialize(callbackSystem);
 		physics->CreateScene(this, {0, -9.81f, 0});
 		physics->LoadScene(this);
+
+		const Eigen::Vector3f gravity (0.f, EngineSetting::GetInstance().GetGravity(), 0.f);
+		physics->SetGravity(gravity);
+
+		auto LayerData(EngineSetting::GetInstance().GetCollsionSetting());
+		for (size_t i = 0; i < LayerData.size(); i++)
+		{
+			for (size_t j = 0; j < LayerData[i].size(); j++)
+			{
+				physics->SetCollisionLayer(i, j, LayerData[i][j]);
+			}
+		}
 	}
 
 	void PhysicsSystem::PreStep() const
@@ -115,6 +129,26 @@ namespace PurahEngine
 		releaseFuntion();
 
 		FreeLibrary(ZonaiPhysicsXDLL);
+	}
+
+	Eigen::Vector3f PhysicsSystem::GetGravity() const
+	{
+		return physics->GetGravity();
+	}
+
+	void PhysicsSystem::SetGravity(const Eigen::Vector3f& _gravity) const
+	{
+		physics->SetGravity(_gravity);
+	}
+
+	void PhysicsSystem::AddMaterial(uint32_t _id, float staticFriction, float dynamicFriction, float _restitution,
+		ZonaiPhysics::eCombineMode _eFriction, ZonaiPhysics::eCombineMode _eRestitution) const
+	{
+		physics->AddMaterial(_id,
+			staticFriction, dynamicFriction, _restitution,
+			_eFriction,
+			_eRestitution
+		);
 	}
 
 	void PhysicsSystem::FreeObject(ZonaiPhysics::ZnRigidBody* _object, void* _gameObject) const

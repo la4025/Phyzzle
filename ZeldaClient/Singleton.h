@@ -6,11 +6,9 @@ class Singleton
 public:
 	static T* Instance()
 	{
-		static T* instance = nullptr;
-
 		if (!instance)
 		{
-			instance = new T;
+			instance = new T();
 		}
 
 		return instance;
@@ -18,18 +16,24 @@ public:
 
 	static void Release()
 	{
-		auto instance = Instance();
+		if (instance)
+			delete instance;
 
-		delete instance;
+		instance = nullptr;
 	}
 
 private:
+	static T* instance;
+
+protected:
 	Singleton() {}
 	virtual ~Singleton() {}
 	Singleton(const Singleton&) = delete;
 	Singleton(Singleton&&) noexcept = delete;
 	Singleton& operator=(const Singleton&) = delete;
-	Singleton& operator=(Singleton&&) noexcept = delete;
+	Singleton&& operator=(Singleton&&) noexcept = delete;
 };
 
+template <typename T>
+T* Singleton<T>::instance = nullptr;
 

@@ -8,7 +8,7 @@ private:
 
 public:
 	TemplateFlag& operator=(const TemplateFlag<Enum, T>&) = default;
-	TemplateFlag&& operator=(TemplateFlag<Enum, T>&&) noexcept = default;
+	TemplateFlag&& operator=(TemplateFlag<Enum, T>&&) noexcept;
 
 public:
 	bool operator==(const TemplateFlag<Enum, T>& _flags) const
@@ -72,4 +72,10 @@ public:
         return flags;
     }
 };
+
+template <typename Enum, typename T>
+TemplateFlag<Enum, T>&& TemplateFlag<Enum, T>::operator=(TemplateFlag<Enum, T>&&) noexcept
+{
+	return {};
+}
 

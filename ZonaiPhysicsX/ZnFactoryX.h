@@ -4,6 +4,8 @@
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)
 #include <Eigen/Dense>
+
+#include "MaterialEnum.h"
 #include "PxPhysicsAPI.h"
 #include "omnipvd/PxOmniPvd.h"
 
@@ -57,7 +59,9 @@ namespace ZonaiPhysics
 
 	public:
 		static physx::PxScene*			CreateScene(void* _userScene, const Eigen::Vector3f& _gravity);
-		static physx::PxMaterial*		CreateMaterial(float _staticFriction, float _dynamicFriction, float _restitution);
+		static physx::PxMaterial*		CreateMaterial(
+			float _staticFriction, float _dynamicFriction, float _restitution, 
+			eCombineMode _eFriction, eCombineMode _eRestitution);
 
 		/// rigidbody
 		static RigidBody*				CreateDynamicRigidBody(void* _userData);

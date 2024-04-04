@@ -11,13 +11,16 @@ void LauncherPlatform::Start()
     elapsedTime = 0.0f;
 }
 
+void LauncherPlatform::FixedUpdate()
+{
+    StateExecute();
+}
+
 void LauncherPlatform::Update()
 {
     elapsedTime += PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
     StateUpdate();
-
-    StateExecute();
 }
 
 void LauncherPlatform::StateUpdate()

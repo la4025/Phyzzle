@@ -9,12 +9,21 @@
 #include "TestSingleton.h"
 #include "AudioTest.h"
 
+#include "Player.h"
 #include "Controller.h"
+
 #include "LauncherPlatform.h"
+
+#include "Button.h"
+#include "DisconnectedWire.h"
+#include "Door.h"
+#include "DoorParts.h"
+#include "ElectricWire.h"
 
 /// 각자 만드는 것들
 #include "NaDong.h"
 #include "BeomJoon.h"
+#include "Holder.h"
 #include "KiHoon.h"
 #include "YongHun.h"
 
@@ -50,6 +59,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<LauncherPlatform>("LauncherPlatform");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
+
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Button>("Button");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Door>("Door");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DoorParts>("DoorParts");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ElectricWire>("ElectricWire");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
