@@ -3,9 +3,16 @@
   "shadowAreaOffset": 0.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": -9.8,
+  "gravity": -30.0,
   "tag": [
-    "Conductor Object"
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "4",
+    "5",
+    "111"
   ],
   "layer": [
     "Default",

@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "PurahEngine.h"
 
 namespace PurahEngine
 {
@@ -19,8 +19,6 @@ namespace Phyzzle
 		void OnTriggerExit(const PurahEngine::Collider*) override;
 
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
-		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
-		void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 	protected:
 		void PreSerialize(json& jsonData) const override;

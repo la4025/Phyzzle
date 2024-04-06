@@ -86,18 +86,25 @@ namespace ZonaiPhysics
 			const ZnCollider* thisCollider = GetCollider(cp.shapes[0]);
 			const ZnCollider* otherCollider = GetCollider(cp.shapes[1]);
 
+			if (thisCollider == nullptr || otherCollider == nullptr)
+				continue;
+				
 			assert(thisCollider != nullptr && otherCollider != nullptr);
 
 			while (itr.hasNextPatch())
 			{
 				itr.nextPatch();
 
-				while (itr.hasNextContact(), contacts++)
+				collision.contactCount = itr.getTotalContactCount();
+
+				if (!collision.contactCount)
+					continue;
+
+				collision.contacts = new ZnContact[collision.contactCount];
+
+				while (itr.hasNextContact())
 				{
 					itr.nextContact();
-
-					collision.contactCount = itr.getTotalContactCount();
-					collision.contacts = new ZnContact[collision.contactCount];
 
 					const auto point = PhysxToEigen(itr.getContactPoint());
 					const auto normal = PhysxToEigen(itr.getContactNormal());
@@ -113,8 +120,21 @@ namespace ZonaiPhysics
 					contact.normal = normal;
 					contact.point = point;
 					contact.separation = separation;
+
+					contacts++;
 				}
 			}
+
+//			if (pairData.preSolverVelocity && pairData.nextItemSet())
+//			{
+//				assert(pairData.contactPairIndex == i);
+//
+//				collision.thisPreLinearVelocity = PhysxToEigen(pairData.preSolverVelocity->linearVelocity[0]);
+//				collision.otherPreLinearVelocity = PhysxToEigen(pairData.preSolverVelocity->linearVelocity[1]);
+//
+//				collision.thisPreAngularVelocity = PhysxToEigen(pairData.preSolverVelocity->angularVelocity[0]);
+//				collision.otherPreAngularVelocity = PhysxToEigen(pairData.preSolverVelocity->angularVelocity[1]);
+//			}
 
 			if (hasPostVelocities && pairData.nextItemSet())
 			{
@@ -122,11 +142,11 @@ namespace ZonaiPhysics
 
 				if (pairData.postSolverVelocity)
 				{
-					collision.thisLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[0]);
-					collision.otherLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[1]);
+					collision.thisPostLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[0]);
+					collision.otherPostLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[1]);
 
-					collision.thisAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[0]);
-					collision.otherAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[1]);
+					collision.thisPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[0]);
+					collision.otherPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[1]);
 				}
 			}
 
@@ -143,7 +163,8 @@ namespace ZonaiPhysics
 			else
 				assert(false);
 
-			delete[] collision.contacts;
+			if (collision.contacts)
+				delete[] collision.contacts;
 		}
 	}
 

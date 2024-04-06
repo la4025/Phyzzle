@@ -47,7 +47,29 @@ namespace Phyzzle
 
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		if (collider->GetGameObject()->GetName() == L"Ground")
+		JumpCheck(zn_collision, collider);
+	}
+
+	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		if (!data.jumping)
+			return;
+
+		JumpCheck(zn_collision, collider);
+	}
+
+	void Player::JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		const float velo{ zn_collision.thisPostLinearVelocity.y() };
+
+		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
+		// const Eigen::Vector3f direction{ zn_collision.impulses.normalized() };
+		const Eigen::Vector3f direction{ velo };
+		float cosTheta1 = up.dot(direction);
+		cosTheta1 = std::clamp(cosTheta1, -1.f, 1.f);
+		OutputDebugStringW(std::wstring(std::to_wstring(cosTheta1) + L'\n').c_str());
+
+		if ((cosTheta1 >= 0.5f))
 		{
 			data.jumping = false;
 		}

@@ -75,6 +75,7 @@ namespace Phyzzle
 
 	void DefaultState::Click_RB()
 	{
+		// 리버레코 취소
 	}
 
 	void DefaultState::Push() const
@@ -87,7 +88,7 @@ namespace Phyzzle
 		auto target = player->data.holder->GetHolderableBody();
 		if (target)
 		{
-			// target->
+			// player->ChangeState(Player::State::HOLD);
 		}
 	}
 

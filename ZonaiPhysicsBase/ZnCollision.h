@@ -16,18 +16,19 @@ namespace ZonaiPhysics
 	struct ZnCollision
  	{
         ZnCollision() = default;
-        ~ZnCollision()
-        {
-	        if (contacts)
-				delete[] contacts;
-        }
+        ~ZnCollision() = default;
 
         Eigen::Vector3f impulses{ Eigen::Vector3f::Zero() };           // 충격량 총량
 
-        Eigen::Vector3f thisLinearVelocity{ Eigen::Vector3f::Zero() };
-        Eigen::Vector3f otherLinearVelocity{ Eigen::Vector3f::Zero() };
-        Eigen::Vector3f thisAngularVelocity{ Eigen::Vector3f::Zero() };
-        Eigen::Vector3f otherAngularVelocity{ Eigen::Vector3f::Zero() };
+        // Eigen::Vector3f thisPreLinearVelocity{ Eigen::Vector3f::Zero() };
+        // Eigen::Vector3f otherPreLinearVelocity{ Eigen::Vector3f::Zero() };
+        // Eigen::Vector3f thisPreAngularVelocity{ Eigen::Vector3f::Zero() };
+        // Eigen::Vector3f otherPreAngularVelocity{ Eigen::Vector3f::Zero() };
+
+        Eigen::Vector3f thisPostLinearVelocity{ Eigen::Vector3f::Zero() };
+        Eigen::Vector3f otherPostLinearVelocity{ Eigen::Vector3f::Zero() };
+        Eigen::Vector3f thisPostAngularVelocity{ Eigen::Vector3f::Zero() };
+        Eigen::Vector3f otherPostAngularVelocity{ Eigen::Vector3f::Zero() };
 
         ZnContact* contacts{ nullptr };                // 접촉점 배열 포인터
         uint32_t contactCount{ 0 };              // 접촉점 개수

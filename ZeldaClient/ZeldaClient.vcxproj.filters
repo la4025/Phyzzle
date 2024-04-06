@@ -75,6 +75,12 @@
     <ClCompile Include="Holder.cpp">
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
+    <ClCompile Include="Rewindable.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Snapshot.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -166,6 +172,15 @@
     </ClInclude>
     <ClInclude Include="Holder.h">
       <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewindable.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Hold.h">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Snapshot.h">
+      <Filter>KH\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

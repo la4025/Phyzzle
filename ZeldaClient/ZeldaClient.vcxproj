@@ -166,8 +166,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
     <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
+    <ClCompile Include="Snapshot.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />
@@ -196,7 +198,9 @@
     <ClInclude Include="HoldState.h" />
     <ClInclude Include="AttatchSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
+    <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
+    <ClInclude Include="Snapshot.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="IMaker.h" />

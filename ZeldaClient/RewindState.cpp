@@ -1,3 +1,5 @@
+#include "Player.h"
+
 #include "RewindState.h"
 
 
@@ -85,13 +87,16 @@ namespace Phyzzle
 
 	void RewindState::Aim()
 	{
+
 	}
 
 	void RewindState::Cancel()
 	{
+		player->ChangeState(Player::State::DEFAULT);
 	}
 
 	void RewindState::Select()
 	{
+
 	}
 }

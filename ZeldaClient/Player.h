@@ -30,6 +30,7 @@ namespace Phyzzle
 			const float limitLowAngle = -70.f;
 
 			float moveSpeed = 10.f;
+			float holdSpeed = 5.f;
 			float sensitivity = 90.f;
 
 			float jumpPower = 10.f;
@@ -65,8 +66,10 @@ namespace Phyzzle
 		void Start() override;
 		void Update() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 	private:
+		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		void GamePadInput();
 
 	public:
@@ -81,7 +84,7 @@ namespace Phyzzle
 	private:
 		friend class DefaultState;
 		friend class AttatchState;
-		friend class DefaultState;
+		friend class RewindState;
 		friend class DefaultState;
 		std::unordered_map<State, IState*> stateSystem;
 		State state = State::DEFAULT;
