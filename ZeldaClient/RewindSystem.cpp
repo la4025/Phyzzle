@@ -28,4 +28,29 @@ namespace Phyzzle
 	{
 		target = nullptr;
 	}
+	void RewindSystem::Active()
+	{
+		while (!activateObject.empty())
+		{
+			Rewindable* object = activateObject.front();
+			activatedObject.push_back(object);
+			activateObject.pop();
+		}
+	}
+
+	void RewindSystem::Deactive()
+	{
+		while (!deactivateObject.empty())
+		{
+			Rewindable* object = deactivateObject.front();
+			const auto itr = std::ranges::find(activatedObject, object);
+
+			if (itr != activatedObject.end())
+			{
+				activatedObject.erase(itr);
+			}
+
+			deactivateObject.pop();
+		}
+	}
 }

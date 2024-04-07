@@ -19,6 +19,8 @@ namespace Phyzzle
 		friend class RewindSystem;
 
 	public:
+		Rewindable();
+
 		void		Awake() override;
 		void		Update() override;
 
@@ -29,8 +31,9 @@ namespace Phyzzle
 		void		Cancel();
 
 	private:
+		long long REWIDABLE_ID;
 		PurahEngine::RigidBody* body;
 		Snapshot* curr;
-		Snapshot* prev;
+		Snapshot* next;
 	};
 }
