@@ -130,7 +130,7 @@ void PurahEngine::SceneManager::InitializationEvent()
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
-			object->OnEnable();
+			object->EnableEvent(eventQueue);
 		}
 		state = RunningState::START;
 	}
@@ -148,6 +148,11 @@ void PurahEngine::SceneManager::InitializationEvent()
 	}
 
 	ExcuteEventQueue();
+
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		object->StateChangeEvent();
+	}
 }
 
 void PurahEngine::SceneManager::DecommissionEvent()
@@ -155,7 +160,7 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	// OnDisable (비활성화 상태)
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->OnDisable();
+		object->DisableEvent(eventQueue);
 	}
 	state = RunningState::UPDATE;
 
@@ -164,7 +169,7 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->OnDestroy();
+		object->DestroyEvent(destroyQueue);
 	}
 	state = RunningState::UPDATE;
 

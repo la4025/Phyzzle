@@ -191,6 +191,7 @@ void PurahEngine::GameLoop::run()
 
 	SceneManager::GetInstance().LoadScene();
 	SceneManager::GetInstance().InitializationEvent();
+	SceneManager::GetInstance().DecommissionEvent();
 
 	SceneManager::GetInstance().Update();
 	SoundManager::GetInstance().Update();

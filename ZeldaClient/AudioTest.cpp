@@ -1,4 +1,5 @@
 #include "AudioTest.h"
+#include "CameraMovement.h"
 
 PurahEngine::AudioTest::AudioTest()
 {
@@ -23,7 +24,7 @@ void PurahEngine::AudioTest::OnDataLoadComplete()
 
 void PurahEngine::AudioTest::Update()
 {
-
+	
 }
 
 void PurahEngine::AudioTest::OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*)

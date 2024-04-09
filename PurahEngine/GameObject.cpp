@@ -22,15 +22,11 @@ void PurahEngine::GameObject::AwakeEvent(std::queue<std::pair<Component*, std::f
 	}
 }
 
-void PurahEngine::GameObject::OnEnable()
+void PurahEngine::GameObject::EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue)
 {
-	if (isEnable == true)
+	for (int i = 0; i < componentList.size(); i++)
 	{
-		Enable();
-	}
-	else
-	{
-		Disable();
+		eventQueue.push({ componentList[i], (&Component::OnEnable) });
 	}
 }
 
@@ -38,6 +34,7 @@ void PurahEngine::GameObject::StartEvent(std::queue<std::pair<Component*, std::f
 {
 	if (state == ObjectState::CREATE)
 	{
+
 		for (int i = 0; i < componentList.size(); i++)
 		{
 			eventQueue.push({ componentList[i], (&Component::Start) });
@@ -47,6 +44,7 @@ void PurahEngine::GameObject::StartEvent(std::queue<std::pair<Component*, std::f
 		{
 			trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue);
 		}
+		state = ObjectState::ENABLE;
 	}
 }
 
@@ -81,25 +79,12 @@ void PurahEngine::GameObject::UpdateEvent()
 
 void PurahEngine::GameObject::LateUpdateEvent()
 {
-	for (PurahEngine::Component* component : componentList)
+	if (state == ObjectState::ENABLE)
 	{
-		component->LateUpdate();
-	}
-}
-
-void PurahEngine::GameObject::OnDisable()
-{
-	for (PurahEngine::Component* component : componentList)
-	{
-		component->OnDisable();
-	}
-}
-
-void PurahEngine::GameObject::OnDestroy()
-{
-	for (PurahEngine::Component* component : componentList)
-	{
-		component->OnDestroy();
+		for (PurahEngine::Component* component : componentList)
+		{
+			component->LateUpdate();
+		}
 	}
 }
 
@@ -117,26 +102,32 @@ void PurahEngine::GameObject::DeleteChild(GameObject* child)
 	}
 }
 
-void PurahEngine::GameObject::Destroy()
+void PurahEngine::GameObject::DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue)
 {
-	state == ObjectState::DESTROY;
-
-	for (int i = 0; i < trans->GetChildren().size(); i++)
+	for (int i = 0; i < componentList.size(); i++)
 	{
-		trans->GetChildren()[i]->GetGameObject()->Destroy();
+		eventQueue.push({ componentList[i], (&Component::OnDisable) });
 	}
 }
 
-void PurahEngine::GameObject::Enable()
+void PurahEngine::GameObject::DestroyEvent(std::queue<GameObject*>& destroyQueue)
 {
-	state = ObjectState::ENABLE;
-	isEnable = true;
-}
+	state == ObjectState::DESTROY;
 
-void PurahEngine::GameObject::Disable()
-{
-	state = ObjectState::DISABLE;
-	isEnable = false;
+	for (int i = 0; i < componentList.size(); i++)
+	{
+		componentList[i]->OnDestroy();
+	}
+
+	for (int i = 0; i < trans->GetChildren().size(); i++)
+	{
+		trans->GetChildren()[i]->GetGameObject()->DestroyEvent(destroyQueue);
+	}
+
+	if (state == ObjectState::DESTROY)
+	{
+		destroyQueue.push(this);
+	}
 }
 
 bool PurahEngine::GameObject::IsEnable()
@@ -160,6 +151,38 @@ bool PurahEngine::GameObject::IsRootEnable()
 	bool ownEnable = IsEnable() && rootEnable;
 
 	return ownEnable;
+}
+
+void PurahEngine::GameObject::StateChangeEvent()
+{
+	if (state == ObjectState::CREATE)
+	{
+		if (IsRootEnable() == true && isEnable == true)
+		{
+			state == ObjectState::ENABLE;
+
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent();
+			}
+		}
+	}
+	else if (state == ObjectState::ENABLE)
+	{
+
+	}
+	else if(state == ObjectState::DISABLE)
+	{
+		if (isEnable == true)
+		{
+			state = ObjectState::ENABLE;
+
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent();
+			}
+		}
+	}
 }
 
 PurahEngine::Transform* PurahEngine::GameObject::GetTransform()

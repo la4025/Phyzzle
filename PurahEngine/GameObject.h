@@ -31,7 +31,7 @@ namespace PurahEngine
 	public:
 
 		virtual void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
-		virtual void OnEnable();
+		void EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
 		virtual void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
 
 
@@ -45,16 +45,11 @@ namespace PurahEngine
 
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdateEvent();
-
-		virtual void OnDisable();
-		virtual void OnDestroy();
 		
 		void DeleteChild(GameObject* child);
 
-		void Destroy();
-
-		void Enable();
-		void Disable();
+		void DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
+		void DestroyEvent(std::queue<GameObject*>& destroyQueue);
 
 
 		/// OnCollision
@@ -85,6 +80,8 @@ namespace PurahEngine
 
 		bool IsEnable();
 		bool IsRootEnable();
+
+		void StateChangeEvent();
 
 		Transform* GetTransform();
 
