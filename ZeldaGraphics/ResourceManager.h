@@ -7,6 +7,9 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include <d2d1.h>
+#include <dwrite.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

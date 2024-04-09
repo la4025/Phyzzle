@@ -18,6 +18,7 @@ namespace PurahEngine
 	{
 	public:
 		void Initialize();
+		void Finalize();
 
 		void LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type);
 		

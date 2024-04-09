@@ -536,8 +536,8 @@ void CoreSystem::run()
 	renderer->DrawLight(dirLightID2);
 	//renderer->DrawLight(pointLightID);
 
-	//renderer->DrawSprite({ scdX, 0 }, msTextureID);
-	//renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);
+	renderer->DrawSprite({ scdX, 0 }, msTextureID);
+	renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID);
 
 	//Eigen::Matrix4f cubeMatrix = Eigen::Matrix4f::Identity();
 	//cubeMatrix(0, 0) = 50.0f;

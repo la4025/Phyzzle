@@ -25,6 +25,11 @@ void PurahEngine::SoundManager::Initialize()
 	system->createChannelGroup("effectChannelGroup", &effectChannelGroup);
 }
 
+void PurahEngine::SoundManager::Finalize()
+{
+	system->release();
+}
+
 void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type)
 {
 	switch (type)
@@ -209,7 +214,7 @@ PurahEngine::SoundManager::SoundManager()
 
 PurahEngine::SoundManager::~SoundManager()
 {
-	system->release();
+
 }
 
 PurahEngine::SoundManager& PurahEngine::SoundManager::GetInstance()
