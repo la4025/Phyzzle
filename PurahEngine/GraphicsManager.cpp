@@ -69,6 +69,8 @@ void PurahEngine::GraphicsManager::Finalize()
 		delete resourceManager;
 	}
 
+	graphicsModule->Finalize();
+
 #ifdef YH_RENDERER
 	assert(0); // Not implement to delete YH Renderer 
 #else

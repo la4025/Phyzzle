@@ -8,6 +8,9 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include <d2d1.h>
+#include <dwrite.h>
+
 #include <SpriteBatch.h>
 #include <CommonStates.h>
 
@@ -87,7 +90,7 @@ namespace std {
 	template <>
 	struct hash<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>> {
 		size_t operator()(const std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>& obj) const {
-			return std::hash<std::pair<MeshID, TextureID>>{}(obj.first) ^ (std::hash<unsigned int>{}(obj.second.second.r) ^ std::hash<unsigned int>{}(obj.second.second.y) ^ std::hash<unsigned int>{}(obj.second.second.z) ^ std::hash<unsigned int>{}(obj.second.second.w));
+			return std::hash<std::pair<MeshID, TextureID>>{}(obj.first) ^ (std::hash<float>{}(obj.second.second.r) ^ std::hash<float>{}(obj.second.second.y) ^ std::hash<float>{}(obj.second.second.z) ^ std::hash<float>{}(obj.second.second.w));
 		}
 	};
 }
@@ -183,25 +186,24 @@ private:
 	bool bVsyncEnabled;
 	int mVideoCardMemory;
 	char mVideoCardDescription[128];
-	IDXGISwapChain* mSwapChain;
-	ID3D11Device* mDevice;
-	ID3D11DeviceContext* mDeviceContext;
-	ID3D11RenderTargetView* mRenderTargetView;
-	ID3D11Texture2D* mDepthStencilBuffer;
-	ID3D11DepthStencilState* mDepthStencilState;
-	ID3D11DepthStencilView* mDepthStencilView;
-	ID3D11RasterizerState* mRasterState;
+	IDXGISwapChain* mSwapChain = nullptr;
+	ID3D11Device* mDevice = nullptr;
+	ID3D11DeviceContext* mDeviceContext = nullptr;
+	ID3D11RenderTargetView* mRenderTargetView = nullptr;
+	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
+	ID3D11DepthStencilState* mDepthStencilState = nullptr;
+	ID3D11DepthStencilView* mDepthStencilView = nullptr;
 
-	ID3D11RasterizerState* defaultRasterState;
-	ID3D11RasterizerState* wireFrameRasterState;
-	ID3D11RasterizerState* pointLightRasterState;
-	ID3D11RasterizerState* cubeMapRasterState;
-	ID3D11RasterizerState* shadowRasterState;
-	ID3D11RasterizerState* currentRasterState;
+	ID3D11RasterizerState* defaultRasterState = nullptr;
+	ID3D11RasterizerState* wireFrameRasterState = nullptr;
+	ID3D11RasterizerState* pointLightRasterState = nullptr;
+	ID3D11RasterizerState* cubeMapRasterState = nullptr;
+	ID3D11RasterizerState* shadowRasterState = nullptr;
+	ID3D11RasterizerState* currentRasterState = nullptr;
 
-	ID3D11BlendState* alphaBlendState;
+	ID3D11BlendState* alphaBlendState = nullptr;
 
-	ID3D11DepthStencilState* cubeMapDepthStencilState;
+	ID3D11DepthStencilState* cubeMapDepthStencilState = nullptr;
 
 	D3D11_VIEWPORT defaultViewPort;
 
@@ -210,21 +212,21 @@ private:
 	ID3D11ShaderResourceView* deferredShaderResources[Deferred::BufferCount];
 
 	// Shadow Mapping
-	ID3D11DepthStencilView* directionalShadowDepthStencilView;
-	ID3D11ShaderResourceView* directionalShadowShaderResource;
+	ID3D11DepthStencilView* directionalShadowDepthStencilView = nullptr;
+	ID3D11ShaderResourceView* directionalShadowShaderResource = nullptr;
 
-	ZeldaShader* deferredBlendingObjectShader;
-	ZeldaShader* deferredObjectShader;
-	ZeldaShader* deferredDirectionalLightShader;
-	ZeldaShader* deferredPointLightShader;
-	ZeldaShader* deferredSpotLightShader;
-	ZeldaShader* deferredFinalShader;
-	ZeldaShader* forwardShader;
-	ZeldaShader* forwardBlendingShader;
-	ZeldaShader* cubeMapShader;
-	ZeldaShader* shadowMapShader;
-	ZeldaShader* blendingAnimationShadowMapShader;
-	ZeldaShader* spriteShader;
+	ZeldaShader* deferredBlendingObjectShader = nullptr;
+	ZeldaShader* deferredObjectShader = nullptr;
+	ZeldaShader* deferredDirectionalLightShader = nullptr;
+	ZeldaShader* deferredPointLightShader = nullptr;
+	ZeldaShader* deferredSpotLightShader = nullptr;
+	ZeldaShader* deferredFinalShader = nullptr;
+	ZeldaShader* forwardShader = nullptr;
+	ZeldaShader* forwardBlendingShader = nullptr;
+	ZeldaShader* cubeMapShader = nullptr;
+	ZeldaShader* shadowMapShader = nullptr;
+	ZeldaShader* blendingAnimationShadowMapShader = nullptr;
+	ZeldaShader* spriteShader = nullptr;
 
 	DebugMode debugMode;
 	DebugMode debugModeBuffer;
@@ -232,30 +234,37 @@ private:
 	RendererMode rendererMode;
 	RendererMode rendererModeBuffer;
 
-	DirectX::SpriteBatch* spriteBatch;
-	DirectX::DX11::CommonStates* commonStates;
+	DirectX::SpriteBatch* spriteBatch = nullptr;
+	DirectX::DX11::CommonStates* commonStates = nullptr;
 
 	HWND hWnd;
 	unsigned int screenWidth;
 	unsigned int screenHeight;
 
-	// hwnd
-	// fullScreenMode
+private:
+	ID2D1Factory* d2dFactory = nullptr;
+	IDWriteFactory* writeFactory = nullptr;
+	IDXGISurface* surface = nullptr;
+	ID2D1RenderTarget* d2dRenderTarget = nullptr;
 
+	HRESULT InitializeD2D();
+	void FinalizeD2D();
+
+private:
 	// Constant Buffer
-	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixVsConstBuffer;
-	ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer;
-	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixVsConstBuffer;
-	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationVsConstBuffer;
-	ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer;
+	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixVsConstBuffer = nullptr;
+	ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer = nullptr;
+	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixVsConstBuffer = nullptr;
+	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationVsConstBuffer = nullptr;
+	ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer = nullptr;
 
-	ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>* matrixPsConstBuffer;
-	ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>* lightInfoConstBuffer;
-	ConstantBuffer<LightIndexBufferType, ShaderType::PixelShader>* lightIndexConstBuffer;
-	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer;
+	ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>* matrixPsConstBuffer = nullptr;
+	ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>* lightInfoConstBuffer = nullptr;
+	ConstantBuffer<LightIndexBufferType, ShaderType::PixelShader>* lightIndexConstBuffer = nullptr;
+	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer = nullptr;
 	
-	ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>* screenConstBuffer;
-	ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>* lightMatrixConstBuffer;
+	ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>* screenConstBuffer = nullptr;
+	ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>* lightMatrixConstBuffer = nullptr;
 
 
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.

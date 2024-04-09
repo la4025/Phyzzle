@@ -8,6 +8,13 @@ namespace Phyzzle
 		powerCounter = 0;
 
 		isPowerOn = false;
+
+		frameNumber = 0;
+	}
+
+	void DisconnectedWire::Update()
+	{
+		frameNumber++;
 	}
 
 	void DisconnectedWire::OnTriggerEnter(const PurahEngine::Collider* collider)
