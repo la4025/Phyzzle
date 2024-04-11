@@ -86,6 +86,20 @@ struct SpriteRenderInfo
 	TextureID textureID;
 };
 
+struct StringRenderInfo
+{
+	std::wstring str;
+	float x;
+	float y;
+	float width;
+	float height;
+	float fontSize;
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
 namespace std {
 	template <>
 	struct hash<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>> {
@@ -130,6 +144,9 @@ public:
 
 	virtual void DrawCubeMap(TextureID texture) override;
 
+	virtual void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a) override;
+
+
 	virtual TextureID CreateTexture(const std::wstring& texturePath) override;
 	virtual void ReleaseTexture(TextureID textureID) override;
 
@@ -169,6 +186,7 @@ private:
 	void DrawBlendingAnimationRenderInfo(BlendingAnimationRenderInfo renderInfo, ZeldaShader* shader);
 	void DrawSpriteRenderInfo(SpriteRenderInfo renderInfo);
 	void DrawCubeMapRenderInfo();
+	void DrawStringRenderInfo();
 
 	void DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader);
 	void DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader);
@@ -286,6 +304,8 @@ private:
 	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> shadowMeshRenderInfo;
 	std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> shadowModelRenderInfo;
 	std::vector<BlendingAnimationRenderInfo> shadowBlendingAnimationRenderInfo;
+
+	std::vector<StringRenderInfo> stringRenderInfo;
 
 	TextureID cubeMapRenderInfo;
 

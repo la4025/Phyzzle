@@ -660,6 +660,8 @@ void CoreSystem::run()
 
 	renderer->DrawCubeMap(cubeMapID);
 
+	renderer->DrawString(L"ABCDEFG", 0, 0, 100, 100, 20, 0, 0, 0, 1);
+
 	renderer->EndDraw();
 }
 
