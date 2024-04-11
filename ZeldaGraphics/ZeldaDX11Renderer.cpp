@@ -53,7 +53,6 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	D3D11_RASTERIZER_DESC lightRasterDesc;
 	D3D11_RASTERIZER_DESC cubeMapRasterDesc;
 	D3D11_RASTERIZER_DESC shadowRasterDesc;
-	float fieldOfView, screenAspect;
 
 	// vsync(수직동기화) 설정 저장.
 	bVsyncEnabled = vsync;
@@ -170,7 +169,13 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	// Set the feature level to DirectX 11.
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, &featureLevel, 1,
+	result = D3D11CreateDeviceAndSwapChain(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		D3D11_CREATE_DEVICE_BGRA_SUPPORT, // D3D11_CREATE_DEVICE_BGRA_SUPPORT: Direct3D 리소스와의 Direct2D 상호 운용성에 필요합니다. by MSDN
+		&featureLevel,
+		1,
 		D3D11_SDK_VERSION, &swapChainDesc, &mSwapChain, &mDevice, nullptr, &mDeviceContext);
 	if (FAILED(result)) return false;
 
@@ -514,6 +519,10 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	rendererMode = RendererMode::None;
 	rendererModeBuffer = RendererMode::None;
 
+	// D2D 초기화
+	result = InitializeD2D();
+	if (FAILED(result)) return false;
+
 	CreateBasicResources();
 
 	return true;
@@ -527,6 +536,8 @@ void ZeldaDX11Renderer::Finalize()
 #endif
 
 	ReleaseBasicResources();
+
+	FinalizeD2D();
 
 	for (int i = 0; i < Deferred::BufferCount; i++)
 	{
@@ -610,11 +621,6 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete lightMatrixConstBuffer;
 		lightMatrixConstBuffer = nullptr;
-	}
-	if (mRasterState)
-	{
-		mRasterState->Release();
-		mRasterState = 0;
 	}
 	if (mDepthStencilView)
 	{
@@ -839,6 +845,7 @@ void ZeldaDX11Renderer::EndDraw()
 	DrawSprite();
 	EndDrawSprite();
 
+	DrawStringRenderInfo();
 
 	// Present the back buffer to the screen since rendering is complete.
 	if (bVsyncEnabled)
@@ -1089,6 +1096,23 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID te
 void ZeldaDX11Renderer::DrawCubeMap(TextureID texture)
 {
 	cubeMapRenderInfo = texture;
+}
+
+void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a)
+{
+	StringRenderInfo renderInfo;
+	renderInfo.str = string;
+	renderInfo.x = x;
+	renderInfo.y = y;
+	renderInfo.width = width;
+	renderInfo.height = height;
+	renderInfo.fontSize = fontSize;
+	renderInfo.r = r;
+	renderInfo.g = g;
+	renderInfo.b = b;
+	renderInfo.a = a;
+
+	stringRenderInfo.push_back(renderInfo);
 }
 
 void ZeldaDX11Renderer::CreateBasicResources()
@@ -1452,7 +1476,7 @@ std::vector<float> ZeldaDX11Renderer::GetAnimationPlayTime(ModelID modelID)
 
 CameraID ZeldaDX11Renderer::CreateCamera()
 {
-	return ResourceManager::GetInstance().CreateCamera(static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+	return ResourceManager::GetInstance().CreateCamera(screenWidth, screenHeight);
 }
 
 void ZeldaDX11Renderer::ReleaseCamera(CameraID cameraID)
@@ -1747,6 +1771,57 @@ void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 	mDeviceContext->OMSetDepthStencilState(nullptr, 0);
 }
 
+void ZeldaDX11Renderer::DrawStringRenderInfo()
+{
+	d2dRenderTarget->BeginDraw();
+
+	for (auto iter = stringRenderInfo.begin(); iter != stringRenderInfo.end(); iter++)
+	{
+		std::wstring str = iter->str;
+		float x = iter->x;
+		float y = iter->y;
+		float width = iter->width;
+		float height = iter->height;
+		float fontSize = iter->fontSize;
+		float r = iter->r;
+		float g = iter->g;
+		float b = iter->b;
+		float a = iter->a;
+
+		// 텍스트 렌더링 준비
+		ID2D1SolidColorBrush* textBrush = nullptr;
+		d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(r, g, b, a), &textBrush);
+
+		// 텍스트 포맷 생성
+		IDWriteTextFormat* textFormat = nullptr;
+		writeFactory->CreateTextFormat(
+			L"Consolas", // 폰트 이름
+			nullptr, // 폰트 컬렉션
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			fontSize, // 글자 크기
+			L"", // 로케일
+			&textFormat
+		);
+
+
+		// 텍스트 렌더링
+		d2dRenderTarget->DrawTextW(
+			str.c_str(), // 텍스트 내용
+			wcslen(str.c_str()), // 텍스트 길이
+			textFormat, // 텍스트 포맷
+			D2D1::RectF(x, y, x + width, y + height), // 텍스트가 그려질 사각형
+			textBrush // 브러시
+		);
+
+		textFormat->Release();
+		textBrush->Release();
+	}
+
+	d2dRenderTarget->EndDraw();
+}
+
 void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
 {
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
@@ -1758,7 +1833,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLi
 	LightMatrixBufferType lightMatrixBuffer;
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
@@ -1845,7 +1920,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaL
 	LightMatrixBufferType lightMatrixBuffer;
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
@@ -1880,7 +1955,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(BlendingAnimationRenderInfo render
 	LightMatrixBufferType lightMatrixBuffer;
 	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
 	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = ShadowMap::Size;
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
@@ -1907,6 +1982,8 @@ void ZeldaDX11Renderer::ClearRenderInfo()
 	shadowBlendingAnimationRenderInfo.clear();
 
 	cubeMapRenderInfo = TextureID::ID_NULL;
+
+	stringRenderInfo.clear();
 }
 
 void ZeldaDX11Renderer::UpdateMode()
@@ -1958,4 +2035,57 @@ bool ZeldaDX11Renderer::CheckRendererMode(RendererMode mode)
 	}
 
 	return static_cast<unsigned int>(rendererMode) & static_cast<unsigned int>(mode);
+}
+
+HRESULT ZeldaDX11Renderer::InitializeD2D()
+{
+	HRESULT result;
+	D2D1_FACTORY_OPTIONS options = D2D1_FACTORY_OPTIONS();
+	options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+
+	result = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, options, &d2dFactory);
+	if (FAILED(result))
+		return result;
+
+	result = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&writeFactory));
+	if (FAILED(result))
+		return result;
+
+	result = mSwapChain->GetBuffer(0, IID_PPV_ARGS(&surface));
+	if (FAILED(result))
+		return result;
+
+	D2D1_RENDER_TARGET_PROPERTIES d2dRenderTargetProperties =
+		D2D1::RenderTargetProperties(
+			D2D1_RENDER_TARGET_TYPE_DEFAULT,
+			D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+			0.0f, 0.0f);
+	result = d2dFactory->CreateDxgiSurfaceRenderTarget(surface, &d2dRenderTargetProperties, &d2dRenderTarget);
+	if (FAILED(result))
+		return result;
+
+	return result;
+}
+
+void ZeldaDX11Renderer::FinalizeD2D()
+{
+	if (d2dRenderTarget)
+	{
+		d2dRenderTarget->Release();
+	}
+
+	if (surface)
+	{
+		surface->Release();
+	}
+
+	if (writeFactory)
+	{
+		writeFactory->Release();
+	}
+
+	if (d2dFactory)
+	{
+		d2dFactory->Release();
+	}
 }

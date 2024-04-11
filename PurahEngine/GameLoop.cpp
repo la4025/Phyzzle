@@ -158,6 +158,7 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 
 void PurahEngine::GameLoop::Finalize()
 {
+	SoundManager::GetInstance().Finalize();
 	GraphicsManager::GetInstance().Finalize();
 	PhysicsSystem::GetInstance().Finalize();
 	GamePadManager::Instance().Release();

@@ -27,6 +27,7 @@ namespace PurahEngine
 		void Initialize(std::string timename);
 
 		void Update(std::string timeName);
+		void UpdateIgnoreDelta(std::string timeName);
 
 		void MoveWindow();
 

@@ -11,6 +11,8 @@ namespace Phyzzle
 	public:
 		void Awake() override;
 
+		void Update() override;
+
 		void OnTriggerEnter(const PurahEngine::Collider* collider) override;
 		void OnTriggerExit(const PurahEngine::Collider* collider) override;
 
@@ -28,6 +30,11 @@ namespace Phyzzle
 		int connectCounter;
 		int powerCounter;
 		bool isPowerOn;
+
+
+
+
+		int frameNumber;
 
 	public:
 		void PreSerialize(json& jsonData) const override;

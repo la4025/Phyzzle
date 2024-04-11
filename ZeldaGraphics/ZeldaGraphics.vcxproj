@@ -403,7 +403,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>ZeldaFBXLoader.lib;DirectXTK.lib;Rpcrt4.lib;assimp-vc143-mtd.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;dwrite.lib;ZeldaFBXLoader.lib;DirectXTK.lib;Rpcrt4.lib;assimp-vc143-mtd.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)DirectXTK\$(Platform)\$(Configuration)\;$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -429,7 +429,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>ZeldaFBXLoader.lib;DirectXTK.lib;Rpcrt4.lib;assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;dwrite.lib;ZeldaFBXLoader.lib;DirectXTK.lib;Rpcrt4.lib;assimp-vc143-mt.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;directxtex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)assimpLib\$(Configuration);$(SolutionDir)DirectXTex\$(Platform)\$(Configuration)\;$(SolutionDir)DirectXTK\$(Platform)\$(Configuration)\;$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
