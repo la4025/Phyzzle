@@ -78,9 +78,6 @@
     <ClCompile Include="Rewindable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Snapshot.cpp">
-      <Filter>KH\Object</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />

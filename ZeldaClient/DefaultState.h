@@ -37,5 +37,6 @@ namespace Phyzzle
 		void Jump() const;
 		void Move() const;
 		void Around() const;
+		void Select() const;
 	};
 }

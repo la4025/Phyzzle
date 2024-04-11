@@ -15,26 +15,26 @@ namespace Phyzzle
 		Player* player;
 
 	public:
-		virtual void Stick_L() = 0;
-		virtual void Stick_R() = 0;
+		virtual void Stick_L() {}
+		virtual void Stick_R() {}
 
-		virtual void Trigger_L() = 0;
-		virtual void Trigger_R() = 0;
+		virtual void Trigger_L() {}
+		virtual void Trigger_R() {}
 
-		virtual void Click_DUp() = 0;
-		virtual void Click_DDown() = 0;
-		virtual void Click_DLeft() = 0;
-		virtual void Click_DRight() = 0;
+		virtual void Click_DUp() {}
+		virtual void Click_DDown() {}
+		virtual void Click_DLeft() {}
+		virtual void Click_DRight() {}
 
-		virtual void Click_A() = 0;
-		virtual void Click_B() = 0;
-		virtual void Click_X() = 0;
-		virtual void Click_Y() = 0;
+		virtual void Click_A() {}
+		virtual void Click_B() {}
+		virtual void Click_X() {}
+		virtual void Click_Y() {}
 
-		virtual void Click_LB() = 0;
-		virtual void Click_RB() = 0;
+		virtual void Click_LB() {}
+		virtual void Click_RB() {}
 
 	public:
-		virtual void operator()() = 0;
+		virtual void operator()() {}
 	};
 }

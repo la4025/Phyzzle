@@ -151,11 +151,8 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 			if (msg.message == WM_QUIT) break;
 			DispatchMessage(&msg);
 		}
-		else
-		{
 			// 엔진 동작
 			run();
-		}
 	}
 }
 
@@ -175,7 +172,7 @@ void PurahEngine::GameLoop::run()
 	TimeController::GetInstance().Update(timeInit);
 
 	Timer::PreUpdate();
-	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
+	float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
 	PhysicsSystem::GetInstance().PreStep();
 	PhysicsSystem::GetInstance().Simulation(deltaTime);
@@ -206,11 +203,18 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 			break;
 		}
 
+		case WM_KILLFOCUS:
+		{
+			TimeController::GetInstance().MoveWindow();
+			break;
+		}
+
 		case WM_ENTERSIZEMOVE:
 		case WM_MOVE:
 		case WM_EXITSIZEMOVE:
 		{
 			TimeController::GetInstance().MoveWindow();
+			break;
 		}
 
 		default:

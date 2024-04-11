@@ -2,7 +2,6 @@
 
 #include "RewindState.h"
 
-
 namespace Phyzzle
 {
 	RewindState::~RewindState()
@@ -93,10 +92,11 @@ namespace Phyzzle
 	void RewindState::Cancel()
 	{
 		player->ChangeState(Player::State::DEFAULT);
+
 	}
 
 	void RewindState::Select()
 	{
-
+		player->CameraForwardRaycast();
 	}
 }

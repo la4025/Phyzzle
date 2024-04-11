@@ -24,6 +24,7 @@ namespace PurahEngine
 	{
 		body = PhysicsSystem::GetInstance().CreateRigidBody(GetGameObject());
 		PhysicsSystem::GetInstance().bodies.push_back(this);
+		body->SetUserData(this);
 		// awake = false;
 	}
 

@@ -2,19 +2,23 @@
 
 #include "QueryFilterCallback.h"
 
+#include "ZnLayer.h"
+
 namespace ZonaiPhysics
 {
 	physx::PxQueryHitType::Enum QueryFilter::preFilter(
         const physx::PxFilterData& filterData, const physx::PxShape* shape, 
         const physx::PxRigidActor* actor, physx::PxHitFlags& queryFlags)
 	{
-        // Early out to avoid crashing
+        // shape가 없으면 X
         if (!shape)
             return physx::PxQueryHitType::eNONE;
 
-        // Check mask
+        // 레이어가 다르면 X
         const physx::PxFilterData shapeFilter = shape->getQueryFilterData();
-        if ((filterData.word0 & shapeFilter.word0) == 0)
+        const bool test = ZnLayer::CanCollide(filterData.word0, shapeFilter.word0);
+        // if ((filterData.word0 & shapeFilter.word0) == 0)
+        if (!test)
         {
             return physx::PxQueryHitType::eNONE;
         }

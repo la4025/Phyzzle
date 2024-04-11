@@ -1,5 +1,4 @@
 #pragma once
-#include <queue>
 #include "Singleton.h"
 
 namespace Phyzzle
@@ -17,15 +16,11 @@ namespace Phyzzle
 
 		void Active();
 		void Deactive();
-		void Store();
+		void Store(Rewindable* _object, Snapshot* _snapshot);
+		bool Check(Snapshot* _last, Snapshot* _newSnapshot);
 
 	private:
 		static Rewindable* target;
-
-	private:
-		std::vector<Rewindable*> activatedObject;
-		std::queue<Rewindable*> activateObject;
-		std::queue<Rewindable*> deactivateObject;
 
 	private:
 		std::unordered_map<Rewindable*, std::list<Snapshot*>> history;

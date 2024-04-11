@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "PurahEngine.h"
 
 namespace Phyzzle
 {
@@ -19,21 +19,30 @@ namespace Phyzzle
 		friend class RewindSystem;
 
 	public:
-		Rewindable();
+					Rewindable();
 
 		void		Awake() override;
 		void		Update() override;
 
 	private:
-		Snapshot*	Store() const;
+		void		Rewind();
+
+		bool		Check() const;
+		void		Store() const;
 		void		Restore(Snapshot* _data);
 		bool		Complete();
 		void		Cancel();
 
 	private:
 		long long REWIDABLE_ID;
-		PurahEngine::RigidBody* body;
+
+	private:
+		bool rewinding = false;
+		Snapshot* prev;
 		Snapshot* curr;
 		Snapshot* next;
+
+	private:
+		PurahEngine::RigidBody* body;
 	};
 }

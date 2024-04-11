@@ -1,10 +1,9 @@
 #pragma once
 #include "PurahEngine.h"
 
-// #define PROPERTY(type, value) type #value; \ 
-
 namespace ZonaiPhysics
 {
+	struct ZnRaycastInfo;
 	class Collider;
 }
 
@@ -69,8 +68,16 @@ namespace Phyzzle
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 	private:
-		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		void GamePadInput();
+
+		void Jump();
+		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
+
+		void Move(float _moveSpeed, bool _cameraLookAt);
+
+		void CameraAround();
+		void CameraForwardRaycast();
+
 
 	public:
 		void PreSerialize(json& jsonData) const override;

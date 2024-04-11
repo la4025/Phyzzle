@@ -64,10 +64,6 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		if (_value)
-		{
-			static int name = (int)_pxBody;
-		}
 		static_cast<physx::PxRigidDynamic*>(_pxBody)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, _value);
 	}
 

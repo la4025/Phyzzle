@@ -55,28 +55,30 @@ struct PxQueryFlag
 {
 	enum Enum
 	{
-		eSTATIC							= (1<<0),	//!< Traverse static shapes
+		eSTATIC							= (1<<0),	//!< 정적 형태를 통과합니다.
 
-		eDYNAMIC						= (1<<1),	//!< Traverse dynamic shapes
+		eDYNAMIC						= (1<<1),	//!< 동적 형태를 통과합니다.
 
-		ePREFILTER						= (1<<2),	//!< Run the pre-intersection-test filter (see #PxQueryFilterCallback::preFilter())
+		ePREFILTER						= (1<<2),	//!< 사전 교차 검사 필터(pre-intersection-test filter)를 실행합니다.
+													//!< (PxQueryFilterCallback::preFilter() 참조)
 
-		ePOSTFILTER						= (1<<3),	//!< Run the post-intersection-test filter (see #PxQueryFilterCallback::postFilter())
+		ePOSTFILTER						= (1<<3),	//!< 사후 교차 검사 필터(post-intersection-test filter)를 실행합니다.
+													//!< (PxQueryFilterCallback::postFilter() 참조)
 
-		eANY_HIT						= (1<<4),	//!< Abort traversal as soon as any hit is found and return it via callback.block.
-													//!< Helps query performance. Both eTOUCH and eBLOCK hitTypes are considered hits with this flag.
+		eANY_HIT						= (1<<4),	//!< 발견된 즉시 모든 통과를 중단하고 콜백을 통해 해당 히트를 반환합니다.
+													//!< 쿼리 성능을 향상시킵니다. 이 플래그는 eTOUCH와 eBLOCK hitTypes가 모두 해당 플래그로 인해 히트로 간주됩니다.
 
-		eNO_BLOCK						= (1<<5),	//!< All hits are reported as touching. Overrides eBLOCK returned from user filters with eTOUCH.
-													//!< This is also an optimization hint that may improve query performance.
+		eNO_BLOCK						= (1<<5),	//!< 모든 히트를 접촉(touching)으로 보고합니다. 사용자 필터에서 eBLOCK을 eTOUCH로 변경하여 eBLOCK이 반환되는 것을 재정의합니다.
+													//!< 이것은 쿼리 성능을 향상시킬 수 있는 최적화 힌트입니다.
 		
-		eBATCH_QUERY_LEGACY_BEHAVIOUR	= (1<<6),	//!< Run with legacy batch query filter behavior. Raising this flag ensures that
-													//!< the hardcoded filter equation is neglected. This guarantees that any provided PxQueryFilterCallback
-													//!< will be utilised, as specified by the ePREFILTER  and ePOSTFILTER flags.
+		eBATCH_QUERY_LEGACY_BEHAVIOUR	= (1<<6),	//!< 레거시 배치 쿼리 필터 동작을 사용합니다.
+													//!< 이 플래그를 올리면 하드코딩된 필터 방정식이 무시됩니다.
+													//!< 이로써 ePREFILTER와 ePOSTFILTER 플래그에 따라 제공된 PxQueryFilterCallback가 사용됨이 보장됩니다.
 
-		eDISABLE_HARDCODED_FILTER		= (1<<6),	//!< Same as eBATCH_QUERY_LEGACY_BEHAVIOUR, more explicit name making it clearer that this can also be used
-													//!< with regular/non-batched queries if needed.
+		eDISABLE_HARDCODED_FILTER		= (1<<6),	//!< eBATCH_QUERY_LEGACY_BEHAVIOUR와 동일하지만, 보다 명확한 이름입니다.
+													//!< 일반/비배치 쿼리에서도 사용할 수 있음을 명시적으로 나타냅니다.
 
-		eRESERVED						= (1<<15)	//!< Reserved for internal use
+		eRESERVED						= (1<<15)	//!< 내부 사용을 위해 예약된 플래그입니다.
 	};
 };
 PX_COMPILE_TIME_ASSERT(PxQueryFlag::eSTATIC==(1<<0));
@@ -91,22 +93,20 @@ typedef PxFlags<PxQueryFlag::Enum,PxU16> PxQueryFlags;
 PX_FLAGS_OPERATORS(PxQueryFlag::Enum,PxU16)
 
 /**
-\brief Classification of scene query hits (intersections).
+\brief 씬 쿼리 히트(교차)의 분류.
 
- - eNONE: Returning this hit type means that the hit should not be reported.
- - eBLOCK: For all raycast, sweep and overlap queries the nearest eBLOCK type hit will always be returned in PxHitCallback::block member.
- - eTOUCH: Whenever a raycast, sweep or overlap query was called with non-zero PxHitCallback::nbTouches and PxHitCallback::touches
-		   parameters, eTOUCH type hits that are closer or same distance (touchDistance <= blockDistance condition)
-		   as the globally nearest eBLOCK type hit, will be reported.
- - For example, to record all hits from a raycast query, always return eTOUCH.
+	- eNONE: 이 히트 유형을 반환하면 해당 히트를 보고하지 않아야 함을 의미합니다.
+	- eBLOCK: 모든 레이캐스트, 스윕 및 오버랩 쿼리에 대해 가장 가까운 eBLOCK 유형 히트가 항상 PxHitCallback::block 멤버에 반환됩니다.
+	- eTOUCH: 레이캐스트, 스윕 또는 오버랩 쿼리가 PxHitCallback::nbTouches 및 PxHitCallback::touches 매개변수로 호출된 경우, 전역적으로 가장 가까운 eBLOCK 유형 히트와 거리가 같거나 더 가까운(eTOUCH hits that are closer or same distance) eTOUCH 유형 히트가 보고됩니다. (touchDistance <= blockDistance 조건)
+	- 예를 들어, 레이캐스트 쿼리의 모든 히트를 기록하려면 항상 eTOUCH를 반환하세요.
 
-All hits in overlap() queries are treated as if the intersection distance were zero.
-This means the hits are unsorted and all eTOUCH hits are recorded by the callback even if an eBLOCK overlap hit was encountered.
-Even though all overlap() blocking hits have zero length, only one (arbitrary) eBLOCK overlap hit is recorded in PxHitCallback::block.
-All overlap() eTOUCH type hits are reported (zero touchDistance <= zero blockDistance condition).
+오버랩() 쿼리의 모든 히트는 교차 거리가 0으로 처리됩니다.
+이는 히트가 정렬되지 않으며 모든 eTOUCH 히트가 콜백에 기록되며 eBLOCK 오버랩 히트가 만날지라도 모든 eTOUCH 히트가 기록됩니다.
+모든 오버랩() 차단 히트는 길이가 0이지만, 하나 (임의의)의 eBLOCK 오버랩 히트만 PxHitCallback::block에 기록됩니다.
+모든 오버랩() eTOUCH 유형 히트가 보고됩니다. (zero touchDistance <= zero blockDistance condition)
 
-For raycast/sweep/overlap calls with zero touch buffer or PxHitCallback::nbTouches member,
-only the closest hit of type eBLOCK is returned. All eTOUCH hits are discarded.
+PxHitCallback::nbTouches 멤버 또는 제로 터치 버퍼로 레이캐스트/스윕/오버랩 호출의 경우,
+eBLOCK 유형의 가장 가까운 히트만 반환됩니다. 모든 eTOUCH 히트는 삭제됩니다.
 
 @see PxQueryFilterCallback.preFilter PxQueryFilterCallback.postFilter PxScene.raycast PxScene.sweep PxScene.overlap
 */
@@ -114,23 +114,26 @@ struct PxQueryHitType
 {
 	enum Enum
 	{
-		eNONE	= 0,	//!< the query should ignore this shape
-		eTOUCH	= 1,	//!< a hit on the shape touches the intersection geometry of the query but does not block it
-		eBLOCK	= 2		//!< a hit on the shape blocks the query (does not block overlap queries)
+		eNONE	= 0,	//!< 쿼리는 이 형태를 무시해야 합니다.
+		eTOUCH	= 1,	//!< 형태에 대한 히트는 쿼리의 교차 지오메트리를 접촉하지만 차단하지 않습니다.
+		eBLOCK	= 2		//!< 형태에 대한 히트는 쿼리를 차단합니다. (겹침 쿼리를 차단하지는 않음)
 	};
 };
 
 /**
-\brief Scene query filtering data.
+\brief 씬 쿼리 필터링 데이터.
 
-Whenever the scene query intersects a shape, filtering is performed in the following order:
+씬 쿼리가 형태와 교차되는 경우, 필터링은 다음과 같은 순서로 수행됩니다:
 
-\li For non-batched queries only:<br>If the data field is non-zero, and the bitwise-AND value of data AND the shape's
-queryFilterData is zero, the shape is skipped
-\li If filter callbacks are enabled in flags field (see #PxQueryFlags) they will get invoked accordingly.
-\li If neither #PxQueryFlag::ePREFILTER or #PxQueryFlag::ePOSTFILTER is set, the hit defaults
-to type #PxQueryHitType::eBLOCK when the value of PxHitCallback::nbTouches provided with the query is zero and to type
-#PxQueryHitType::eTOUCH when PxHitCallback::nbTouches is positive.
+\li 배치 쿼리가 아닌 경우만: <br>만약 데이터 필드가 0이 아니고,
+	데이터와 형태의 queryFilterData의 비트 AND 값이 0이면, 해당 형태는 건너뜁니다.
+
+\li 플래그 필드에서 필터 콜백이 활성화된 경우 (PxQueryFlags 참조), 해당되는 콜백이 호출됩니다.
+
+\li #PxQueryFlag::ePREFILTER 또는 #PxQueryFlag::ePOSTFILTER 중 하나도 설정되어 있지 않으면,
+	PxHitCallback::nbTouches의 값이 0이고 PxHitCallback::nbTouches로 제공된 쿼리가 있으면,
+	히트는 기본적으로 #PxQueryHitType::eBLOCK 유형으로 설정됩니다.
+	그렇지 않으면 #PxQueryHitType::eTOUCH 유형으로 설정됩니다.
 
 @see PxScene.raycast PxScene.sweep PxScene.overlap PxQueryFlag::eANY_HIT
 */

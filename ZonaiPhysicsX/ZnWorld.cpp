@@ -28,6 +28,17 @@ namespace ZonaiPhysics
 	{
 		assert(currScene != nullptr);
 
+		if (_dt > (1.f / 50.f))
+			_dt = 1.f / 10.f;
+		else if (_dt > (1.f / 40.f))
+			_dt = 1.f / 10.f;
+		else if (_dt > (1.f / 30.f))
+			_dt = 1.f / 10.f;
+		else if (_dt > (1.f / 20.f))
+			_dt = 1.f / 10.f;
+		else if (_dt > (1.f / 10.f))
+			_dt = 1.f / 10.f;
+
 		currScene->simulate(_dt);
 		currScene->fetchResults(true);
 	}
@@ -166,10 +177,19 @@ namespace ZonaiPhysics
 	{
 		physx::PxRaycastBuffer temp;
 
-		if (bool hit = currScene->raycast(EigenToPhysx(_from), EigenToPhysx(_to), _distance, temp))
+		if (bool hit = currScene->raycast(
+			EigenToPhysx(_from), 
+			EigenToPhysx(_to),
+			_distance, 
+			temp
+			// ,physx::PxHitFlag::eDEFAULT, 
+			// physx::PxQueryFilterData{}
+		))
 		{
-			_out.bodyData = static_cast<ZnRigidBody*>(temp.block.actor->userData)->GetUserData();
-			_out.colliderData = static_cast<ZnCollider*>(temp.block.shape->userData)->GetUserData();
+			const auto object0 = static_cast<ZnObject*>(static_cast<ZnBase*>(temp.block.actor->userData));
+			const auto object1 = static_cast<ZnObject*>(static_cast<ZnBase*>(temp.block.shape->userData));
+			_out.bodyData = static_cast<ZonaiPhysics::RigidBody*>(object0)->GetUserData();
+			_out.colliderData = static_cast<ZonaiPhysics::Collider*>(object1)->GetUserData();
 			_out.position = PhysxToEigen(temp.block.position);
 			_out.distance = temp.block.distance;
 

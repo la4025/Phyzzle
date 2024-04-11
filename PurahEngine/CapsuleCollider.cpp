@@ -26,7 +26,7 @@ namespace PurahEngine
 			radius * maxScale, height * scale.y()
 		);
 
-		znCollider->SetUserData(this);
+		Collider::SetUserData();
 
 		awake = false;
 

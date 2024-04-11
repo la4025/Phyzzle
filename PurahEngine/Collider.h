@@ -27,6 +27,7 @@ namespace PurahEngine
 
     public:
         void OnDataLoadComplete() override;
+        void SetUserData();
 
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);

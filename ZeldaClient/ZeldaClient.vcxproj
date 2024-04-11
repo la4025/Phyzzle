@@ -169,7 +169,6 @@
     <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
-    <ClCompile Include="Snapshot.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />

@@ -11,7 +11,7 @@
 
 namespace ZonaiPhysics
 {
-	RigidBody::RigidBody(physx::PxRigidDynamic * _pxBody, void* _userData) : pxBody(_pxBody), userData(_userData)
+	RigidBody::RigidBody(physx::PxRigidDynamic * _pxBody, void* _userData) : pxBody(_pxBody)
 	{
 		_pxBody->userData = this;
 	}
@@ -63,12 +63,12 @@ namespace ZonaiPhysics
 
 	void* RigidBody::GetUserData() const
 	{
-		return RigidBodyHelper::GetUserData(pxBody);
+		return userData;
 	}
 
 	void RigidBody::SetUserData(void* _userData)
 	{
-		RigidBodyHelper::SetUserData(pxBody, _userData);
+		userData = _userData;
 	}
 
 	float RigidBody::GetMass() const

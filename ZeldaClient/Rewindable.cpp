@@ -1,8 +1,9 @@
 #include "TimeController.h"
-#include "Snapshot.h"
 
 #include "RigidBody.h"
 #include "GameObject.h"
+
+#include "Snapshot.h"
 
 #include "Rewindable.h"
 
@@ -25,44 +26,50 @@ namespace Phyzzle
 
 	void Rewindable::Update()
 	{
-		if (!body)
-			return;
+		assert(body != nullptr);
 
-		if (body->IsSleeping())
-			return;
+		if (rewinding)
+		{
+			Rewind();
+		}
+		else
+		{
+			Store();
+		}
+	}
 
-		auto direction = body->GetLinearVelocity();
-
+	void Rewindable::Rewind()
+	{
 
 	}
 
-	Snapshot* Rewindable::Store() const
+	void Rewindable::Store() const
 	{
 		assert(body != nullptr);
 
+		// this->prev = curr;
+
 		// 물리 정보를 저장.
 		Snapshot* snapshot			= new Snapshot;
-		snapshot->time				= std::chrono::system_clock::now();
+		/*snapshot->time				= std::chrono::system_clock::now();*/
 		snapshot->position			= body->GetPosition();
 		snapshot->rotation			= body->GetRotation();
 		snapshot->linearVelocity	= body->GetLinearVelocity();
 		snapshot->angularVelocity	= body->GetAngularVelocity();
-
-		return snapshot;
 	}
 
 	void Rewindable::Restore(Snapshot* _data)
 	{
 		// 시간 간격
-		std::chrono::duration<float> d = next->time - curr->time;
-		float difference = d.count();
+		/*std::chrono::duration<float> d = next->time - curr->time;*/
+		/*float difference = d.count();*/
 
 		// dt를 
 		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
-		auto a = dt / difference;
+		/*auto a = dt / difference;*/
 
 		// 물리 정보를 꺼냄.
-		_data->time;
+		/*_data->time;*/
 		_data->linearVelocity;
 		_data->angularVelocity;
 	}

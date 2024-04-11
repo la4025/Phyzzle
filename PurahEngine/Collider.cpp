@@ -64,6 +64,11 @@ namespace PurahEngine
         }
 	}
 
+	void Collider::SetUserData()
+	{
+        znCollider->SetUserData(this);
+	}
+
 	void Collider::SetPositionOffset(const Eigen::Vector3f& _pos)
     {
         if (awake)
