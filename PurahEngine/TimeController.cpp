@@ -58,11 +58,23 @@ void PurahEngine::TimeController::Update(std::string timeName)
 	timeTable[timeName] = currentTime;
 }
 
+void PurahEngine::TimeController::UpdateIgnoreDelta(std::string timeName)
+{
+	std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+
+	if (timeTable.count(timeName) == 0)
+	{
+		timeTable[timeName] = currentTime;
+	}
+
+	timeTable[timeName] = currentTime;
+}
+
 void PurahEngine::TimeController::MoveWindow()
 {
 	for (auto iter = timeTable.begin(); iter != timeTable.end(); iter++)
 	{
-		Update((*iter).first);
+		UpdateIgnoreDelta((*iter).first);
 	}
 }
 
