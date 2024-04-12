@@ -24,13 +24,6 @@ namespace PurahEngine
 	class PURAHENGINE_API GamePad
 	{
 	private:
-		enum class State
-		{
-			NONE,
-			DOWN,
-			PRESSED,
-			UP,
-		};
 
 		void Initialize(int _id, ePad* _inputArr, int _size);
 		void Update();
@@ -42,11 +35,19 @@ namespace PurahEngine
 
 	public:
 		friend GamePadManager;
+		enum class State
+		{
+			NONE,
+			DOWN,
+			PRESSED,
+			UP,
+		};
 
 		/// 키 입력
 		bool				IsKeyDown(ePad _input);
 		bool				IsKeyPressed(ePad _input);
 		bool				IsKeyUp(ePad _input);
+		State				IsKeyValue(ePad _input);
 
 		/// 트리거 값
 		int					GetTriggerValue(ePadTrigger _index) const;

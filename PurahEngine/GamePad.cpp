@@ -83,6 +83,11 @@ namespace PurahEngine
 		return inputMap[_input] == State::UP;
 	}
 
+	GamePad::State GamePad::IsKeyValue(ePad _input)
+	{
+		return inputMap[_input];
+	}
+
 	int GamePad::GetTriggerValue(ePadTrigger _index) const
 	{
 		if (_index == ePadTrigger::ePAD_TRIGGER_L)
