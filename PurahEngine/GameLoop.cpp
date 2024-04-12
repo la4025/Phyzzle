@@ -154,7 +154,10 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 		else
 		{
 			// 엔진 동작
-			run();
+			if (!moving)
+			{
+				run();
+			}
 		}
 	}
 }
@@ -180,6 +183,7 @@ void PurahEngine::GameLoop::run()
 
 	PhysicsSystem::GetInstance().PreStep();
 	PhysicsSystem::GetInstance().Simulation(deltaTime);
+	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
@@ -219,6 +223,22 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 		}
 
 		case WM_MOVE:
+		{
+			GameLoop::GetInstance().moving = true;
+			TimeController::GetInstance().PauseAll();
+			break;
+		}
+
+		case WM_ENTERIDLE:
+		{
+			if (GameLoop::GetInstance().moving)
+			{
+				TimeController::GetInstance().ResumeAll();
+				GameLoop::GetInstance().moving = false;
+			}
+			break;
+		}
+
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);

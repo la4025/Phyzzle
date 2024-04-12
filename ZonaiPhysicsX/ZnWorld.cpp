@@ -28,17 +28,6 @@ namespace ZonaiPhysics
 	{
 		assert(currScene != nullptr);
 
-		if (_dt > (1.f / 50.f))
-			_dt = 1.f / 10.f;
-		else if (_dt > (1.f / 40.f))
-			_dt = 1.f / 10.f;
-		else if (_dt > (1.f / 30.f))
-			_dt = 1.f / 10.f;
-		else if (_dt > (1.f / 20.f))
-			_dt = 1.f / 10.f;
-		else if (_dt > (1.f / 10.f))
-			_dt = 1.f / 10.f;
-
 		currScene->simulate(_dt);
 		currScene->fetchResults(true);
 	}
