@@ -208,12 +208,17 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 		}
 
 		case WM_ENTERSIZEMOVE:
-		case WM_MOVE:
+		{
+			TimeController::GetInstance().PauseAll();			
+			break;
+		}
 		case WM_EXITSIZEMOVE:
 		{
-			TimeController::GetInstance().MoveWindow();
+			TimeController::GetInstance().ResumeAll();
+			break;
 		}
 
+		case WM_MOVE:
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);
