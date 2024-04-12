@@ -11,7 +11,6 @@
 #include "Timer.h"
 #include "SoundManager.h"
 #include "EngineSetting.h"
-#include <string>
 #include <cassert>
 
 
@@ -177,16 +176,10 @@ void PurahEngine::GameLoop::run()
 	TimeController::GetInstance().Update(timeInit);
 
 	Timer::PreUpdate();
-	float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
+	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
-	if (deltaTime > (1.f / 50.f))
-	{
-		OutputDebugString((std::to_wstring(deltaTime) + L"\n").c_str());
-	}
-	
 	PhysicsSystem::GetInstance().PreStep();
 	PhysicsSystem::GetInstance().Simulation(deltaTime);
-	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
@@ -214,20 +207,18 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 			break;
 		}
 
-		//case WM_KILLFOCUS:
-		//{
-		//	TimeController::GetInstance().MoveWindow();
-		//	break;
-		//}
-
 		case WM_ENTERSIZEMOVE:
-		case WM_MOVE:
+		{
+			TimeController::GetInstance().PauseAll();			
+			break;
+		}
 		case WM_EXITSIZEMOVE:
 		{
-			TimeController::GetInstance().MoveWindow();
+			TimeController::GetInstance().ResumeAll();
 			break;
 		}
 
+		case WM_MOVE:
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);

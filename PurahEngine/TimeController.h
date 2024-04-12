@@ -29,6 +29,9 @@ namespace PurahEngine
 		void Update(std::string timeName);
 		void UpdateIgnoreDelta(std::string timeName);
 
+		void PauseAll();
+		void ResumeAll();
+
 		void MoveWindow();
 
 	private:
@@ -38,6 +41,8 @@ namespace PurahEngine
 
 		float timeScale;
 		int framePerSecond; 
+		bool isRunning;
+		std::chrono::system_clock::time_point pauseTime;
 
 		std::string timeName;
 		std::string physicName;
