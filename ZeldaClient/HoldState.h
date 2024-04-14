@@ -13,6 +13,9 @@ namespace Phyzzle
 		~HoldState() override;
 
 	private:
+		void Input() override;
+		void StateEnter() override;
+		void StateExit() override;
 		void operator()() override;
 
 	private:

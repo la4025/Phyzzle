@@ -1,4 +1,5 @@
 #include <Eigen/Dense>
+#include <cmath>
 
 #include "Transform.h"
 #include "TimeController.h"
@@ -12,6 +13,23 @@ namespace Phyzzle
 {
 	DefaultState::~DefaultState()
 	= default;
+
+	void DefaultState::Input()
+	{
+		IState::Input();
+
+
+	}
+
+	void DefaultState::StateEnter()
+	{
+
+	}
+
+	void DefaultState::StateExit()
+	{
+
+	}
 
 	void DefaultState::operator()()
 	{
@@ -47,10 +65,12 @@ namespace Phyzzle
 
 	void DefaultState::Click_DLeft()
 	{
+		ChangeState(false);
 	}
 
 	void DefaultState::Click_DRight()
 	{
+		ChangeState(true);
 	}
 
 	void DefaultState::Click_A()
@@ -73,7 +93,7 @@ namespace Phyzzle
 
 	void DefaultState::Click_LB()
 	{
-		player->ChangeState(Player::State::ATTATCH);
+		player->ChangeState(player->data.state);
 	}
 
 	void DefaultState::Click_RB()
@@ -113,5 +133,30 @@ namespace Phyzzle
 	void DefaultState::Select() const
 	{
 		player->CameraForwardRaycast();
+	}
+
+	// 현재 능력을 변경함
+	void DefaultState::ChangeState(bool _value) const
+	{
+		if (_value)
+		{
+			Player::State newState = 
+				static_cast<Player::State>(
+					(player->data.state + 1) 
+					% (player->stateSystem.size() - 1)
+					);
+
+			player->data.state = newState;
+		}
+		else
+		{
+			Player::State newState = 
+				static_cast<Player::State>(
+					max(static_cast<int>(player->data.state - 1), 0)
+					% (player->stateSystem.size() - 1)
+					); 
+
+			player->data.state = newState;
+		}
 	}
 }
