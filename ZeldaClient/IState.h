@@ -1,4 +1,6 @@
 #pragma once
+#include "ePad.h"
+#include "Player.h"
 
 namespace Phyzzle
 {
@@ -17,24 +19,26 @@ namespace Phyzzle
 	public:
 		virtual void Input()
 		{
-			player->pad.Lstick.Size = player->pad.gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, player->pad.Lstick.X, player->pad.Lstick.Y);
-			player->pad.Rstick.Size = player->pad.gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, player->pad.Rstick.X, player->pad.Rstick.Y);
+			player->prevInput = player->currInput;
 
-			player->pad.LTrigger = player->pad.gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
-			player->pad.RTrigger = player->pad.gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
+			player->currInput.Lstick.Size = player->gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, player->currInput.Lstick.X, player->currInput.Lstick.Y);
+			player->currInput.Rstick.Size = player->gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, player->currInput.Rstick.X, player->currInput.Rstick.Y);
 
-			player->pad.buttonA = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_A);
-			player->pad.buttonB = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_B);
-			player->pad.buttonX = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_X);
-			player->pad.buttonY = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_Y);
+			player->currInput.LTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
+			player->currInput.RTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
 
-			player->pad.buttonUP = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_UP);
-			player->pad.buttonDOWN = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_DOWN);
-			player->pad.buttonLEFT = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_LEFT);
-			player->pad.buttonRIGHT = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_RIGHT);
+			player->currInput.buttonA = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_A);
+			player->currInput.buttonB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_B);
+			player->currInput.buttonX = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_X);
+			player->currInput.buttonY = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_Y);
 
-			player->pad.buttonLB = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_L);
-			player->pad.buttonRB = player->pad.gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_R);
+			player->currInput.buttonUP = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_UP);
+			player->currInput.buttonDOWN = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_DOWN);
+			player->currInput.buttonLEFT = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_LEFT);
+			player->currInput.buttonRIGHT = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_RIGHT);
+
+			player->currInput.buttonLB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_L);
+			player->currInput.buttonRB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_R);
 		}
 
 		virtual void operator()() {}

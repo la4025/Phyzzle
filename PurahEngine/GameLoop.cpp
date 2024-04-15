@@ -213,29 +213,28 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 
 		case WM_ENTERSIZEMOVE:
 		{
+			GameLoop::GetInstance().moving = true;
 			TimeController::GetInstance().PauseAll();			
 			break;
 		}
 		case WM_EXITSIZEMOVE:
 		{
+			GameLoop::GetInstance().moving = false;
 			TimeController::GetInstance().ResumeAll();
 			break;
 		}
 
 		case WM_MOVE:
 		{
-			GameLoop::GetInstance().moving = true;
-			TimeController::GetInstance().PauseAll();
+			GameLoop::GetInstance().moving = false;
+			TimeController::GetInstance().ResumeAll();
 			break;
 		}
 
-		case WM_ENTERIDLE:
+		case WM_MOVING:
 		{
-			if (GameLoop::GetInstance().moving)
-			{
-				TimeController::GetInstance().ResumeAll();
-				GameLoop::GetInstance().moving = false;
-			}
+			GameLoop::GetInstance().moving = true;
+			TimeController::GetInstance().PauseAll();
 			break;
 		}
 
