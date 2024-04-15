@@ -82,7 +82,6 @@ namespace ZonaiPhysics
 		void				ClearTorque() override;
 
 	public:
-		void* userData;
 		physx::PxRigidDynamic* pxBody;
 	};
 } // namespace ZonaiPhysics

@@ -180,6 +180,7 @@ void PurahEngine::GameLoop::run()
 
 	PhysicsSystem::GetInstance().PreStep();
 	PhysicsSystem::GetInstance().Simulation(deltaTime);
+	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
@@ -209,16 +210,16 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 
 		case WM_ENTERSIZEMOVE:
 		{
-			TimeController::GetInstance().PauseAll();			
+			TimeController::GetInstance().PauseAll();
 			break;
 		}
+
 		case WM_EXITSIZEMOVE:
 		{
 			TimeController::GetInstance().ResumeAll();
 			break;
 		}
 
-		case WM_MOVE:
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);

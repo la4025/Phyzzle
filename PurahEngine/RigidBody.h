@@ -23,11 +23,10 @@ namespace PurahEngine
 		void		OnDataLoadComplete() override;
 		void		Awake() override;
 
-	private:
+	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
 		const Eigen::Vector3f& GetPosition() noexcept;
 
-	private:
 		void		SetRotation(const Eigen::Quaternionf& _rot) noexcept;
 		const Eigen::Quaternionf& GetRotation() noexcept;
 

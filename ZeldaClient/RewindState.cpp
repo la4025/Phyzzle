@@ -1,10 +1,26 @@
-#include "RewindState.h"
+#include "Player.h"
 
+#include "RewindState.h"
 
 namespace Phyzzle
 {
 	RewindState::~RewindState()
 	= default;
+
+	void RewindState::Input()
+	{
+		IState::Input();
+	}
+
+	void RewindState::StateEnter()
+	{
+		IState::StateEnter();
+	}
+
+	void RewindState::StateExit()
+	{
+		IState::StateExit();
+	}
 
 	void RewindState::operator()()
 	{
@@ -75,7 +91,7 @@ namespace Phyzzle
 
 	void RewindState::Click_LB()
 	{
-
+		Cancel();
 	}
 
 	void RewindState::Click_RB()
@@ -85,13 +101,16 @@ namespace Phyzzle
 
 	void RewindState::Aim()
 	{
+
 	}
 
 	void RewindState::Cancel()
 	{
+		player->ChangeState(Player::State::DEFAULT);
 	}
 
 	void RewindState::Select()
 	{
+		player->CameraForwardRaycast();
 	}
 }

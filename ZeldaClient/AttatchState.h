@@ -13,6 +13,12 @@ namespace Phyzzle
 		~AttatchState() override;
 
 	private:
+		void Input() override;
+		void StateEnter() override;
+		void StateExit() override;
+		void operator()() override;
+
+	private:
 		void Stick_L() override;
 		void Stick_R() override;
 		void Trigger_L() override;
@@ -29,7 +35,13 @@ namespace Phyzzle
 		void Click_RB() override;
 
 	private:
-		void operator()() override;
+		bool holdState = false;
+
+		void Move() const;
+		void Around() const;
+		void Cancel() const;
+		bool ObjectSelect() const;
+		void Jump() const;
 	};
 }
 

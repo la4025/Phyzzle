@@ -24,6 +24,7 @@ namespace PurahEngine
 		void Finalize();
 
 	private:
+		bool moving = false;
 		HWND hWnd;
 		// 내부적으로 Run()함수에서 돌아갈 함수
 		void run();

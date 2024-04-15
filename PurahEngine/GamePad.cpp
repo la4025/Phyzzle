@@ -44,7 +44,7 @@ namespace PurahEngine
 			}
 			else if (_state.Gamepad.wButtons & button && currState == State::DOWN)
 			{
-				currState = State::PRESSED;
+					currState = State::PRESSED;
 			}
 			else if (!(_state.Gamepad.wButtons & button) && currState == State::DOWN)
 			{
@@ -81,6 +81,11 @@ namespace PurahEngine
 	bool GamePad::IsKeyUp(ePad _input)
 	{
 		return inputMap[_input] == State::UP;
+	}
+
+	GamePad::State GamePad::IsKeyValue(ePad _input)
+	{
+		return inputMap[_input];
 	}
 
 	int GamePad::GetTriggerValue(ePadTrigger _index) const
@@ -145,6 +150,14 @@ namespace PurahEngine
 			magnitude = 0.0;
 			_outX = 0.f;
 			_outY = 0.f;
+		}
+	}
+
+	void GamePad::InputQueueClear(ePad _keyCode)
+	{
+		while (!inputQueue[_keyCode].empty())
+		{
+			inputQueue[_keyCode].pop();
 		}
 	}
 

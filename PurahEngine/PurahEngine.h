@@ -21,6 +21,13 @@
 #include "UnifiedInputManager.h"
 
 // Physics
+#include "EasingFunc.h"
+
+#include "ZnRaycastInfo.h"
+
+#include "PhysicsSystem.h"
+#include "Physics.h"
+
 #include "RigidBody.h"
 #include "BoxCollider.h"
 #include "SphereCollider.h"

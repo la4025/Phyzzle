@@ -13,6 +13,9 @@ namespace Phyzzle
 		~HoldState() override;
 
 	private:
+		void Input() override;
+		void StateEnter() override;
+		void StateExit() override;
 		void operator()() override;
 
 	private:
@@ -30,5 +33,10 @@ namespace Phyzzle
 		void Click_Y() override;
 		void Click_LB() override;
 		void Click_RB() override;
+
+	private:
+		void Cancel() const;
+		void XRotate() const;
+		void YRotate() const;
 	};
 }

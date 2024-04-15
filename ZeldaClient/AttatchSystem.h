@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+
 #include "Singleton.h"
 
 namespace PurahEngine
@@ -14,7 +16,20 @@ namespace Phyzzle
 		~AttatchSystem() override;
 
 	public:
+		void Update();
+
+		bool HasSelectedBody() const;
+		void SelectBody(PurahEngine::RigidBody* _body);
+		void Cancel();
+		void XRotate(float _degree);
+		void YRotate(float _degree);
 		void Attatch(PurahEngine::RigidBody* _base, PurahEngine::RigidBody* _target);
+
+
+	private:
+		PurahEngine::RigidBody* selectBody = nullptr;
+		bool gravity = true;
+		float mass = 1.f;
 	};
 }
 

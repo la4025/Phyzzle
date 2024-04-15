@@ -24,7 +24,7 @@ namespace PurahEngine
 			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z()
 		);
 
-		znCollider->SetUserData(this);
+		Collider::SetUserData();
 
 		awake = false;
 
