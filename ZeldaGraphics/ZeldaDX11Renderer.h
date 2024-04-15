@@ -141,6 +141,7 @@ public:
 	virtual void DrawLight(LightID lightID) override;
 
 	virtual void DrawSprite(const Eigen::Vector2f& position, TextureID texture) override;
+	virtual void DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture) override;
 
 	virtual void DrawCubeMap(TextureID texture) override;
 

@@ -4,7 +4,7 @@
 
 namespace Phyzzle
 {
-	class Button : public PurahEngine::Component
+	class ButtonDevice : public PurahEngine::Component
 	{
 	private:
 		enum class ButtonType : int

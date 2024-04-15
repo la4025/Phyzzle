@@ -14,7 +14,7 @@
 
 #include "LauncherPlatform.h"
 
-#include "Button.h"
+#include "ButtonDevice.h"
 #include "DisconnectedWire.h"
 #include "Door.h"
 #include "DoorParts.h"
@@ -62,7 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
 
-	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Button>("Button");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ButtonDevice>("ButtonDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Door>("Door");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DoorParts>("DoorParts");

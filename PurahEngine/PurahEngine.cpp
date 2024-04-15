@@ -34,6 +34,14 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 	ComponentFactory::GetInstance().RegisterComponent<AudioSource>("AudioSource");
 	ComponentFactory::GetInstance().RegisterComponent<AudioListener>("AudioListener");
 
+	// UI
+	{
+		ComponentFactory::GetInstance().RegisterComponent<UI>("UI");
+		ComponentFactory::GetInstance().RegisterComponent<Image>("Image");
+		ComponentFactory::GetInstance().RegisterComponent<Button>("Button");
+		ComponentFactory::GetInstance().RegisterComponent<ButtonGroup>("ButtonGroup");
+	}
+
 	PurahEngine::GameLoop::GetInstance().Initialize(hInstance, gameName, width, height);
 }
 

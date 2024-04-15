@@ -17,6 +17,11 @@
 	value = static_cast<decltype(value)>(PurahEngine::FileManager::GetInstance().GetAddress(jsonData[std::string("__ID__") + #value]));\
 }
 
+#define PREDESERIALIZE_VECTOR2F(value)\
+{\
+	value = Eigen::Vector2f(jsonData[#value]["x"], jsonData[#value]["y"]); \
+}
+
 #define PREDESERIALIZE_VECTOR3F(value)\
 {\
 	value = Eigen::Vector3f(jsonData[#value]["x"], jsonData[#value]["y"], jsonData[#value]["z"]); \

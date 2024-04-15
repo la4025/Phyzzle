@@ -148,7 +148,7 @@
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
-    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonDevice.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DisconnectedWire.cpp" />
@@ -180,7 +180,7 @@
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
-    <ClInclude Include="Button.h" />
+    <ClInclude Include="ButtonDevice.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="DisconnectedWire.h" />

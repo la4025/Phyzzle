@@ -1072,8 +1072,14 @@ void ZeldaDX11Renderer::DrawLight(LightID lightID)
 
 void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture)
 {
+	DrawSprite(position, { 0.0f, 0.0f }, texture);
+}
+
+void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture)
+{
 	SpriteInstancingInfo instancinInfo;
 	instancinInfo.position = { position.x(), position.y() };
+	instancinInfo.size = { size.x(), size .y() };
 
 	auto iter = organizedSpriteRenderInfo.find(texture);
 
@@ -1729,7 +1735,20 @@ void ZeldaDX11Renderer::DrawSpriteRenderInfo(SpriteRenderInfo renderInfo)
 
 	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
 	{
-		spriteBatch->Draw(texture->GetTexture(), renderInfo.instancingInfo[i].position);
+		if (renderInfo.instancingInfo[i].size.x == 0.0f && renderInfo.instancingInfo[i].size.y == 0.0f)
+		{
+			spriteBatch->Draw(texture->GetTexture(), renderInfo.instancingInfo[i].position);
+		}
+		else
+		{
+			RECT rect;
+			rect.left = renderInfo.instancingInfo[i].position.x;
+			rect.right = renderInfo.instancingInfo[i].position.x + renderInfo.instancingInfo[i].size.x;
+			rect.top = renderInfo.instancingInfo[i].position.y;
+			rect.bottom = renderInfo.instancingInfo[i].position.y + renderInfo.instancingInfo[i].size.y;
+
+			spriteBatch->Draw(texture->GetTexture(), rect);
+		}
 	}
 }
 

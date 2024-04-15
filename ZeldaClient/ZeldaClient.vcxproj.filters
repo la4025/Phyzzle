@@ -54,7 +54,7 @@
     <ClCompile Include="DisconnectedWire.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="ButtonDevice.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
     <ClCompile Include="DefaultState.cpp">
@@ -140,7 +140,7 @@
     <ClInclude Include="DisconnectedWire.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="ButtonDevice.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
     <ClInclude Include="ElectricalDevice.h">
@@ -167,6 +167,7 @@
     <ClInclude Include="Holder.h">
       <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
+    <ClInclude Include="Hold.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
