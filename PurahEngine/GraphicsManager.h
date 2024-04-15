@@ -28,6 +28,21 @@ namespace PurahEngine
 
 	class PURAHENGINE_API GraphicsManager
 	{
+	private:
+		struct StringRenderInfo
+		{
+			std::wstring str;
+			float x;
+			float y;
+			float width;
+			float height;
+			float fontSize;
+			float r;
+			float g;
+			float b;
+			float a;
+		};
+
 	public:
 		void Initialize(HWND hWnd);
 		void Finalize();
@@ -37,6 +52,8 @@ namespace PurahEngine
 
 		void UpdateAnimator(float deltaTime);
 		void Render(float deltaTime);
+
+		void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a);
 
 	private:
 		void AddRenderer(IRenderer* renderer);
@@ -55,6 +72,8 @@ namespace PurahEngine
 		std::vector<IRenderer*> lightList;
 		std::vector<IRenderer*> rendererList;
 		std::vector<Animator*> animatorList;
+
+		std::vector<StringRenderInfo> stringList;
 
 		GraphicsResourceManager* resourceManager;
 
