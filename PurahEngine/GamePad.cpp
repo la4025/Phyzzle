@@ -44,7 +44,7 @@ namespace PurahEngine
 			}
 			else if (_state.Gamepad.wButtons & button && currState == State::DOWN)
 			{
-				currState = State::PRESSED;
+					currState = State::PRESSED;
 			}
 			else if (!(_state.Gamepad.wButtons & button) && currState == State::DOWN)
 			{
@@ -150,6 +150,14 @@ namespace PurahEngine
 			magnitude = 0.0;
 			_outX = 0.f;
 			_outY = 0.f;
+		}
+	}
+
+	void GamePad::InputQueueClear(ePad _keyCode)
+	{
+		while (!inputQueue[_keyCode].empty())
+		{
+			inputQueue[_keyCode].pop();
 		}
 	}
 

@@ -154,10 +154,7 @@ void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
 		else
 		{
 			// 엔진 동작
-			if (!moving)
-			{
-				run();
-			}
+			run();
 		}
 	}
 }
@@ -213,28 +210,13 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 
 		case WM_ENTERSIZEMOVE:
 		{
-			GameLoop::GetInstance().moving = true;
-			TimeController::GetInstance().PauseAll();			
+			TimeController::GetInstance().PauseAll();
 			break;
 		}
+
 		case WM_EXITSIZEMOVE:
 		{
-			GameLoop::GetInstance().moving = false;
 			TimeController::GetInstance().ResumeAll();
-			break;
-		}
-
-		case WM_MOVE:
-		{
-			GameLoop::GetInstance().moving = false;
-			TimeController::GetInstance().ResumeAll();
-			break;
-		}
-
-		case WM_MOVING:
-		{
-			GameLoop::GetInstance().moving = true;
-			TimeController::GetInstance().PauseAll();
 			break;
 		}
 

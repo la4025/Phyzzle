@@ -98,7 +98,7 @@ namespace Phyzzle
 
 	void DefaultState::Click_RB()
 	{
-		// 리버레코 취소
+		// player->CameraReset();
 	}
 
 	void DefaultState::Push() const
@@ -130,30 +130,33 @@ namespace Phyzzle
 		player->CameraAround();
 	}
 
-	void DefaultState::Select() const
-	{
-		player->CameraForwardRaycast();
-	}
-
 	// 현재 능력을 변경함
 	void DefaultState::ChangeState(bool _value) const
 	{
 		if (_value)
 		{
-			Player::State newState = 
+			Player::State newState =
 				static_cast<Player::State>(
-					(player->data.state + 1) 
-					% (player->stateSystem.size() - 1)
+					(player->data.state + 1)
+					);
+
+			newState = 
+				static_cast<Player::State>(
+					max(newState % (player->stateSystem.size()), 1)
 					);
 
 			player->data.state = newState;
 		}
 		else
 		{
-			Player::State newState = 
+			Player::State newState =
 				static_cast<Player::State>(
-					max(static_cast<int>(player->data.state - 1), 0)
-					% (player->stateSystem.size() - 1)
+					player->data.state + player->stateSystem.size() + 1
+					);
+
+			newState =
+				static_cast<Player::State>(
+					max(newState % player->stateSystem.size(), 1)
 					); 
 
 			player->data.state = newState;

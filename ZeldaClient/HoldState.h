@@ -33,5 +33,10 @@ namespace Phyzzle
 		void Click_Y() override;
 		void Click_LB() override;
 		void Click_RB() override;
+
+	private:
+		void Cancel() const;
+		void XRotate() const;
+		void YRotate() const;
 	};
 }

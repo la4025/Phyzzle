@@ -33,6 +33,15 @@ namespace Phyzzle
 		void Click_Y() override;
 		void Click_LB() override;
 		void Click_RB() override;
+
+	private:
+		bool holdState = false;
+
+		void Move() const;
+		void Around() const;
+		void Cancel() const;
+		bool ObjectSelect() const;
+		void Jump() const;
 	};
 }
 

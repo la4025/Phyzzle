@@ -143,7 +143,31 @@ void PurahEngine::GraphicsManager::Render(float deltaTime)
 		render->Render(graphicsModule);
 	}
 
+
+	// String
+	for (auto& renderInfo : stringList)
+	{
+		graphicsModule->DrawString(renderInfo.str, renderInfo.x, renderInfo.y, renderInfo.width, renderInfo.height, renderInfo.fontSize, renderInfo.r, renderInfo.g, renderInfo.b, renderInfo.a);
+	}
+	stringList.clear();
+
 	graphicsModule->EndDraw();
+}
+
+void PurahEngine::GraphicsManager::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a)
+{
+	StringRenderInfo renderInfo;
+	renderInfo.str = string;
+	renderInfo.x = x;
+	renderInfo.y = y;
+	renderInfo.width = width;
+	renderInfo.height = height;
+	renderInfo.fontSize = fontSize;
+	renderInfo.r = r;
+	renderInfo.g = g;
+	renderInfo.b = b;
+	renderInfo.a = a;
+	stringList.push_back(renderInfo);
 }
 
 void PurahEngine::GraphicsManager::AddRenderer(IRenderer* renderer)

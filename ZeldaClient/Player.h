@@ -36,11 +36,33 @@ namespace Phyzzle
 			PurahEngine::Animator* animator;
 			Holder* holder;
 
-			State state;
+			State state = HOLD;
+
+			Eigen::Vector3f		coreDefaultPosition;
+			Eigen::Quaternionf	coreDefaultRotation;
+
+			Eigen::Vector3f		coreStartPosition;
+			Eigen::Quaternionf	coreStartRotation;
+
+			Eigen::Vector3f		coreTargetPosition;
+			Eigen::Quaternionf	coreTargetRotation;
+
+			Eigen::Vector3f		armDefaultPosition;
+			Eigen::Quaternionf	armDefaultRotation;
+
+			Eigen::Vector3f		armStartPosition;
+			Eigen::Quaternionf	armStartRotation;
+
+			Eigen::Vector3f		armTargetPosition;
+			Eigen::Quaternionf	armTargetRotation;
 
 			float xAngle = 0.f;
 			const float limitHighAngle = 80.f;
 			const float limitLowAngle = -70.f;
+
+			bool cameraUpdate = true;
+			float lerpFactor = 0.2f;
+			float acclerpFactor = 0.f;
 
 			float moveSpeed = 10.f;
 			float holdSpeed = 5.f;
@@ -162,6 +184,9 @@ namespace Phyzzle
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
+		void DebugDraw();
+
+
 	private:
 		void GamePadInput();
 
@@ -170,8 +195,12 @@ namespace Phyzzle
 
 		void Move(float _moveSpeed, bool _cameraLookAt);
 
+		void CameraCoreUpdate();
+		bool CameraUpdate();
+		void CameraReset();
 		void CameraAround();
-		void CameraForwardRaycast();
+
+		bool CameraForwardRaycast();
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -187,7 +216,7 @@ namespace Phyzzle
 		friend class DefaultState;
 		friend class AttatchState;
 		friend class RewindState;
-		friend class DefaultState;
+		friend class HoldState;
 
 		std::unordered_map<State, IState*> stateSystem;
 		
@@ -199,18 +228,17 @@ namespace Phyzzle
 		PlayerInput prevInput;
 
 		PlayerData data;
+		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
+		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
+
 
 	private:
 		/// 사라질 변수들
-		Eigen::Vector3f startPosition;
+		Eigen::Vector3f		highPosition;
+		Eigen::Vector3f		lowPosition;
 
-		Eigen::Vector3f highPosition;
-		Eigen::Vector3f lowPosition;
-
-		Eigen::Vector3f differenceHigh;
-		Eigen::Vector3f differenceLow;
-
-		Eigen::Quaternionf startRotation;
+		Eigen::Vector3f		differenceHigh;
+		Eigen::Vector3f		differenceLow;
 	};
 }
 
