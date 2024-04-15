@@ -845,6 +845,7 @@ void ZeldaDX11Renderer::EndDraw()
 	DrawSprite();
 	EndDrawSprite();
 
+	DrawStringRenderInfo();
 
 	// Present the back buffer to the screen since rendering is complete.
 	if (bVsyncEnabled)
@@ -1095,6 +1096,23 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID te
 void ZeldaDX11Renderer::DrawCubeMap(TextureID texture)
 {
 	cubeMapRenderInfo = texture;
+}
+
+void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a)
+{
+	StringRenderInfo renderInfo;
+	renderInfo.str = string;
+	renderInfo.x = x;
+	renderInfo.y = y;
+	renderInfo.width = width;
+	renderInfo.height = height;
+	renderInfo.fontSize = fontSize;
+	renderInfo.r = r;
+	renderInfo.g = g;
+	renderInfo.b = b;
+	renderInfo.a = a;
+
+	stringRenderInfo.push_back(renderInfo);
 }
 
 void ZeldaDX11Renderer::CreateBasicResources()
@@ -1713,52 +1731,6 @@ void ZeldaDX11Renderer::DrawSpriteRenderInfo(SpriteRenderInfo renderInfo)
 	{
 		spriteBatch->Draw(texture->GetTexture(), renderInfo.instancingInfo[i].position);
 	}
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 테스트 코드
-
-
-	//// 텍스트 렌더링 준비
-	//ID2D1SolidColorBrush* textBrush = nullptr;
-	//d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &textBrush);
-
-	//float fontSize = 20.0f;
-
-	//// 텍스트 포맷 생성
-	//IDWriteTextFormat* textFormat = nullptr;
-	//writeFactory->CreateTextFormat(
-	//	L"Consolas", // 폰트 이름
-	//	nullptr, // 폰트 컬렉션
-	//	DWRITE_FONT_WEIGHT_NORMAL,
-	//	DWRITE_FONT_STYLE_NORMAL,
-	//	DWRITE_FONT_STRETCH_NORMAL,
-	//	fontSize, // 글자 크기
-	//	L"", // 로케일
-	//	&textFormat
-	//);
-
-	//float x = 100.0f;
-	//float y = 100.0f;
-	//float width = 60.0f;
-	//float height = 300.0f;
-
-
-
-	//// 텍스트 렌더링
-	//d2dRenderTarget->BeginDraw();
-	//d2dRenderTarget->DrawTextW(
-	//	L"Hello, World!", // 텍스트 내용
-	//	wcslen(L"Hello, World!"), // 텍스트 길이
-	//	textFormat, // 텍스트 포맷
-	//	D2D1::RectF(x, y, x + width, y + height), // 텍스트가 그려질 사각형
-	//	textBrush // 브러시
-	//);
-	//d2dRenderTarget->EndDraw();
-
-	//textFormat->Release();
-	//textBrush->Release();
 }
 
 void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
@@ -1797,6 +1769,57 @@ void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 
 	mDeviceContext->RSSetState(defaultRasterState);
 	mDeviceContext->OMSetDepthStencilState(nullptr, 0);
+}
+
+void ZeldaDX11Renderer::DrawStringRenderInfo()
+{
+	d2dRenderTarget->BeginDraw();
+
+	for (auto iter = stringRenderInfo.begin(); iter != stringRenderInfo.end(); iter++)
+	{
+		std::wstring str = iter->str;
+		float x = iter->x;
+		float y = iter->y;
+		float width = iter->width;
+		float height = iter->height;
+		float fontSize = iter->fontSize;
+		float r = iter->r;
+		float g = iter->g;
+		float b = iter->b;
+		float a = iter->a;
+
+		// 텍스트 렌더링 준비
+		ID2D1SolidColorBrush* textBrush = nullptr;
+		d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(r, g, b, a), &textBrush);
+
+		// 텍스트 포맷 생성
+		IDWriteTextFormat* textFormat = nullptr;
+		writeFactory->CreateTextFormat(
+			L"Consolas", // 폰트 이름
+			nullptr, // 폰트 컬렉션
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			fontSize, // 글자 크기
+			L"", // 로케일
+			&textFormat
+		);
+
+
+		// 텍스트 렌더링
+		d2dRenderTarget->DrawTextW(
+			str.c_str(), // 텍스트 내용
+			wcslen(str.c_str()), // 텍스트 길이
+			textFormat, // 텍스트 포맷
+			D2D1::RectF(x, y, x + width, y + height), // 텍스트가 그려질 사각형
+			textBrush // 브러시
+		);
+
+		textFormat->Release();
+		textBrush->Release();
+	}
+
+	d2dRenderTarget->EndDraw();
 }
 
 void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
@@ -1959,6 +1982,8 @@ void ZeldaDX11Renderer::ClearRenderInfo()
 	shadowBlendingAnimationRenderInfo.clear();
 
 	cubeMapRenderInfo = TextureID::ID_NULL;
+
+	stringRenderInfo.clear();
 }
 
 void ZeldaDX11Renderer::UpdateMode()

@@ -78,6 +78,8 @@ public:
 	// 큐브맵을 그린다. 마지막으로 그린 단 하나만 그려진다.
 	virtual void DrawCubeMap(TextureID texture) abstract;
 
+	// 문자열을 그린다.
+	virtual void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a) abstract;
 
 
 	// ### CreateXXXX()
