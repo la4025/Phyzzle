@@ -24,9 +24,20 @@ void PurahEngine::GameObject::AwakeEvent(std::queue<std::pair<Component*, std::f
 
 void PurahEngine::GameObject::EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue)
 {
-	for (int i = 0; i < componentList.size(); i++)
+	if (state == ObjectState::ENABLE)
 	{
-		eventQueue.push({ componentList[i], (&Component::OnEnable) });
+		if (IsRootEnable() != false)
+		{
+
+		}
+	}
+
+	else if (state == ObjectState::DISABLE)
+	{
+		for (int i = 0; i < componentList.size(); i++)
+		{
+			eventQueue.push({ componentList[i], (&Component::OnEnable) });
+		}
 	}
 }
 
@@ -171,7 +182,7 @@ void PurahEngine::GameObject::StateChangeEvent()
 	{
 
 	}
-	else if(state == ObjectState::DISABLE)
+	else if (state == ObjectState::DISABLE)
 	{
 		if (isEnable == true)
 		{
