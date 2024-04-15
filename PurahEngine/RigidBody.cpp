@@ -342,6 +342,11 @@ namespace PurahEngine
 		// }
 	}
 
+	bool RigidBody::IsKinematic() const
+	{
+		return body->IsKinematic();
+	}
+
 	void RigidBody::UseGravity(bool _value)
 	{
 		// if (awake)
@@ -352,6 +357,11 @@ namespace PurahEngine
 		// {
 			body->UseGravity(_value);
 		// }
+	}
+
+	bool RigidBody::HasGravity() const
+	{
+		return  body->HasGravity();
 	}
 
 	void RigidBody::SimulateResult()

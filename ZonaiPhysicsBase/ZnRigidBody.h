@@ -29,11 +29,13 @@ namespace ZonaiPhysics
 		중력의 영향을 받는가? 
 		*/
 		virtual void			UseGravity(bool) = 0;
+		virtual bool			HasGravity() const = 0;
 
 		/**
 		키네마틱 설정
 		*/
 		virtual void			SetKinematic(bool) = 0;
+		virtual bool			IsKinematic() const = 0;
 
 		/**
 		강체의 움직임을 제한하는 플래그

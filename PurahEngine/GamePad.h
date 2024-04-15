@@ -57,7 +57,6 @@ namespace PurahEngine
 	private:
 		void				ApplyDeadZone(int& _value, float _deadZone) const;
 		void				StickValueNormalize(int _xValue, int _yValue, float& _outX, float& _outY, float _deadZone);
-		void				InputQueueClear(ePad);
 
 	public:
 		int					GetStickInput(ePadStick _index);
@@ -89,7 +88,6 @@ namespace PurahEngine
 		XINPUT_KEYSTROKE		stroke;
 		int						deadZone = 1000;
 		std::map<ePad, State>	inputMap;
-		std::map<ePad, std::queue<State>> inputQueue;
 		// std::map<> 진동 관련된 체널을 관리하는 뭔가가 있으면 좋겠음.
 	};
 }

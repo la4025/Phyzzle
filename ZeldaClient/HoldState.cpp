@@ -94,7 +94,7 @@ namespace Phyzzle
 
 	void HoldState::XRotate() const
 	{
-
+		
 	}
 
 	void HoldState::YRotate() const

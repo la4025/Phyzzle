@@ -36,9 +36,19 @@ namespace ZonaiPhysics
 		RigidBodyHelper::UseGravity(pxBody, value);
 	}
 
+	bool RigidBody::HasGravity() const
+	{
+		return RigidBodyHelper::HasGravity(pxBody);
+	}
+
 	void RigidBody::SetKinematic(bool value)
 	{
 		RigidBodyHelper::SetKinematic(pxBody, value);
+	}
+
+	bool RigidBody::IsKinematic() const
+	{
+		return RigidBodyHelper::IsKinematic(pxBody);
 	}
 
 	void RigidBody::Disable(bool value) const

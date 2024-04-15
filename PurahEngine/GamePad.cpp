@@ -153,14 +153,6 @@ namespace PurahEngine
 		}
 	}
 
-	void GamePad::InputQueueClear(ePad _keyCode)
-	{
-		while (!inputQueue[_keyCode].empty())
-		{
-			inputQueue[_keyCode].pop();
-		}
-	}
-
 	int GamePad::GetStickInput(ePadStick _index)
 	{
 		return 0;
