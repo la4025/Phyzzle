@@ -60,11 +60,33 @@ namespace ZonaiPhysics
 		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !_value);
 	}
 
+	bool RigidBodyHelper::HasGravity(void* _pxBody)
+	{
+		assert(_pxBody != nullptr);
+
+		const auto body = static_cast<physx::PxRigidDynamic*>(_pxBody);
+
+		const auto flag = body->getActorFlags();
+
+		return !(flag & physx::PxActorFlag::eDISABLE_GRAVITY);
+	}
+
 	void RigidBodyHelper::SetKinematic(void* _pxBody, bool _value)
 	{
 		assert(_pxBody != nullptr);
 
 		static_cast<physx::PxRigidDynamic*>(_pxBody)->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, _value);
+	}
+
+	bool RigidBodyHelper::IsKinematic(void* _pxBody)
+	{
+		assert(_pxBody != nullptr);
+
+		const auto body = static_cast<physx::PxRigidDynamic*>(_pxBody);
+
+		const auto flag = body->getRigidBodyFlags();
+
+		return flag & physx::PxRigidBodyFlag::eKINEMATIC;
 	}
 
 	void RigidBodyHelper::UpdateInertiaTensor(void* _pxBody)

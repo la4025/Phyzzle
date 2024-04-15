@@ -111,8 +111,10 @@ namespace PurahEngine
 		void		ClearTorque() noexcept;
 
 		void		SetKinematic(bool) noexcept;
+		bool		IsKinematic() const;
 
 		void		UseGravity(bool);
+		bool		HasGravity() const;
 
 	public:
 		void SimulateResult();

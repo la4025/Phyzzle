@@ -16,8 +16,6 @@ namespace Phyzzle
 
 	void DefaultState::Input()
 	{
-		IState::Input();
-
 
 	}
 
@@ -46,23 +44,6 @@ namespace Phyzzle
 		Around();
 	}
 
-	void DefaultState::Trigger_L()
-	{
-		
-	}
-
-	void DefaultState::Trigger_R()
-	{
-	}
-
-	void DefaultState::Click_DUp()
-	{
-	}
-
-	void DefaultState::Click_DDown()
-	{
-	}
-
 	void DefaultState::Click_DLeft()
 	{
 		ChangeState(false);
@@ -78,19 +59,6 @@ namespace Phyzzle
 		Jump();
 	}
 
-	void DefaultState::Click_B()
-	{
-
-	}
-
-	void DefaultState::Click_X()
-	{
-	}
-
-	void DefaultState::Click_Y()
-	{
-	}
-
 	void DefaultState::Click_LB()
 	{
 		player->ChangeState(player->data.state);
@@ -99,20 +67,6 @@ namespace Phyzzle
 	void DefaultState::Click_RB()
 	{
 		// player->CameraReset();
-	}
-
-	void DefaultState::Push() const
-	{
-
-	}
-
-	void DefaultState::Hold() const
-	{
-		auto target = player->data.holder->GetHolderableBody();
-		if (target)
-		{
-			// player->ChangeState(Player::State::HOLD);
-		}
 	}
 
 	void DefaultState::Jump() const

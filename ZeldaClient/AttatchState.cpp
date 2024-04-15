@@ -42,36 +42,6 @@ namespace Phyzzle
 		Around();
 	}
 
-	void AttatchState::Trigger_L()
-	{
-
-	}
-
-	void AttatchState::Trigger_R()
-	{
-
-	}
-
-	void AttatchState::Click_DUp()
-	{
-
-	}
-
-	void AttatchState::Click_DDown()
-	{
-
-	}
-
-	void AttatchState::Click_DLeft()
-	{
-
-	}
-
-	void AttatchState::Click_DRight()
-	{
-
-	}
-
 	void AttatchState::Click_A()
 	{
 		Cancel();
@@ -81,7 +51,7 @@ namespace Phyzzle
 	{
 		if (ObjectSelect())
 		{
-			player->ChangeState(Player::State::HOLD);
+			selected = true;
 		}
 	}
 

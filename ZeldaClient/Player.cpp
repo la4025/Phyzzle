@@ -292,13 +292,19 @@ namespace Phyzzle
 			data.animator->SetPlaySpeed(L"Armature|Armature|Armature|running", currInput.Lstick.Size);
 		}
 
-		if (_cameraLookAt)
+		if (!_cameraLookAt)
 		{
 			const Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
 
 			// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
 			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
 
+			// Set the rotation of the transform to the target rotation
+			data.modelCore->SetLocalRotation(targetRotation);
+		}
+		else
+		{
+			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), cameraFront);
 			// Set the rotation of the transform to the target rotation
 			data.modelCore->SetLocalRotation(targetRotation);
 		}
@@ -461,10 +467,13 @@ namespace Phyzzle
 		{
 			PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
 
-			if (shape == nullptr)
-			{
+			if (!shape)
 				return false;
-			}
+
+			PurahEngine::RigidBody* body = shape->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+
+			if (!body)
+				return false;
 
 			float distance = info.distance;
 			Eigen::Vector3f hitPosition = info.position;

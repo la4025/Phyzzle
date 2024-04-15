@@ -22,8 +22,10 @@ namespace ZonaiPhysics
 		static bool				IsSleeping(void*);
 
 		static void				UseGravity(void*, bool);
+		static bool				HasGravity(void*);
 
 		static void				SetKinematic(void*, bool);
+		static bool				IsKinematic(void*);
 
 		static void				UpdateInertiaTensor(void*);
 
