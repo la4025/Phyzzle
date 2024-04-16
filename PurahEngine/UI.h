@@ -13,6 +13,8 @@ namespace PurahEngine
 
 		Eigen::Vector2f GetScreenPosition();
 
+		void SetLocalPosition(const Eigen::Vector2f& value);
+		void SetSize(const Eigen::Vector2f& value);
 		Eigen::Vector2f GetLocalPosition();
 		Eigen::Vector2f GetSize();
 

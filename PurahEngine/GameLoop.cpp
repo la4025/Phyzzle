@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "SoundManager.h"
 #include "EngineSetting.h"
+#include "UnifiedInputManager.h"
 #include <cassert>
 
 
@@ -119,6 +120,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	};
 	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
 	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
+	UnifiedInputManager::Getinstance().Initialize();
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -184,6 +186,8 @@ void PurahEngine::GameLoop::run()
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
+	// InputManager, GamePadManager 이후에 실행해야한다.
+	UnifiedInputManager::Getinstance().Update();
 
 	Timer::Update();
 	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_ESCAPE))

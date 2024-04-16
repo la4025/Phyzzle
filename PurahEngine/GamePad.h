@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <queue>
 
 // 순서 중요함.
@@ -33,6 +33,7 @@ namespace PurahEngine
 		XINPUT_STATE		GetState();
 
 	public:
+		friend class UnifiedInputManager;
 		friend GamePadManager;
 		enum class State
 		{
@@ -43,9 +44,11 @@ namespace PurahEngine
 		};
 
 		/// 키 입력
+		bool				GetKey(ePad _input);
 		bool				IsKeyDown(ePad _input);
 		bool				IsKeyPressed(ePad _input);
 		bool				IsKeyUp(ePad _input);
+		bool				IsKeyReleased(ePad _input);
 		State				IsKeyValue(ePad _input);
 
 		/// 트리거 값
@@ -87,7 +90,14 @@ namespace PurahEngine
 		XINPUT_STATE			state;
 		XINPUT_KEYSTROKE		stroke;
 		int						deadZone = 1000;
-		std::map<ePad, State>	inputMap;
+		std::unordered_map<ePad, State>	inputMap;
+		std::unordered_map<ePad, State>	prevInputMap;
+		std::unordered_map<ePad, float>	keyDownElapsedMap;
+		std::unordered_map<ePad, bool>	keyMap;
 		// std::map<> 진동 관련된 체널을 관리하는 뭔가가 있으면 좋겠음.
+
+	private:
+		const static float firstInputDelay;
+		const static float continuousInputCycles;
 	};
 }

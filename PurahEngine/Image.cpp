@@ -3,6 +3,9 @@
 #include "GameObject.h"
 #include "UI.h"
 
+#include "UnifiedInputManager.h"
+#include "GraphicsManager.h"
+
 namespace PurahEngine
 {
 	void Image::Awake()

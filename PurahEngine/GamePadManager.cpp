@@ -50,6 +50,9 @@ namespace PurahEngine
 				i.Initialize(id++, input, sizeof(input) / sizeof(ePad));
 			}
 		}
+
+		AddGamePad(0);
+		GetGamePad(0)->SetDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 	}
 
 	void GamePadManager::Update()

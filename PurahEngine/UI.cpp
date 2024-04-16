@@ -25,6 +25,16 @@ namespace PurahEngine
 		}
 	}
 
+	void UI::SetLocalPosition(const Eigen::Vector2f& value)
+	{
+		position = value;
+	}
+
+	void UI::SetSize(const Eigen::Vector2f& value)
+	{
+		size = value;
+	}
+
 	Eigen::Vector2f UI::GetLocalPosition()
 	{
 		return position;

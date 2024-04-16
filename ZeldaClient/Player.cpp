@@ -20,10 +20,7 @@ namespace Phyzzle
 
 	void Player::Start()
 	{
-		PurahEngine::GamePadManager::AddGamePad(0);
-
 		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
-		gamePad->SetDeadZone(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 
 		data.armDefaultPosition = data.cameraArm->GetLocalPosition();
 		data.armDefaultRotation = data.cameraArm->GetLocalRotation();
