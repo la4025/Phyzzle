@@ -48,6 +48,8 @@ namespace PurahEngine
 		
 		void DeleteChild(GameObject* child);
 
+		void Destroy();
+
 		void DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
 		void DestroyEvent(std::queue<GameObject*>& destroyQueue);
 
@@ -77,13 +79,13 @@ namespace PurahEngine
 		virtual void OnMouseExit();
 
 		void SetEnable(bool isTrue);
-
-		bool IsEnable();
+		bool GetEnable();
 		bool IsRootEnable();
 
 		void StateChangeEvent();
 
 		Transform* GetTransform();
+		std::vector<Component*> GetComponents();
 
 		std::wstring GetName();
 
@@ -118,7 +120,7 @@ namespace PurahEngine
 		ObjectState state;
 		std::wstring name;
 		bool isEnable;
-		bool isRun = false;
+		bool isDestroy;
 
 		Transform* trans;
 
