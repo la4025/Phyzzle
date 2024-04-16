@@ -30,7 +30,9 @@ namespace ZonaiPhysics
 		bool				IsSleeping() const override;
 
 		void				UseGravity(bool) override;
+		bool				HasGravity() const override;
 		void				SetKinematic(bool) override;
+		bool				IsKinematic() const override;
 
 		void				Disable(bool) const;
 
@@ -82,7 +84,6 @@ namespace ZonaiPhysics
 		void				ClearTorque() override;
 
 	public:
-		void* userData;
 		physx::PxRigidDynamic* pxBody;
 	};
 } // namespace ZonaiPhysics

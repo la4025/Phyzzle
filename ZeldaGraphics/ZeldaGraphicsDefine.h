@@ -290,4 +290,5 @@ struct ModelInstancingInfo
 struct SpriteInstancingInfo
 {
 	DirectX::XMFLOAT2 position;
+	DirectX::XMFLOAT2 size;
 };

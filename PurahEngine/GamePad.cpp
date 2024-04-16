@@ -2,12 +2,16 @@
 #include <cmath>
 #include "Timer.h"
 #include "GamePad.h"
+#include "TimeController.h"
 
 #include <cassert>
 
 
 namespace PurahEngine
 {
+	const float GamePad::firstInputDelay = 0.5f;
+	const float GamePad::continuousInputCycles = 0.05f;
+
 	void GamePad::Initialize(int _id, ePad* _inputArr, int _size)
 	{
 		id = _id;
@@ -19,44 +23,77 @@ namespace PurahEngine
 		{
 			inputMap.insert(std::make_pair(_inputArr[i], State::NONE));
 		}
+
+		// 이전 입력 맵 초기화
+		for (auto i = 0; i < _size; i++)
+		{
+			prevInputMap.insert(std::make_pair(_inputArr[i], State::NONE));
+		}
+
+		// keyDownElapsedMap 초기화
+		for (auto i = 0; i < _size; i++)
+		{
+			keyDownElapsedMap.insert(std::make_pair(_inputArr[i], -1.0f));
+		}
+
+		for (auto i = 0; i < _size; i++)
+		{
+			keyMap.insert(std::make_pair(_inputArr[i], false));
+		}
 	}
 
 	void GamePad::Update()
 	{
 		const auto newState = GetState();
 
-		UpdateInputMap(newState);
+		for (auto& [keyCode, currState] : keyMap)
+		{
+			currState = false;
+		}
 
+		UpdateInputMap(newState);
 	}
 
 	void GamePad::UpdateInputMap(const XINPUT_STATE& _state)
 	{
+		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
 		_state.dwPacketNumber;
 
 		for (auto& [keyCode, currState] : inputMap)
 		{
 			const WORD button = static_cast<WORD>(keyCode);
 
-			// 현재 상태 업데이트
-			if (_state.Gamepad.wButtons & button && currState == State::NONE)
+			// 현재 상태를 prevInputMap에 저장
+			auto prevState = currState;
+			prevInputMap[keyCode] = prevState;
+
+			// 누름
+			if (_state.Gamepad.wButtons & button)
 			{
 				currState = State::DOWN;
+
+				// 키가 방금 눌렸다면 키가 눌린시간을 초기화 한다.
+				if (prevState == State::UP)
+				{
+					keyDownElapsedMap[keyCode] = 0.0f;
+					keyMap[keyCode] = true;
+				}
+				// 키가 눌렸다면 시간을 누적한다.
+				else
+				{
+					keyDownElapsedMap[keyCode] += deltaTime;
+					if (keyDownElapsedMap[keyCode] >= firstInputDelay)
+					{
+						keyDownElapsedMap[keyCode] -= continuousInputCycles;
+						keyMap[keyCode] = true;
+					}
+				}
 			}
-			else if (_state.Gamepad.wButtons & button && currState == State::DOWN)
-			{
-				currState = State::PRESSED;
-			}
-			else if (!(_state.Gamepad.wButtons & button) && currState == State::DOWN)
+			// 뗌
+			else
 			{
 				currState = State::UP;
-			}
-			else if (!(_state.Gamepad.wButtons & button) && currState == State::PRESSED)
-			{
-				currState = State::UP;
-			}
-			else if (!(_state.Gamepad.wButtons & button) && currState == State::UP)
-			{
-				currState = State::NONE;
 			}
 		}
 	}
@@ -68,19 +105,34 @@ namespace PurahEngine
 		return state;
 	}
 
+	bool GamePad::GetKey(ePad _input)
+	{
+		return keyMap[_input];
+	}
+
 	bool GamePad::IsKeyDown(ePad _input)
 	{
-		return inputMap[_input] == State::DOWN;
+		return (prevInputMap[_input] == State::UP) && (inputMap[_input] == State::DOWN);
 	}
 
 	bool GamePad::IsKeyPressed(ePad _input)
 	{
-		return inputMap[_input] == State::PRESSED;
+		return (prevInputMap[_input] == State::DOWN) && (inputMap[_input] == State::DOWN);
 	}
 
 	bool GamePad::IsKeyUp(ePad _input)
 	{
-		return inputMap[_input] == State::UP;
+		return (prevInputMap[_input] == State::DOWN) && (inputMap[_input] == State::UP);
+	}
+
+	bool GamePad::IsKeyReleased(ePad _input)
+	{
+		return (prevInputMap[_input] == State::UP) && (inputMap[_input] == State::UP);
+	}
+
+	GamePad::State GamePad::IsKeyValue(ePad _input)
+	{
+		return inputMap[_input];
 	}
 
 	int GamePad::GetTriggerValue(ePadTrigger _index) const

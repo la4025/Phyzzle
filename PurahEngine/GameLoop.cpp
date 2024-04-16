@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "SoundManager.h"
 #include "EngineSetting.h"
+#include "UnifiedInputManager.h"
 #include <cassert>
 
 
@@ -119,6 +120,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	};
 	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
 	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
+	UnifiedInputManager::Getinstance().Initialize();
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -180,9 +182,12 @@ void PurahEngine::GameLoop::run()
 
 	PhysicsSystem::GetInstance().PreStep();
 	PhysicsSystem::GetInstance().Simulation(deltaTime);
+	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
+	// InputManager, GamePadManager 이후에 실행해야한다.
+	UnifiedInputManager::Getinstance().Update();
 
 	Timer::Update();
 	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_ESCAPE))
@@ -213,16 +218,16 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 
 		case WM_ENTERSIZEMOVE:
 		{
-			TimeController::GetInstance().PauseAll();			
+			TimeController::GetInstance().PauseAll();
 			break;
 		}
+
 		case WM_EXITSIZEMOVE:
 		{
 			TimeController::GetInstance().ResumeAll();
 			break;
 		}
 
-		case WM_MOVE:
 		default:
 		{
 			return DefWindowProc(hWnd, message, wParam, lParam);

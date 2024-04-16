@@ -1,19 +1,12 @@
-#include "RigidBody.h"
+
 
 #include "Holder.h"
-
-#include "Collider.h"
-#include "GameObject.h"
 
 namespace Phyzzle
 {
 	void Holder::OnTriggerEnter(const PurahEngine::Collider* collider)
 	{
-		//if (collider->GetGameObject()->tag)
-		//{
-		//	
-		//}
-		//rigidbody = collider->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+		rigidbody = collider->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
 	}
 
 	void Holder::OnTriggerStay(const PurahEngine::Collider* collider)
@@ -26,31 +19,13 @@ namespace Phyzzle
 		rigidbody = nullptr;
 	}
 
-	void Holder::OnCollisionEnter(
-		const ZonaiPhysics::ZnCollision& zn_collision, 
-		const PurahEngine::Collider* collider)
+	void Holder::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-
-	}
-
-	void Holder::OnCollisionStay(
-		const ZonaiPhysics::ZnCollision& zn_collision, 
-		const PurahEngine::Collider* collider)
-	{
-
-	}
-
-	void Holder::OnCollisionExit(
-		const ZonaiPhysics::ZnCollision& zn_collision, 
-		const PurahEngine::Collider* collider)
-	{
-
 	}
 
 	PurahEngine::RigidBody* Holder::GetHolderableBody()
 	{
-		// return rigidbody;
-		return nullptr;
+		return rigidbody;
 	}
 
 	void Holder::PreSerialize(json& jsonData) const
@@ -59,6 +34,7 @@ namespace Phyzzle
 
 	void Holder::PreDeserialize(const json& jsonData)
 	{
+		PREDESERIALIZE_BASE();
 	}
 
 	void Holder::PostSerialize(json& jsonData) const

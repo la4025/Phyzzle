@@ -54,9 +54,6 @@
     <ClCompile Include="DisconnectedWire.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Device\Electrical Device</Filter>
-    </ClCompile>
     <ClCompile Include="DefaultState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
@@ -74,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="Holder.cpp">
       <Filter>KH\PLAYER\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Rewindable.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonDevice.cpp">
+      <Filter>Device\Electrical Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +143,6 @@
     <ClInclude Include="DisconnectedWire.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Device\Electrical Device</Filter>
-    </ClInclude>
     <ClInclude Include="ElectricalDevice.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
@@ -166,6 +166,18 @@
     </ClInclude>
     <ClInclude Include="Holder.h">
       <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewindable.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Hold.h">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Snapshot.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonDevice.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

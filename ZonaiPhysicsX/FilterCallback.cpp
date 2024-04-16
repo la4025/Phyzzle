@@ -99,6 +99,7 @@ namespace ZonaiPhysics
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+			pairFlags |= physx::PxPairFlag::ePRE_SOLVER_VELOCITY;
 			pairFlags |= physx::PxPairFlag::ePOST_SOLVER_VELOCITY;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
 			return physx::PxFilterFlag::eDEFAULT;

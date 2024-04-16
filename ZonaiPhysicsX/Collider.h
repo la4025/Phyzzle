@@ -61,7 +61,6 @@ namespace ZonaiPhysics
 
 	protected:
 		friend class ZnPhysicsX;
-
 		RigidBody* znBody;
 
 	public:

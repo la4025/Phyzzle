@@ -6,65 +6,97 @@ namespace Phyzzle
 	AttatchState::~AttatchState()
 		= default;
 
-	void AttatchState::Stick_L()
+	void AttatchState::Input()
 	{
+
 	}
 
-	void AttatchState::Stick_R()
+	void AttatchState::StateEnter()
 	{
+		auto p = player->data.cameraCore->GetLocalPosition();
+		p += Eigen::Vector3f{ 1.f ,1.f, 0.f };
+
+		player->data.cameraCore->SetLocalPosition(p);
 	}
 
-	void AttatchState::Trigger_L()
+	void AttatchState::StateExit()
 	{
-	}
+		auto p = player->data.cameraCore->GetLocalPosition();
+		p -= Eigen::Vector3f{ 1.f ,1.f, 0.f };
 
-	void AttatchState::Trigger_R()
-	{
-	}
-
-	void AttatchState::Click_DUp()
-	{
-	}
-
-	void AttatchState::Click_DDown()
-	{
-	}
-
-	void AttatchState::Click_DLeft()
-	{
-	}
-
-	void AttatchState::Click_DRight()
-	{
-	}
-
-	void AttatchState::Click_A()
-	{
-	}
-
-	void AttatchState::Click_B()
-	{
-	}
-
-	void AttatchState::Click_X()
-	{
-	}
-
-	void AttatchState::Click_Y()
-	{
-	}
-
-	void AttatchState::Click_LB()
-	{
-	}
-
-	void AttatchState::Click_RB()
-	{
+		player->data.cameraCore->SetLocalPosition(p);
 	}
 
 	void AttatchState::operator()()
 	{
+
 	}
 
+	void AttatchState::Stick_L()
+	{
+		Move();
+	}
 
+	void AttatchState::Stick_R()
+	{
+		Around();
+	}
+
+	void AttatchState::Click_A()
+	{
+		Cancel();
+	}
+
+	void AttatchState::Click_B()
+	{
+		if (ObjectSelect())
+		{
+			selected = true;
+		}
+	}
+
+	void AttatchState::Click_X()
+	{
+		Cancel();
+	}
+
+	void AttatchState::Click_Y()
+	{
+		Cancel();
+	}
+
+	void AttatchState::Click_LB()
+	{
+		Cancel();
+	}
+
+	void AttatchState::Click_RB()
+	{
+		Cancel();
+	}
+
+	void AttatchState::Move() const
+	{
+		player->Move(player->data.moveSpeed, true);
+	}
+
+	void AttatchState::Around() const
+	{
+		player->CameraAround();
+	}
+
+	void AttatchState::Cancel() const
+	{
+		player->ChangeState(Player::State::DEFAULT);
+	}
+
+	bool AttatchState::ObjectSelect() const
+	{
+		return  player->CameraForwardRaycast();
+	}
+
+	void AttatchState::Jump() const
+	{
+		player->Jump();
+	}
 }
