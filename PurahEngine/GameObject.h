@@ -30,10 +30,9 @@ namespace PurahEngine
 	{
 	public:
 
-		virtual void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
-		void EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
-		virtual void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
-
+		void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
+		void EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
+		void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 
 		/// Update
 		// 물리 관련 업데이트
@@ -50,7 +49,7 @@ namespace PurahEngine
 
 		void Destroy();
 
-		void DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue);
+		void DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		void DestroyEvent(std::queue<GameObject*>& destroyQueue);
 
 
@@ -82,7 +81,7 @@ namespace PurahEngine
 		bool GetEnable();
 		bool IsRootEnable();
 
-		void StateChangeEvent();
+		void StateChangeEvent(bool parentEnable = true);
 
 		Transform* GetTransform();
 		std::vector<Component*> GetComponents();

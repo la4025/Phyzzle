@@ -50,27 +50,20 @@ void PurahEngine::SceneManager::Update()
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("physics");
 	physicsTime += deltaTime;
 
-	if (state == RunningState::UPDATE)
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
+		if (object->IsRootEnable() == true)
 		{
-			if (object->IsRootEnable() == true)
-			{
-				object->UpdateEvent();
-			}
+			object->UpdateEvent();
 		}
-		state = RunningState::LATEUPDATE;
 	}
-	if (state == RunningState::LATEUPDATE)
+
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
+		if (object->IsRootEnable() == true)
 		{
-			if (object->IsRootEnable() == true)
-			{
-				object->LateUpdateEvent();
-			}
+			object->LateUpdateEvent();
 		}
-		state = RunningState::UPDATE;
 	}
 
 	if (physicsTime >= 0.02f)
@@ -85,7 +78,6 @@ void PurahEngine::SceneManager::Update()
 	{
 		physicsTime -= 0.02f;
 	}
-
 }
 
 void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
@@ -96,14 +88,14 @@ void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
 void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 {
 	auto objectIter = std::find(objectList.begin(), objectList.end(), gameObject);
-	
+
 	if (objectIter != objectList.end())
 	{
-		delete *objectIter;
+		delete* objectIter;
 		objectList.erase(objectIter);
 	}
 
-	for (int i = 0; i < objectList.size() ; i++)
+	for (int i = 0; i < objectList.size(); i++)
 	{
 		objectList[i]->DeleteChild(gameObject);
 	}
@@ -112,41 +104,27 @@ void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 void PurahEngine::SceneManager::InitializationEvent()
 {
 	// Awake
-	if (state == RunningState::AWAKE)
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			object->AwakeEvent(eventQueue);
-		}
-		state = RunningState::START;
+		object->AwakeEvent(eventQueue);
 	}
-
 	ExcuteEventQueue();
 
 	// OnEnable(활성화 직 후)
-	if (state == RunningState::AWAKE)
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			object->EnableEvent(eventQueue);
-		}
-		state = RunningState::START;
+		object->EnableEvent(eventQueue);
 	}
-
 	ExcuteEventQueue();
 
 	// Start
-	if (state == RunningState::START)
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			object->StartEvent(eventQueue);
-		}
-		state = RunningState::UPDATE;
+		object->StartEvent(eventQueue);
 	}
-
 	ExcuteEventQueue();
 
+	// State Change
 	for (PurahEngine::GameObject* object : objectList)
 	{
 		object->StateChangeEvent();
@@ -160,8 +138,6 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	{
 		object->DisableEvent(eventQueue);
 	}
-	state = RunningState::UPDATE;
-
 	ExcuteEventQueue();
 
 	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
@@ -169,8 +145,6 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	{
 		object->DestroyEvent(destroyQueue);
 	}
-	state = RunningState::UPDATE;
-
 	ExcuteDestroyQueue();
 }
 
@@ -219,8 +193,6 @@ void PurahEngine::SceneManager::LoadScene()
 
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
 	sceneBuffer = L"";
-
-	state = RunningState::AWAKE;
 }
 
 void PurahEngine::SceneManager::LoadSceneCompleteEvent()
