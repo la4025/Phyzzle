@@ -195,11 +195,15 @@ void PurahEngine::GameLoop::run()
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
+	SceneManager::GetInstance().LoadScene();
+	SceneManager::GetInstance().InitializationEvent();
+
 	SceneManager::GetInstance().Update();
 	SoundManager::GetInstance().Update();
 
 	GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
 	GraphicsManager::GetInstance().Render(deltaTime);
+	SceneManager::GetInstance().DecommissionEvent();
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

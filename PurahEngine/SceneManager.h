@@ -4,10 +4,13 @@
 
 #include <string>
 #include <vector>
+#include <queue>
+#include <functional>
 #include <eigen/Dense>
 
 namespace PurahEngine
 {
+	class Component;
 	class GameLoop;
 	class GameObject;
 	class Camera;
@@ -35,6 +38,16 @@ namespace PurahEngine
 		void Update();
 
 		void LoadScene(const std::wstring fileName);
+
+		void DeleteGameObject(GameObject* gameObject);
+
+		void InitializationEvent();
+
+		void DecommissionEvent();
+
+		void ExcuteEventQueue();
+
+		void ExcuteDestroyQueue();
 
 	private:
 		void LoadScene();
@@ -69,10 +82,13 @@ namespace PurahEngine
 
 		// 씬에 생성된 오브젝트 리스트
 		std::vector<GameObject*> objectList;
-
+		std::queue<GameObject*> ExcuteObject;
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
 		Eigen::Vector3f cameraPosition;
+
+		std::queue<std::pair<Component*, std::function<void(Component&)>>> eventQueue;
+		std::queue<GameObject*> destroyQueue;
 
 		float physicsTime;
 

@@ -11,6 +11,7 @@ namespace PurahEngine
 		AudioTest();
 		~AudioTest();
 
+		void Awake();
 		void OnDataLoadComplete();
 		void Update();
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*);

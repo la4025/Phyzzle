@@ -34,7 +34,7 @@ void PurahEngine::Test2::Update()
 		{
 			if (isRootable == false)
 			{
-				GetGameObject()->Disable();
+				
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"			             Disable"));
 			}
 		}
@@ -42,7 +42,7 @@ void PurahEngine::Test2::Update()
 		{
 			if (isRootable == true)
 			{
-				GetGameObject()->Disable();
+				
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				         Disable"));
 			}
 		}
@@ -64,7 +64,7 @@ void PurahEngine::Test2::FixedUpdate()
 			if (isRootable == true)
 			{
 				GetGameObject()->SetEnable(true);
-				GetGameObject()->Enable();
+				
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
 		}
@@ -72,7 +72,7 @@ void PurahEngine::Test2::FixedUpdate()
 		{
 			if (isRootable == false)
 			{
-				GetGameObject()->Enable();
+				
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
 		}
