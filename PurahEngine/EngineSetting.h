@@ -45,6 +45,7 @@ namespace PurahEngine
 		int shadowMapSize;
 
 		std::vector<std::wstring> preLoadModels;
+		std::vector<std::wstring> scenes;
 
 		// 게임 실행 후에도 변경될 수 있는 설정
 		std::vector<std::vector<bool>> collisionSetting;

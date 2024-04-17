@@ -172,6 +172,15 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 		preLoadModels[i] = wmodelPath;
 	}
 
+	const json& scenesdata = jsonData["scenes"];
+	scenes.resize(scenesdata.size());
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		std::string path = scenesdata[i];
+		std::wstring wPath(path.begin(), path.end());
+		scenes[i] = wPath;
+	}
+
 	shadowAreaRange = jsonData["shadowAreaRange"];
 	shadowAreaOffset = jsonData["shadowAreaOffset"];
 	shadowMapSize = jsonData["shadowMapSize"];

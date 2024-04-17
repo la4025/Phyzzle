@@ -65,5 +65,9 @@
       true
     ]
   ],
-  "preLoadModels": []
+  "preLoadModels": [],
+  "scenes": [
+    "MainMenu.pzscene",
+    "Game.pzscene"
+  ]
 }

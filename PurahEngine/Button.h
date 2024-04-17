@@ -7,27 +7,38 @@
 namespace PurahEngine
 {
 	class Image;
+	class UI;
 
 	class PURAHENGINE_API Button : public Component
 	{
 	public:
-		void Start() override;
+		void Awake() override;
 
-		void Push();
+		void Update() override;
+		void LateUpdate() override;
+
 		void Select();
 		void Unselect();
 
-	private:
-		void PushEvent();
+		bool IsSelected();
 
 	private:
+		void ButtonEvent();
+
+	private:
+		UI* ui;
 		bool selected;
+		bool clicked;
 
-		bool selectedWithStart;
+	private:
+		bool selectedWithAwake;
 		Image* targetImage;
 		std::wstring selectedImage;
 		std::wstring unselectedImage;
 		std::wstring pushedImage;
+
+		std::vector<std::pair<GameObject*, bool>> objectOnOffEventList;
+		std::wstring loadSceneEventBuffer;
 
 	private:
 		// Component을(를) 통해 상속됨
