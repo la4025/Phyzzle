@@ -139,7 +139,7 @@ void PurahEngine::GameObject::StartEvent(std::queue<std::pair<Component*, std::f
 		{
 			for (int i = 0; i < trans->GetChildren().size(); i++)
 			{
-				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+				trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue, false);
 			}
 		}
 
@@ -147,14 +147,14 @@ void PurahEngine::GameObject::StartEvent(std::queue<std::pair<Component*, std::f
 		{
 			for (int i = 0; i < trans->GetChildren().size(); i++)
 			{
-				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, true);
+				trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue, true);
 			}
 		}
 		else
 		{
 			for (int i = 0; i < trans->GetChildren().size(); i++)
 			{
-				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+				trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue, false);
 			}
 		}
 	}
