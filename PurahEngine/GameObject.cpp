@@ -24,6 +24,38 @@ void PurahEngine::GameObject::AwakeEvent(std::queue<std::pair<Component*, std::f
 			}
 		}
 	}
+	else if (state == ObjectState::ENABLE)
+	{
+		if (isDestroy == true)
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+			}
+		}
+
+		if (parentEnable == true && isEnable == true)
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, true);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+			}
+		}
+	}
+	else if (state == ObjectState::DISABLE)
+	{
+		for (int i = 0; i < trans->GetChildren().size(); i++)
+		{
+			trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+		}
+	}
 }
 
 void PurahEngine::GameObject::EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable)
@@ -99,6 +131,38 @@ void PurahEngine::GameObject::StartEvent(std::queue<std::pair<Component*, std::f
 			{
 				trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue, true);
 			}
+		}
+	}
+	else if (state == ObjectState::ENABLE)
+	{
+		if (isDestroy == true)
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+			}
+		}
+
+		if (parentEnable == true && isEnable == true)
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, true);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->AwakeEvent(eventQueue, false);
+			}
+		}
+	}
+	else if (state == ObjectState::DISABLE)
+	{
+		for (int i = 0; i < trans->GetChildren().size(); i++)
+		{
+			trans->GetChildren()[i]->GetGameObject()->StartEvent(eventQueue, false);
 		}
 	}
 }
