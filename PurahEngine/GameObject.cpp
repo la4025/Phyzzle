@@ -449,6 +449,8 @@ void PurahEngine::GameObject::PreDeserialize(const json& jsonData)
 	auto& fManager = FileManager::GetInstance();
 	fManager.SetAddress(jsonData["__Base__instanceID"], this);
 	trans->PreDeserialize(jsonData["transform"]);
+	bool active = jsonData["active"];
+	SetEnable(active);
 	for (int i = 0; i < jsonData["components"].size(); i++)
 	{
 		Component* component = AddComponentToString(jsonData["components"][i]["__Base__Component"]);

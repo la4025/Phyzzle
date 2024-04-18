@@ -65,6 +65,11 @@ namespace PurahEngine
 		SceneManager::GetInstance().SetMainCamera(this);
 	}
 
+	bool Camera::IsRootEnable()
+	{
+		return GetGameObject()->IsRootEnable();
+	}
+
 	void PurahEngine::Camera::Render(IZeldaRenderer* renderer)
 	{
 		renderer->SetMainCamera(cameraID);
@@ -99,5 +104,4 @@ namespace PurahEngine
 	{
 
 	}
-
 }

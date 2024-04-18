@@ -14,6 +14,8 @@ namespace PurahEngine
 		Renderer();
 		virtual ~Renderer();
 
+		virtual bool IsRootEnable() override final;
+
 	protected:
 		TextureID GetTextureID(std::wstring textureName);
 		ModelID GetModelID(std::wstring modelName);

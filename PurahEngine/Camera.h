@@ -25,6 +25,7 @@ namespace PurahEngine
 
 		void SetMainCamera();
 
+		bool IsRootEnable() override;
 		void Render(IZeldaRenderer* renderer) override;
 
 	public:

@@ -106,28 +106,40 @@ void PurahEngine::SceneManager::InitializationEvent()
 	// Awake
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->AwakeEvent(eventQueue);
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->AwakeEvent(eventQueue);
+		}
 	}
 	ExcuteEventQueue();
 
 	// OnEnable(활성화 직 후)
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->EnableEvent(eventQueue);
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->EnableEvent(eventQueue);
+		}
 	}
 	ExcuteEventQueue();
 
 	// Start
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->StartEvent(eventQueue);
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->StartEvent(eventQueue);
+		}
 	}
 	ExcuteEventQueue();
 
 	// State Change
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->StateChangeEvent();
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->StateChangeEvent();
+		}
 	}
 }
 
@@ -136,14 +148,20 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	// OnDisable (비활성화 상태)
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->DisableEvent(eventQueue);
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->DisableEvent(eventQueue);
+		}
 	}
 	ExcuteEventQueue();
 
 	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		object->DestroyEvent(destroyQueue);
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->DestroyEvent(destroyQueue);
+		}
 	}
 	ExcuteDestroyQueue();
 }
