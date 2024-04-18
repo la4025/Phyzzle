@@ -129,18 +129,27 @@ void PurahEngine::GraphicsManager::Render(float deltaTime)
 
 	// Camera
 	Camera* mainCamera = PurahEngine::SceneManager::GetInstance().GetMainCamera();
-	mainCamera->Render(graphicsModule);
+	if (mainCamera->GetGameObject()->IsRootEnable())
+	{
+		mainCamera->Render(graphicsModule);
+	}
 
 	// Light
 	for (auto light : lightList)
 	{
-		light->Render(graphicsModule);
+		if (light->IsRootEnable())
+		{
+			light->Render(graphicsModule);
+		}
 	}
 
 	// Object
 	for (auto render : rendererList)
 	{
-		render->Render(graphicsModule);
+		if (render->IsRootEnable())
+		{
+			render->Render(graphicsModule);
+		}
 	}
 
 

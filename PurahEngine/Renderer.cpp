@@ -16,6 +16,11 @@ namespace PurahEngine
 		GraphicsManager::GetInstance().RemoveRenderer(this);
 	}
 
+	bool Renderer::IsRootEnable()
+	{
+		return GetGameObject()->IsRootEnable();
+	}
+
 	TextureID Renderer::GetTextureID(std::wstring textureName)
 	{
 		return GraphicsManager::GetInstance().resourceManager->GetTextureID(textureName);

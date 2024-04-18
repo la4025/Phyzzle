@@ -39,6 +39,11 @@ namespace PurahEngine
 		specular = _specular;
 	}
 
+	bool Light::IsRootEnable()
+	{
+		return GetGameObject()->IsRootEnable();
+	}
+
 	void Light::Render(IZeldaRenderer* renderer)
 	{
 		// 게임오브젝트가 활성화 되어 있는 경우에만 작동한다.
@@ -116,5 +121,4 @@ namespace PurahEngine
 	{
 
 	}
-
 }

@@ -20,6 +20,7 @@ namespace PurahEngine
 		void SetLightSpecular(const Eigen::Vector3f&);
 
 		// IRenderer을(를) 통해 상속됨
+		bool IsRootEnable() override;
 		void Render(IZeldaRenderer* renderer) override;
 
 	protected:
