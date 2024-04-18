@@ -64,7 +64,7 @@ void PurahEngine::Test2::FixedUpdate()
 			if (isRootable == true)
 			{
 				GetGameObject()->SetEnable(true);
-				GetGameObject()->GetState()
+				GetGameObject()->GetState();
 				
 				TestSingleton::Getinstance().log.push_back(GetGameObject()->GetName() + (L"				       Enable"));
 			}
