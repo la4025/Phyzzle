@@ -27,6 +27,9 @@ namespace PurahEngine
 		float GetShadowMapDepthBias();
 		float GetGravity();
 
+		std::wstring GetScene(int sceneNumber);
+		int GetSceneCount();
+
 		std::vector<std::wstring> GetPreLoadModels();
 		std::vector<std::vector<bool>> GetCollsionSetting();
 

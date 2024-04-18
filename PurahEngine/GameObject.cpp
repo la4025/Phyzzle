@@ -14,6 +14,7 @@ void PurahEngine::GameObject::AwakeEvent(std::queue<std::pair<Component*, std::f
 		{
 			for (int i = 0; i < componentList.size(); i++)
 			{
+				// eventQueue에 이게 있는가? 없으면 push 있으면 스킵
 				eventQueue.push({ componentList[i], (&Component::Awake) });
 			}
 

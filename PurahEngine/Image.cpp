@@ -15,18 +15,14 @@ namespace PurahEngine
 
 	void Image::Render(IZeldaRenderer* renderer)
 	{
-		// 게임오브젝트가 활성화 되어 있는 경우에만 작동한다.
-		if (GetGameObject()->IsRootEnable())
-		{
-			Eigen::Vector2f position = ui->GetScreenPosition();
-			Eigen::Vector2f size = ui->GetSize();
+		Eigen::Vector2f position = ui->GetScreenPosition();
+		Eigen::Vector2f size = ui->GetSize();
 
-			TextureID textureID = TextureID::ID_NULL;
-			if (textureName != L"")
-			{
-				textureID = GetTextureID(textureName);
-				renderer->DrawSprite(position, size, textureID);
-			}
+		TextureID textureID = TextureID::ID_NULL;
+		if (textureName != L"")
+		{
+			textureID = GetTextureID(textureName);
+			renderer->DrawSprite(position, size, textureID);
 		}
 	}
 

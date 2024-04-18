@@ -106,6 +106,18 @@ float PurahEngine::EngineSetting::GetGravity()
 	return gravity;
 }
 
+std::wstring PurahEngine::EngineSetting::GetScene(int sceneNumber)
+{
+	assert(0 <= sceneNumber && sceneNumber < scenes.size());
+	
+	return scenes[std::clamp(sceneNumber, 0, static_cast<int>(scenes.size()))];
+}
+
+int PurahEngine::EngineSetting::GetSceneCount()
+{
+	return 0;
+}
+
 std::vector<std::wstring> PurahEngine::EngineSetting::GetPreLoadModels()
 {
 	return preLoadModels;

@@ -131,6 +131,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// SoundManager 초기화
 	PurahEngine::SoundManager::GetInstance().Initialize();
+
+	// 0번 씬 로드
+	SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(0));
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
