@@ -117,14 +117,15 @@ namespace PurahEngine
 			DESTROY
 		};
 
-		ObjectState GetState();
-
 		ObjectState state;
 		std::wstring name;
 		bool isEnable;
 		bool isDestroy;
 
 		Transform* trans;
+
+	public:
+		ObjectState GetState();
 
 	public:
 		// ComponentList·Î Component Ãß°¡
