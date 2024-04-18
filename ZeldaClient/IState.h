@@ -41,9 +41,9 @@ namespace Phyzzle
 			player->currInput.buttonRB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_R);
 		}
 
-		virtual void operator()() {}
-		virtual void StateEnter() {}
-		virtual void StateExit() {}
+		virtual void StateStay() = 0;
+		virtual void StateEnter() = 0;
+		virtual void StateExit() = 0;
 
 	public:
 		virtual void Stick_L() {}

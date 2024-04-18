@@ -157,6 +157,7 @@
     <ClCompile Include="ElectricWire.cpp" />
     <ClCompile Include="DefaultState.cpp" />
     <ClCompile Include="Holder.cpp" />
+    <ClCompile Include="LockState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HoldState.cpp" />
     <ClCompile Include="IObject.cpp" />
@@ -165,7 +166,7 @@
     <ClCompile Include="LauncherPlatform.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
-    <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
@@ -193,10 +194,12 @@
     <ClInclude Include="IElectricalDevice.h" />
     <ClInclude Include="DefaultState.h" />
     <ClInclude Include="Holder.h" />
+    <ClInclude Include="LockState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="HoldState.h" />
     <ClInclude Include="AttatchSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
+    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="Snapshot.h" />
@@ -207,7 +210,6 @@
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
     <ClInclude Include="eObjectProperty.h" />
-    <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="RewindState.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Test.h" />

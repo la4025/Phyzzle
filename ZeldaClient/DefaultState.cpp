@@ -29,7 +29,7 @@ namespace Phyzzle
 
 	}
 
-	void DefaultState::operator()()
+	void DefaultState::StateStay()
 	{
 
 	}
@@ -37,6 +37,10 @@ namespace Phyzzle
 	void DefaultState::Stick_L()
 	{
 		Move();
+
+		auto direction = player->data.playerRigidbody->GetLinearVelocity();
+		direction.y() = 0.f;
+		LookToWorldDirection(direction);
 	}
 
 	void DefaultState::Stick_R()
@@ -76,12 +80,22 @@ namespace Phyzzle
 
 	void DefaultState::Move() const
 	{
-		player->Move(player->data.moveSpeed, true);
+		player->Move(player->data.moveSpeed);
 	}
 
 	void DefaultState::Around() const
 	{
 		player->CameraAround();
+	}
+
+	void DefaultState::LookToWorldDirection(const Eigen::Vector3f& _to) const
+	{
+		player->LookInWorldDirection(_to);
+	}
+
+	void DefaultState::LookToLocalDirection(const Eigen::Vector3f& _to) const
+	{
+		player->LookInLocalDirection(_to);
 	}
 
 	// 현재 능력을 변경함

@@ -14,15 +14,13 @@ namespace Phyzzle
 
 	void RewindState::StateEnter()
 	{
-		IState::StateEnter();
 	}
 
 	void RewindState::StateExit()
 	{
-		IState::StateExit();
 	}
 
-	void RewindState::operator()()
+	void RewindState::StateStay()
 	{
 
 	}
@@ -111,6 +109,5 @@ namespace Phyzzle
 
 	void RewindState::Select()
 	{
-		player->CameraForwardRaycast();
 	}
 }

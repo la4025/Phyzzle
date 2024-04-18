@@ -1,6 +1,7 @@
 #pragma once
 #include "IState.h"
 
+// ReSharper disable once IdentifierTypo
 namespace Phyzzle
 {
 	class AttatchState final : public IState
@@ -13,10 +14,9 @@ namespace Phyzzle
 		~AttatchState() override;
 
 	private:
-		void Input() override;
 		void StateEnter() override;
 		void StateExit() override;
-		void operator()() override;
+		void StateStay() override;
 
 	private:
 		void Stick_L() override;
@@ -32,12 +32,32 @@ namespace Phyzzle
 
 	private:
 		bool selected = false;
+		float lerpTime = 0.1f;
 
-		void Move() const;
-		void Around() const;
-		void Cancel() const;
-		bool ObjectSelect() const;
+	private:
+		bool hasGravity = false;
+		float mass = -0.1f;
+		PurahEngine::RigidBody* selectBody = nullptr;
+		Eigen::Vector3f targetLocalPosition = Eigen::Vector3f::Zero();
+		Eigen::Quaternionf targetLocalRotation = Eigen::Quaternionf::Identity();
+
+		void PlayerMove() const;
+		void CameraAround() const;
+		void StateCancel() const;
+
 		void Jump() const;
+
+		void LookToWorldDirection(const Eigen::Vector3f& _to) const;
+		void LookToLocalDirection(const Eigen::Vector3f& _to) const;
+
+		bool Search() const;
+		bool Select();
+		void ObjectToTargetPosition() const;
+
+		void Set();
+		void Reset();
+
+		static void SearchDebugDraw(bool _value);
 	};
 }
 

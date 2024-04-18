@@ -193,14 +193,16 @@ namespace Phyzzle
 		void Jump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 
-		void Move(float _moveSpeed, bool _cameraLookAt);
+		void Move(float _moveSpeed);
+		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
+		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
 		void CameraCoreUpdate();
 		bool CameraUpdate();
 		void CameraReset();
 		void CameraAround();
 
-		bool CameraForwardRaycast();
+		bool CameraForwardRaycast(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -217,6 +219,7 @@ namespace Phyzzle
 		friend class AttatchState;
 		friend class RewindState;
 		friend class HoldState;
+		friend class LockState;
 
 		std::unordered_map<State, IState*> stateSystem;
 		
@@ -240,5 +243,12 @@ namespace Phyzzle
 		Eigen::Vector3f		differenceHigh;
 		Eigen::Vector3f		differenceLow;
 	};
+
+	inline Eigen::Vector3f MulMatrixVector(const Eigen::Matrix4f& _mat, const Eigen::Vector3f& _vec)
+	{
+		Eigen::Vector4f temp = _mat * Eigen::Vector4f(_vec.x(), _vec.y(), _vec.z(), 1.f);
+
+		return { temp.x(), temp.y() , temp.z() };
+	}
 }
 

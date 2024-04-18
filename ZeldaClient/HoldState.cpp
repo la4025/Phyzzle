@@ -20,7 +20,7 @@ namespace Phyzzle
 
 	}
 
-	void HoldState::operator()()
+	void HoldState::StateStay()
 	{
 
 	}

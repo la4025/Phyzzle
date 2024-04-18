@@ -36,9 +36,6 @@
     <ClCompile Include="AttatchSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSystem.cpp">
-      <Filter>KH\System</Filter>
-    </ClCompile>
     <ClCompile Include="LauncherPlatform.cpp">
       <Filter>Device</Filter>
     </ClCompile>
@@ -77,6 +74,12 @@
     </ClCompile>
     <ClCompile Include="Rewindable.cpp">
       <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="LockState.cpp">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCamera.cpp">
+      <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,9 +123,6 @@
     </ClInclude>
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="AttatchSystem.h">
-      <Filter>KH\System</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
@@ -178,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="Snapshot.h">
       <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="LockState.h">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCamera.h">
+      <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

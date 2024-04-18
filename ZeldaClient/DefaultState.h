@@ -16,7 +16,7 @@ namespace Phyzzle
 		void Input() override;
 		void StateEnter() override;
 		void StateExit() override;
-		void operator()() override;
+		void StateStay() override;
 
 	private:
 		void Stick_L() override;
@@ -34,6 +34,8 @@ namespace Phyzzle
 		void Jump() const;
 		void Move() const;
 		void Around() const;
+		void LookToWorldDirection(const Eigen::Vector3f& _to) const;
+		void LookToLocalDirection(const Eigen::Vector3f& _to) const;
 		void ChangeState(bool _value) const;
 	};
 }

@@ -6,6 +6,7 @@
 #include "HoldState.h"
 #include "AttatchState.h"
 #include "RewindState.h"
+#include "LockState.h"
 
 #include "Player.h"
 
@@ -15,7 +16,11 @@ namespace Phyzzle
 {
 	Player::~Player()
 	{
-		
+		for (auto& [key, State] : stateSystem)
+		{
+			delete State;
+			State = nullptr;
+		}
 	}
 
 	void Player::Start()
@@ -66,6 +71,7 @@ namespace Phyzzle
 		stateSystem.insert(std::make_pair(State::HOLD, new HoldState(this)));
 		stateSystem.insert(std::make_pair(State::ATTATCH, new AttatchState(this)));
 		stateSystem.insert(std::make_pair(State::REWIND, new RewindState(this)));
+		stateSystem.insert(std::make_pair(State::LOCK, new LockState(this)));
 	}
 
 	void Player::Update()
@@ -82,10 +88,10 @@ namespace Phyzzle
 			stateSystem[prevState]->StateExit();
 			stateSystem[currState]->StateEnter();
 		}
-
-		(*stateSystem[currState])();
-
-		// CameraUpdate();
+		else
+		{
+			stateSystem[currState]->StateStay();
+		}
 	}
 
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
@@ -162,12 +168,6 @@ namespace Phyzzle
 			100, 200, 
 			400, 100, 15,
 			255, 255, 255, 255);
-
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"X",
-			945, 510,
-			200, 100, 50,
-			255, 255, 255, 255);
 	}
 
 	void Player::GamePadInput()
@@ -215,9 +215,11 @@ namespace Phyzzle
 	{
 		if (!data.jumping)
 		{
-			auto curr = data.playerRigidbody->GetLinearVelocity();
-			curr.y() = data.jumpPower;
-			data.playerRigidbody->SetLinearVelocity(curr);
+			// auto curr = data.playerRigidbody->GetLinearVelocity();
+			// curr.y() = data.jumpPower;
+			// data.playerRigidbody->SetLinearVelocity(curr);
+			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Impulse);
 			data.jumping = true;
 		}
 	}
@@ -238,16 +240,14 @@ namespace Phyzzle
 		}
 	}
 
-	void Player::Move(float _moveSpeed, bool _cameraLookAt)
+	void Player::Move(float _moveSpeed)
 	{
 		// 카메라의 전방 벡터를 계산
-		Eigen::Vector3f cameraFront = data.cameraArm->GetFront();
+		const Eigen::Vector3f cameraFront = data.cameraArm->GetFront();
 		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
 		const Eigen::Vector3f right = data.cameraArm->GetRight();
 
 		Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
-
-		movementDirection.y() = 0.f;
 
 		// 속도 벡터를 계산
 		Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
@@ -262,8 +262,7 @@ namespace Phyzzle
 		// 속력을 적용시킴
 		data.playerRigidbody->SetLinearVelocity(velocity);
 
-		const Eigen::Quaternionf parentWorld = gameObject->GetTransform()->GetWorldRotation();
-
+		/// 애니메이션 부분은 고칠 필요가 있음.
 		{
 			static bool lastbool = false;
 			static bool currentbool = false;
@@ -291,23 +290,33 @@ namespace Phyzzle
 
 			data.animator->SetPlaySpeed(L"Armature|Armature|Armature|running", currInput.Lstick.Size);
 		}
+	}
 
-		if (!_cameraLookAt)
-		{
-			const Eigen::Vector3f localForward = parentWorld.conjugate() * movementDirection.normalized();
+	/// \brief 모델을 월드 방향 벡터를 향해 회전
+	void Player::LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const
+	{
+		if (_worldDirection.isZero())
+			return;
 
-			// Calculate the rotation quaternion to align the current forward direction with the desired forward direction
-			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), localForward);
+		// 플레이어의 월드 회전을 구함
+		const Eigen::Quaternionf parentWorld = gameObject->GetTransform()->GetWorldRotation();
+		// Model의 로컬 방향을 구함.
+		const Eigen::Vector3f localDirection = parentWorld.conjugate() * _worldDirection;
 
-			// Set the rotation of the transform to the target rotation
-			data.modelCore->SetLocalRotation(targetRotation);
-		}
-		else
-		{
-			const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), cameraFront);
-			// Set the rotation of the transform to the target rotation
-			data.modelCore->SetLocalRotation(targetRotation);
-		}
+		LookInLocalDirection(localDirection);
+	}
+
+	/// \brief 모델을 Player의 로컬 방향 벡터를 향해 회전
+	void Player::LookInLocalDirection(const Eigen::Vector3f& _localDirection) const
+	{
+		if (_localDirection.isZero())
+			return;
+
+		// 로컬 Z와 Local Direction 사이의 쿼터니언을 구함.
+		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), _localDirection);
+
+		// Model을 회전시킴
+		data.modelCore->SetLocalRotation(targetRotation);
 	}
 
 	void Player::CameraCoreUpdate()
@@ -455,17 +464,21 @@ namespace Phyzzle
 		CameraCoreUpdate();
 	}
 
-	bool Player::CameraForwardRaycast()
+	bool Player::CameraForwardRaycast(float _distance,
+		PurahEngine::RigidBody** _outBody, float* _outDistance, Eigen::Vector3f* _outHitPosition)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		ZonaiPhysics::ZnRaycastInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, 1000.f, info);
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
 
 		if (block)
 		{
-			PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
+			if (!_outBody)
+				return block;
+
+			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
 
 			if (!shape)
 				return false;
@@ -474,9 +487,15 @@ namespace Phyzzle
 
 			if (!body)
 				return false;
+			if (body->IsKinematic())
+				return false;
 
-			float distance = info.distance;
-			Eigen::Vector3f hitPosition = info.position;
+			if (_outBody)
+				*_outBody = body;
+			if (_outDistance)
+				*_outDistance = info.distance;
+			if (_outHitPosition)
+				*_outHitPosition = info.position;
 
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
