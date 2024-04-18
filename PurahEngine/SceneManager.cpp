@@ -52,7 +52,7 @@ void PurahEngine::SceneManager::Update()
 
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		if (object->IsRootEnable() == true)
+		if (object->trans->GetParent() == nullptr)
 		{
 			object->UpdateEvent();
 		}
@@ -60,7 +60,7 @@ void PurahEngine::SceneManager::Update()
 
 	for (PurahEngine::GameObject* object : objectList)
 	{
-		if (object->IsRootEnable() == true)
+		if (object->trans->GetParent() == nullptr)
 		{
 			object->LateUpdateEvent();
 		}
@@ -70,7 +70,10 @@ void PurahEngine::SceneManager::Update()
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
-			object->FixedUpdateEvent();
+			if (object->trans->GetParent() == nullptr)
+			{
+				object->FixedUpdateEvent();
+			}
 		}
 	}
 
