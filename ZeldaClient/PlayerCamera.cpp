@@ -8,7 +8,23 @@ namespace Phyzzle
 
 	void PlayerCamera::Start()
 	{
+		lerp =
+			[this](const Eigen::Vector3f start, const Eigen::Vector3f end, float _t) -> Eigen::Vector3f
+			{
+				if (start == end)
+					return start;
 
+				return start + _t * (end - start);
+			};
+
+		slerp =
+			[this](const Eigen::Quaternionf start, const Eigen::Quaternionf end, float _t) -> Eigen::Quaternionf
+			{
+				if (start == end)
+					return start;
+
+				return 	start.slerp(_t, end);
+			};
 	}
 
 	void PlayerCamera::Update()
@@ -18,52 +34,37 @@ namespace Phyzzle
 
 	void PlayerCamera::LateUpdate()
 	{
+		auto dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+
 
 	}
 
-	Eigen::Vector3f PlayerCamera::GetArmForward()
+	PurahEngine::Camera* PlayerCamera::GetMainCamera()
 	{
-		return arm->GetFront();
+		return nullptr;
 	}
 
-	Eigen::Vector3f PlayerCamera::GetArmRight()
+	void PlayerCamera::ChangeCamera(
+		const std::string& _cameraName,
+		float _lerpTime)
 	{
-		return arm->GetRight();
+		if (currCamera)
+		{
+			currCamera->GetWorldPosition();
+			currCamera->GetWorldRotation();
+		}
+
+		auto cameraTransform = cameraList[_cameraName];
 	}
 
-	Eigen::Vector3f PlayerCamera::GetArmUp()
+	void PlayerCamera::CameraLookAt(const Eigen::Vector3f& _position)
 	{
-		return arm->GetUp();
+
 	}
 
-	Eigen::Vector3f PlayerCamera::GetCoreForward()
+	void PlayerCamera::CameraLookTo(const Eigen::Vector3f& _focus)
 	{
-		return core->GetFront();
-	}
 
-	Eigen::Vector3f PlayerCamera::GetCoreRight()
-	{
-		return core->GetRight();
-	}
-
-	Eigen::Vector3f PlayerCamera::GetCoreUp()
-	{
-		return core->GetUp();
-	}
-
-	void PlayerCamera::CameraArmRotate()
-	{
-	}
-
-	void PlayerCamera::CameraArmTranslate()
-	{
-	}
-
-	void PlayerCamera::CameraCoreRotate()
-	{
-	}
-
-	void PlayerCamera::CameraCoreTranslate()
-	{
 	}
 }

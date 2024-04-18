@@ -146,6 +146,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
+    <ClCompile Include="Attachable.cpp" />
+    <ClCompile Include="AttachIsland.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -161,7 +163,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="HoldState.cpp" />
     <ClCompile Include="IObject.cpp" />
-    <ClCompile Include="AttatchSystem.cpp" />
+    <ClCompile Include="AttachSystem.cpp" />
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="LauncherPlatform.cpp" />
     <ClCompile Include="main.cpp" />
@@ -175,11 +177,13 @@
     <ClCompile Include="Test3.cpp" />
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
-    <ClCompile Include="AttatchState.cpp" />
+    <ClCompile Include="AttachState.cpp" />
     <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
+    <ClInclude Include="Attachable.h" />
+    <ClInclude Include="AttachIsland.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="Button.h" />
@@ -197,7 +201,7 @@
     <ClInclude Include="LockState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="HoldState.h" />
-    <ClInclude Include="AttatchSystem.h" />
+    <ClInclude Include="AttachSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Rewindable.h" />
@@ -217,7 +221,7 @@
     <ClInclude Include="Test3.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
-    <ClInclude Include="AttatchState.h" />
+    <ClInclude Include="AttachState.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

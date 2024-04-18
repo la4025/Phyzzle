@@ -4,14 +4,14 @@
 // ReSharper disable once IdentifierTypo
 namespace Phyzzle
 {
-	class AttatchState final : public IState
+	class AttachState final : public IState
 	{
 	public:
-		AttatchState() = delete;
-		explicit AttatchState(Player* _player)
+		AttachState() = delete;
+		explicit AttachState(Player* _player)
 			: IState(_player)
 		{}
-		~AttatchState() override;
+		~AttachState() override;
 
 	private:
 		void StateEnter() override;
@@ -27,11 +27,17 @@ namespace Phyzzle
 		void Click_X() override;
 		void Click_Y() override;
 
+		void Click_DUp() override;
+		void Click_DDown() override;
+		void Click_DLeft() override;
+		void Click_DRight() override;
+
 		void Click_LB() override;
 		void Click_RB() override;
 
 	private:
 		bool selected = false;
+		bool rotateMode = false;
 		float lerpTime = 0.1f;
 
 	private:
@@ -47,8 +53,8 @@ namespace Phyzzle
 
 		void Jump() const;
 
-		void LookToWorldDirection(const Eigen::Vector3f& _to) const;
-		void LookToLocalDirection(const Eigen::Vector3f& _to) const;
+		void LookToWorldDirection(const Eigen::Vector3f& _to);
+		void LookToLocalDirection(const Eigen::Vector3f& _to);
 
 		bool Search() const;
 		bool Select();
@@ -57,7 +63,12 @@ namespace Phyzzle
 		void Set();
 		void Reset();
 
-		static void SearchDebugDraw(bool _value);
+	private:
+		void SearchDebugDraw(bool _value);
+
+		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
+		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
+		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
 	};
 }
 

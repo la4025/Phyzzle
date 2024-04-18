@@ -80,7 +80,7 @@ namespace Phyzzle
 
 	void DefaultState::Move() const
 	{
-		player->Move(player->data.moveSpeed);
+		player->PlayerMove(player->data.moveSpeed);
 	}
 
 	void DefaultState::Around() const

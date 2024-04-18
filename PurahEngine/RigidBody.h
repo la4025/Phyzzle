@@ -25,10 +25,10 @@ namespace PurahEngine
 
 	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
-		const Eigen::Vector3f& GetPosition() noexcept;
+		Eigen::Vector3f GetPosition() noexcept;
 
 		void		SetRotation(const Eigen::Quaternionf& _rot) noexcept;
-		const Eigen::Quaternionf& GetRotation() noexcept;
+		Eigen::Quaternionf GetRotation() noexcept;
 
 	public:
 		/**

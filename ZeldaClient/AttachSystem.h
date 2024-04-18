@@ -3,6 +3,16 @@
 
 #include "Singleton.h"
 
+namespace Phyzzle
+{
+	class AttachIsland;
+}
+
+namespace Phyzzle
+{
+	class Attachable;
+}
+
 namespace PurahEngine
 {
 	class RigidBody;
@@ -10,10 +20,10 @@ namespace PurahEngine
 
 namespace Phyzzle
 {
-	class AttatchSystem final : public Singleton<AttatchSystem>
+	class AttachSystem final : public Singleton<AttachSystem>
 	{
 	public:
-		~AttatchSystem() override;
+		~AttachSystem() override;
 
 	public:
 		void Update();
@@ -27,6 +37,8 @@ namespace Phyzzle
 
 
 	private:
+		std::vector<AttachIsland*> attachIsland;
+
 		PurahEngine::RigidBody* selectBody = nullptr;
 		bool gravity = true;
 		float mass = 1.f;

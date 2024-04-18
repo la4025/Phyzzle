@@ -4,7 +4,7 @@
 #include "IState.h"
 #include "DefaultState.h"
 #include "HoldState.h"
-#include "AttatchState.h"
+#include "AttachState.h"
 #include "RewindState.h"
 #include "LockState.h"
 
@@ -69,7 +69,7 @@ namespace Phyzzle
 
 		stateSystem.insert(std::make_pair(State::DEFAULT, new DefaultState(this)));
 		stateSystem.insert(std::make_pair(State::HOLD, new HoldState(this)));
-		stateSystem.insert(std::make_pair(State::ATTATCH, new AttatchState(this)));
+		stateSystem.insert(std::make_pair(State::ATTATCH, new AttachState(this)));
 		stateSystem.insert(std::make_pair(State::REWIND, new RewindState(this)));
 		stateSystem.insert(std::make_pair(State::LOCK, new LockState(this)));
 	}
@@ -240,7 +240,7 @@ namespace Phyzzle
 		}
 	}
 
-	void Player::Move(float _moveSpeed)
+	void Player::PlayerMove(float _moveSpeed)
 	{
 		// 카메라의 전방 벡터를 계산
 		const Eigen::Vector3f cameraFront = data.cameraArm->GetFront();
@@ -475,9 +475,6 @@ namespace Phyzzle
 
 		if (block)
 		{
-			if (!_outBody)
-				return block;
-
 			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
 
 			if (!shape)

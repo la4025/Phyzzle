@@ -68,7 +68,7 @@ namespace PurahEngine
 		// }
 	}
 
-	const Eigen::Vector3f& RigidBody::GetPosition() noexcept
+	Eigen::Vector3f RigidBody::GetPosition() noexcept
 	{
 		// if (awake)
 		// {
@@ -94,7 +94,7 @@ namespace PurahEngine
 		// }
 	}
 
-	const Eigen::Quaternionf& RigidBody::GetRotation() noexcept
+	Eigen::Quaternionf RigidBody::GetRotation() noexcept
 	{
 		// if (awake)
 		// {

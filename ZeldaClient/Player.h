@@ -16,7 +16,6 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
-
 		enum State
 		{
 			DEFAULT		= 0,	// 기본 상태
@@ -193,7 +192,7 @@ namespace Phyzzle
 		void Jump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 
-		void Move(float _moveSpeed);
+		void PlayerMove(float _moveSpeed);
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
@@ -216,7 +215,7 @@ namespace Phyzzle
 	private:
 		friend class IState;
 		friend class DefaultState;
-		friend class AttatchState;
+		friend class AttachState;
 		friend class RewindState;
 		friend class HoldState;
 		friend class LockState;

@@ -26,14 +26,14 @@
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="AttatchState.cpp">
+    <ClCompile Include="AttachState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="RewindState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="AudioTest.cpp" />
-    <ClCompile Include="AttatchSystem.cpp">
+    <ClCompile Include="AttachSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
     <ClCompile Include="LauncherPlatform.cpp">
@@ -81,6 +81,12 @@
     <ClCompile Include="PlayerCamera.cpp">
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
+    <ClCompile Include="Attachable.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachIsland.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -109,7 +115,7 @@
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="AttatchState.h">
+    <ClInclude Include="AttachState.h">
       <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="RewindState.h">
@@ -122,7 +128,7 @@
       <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="AudioTest.h" />
-    <ClInclude Include="AttatchSystem.h">
+    <ClInclude Include="AttachSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
@@ -184,6 +190,12 @@
     </ClInclude>
     <ClInclude Include="PlayerCamera.h">
       <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Attachable.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachIsland.h">
+      <Filter>KH\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
