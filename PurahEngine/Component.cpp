@@ -98,7 +98,17 @@ void PurahEngine::Component::OnMouseExit()
 
 }
 
+void PurahEngine::Component::PreInitialize()
+{
+
+}
+
 void PurahEngine::Component::Initialize()
+{
+
+}
+
+void PurahEngine::Component::PostInitialize()
 {
 
 }

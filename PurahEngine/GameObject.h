@@ -87,6 +87,7 @@ namespace PurahEngine
 		std::vector<Component*> GetComponents();
 
 		std::wstring GetName();
+		bool GetStateEnable();
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -116,6 +117,8 @@ namespace PurahEngine
 			DESTROY
 		};
 
+		ObjectState GetState();
+
 		ObjectState state;
 		std::wstring name;
 		bool isEnable;
@@ -131,7 +134,11 @@ namespace PurahEngine
 			T* t = new T;
 			componentList.push_back(t);
 			dynamic_cast<Component*>(t)->gameObject = this;
+
 			t->Initialize();
+
+			/// 기훈 왈 이거 빼라
+			t->PostInitialize();
 
 			return t; // 추가된 컴포넌트 포인터를 반환
 		}

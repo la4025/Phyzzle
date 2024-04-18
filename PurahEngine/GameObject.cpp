@@ -421,10 +421,10 @@ bool PurahEngine::GameObject::IsRootEnable()
 	}
 	else
 	{
-		rootEnable = GetEnable();
+		rootEnable = GetStateEnable();
 	}
 
-	bool ownEnable = GetEnable() && rootEnable;
+	bool ownEnable = GetStateEnable() && rootEnable;
 
 	return ownEnable;
 }
@@ -432,6 +432,11 @@ bool PurahEngine::GameObject::IsRootEnable()
 std::wstring PurahEngine::GameObject::GetName()
 {
 	return name;
+}
+
+bool PurahEngine::GameObject::GetStateEnable()
+{
+	return state == ObjectState::ENABLE;
 }
 
 void PurahEngine::GameObject::PreSerialize(json& jsonData) const
@@ -509,6 +514,11 @@ PurahEngine::GameObject::~GameObject()
 		delete componentList[i];
 	}
 	componentList.clear();
+}
+
+PurahEngine::GameObject::ObjectState PurahEngine::GameObject::GetState()
+{
+	return state;
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)
