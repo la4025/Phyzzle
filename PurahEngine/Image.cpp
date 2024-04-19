@@ -22,7 +22,7 @@ namespace PurahEngine
 		if (textureName != L"")
 		{
 			textureID = GetTextureID(textureName);
-			renderer->DrawSprite(position, size, textureID);
+			renderer->DrawSprite(position, size, textureID, layer);
 		}
 	}
 
@@ -39,6 +39,7 @@ namespace PurahEngine
 	{
 		PREDESERIALIZE_BASE();
 		PREDESERIALIZE_WSTRING(textureName);
+		PREDESERIALIZE_VALUE(layer);
 	}
 
 	void Image::PostSerialize(json& jsonData) const

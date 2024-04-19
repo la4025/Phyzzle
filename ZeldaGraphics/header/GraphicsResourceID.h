@@ -51,6 +51,22 @@ struct ResourceID
 	{
 		return (ull[0] != right.ull[0]) || (ull[1] != right.ull[1]) || (resourceType != right.resourceType);
 	}
+
+	bool operator<(const ResourceID& right) const
+	{
+		if (ull[0] < right.ull[0])
+		{
+			return true;
+		}
+		else if (ull[0] == right.ull[0])
+		{
+			return ull[1] < right.ull[1];
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
 
 template <ResourceType type>

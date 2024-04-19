@@ -1070,18 +1070,18 @@ void ZeldaDX11Renderer::DrawLight(LightID lightID)
 	}
 }
 
-void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture)
+void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture, int layer)
 {
-	DrawSprite(position, { 0.0f, 0.0f }, texture);
+	DrawSprite(position, { 0.0f, 0.0f }, texture, layer);
 }
 
-void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture)
+void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, int layer)
 {
 	SpriteInstancingInfo instancinInfo;
 	instancinInfo.position = { position.x(), position.y() };
 	instancinInfo.size = { size.x(), size .y() };
 
-	auto iter = organizedSpriteRenderInfo.find(texture);
+	auto iter = organizedSpriteRenderInfo.find({ layer, texture });
 
 	// 이미 동일한 것을 그린적이 있음
 	if (iter != organizedSpriteRenderInfo.end())
@@ -1095,7 +1095,7 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen:
 		renderInfo.instancingInfo.assign(1, instancinInfo);
 		renderInfo.textureID = texture;
 
-		organizedSpriteRenderInfo[texture] = renderInfo;
+		organizedSpriteRenderInfo[{ layer, texture }] = renderInfo;
 	}
 }
 

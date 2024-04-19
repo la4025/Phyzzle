@@ -571,10 +571,10 @@ PurahEngine::GameObject::GameObject(std::wstring objectname, bool isenable)
 
 PurahEngine::GameObject::~GameObject()
 {
-	for (int i = 0; i < trans->GetChildren().size(); i++)
-	{
-		delete trans->GetChildren()[i]->GetGameObject();
-	}
+	//for (int i = 0; i < trans->GetChildren().size(); i++)
+	//{
+	//	delete trans->GetChildren()[i]->GetGameObject();
+	//}
 
 	for (int i = 0; i < componentList.size(); i++)
 	{

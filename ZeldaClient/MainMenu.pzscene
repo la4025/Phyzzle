@@ -1,0 +1,2224 @@
+{
+  "gameObjects": [
+    {
+      "__Base__instanceID": 43644,
+      "name": "Main Camera",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43650,
+        "position": {
+          "x": 0.0,
+          "y": 1.0,
+          "z": -10.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43652,
+          "__Base__Component": "Camera",
+          "mainCamera": true,
+          "cameraNear": 0.3,
+          "cameraFar": 1000.0,
+          "fieldOfView": 1.04719758
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43654,
+      "name": "Directional Light",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43658,
+        "position": {
+          "x": 0.0,
+          "y": 3.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.408217877,
+          "y": -0.234569684,
+          "z": 0.109381631,
+          "w": 0.8754261
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43660,
+          "__Base__Component": "DirectionalLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "range": 0.0,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43406,
+      "name": "Canvas",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43414,
+        "position": {
+          "x": 960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          43568,
+          43524,
+          43532,
+          43386,
+          43446,
+          43706
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 43566,
+      "name": "Group",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43568,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43496,
+          43632,
+          43288,
+          43344
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43570,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "__Base__instanceID": 43572,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 1,
+          "__ID__contents": [
+            43506,
+            43634,
+            43290,
+            43346
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            43572,
+            43572,
+            43572,
+            43572
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43494,
+      "name": "Image (00)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43496,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43568
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43504,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43502,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43506,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 43504,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43522,
+              true
+            ],
+            [
+              43566,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43630,
+      "name": "Image (01)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43632,
+        "position": {
+          "x": 150.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43568
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43638,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43636,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 150.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43634,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43638,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43530,
+              true
+            ],
+            [
+              43566,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43286,
+      "name": "Image (02)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43288,
+        "position": {
+          "x": 300.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43568
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43294,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43292,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 300.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43290,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43294,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43384,
+              true
+            ],
+            [
+              43566,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43342,
+      "name": "Image (03)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43344,
+        "position": {
+          "x": 450.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43568
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43350,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43348,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 450.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43346,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43350,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43444,
+              true
+            ],
+            [
+              43566,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43522,
+      "name": "Group (1)",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43524,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43274,
+          43604,
+          43358,
+          43590,
+          43330
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43528,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "__Base__instanceID": 43526,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 0,
+          "__ID__contents": [
+            43276,
+            43606,
+            43360,
+            43592,
+            43332
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            43526,
+            43526,
+            43526,
+            43526
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43272,
+      "name": "Image (10)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43274,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43524
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43280,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43278,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43276,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 43280,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43566,
+              true
+            ],
+            [
+              43522,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43602,
+      "name": "Image (11)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43604,
+        "position": {
+          "x": 0.0,
+          "y": -100.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43524
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43610,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43608,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 100.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43606,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43610,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43356,
+      "name": "Image (12)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43358,
+        "position": {
+          "x": 0.0,
+          "y": -200.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43524
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43364,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43362,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 200.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43360,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43364,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43588,
+      "name": "Image (13)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43590,
+        "position": {
+          "x": 0.0,
+          "y": -300.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43524
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43596,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43594,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 300.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43592,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43596,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43328,
+      "name": "Image (14)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43330,
+        "position": {
+          "x": 0.0,
+          "y": -400.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43524
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43336,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43334,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 400.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43332,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43336,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43530,
+      "name": "Group (2)",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43532,
+        "position": {
+          "x": -810.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43372,
+          43540,
+          43432
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43536,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 150.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "__Base__instanceID": 43534,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 0,
+          "__ID__contents": [
+            43374,
+            43542,
+            43434
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            43534,
+            43534,
+            43534,
+            43534
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43370,
+      "name": "Image (20)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43372,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43532
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43378,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43376,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43374,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 43378,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43566,
+              true
+            ],
+            [
+              43530,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43538,
+      "name": "Image (21)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43540,
+        "position": {
+          "x": 0.0,
+          "y": -100.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43532
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43546,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43544,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 100.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43542,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43546,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43430,
+      "name": "Image (22)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43432,
+        "position": {
+          "x": 0.0,
+          "y": -200.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43532
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43438,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43436,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 200.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43434,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43438,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43384,
+      "name": "Group (3)",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43386,
+        "position": {
+          "x": -660.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43482,
+          43468,
+          43678,
+          43394,
+          43418
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43390,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 300.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "__Base__instanceID": 43388,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 0,
+          "__ID__contents": [
+            43484,
+            43470,
+            43680,
+            43396,
+            43420
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            43388,
+            43388,
+            43388,
+            43388
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43480,
+      "name": "Image (30)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43482,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43386
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43488,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43486,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43484,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 43488,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43566,
+              true
+            ],
+            [
+              43384,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43466,
+      "name": "Image (31)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43468,
+        "position": {
+          "x": 0.0,
+          "y": -100.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43386
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43474,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43472,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 100.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43470,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43474,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43676,
+      "name": "Image (32)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43678,
+        "position": {
+          "x": 0.0,
+          "y": -200.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43386
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43684,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43682,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 200.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43680,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43684,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43392,
+      "name": "Image (33)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43394,
+        "position": {
+          "x": 0.0,
+          "y": -300.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43386
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43400,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43398,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 300.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43396,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43400,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43416,
+      "name": "Image (34)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43418,
+        "position": {
+          "x": 0.0,
+          "y": -400.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43386
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43424,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43422,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 400.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43420,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43424,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43444,
+      "name": "Group (4)",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43446,
+        "position": {
+          "x": -510.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43692,
+          43454,
+          43576,
+          43554
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43450,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 450.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        {
+          "__Base__instanceID": 43448,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 0,
+          "__ID__contents": [
+            43694,
+            43456,
+            43578,
+            43556
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            43448,
+            43448,
+            43448,
+            43448
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43690,
+      "name": "Image (40)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43692,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43446
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43698,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43696,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43694,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 43698,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43566,
+              true
+            ],
+            [
+              43444,
+              false
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43452,
+      "name": "Image (41)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43454,
+        "position": {
+          "x": 0.0,
+          "y": -100.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43446
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43460,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43458,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 100.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43456,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43460,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43574,
+      "name": "Image (42)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43576,
+        "position": {
+          "x": 0.0,
+          "y": -200.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43446
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43582,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43580,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 200.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43578,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43582,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43552,
+      "name": "Image (43)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43554,
+        "position": {
+          "x": 0.0,
+          "y": -300.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43446
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43560,
+          "__Base__Component": "Image",
+          "textureName": "",
+          "layer": 0
+        },
+        {
+          "__Base__instanceID": 43558,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 300.0
+          },
+          "size": {
+            "x": 100.0,
+            "y": 64.0
+          }
+        },
+        {
+          "__Base__instanceID": 43556,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 43560,
+          "selectedImage": "Resources/UI/exit_cursor.png",
+          "unselectedImage": "Resources/UI/exit.png",
+          "pushedImage": "Resources/UI/exit_click.png",
+          "__ID__objectOnOffEventList": [
+            [
+              43704,
+              true
+            ]
+          ],
+          "loadSceneEventBuffer": ""
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43704,
+      "name": "Wait",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43706,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43414
+        ],
+        "__ID__children": [
+          43510,
+          43664,
+          43302,
+          43618,
+          43316
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43708,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43508,
+      "name": "Image",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43510,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43706
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43512,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 1920.0,
+            "y": 1080.0
+          }
+        },
+        {
+          "__Base__instanceID": 43514,
+          "__Base__Component": "Image",
+          "textureName": "mang.jpg",
+          "layer": -1
+        },
+        {
+          "__Base__instanceID": 43520,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Game.pzscene",
+          "delay": 5.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43662,
+      "name": "Image (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43664,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43706
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43670,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 192.0,
+            "y": 108.0
+          }
+        },
+        {
+          "__Base__instanceID": 43668,
+          "__Base__Component": "Image",
+          "textureName": "mang.jpg",
+          "layer": -2
+        },
+        {
+          "__Base__instanceID": 43666,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Game.pzscene",
+          "delay": 5.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43300,
+      "name": "Image (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43302,
+        "position": {
+          "x": 96.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43706
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43308,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 96.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 192.0,
+            "y": 108.0
+          }
+        },
+        {
+          "__Base__instanceID": 43306,
+          "__Base__Component": "Image",
+          "textureName": "mang.jpg",
+          "layer": -3
+        },
+        {
+          "__Base__instanceID": 43304,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Game.pzscene",
+          "delay": 5.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43616,
+      "name": "Image (3)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43618,
+        "position": {
+          "x": 96.0,
+          "y": -54.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43706
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43624,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 96.0,
+            "y": 54.0
+          },
+          "size": {
+            "x": 192.0,
+            "y": 108.0
+          }
+        },
+        {
+          "__Base__instanceID": 43622,
+          "__Base__Component": "Image",
+          "textureName": "mang.jpg",
+          "layer": -4
+        },
+        {
+          "__Base__instanceID": 43620,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Game.pzscene",
+          "delay": 5.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 43314,
+      "name": "Image (4)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 43316,
+        "position": {
+          "x": 0.0,
+          "y": -54.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          43706
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 43322,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 54.0
+          },
+          "size": {
+            "x": 192.0,
+            "y": 108.0
+          }
+        },
+        {
+          "__Base__instanceID": 43320,
+          "__Base__Component": "Image",
+          "textureName": "mang.jpg",
+          "layer": -5
+        },
+        {
+          "__Base__instanceID": 43318,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Game.pzscene",
+          "delay": 5.0
+        }
+      ]
+    }
+  ]
+}

@@ -38,6 +38,7 @@ namespace PurahEngine
 		void Update();
 
 		void LoadScene(const std::wstring fileName);
+		void LoadScene(int sceneNumber);
 
 		void DeleteGameObject(GameObject* gameObject);
 

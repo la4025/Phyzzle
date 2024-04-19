@@ -5,7 +5,8 @@
   "shadowMapDepthBias": 0.1,
   "gravity": -29.4,
   "tag": [
-    "Conductor Object"
+    "Conductor Object",
+    "Phyzzle Player"
   ],
   "layer": [
     "Default",

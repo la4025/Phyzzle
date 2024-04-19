@@ -110,7 +110,14 @@ std::wstring PurahEngine::EngineSetting::GetScene(int sceneNumber)
 {
 	assert(0 <= sceneNumber && sceneNumber < scenes.size());
 	
-	return scenes[std::clamp(sceneNumber, 0, static_cast<int>(scenes.size()))];
+	if (sceneNumber < 0 || scenes.size() <= sceneNumber)
+	{
+		return L"";
+	}
+	else
+	{
+		return scenes[sceneNumber];
+	}
 }
 
 int PurahEngine::EngineSetting::GetSceneCount()

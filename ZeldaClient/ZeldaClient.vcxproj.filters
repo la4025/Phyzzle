@@ -78,6 +78,9 @@
     <ClCompile Include="ButtonDevice.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="SceneLoadSupport.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -179,6 +182,9 @@
     <ClInclude Include="ButtonDevice.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
+    <ClInclude Include="SceneLoadSupport.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -228,6 +234,9 @@
     </Filter>
     <Filter Include="KH\PLAYER\State\Base">
       <UniqueIdentifier>{f6c2598c-888c-4205-9a79-ac89b2ee3273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{f699f263-adde-4526-b6b9-8c1a94fd71bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

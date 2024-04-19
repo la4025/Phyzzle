@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "PhysicsSystem.h"
 #include "TimeController.h"
+#include "EngineSetting.h"
 
 PurahEngine::SceneManager::SceneManager()
 	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE), physicsTime(0.0f), sceneBuffer(L"")
@@ -86,6 +87,11 @@ void PurahEngine::SceneManager::Update()
 void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
 {
 	sceneBuffer = fileName;
+}
+
+void PurahEngine::SceneManager::LoadScene(int sceneNumber)
+{
+	sceneBuffer = EngineSetting::GetInstance().GetScene(sceneNumber);
 }
 
 void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
