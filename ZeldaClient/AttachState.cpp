@@ -9,19 +9,25 @@ namespace Phyzzle
 	void AttachState::StateEnter()
 	{
 		// 플레이어 카메라 컴포넌트를 만든다면
-		auto p = player->data.cameraCore->GetLocalPosition();
-		p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+		{
+			auto p = player->data.cameraCore->GetLocalPosition();
+			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
 
-		player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalPosition(p);
+		}
 	}
 
 	// 상태 나가기
 	void AttachState::StateExit()
 	{
-		auto p = player->data.cameraCore->GetLocalPosition();
-		p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+		// 플레이어 카메라 컴포넌트를 만든다면
+		// 이부분은 수정이 반드시 필요함
+		{
+			auto p = player->data.cameraCore->GetLocalPosition();
+			p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
 
-		player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalPosition(p);
+		}
 
 		Reset();
 	}
@@ -81,7 +87,17 @@ namespace Phyzzle
 		// 좌우 입력은 '플레이어가 보고 있는 방향'의 좌우로 힘을 주고
 		// 상하 입력은 월드 Up, Down 방향으로 힘을 주는 것으로 하자.
 		// 플레이어가 항상 물체를 바라보고 있는 것으로 하면 얼추 비슷하게 나올 것이다.
-		CameraAround();
+
+		if (!selected)
+		{
+			CameraAround();
+		}
+		else
+		{
+			player->currInput.Rstick.X;
+			player->currInput.Rstick.Y;
+			player->currInput.Rstick.Size;
+		}
 	}
 
 	// 취소
@@ -93,9 +109,18 @@ namespace Phyzzle
 	// 선택
 	void AttachState::Click_B()
 	{
-		if (Select())
+		// 울트라 핸드 상태가 아니라면..
+		if (!selected)
 		{
-			Set();
+			if (Select())
+			{
+				Set();
+			}
+		}
+		// 오브젝트를 이동시킬수 있는 상태라면
+		else
+		{
+			// 붙일 수 있어야함.
 		}
 	}
 
@@ -271,6 +296,11 @@ namespace Phyzzle
 		// selectBody->SetRotation(targetR);
 	}
 
+	void AttachState::ObjectTranslate(const Eigen::Vector3f& _direction, float power)
+	{
+		selectBody->SetLinearVelocity(_direction * power);
+	}
+
 	void AttachState::Set()
 	{
 		if (selectBody == nullptr)
@@ -290,7 +320,7 @@ namespace Phyzzle
 		selectBody->SetMass(0.001f);                    
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
-		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
+		const Eigen::Vector3f playerPosition = player->GetGameObject()->GetTransform()->GetWorldPosition();
 
 		const Eigen::Vector3f lookTo = objectPosition - playerPosition;
 		// 모델을 물체를 바라보도록 함.

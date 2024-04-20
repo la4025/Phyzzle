@@ -30,9 +30,9 @@ namespace Phyzzle
 		void CameraCoreTranslate(const Eigen::Vector3f& _translate);
 
 	private:
-		PurahEngine::Transform* currCamera;
-		PurahEngine::Transform* arm;
-		PurahEngine::Transform* core;
+		PurahEngine::Camera* currCamera;
+		PurahEngine::Transform* cameraArmTransform;
+		PurahEngine::Transform* cameraCoreTransform;
 
 	private:
 		Eigen::Vector3f startPosition;
@@ -40,6 +40,6 @@ namespace Phyzzle
 		std::function<Eigen::Vector3f(Eigen::Vector3f, Eigen::Vector3f, float)> lerp;
 		std::function<Eigen::Quaternionf(Eigen::Quaternionf, Eigen::Quaternionf, float)> slerp;
 
-		std::map<std::string, PurahEngine::Transform*> cameraList;
+		std::map<std::string, PurahEngine::Camera*> cameraList;
 	};
 }

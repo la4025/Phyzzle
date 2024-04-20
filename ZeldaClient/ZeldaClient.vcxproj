@@ -189,6 +189,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Coroutine.h" />
     <ClInclude Include="DisconnectedWire.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="DoorParts.h" />

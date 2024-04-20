@@ -36,13 +36,16 @@ namespace Phyzzle
 	{
 		auto dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-
-
 	}
 
 	PurahEngine::Camera* PlayerCamera::GetMainCamera()
 	{
-		return nullptr;
+		return currCamera;
+	}
+
+	PurahEngine::Camera* PlayerCamera::GetCamera(const std::string& _cameraName)
+	{
+		return cameraList[_cameraName];
 	}
 
 	void PlayerCamera::ChangeCamera(
@@ -51,8 +54,9 @@ namespace Phyzzle
 	{
 		if (currCamera)
 		{
-			currCamera->GetWorldPosition();
-			currCamera->GetWorldRotation();
+			PurahEngine::Transform* currTransform = currCamera->GetGameObject()->GetTransform();
+			currTransform->GetWorldPosition();
+			currTransform->GetWorldRotation();
 		}
 
 		auto cameraTransform = cameraList[_cameraName];

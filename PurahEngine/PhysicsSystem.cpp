@@ -80,7 +80,15 @@ namespace PurahEngine
 
 	void PhysicsSystem::Simulation(float _dt) const noexcept
 	{
-		physics->Simulation(_dt);
+		static float acc = 0.f;
+
+		acc += _dt;
+
+		if (acc >= 1.f / 60.f)
+		{
+			acc -= 1.f / 60.f;
+			physics->Simulation(1.f / 60.f);
+		}
 	}
 
 	void PhysicsSystem::SimulateResult() const

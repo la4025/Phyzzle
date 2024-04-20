@@ -47,6 +47,7 @@ namespace Phyzzle
 		Eigen::Vector3f targetLocalPosition = Eigen::Vector3f::Zero();
 		Eigen::Quaternionf targetLocalRotation = Eigen::Quaternionf::Identity();
 
+	private:
 		void PlayerMove() const;
 		void CameraAround() const;
 		void StateCancel() const;
@@ -58,7 +59,13 @@ namespace Phyzzle
 
 		bool Search() const;
 		bool Select();
+		
 		void ObjectToTargetPosition() const;
+
+		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);
+		void ObjectRotate();
+		
+		void Attach() const;
 
 		void Set();
 		void Reset();

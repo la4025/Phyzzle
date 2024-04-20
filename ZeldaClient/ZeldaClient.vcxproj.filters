@@ -197,6 +197,9 @@
     <ClInclude Include="AttachIsland.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Coroutine.h">
+      <Filter>KH\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
