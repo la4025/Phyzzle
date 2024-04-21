@@ -1,64 +1,54 @@
 #pragma once
+
 #include <coroutine>
 #include <exception>
+#include <optional>
 
-template <typename T>
-class Coroutine
+template<typename T>
+struct Coroutine
 {
-	class awaitable;
 	struct promise_type;
-	
-	using handle_type = std::coroutine_handle<promise_type>;
-	// using traits_type = std::coroutine_traits<promise_type>;
 
-	//class awaitable
-	//{
-	//	bool ready_;
-	//public:
-	//	explicit(false) awaitable(bool ready) : ready_(ready) {}
-	//
-	//	bool await_ready() const noexcept { return ready_; }
-	//	void await_suspend(std::coroutine_handle<> h) noexcept {}
-	//	void await_resume() noexcept {}
-	//};
+	using handle_type = std::coroutine_handle<promise_type>;
 
 	struct promise_type
 	{
-		Coroutine get_return_object() {
+		std::optional<T> value_;
+		std::exception_ptr exception_;
+
+		promise_type() = default;
+		~promise_type() = default;
+		promise_type(const promise_type&) = delete;
+		promise_type(promise_type&&) = delete;
+		promise_type& operator=(const promise_type&) = delete;
+		promise_type& operator=(promise_type&&) = delete;
+
+		Coroutine get_return_object()
+		{
 			return Coroutine(handle_type::from_promise(*this));
 		}
 		auto initial_suspend() { return std::suspend_always{}; }
 		auto final_suspend() noexcept { return std::suspend_always{}; }
 		void unhandled_exception() { exception_ = std::current_exception(); }
-		void return_void() {}
 
 		template<std::convertible_to<T> From>
 		void return_value(const From& from)
 		{
-			return_value_ = from;
+			value_ = from;						// 반환값을 저장함
 		}
 
-		template<std::convertible_to<T> From> 
+		template<std::convertible_to<T> From>
 		void return_value(From&& from) noexcept
 		{
-			return_value_ = std::move(from);
+			value_ = std::move(from);			// 반환값을 저장함
 		}
 
 		template<std::convertible_to<T> From>
 		auto yield_value(From&& from) noexcept
 		{
-			curr_value_ = std::forward<From>(from);	// 값을 저장하고 제어권을 넘김
+			value_ = std::forward<From>(from);	// 값을 저장하고 제어권을 넘김
 			return std::suspend_always{};
 		}
-
-		//auto await_transform(std::suspend_always) { return awaitable(!ready_); }
-		//void disable_suspension() { ready_ = false; }
-
-	private:
-		T curr_value_;
-		T return_value_;
-		std::exception_ptr exception_;
-		bool ready_{ true };
 	};
 
 	Coroutine(handle_type handler) : handler_(handler) {}
@@ -73,37 +63,96 @@ class Coroutine
 			handler_.destroy();
 	}
 
-	void disable_suspension() const
-	{
-		if (handler_.done())
-			return;
-		handler_.promise().disable_suspension();
-		handler_();
-	}
-
-	bool operator()()
+	std::optional<T> operator()()
 	{
 		if (!handler_.done())
 			handler_();
-		
+
 		if (handler_.promise().exception_)
 			std::rethrow_exception(handler_.promise().exception_);
-		
-		// 함수를 완료하면 true를 반환함
+
+		auto ret = std::move(handler_.promise().value_);
+		handler_.promise().value_ = std::nullopt;
+
+		return ret;
+	}
+
+	bool done()
+	{
 		return handler_.done();
-	}
-
-	T yield_value()
-	{
-		return handler_.promise().curr_value_;
-	}
-
-	T return_value()
-	{
-		return handler_.promise().return_value_;
 	}
 
 private:
 	handle_type handler_;
 };
 
+template <typename T>
+struct CoroutineVoid
+{
+	struct promise_type;
+
+	using handle_type = std::coroutine_handle<promise_type>;
+
+	struct promise_type
+	{
+		std::optional<T> value_;
+		std::exception_ptr exception_;
+
+		promise_type() = default;
+		~promise_type() = default;
+		promise_type(const promise_type&) = delete;
+		promise_type(promise_type&&) = delete;
+		promise_type& operator=(const promise_type&) = delete;
+		promise_type& operator=(promise_type&&) = delete;
+
+		CoroutineVoid get_return_object()
+		{
+			return CoroutineVoid(handle_type::from_promise(*this));
+		}
+		auto initial_suspend() { return std::suspend_always{}; }
+		auto final_suspend() noexcept { return std::suspend_always{}; }
+		void unhandled_exception() { exception_ = std::current_exception(); }
+		void return_void() {}
+
+		template<std::convertible_to<T> From>
+		auto yield_value(From&& from) noexcept
+		{
+			value_ = std::forward<From>(from);		// 값을 저장하고 제어권을 넘김
+			return std::suspend_always{};
+		}
+	};
+
+	CoroutineVoid(handle_type handler) : handler_(handler) {}
+	CoroutineVoid(const CoroutineVoid&) = delete;
+	CoroutineVoid(CoroutineVoid&&) = delete;
+	CoroutineVoid& operator=(const CoroutineVoid&) = delete;
+	CoroutineVoid& operator=(CoroutineVoid&&) = delete;
+
+	~CoroutineVoid()
+	{
+		if (handler_)
+			handler_.destroy();
+	}
+
+	std::optional<T> operator()()
+	{
+		if (!handler_.done())
+			handler_();
+
+		if (handler_.promise().exception_)
+			std::rethrow_exception(handler_.promise().exception_);
+
+		auto ret = std::move(handler_.promise().value_);
+		handler_.promise().value_ = std::nullopt;
+
+		return ret;
+	}
+
+	bool done()
+	{
+		return handler_.done();
+	}
+
+private:
+	handle_type handler_;
+};

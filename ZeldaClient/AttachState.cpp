@@ -94,9 +94,20 @@ namespace Phyzzle
 		}
 		else
 		{
-			player->currInput.Rstick.X;
-			player->currInput.Rstick.Y;
-			player->currInput.Rstick.Size;
+			if (player->currInput.Rstick.Size)
+			{
+				Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+				Eigen::Vector3f objectPos = selectBody->GetPosition();
+				Eigen::Vector3f forward = objectPos - playerPos;
+				forward.y() = 0.f;
+				forward.normalize();
+				Eigen::Vector3f right = Eigen::Vector3f::UnitY().cross(forward);
+				Eigen::Vector3f direction = Eigen::Vector3f::UnitY() * player->currInput.Rstick.Y + right * player->currInput.Rstick.X;
+				direction.normalize();
+				direction *= player->currInput.Rstick.Size;
+
+				ObjectTranslate(direction, 5.f);
+			}
 		}
 	}
 
@@ -140,7 +151,13 @@ namespace Phyzzle
 	{
 		if (!rotateMode)
 		{
-			// 오브젝트에 속력을 줘서 밈
+			Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+			Eigen::Vector3f objectPos = selectBody->GetPosition();
+			Eigen::Vector3f forward = objectPos - playerPos;
+			forward.y() = 0.f;
+			forward.normalize();
+
+			ObjectTranslate(forward, 5.f);
 		}
 		else
 		{
@@ -153,7 +170,13 @@ namespace Phyzzle
 	{
 		if (!rotateMode)
 		{
-			// 오브젝트에 속력을 줘서 당김
+			Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+			Eigen::Vector3f objectPos = selectBody->GetPosition();
+			Eigen::Vector3f forward = objectPos - playerPos;
+			forward.y() = 0.f;
+			forward.normalize();
+
+			ObjectTranslate(forward, -5.f);
 		}
 		else
 		{
@@ -191,6 +214,7 @@ namespace Phyzzle
 	{
 		StateCancel();
 	}
+
 #pragma endregion 키입력
 
 	void AttachState::PlayerMove() const
@@ -395,5 +419,21 @@ namespace Phyzzle
 				200, 100, 50,
 				255, 255, 255, 255);
 		}
+	}
+
+	Coroutine<int> CoroutineTest()
+	{
+		co_await std::suspend_always{};
+
+		co_yield 100;
+
+		co_return 0;
+	}
+
+	CoroutineVoid<int> CoroutineTest1()
+	{
+		co_yield 100;
+
+		co_return;
 	}
 }

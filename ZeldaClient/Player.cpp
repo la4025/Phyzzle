@@ -247,10 +247,10 @@ namespace Phyzzle
 		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
 		const Eigen::Vector3f right = data.cameraArm->GetRight();
 
-		Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
+		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 
 		// 속도 벡터를 계산
-		Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
+		const Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
 
 		Eigen::Vector3f velocity = data.playerRigidbody->GetLinearVelocity();
 

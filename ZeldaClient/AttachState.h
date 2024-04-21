@@ -1,5 +1,6 @@
 #pragma once
 #include "IState.h"
+#include "Coroutine.h"
 
 // ReSharper disable once IdentifierTypo
 namespace Phyzzle
@@ -77,5 +78,8 @@ namespace Phyzzle
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
 	};
+
+	Coroutine<int> CoroutineTest();
+	CoroutineVoid<int> CoroutineTest1();
 }
 
