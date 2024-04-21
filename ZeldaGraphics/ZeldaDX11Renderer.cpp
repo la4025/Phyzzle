@@ -771,6 +771,128 @@ void ZeldaDX11Renderer::Finalize()
 	ResourceManager::GetInstance().Finalize();
 }
 
+void ZeldaDX11Renderer::Resize(unsigned int screenWidth, unsigned int screenHeight)
+{
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
+
+	HRESULT hr = 0;
+	HRESULT result = 0;
+
+	// 1. Clear the existing references to the backbuffer
+	ID3D11RenderTargetView* nullViews[] = { nullptr };
+	mDeviceContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		if (deferredRenderTargets[i] != nullptr)		deferredRenderTargets[i]->Release();
+		if (deferredShaderResources[i] != nullptr)		deferredShaderResources[i]->Release();
+	}
+
+	if (mRenderTargetView != nullptr)						mRenderTargetView->Release();
+	if (mDepthStencilView != nullptr)						mDepthStencilView->Release();
+
+	mDeviceContext->Flush();
+
+	// 2. Resize the existing swapchain
+	hr = mSwapChain->ResizeBuffers(2, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+	{
+		// You have to destroy the device, swapchain, and all resources and
+		// recreate them to recover from this case. The device was hardware reset,
+		// physically removed, or the driver was updated and/or restarted
+	}
+
+	// 3. Get the new backbuffer texture to use as a render target
+	ID3D11Texture2D* backBufferPtr;
+
+	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+
+	hr = mDevice->CreateRenderTargetView(backBufferPtr, nullptr, &mRenderTargetView);
+
+	backBufferPtr->Release();
+	backBufferPtr = nullptr;
+
+	ID3D11Texture2D* depthStencil;
+
+	// 4. Create a depth/stencil buffer and create the depth stencil view
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT, screenWidth, screenHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+	hr = mDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencil);
+
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+	hr = mDevice->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &mDepthStencilView);
+
+	// 5. Reset the rendering viewport to the new size
+	CD3D11_VIEWPORT viewPort(0.0f, 0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+	mDeviceContext->RSSetViewports(1, &viewPort);
+
+	// 6. Reset your camera's aspect ratio based on backBufferWidth/backBufferHeight
+
+
+
+
+
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	textureDesc.Width = screenWidth;
+	textureDesc.Height = screenHeight;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* renderTargetTextures[Deferred::BufferCount];
+
+	// Texture2D 持失
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures[i]);
+	}
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// RenderTargetView 持失
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateRenderTargetView(renderTargetTextures[i], &renderTargetViewDesc, &deferredRenderTargets[i]);
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Shader Resource View 持失
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateShaderResourceView(renderTargetTextures[i], &shaderResourceViewDesc, &deferredShaderResources[i]);
+	}
+
+	//Release render target texture array
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		renderTargetTextures[i]->Release();
+	}
+
+
+
+
+	// 7. Set your render target view/depth stencil view for rendering
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+}
+
 void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize)
 {
 #ifdef USE_INIT_FLAG
