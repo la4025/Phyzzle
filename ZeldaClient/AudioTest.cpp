@@ -1,4 +1,5 @@
 #include "AudioTest.h"
+#include "CameraMovement.h"
 
 PurahEngine::AudioTest::AudioTest()
 {
@@ -10,6 +11,12 @@ PurahEngine::AudioTest::~AudioTest()
 
 }
 
+void PurahEngine::AudioTest::Awake()
+{
+	auto& soundManager = PurahEngine::SoundManager::GetInstance();
+	//soundManager.PlayBGM(audioSource->GetSoundName(), audioSource);
+}
+
 void PurahEngine::AudioTest::OnDataLoadComplete()
 {
 
@@ -17,7 +24,7 @@ void PurahEngine::AudioTest::OnDataLoadComplete()
 
 void PurahEngine::AudioTest::Update()
 {
-
+	
 }
 
 void PurahEngine::AudioTest::OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*)

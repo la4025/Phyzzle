@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "SoundManager.h"
 #include "EngineSetting.h"
+#include "UnifiedInputManager.h"
 #include <cassert>
 
 
@@ -104,6 +105,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_1,
 		eKey::eKEY_2,
 
+		eKey::eKEY_SPACE,
 		eKey::eKEY_CONTROL,
 		eKey::eKEY_F1,
 		eKey::eKEY_F2,
@@ -119,6 +121,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 	};
 	PurahEngine::InputManager::Getinstance().Initialize(hWnd, key, sizeof(key) / sizeof(eKey));
 	PurahEngine::GamePadManager::Instance().Initialize(hWnd, nullptr, 0);
+	UnifiedInputManager::Getinstance().Initialize();
 
 	// SceneManager 초기화
 	PurahEngine::SceneManager::GetInstance().Initialize();
@@ -128,6 +131,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 
 	// SoundManager 초기화
 	PurahEngine::SoundManager::GetInstance().Initialize();
+
+	// 0번 씬 로드
+	SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(0));
 }
 
 void PurahEngine::GameLoop::Run(_In_ int nCmdShow)
@@ -184,6 +190,8 @@ void PurahEngine::GameLoop::run()
 
 	InputManager::Getinstance().Update();
 	GamePadManager::Instance().Update();
+	// InputManager, GamePadManager 이후에 실행해야한다.
+	UnifiedInputManager::Getinstance().Update();
 
 	Timer::Update();
 	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_ESCAPE))
@@ -191,11 +199,15 @@ void PurahEngine::GameLoop::run()
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
+	SceneManager::GetInstance().LoadScene();
+	SceneManager::GetInstance().InitializationEvent();
+
 	SceneManager::GetInstance().Update();
 	SoundManager::GetInstance().Update();
 
 	GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
 	GraphicsManager::GetInstance().Render(deltaTime);
+	SceneManager::GetInstance().DecommissionEvent();
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

@@ -28,6 +28,11 @@ namespace PurahEngine
 		virtual void Start();
 		virtual void OnDataLoadComplete();
 
+		virtual void OnEnable();
+		virtual void OnDisable();
+
+		virtual void OnDestroy();
+
 		/// Update
 		// 물리 관련 업데이트
 		virtual void FixedUpdate();
@@ -65,7 +70,9 @@ namespace PurahEngine
 
 		// 게임오브젝트 생성 후에 초기화를 하기위한 함수.
 		// 걍 생성자 대용이다 라고 생각하자.
+		virtual void PreInitialize();
 		virtual void Initialize();
+		virtual void PostInitialize();
 
 		GameObject* GetGameObject() const;
 

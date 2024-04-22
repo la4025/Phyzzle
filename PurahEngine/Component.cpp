@@ -23,6 +23,21 @@ void PurahEngine::Component::OnDataLoadComplete()
 {
 }
 
+void PurahEngine::Component::OnEnable()
+{
+
+}
+
+void PurahEngine::Component::OnDisable()
+{
+
+}
+
+void PurahEngine::Component::OnDestroy()
+{
+
+}
+
 void PurahEngine::Component::FixedUpdate()
 {
 
@@ -83,7 +98,17 @@ void PurahEngine::Component::OnMouseExit()
 
 }
 
+void PurahEngine::Component::PreInitialize()
+{
+
+}
+
 void PurahEngine::Component::Initialize()
+{
+
+}
+
+void PurahEngine::Component::PostInitialize()
 {
 
 }

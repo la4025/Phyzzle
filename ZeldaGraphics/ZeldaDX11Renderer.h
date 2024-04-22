@@ -15,6 +15,7 @@
 #include <CommonStates.h>
 
 #include <unordered_map>
+#include <map>
 #include <unordered_set>
 
 #ifdef _DEBUG
@@ -140,7 +141,8 @@ public:
 
 	virtual void DrawLight(LightID lightID) override;
 
-	virtual void DrawSprite(const Eigen::Vector2f& position, TextureID texture) override;
+	virtual void DrawSprite(const Eigen::Vector2f& position, TextureID texture, int layer) override;
+	virtual void DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, int layer) override;
 
 	virtual void DrawCubeMap(TextureID texture) override;
 
@@ -288,7 +290,7 @@ private:
 	// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.
 	std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> organizedMeshRenderInfo;
 	std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> organizedModelRenderInfo;
-	std::unordered_map<TextureID, SpriteRenderInfo> organizedSpriteRenderInfo;
+	std::map<std::pair<int, TextureID>, SpriteRenderInfo> organizedSpriteRenderInfo;
 	std::unordered_set<LightID> organizedLightRenderInfo;
 
 	std::vector<BlendingAnimationRenderInfo> blendingAnimationRenderInfo;

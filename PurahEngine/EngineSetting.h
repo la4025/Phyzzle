@@ -27,6 +27,9 @@ namespace PurahEngine
 		float GetShadowMapDepthBias();
 		float GetGravity();
 
+		std::wstring GetScene(int sceneNumber);
+		int GetSceneCount();
+
 		std::vector<std::wstring> GetPreLoadModels();
 		std::vector<std::vector<bool>> GetCollsionSetting();
 
@@ -45,6 +48,7 @@ namespace PurahEngine
 		int shadowMapSize;
 
 		std::vector<std::wstring> preLoadModels;
+		std::vector<std::wstring> scenes;
 
 		// 게임 실행 후에도 변경될 수 있는 설정
 		std::vector<std::vector<bool>> collisionSetting;

@@ -19,5 +19,6 @@ namespace PurahEngine
 	{
 	public:
 		virtual void Render(IZeldaRenderer* renderer) abstract;
+		virtual bool IsRootEnable() abstract;
 	};
 }

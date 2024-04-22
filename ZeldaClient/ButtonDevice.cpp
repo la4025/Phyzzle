@@ -1,10 +1,10 @@
-#include "Button.h"
+#include "ButtonDevice.h"
 
 #include "Door.h"
 
 namespace Phyzzle
 {
-	void Button::Awake()
+	void ButtonDevice::Awake()
 	{		
 		originPos = pushableObject->GetTransform()->GetLocalPosition();
 
@@ -18,7 +18,7 @@ namespace Phyzzle
 		pushableRigidbody = pushableObject->GetComponent<PurahEngine::RigidBody>();
 	}
 
-	void Button::Update()
+	void ButtonDevice::Update()
 	{
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
@@ -34,7 +34,7 @@ namespace Phyzzle
 
 		switch (buttonType)
 		{
-			case Phyzzle::Button::ButtonType::Toggle:
+			case Phyzzle::ButtonDevice::ButtonType::Toggle:
 			{
 				if (isButtonDown)
 				{
@@ -51,7 +51,7 @@ namespace Phyzzle
 				}
 				break;
 			}
-			case Phyzzle::Button::ButtonType::Clickable:
+			case Phyzzle::ButtonDevice::ButtonType::Clickable:
 			{
 				if (isButtonDown)
 				{
@@ -68,7 +68,7 @@ namespace Phyzzle
 				}
 				break;
 			}
-			case Phyzzle::Button::ButtonType::Timer:
+			case Phyzzle::ButtonDevice::ButtonType::Timer:
 			{
 				TimerButtonUpdate();
 
@@ -82,13 +82,13 @@ namespace Phyzzle
 		}
 	}
 
-	void Button::FixedUpdate()
+	void ButtonDevice::FixedUpdate()
 	{
 		// Pushable Object의 속도 고정
 		pushableRigidbody->SetLinearVelocity({ 0.0f, releasedSpeed, 0.0f });
 	}
 
-	void Button::TargetPowerOn()
+	void ButtonDevice::TargetPowerOn()
 	{
 		if (isPowerOn == true)
 		{
@@ -104,7 +104,7 @@ namespace Phyzzle
 		}
 	}
 
-	void Button::TargetPowerOff()
+	void ButtonDevice::TargetPowerOff()
 	{
 		if (isPowerOn == false)
 		{
@@ -119,18 +119,18 @@ namespace Phyzzle
 		}
 	}
 
-	void Button::FastenButton()
+	void ButtonDevice::FastenButton()
 	{
 		pushableRigidbody->SetKinematic(true);
 	}
 
-	void Button::TimerButtonUpdate()
+	void ButtonDevice::TimerButtonUpdate()
 	{
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		switch (timerType)
 		{
-			case Phyzzle::Button::TimerType::Hold:
+			case Phyzzle::ButtonDevice::TimerType::Hold:
 			{
 				if (isButtonDown)
 				{
@@ -147,7 +147,7 @@ namespace Phyzzle
 
 				break;
 			}
-			case Phyzzle::Button::TimerType::Push:
+			case Phyzzle::ButtonDevice::TimerType::Push:
 			{
 				if (isPowerOn)
 				{
@@ -177,7 +177,7 @@ namespace Phyzzle
 
 				break;
 			}
-			case Phyzzle::Button::TimerType::Release:
+			case Phyzzle::ButtonDevice::TimerType::Release:
 			{
 				if (isPowerOn)
 				{
@@ -215,10 +215,10 @@ namespace Phyzzle
 		}
 	}
 	
-	void Button::PreSerialize(json& jsonData) const
+	void ButtonDevice::PreSerialize(json& jsonData) const
 	{
 	}
-	void Button::PreDeserialize(const json& jsonData)
+	void ButtonDevice::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
 		int buttonTypeInt = jsonData["buttonType"];
@@ -232,10 +232,10 @@ namespace Phyzzle
 		PREDESERIALIZE_VALUE(deactivationDepth);
 		PREDESERIALIZE_VALUE(executeDelay);
 	}
-	void Button::PostSerialize(json& jsonData) const
+	void ButtonDevice::PostSerialize(json& jsonData) const
 	{
 	}
-	void Button::PostDeserialize(const json& jsonData)
+	void ButtonDevice::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(pushableObject);
 		POSTDESERIALIZE_VECTOR_PTR(targetDeviceList);

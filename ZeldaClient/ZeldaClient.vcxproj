@@ -150,7 +150,7 @@
     <ClCompile Include="AttachIsland.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
-    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonDevice.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DisconnectedWire.cpp" />
@@ -172,6 +172,7 @@
     <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
+    <ClCompile Include="SceneLoadSupport.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />
@@ -186,7 +187,7 @@
     <ClInclude Include="AttachIsland.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
-    <ClInclude Include="Button.h" />
+    <ClInclude Include="ButtonDevice.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Coroutine.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
+    <ClInclude Include="SceneLoadSupport.h" />
     <ClInclude Include="Snapshot.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IState.h" />

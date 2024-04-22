@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "PhysicsSystem.h"
 #include "TimeController.h"
+#include "EngineSetting.h"
 
 PurahEngine::SceneManager::SceneManager()
 	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE), physicsTime(0.0f), sceneBuffer(L"")
@@ -41,8 +42,6 @@ void PurahEngine::SceneManager::SetName(std::wstring name)
 
 void PurahEngine::SceneManager::Update()
 {
-	LoadScene();
-
 	PurahEngine::TimeController::GetInstance().Update("Simulate");
 	float SdeltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("Simulate");
 	static float SimuleTime = 0;
@@ -52,89 +51,151 @@ void PurahEngine::SceneManager::Update()
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("physics");
 	physicsTime += deltaTime;
 
-	if (state == RunningState::AWAKE)
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
+		if (object->trans->GetParent() == nullptr)
 		{
-			object->AwakeEvent();
+			object->UpdateEvent();
 		}
-		state = RunningState::START;
 	}
-	if (state == RunningState::START)
+
+	for (PurahEngine::GameObject* object : objectList)
 	{
-		for (PurahEngine::GameObject* object : objectList)
+		if (object->trans->GetParent() == nullptr)
 		{
-			object->StartEvent();
+			object->LateUpdateEvent();
 		}
-		state = RunningState::UPDATE;
-	}
-	if (state == RunningState::UPDATE)
-	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			if (object->IsRootEnable() == true)
-			{
-				object->UpdateEvent();
-			}
-		}
-		state = RunningState::LATEUPDATE;
-	}
-	if (state == RunningState::LATEUPDATE)
-	{
-		for (PurahEngine::GameObject* object : objectList)
-		{
-			if (object->IsRootEnable() == true)
-			{
-				object->LateUpdateEvent();
-			}
-		}
-		state = RunningState::UPDATE;
 	}
 
 	if (physicsTime >= 0.02f)
 	{
 		for (PurahEngine::GameObject* object : objectList)
 		{
-			object->FixedUpdateEvent();
+			if (object->trans->GetParent() == nullptr)
+			{
+				object->FixedUpdateEvent();
+			}
 		}
 	}
 
-
-	/*for (PurahEngine::GameObject* object : objectList)
-	{
-		if (state == RunningState::START)
-		{
-			object->StartEvent();
-		}
-		if (physicsTime >= 0.02f)
-		{
-			object->FixedUpdateEvent();
-
-			object->OnCollisionEnter();
-			object->OnCollisionStay();
-			object->OnCollisionExit();
-
-			object->OnTriggerEnter();
-			object->OnTriggerStay();
-			object->OnTriggerExit();
-		}
-		if (object->isRun == true)
-		{
-			object->UpdateEvent();
-			object->LateUpdateEvent();
-		}
-		object->isRun = true;
-	}*/
 	if (physicsTime >= 0.02f)
 	{
 		physicsTime -= 0.02f;
 	}
-
 }
 
 void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
 {
 	sceneBuffer = fileName;
+}
+
+void PurahEngine::SceneManager::LoadScene(int sceneNumber)
+{
+	sceneBuffer = EngineSetting::GetInstance().GetScene(sceneNumber);
+}
+
+void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
+{
+	auto objectIter = std::find(objectList.begin(), objectList.end(), gameObject);
+
+	if (objectIter != objectList.end())
+	{
+		delete* objectIter;
+		objectList.erase(objectIter);
+	}
+
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		objectList[i]->DeleteChild(gameObject);
+	}
+}
+
+void PurahEngine::SceneManager::InitializationEvent()
+{
+	// Awake
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->AwakeEvent(eventQueue);
+		}
+	}
+	ExcuteEventQueue();
+
+	// OnEnable(활성화 직 후)
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->EnableEvent(eventQueue);
+		}
+	}
+	ExcuteEventQueue();
+
+	// Start
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->StartEvent(eventQueue);
+		}
+	}
+	ExcuteEventQueue();
+
+	// State Change
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->StateChangeEvent();
+		}
+	}
+}
+
+void PurahEngine::SceneManager::DecommissionEvent()
+{
+	// OnDisable (비활성화 상태)
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->DisableEvent(eventQueue);
+		}
+	}
+	ExcuteEventQueue();
+
+	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->DestroyEvent(destroyQueue);
+		}
+	}
+	ExcuteDestroyQueue();
+}
+
+void PurahEngine::SceneManager::ExcuteEventQueue()
+{
+	while (!eventQueue.empty())
+	{
+		Component* component = eventQueue.front().first;
+		auto f = eventQueue.front().second;
+		eventQueue.pop();
+
+		f(*component);
+	}
+}
+
+void PurahEngine::SceneManager::ExcuteDestroyQueue()
+{
+	while (!destroyQueue.empty())
+	{
+		GameObject* object = destroyQueue.front();
+		destroyQueue.pop();
+
+		DeleteGameObject(object);
+	}
 }
 
 void PurahEngine::SceneManager::LoadScene()
@@ -155,14 +216,10 @@ void PurahEngine::SceneManager::LoadScene()
 	sceneData = fManager.LoadData(sceneBuffer);
 	Deserialize(sceneData);
 
-
-
 	LoadSceneCompleteEvent();
 
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
 	sceneBuffer = L"";
-
-	state = RunningState::AWAKE;
 }
 
 void PurahEngine::SceneManager::LoadSceneCompleteEvent()
@@ -186,7 +243,7 @@ void PurahEngine::SceneManager::PreDeserialize(const json& jsonData)
 	for (int i = 0; i < jsonData["gameObjects"].size(); i++)
 	{
 		std::string name = jsonData["gameObjects"][i]["name"];
-		GameObject* object = CreateGameObject(std::wstring(name.begin(),name.end()));
+		GameObject* object = CreateGameObject(std::wstring(name.begin(), name.end()));
 		object->PreDeserialize(jsonData["gameObjects"][i]);
 	}
 }

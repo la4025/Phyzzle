@@ -106,6 +106,25 @@ float PurahEngine::EngineSetting::GetGravity()
 	return gravity;
 }
 
+std::wstring PurahEngine::EngineSetting::GetScene(int sceneNumber)
+{
+	assert(0 <= sceneNumber && sceneNumber < scenes.size());
+	
+	if (sceneNumber < 0 || scenes.size() <= sceneNumber)
+	{
+		return L"";
+	}
+	else
+	{
+		return scenes[sceneNumber];
+	}
+}
+
+int PurahEngine::EngineSetting::GetSceneCount()
+{
+	return 0;
+}
+
 std::vector<std::wstring> PurahEngine::EngineSetting::GetPreLoadModels()
 {
 	return preLoadModels;
@@ -170,6 +189,15 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 		std::string modelPath = preloadmodels[i];
 		std::wstring wmodelPath(modelPath.begin(), modelPath.end());
 		preLoadModels[i] = wmodelPath;
+	}
+
+	const json& scenesdata = jsonData["scenes"];
+	scenes.resize(scenesdata.size());
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		std::string path = scenesdata[i];
+		std::wstring wPath(path.begin(), path.end());
+		scenes[i] = wPath;
 	}
 
 	shadowAreaRange = jsonData["shadowAreaRange"];

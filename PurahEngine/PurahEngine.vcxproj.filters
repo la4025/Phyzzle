@@ -106,6 +106,12 @@
     <Filter Include="Component\2. Physics\Collider\Base">
       <UniqueIdentifier>{ea38ca8f-c084-4d33-890a-edced291833b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\5. UI">
+      <UniqueIdentifier>{973cb6bd-a04f-419c-93ad-0ca8cd9afc07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\5. UI\Base">
+      <UniqueIdentifier>{d87542d2-4198-453d-a052-0a8e04326905}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -249,6 +255,21 @@
     </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Core\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Component\5. UI\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Component\5. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Component\5. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonGroup.cpp">
+      <Filter>Component\5. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UnifiedInputManager.cpp">
+      <Filter>Core\Manager\InputManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -429,6 +450,24 @@
     </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Core\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Component\5. UI\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Component\5. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Component\5. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonGroup.h">
+      <Filter>Component\5. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UnifiedInputManager.h">
+      <Filter>Core\Manager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="eUnfInput.h">
+      <Filter>Core\Manager\InputManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

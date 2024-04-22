@@ -14,11 +14,12 @@
 
 #include "LauncherPlatform.h"
 
-#include "Button.h"
+#include "ButtonDevice.h"
 #include "DisconnectedWire.h"
 #include "Door.h"
 #include "DoorParts.h"
 #include "ElectricWire.h"
+#include "SceneLoadSupport.h"
 
 /// 각자 만드는 것들
 #include "NaDong.h"
@@ -62,61 +63,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
 
-	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Button>("Button");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ButtonDevice>("ButtonDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Door>("Door");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DoorParts>("DoorParts");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ElectricWire>("ElectricWire");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::SceneLoadSupport>("SceneLoadSupport");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
-
-	int BJ = 0;
-	int KH = 1;
-	int DH = 2;
-	int YH = 3;
-	int loadScene = 4;
-
-	int play = loadScene;
-
-	IMaker* iMaker = nullptr;
-
-	if (play == DH)
-	{
-		iMaker = new NaDong();
-	}
-	else if (play == BJ)
-	{
-		iMaker = new BeomJoon();
-	}
-	else if (play == KH)
-	{
-		iMaker = new KiHoon();
-	}
-	else if (play == YH)
-	{
-		iMaker = new YongHun();
-	}
-	else if (play == loadScene)
-	{
-		PurahEngine::SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
-	}
-
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-
-	if (play != loadScene)
-	{
-		iMaker->Run();
-	}
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-	/// 건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마건들지마
-
-	auto& test = PurahEngine::TestSingleton::Getinstance();
-
-
 
 	//PurahEngine::Run(); 역할
 	CreateRun(nCmdShow);

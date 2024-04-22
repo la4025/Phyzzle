@@ -1,7 +1,7 @@
 #pragma once
 #include "PurahEngineAPI.h"
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include "eKey.h"
 
@@ -32,15 +32,26 @@ namespace PurahEngine
 		bool IsKeyPressed(eKey keycode);
 		// 키를 방금 뗐는가?
 		bool IsKeyUp(eKey keycode);
+		// 키를 떼고 있는가?
+		bool IsKeyReleased(eKey keycode);
+		// 키 입력이 있는가?
+		bool GetKey(eKey keycode);
 
 		/// 마우스
 
 	private:
 		std::vector<eKey> keys;
-		std::map<eKey, short> PrevKeyState;
-		std::map<eKey, short> NowKeyState;
+		std::unordered_map<eKey, short> PrevKeyState;
+		std::unordered_map<eKey, short> NowKeyState;
+		std::unordered_map<eKey, float> keyDownElapsed;
+		std::unordered_map<eKey, bool> keyState;
 
 		HWND hWnd;
+
+	private:
+		const static float firstInputDelay;
+		const static float continuousInputCycles;
+		
 
 	public:
 		static InputManager& Getinstance();

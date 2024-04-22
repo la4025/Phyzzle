@@ -5,6 +5,7 @@
 #include "ComponentFactory.h"
 #include "Tag.h"
 
+#include <queue>
 #include <vector>
 #include <string>
 
@@ -29,8 +30,9 @@ namespace PurahEngine
 	{
 	public:
 
-		virtual void AwakeEvent();
-		virtual void StartEvent();
+		void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
+		void EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
+		void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 
 		/// Update
 		// 물리 관련 업데이트
@@ -42,9 +44,13 @@ namespace PurahEngine
 
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdateEvent();
+		
+		void DeleteChild(GameObject* child);
 
-		void Enable();
-		void Disable();
+		void Destroy();
+
+		void DisableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
+		void DestroyEvent(std::queue<GameObject*>& destroyQueue);
 
 
 		/// OnCollision
@@ -72,13 +78,16 @@ namespace PurahEngine
 		virtual void OnMouseExit();
 
 		void SetEnable(bool isTrue);
-
-		bool IsEnable();
+		bool GetEnable();
 		bool IsRootEnable();
 
+		void StateChangeEvent(bool parentEnable = true);
+
 		Transform* GetTransform();
+		std::vector<Component*> GetComponents();
 
 		std::wstring GetName();
+		bool GetStateEnable();
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -111,9 +120,12 @@ namespace PurahEngine
 		ObjectState state;
 		std::wstring name;
 		bool isEnable;
-		bool isRun = false;
+		bool isDestroy;
 
 		Transform* trans;
+
+	public:
+		ObjectState GetState();
 
 	public:
 		// ComponentList로 Component 추가
@@ -123,7 +135,11 @@ namespace PurahEngine
 			T* t = new T;
 			componentList.push_back(t);
 			dynamic_cast<Component*>(t)->gameObject = this;
+
 			t->Initialize();
+
+			/// 기훈 왈 이거 빼라
+			t->PostInitialize();
 
 			return t; // 추가된 컴포넌트 포인터를 반환
 		}
