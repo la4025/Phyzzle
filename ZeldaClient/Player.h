@@ -26,6 +26,7 @@ namespace Phyzzle
 		};
 
 	private:
+#pragma region Struct
 		struct PlayerData
 		{
 			PurahEngine::RigidBody* playerRigidbody;
@@ -40,20 +41,20 @@ namespace Phyzzle
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
 
-			Eigen::Vector3f		coreStartPosition;
-			Eigen::Quaternionf	coreStartRotation;
-
-			Eigen::Vector3f		coreTargetPosition;
-			Eigen::Quaternionf	coreTargetRotation;
-
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
 
-			Eigen::Vector3f		armStartPosition;
-			Eigen::Quaternionf	armStartRotation;
+			//Eigen::Vector3f		coreStartPosition;
+			//Eigen::Quaternionf	coreStartRotation;
 
-			Eigen::Vector3f		armTargetPosition;
-			Eigen::Quaternionf	armTargetRotation;
+			//Eigen::Vector3f		armStartPosition;
+			//Eigen::Quaternionf	armStartRotation;
+
+			//Eigen::Vector3f		coreTargetPosition;
+			//Eigen::Quaternionf	coreTargetRotation;
+
+			//Eigen::Vector3f		armTargetPosition;
+			//Eigen::Quaternionf	armTargetRotation;
 
 			float xAngle = 0.f;
 			const float limitHighAngle = 80.f;
@@ -122,7 +123,7 @@ namespace Phyzzle
 			float LTrigger;
 			float RTrigger;
 
-			const PlayerInput& operator=(const PlayerInput& _other)
+			PlayerInput& operator=(const PlayerInput& _other)
 			{
 				if (this != &_other)
 				{
@@ -148,8 +149,7 @@ namespace Phyzzle
 
 				return *this;
 			}
-
-			const PlayerInput& operator=(PlayerInput&& _other) noexcept
+			PlayerInput& operator=(PlayerInput&& _other) noexcept
 			{
 				if (this != &_other)
 				{
@@ -176,12 +176,15 @@ namespace Phyzzle
 				return *this;
 			}
 		};
+#pragma endregion Struct
 
 	public:
+#pragma region Event
 		void Start() override;
 		void Update() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+#pragma endregion Event
 
 		void DebugDraw();
 
@@ -204,10 +207,12 @@ namespace Phyzzle
 		bool CameraForwardRaycast(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
 
 	public:
+#pragma region 직렬화
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
 		void PostSerialize(json& jsonData) const override;
 		void PostDeserialize(const json& jsonData) override;
+#pragma endregion 직렬화
 
 	private:
 		void ChangeState(State);

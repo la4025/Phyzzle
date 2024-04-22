@@ -8,7 +8,6 @@ namespace Phyzzle
 	// 상태 들어오기
 	void AttachState::StateEnter()
 	{
-		// 플레이어 카메라 컴포넌트를 만든다면
 		{
 			auto p = player->data.cameraCore->GetLocalPosition();
 			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
@@ -38,7 +37,7 @@ namespace Phyzzle
 		if (selected)
 		{
 			// 오브젝트의 위치를 업데이트 함.
-			ObjectToTargetPosition();
+
 		}
 		else
 		{
@@ -276,66 +275,29 @@ namespace Phyzzle
 		return true;
 	}
 
-	void AttachState::ObjectToTargetPosition() const
+	void AttachState::ApplyPlayerVelocity() const
 	{
-		using namespace Eigen;
+		player->data.playerRigidbody->SetLinearVelocity(playerVelocity);
+	}
 
-		// const Vector3f currPosition = selectBody->GetPosition();
-		// const Quaternionf currRotation = selectBody->GetRotation();
-		// 
-		// const Vector3f targetP = MulMatrixVector(player->data.modelCore->GetWorldMatrix(), targetLocalPosition);
-		// const Quaternionf targetR = player->data.modelCore->GetWorldRotation() * targetLocalRotation;
-		// 
-		// const Vector3f diffP = targetP - currPosition;
-		// const Quaternionf diffR = currRotation.inverse() * targetR;
-
-		// PurahEngine::GraphicsManager::GetInstance().DrawString(
-		// 	L"현재 회전 값 : " +
-		// 	std::to_wstring(currRotation.vec().x()) + L" " +
-		// 	std::to_wstring(currRotation.vec().y()) + L" " +
-		// 	std::to_wstring(currRotation.vec().z()) + L" ",
-		// 	1200, 100,
-		// 	200, 300, 15,
-		// 	255, 255, 255, 255);
-		// 
-		// PurahEngine::GraphicsManager::GetInstance().DrawString(
-		// 	L"목표 회전 값 : " +
-		// 	std::to_wstring(targetR.vec().x()) + L" " + 
-		// 	std::to_wstring(targetR.vec().y()) + L" " + 
-		// 	std::to_wstring(targetR.vec().z()) + L" ",
-		// 	1200, 150,
-		// 	200, 300, 15,
-		// 	255, 255, 255, 255);
-		// 
-		// PurahEngine::GraphicsManager::GetInstance().DrawString(
-		// 	L"회전 차이 : " + 
-		// 	std::to_wstring(diffR.vec().x()) + L" " +
-		// 	std::to_wstring(diffR.vec().y()) + L" " +
-		// 	std::to_wstring(diffR.vec().z()) + L" ",
-		// 	1200, 200,
-		// 	200, 300, 15,
-		// 	255, 255, 255, 255);
-
-		// selectBody->SetLinearVelocity(diffP / lerpTime);
-		// selectBody->SetRotation(targetR);
+	void AttachState::ApplyObjectVelocity() const
+	{
+		selectBody->SetLinearVelocity(targetVelocity);
 	}
 
 	void AttachState::ObjectTranslate(const Eigen::Vector3f& _direction, float power)
 	{
-		selectBody->SetLinearVelocity(_direction * power);
+		targetVelocity += (_direction * power);
 	}
 
 	void AttachState::Set()
 	{
+		using namespace Eigen;
+
 		if (selectBody == nullptr)
 			return;
 
-		using namespace Eigen;
 		selected = true;
-
-		// 여기서 연결된 오브젝트들을 순회하면서 같은 설정을 할 필요가 있음.
-		// 오브젝트 정보를 상태에 저장하고 있지만
-		// Attatchable 
 
 		hasGravity = selectBody->HasGravity();
 		mass = selectBody->GetMass();
@@ -347,13 +309,9 @@ namespace Phyzzle
 		const Eigen::Vector3f playerPosition = player->GetGameObject()->GetTransform()->GetWorldPosition();
 
 		const Eigen::Vector3f lookTo = objectPosition - playerPosition;
-		// 모델을 물체를 바라보도록 함.
 		LookToWorldDirection(lookTo);
 
-		debugVector0 = lookTo;
-
-		// targetLocalPosition = MulMatrixVector(player->data.modelCore->GetWorldMatrix().inverse(), selectBody->GetPosition());
-		// targetLocalRotation = player->data.modelCore->GetWorldRotation().inverse() * selectBody->GetRotation();
+		distance = lookTo.size();
 	}
 
 	void AttachState::Reset()
@@ -366,10 +324,11 @@ namespace Phyzzle
 			selectBody->SetMass(mass);
 		}
 
-		targetLocalPosition = Vector3f::Zero();
-		targetLocalRotation = Quaternionf::Identity();
+		playerVelocity = Eigen::Vector3f::Zero();
+		targetVelocity = Eigen::Vector3f::Zero();
 		hasGravity = false;
 		mass = -0.1f;
+		distance = -0.1f;
 		selectBody = nullptr;
 		selected = false;
 	}
@@ -419,21 +378,5 @@ namespace Phyzzle
 				200, 100, 50,
 				255, 255, 255, 255);
 		}
-	}
-
-	Coroutine<int> CoroutineTest()
-	{
-		co_await std::suspend_always{};
-
-		co_yield 100;
-
-		co_return 0;
-	}
-
-	CoroutineVoid<int> CoroutineTest1()
-	{
-		co_yield 100;
-
-		co_return;
 	}
 }

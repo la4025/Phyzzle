@@ -117,7 +117,7 @@ namespace Phyzzle
 			}
 			else if (data.state == ATTATCH)
 			{
-				str = L"ATTATCH";
+				str = L"ATTACH";
 			}
 			else if (data.state == REWIND)
 			{
@@ -141,7 +141,7 @@ namespace Phyzzle
 			}
 			else if (currState == ATTATCH)
 			{
-				str0 = L"ATTATCH";
+				str0 = L"ATTACH";
 			}
 			else if (currState == REWIND)
 			{
@@ -351,67 +351,67 @@ namespace Phyzzle
 
 	bool Player::CameraUpdate()
 	{
-		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
+		//PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
 
-		const float deltaTime = time.GetDeltaTime();
+		//const float deltaTime = time.GetDeltaTime();
 
-		data.acclerpFactor += deltaTime;
+		//data.acclerpFactor += deltaTime;
 
-		if (data.acclerpFactor < 1.f)
-		{
-			const float t = data.acclerpFactor / data.lerpFactor;
+		//if (data.acclerpFactor < 1.f)
+		//{
+		//	const float t = data.acclerpFactor / data.lerpFactor;
 
-			auto coreP = lerp(data.coreStartPosition, data.coreTargetPosition, t);
-			auto coreR = slerp(data.coreStartRotation, data.coreTargetRotation, t);
+		//	auto coreP = lerp(data.coreStartPosition, data.coreTargetPosition, t);
+		//	auto coreR = slerp(data.coreStartRotation, data.coreTargetRotation, t);
 
-			auto armP = lerp(data.armStartPosition, data.armTargetPosition, t);
-			auto armR = slerp(data.armStartRotation, data.armTargetRotation, t);
+		//	auto armP = lerp(data.armStartPosition, data.armTargetPosition, t);
+		//	auto armR = slerp(data.armStartRotation, data.armTargetRotation, t);
 
-			data.cameraCore->SetLocalPosition(coreP);
-			data.cameraCore->SetLocalRotation(coreR);
+		//	data.cameraCore->SetLocalPosition(coreP);
+		//	data.cameraCore->SetLocalRotation(coreR);
 
-			std::wstring str0 = std::to_wstring(coreP.x()) +
-				L" " + std::to_wstring(coreP.y()) +
-				L" " + std::to_wstring(coreP.z());
+		//	std::wstring str0 = std::to_wstring(coreP.x()) +
+		//		L" " + std::to_wstring(coreP.y()) +
+		//		L" " + std::to_wstring(coreP.z());
 
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				str0, 1000, 600, 100, 100, 20, 255, 255, 255, 255);
+		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
+		//		str0, 1000, 600, 100, 100, 20, 255, 255, 255, 255);
 
-			data.cameraArm->SetLocalPosition(armP);
-			data.cameraArm->SetLocalRotation(armR);
+		//	data.cameraArm->SetLocalPosition(armP);
+		//	data.cameraArm->SetLocalRotation(armR);
 
-			std::wstring str1 = std::to_wstring(armP.x()) +
-				L" " + std::to_wstring(armP.y()) +
-				L" " + std::to_wstring(armP.z());
+		//	std::wstring str1 = std::to_wstring(armP.x()) +
+		//		L" " + std::to_wstring(armP.y()) +
+		//		L" " + std::to_wstring(armP.z());
 
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				str1, 1000, 700, 100, 100, 20, 255, 255, 255, 255);
+		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
+		//		str1, 1000, 700, 100, 100, 20, 255, 255, 255, 255);
 
-			return false;
-		}
-		else
-		{
-			data.acclerpFactor = 1.f;
+		//	return false;
+		//}
+		//else
+		//{
+		//	data.acclerpFactor = 1.f;
 
-			data.cameraUpdate = false;
+		//	data.cameraUpdate = false;
 
-			return true;
-		}
+		//	return true;
+		//}
 	}
 
 	void Player::CameraReset()
 	{
-		data.coreStartPosition = data.cameraCore->GetLocalPosition();
-		data.coreStartRotation = data.cameraCore->GetLocalRotation();
+		//data.coreStartPosition = data.cameraCore->GetLocalPosition();
+		//data.coreStartRotation = data.cameraCore->GetLocalRotation();
 
-		data.coreTargetPosition = data.coreDefaultPosition;
-		data.coreTargetRotation = data.coreDefaultRotation;
+		//data.coreTargetPosition = data.coreDefaultPosition;
+		//data.coreTargetRotation = data.coreDefaultRotation;
 
-		data.armStartPosition =	data.cameraArm->GetLocalPosition();
-		data.armStartRotation =	data.cameraArm->GetLocalRotation();
+		//data.armStartPosition =	data.cameraArm->GetLocalPosition();
+		//data.armStartRotation =	data.cameraArm->GetLocalRotation();
 
-		data.armTargetPosition = data.armDefaultPosition;
-		data.armTargetRotation = data.modelCore->GetLocalRotation();
+		//data.armTargetPosition = data.armDefaultPosition;
+		//data.armTargetRotation = data.modelCore->GetLocalRotation();
 
 		data.acclerpFactor = 0.f;
 		data.cameraUpdate = true;
@@ -506,6 +506,7 @@ namespace Phyzzle
 		currState = _state;
 	}
 
+#pragma region 직렬화
 	void Player::PreSerialize(json& jsonData) const
 	{}
 
@@ -555,4 +556,5 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(holder);
 		data.holder = holder;
 	}
+#pragma endregion 직렬화
 }

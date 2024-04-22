@@ -2,7 +2,6 @@
 #include "IState.h"
 #include "Coroutine.h"
 
-// ReSharper disable once IdentifierTypo
 namespace Phyzzle
 {
 	class AttachState final : public IState
@@ -44,9 +43,10 @@ namespace Phyzzle
 	private:
 		bool hasGravity = false;
 		float mass = -0.1f;
+		float distance = -0.1f;
+		Eigen::Vector3f playerVelocity = Eigen::Vector3f::Zero();
+		Eigen::Vector3f targetVelocity = Eigen::Vector3f::Zero();
 		PurahEngine::RigidBody* selectBody = nullptr;
-		Eigen::Vector3f targetLocalPosition = Eigen::Vector3f::Zero();
-		Eigen::Quaternionf targetLocalRotation = Eigen::Quaternionf::Identity();
 
 	private:
 		void PlayerMove() const;
@@ -61,11 +61,15 @@ namespace Phyzzle
 		bool Search() const;
 		bool Select();
 		
-		void ObjectToTargetPosition() const;
+		void ApplyPlayerVelocity() const;
+		void ApplyObjectVelocity() const;
 
 		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);
 		void ObjectRotate();
-		
+
+		Coroutine<int> Test();
+
+
 		void Attach() const;
 
 		void Set();
@@ -78,8 +82,5 @@ namespace Phyzzle
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
 	};
-
-	Coroutine<int> CoroutineTest();
-	CoroutineVoid<int> CoroutineTest1();
 }
 
