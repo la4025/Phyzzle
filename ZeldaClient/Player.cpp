@@ -3,8 +3,8 @@
 
 #include "IState.h"
 #include "DefaultState.h"
-#include "HoldState.h"
-#include "AttachState.h"
+#include "AttachHoldState.h"
+#include "AttachSelectState.h"
 #include "RewindState.h"
 #include "LockState.h"
 
@@ -29,17 +29,9 @@ namespace Phyzzle
 
 		data.armDefaultPosition = data.cameraArm->GetLocalPosition();
 		data.armDefaultRotation = data.cameraArm->GetLocalRotation();
-		data.armStartPosition = data.armDefaultPosition;
-		data.armStartRotation = data.armDefaultRotation;
-		data.armTargetPosition = data.armDefaultPosition;
-		data.armTargetRotation = data.armDefaultRotation;
 
 		data.coreDefaultPosition = data.cameraCore->GetLocalPosition();
 		data.coreDefaultRotation = data.cameraCore->GetLocalRotation();
-		data.coreStartPosition = data.coreDefaultPosition;
-		data.coreStartRotation = data.coreDefaultRotation;
-		data.coreTargetPosition = data.coreDefaultPosition;
-		data.coreTargetRotation = data.coreDefaultRotation;
 
 		highPosition = Eigen::Vector3f(0.f, 0.f, -20.f);
 		lowPosition = Eigen::Vector3f(0.f, 0.f, -2.f);
@@ -64,11 +56,11 @@ namespace Phyzzle
 				return 	start.slerp(_t, end);
 			};
 
-		stateSystem.insert(std::make_pair(State::DEFAULT, new DefaultState(this)));
-		stateSystem.insert(std::make_pair(State::HOLD, new HoldState(this)));
-		stateSystem.insert(std::make_pair(State::ATTATCH, new AttachState(this)));
-		stateSystem.insert(std::make_pair(State::REWIND, new RewindState(this)));
-		stateSystem.insert(std::make_pair(State::LOCK, new LockState(this)));
+		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
+		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
+		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
+		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
+		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
 	}
 
 	void Player::Update()
@@ -108,21 +100,21 @@ namespace Phyzzle
 	{
 		std::wstring str{};
 		{
-			if (data.state == HOLD)
+			if (data.state == ATTACH_HOLD)
 			{
-				str = L"HOLD";
+				str = L"ATTACH_HOLD";
 			}
-			else if (data.state == ATTATCH)
+			else if (data.state == ATTACH_SELECT)
 			{
-				str = L"ATTACH";
+				str = L"ATTACH_SELECT";
 			}
-			else if (data.state == REWIND)
+			else if (data.state == REWIND_SELECT)
 			{
-				str = L"REWIND";
+				str = L"REWIND_SELECT";
 			}
-			else if (data.state == LOCK)
+			else if (data.state == LOCK_SELECT)
 			{
-				str = L"LOCK";
+				str = L"LOCK_SELECT";
 			}
 			else
 			{
@@ -132,21 +124,21 @@ namespace Phyzzle
 
 		std::wstring str0{};
 		{
-			if (currState == HOLD)
+			if (currState == ATTACH_HOLD)
 			{
-				str0 = L"HOLD";
+				str0 = L"ATTACH_HOLD";
 			}
-			else if (currState == ATTATCH)
+			else if (currState == ATTACH_SELECT)
 			{
-				str0 = L"ATTACH";
+				str0 = L"ATTACH_SELECT";
 			}
-			else if (currState == REWIND)
+			else if (currState == REWIND_SELECT)
 			{
-				str0 = L"REWIND";
+				str0 = L"REWIND_SELECT";
 			}
-			else if (currState == LOCK)
+			else if (currState == LOCK_SELECT)
 			{
-				str0 = L"LOCK";
+				str0 = L"LOCK_SELECT";
 			}
 			else
 			{
@@ -185,26 +177,54 @@ namespace Phyzzle
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_L))
 				stateSystem[currState]->Click_LB();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_L))
+				stateSystem[currState]->Pressing_LB();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_R))
 				stateSystem[currState]->Click_RB();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_R))
+				stateSystem[currState]->Pressing_RB();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
 				stateSystem[currState]->Click_A();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_A))
+				stateSystem[currState]->Pressing_A();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_B))
 				stateSystem[currState]->Click_B();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_B))
+				stateSystem[currState]->Pressing_B();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_X))
 				stateSystem[currState]->Click_X();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_X))
+				stateSystem[currState]->Pressing_X();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_Y))
 				stateSystem[currState]->Click_Y();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_Y))
+				stateSystem[currState]->Pressing_Y();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_UP))
 				stateSystem[currState]->Click_DUp();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_UP))
+				stateSystem[currState]->Pressing_DUp();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_DOWN))
 				stateSystem[currState]->Click_DDown();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_DOWN))
+				stateSystem[currState]->Pressing_DDown();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_LEFT))
 				stateSystem[currState]->Click_DLeft();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_LEFT))
+				stateSystem[currState]->Pressing_DLeft();
+
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_RIGHT))
 				stateSystem[currState]->Click_DRight();
+			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_RIGHT))
+				stateSystem[currState]->Pressing_DRight();
+
 		}
 	}
 
@@ -394,6 +414,8 @@ namespace Phyzzle
 
 		//	return true;
 		//}
+
+		return false;
 	}
 
 	void Player::CameraReset()
@@ -549,9 +571,9 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(animator);
 		data.animator = animator;
 
-		auto holder = data.holder;
-		POSTDESERIALIZE_PTR(holder);
-		data.holder = holder;
+		//auto holder = data.holder;
+		//POSTDESERIALIZE_PTR(holder);
+		//data.holder = holder;
 	}
 #pragma endregion Á÷·ÄÈ­
 }

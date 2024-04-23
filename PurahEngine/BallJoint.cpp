@@ -25,9 +25,16 @@ namespace PurahEngine
 
 		assert(body0 != nullptr);
 
+		ZonaiPhysics::ZnRigidBody* connect = nullptr;
+
+		if (connectedBody)
+		{
+			connect = connectedBody->body;
+		}
+
 		joint = instance.CreateBallJoint(
 			body0->body, { LocalAnchor, LocalAnchorRotation },
-			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
+			connect, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);
@@ -105,6 +112,7 @@ namespace PurahEngine
 
 		PREDESERIALIZE_VECTOR3F(LocalAnchor);
 		PREDESERIALIZE_QUATERNIONF(LocalAnchorRotation);
+
 		PREDESERIALIZE_VECTOR3F(connectedLocalAnchor);
 		PREDESERIALIZE_QUATERNIONF(connectedLocalAnchorRotation);
 
@@ -131,5 +139,9 @@ namespace PurahEngine
 	void BallJoint::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(connectedBody);
+		if (connectedBody == GetGameObject()->GetComponent<RigidBody>())
+		{
+			connectedBody = nullptr;
+		}
 	}
 }

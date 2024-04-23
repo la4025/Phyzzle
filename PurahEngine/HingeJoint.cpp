@@ -24,9 +24,16 @@ namespace PurahEngine
 
 		assert(body0 != nullptr);
 
+		ZonaiPhysics::ZnRigidBody* connect = nullptr;
+
+		if (connectedBody)
+		{
+			connect = connectedBody->body;
+		}
+
 		joint = instance.CreateHingeJoint(
 			body0->body, { LocalAnchor, LocalAnchorRotation },
-			connectedBody->body, { connectedLocalAnchor, connectedLocalAnchorRotation }
+			connect, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);
@@ -186,5 +193,9 @@ namespace PurahEngine
 	void HingeJoint::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(connectedBody);
+		if (connectedBody == GetGameObject()->GetComponent<RigidBody>())
+		{
+			connectedBody = nullptr;
+		}
 	}
 }

@@ -58,6 +58,31 @@ namespace Phyzzle
 		ChangeState(true);
 	}
 
+	void DefaultState::Pressing_DLeft()
+	{
+
+	}
+
+	void DefaultState::Pressing_DRight()
+	{
+
+	}
+
+	void DefaultState::Pressing_A()
+	{
+
+	}
+
+	void DefaultState::Pressing_LB()
+	{
+
+	}
+
+	void DefaultState::Pressing_RB()
+	{
+
+	}
+
 	void DefaultState::Click_A()
 	{
 		Jump();
@@ -101,33 +126,38 @@ namespace Phyzzle
 	// 현재 능력을 변경함
 	void DefaultState::ChangeState(bool _value) const
 	{
+		Player::State newState = Player::State::DEFAULT;
+
+		const int size = player->stateSystem.size();
+
 		if (_value)
 		{
-			Player::State newState =
+			newState =
 				static_cast<Player::State>(
 					(player->data.state + 1)
 					);
 
 			newState = 
 				static_cast<Player::State>(
-					max(newState % (player->stateSystem.size()), 1)
+					max(newState % size, 1)
 					);
-
-			player->data.state = newState;
 		}
 		else
 		{
-			Player::State newState =
-				static_cast<Player::State>(
-					player->data.state + player->stateSystem.size() + 1
-					);
 
 			newState =
 				static_cast<Player::State>(
-					max(newState % player->stateSystem.size(), 1)
-					); 
+					player->data.state - 1
+					);
 
-			player->data.state = newState;
+			if (newState == Player::State::DEFAULT)
+			{
+				newState = static_cast<Player::State>(
+					size - 1
+					);
+			}
 		}
+
+		player->data.state = newState;
 	}
 }

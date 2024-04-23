@@ -90,13 +90,13 @@ namespace PurahEngine
 		선속도 제한
 		*/
 		// float		GetMaxLinearVelocity() const noexcept;
-		// void		SetMaxLinearVelocity(const float&) noexcept;
+		void		SetMaxLinearVelocity(const float&) noexcept;
 
 		/**
 		각속도 제한
 		*/
 		// float		GetMaxAngularVelocity() const noexcept;
-		// void		SetMaxAngularVelocity(const float&) noexcept;
+		void		SetMaxAngularVelocity(const float&) noexcept;
 
 		/**
 		물체에 힘을 가하거나 지움

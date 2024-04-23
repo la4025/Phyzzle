@@ -27,19 +27,6 @@ namespace Phyzzle
 
 			player->currInput.LTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
 			player->currInput.RTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
-
-			player->currInput.buttonA = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_A);
-			player->currInput.buttonB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_B);
-			player->currInput.buttonX = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_X);
-			player->currInput.buttonY = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_Y);
-
-			player->currInput.buttonUP = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_UP);
-			player->currInput.buttonDOWN = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_DOWN);
-			player->currInput.buttonLEFT = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_LEFT);
-			player->currInput.buttonRIGHT = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_RIGHT);
-
-			player->currInput.buttonLB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_L);
-			player->currInput.buttonRB = player->gamePad->IsKeyValue(PurahEngine::ePad::ePAD_SHOULDER_R);
 		}
 
 		virtual void StateStay() = 0;
@@ -54,17 +41,34 @@ namespace Phyzzle
 		virtual void Trigger_R() {}
 
 		virtual void Click_DUp() {}
+		virtual void Pressing_DUp() {}
+
 		virtual void Click_DDown() {}
+		virtual void Pressing_DDown() {}
+
 		virtual void Click_DLeft() {}
+		virtual void Pressing_DLeft() {}
+
 		virtual void Click_DRight() {}
+		virtual void Pressing_DRight() {}
 
 		virtual void Click_A() {}
+		virtual void Pressing_A() {}
+
 		virtual void Click_B() {}
+		virtual void Pressing_B() {}
+
 		virtual void Click_X() {}
+		virtual void Pressing_X() {}
+
 		virtual void Click_Y() {}
+		virtual void Pressing_Y() {}
 
 		virtual void Click_LB() {}
+		virtual void Pressing_LB() {}
+
 		virtual void Click_RB() {}
+		virtual void Pressing_RB() {}
 
 	};
 }

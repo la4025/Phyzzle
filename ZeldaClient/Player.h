@@ -18,11 +18,11 @@ namespace Phyzzle
 		~Player() override;
 		enum State
 		{
-			DEFAULT		= 0,	// 기본 상태
-			HOLD		= 1,	// 물건을 든 상태
-			ATTATCH		= 2,	// 물건을 부착하려는 상태
-			REWIND		= 3,	// 물건을 되돌리려는 상태
-			LOCK		= 4
+			DEFAULT			= 0,	// 기본 상태
+			ATTACH_SELECT	= 1,	// 물건을 부착하려는 상태
+			ATTACH_HOLD		= 2,	// 물건을 든 상태
+			REWIND_SELECT	= 3,	// 물건을 되돌리려는 상태
+			LOCK_SELECT		= 4
 		};
 
 	private:
@@ -34,27 +34,14 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
-			Holder* holder;
 
-			State state = HOLD;
+			State state = ATTACH_HOLD;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
 
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
-
-			//Eigen::Vector3f		coreStartPosition;
-			//Eigen::Quaternionf	coreStartRotation;
-
-			//Eigen::Vector3f		armStartPosition;
-			//Eigen::Quaternionf	armStartRotation;
-
-			//Eigen::Vector3f		coreTargetPosition;
-			//Eigen::Quaternionf	coreTargetRotation;
-
-			//Eigen::Vector3f		armTargetPosition;
-			//Eigen::Quaternionf	armTargetRotation;
 
 			float xAngle = 0.f;
 			const float limitHighAngle = 80.f;
@@ -188,7 +175,6 @@ namespace Phyzzle
 
 		void DebugDraw();
 
-
 	private:
 		void GamePadInput();
 
@@ -220,9 +206,9 @@ namespace Phyzzle
 	private:
 		friend class IState;
 		friend class DefaultState;
-		friend class AttachState;
+		friend class AttachSelectState;
 		friend class RewindState;
-		friend class HoldState;
+		friend class AttachHoldState;
 		friend class LockState;
 
 		std::unordered_map<State, IState*> stateSystem;

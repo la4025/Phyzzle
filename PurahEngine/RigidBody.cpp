@@ -39,9 +39,10 @@ namespace PurahEngine
 		this->SetKinematic(isKinematic);
 		this->UseGravity(useGravity);
 		// SetLinearVelocity(LinearVelocity);
-		// SetAngularVelocity(angularVelocity);
+		// SetAngularVelocity(10.f);
 		this->SetLinearDamping(linearDamping);
 		this->SetAngularDamping(angularDamping);
+		this->SetMaxAngularVelocity(10.f);
 		if (!isKinematic)
 		{
 			this->WakeUp();
@@ -281,20 +282,20 @@ namespace PurahEngine
 // 		return body->GetMaxLinearVelocity();
 // 	}
 // 
-// 	void RigidBody::SetMaxLinearVelocity(const float& _velo) noexcept
-// 	{
-// 		body->SetMaxLinearVelocity(_velo);
-// 	}
-// 
+ 	void RigidBody::SetMaxLinearVelocity(const float& _velo) noexcept
+ 	{
+ 		body->SetMaxLinearVelocity(_velo);
+ 	}
+ 
 // 	float RigidBody::GetMaxAngularVelocity() const noexcept
 // 	{
 // 		return body->GetMaxAngularVelocity();
 // 	}
-// 
-// 	void RigidBody::SetMaxAngularVelocity(const float& _velo) noexcept
-// 	{
-// 		body->SetMaxAngularVelocity(_velo);
-// 	}
+
+ 	void RigidBody::SetMaxAngularVelocity(const float& _velo) noexcept
+ 	{
+ 		body->SetMaxAngularVelocity(_velo);
+ 	}
 
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ZonaiPhysics::ForceType _type) noexcept
 	{

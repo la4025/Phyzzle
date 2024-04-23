@@ -4,14 +4,21 @@
 
 namespace Phyzzle
 {
-	class AttachState final : public IState
+	class AttachSelectState final : public IState
 	{
+		enum Mode
+		{
+			SELECT	= 0,
+			HOLD	= 1,
+			ROTATE	= 2,
+		};
+
 	public:
-		AttachState() = delete;
-		explicit AttachState(Player* _player)
+		AttachSelectState() = delete;
+		explicit AttachSelectState(Player* _player)
 			: IState(_player)
 		{}
-		~AttachState() override;
+		~AttachSelectState() override;
 
 	private:
 		void StateEnter() override;
@@ -19,6 +26,7 @@ namespace Phyzzle
 		void StateStay() override;
 
 	private:
+#pragma region Input
 		void Stick_L() override;
 		void Stick_R() override;
 
@@ -32,11 +40,19 @@ namespace Phyzzle
 		void Click_DLeft() override;
 		void Click_DRight() override;
 
+		void Pressing_DUp() override;
+		void Pressing_DDown() override;
+		void Pressing_DLeft() override;
+		void Pressing_DRight() override;
+
 		void Click_LB() override;
-		void Click_RB() override;
+
+		void Pressing_RB() override;
+#pragma endregion Input
 
 	private:
-		bool selected = false;
+		Mode mode = SELECT;
+
 		bool rotateMode = false;
 		float lerpTime = 0.1f;
 
@@ -49,7 +65,7 @@ namespace Phyzzle
 		PurahEngine::RigidBody* selectBody = nullptr;
 
 	private:
-		void PlayerMove() const;
+		void PlayerMove(float _speed) const;
 		void CameraAround() const;
 		void StateCancel() const;
 
@@ -61,14 +77,11 @@ namespace Phyzzle
 		bool Search() const;
 		bool Select();
 		
-		void ApplyPlayerVelocity() const;
 		void ApplyObjectVelocity() const;
+		void ResetObjectVelocity();
 
 		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);
 		void ObjectRotate();
-
-		Coroutine<int> Test();
-
 
 		void Attach() const;
 
