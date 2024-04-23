@@ -147,7 +147,6 @@
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="Attachable.cpp" />
-    <ClCompile Include="AttachIsland.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="ButtonDevice.cpp" />
@@ -184,7 +183,6 @@
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Attachable.h" />
-    <ClInclude Include="AttachIsland.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="ButtonDevice.h" />

@@ -81,9 +81,6 @@
     <ClCompile Include="Attachable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="AttachIsland.cpp">
-      <Filter>KH\Object</Filter>
-    </ClCompile>
     <ClCompile Include="ButtonDevice.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
@@ -192,9 +189,6 @@
       <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
     <ClInclude Include="Attachable.h">
-      <Filter>KH\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="AttachIsland.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="Coroutine.h">
