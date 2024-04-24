@@ -56,9 +56,10 @@ namespace Phyzzle
 				return 	start.slerp(_t, end);
 			};
 
+		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
+
 		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
 		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
-		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
 		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
 		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
 	}
@@ -69,8 +70,6 @@ namespace Phyzzle
 
 		DebugDraw();
 		GamePadInput();
-
-		stateSystem[currState]->Input();
 
 		if (prevState != currState)
 		{
@@ -157,6 +156,23 @@ namespace Phyzzle
 			100, 200, 
 			400, 100, 15,
 			255, 255, 255, 255);
+
+		if (!data.jumping)
+		{
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"can Jump",
+				500, 200,
+				400, 200, 15,
+				255, 255, 255, 255);
+		}
+		else
+		{
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"Jumping",
+				500, 200,
+				400, 200, 15,
+				255, 255, 255, 255);
+		}
 	}
 
 	void Player::GamePadInput()
@@ -232,11 +248,8 @@ namespace Phyzzle
 	{
 		if (!data.jumping)
 		{
-			// auto curr = data.playerRigidbody->GetLinearVelocity();
-			// curr.y() = data.jumpPower;
-			// data.playerRigidbody->SetLinearVelocity(curr);
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
-			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Impulse);
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Force);
 			data.jumping = true;
 		}
 	}
@@ -246,7 +259,6 @@ namespace Phyzzle
 		const auto velo = zn_collision.thisPostLinearVelocity;
 
 		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		// const Eigen::Vector3f direction{ zn_collision.impulses.normalized() };
 		const Eigen::Vector3f direction{ velo };
 		float cosTheta1 = up.dot(direction);
 		cosTheta1 = std::clamp(cosTheta1, -1.f, 1.f);
@@ -364,58 +376,6 @@ namespace Phyzzle
 			currP.z() = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
 			data.cameraCore->SetLocalPosition(currP);
 		}
-	}
-
-	bool Player::CameraUpdate()
-	{
-		//PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
-
-		//const float deltaTime = time.GetDeltaTime();
-
-		//data.acclerpFactor += deltaTime;
-
-		//if (data.acclerpFactor < 1.f)
-		//{
-		//	const float t = data.acclerpFactor / data.lerpFactor;
-
-		//	auto coreP = lerp(data.coreStartPosition, data.coreTargetPosition, t);
-		//	auto coreR = slerp(data.coreStartRotation, data.coreTargetRotation, t);
-
-		//	auto armP = lerp(data.armStartPosition, data.armTargetPosition, t);
-		//	auto armR = slerp(data.armStartRotation, data.armTargetRotation, t);
-
-		//	data.cameraCore->SetLocalPosition(coreP);
-		//	data.cameraCore->SetLocalRotation(coreR);
-
-		//	std::wstring str0 = std::to_wstring(coreP.x()) +
-		//		L" " + std::to_wstring(coreP.y()) +
-		//		L" " + std::to_wstring(coreP.z());
-
-		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
-		//		str0, 1000, 600, 100, 100, 20, 255, 255, 255, 255);
-
-		//	data.cameraArm->SetLocalPosition(armP);
-		//	data.cameraArm->SetLocalRotation(armR);
-
-		//	std::wstring str1 = std::to_wstring(armP.x()) +
-		//		L" " + std::to_wstring(armP.y()) +
-		//		L" " + std::to_wstring(armP.z());
-
-		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
-		//		str1, 1000, 700, 100, 100, 20, 255, 255, 255, 255);
-
-		//	return false;
-		//}
-		//else
-		//{
-		//	data.acclerpFactor = 1.f;
-
-		//	data.cameraUpdate = false;
-
-		//	return true;
-		//}
-
-		return false;
 	}
 
 	void Player::CameraReset()

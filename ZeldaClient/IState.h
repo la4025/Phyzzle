@@ -18,17 +18,6 @@ namespace Phyzzle
 		Player* player;
 
 	public:
-		virtual void Input()
-		{
-			player->prevInput = player->currInput;
-
-			player->currInput.Lstick.Size = player->gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, player->currInput.Lstick.X, player->currInput.Lstick.Y);
-			player->currInput.Rstick.Size = player->gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, player->currInput.Rstick.X, player->currInput.Rstick.Y);
-
-			player->currInput.LTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
-			player->currInput.RTrigger = player->gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
-		}
-
 		virtual void StateStay() = 0;
 		virtual void StateEnter() = 0;
 		virtual void StateExit() = 0;

@@ -43,7 +43,7 @@ namespace ZonaiPhysics
 			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		defaultMaterial = ZnFactoryX::CreateMaterial(0.8f, 0.8f, 0.f, eAVERAGE, eAVERAGE);
+		defaultMaterial = ZnFactoryX::CreateMaterial(0.8f, 0.8f, 0.2f, eAVERAGE, eAVERAGE);
 	}
 
 	void ZnPhysicsX::Simulation(float _dt)

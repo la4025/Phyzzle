@@ -43,6 +43,9 @@ namespace Phyzzle
 #pragma endregion Input
 
 	private:
+		bool rotateMode = false;
+
+	private:
 		void Cancel() const;
 		void XRotate() const;
 		void YRotate() const;

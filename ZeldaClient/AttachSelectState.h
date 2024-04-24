@@ -89,11 +89,13 @@ namespace Phyzzle
 		void Reset();
 
 	private:
+#if _DEBUG
 		void SearchDebugDraw(bool _value);
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
+#endif _DEBUG
 	};
 }
 

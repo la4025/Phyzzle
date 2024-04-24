@@ -7,8 +7,36 @@ namespace Phyzzle
 	{
 	}
 
+	void Attachable::Start()
+	{
+		body = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+
+		assert(body != nullptr);
+	}
+
+	IslandID Attachable::GetIslandID() const
+	{
+		return islandID;
+	}
+
+	void Attachable::ValiantStore()
+	{
+		isKinematic = body->IsKinematic();
+		hasGravity = body->HasGravity();
+		originMass = body->GetMass();
+	}
+
 	void Attachable::Selected()
 	{
-		
+		body->SetKinematic(false);
+		body->UseGravity(false);
+		body->SetMass(0.001f);
+	}
+
+	void Attachable::ValiantRetrieve()
+	{
+		body->SetKinematic(isKinematic);
+		body->UseGravity(hasGravity);
+		body->SetMass(originMass);
 	}
 }

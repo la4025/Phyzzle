@@ -14,11 +14,6 @@ namespace Phyzzle
 	DefaultState::~DefaultState()
 	= default;
 
-	void DefaultState::Input()
-	{
-
-	}
-
 	void DefaultState::StateEnter()
 	{
 
@@ -141,6 +136,13 @@ namespace Phyzzle
 				static_cast<Player::State>(
 					max(newState % size, 1)
 					);
+
+			if (newState == Player::State::DEFAULT)
+			{
+				newState = static_cast<Player::State>(
+					newState + 1
+					);
+			}
 		}
 		else
 		{

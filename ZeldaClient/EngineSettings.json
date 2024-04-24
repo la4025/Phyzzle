@@ -3,7 +3,7 @@
   "shadowAreaOffset": 32.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": -1.81,
+  "gravity": -20.0,
   "tag": [
     "Conductor Object",
     "Phyzzle Player"

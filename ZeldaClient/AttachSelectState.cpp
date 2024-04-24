@@ -42,7 +42,10 @@ namespace Phyzzle
 		{
 		case SELECT:
 		{
-			SearchDebugDraw(Search());
+			bool result = Search();
+#if _DEBUG
+			SearchDebugDraw(result);
+#endif _DEBUG
 		}
 		break;
 
@@ -486,6 +489,7 @@ namespace Phyzzle
 		mode = SELECT;
 	}
 
+#if _DEBUG
 	void AttachSelectState::SearchDebugDraw(bool _value)
 	{
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
@@ -532,4 +536,5 @@ namespace Phyzzle
 				255, 255, 255, 255);
 		}
 	}
+#endif _DEBUG
 }
