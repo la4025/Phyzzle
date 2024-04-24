@@ -6,13 +6,6 @@ namespace Phyzzle
 {
 	class AttachSelectState final : public IState
 	{
-		enum Mode
-		{
-			SELECT	= 0,
-			HOLD	= 1,
-			ROTATE	= 2,
-		};
-
 	public:
 		AttachSelectState() = delete;
 		explicit AttachSelectState(Player* _player)
@@ -20,13 +13,15 @@ namespace Phyzzle
 		{}
 		~AttachSelectState() override;
 
+#pragma region StateEvent
 	private:
 		void StateEnter() override;
 		void StateExit() override;
 		void StateStay() override;
+#pragma endregion StateEvent
 
-	private:
 #pragma region Input
+	private:
 		void Stick_L() override;
 		void Stick_R() override;
 
@@ -35,34 +30,14 @@ namespace Phyzzle
 		void Click_X() override;
 		void Click_Y() override;
 
-		void Click_DUp() override;
-		void Click_DDown() override;
-		void Click_DLeft() override;
-		void Click_DRight() override;
-
-		void Pressing_DUp() override;
-		void Pressing_DDown() override;
-		void Pressing_DLeft() override;
-		void Pressing_DRight() override;
-
 		void Click_LB() override;
 
 		void Pressing_RB() override;
 #pragma endregion Input
 
+#pragma region Content
 	private:
-		Mode mode = SELECT;
-
-		bool rotateMode = false;
-		float lerpTime = 0.1f;
-
-	private:
-		bool hasGravity = false;
-		float mass = -0.1f;
-		float distance = -0.1f;
-		Eigen::Vector3f playerVelocity = Eigen::Vector3f::Zero();
-		Eigen::Vector3f targetVelocity = Eigen::Vector3f::Zero();
-		PurahEngine::RigidBody* selectBody = nullptr;
+		bool select = false;
 
 	private:
 		void PlayerMove(float _speed) const;
@@ -75,26 +50,11 @@ namespace Phyzzle
 		void LookToLocalDirection(const Eigen::Vector3f& _to);
 
 		bool Search() const;
-		bool Select();
+#pragma endregion Content
 		
-		void ApplyObjectVelocity() const;
-		void ResetObjectVelocity();
-
-		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);
-		void ObjectRotate();
-
-		void Attach() const;
-
-		void Set();
-		void Reset();
-
-	private:
 #if _DEBUG
+	private:
 		void SearchDebugDraw(bool _value);
-
-		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
-		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
-		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
 #endif _DEBUG
 	};
 }
