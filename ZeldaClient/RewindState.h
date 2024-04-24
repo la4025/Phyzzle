@@ -16,7 +16,7 @@ namespace Phyzzle
 		void Input() override;
 		void StateEnter() override;
 		void StateExit() override;
-		void operator()() override;
+		void StateStay() override;
 
 	private:
 		void Stick_L() override;

@@ -23,6 +23,8 @@ namespace ZonaiPhysics
 		virtual				~ZnJoint() = default;
 
 	public:
+		virtual void		DisableConstraint(bool _value) = 0;
+
 		/**
 		오브젝트의 포지션
 		*/

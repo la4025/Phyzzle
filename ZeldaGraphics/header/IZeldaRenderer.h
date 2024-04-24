@@ -35,6 +35,9 @@ public:
 	/// Renderer의 종료
 	virtual void Finalize() abstract;
 
+	// 화면 크기 재설정
+	virtual void Resize(unsigned int screenWidth, unsigned int screenHeight) abstract;
+
 	/// <summary>
 	/// 추가 옵션을 설정한다. Initialize가 호출되기 이전에 호출되어야 설정된 옵션을 적용할 수 있다.
 	/// </summary>

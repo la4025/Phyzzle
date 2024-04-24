@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
+    <ClCompile Include="Attachable.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="ButtonDevice.cpp" />
@@ -157,15 +158,16 @@
     <ClCompile Include="ElectricWire.cpp" />
     <ClCompile Include="DefaultState.cpp" />
     <ClCompile Include="Holder.cpp" />
+    <ClCompile Include="LockState.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="HoldState.cpp" />
+    <ClCompile Include="AttachHoldState.cpp" />
     <ClCompile Include="IObject.cpp" />
-    <ClCompile Include="AttatchSystem.cpp" />
+    <ClCompile Include="AttachSystem.cpp" />
     <ClCompile Include="KiHoon.cpp" />
     <ClCompile Include="LauncherPlatform.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
-    <ClCompile Include="PlayerSystem.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
     <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
@@ -175,16 +177,18 @@
     <ClCompile Include="Test3.cpp" />
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
-    <ClCompile Include="AttatchState.cpp" />
+    <ClCompile Include="AttachSelectState.cpp" />
     <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
+    <ClInclude Include="Attachable.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="ButtonDevice.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Coroutine.h" />
     <ClInclude Include="DisconnectedWire.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="DoorParts.h" />
@@ -194,10 +198,12 @@
     <ClInclude Include="IElectricalDevice.h" />
     <ClInclude Include="DefaultState.h" />
     <ClInclude Include="Holder.h" />
+    <ClInclude Include="LockState.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="HoldState.h" />
-    <ClInclude Include="AttatchSystem.h" />
+    <ClInclude Include="AttachHoldState.h" />
+    <ClInclude Include="AttachSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
+    <ClInclude Include="PlayerCamera.h" />
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />
@@ -209,7 +215,6 @@
     <ClInclude Include="KiHoon.h" />
     <ClInclude Include="NaDong.h" />
     <ClInclude Include="eObjectProperty.h" />
-    <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="RewindState.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Test.h" />
@@ -217,7 +222,7 @@
     <ClInclude Include="Test3.h" />
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
-    <ClInclude Include="AttatchState.h" />
+    <ClInclude Include="AttachSelectState.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

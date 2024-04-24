@@ -25,10 +25,10 @@ namespace PurahEngine
 
 	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
-		const Eigen::Vector3f& GetPosition() noexcept;
+		Eigen::Vector3f GetPosition() noexcept;
 
 		void		SetRotation(const Eigen::Quaternionf& _rot) noexcept;
-		const Eigen::Quaternionf& GetRotation() noexcept;
+		Eigen::Quaternionf GetRotation() noexcept;
 
 	public:
 		/**
@@ -90,13 +90,13 @@ namespace PurahEngine
 		선속도 제한
 		*/
 		// float		GetMaxLinearVelocity() const noexcept;
-		// void		SetMaxLinearVelocity(const float&) noexcept;
+		void		SetMaxLinearVelocity(const float&) noexcept;
 
 		/**
 		각속도 제한
 		*/
 		// float		GetMaxAngularVelocity() const noexcept;
-		// void		SetMaxAngularVelocity(const float&) noexcept;
+		void		SetMaxAngularVelocity(const float&) noexcept;
 
 		/**
 		물체에 힘을 가하거나 지움

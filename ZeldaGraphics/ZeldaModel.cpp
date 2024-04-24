@@ -82,10 +82,12 @@ void ZeldaModel::Render(
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
 	const std::wstring& animationName,
-	float animationTime)
+	float animationTime,
+	int drawIDCounter)
 {
 	assert(animationIDTable.count(animationName) > 0);
 	unsigned int animationID = animationIDTable[animationName];
@@ -103,6 +105,10 @@ void ZeldaModel::Render(
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 	animationConstBuffer->SetData(animationData);
+
+	ObjectIDBufferType objectIDBufferType;
+	objectIDBufferType.objectID = drawIDCounter;
+	objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 	// 모든 메쉬 그리기
 	for (int i = 0; i < meshes.size(); i++)
@@ -133,9 +139,11 @@ void ZeldaModel::RenderInstanced(
 	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixConstBuffer,
 	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 	const std::vector<ModelInstancingInfo>& instancingInfo,
 	ZeldaShader* shader,
-	const std::wstring& animationName)
+	const std::wstring& animationName,
+	int drawIDCounter)
 {
 	assert(animationIDTable.count(animationName) > 0);
 	unsigned int animationID = animationIDTable[animationName];
@@ -184,6 +192,11 @@ void ZeldaModel::RenderInstanced(
 					materials[materialIndex[meshNum]]->useNormalMap
 					});
 
+				ObjectIDBufferType objectIDBufferType;
+				objectIDBufferType.objectID = drawIDCounter;
+				objectIDPSConstBuffer->SetData(objectIDBufferType);
+				drawIDCounter += (i % INSTANCING_MAX) + 1;
+
 				ConstantBufferManager::GetInstance().SetBuffer();
 
 				materials[materialIndex[meshNum]]->SetShaderResource(deviceContext);
@@ -201,13 +214,15 @@ void ZeldaModel::RenderBlendingAnimation(
 	ID3D11DeviceContext* deviceContext, ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 	DirectX::XMMATRIX worldMatrix,
 	ZeldaShader* shader,
 	const std::wstring& firstAnimationName,
 	const std::wstring& secondAnimationName,
 	float firstAnimationTime,
 	float secondAnimationTime,
-	float ratio)
+	float ratio,
+	int drawIDCounter)
 {
 	auto iter1 = animationTable.find(firstAnimationName);
 	auto iter2 = animationTable.find(secondAnimationName);
@@ -371,6 +386,10 @@ void ZeldaModel::RenderBlendingAnimation(
 
 	// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
+
+	ObjectIDBufferType objectIDBufferType;
+	objectIDBufferType.objectID = drawIDCounter;
+	objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 	// 모든 메쉬 그리기
 	for (int i = 0; i < meshes.size(); i++)

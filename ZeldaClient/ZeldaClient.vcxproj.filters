@@ -26,17 +26,14 @@
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="AttatchState.cpp">
+    <ClCompile Include="AttachSelectState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="RewindState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="AudioTest.cpp" />
-    <ClCompile Include="AttatchSystem.cpp">
-      <Filter>KH\System</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerSystem.cpp">
+    <ClCompile Include="AttachSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
     <ClCompile Include="LauncherPlatform.cpp">
@@ -60,7 +57,7 @@
     <ClCompile Include="RewindSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
-    <ClCompile Include="HoldState.cpp">
+    <ClCompile Include="AttachHoldState.cpp">
       <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -73,6 +70,15 @@
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
     <ClCompile Include="Rewindable.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="LockState.cpp">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCamera.cpp">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Attachable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="ButtonDevice.cpp">
@@ -109,7 +115,7 @@
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="AttatchState.h">
+    <ClInclude Include="AttachSelectState.h">
       <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="RewindState.h">
@@ -122,10 +128,7 @@
       <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="AudioTest.h" />
-    <ClInclude Include="AttatchSystem.h">
-      <Filter>KH\System</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerSystem.h">
+    <ClInclude Include="AttachSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
@@ -155,7 +158,7 @@
     <ClInclude Include="RewindSystem.h">
       <Filter>KH\System</Filter>
     </ClInclude>
-    <ClInclude Include="HoldState.h">
+    <ClInclude Include="AttachHoldState.h">
       <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -178,6 +181,18 @@
     </ClInclude>
     <ClInclude Include="Snapshot.h">
       <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="LockState.h">
+      <Filter>KH\PLAYER\State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCamera.h">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Attachable.h">
+      <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Coroutine.h">
+      <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="ButtonDevice.h">
       <Filter>Device\Electrical Device</Filter>

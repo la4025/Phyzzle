@@ -25,9 +25,16 @@ namespace PurahEngine
 
 		assert(body0 != nullptr);
 
+		ZonaiPhysics::ZnRigidBody* connect = nullptr;
+
+		if (connectedBody)
+		{
+			connect = connectedBody->body;
+		}
+
 		joint = instance.CreateDistanceJoint(
 			body0->body, { LocalAnchor },
-			connectedBody->body, { connectedLocalAnchor }
+			connect, { connectedLocalAnchor }
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);
@@ -158,5 +165,9 @@ namespace PurahEngine
 	void SpringJoint::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(connectedBody);
+		if (connectedBody == GetGameObject()->GetComponent<RigidBody>())
+		{
+			connectedBody = nullptr;
+		}
 	}
 }

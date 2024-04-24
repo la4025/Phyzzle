@@ -669,7 +669,7 @@ ModelID ResourceManager::CreateModelFromModelingFile(const std::wstring& filePat
 
 	if (fbxmodel == nullptr)
 	{
-		MessageBox(0, L"Failed to load FBXfile.", L"ResourceManager Error", MB_OK);
+		MessageBox(0, (L"Failed to load FBXfile.\n" + filePath).c_str(), L"ResourceManager Error", MB_OK);
 	}
 
 	ModelID resourceID = IDGenerator::CreateID<ResourceType::Model>();

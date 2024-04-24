@@ -54,6 +54,9 @@
     <Filter Include="Shader\Sprite">
       <UniqueIdentifier>{11c3291d-0660-4592-88db-0d7f4883db18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\OutLine">
+      <UniqueIdentifier>{bb8cd59d-ec63-4e10-888d-abb8d3884ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\IZeldaRenderer.h">
@@ -248,6 +251,18 @@
     </FxCompile>
     <FxCompile Include="DirectionalShadowMapBlendingAnimationVS.hlsl">
       <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="FastOutLineVS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="FastOutLinePS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="OutLinePS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="OutLineVS.hlsl">
+      <Filter>Shader\OutLine</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
