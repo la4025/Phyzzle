@@ -21,7 +21,7 @@ PurahEngine::GameObject* PurahEngine::SceneManager::CreateGameObject(std::wstrin
 {
 	GameObject* object = new GameObject(objectName);
 	objectList.push_back(object);
-	object->trans = object->AddComponent<Transform>();
+	object->trans = object->AddComponentInit<Transform>();
 	return object;
 }
 
@@ -55,17 +55,19 @@ void PurahEngine::SceneManager::Update()
 	{
 		if (object->trans->GetParent() == nullptr)
 		{
-			object->UpdateEvent();
+			object->UpdateEvent(eventQueue);
 		}
 	}
+	ExcuteEventQueue();
 
 	for (PurahEngine::GameObject* object : objectList)
 	{
 		if (object->trans->GetParent() == nullptr)
 		{
-			object->LateUpdateEvent();
+			object->LateUpdateEvent(eventQueue);
 		}
 	}
+	ExcuteEventQueue();
 
 	if (physicsTime >= 0.02f)
 	{
@@ -73,7 +75,7 @@ void PurahEngine::SceneManager::Update()
 		{
 			if (object->trans->GetParent() == nullptr)
 			{
-				object->FixedUpdateEvent();
+				object->FixedUpdateEvent(eventQueue);
 			}
 		}
 	}
@@ -112,6 +114,15 @@ void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 
 void PurahEngine::SceneManager::InitializationEvent()
 {
+	for (PurahEngine::GameObject* object : objectList)
+	{
+		if (object->trans->GetParent() == nullptr)
+		{
+			object->PostInitializeEvent(eventQueue);
+		}
+	}
+	ExcuteEventQueue();
+
 	// Awake
 	for (PurahEngine::GameObject* object : objectList)
 	{
@@ -267,7 +278,7 @@ void PurahEngine::SceneManager::Initialize()
 	if (mainCamera == nullptr)
 	{
 		GameObject* object = CreateGameObject(L"MainCamera");
-		Camera* tmp = object->AddComponent<Camera>();
+		Camera* tmp = object->AddComponentInit<Camera>();
 		mainCamera = tmp;
 		physicsTime = 0.0f;
 	}
