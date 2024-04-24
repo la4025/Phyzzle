@@ -16,17 +16,17 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
-
 		enum State
 		{
-			DEFAULT		= 0,	// 기본 상태
-			HOLD		= 1,	// 물건을 든 상태
-			ATTATCH		= 2,	// 물건을 부착하려는 상태
-			REWIND		= 3,	// 물건을 되돌리려는 상태
-			LOCK		= 4
+			DEFAULT			= 0,	// 기본 상태
+			ATTACH_SELECT	= 1,	// 물건을 부착하려는 상태
+			ATTACH_HOLD		= 2,	// 물건을 든 상태
+			REWIND_SELECT	= 3,	// 물건을 되돌리려는 상태
+			LOCK_SELECT		= 4
 		};
 
 	private:
+#pragma region Struct
 		struct PlayerData
 		{
 			PurahEngine::RigidBody* playerRigidbody;
@@ -34,27 +34,14 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
-			Holder* holder;
 
-			State state = HOLD;
+			State state = ATTACH_HOLD;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
 
-			Eigen::Vector3f		coreStartPosition;
-			Eigen::Quaternionf	coreStartRotation;
-
-			Eigen::Vector3f		coreTargetPosition;
-			Eigen::Quaternionf	coreTargetRotation;
-
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
-
-			Eigen::Vector3f		armStartPosition;
-			Eigen::Quaternionf	armStartRotation;
-
-			Eigen::Vector3f		armTargetPosition;
-			Eigen::Quaternionf	armTargetRotation;
 
 			float xAngle = 0.f;
 			const float limitHighAngle = 80.f;
@@ -123,7 +110,7 @@ namespace Phyzzle
 			float LTrigger;
 			float RTrigger;
 
-			const PlayerInput& operator=(const PlayerInput& _other)
+			PlayerInput& operator=(const PlayerInput& _other)
 			{
 				if (this != &_other)
 				{
@@ -149,8 +136,7 @@ namespace Phyzzle
 
 				return *this;
 			}
-
-			const PlayerInput& operator=(PlayerInput&& _other) noexcept
+			PlayerInput& operator=(PlayerInput&& _other) noexcept
 			{
 				if (this != &_other)
 				{
@@ -177,15 +163,17 @@ namespace Phyzzle
 				return *this;
 			}
 		};
+#pragma endregion Struct
 
 	public:
+#pragma region Event
 		void Start() override;
 		void Update() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+#pragma endregion Event
 
 		void DebugDraw();
-
 
 	private:
 		void GamePadInput();
@@ -193,20 +181,24 @@ namespace Phyzzle
 		void Jump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 
-		void Move(float _moveSpeed, bool _cameraLookAt);
+		void PlayerMove(float _moveSpeed);
+		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
+		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
 		void CameraCoreUpdate();
 		bool CameraUpdate();
 		void CameraReset();
 		void CameraAround();
 
-		bool CameraForwardRaycast();
+		bool CameraForwardRaycast(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
 
 	public:
+#pragma region 직렬화
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
 		void PostSerialize(json& jsonData) const override;
 		void PostDeserialize(const json& jsonData) override;
+#pragma endregion 직렬화
 
 	private:
 		void ChangeState(State);
@@ -214,9 +206,10 @@ namespace Phyzzle
 	private:
 		friend class IState;
 		friend class DefaultState;
-		friend class AttatchState;
+		friend class AttachSelectState;
 		friend class RewindState;
-		friend class HoldState;
+		friend class AttachHoldState;
+		friend class LockState;
 
 		std::unordered_map<State, IState*> stateSystem;
 		
@@ -240,5 +233,12 @@ namespace Phyzzle
 		Eigen::Vector3f		differenceHigh;
 		Eigen::Vector3f		differenceLow;
 	};
+
+	inline Eigen::Vector3f MulMatrixVector(const Eigen::Matrix4f& _mat, const Eigen::Vector3f& _vec)
+	{
+		Eigen::Vector4f temp = _mat * Eigen::Vector4f(_vec.x(), _vec.y(), _vec.z(), 1.f);
+
+		return { temp.x(), temp.y() , temp.z() };
+	}
 }
 

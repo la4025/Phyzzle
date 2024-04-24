@@ -14,6 +14,8 @@
 
 #include "PhysicsSystem.h"
 
+#include "GameObject.h"
+
 namespace PurahEngine
 {
 	void PhysicsSystem::Initialize() noexcept
@@ -74,20 +76,34 @@ namespace PurahEngine
 	{
 		for (const auto& e : dynamicColliders)
 		{
-			e->PreStep();
+			if (e->GetGameObject()->IsRootEnable())
+			{
+				e->PreStep();
+			}
 		}
 	}
 
 	void PhysicsSystem::Simulation(float _dt) const noexcept
 	{
-		physics->Simulation(_dt);
+		static float acc = 0.f;
+
+		acc += _dt;
+
+		if (acc >= 1.f / 60.f)
+		{
+			acc -= 1.f / 60.f;
+			physics->Simulation(1.f / 60.f);
+		}
 	}
 
 	void PhysicsSystem::SimulateResult() const
 	{
 		for (const auto& e : bodies)
 		{
-			e->SimulateResult();
+			if (e->GetGameObject()->IsRootEnable())
+			{
+				e->SimulateResult();
+			}
 		}
 	}
 
@@ -200,7 +216,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreateFixedJoint(_body0, _localTm0, _body1, _localTm1);
 	}
@@ -209,7 +225,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreatePrismaticJoint(_body0, _localTm0, _body1, _localTm1);
 	}
@@ -218,7 +234,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreateHingeJoint(_body0, _localTm0, _body1, _localTm1);
 	}
@@ -227,7 +243,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreateSphericalJoint(_body0, _localTm0, _body1, _localTm1);
 	}
@@ -236,7 +252,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreateDistanceJoint(_body0, _localTm0, _body1, _localTm1);
 	}
@@ -245,7 +261,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 		ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const
 	{
-		assert(_body0 != nullptr && _body1 != nullptr);
+		assert(_body0 != nullptr);
 
 		return physics->CreateDistanceJoint(_body0, _localTm0, _body1, _localTm1);
 	}

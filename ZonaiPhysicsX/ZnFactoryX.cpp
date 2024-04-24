@@ -324,11 +324,16 @@ namespace ZonaiPhysics
 
 	FixedJoint* ZnFactoryX::CreateFixedJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
-		assert(_znBody0 != nullptr && _znBody1 != nullptr);
+		assert(_znBody0 != nullptr);
 
-		const auto pxbody0 = _znBody0->pxBody;
-		const auto pxbody1 = _znBody1->pxBody;
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
 		const auto joint = physx::PxFixedJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
@@ -344,11 +349,16 @@ namespace ZonaiPhysics
 
 	PrismaticJoint* ZnFactoryX::CreatePrismaticJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
-		assert(_znBody0 != nullptr && _znBody1 != nullptr);
+		assert(_znBody0 != nullptr);
 
 		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
 		const auto joint = physx::PxPrismaticJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
@@ -364,11 +374,16 @@ namespace ZonaiPhysics
 
 	DistanceJoint* ZnFactoryX::CreateDistanceJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
-		assert(_znBody0 != nullptr && _znBody1 != nullptr);
+		assert(_znBody0 != nullptr);
 
 		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
 		const auto joint = physx::PxDistanceJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
@@ -384,11 +399,16 @@ namespace ZonaiPhysics
 
 	SphericalJoint* ZnFactoryX::CreateSphericalJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
-		assert(_znBody0 != nullptr && _znBody1 != nullptr);
+		assert(_znBody0 != nullptr);
 
 		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
 		const auto joint = physx::PxSphericalJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);
@@ -404,11 +424,16 @@ namespace ZonaiPhysics
 
 	HingeJoint* ZnFactoryX::CreateHingeJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
 	{
-		assert(_znBody0 != nullptr && _znBody1 != nullptr);
+		assert(_znBody0 != nullptr);
 
 		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
-		const auto pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
 		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
 		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
 
 		const auto joint = physx::PxRevoluteJointCreate(*pxFactory, pxbody0, t0, pxbody1, t1);

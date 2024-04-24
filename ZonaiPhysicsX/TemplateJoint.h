@@ -39,6 +39,13 @@ namespace ZonaiPhysics
 		void* userData;
 
 	public:
+		void DisableConstraint(bool _value) override final
+		{
+			assert(joint != nullptr);
+
+			joint->setConstraintFlag(physx::PxConstraintFlag::eDISABLE_CONSTRAINT, _value);
+		}
+
 		/**
 		오브젝트의 포지션
 		*/
