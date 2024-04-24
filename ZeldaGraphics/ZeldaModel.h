@@ -69,10 +69,12 @@ public:
 		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 		ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 		DirectX::XMMATRIX worldMatrix,
 		ZeldaShader* shader,
 		const std::wstring& animationName,
-		float animationTime
+		float animationTime,
+		int drawIDCounter
 	);
 
 	void RenderInstanced(
@@ -81,9 +83,11 @@ public:
 		ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixConstBuffer,
 		ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 		const std::vector<ModelInstancingInfo>& instancingInfo,
 		ZeldaShader* shader,
-		const std::wstring& animationName
+		const std::wstring& animationName,
+		int drawIDCounter
 	);
 
 	void RenderBlendingAnimation(
@@ -91,13 +95,15 @@ public:
 		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 		ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
+		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
 		DirectX::XMMATRIX worldMatrix,
 		ZeldaShader* shader,
 		const std::wstring& firstAnimationName,
 		const std::wstring& secondAnimationName,
 		float firstAnimationTime,
 		float secondAnimationTime,
-		float ratio
+		float ratio,
+		int drawIDCounter
 	);
 
 	std::vector<std::wstring> GetAnimationList();

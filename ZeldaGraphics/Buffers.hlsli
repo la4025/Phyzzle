@@ -24,6 +24,7 @@ Texture2D Temp1Map : register(t6);
 Texture2D Temp2Map : register(t7);
 Texture2D AnimationMap : register(t8);
 TextureCube cubeMap : register(t9);
+Texture2D<uint> IDMap : register(t10);
 
 SamplerState Sampler : register(s0);
 SamplerComparisonState ShadowSampler : register(s1);
@@ -125,6 +126,12 @@ cbuffer LightMatrixBufferType : register(b9)
     float shadowMapSize;
     float shadowMapDepthBias;
     float2 b9padding;
+}
+
+cbuffer ObjectIDBufferType : register(b10)
+{
+    unsigned int objectID;
+    float3 b10padding;
 }
 
 #endif

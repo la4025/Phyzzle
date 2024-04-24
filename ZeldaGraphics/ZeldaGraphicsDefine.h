@@ -38,6 +38,7 @@ namespace Texture
 		constexpr unsigned int ARMMap = 2u;
 		constexpr unsigned int HeightMap = 3u;
 		constexpr unsigned int EmissionMap = 4u;
+		constexpr unsigned int IDMap = 10u;
 	}
 }
 
@@ -266,6 +267,15 @@ struct LightMatrixBufferType
 	constexpr static unsigned int registerNumB = 9;
 };
 static_assert(sizeof(LightMatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+
+struct ObjectIDBufferType
+{
+	unsigned int objectID;
+	float padding[3];
+
+	constexpr static unsigned int registerNumB = 10;
+};
+static_assert(sizeof(ObjectIDBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 #pragma endregion
 

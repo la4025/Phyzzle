@@ -264,6 +264,21 @@ private:
 	unsigned int screenHeight;
 
 private:
+	// ID Map
+	ID3D11RenderTargetView* idMapRenderTarget = nullptr;
+	ID3D11ShaderResourceView* idMapShaderResource = nullptr;
+
+	// Outline Map
+	ID3D11RenderTargetView* outlineMapRenderTarget = nullptr;
+	ID3D11ShaderResourceView* outlineMapShaderResource = nullptr;
+
+	// ID Constant Buffer
+	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer = nullptr;
+
+private:
+	int drawIDCounter;
+
+private:
 	ID2D1Factory* d2dFactory = nullptr;
 	IDWriteFactory* writeFactory = nullptr;
 	IDXGISurface* surface = nullptr;
