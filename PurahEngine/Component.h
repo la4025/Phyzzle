@@ -23,6 +23,15 @@ namespace PurahEngine
 	public:
 		virtual ~Component();
 
+	private:
+		enum class ComponentState
+		{
+			CREATE,
+			ENABLE,
+			DISABLE,
+			DESTROY
+		};
+
 	public:
 		virtual void Awake();
 		virtual void Start();
@@ -75,9 +84,12 @@ namespace PurahEngine
 		virtual void PostInitialize();
 
 		GameObject* GetGameObject() const;
+		ComponentState GetState();
+
 
 	protected:
 		GameObject* gameObject;
+		ComponentState state;
 
 		friend GameObject;
 	};
