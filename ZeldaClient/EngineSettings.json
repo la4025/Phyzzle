@@ -3,7 +3,7 @@
   "shadowAreaOffset": 32.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": -1.81,
+  "gravity": -29.4,
   "tag": [
     "Conductor Object",
     "Phyzzle Player"
@@ -14,10 +14,39 @@
     "Ignore Raycast",
     "Floor",
     "Water",
-    "UI"
+    "UI",
+    "Trigger"
   ],
   "collisionSetting": [
     [
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
       true,
       true,
       true,
@@ -31,29 +60,6 @@
       true,
       true,
       true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
       true,
       true
     ],
@@ -63,7 +69,17 @@
       true,
       true,
       true,
+      true,
       true
+    ],
+    [
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false
     ]
   ],
   "preLoadModels": [],
