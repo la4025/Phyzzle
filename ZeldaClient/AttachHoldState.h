@@ -46,7 +46,8 @@ namespace Phyzzle
 
 #pragma region Content
 	private:
-		float lerpTime = 0.1f;
+		const float selectRange = 40.f;
+		const float lerpTime = 0.1f;
 
 	private:
 		bool hasGravity = false;
@@ -61,7 +62,7 @@ namespace Phyzzle
 		void CameraAround() const;								// 카메라 회전
 		void StateCancel() const;								// Default 모드로 돌아감
 
-		bool TrySelect();										// 선택
+		void TrySelect();										// 선택
 
 		void LookToWorldDirection(const Eigen::Vector3f& _to);	// 플레이어가 to 방향으로 회전
 		void LookToLocalDirection(const Eigen::Vector3f& _to);	// 플레이어가 to 방향으로 회전

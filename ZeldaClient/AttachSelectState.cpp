@@ -93,6 +93,10 @@ namespace Phyzzle
 		StateCancel();
 	}
 
+	void AttachSelectState::Pressing_RB()
+	{
+	}
+
 #pragma endregion Input
 
 #pragma region Content

@@ -211,6 +211,7 @@
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />
     <ClInclude Include="Snapshot.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="IMaker.h" />

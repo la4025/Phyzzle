@@ -8,14 +8,7 @@ namespace Phyzzle
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
 	{
-		if (!TrySelect())
-		{
-			player->ChangeState(Player::ATTACH_SELECT);
-		}
-		else
-		{
-			VariableSet();
-		}
+		TrySelect();
 	}
 
 	void AttachHoldState::StateExit()
@@ -229,18 +222,17 @@ namespace Phyzzle
 		player->ChangeState(Player::State::DEFAULT);
 	}
 
-	bool AttachHoldState::TrySelect()
+	void AttachHoldState::TrySelect()
 	{
-		const float distance = 40.f;
-		const bool hit = player->CameraForwardRaycast(distance, &selectBody, nullptr, nullptr);
+		const bool hit = player->CameraForwardRaycast(selectRange, &selectBody, nullptr, nullptr);
 
-		if (!hit)
-			return false;
+		if (!hit || !selectBody)
+		{
+			player->ChangeState(Player::ATTACH_SELECT);
+			return;
+		}
 
-		if (!selectBody)
-			return false;
-
-		return true;
+		VariableSet();
 	}
 
 	void AttachHoldState::LookToWorldDirection(const Eigen::Vector3f& _to)

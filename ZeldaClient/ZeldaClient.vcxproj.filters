@@ -209,6 +209,9 @@
     <ClInclude Include="DefaultState.h">
       <Filter>KH\PLAYER\State\0. Base</Filter>
     </ClInclude>
+    <ClInclude Include="Spring.h">
+      <Filter>KH\ETC\Spring</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -273,6 +276,9 @@
     </Filter>
     <Filter Include="KH\PLAYER\State\0. Base">
       <UniqueIdentifier>{f6c2598c-888c-4205-9a79-ac89b2ee3273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\ETC\Spring">
+      <UniqueIdentifier>{a669704a-870c-42bc-abbf-ff43288a54a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
