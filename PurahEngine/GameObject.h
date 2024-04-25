@@ -29,21 +29,21 @@ namespace PurahEngine
 	class PURAHENGINE_API GameObject : public Serializable
 	{
 	public:
-
+		void PostInitializeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		void AwakeEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		void EnableEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		void StartEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 
 		/// Update
 		// 물리 관련 업데이트
-		virtual void FixedUpdateEvent();
+		virtual void FixedUpdateEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		// 기존 업데이트
-		virtual void UpdateEvent();
+		virtual void UpdateEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 
 		// 물리 관련 업데이트 2종 추가예정
 
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
-		virtual void LateUpdateEvent();
+		virtual void LateUpdateEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 		
 		void DeleteChild(GameObject* child);
 
@@ -99,6 +99,8 @@ namespace PurahEngine
 	private:
 		// ComponentList로 Component 관리
 		std::vector<Component*> componentList;
+		std::queue<Component*> addQueue;
+		void AddComponentQueue();
 
 	public:
 		Tag tag;
@@ -130,16 +132,28 @@ namespace PurahEngine
 	public:
 		// ComponentList로 Component 추가
 		template<componentType T>
-		T* AddComponent()
+		T* AddComponentInit()
 		{
 			T* t = new T;
 			componentList.push_back(t);
 			dynamic_cast<Component*>(t)->gameObject = this;
+			dynamic_cast<Component*>(t)->state = Component::ComponentState::CREATE;
 
 			t->Initialize();
 
-			/// 기훈 왈 이거 빼라
-			t->PostInitialize();
+			return t; // 추가된 컴포넌트 포인터를 반환
+		}
+
+		// ComponentList로 Component 추가
+		template<componentType T>
+		T* AddComponent()
+		{
+			T* t = new T;
+			addQueue.push(t);
+			dynamic_cast<Component*>(t)->gameObject = this;
+			dynamic_cast<Component*>(t)->state = Component::ComponentState::CREATE;
+
+			t->Initialize();
 
 			return t; // 추가된 컴포넌트 포인터를 반환
 		}

@@ -1,7 +1,7 @@
 
 #include "Component.h"
 
-PurahEngine::Component::Component() : gameObject(nullptr)
+PurahEngine::Component::Component() : gameObject(nullptr), state(ComponentState::CREATE)
 {
 
 }
@@ -116,4 +116,9 @@ void PurahEngine::Component::PostInitialize()
 PurahEngine::GameObject* PurahEngine::Component::GetGameObject() const
 {
 	return gameObject;
+}
+
+PurahEngine::Component::ComponentState PurahEngine::Component::GetState()
+{
+	return state;
 }

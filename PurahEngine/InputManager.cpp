@@ -38,7 +38,7 @@ namespace PurahEngine
 	{
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		if (hWnd == GetFocus())
+		//if (hWnd == GetFocus())
 		{
 			for (const auto e : keys)
 			{
@@ -51,13 +51,13 @@ namespace PurahEngine
 				NowKeyState[e] = GetAsyncKeyState(static_cast<int>(e));
 
 				// 키가 방금 눌렸다면 키가 눌린시간을 초기화 한다.
-				if ((PrevKeyState[e] == 0) && (NowKeyState[e] & 0x8001))
+				if (!(PrevKeyState[e] & 0x8000) && (NowKeyState[e] & 0x8000))
 				{
 					keyDownElapsed[e] = 0.0f;
 					keyState[e] = true;
 				}
 				// 키가 눌렸다면 시간을 누적한다.
-				else if (NowKeyState[e] & 0x8001)
+				else if (NowKeyState[e] & 0x8000)
 				{
 					keyDownElapsed[e] += deltaTime;
 					if (keyDownElapsed[e] >= firstInputDelay)
@@ -73,24 +73,24 @@ namespace PurahEngine
 	// 키를 방금 눌렀는가
 	bool InputManager::IsKeyDown(eKey keycode)
 	{
-		return (PrevKeyState[keycode] == 0) && (NowKeyState[keycode] & 0x8001);
+		return !(PrevKeyState[keycode] & 0x8000) && (NowKeyState[keycode] & 0x8000);
 	}
 
 	// 키를 눌리고 있는가
 	bool InputManager::IsKeyPressed(eKey keycode)
 	{
-		return (PrevKeyState[keycode] & 0x8001) && (NowKeyState[keycode] & 0x8001);
+		return (PrevKeyState[keycode] & 0x8000) && (NowKeyState[keycode] & 0x8000);
 	}
 
 	// 키를 뗐는가
 	bool InputManager::IsKeyUp(eKey keycode)
 	{
-		return (PrevKeyState[keycode] & 0x8001) && (NowKeyState[keycode] == 0);
+		return (PrevKeyState[keycode] & 0x8000) && !(NowKeyState[keycode] & 0x8000);
 	}
 
 	bool InputManager::IsKeyReleased(eKey keycode)
 	{
-		return (PrevKeyState[keycode] == 0) && (NowKeyState[keycode] == 0);
+		return !(PrevKeyState[keycode] & 0x8000) && !(NowKeyState[keycode] & 0x8000);
 	}
 
 	bool InputManager::GetKey(eKey keycode)

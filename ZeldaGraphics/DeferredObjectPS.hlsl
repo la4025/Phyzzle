@@ -8,6 +8,7 @@ struct PixelInputType
     float3 tangent : TANGENT;
     float3 biNormal : BINORMAL;
     float2 tex : TEXCOORD0;
+    uint instance : InstanceID;
 };
 
 struct PixelOutputType
@@ -16,6 +17,7 @@ struct PixelOutputType
     float4 normal : SV_Target1;
     float4 color : SV_Target2;
     float4 depth : SV_Target3;
+    uint id : SV_Target4;
 };
 
 PixelOutputType main(PixelInputType input)
@@ -77,6 +79,8 @@ PixelOutputType main(PixelInputType input)
     
     output.color = textureColor;
     output.depth = float4(depth, depth, depth, 1.0f);
+    
+    output.id = objectID + input.instance;
     
     return output;
 }

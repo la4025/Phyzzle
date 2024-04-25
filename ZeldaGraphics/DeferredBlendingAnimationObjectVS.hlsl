@@ -19,6 +19,7 @@ struct PixelInputType
     float3 tangent : TANGENT;
     float3 biNormal : BINORMAL;
     float2 tex : TEXCOORD0;
+    uint instance : InstanceID;
 };
 
 PixelInputType main(VertexInputType input)
@@ -70,6 +71,8 @@ PixelInputType main(VertexInputType input)
     output.normal = (length(output.normal) > F_EPSILON) ? (normalize(output.normal)) : (float3(0.0f, 0.0f, 0.0f));
     output.tangent = (length(output.tangent) > F_EPSILON) ? (normalize(output.tangent)) : (float3(0.0f, 0.0f, 0.0f));
     output.biNormal = (length(output.biNormal) > F_EPSILON) ? (normalize(output.biNormal)) : (float3(0.0f, 0.0f, 0.0f));
+    
+    output.instance = 0u;
     
     return output;
 }

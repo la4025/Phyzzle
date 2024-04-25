@@ -220,12 +220,12 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 	// Stencil opertations if pixel is front-facing.
 	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	// Stencil operations if pixel is back-facing.
 	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	// Create the depth stencil state.
@@ -353,6 +353,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	lightInfoConstBuffer = new ConstantBuffer<LightInfoBufferType, ShaderType::PixelShader>(mDevice);
 	lightIndexConstBuffer = new ConstantBuffer<LightIndexBufferType, ShaderType::PixelShader>(mDevice);
 	materialConstBuffer = new ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>(mDevice);
+	objectIDPSConstBuffer = new ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>(mDevice);
 
 	screenConstBuffer = new ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 	lightMatrixConstBuffer = new ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
@@ -484,6 +485,58 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	}
 
 #pragma endregion Shadow Mapping
+
+
+#pragma region outline
+
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+		textureDesc.Width = screenWidth;
+		textureDesc.Height = screenHeight;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R32_UINT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+
+		ID3D11Texture2D* renderTargetTextures;
+
+		// Texture2D 생성
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures);
+		if (FAILED(result)) return false;
+
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+		ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+		renderTargetViewDesc.Format = textureDesc.Format;
+		renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+		// Render Target 생성
+		result = mDevice->CreateRenderTargetView(renderTargetTextures, &renderTargetViewDesc, &idMapRenderTarget);
+		if (FAILED(result)) return false;
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+		ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+		shaderResourceViewDesc.Format = textureDesc.Format;
+		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+		// Shader Resource View 생성
+		result = mDevice->CreateShaderResourceView(renderTargetTextures, &shaderResourceViewDesc, &idMapShaderResource);
+		if (FAILED(result)) return false;
+
+		renderTargetTextures->Release();
+	}
+	
+
+#pragma endregion outline
 
 
 	// 깊이 스텐실 스테이트 생성
@@ -762,6 +815,31 @@ void ZeldaDX11Renderer::Finalize()
 		directionalShadowShaderResource->Release();
 		directionalShadowShaderResource = nullptr;
 	}
+	if (idMapRenderTarget)
+	{
+		idMapRenderTarget->Release();
+		idMapRenderTarget = nullptr;
+	}
+	if (idMapShaderResource)
+	{
+		idMapShaderResource->Release();
+		idMapShaderResource = nullptr;
+	}
+	if (outlineMapRenderTarget)
+	{
+		outlineMapRenderTarget->Release();
+		outlineMapRenderTarget = nullptr;
+	}
+	if (outlineMapShaderResource)
+	{
+		outlineMapShaderResource->Release();
+		outlineMapShaderResource = nullptr;
+	}
+	if (objectIDPSConstBuffer)
+	{
+		delete objectIDPSConstBuffer;
+		objectIDPSConstBuffer = nullptr;
+	}
 	if (currentRasterState)
 	{
 		// 얘는 defaultRasterState, wireFrameRasterState를 받아두기만 하기 때문에 해제 필요없음
@@ -769,6 +847,130 @@ void ZeldaDX11Renderer::Finalize()
 	}
 
 	ResourceManager::GetInstance().Finalize();
+}
+
+void ZeldaDX11Renderer::Resize(unsigned int screenWidth, unsigned int screenHeight)
+{
+	// D2D관련된 것들을 다시 만들어야 할 수도 있다.
+
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
+
+	HRESULT hr = 0;
+	HRESULT result = 0;
+
+	// 1. Clear the existing references to the backbuffer
+	ID3D11RenderTargetView* nullViews[] = { nullptr };
+	mDeviceContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		if (deferredRenderTargets[i] != nullptr)		deferredRenderTargets[i]->Release();
+		if (deferredShaderResources[i] != nullptr)		deferredShaderResources[i]->Release();
+	}
+
+	if (mRenderTargetView != nullptr)						mRenderTargetView->Release();
+	if (mDepthStencilView != nullptr)						mDepthStencilView->Release();
+
+	mDeviceContext->Flush();
+
+	// 2. Resize the existing swapchain
+	hr = mSwapChain->ResizeBuffers(2, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+	{
+		// You have to destroy the device, swapchain, and all resources and
+		// recreate them to recover from this case. The device was hardware reset,
+		// physically removed, or the driver was updated and/or restarted
+	}
+
+	// 3. Get the new backbuffer texture to use as a render target
+	ID3D11Texture2D* backBufferPtr;
+
+	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+
+	hr = mDevice->CreateRenderTargetView(backBufferPtr, nullptr, &mRenderTargetView);
+
+	backBufferPtr->Release();
+	backBufferPtr = nullptr;
+
+	ID3D11Texture2D* depthStencil;
+
+	// 4. Create a depth/stencil buffer and create the depth stencil view
+	CD3D11_TEXTURE2D_DESC depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT, screenWidth, screenHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+	hr = mDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencil);
+
+	CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+	hr = mDevice->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &mDepthStencilView);
+
+	// 5. Reset the rendering viewport to the new size
+	CD3D11_VIEWPORT viewPort(0.0f, 0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight));
+	mDeviceContext->RSSetViewports(1, &viewPort);
+
+	// 6. Reset your camera's aspect ratio based on backBufferWidth/backBufferHeight
+
+
+
+
+
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	textureDesc.Width = screenWidth;
+	textureDesc.Height = screenHeight;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* renderTargetTextures[Deferred::BufferCount];
+
+	// Texture2D 생성
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures[i]);
+	}
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// RenderTargetView 생성
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateRenderTargetView(renderTargetTextures[i], &renderTargetViewDesc, &deferredRenderTargets[i]);
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Shader Resource View 생성
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		result = mDevice->CreateShaderResourceView(renderTargetTextures[i], &shaderResourceViewDesc, &deferredShaderResources[i]);
+	}
+
+	//Release render target texture array
+	for (int i = 0; i < Deferred::BufferCount; i++)
+	{
+		renderTargetTextures[i]->Release();
+	}
+
+
+
+
+	// 7. Set your render target view/depth stencil view for rendering
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 }
 
 void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize)
@@ -806,6 +1008,8 @@ void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 	beginflag = true;
 #endif
 
+	drawIDCounter = 1;
+
 	UpdateMode();
 
 	ClearRenderInfo();
@@ -822,6 +1026,7 @@ void ZeldaDX11Renderer::EndDraw()
 
 	float gray[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float idInit[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	for (int i = 0; i < Deferred::BufferCount; i++)
 	{
@@ -833,7 +1038,12 @@ void ZeldaDX11Renderer::EndDraw()
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, (existLight) ? (gray) : (black));
 
 	// Clear the depth buffer.
-	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
+
+	// outline
+	mDeviceContext->ClearRenderTargetView(idMapRenderTarget, idInit);
 
 	DrawDeferred();
 
@@ -1152,7 +1362,16 @@ void ZeldaDX11Renderer::DrawDeferred()
 	ConstantBufferManager::GetInstance().SetBuffer();
 
 #pragma region Draw Deferred Object
-	mDeviceContext->OMSetRenderTargets(Deferred::Object::Count, deferredRenderTargets + Deferred::Object::Begin, mDepthStencilView);
+	ID3D11RenderTargetView* renderTargets[Deferred::Object::Count + 1] =
+	{
+		deferredRenderTargets[Deferred::Object::Begin + 0],
+		deferredRenderTargets[Deferred::Object::Begin + 1],
+		deferredRenderTargets[Deferred::Object::Begin + 2],
+		deferredRenderTargets[Deferred::Object::Begin + 3],
+		idMapRenderTarget
+	};
+	mDeviceContext->OMSetRenderTargets(Deferred::Object::Count + 1, renderTargets, mDepthStencilView);
+	//mDeviceContext->OMSetRenderTargets(Deferred::Object::Count, deferredRenderTargets + Deferred::Object::Begin, mDepthStencilView);
 
 	for (auto& iter : organizedMeshRenderInfo)
 	{
@@ -1202,10 +1421,13 @@ void ZeldaDX11Renderer::DrawDeferred()
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 0, 1, deferredShaderResources + Deferred::Object::Albedo);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 1, 2, deferredShaderResources + Deferred::Light::Begin);
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
 
 	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
 	squareMesh->Render(mDeviceContext);
 	deferredFinalShader->Render(mDeviceContext, squareMesh->GetIndexCount());
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV[0]);
 
 #pragma endregion
 }
@@ -1230,45 +1452,6 @@ void ZeldaDX11Renderer::DrawForward()
 	{
 		DrawBlendingAnimationRenderInfo(iter, forwardBlendingShader);
 	}
-
-
-
-	////////////////////////////////////////////////////////////////////////////////// 임시 디버깅
-	//if (CheckDebugMode(DebugMode::DeferredDebugAll))
-	//{
-	//	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-	//	mDeviceContext->PSSetShaderResources(0, 1, &directionalShadowShaderResource);
-
-	//	const static long wsize = 240;
-	//	const static long hsize = 135;
-	//	const static long space = 20;
-
-	//	const static unsigned int DebugInfoCount = Deferred::BufferCount + 1;
-	//	long fullsize = wsize * DebugInfoCount + max(DebugInfoCount - 1, 0) * space;
-
-	//	{
-	//		int i = Deferred::BufferCount;
-
-	//		float posX = ((1920l - fullsize) / 2) + (i) * (wsize + space);
-	//		float posY = 100;
-	//		float width = ((1920l - fullsize) / 2) + (i) * (wsize + space) + wsize;
-	//		float height = 100 + wsize;
-
-	//		ZeldaMesh* mesh = ResourceManager::GetInstance().GetSquareMesh();
-	//		mesh->Render(mDeviceContext);
-
-	//		MatrixBufferType matrixData;
-	//		matrixData.world = DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling((width - posX) / static_cast<float>(screenWidth), (height - posY) / static_cast<float>(screenHeight), 1.0f) * DirectX::XMMatrixTranslation(posX / static_cast<float>(screenWidth), posY / static_cast<float>(screenHeight), 0.0f));
-	//		matrixVsConstBuffer->SetData((matrixData));
-
-	//		ConstantBufferManager::GetInstance().SetBuffer();
-
-	//		spriteShader->Render(mDeviceContext, mesh->GetIndexCount());
-	//	}
-
-	//	ID3D11ShaderResourceView* nullsrv[1] = { nullptr };
-	//	mDeviceContext->PSSetShaderResources(0, 1, nullsrv);
-	//}
 }
 
 void ZeldaDX11Renderer::BeginDrawSprite()
@@ -1652,6 +1835,12 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShade
 			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.instancingInfo.size() - 1))
 			{
 				instancingMatrixVsConstBuffer->SetData(*instacingMatrix);
+
+				ObjectIDBufferType objectIDBufferType;
+				objectIDBufferType.objectID = drawIDCounter;
+				objectIDPSConstBuffer->SetData(objectIDBufferType);
+				drawIDCounter += (i % INSTANCING_MAX) + 1;
+
 				ConstantBufferManager::GetInstance().SetBuffer();
 
 				shader->RenderInstanced(mDeviceContext, cubeMesh->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
@@ -1686,6 +1875,11 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShade
 			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 			matrixVsConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 
+			ObjectIDBufferType objectIDBufferType;
+			objectIDBufferType.objectID = drawIDCounter;
+			objectIDPSConstBuffer->SetData(objectIDBufferType);
+			drawIDCounter += 1;
+
 			ConstantBufferManager::GetInstance().SetBuffer();
 
 			shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
@@ -1703,7 +1897,8 @@ void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaSha
 		UseWireFrameRasterState(renderInfo.wireFrame);
 		mDeviceContext->RSSetState(currentRasterState);
 
-		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName);
+		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName, drawIDCounter);
+		drawIDCounter += renderInfo.instancingInfo.size();
 	}
 	else
 	{
@@ -1714,7 +1909,8 @@ void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaSha
 			UseWireFrameRasterState(renderInfo.wireFrame);
 			mDeviceContext->RSSetState(currentRasterState);
 
-			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time);
+			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, objectIDPSConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time, drawIDCounter);
+			drawIDCounter += renderInfo.instancingInfo.size();
 		}
 	}
 }
@@ -1726,7 +1922,8 @@ void ZeldaDX11Renderer::DrawBlendingAnimationRenderInfo(BlendingAnimationRenderI
 	UseWireFrameRasterState(renderInfo.wireFrame);
 	mDeviceContext->RSSetState(currentRasterState);
 
-	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio);
+	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio, drawIDCounter);
+	drawIDCounter += 1;
 }
 
 void ZeldaDX11Renderer::DrawSpriteRenderInfo(SpriteRenderInfo renderInfo)
@@ -1761,7 +1958,7 @@ void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 	}
 
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-	mDeviceContext->OMSetDepthStencilState(cubeMapDepthStencilState, 0);
+	mDeviceContext->OMSetDepthStencilState(cubeMapDepthStencilState, 1);
 	mDeviceContext->RSSetState(cubeMapRasterState);
 
 
@@ -1787,7 +1984,7 @@ void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 	cubeMapShader->Render(mDeviceContext, mesh->GetIndexCount());
 
 	mDeviceContext->RSSetState(defaultRasterState);
-	mDeviceContext->OMSetDepthStencilState(nullptr, 0);
+	mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
 }
 
 void ZeldaDX11Renderer::DrawStringRenderInfo()
@@ -1949,7 +2146,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaL
 		UseWireFrameRasterState(renderInfo.wireFrame);
 		mDeviceContext->RSSetState(currentRasterState);
 
-		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName);
+		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName, 0);
 	}
 	else
 	{
@@ -1960,7 +2157,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaL
 			UseWireFrameRasterState(renderInfo.wireFrame);
 			mDeviceContext->RSSetState(currentRasterState);
 
-			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time);
+			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, objectIDPSConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time, 0);
 		}
 	}
 }
@@ -1981,7 +2178,7 @@ void ZeldaDX11Renderer::DrawDirectionalShadow(BlendingAnimationRenderInfo render
 	UseWireFrameRasterState(renderInfo.wireFrame);
 	mDeviceContext->RSSetState(currentRasterState);
 
-	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio);
+	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio, 0);
 }
 
 void ZeldaDX11Renderer::ClearRenderInfo()

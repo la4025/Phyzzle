@@ -220,6 +220,17 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 			break;
 		}
 
+		//case WM_SIZE:
+		//{
+		//	UINT width = LOWORD(lParam);
+		//	UINT height = HIWORD(lParam);
+
+		//	UINT menubarHeight = 11u;
+
+		//	OutputDebugString((L"" + std::to_wstring(width) + L"" + std::to_wstring(height - menubarHeight)).c_str());
+		//	break;
+		//}
+
 		case WM_ENTERSIZEMOVE:
 		{
 			TimeController::GetInstance().PauseAll();
