@@ -57,6 +57,9 @@
     <Filter Include="Shader\OutLine">
       <UniqueIdentifier>{bb8cd59d-ec63-4e10-888d-abb8d3884ebe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\RenderInfo">
+      <UniqueIdentifier>{6412652c-75cf-422f-b59c-6fed56c8dfaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\IZeldaRenderer.h">
@@ -122,6 +125,12 @@
     <ClInclude Include="ZeldaLight.h">
       <Filter>Core\Resource\Light</Filter>
     </ClInclude>
+    <ClInclude Include="RenderInfo.h">
+      <Filter>Core\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInfoManager.h">
+      <Filter>Core\RenderInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZeldaShader.cpp">
@@ -168,6 +177,12 @@
     </ClCompile>
     <ClCompile Include="ZeldaLight.cpp">
       <Filter>Core\Resource\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderInfo.cpp">
+      <Filter>Core\RenderInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderInfoManager.cpp">
+      <Filter>Core\RenderInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

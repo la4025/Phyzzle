@@ -1,0 +1,1 @@
+#include "RenderInfoManager.h"
