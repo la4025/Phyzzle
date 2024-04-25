@@ -60,6 +60,9 @@
     <Filter Include="Core\RenderInfo">
       <UniqueIdentifier>{6412652c-75cf-422f-b59c-6fed56c8dfaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Struct">
+      <UniqueIdentifier>{424633da-d5be-4800-9a1a-e5334e4d80cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\IZeldaRenderer.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="RenderInfoManager.h">
       <Filter>Core\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Struct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

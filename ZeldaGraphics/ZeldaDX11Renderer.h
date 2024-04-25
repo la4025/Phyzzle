@@ -5,6 +5,8 @@
 #include "ZeldaGraphicsDefine.h"
 #include "ConstantBuffer.h"
 
+#include "Color.h"
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -30,27 +32,6 @@ class ZeldaLight;
 class ZeldaTexture;
 class ZeldaMaterial;
 class IRenderable;
-
-struct Color
-{
-	union
-	{
-		struct
-		{
-			float r, g, b, a;
-		};
-
-		struct
-		{
-			float x, y, z, w;
-		};
-	};
-
-	bool operator==(const Color& right) const
-	{
-		return r == right.r && g == right.g && b == right.b && a == right.a;
-	}
-};
 
 struct MeshRenderInfo
 {

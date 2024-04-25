@@ -290,7 +290,7 @@ void CoreSystem::run()
 		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
 
-		fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
+		//fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
 
 		dirLightID = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
 		dirLightID2 = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
@@ -309,8 +309,8 @@ void CoreSystem::run()
 		animationList = renderer->GetAnimationListByModel(fbxID);
 		animationPlayTimeList = renderer->GetAnimationPlayTime(fbxID);
 
-		animationList2 = renderer->GetAnimationListByModel(fbxID2);
-		animationPlayTimeList2 = renderer->GetAnimationPlayTime(fbxID2);
+		//animationList2 = renderer->GetAnimationListByModel(fbxID2);
+		//animationPlayTimeList2 = renderer->GetAnimationPlayTime(fbxID2);
 	}
 
 	const static float moveSpeed = 0.5f;
