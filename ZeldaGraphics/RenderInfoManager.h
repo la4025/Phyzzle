@@ -16,16 +16,20 @@ public:
 
 	void RegisterRenderInfo(RenderType renderType, ResourceType resourceType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue);
 
+private:
+	void SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer);
 
 private:
-	std::vector<RenderInfo> RenderInfoList;
+	// Render Info
+	std::vector<RenderInfo> renderInfoList;
 
+	// Sorted RenderInfo
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;
-	
-	std::unordered_set<InstancingKey> lightRenderInfo;
 
+	std::unordered_set<InstancingKey> lightRenderInfo;
+	std::vector<RenderInfo*> stringRenderInfo;
 	
 
 	//singleton

@@ -53,6 +53,8 @@ struct InstancingValue
 	float animationTime;
 	Color color; // 기존에는 InstancingKey였으나 그냥 1024종류의 색 넘겨주면서 인스턴싱 해보자
 	int layer;
+	float fontSize;
+	std::wstring str;
 };
 
 struct RenderInfo
