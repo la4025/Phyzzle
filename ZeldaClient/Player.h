@@ -1,4 +1,6 @@
 #pragma once
+#include <set>
+
 #include "PurahEngine.h"
 
 namespace ZonaiPhysics
@@ -36,7 +38,7 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
 
-			State state = ATTACH_HOLD;
+			State state = ATTACH_SELECT;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
@@ -169,11 +171,12 @@ namespace Phyzzle
 		friend class IState;
 		friend class DefaultState;
 		friend class AttachSelectState;
-		friend class RewindState;
 		friend class AttachHoldState;
+		friend class RewindState;
 		friend class LockState;
 
 		std::unordered_map<State, IState*> stateSystem;
+		std::set<State> stateChange;
 		
 		State prevState = DEFAULT;
 		State currState = DEFAULT;

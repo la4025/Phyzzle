@@ -58,6 +58,8 @@ namespace Phyzzle
 		PurahEngine::RigidBody* selectBody = nullptr;
 
 	private:
+		void SetSelectObject();
+
 		void PlayerMove(float _speed) const;					// 이동
 		void CameraAround() const;								// 카메라 회전
 		void StateCancel() const;								// Default 모드로 돌아감
@@ -70,6 +72,7 @@ namespace Phyzzle
 		void ApplyObjectVelocity() const;						// 입력을 오브젝트에 적용시킴
 		void ResetObjectVelocity();								// 입력을 초기화 시킴
 
+		void ObjectSpring();
 		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);	// 오브젝트 이동
 
 		void XRotate() const;									// 오브젝트 회전

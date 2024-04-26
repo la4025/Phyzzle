@@ -123,7 +123,7 @@ namespace Phyzzle
 	{
 		Player::State newState = Player::State::DEFAULT;
 
-		const int size = player->stateSystem.size();
+		const int size = player->stateChange.size() + 1;
 
 		if (_value)
 		{

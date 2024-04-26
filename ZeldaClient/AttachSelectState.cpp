@@ -69,7 +69,7 @@ namespace Phyzzle
 	{
 		// 레이캐스팅
 		if (select)
-		{
+		{ 
 			// 상태 바꿈
 			player->ChangeState(Player::ATTACH_HOLD);
 		}
@@ -130,12 +130,18 @@ namespace Phyzzle
 		player->LookInLocalDirection(_to.normalized());
 	}
 
-	bool AttachSelectState::Search() const
+	bool AttachSelectState::Search()
 	{
 		const float distance = 40.f;
-		const bool hit = player->CameraForwardRaycast(distance, nullptr, nullptr, nullptr);
+		const bool hit = player->CameraForwardRaycast(distance, &result, nullptr, nullptr);
 
 		if (!hit)
+			return false;
+
+		if (result->IsKinematic())
+			return false;
+
+		if (result->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
 			return false;
 
 		return true;

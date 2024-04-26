@@ -23,8 +23,6 @@ namespace PurahEngine
 		Tag operator&(const Tag& right) const;
 		Tag operator|(const Tag& right) const;
 
-		bool operator==(const std::wstring& right) const;
-
 		Tag& operator=(const std::vector<std::wstring>& right);
 
 	private:

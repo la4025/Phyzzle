@@ -8,16 +8,33 @@ namespace Phyzzle
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
 	{
+		{
+			auto p = player->data.cameraCore->GetLocalPosition();
+			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+
+			player->data.cameraCore->SetLocalPosition(p);
+		}
+
 		TrySelect();
 	}
 
 	void AttachHoldState::StateExit()
 	{
+		{
+			auto p = player->data.cameraCore->GetLocalPosition();
+			p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+
+			player->data.cameraCore->SetLocalPosition(p);
+		}
+
 		VariableReset();
 	}
 
 	void AttachHoldState::StateStay()
 	{
+
+
+
 		ApplyObjectVelocity();
 		ResetObjectVelocity();
 	}
@@ -156,7 +173,7 @@ namespace Phyzzle
 		const Eigen::Vector3f objectPos = selectBody->GetPosition();
 		Eigen::Vector3f forward = objectPos - playerPos;
 		forward.y() = 0.f;
-		float distance = forward.norm();
+		distance = forward.norm();
 
 		if (distance > 20.f)
 			return;
@@ -173,7 +190,7 @@ namespace Phyzzle
 		Eigen::Vector3f objectPos = selectBody->GetPosition();
 		Eigen::Vector3f forward = objectPos - playerPos;
 		forward.y() = 0.f;
-		float distance = forward.norm();
+		distance = forward.norm();
 
 		if (distance < 3.f)
 			return;
@@ -229,10 +246,14 @@ namespace Phyzzle
 		if (!hit || !selectBody)
 		{
 			player->ChangeState(Player::ATTACH_SELECT);
-			return;
 		}
-
-		VariableSet();
+		else
+		{
+			if (selectBody->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
+				player->ChangeState(Player::ATTACH_SELECT);
+			else
+				VariableSet();
+		}
 	}
 
 	void AttachHoldState::LookToWorldDirection(const Eigen::Vector3f& _to)
@@ -257,6 +278,11 @@ namespace Phyzzle
 	void AttachHoldState::ResetObjectVelocity()
 	{
 		targetVelocity = Eigen::Vector3f::Zero();
+	}
+
+	void AttachHoldState::ObjectSpring()
+	{
+
 	}
 
 	void AttachHoldState::ObjectTranslate(const Eigen::Vector3f& _direction, float power)

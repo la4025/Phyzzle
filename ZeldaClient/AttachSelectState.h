@@ -38,6 +38,7 @@ namespace Phyzzle
 #pragma region Content
 	private:
 		bool select = false;
+		PurahEngine::RigidBody* result = nullptr;
 
 	private:
 		void PlayerMove(float _speed) const;
@@ -49,7 +50,7 @@ namespace Phyzzle
 		void LookToWorldDirection(const Eigen::Vector3f& _to);
 		void LookToLocalDirection(const Eigen::Vector3f& _to);
 
-		bool Search() const;
+		bool Search();
 #pragma endregion Content
 		
 #if _DEBUG

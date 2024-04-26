@@ -57,11 +57,15 @@ namespace Phyzzle
 			};
 
 		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
-
 		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
+
 		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
 		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
 		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
+
+		stateChange.insert(ATTACH_SELECT);
+		stateChange.insert(REWIND_SELECT);
+		stateChange.insert(LOCK_SELECT);
 	}
 
 	void Player::Update()
@@ -462,8 +466,6 @@ namespace Phyzzle
 			PurahEngine::RigidBody* body = shape->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
 
 			if (!body)
-				return false;
-			if (body->IsKinematic())
 				return false;
 
 			if (_outBody)
