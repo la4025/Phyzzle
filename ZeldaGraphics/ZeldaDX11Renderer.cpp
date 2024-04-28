@@ -17,6 +17,7 @@
 #include "MathConverter.h"
 
 #include "ConstantBufferManager.h"
+#include "RenderInfoManager.h"
 
 using namespace DirectX;
 

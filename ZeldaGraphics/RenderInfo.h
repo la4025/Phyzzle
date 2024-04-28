@@ -43,6 +43,17 @@ struct InstancingKey
 		animationID(0xffffffff),
 		color({ 0.0f, 0.0f, 0.0f, 0.0f })
 	{}
+
+	bool operator==(const InstancingKey& right) const
+	{
+		return
+			meshID == right.meshID &&
+			textureID == right.textureID &&
+			modelID == right.modelID &&
+			lightID == right.lightID &&
+			animationID == right.animationID &&
+			color == right.color;
+	}
 };
 
 struct InstancingValue
@@ -55,6 +66,17 @@ struct InstancingValue
 	int layer;
 	float fontSize;
 	std::wstring str;
+
+	InstancingValue() :
+		worldMatrix(DirectX::XMMatrixIdentity()),
+		position({ 0.0f, 0.0f }),
+		size({ 0.0f, 0.0f }),
+		animationTime(0.0f),
+		color({ 1.0f, 1.0f, 1.0f, 1.0f }),
+		layer(0),
+		fontSize(30.0f),
+		str(L"")
+	{}
 };
 
 struct RenderInfo

@@ -12,6 +12,11 @@ void RenderInfoManager::SortRenderInfo()
 	forwardRenderInfo.clear();
 	spriteRenderInfo.clear();
 	lightRenderInfo.clear();
+	stringRenderInfo.clear();
+
+	shadowRenderInfo.clear();
+	fastOutLineRenderInfo.clear();
+	outLineRenderInfo.clear();
 
 	// renderInfoList를 순회하며 정렬한다.
 	for (int i = 0; i < renderInfoList.size(); i++)
@@ -19,6 +24,7 @@ void RenderInfoManager::SortRenderInfo()
 		RenderInfo& renderInfo = renderInfoList[i];
 
 		RenderType renderType = renderInfo.renderType;
+		RenderOption renderOption = renderInfo.renderOption;
 
 		switch (renderType)
 		{
@@ -27,6 +33,23 @@ void RenderInfoManager::SortRenderInfo()
 			case RenderType::Deferred_BlendingAnimation:
 			{
 				SortRenderInfo(&renderInfo, deferredRenderInfo);
+
+				// Option
+				if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::OutLine)) > 0)
+				{
+					outLineRenderInfo.push_back(&renderInfo);
+				}
+				// FastOutLine은 OutLine을 그린다면 진행하지 않는다.
+				else if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::FastOutLine)) > 0)
+				{
+					SortRenderInfo(&renderInfo, fastOutLineRenderInfo);
+				}
+
+				if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::Shadow)) > 0)
+				{
+					SortRenderInfo(&renderInfo, shadowRenderInfo);
+				}
+
 				break;
 			}
 			case RenderType::Forward_Mesh:
@@ -43,12 +66,12 @@ void RenderInfoManager::SortRenderInfo()
 			}
 			case RenderType::String:
 			{
-
+				stringRenderInfo.push_back(&renderInfo);
 				break;
 			}
 			case RenderType::Light:
 			{
-				//lightRenderInfo.insert(renderInfo.instancingKey);
+				lightRenderInfo.insert({ renderInfo.instancingKey, &renderInfo });
 				break;
 			}
 			default:
@@ -59,27 +82,76 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+
+	// ID를 부여한다.
 	int drawIDCounter = 1;
 
+	for (auto& [key, value] : deferredRenderInfo)
+	{
+		for (auto& renderInfo : value)
+		{
+			renderInfo->drawID = drawIDCounter;
+			drawIDCounter += 1;
+		}
+	}
 
+	for (auto& [key, value] : forwardRenderInfo)
+	{
+		for (auto& renderInfo : value)
+		{
+			renderInfo->drawID = drawIDCounter;
+			drawIDCounter += 1;
+		}
+	}
 
+	for (auto& [key, value] : spriteRenderInfo)
+	{
+		for (auto& renderInfo : value)
+		{
+			renderInfo->drawID = drawIDCounter;
+			drawIDCounter += 1;
+		}
+	}
+
+	for (auto& [key, value] : lightRenderInfo)
+	{
+		value->drawID = drawIDCounter;
+		drawIDCounter += 1;
+	}
+
+	for (auto& iter : stringRenderInfo)
+	{
+		iter->drawID = drawIDCounter;
+		drawIDCounter += 1;
+	}
+}
+
+void RenderInfoManager::RegisterRenderInfo(RenderType renderType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue)
+{
+	RenderInfo renderInfo;
+	renderInfo.renderType = renderType;
+	renderInfo.renderOption = renderOption;
+	renderInfo.instancingKey = instancingKey;
+	renderInfo.instancingValue = instancingValue;
+
+	renderInfoList.push_back(renderInfo);
 }
 
 void RenderInfoManager::SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer)
 {
-	//auto iter = targetContainer.find(renderInfo->instancingKey);
+	auto iter = targetContainer.find(renderInfo->instancingKey);
 
-	//// 동일한 instancingKey로 그린적이 있음
-	//if (iter != targetContainer.end())
-	//{
-	//	auto& infoVector = iter->second;
-	//	infoVector.push_back(renderInfo);
-	//}
-	//// 동일한 instancingKey로 그린적이 없음
-	//else
-	//{
-	//	targetContainer.insert({ renderInfo->instancingKey, std::vector<RenderInfo*>(1, renderInfo) });
-	//}
+	// 동일한 instancingKey로 그린적이 있음
+	if (iter != targetContainer.end())
+	{
+		auto& infoVector = iter->second;
+		infoVector.push_back(renderInfo);
+	}
+	// 동일한 instancingKey로 그린적이 없음
+	else
+	{
+		targetContainer.insert({ renderInfo->instancingKey, std::vector<RenderInfo*>(1, renderInfo) });
+	}
 }
 
 RenderInfoManager& RenderInfoManager::GetInstance()

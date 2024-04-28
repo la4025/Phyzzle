@@ -14,7 +14,7 @@ public:
 	// RenderInfo를 정렬한다. (DrawID가 정해진다.)
 	void SortRenderInfo();
 
-	void RegisterRenderInfo(RenderType renderType, ResourceType resourceType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue);
+	void RegisterRenderInfo(RenderType renderType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue);
 
 private:
 	void SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer);
@@ -24,13 +24,17 @@ private:
 	std::vector<RenderInfo> renderInfoList;
 
 	// Sorted RenderInfo
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;
-
-	std::unordered_set<InstancingKey> lightRenderInfo;
-	std::vector<RenderInfo*> stringRenderInfo;
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;		// ID 1
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;		// ID 2
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;		// ID 3
+	std::unordered_map<InstancingKey, RenderInfo*> lightRenderInfo;		// ID 4
+	std::vector<RenderInfo*> stringRenderInfo;							// ID 5
 	
+	// Option RenderInfo
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> shadowRenderInfo;
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> fastOutLineRenderInfo;
+	std::vector<RenderInfo*> outLineRenderInfo;
+
 
 	//singleton
 public:
