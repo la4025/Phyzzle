@@ -22,6 +22,7 @@ namespace PurahEngine
 	class SceneManager;
 	class Transform;
 	class Collider;
+	class DataManager;
 
 	template <typename T>
 	concept componentType = std::is_base_of_v<Component, T>;
@@ -128,6 +129,7 @@ namespace PurahEngine
 
 	public:
 		ObjectState GetState();
+		void DonDestroyOnLoad();
 
 	public:
 		// ComponentList·Î Component Ãß°¡

@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "EngineSetting.h"
+#include "DataManager.h"
 
 #include "GameObject.h"
 
@@ -727,6 +728,11 @@ PurahEngine::GameObject::~GameObject()
 PurahEngine::GameObject::ObjectState PurahEngine::GameObject::GetState()
 {
 	return state;
+}
+
+void PurahEngine::GameObject::DonDestroyOnLoad()
+{
+	DataManager::GetInstance().DontDestroyOnLoad(this);
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)

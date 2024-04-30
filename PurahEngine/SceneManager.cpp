@@ -5,6 +5,7 @@
 #include "PhysicsSystem.h"
 #include "TimeController.h"
 #include "EngineSetting.h"
+#include "DataManager.h"
 
 PurahEngine::SceneManager::SceneManager()
 	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE), physicsTime(0.0f), sceneBuffer(L"")
@@ -229,6 +230,8 @@ void PurahEngine::SceneManager::LoadScene()
 
 	LoadSceneCompleteEvent();
 
+	LoadDontDestroyObject();
+
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
 	sceneBuffer = L"";
 }
@@ -240,6 +243,19 @@ void PurahEngine::SceneManager::LoadSceneCompleteEvent()
 		for (int j = 0; j < objectList[i]->componentList.size(); j++)
 		{
 			objectList[i]->componentList[j]->OnDataLoadComplete();
+		}
+	}
+}
+
+void PurahEngine::SceneManager::LoadDontDestroyObject()
+{
+	std::vector<GameObject*> dontDestroyList = DataManager::GetInstance().dontDestroyObjectList;
+	int size = dontDestroyList.size();
+	if (size != 0)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			objectList.push_back(dontDestroyList[i]);
 		}
 	}
 }
