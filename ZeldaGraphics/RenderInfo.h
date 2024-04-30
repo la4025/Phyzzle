@@ -15,15 +15,18 @@ enum class RenderType
 	Forward_BlendingAnimation,
 	Sprite,
 	String,
-	Light
+	Light,
+	CubeMap
 };
 
-enum class RenderOption : unsigned int
+using RenderOption = unsigned int;
+
+namespace RenderInfoOption
 {
-	None = 0x00000000u,
-	OutLine = 0x00000001u,
-	FastOutLine = 0x00000002u,
-	Shadow = 0x00000004u
+	constexpr static unsigned int None = 0x00000000u;
+	constexpr static unsigned int OutLine = 0x00000001u;
+	constexpr static unsigned int FastOutLine = 0x00000002u;
+	constexpr static unsigned int Shadow = 0x00000004;
 };
 
 struct InstancingKey
@@ -66,6 +69,11 @@ struct InstancingValue
 	int layer;
 	float fontSize;
 	std::wstring str;
+	unsigned int blendAnimationID1;
+	unsigned int blendAnimationID2;
+	float blendAnimationTime1;
+	float blendAnimationTime2;
+	float ratio;
 
 	InstancingValue() :
 		worldMatrix(DirectX::XMMatrixIdentity()),
@@ -75,7 +83,12 @@ struct InstancingValue
 		color({ 1.0f, 1.0f, 1.0f, 1.0f }),
 		layer(0),
 		fontSize(30.0f),
-		str(L"")
+		str(L""),
+		blendAnimationID1(0u),
+		blendAnimationID2(0u),
+		blendAnimationTime1(0.0f),
+		blendAnimationTime2(0.0f),
+		ratio(0.0f)
 	{}
 };
 

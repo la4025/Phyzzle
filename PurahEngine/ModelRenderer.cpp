@@ -40,18 +40,18 @@ namespace PurahEngine
 			// Animator가 없는 경우 DrawModel함수를 이용한다.
 			if (animator == nullptr)
 			{
-				renderer->DrawModel(worldTM, modelID, wireFrame, shadow);
+				renderer->DrawModel(worldTM, modelID, wireFrame, shadow, false, false);
 			}
 			// Animator가 있는 경우 DrawAnimation, DrawChangingAnimation 함수를 이용한다.
 			else
 			{
 				if (isBlending)
 				{
-					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, wireFrame, shadow);
+					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, wireFrame, shadow, false, false);
 				}
 				else
 				{
-					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, wireFrame, shadow);
+					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, wireFrame, shadow, false, false);
 				}
 			}
 		}

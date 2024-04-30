@@ -18,6 +18,11 @@ struct VertexOut
     float4 clipPos : POSITIONT;
 };
 
+// Instancing Value 0 : Animation Frame Info        float4(frame, 0.0f, 0.0f, 0.0f)
+// Instancing Value 1 : Not Used
+// Instancing Value 2 : Not Used
+// Instancing Value 3 : Not Used
+
 VertexOut main(VertexIn input)
 {
     VertexOut output = (VertexOut) 0;
@@ -26,10 +31,10 @@ VertexOut main(VertexIn input)
     input.position.w = 1.0f;
 
     float4x4 finalMatrix[4];
-    finalMatrix[0] = GetFinalTM(input.boneIndices[0], instancingAnimationInfo[input.instance].time);
-    finalMatrix[1] = GetFinalTM(input.boneIndices[1], instancingAnimationInfo[input.instance].time);
-    finalMatrix[2] = GetFinalTM(input.boneIndices[2], instancingAnimationInfo[input.instance].time);
-    finalMatrix[3] = GetFinalTM(input.boneIndices[3], instancingAnimationInfo[input.instance].time);
+    finalMatrix[0] = GetFinalTM(input.boneIndices[0], instancingValue0[input.instance].x);
+    finalMatrix[1] = GetFinalTM(input.boneIndices[1], instancingValue0[input.instance].x);
+    finalMatrix[2] = GetFinalTM(input.boneIndices[2], instancingValue0[input.instance].x);
+    finalMatrix[3] = GetFinalTM(input.boneIndices[3], instancingValue0[input.instance].x);
         
     // boneIndices와 weight를 이용해 애니메이션된 position을 계산한다.
     // boneIndices의 값이 unsigned int의 MAX값이면 영향을 받는 본이 없는것으로 생각한다.

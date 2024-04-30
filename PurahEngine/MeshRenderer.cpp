@@ -35,7 +35,7 @@ namespace PurahEngine
 				}
 				case PurahEngine::MeshRenderer::MeshType::Cube:
 				{
-					renderer->DrawCube(worldTM, textureID, wireFrame, shadow, r, g, b, a);
+					renderer->DrawCube(worldTM, textureID, wireFrame, shadow, false, false, r, g, b, a);
 
 					break;
 				}

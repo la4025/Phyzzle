@@ -240,13 +240,16 @@ struct InstancingMatrixBufferType
 };
 static_assert(sizeof(InstancingMatrixBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
-struct InstancingAnimationBufferType
+struct InstancingDataBufferType
 {
-	AnimationInfo animationInfo[INSTANCING_MAX];
+	DirectX::XMFLOAT4 instancingValue0[INSTANCING_MAX];
+	DirectX::XMFLOAT4 instancingValue1[INSTANCING_MAX];
+	DirectX::XMFLOAT4 instancingValue2[INSTANCING_MAX];
+	DirectX::XMFLOAT4 instancingValue3[INSTANCING_MAX];
 
 	constexpr static unsigned int registerNumB = 7;
 };
-static_assert(sizeof(InstancingAnimationBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+static_assert(sizeof(InstancingDataBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 struct BlendingAnimationBufferType
 {

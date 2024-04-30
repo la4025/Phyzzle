@@ -109,9 +109,12 @@ cbuffer InstancingMatrixBufferType : register(b6)
     matrix instancingWorldMatrix[INSTANCING_MAX];
 };
 
-cbuffer InstancingAnimationBufferType : register(b7)
+cbuffer InstancingDataBufferType : register(b7)
 {
-    AnimationInfo instancingAnimationInfo[INSTANCING_MAX];
+    float4 instancingValue0[INSTANCING_MAX];
+    float4 instancingValue1[INSTANCING_MAX];
+    float4 instancingValue2[INSTANCING_MAX];
+    float4 instancingValue3[INSTANCING_MAX];
 }
 
 cbuffer BlendingAnimationBufferType : register(b8)

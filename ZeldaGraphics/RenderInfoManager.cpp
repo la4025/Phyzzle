@@ -13,6 +13,7 @@ void RenderInfoManager::SortRenderInfo()
 	spriteRenderInfo.clear();
 	lightRenderInfo.clear();
 	stringRenderInfo.clear();
+	cubeMapRenderInfo = nullptr;
 
 	shadowRenderInfo.clear();
 	fastOutLineRenderInfo.clear();
@@ -35,17 +36,17 @@ void RenderInfoManager::SortRenderInfo()
 				SortRenderInfo(&renderInfo, deferredRenderInfo);
 
 				// Option
-				if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::OutLine)) > 0)
+				if ((renderOption & RenderInfoOption::OutLine) > 0u)
 				{
 					outLineRenderInfo.push_back(&renderInfo);
 				}
 				// FastOutLine은 OutLine을 그린다면 진행하지 않는다.
-				else if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::FastOutLine)) > 0)
+				else if ((renderOption & RenderInfoOption::FastOutLine) > 0u)
 				{
 					SortRenderInfo(&renderInfo, fastOutLineRenderInfo);
 				}
 
-				if ((static_cast<unsigned int>(renderOption) & static_cast<unsigned int>(RenderOption::Shadow)) > 0)
+				if ((renderOption & RenderInfoOption::Shadow) > 0u)
 				{
 					SortRenderInfo(&renderInfo, shadowRenderInfo);
 				}
@@ -72,6 +73,11 @@ void RenderInfoManager::SortRenderInfo()
 			case RenderType::Light:
 			{
 				lightRenderInfo.insert({ renderInfo.instancingKey, &renderInfo });
+				break;
+			}
+			case RenderType::CubeMap:
+			{
+				cubeMapRenderInfo = &renderInfo;
 				break;
 			}
 			default:
@@ -124,6 +130,12 @@ void RenderInfoManager::SortRenderInfo()
 		iter->drawID = drawIDCounter;
 		drawIDCounter += 1;
 	}
+
+	if (cubeMapRenderInfo != nullptr)
+	{
+		cubeMapRenderInfo->drawID = drawIDCounter;
+		drawIDCounter += 1;
+	}
 }
 
 void RenderInfoManager::RegisterRenderInfo(RenderType renderType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue)
@@ -135,6 +147,41 @@ void RenderInfoManager::RegisterRenderInfo(RenderType renderType, RenderOption r
 	renderInfo.instancingValue = instancingValue;
 
 	renderInfoList.push_back(renderInfo);
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetDeferredRenderInfo() const
+{
+	return deferredRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetForwardRenderInfo() const
+{
+	return forwardRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetSpriteRenderInfo() const
+{
+	return spriteRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, RenderInfo*>& RenderInfoManager::GetLightRenderInfo() const
+{
+	return lightRenderInfo;
+}
+
+const std::vector<RenderInfo*>& RenderInfoManager::GetStringRenderInfo() const
+{
+	return stringRenderInfo;
+}
+
+const RenderInfo* RenderInfoManager::GetCubeMapRenderInfo()
+{
+	return cubeMapRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetShadowRenderInfo() const
+{
+	return shadowRenderInfo;
 }
 
 void RenderInfoManager::SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer)
