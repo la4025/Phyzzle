@@ -199,11 +199,15 @@ namespace Phyzzle
 				stateSystem[currState]->Click_LB();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_L))
 				stateSystem[currState]->Pressing_LB();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_L))
+				stateSystem[currState]->Up_LB();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_R))
 				stateSystem[currState]->Click_RB();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_R))
 				stateSystem[currState]->Pressing_RB();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_R))
+				stateSystem[currState]->Up_RB();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
 				stateSystem[currState]->Click_A();

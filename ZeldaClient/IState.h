@@ -55,9 +55,11 @@ namespace Phyzzle
 
 		virtual void Click_LB() {}
 		virtual void Pressing_LB() {}
+		virtual void Up_LB() {}
 
 		virtual void Click_RB() {}
 		virtual void Pressing_RB() {}
+		virtual void Up_RB() {}
 
 	};
 }

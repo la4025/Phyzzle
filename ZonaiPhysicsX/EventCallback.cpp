@@ -138,7 +138,7 @@ namespace ZonaiPhysics
 
 			if (hasPostVelocities && pairData.nextItemSet())
 			{
-				assert(pairData.contactPairIndex == i);
+				// assert(pairData.contactPairIndex == i);
 
 				if (pairData.postSolverVelocity)
 				{

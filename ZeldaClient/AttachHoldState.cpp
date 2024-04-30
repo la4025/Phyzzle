@@ -1,5 +1,7 @@
 #include "AttachHoldState.h"
 
+#include "../GraphicsTest/CoreSystem.h"
+
 namespace Phyzzle
 {
 	AttachHoldState::~AttachHoldState()
@@ -33,8 +35,7 @@ namespace Phyzzle
 	void AttachHoldState::StateStay()
 	{
 
-
-
+		SpringCalculate();
 		ApplyObjectVelocity();
 		ResetObjectVelocity();
 	}
@@ -44,9 +45,8 @@ namespace Phyzzle
 	// 플레이어 이동
 	void AttachHoldState::Stick_L()
 	{
-		//case HOLD:
-		//case ROTATE:
 		PlayerMove(player->data.moveSpeed * 0.7f);
+
 		// 오브젝트 방향으로 캐릭터를 회전 시킴
 		Eigen::Vector3f direction = selectBody->GetPosition() - player->GetGameObject()->GetTransform()->GetWorldPosition();
 		direction.y() = 0.f;
@@ -59,47 +59,20 @@ namespace Phyzzle
 	// 오브젝트 이동
 	void AttachHoldState::Stick_R()
 	{
-		// Stick L은 플레이어의 움직임
-		// Stick R와 D Pad는 잡은 오브젝트의 움직임
-		//
-		// 업데이트 마다 오브젝트와 플레이어의 상대적 거리와 회전을 다시 계산할 것.
-		// 업데이트 했을 때 위치가 적합한지 체크하고 아니면 능력을 취소함.
-		//
-		// Stick L로 플레이어를 움직일 때, 물체에도 같이 힘을 줘야 함.
-		//
-		// 물체를 선택한 상태라면
-		// 좌우 입력은 '플레이어가 보고 있는 방향'의 좌우로 힘을 주고
-		// 상하 입력은 월드 Up, Down 방향으로 힘을 주는 것으로 하자.
-		// 플레이어가 항상 물체를 바라보고 있는 것으로 하면 얼추 비슷하게 나올 것이다.
-
 		// 키 입력이 없으면 힘 안줌
 		if (player->currInput.Rstick.Size)
 		{
-			const Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
-			const Eigen::Vector3f objectPos = selectBody->GetPosition();
-			Eigen::Vector3f forward = objectPos - playerPos;
-			const float distance = forward.y();
-			forward.y() = 0.f;
-			forward.normalize();
-			const Eigen::Vector3f right = Eigen::Vector3f::UnitY().cross(forward);
-			const Eigen::Vector3f rightVelocity = right * player->currInput.Rstick.X;
-			Eigen::Vector3f upVelocity = Eigen::Vector3f::Zero();
-
-			if (player->currInput.Rstick.Y > 0.f && distance < 10.f)
-			{
-				upVelocity = Eigen::Vector3f::UnitY() * player->currInput.Rstick.Y;
-			}
-			else if (player->currInput.Rstick.Y < 0.f && distance > -5.f)
-			{
-				upVelocity = Eigen::Vector3f::UnitY() * player->currInput.Rstick.Y;
-			}
-
-			Eigen::Vector3f direction = upVelocity + rightVelocity;
-			direction.normalize();
-			direction *= player->currInput.Rstick.Size;
-
-			ObjectTranslate(direction, 5.f);
+			ObjectXTranslate(5.f * player->currInput.Rstick.X * player->currInput.Rstick.Size);
+			ObjectYTranslate(5.f * player->currInput.Rstick.Y * player->currInput.Rstick.Size);
 		}
+	}
+
+	void AttachHoldState::Trigger_L()
+	{
+		adjustmentMode = false;
+
+		if (player->currInput.LTrigger > 0)
+			adjustmentMode = true;
 	}
 
 	// 취소
@@ -113,6 +86,7 @@ namespace Phyzzle
 	{
 		// 오브젝트를 이동시킬수 있는 상태라면
 		// 붙일 수 있어야함.
+		TryAttach();
 	}
 
 	// 취소
@@ -136,90 +110,156 @@ namespace Phyzzle
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Click_DUp()
 	{
-		//case ROTATE:
+		const bool justRotate = !adjustmentMode && roateMode;
+		const bool justTranslate = !adjustmentMode && !roateMode;
+
+		if (justTranslate)
+		{
+			SpringZTranslate(2.f);
+		}
+		else if (justRotate)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
-			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
+			// 플레이어 기준으로 Y 축 기준으로 +회전 시킴
+			SpringXRotate(rotateAngle);
+		}
 	}
 
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Click_DDown()
 	{
-		//case ROTATE:
+		const bool justRotate = !adjustmentMode && roateMode;
+		const bool justTranslate = !adjustmentMode && !roateMode;
+
+		if (justTranslate)
+		{
+			SpringZTranslate(-2.f);
+		}
+		else if (justRotate)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
+			SpringXRotate(-rotateAngle);
+		}
 	}
 
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Click_DLeft()
 	{
-		//case ROTATE:
+		const bool justRotate = !adjustmentMode && roateMode;
+		if (justRotate)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
+			SpringYRotate(rotateAngle);
+		}
 	}
 
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Click_DRight()
 	{
-		//case ROTATE:
+		const bool justRotate = !adjustmentMode && roateMode;
+		if (justRotate)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
+
+			SpringYRotate(-rotateAngle);
+		}
 	}
 
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Pressing_DUp()
 	{
-		// 플레이어 - 오브젝트 방향으로 주고 받음.
-		const Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
-		const Eigen::Vector3f objectPos = selectBody->GetPosition();
-		Eigen::Vector3f forward = objectPos - playerPos;
-		forward.y() = 0.f;
-		distance = forward.norm();
+		const bool rotateAdjustment = adjustmentMode && roateMode;
+		const bool translateAdjustment = adjustmentMode && !roateMode;
 
-		if (distance > 20.f)
-			return;
+		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		forward.normalize();
+		if (translateAdjustment)
+		{
+			// 플레이어 - 오브젝트 방향으로 주고 받음.
+			const float velocity = pushingVelocity * player->currInput.LTrigger * dt;
 
-		ObjectTranslate(forward, 10.f);
+			SpringZTranslate(velocity);
+		}
+		else if (rotateAdjustment)
+		{
+			const float velocity = rotateAngle * player->currInput.LTrigger * dt;
+
+			SpringXRotate(velocity);
+		}
 	}
 
 	// 오브젝트 이동 및 회전
 	void AttachHoldState::Pressing_DDown()
 	{
-		Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
-		Eigen::Vector3f objectPos = selectBody->GetPosition();
-		Eigen::Vector3f forward = objectPos - playerPos;
-		forward.y() = 0.f;
-		distance = forward.norm();
+		const bool translateAdjustment = adjustmentMode && !roateMode;
+		const bool rotateAdjustment = adjustmentMode && roateMode;
 
-		if (distance < 3.f)
-			return;
+		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		forward.normalize();
+		// 이동
+		if (translateAdjustment)
+		{
+			const float velocity = pushingVelocity * player->currInput.LTrigger * dt;
 
-		ObjectTranslate(forward, -10.f);
+			SpringZTranslate(-velocity);
+		}
+		// 회전
+		else if (rotateAdjustment)
+		{
+			const float velocity = rotateAngle * player->currInput.LTrigger * dt;
+			
+			SpringXRotate(-velocity);
+		}
 	}
 
-	// 오브젝트 이동 및 회전
+	// 오브젝트 회전
 	void AttachHoldState::Pressing_DLeft()
 	{
-		//case ROTATE:
+		const bool rotateAdjustment = adjustmentMode && roateMode;
+
+		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+		if (rotateAdjustment)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
-			// 플레이어 기준으로 X 축 기준으로 -회전 시킴
+			// 플레이어 기준으로 X 축 기준으로 +회전 시킴
+
+			const float velocity = rotateAngle * player->currInput.LTrigger * dt;
+
+			SpringYRotate(velocity);
+		}
 	}
 
-	// 오브젝트 이동 및 회전
+	// 오브젝트 회전
 	void AttachHoldState::Pressing_DRight()
 	{
-		//case ROTATE:
+		const bool rotateAdjustment = adjustmentMode && roateMode;
+
+		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+		if (rotateAdjustment)
+		{
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
+
+			const float velocity = rotateAngle * player->currInput.LTrigger * dt;
+
+			SpringYRotate(-velocity);
+		}
 	}
 
 	// Rotate 모드
 	void AttachHoldState::Pressing_RB()
 	{
+		roateMode = true;
+	}
 
+	void AttachHoldState::Up_RB()
+	{
+		roateMode = false;
 	}
 #pragma endregion Input
 
@@ -272,17 +312,166 @@ namespace Phyzzle
 
 	void AttachHoldState::ApplyObjectVelocity() const
 	{
-		selectBody->SetLinearVelocity(targetVelocity);
+		selectBody->SetLinearVelocity(targetVelocity + springL);
+		selectBody->SetAngularVelocity(targetAngularVelocity + springR);
 	}
 
 	void AttachHoldState::ResetObjectVelocity()
 	{
 		targetVelocity = Eigen::Vector3f::Zero();
+		targetAngularVelocity = Eigen::Vector3f::Zero();
 	}
 
-	void AttachHoldState::ObjectSpring()
+	void AttachHoldState::SpringCalculate()
 	{
+		float zeta = 0.5f;												// Damping ratio
+		float zeta0 = 0.05f;												// Damping ratio
+		float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
+		float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
 
+		Eigen::Vector3f currPos = selectBody->GetPosition();
+		currPos.y() = 0.f;
+
+		Eigen::Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		playerPos.y() = 0.f;
+		Eigen::Vector3f zPos = player->data.modelCore->GetFront() * targetPosition.z();
+		zPos.y() = 0.f;
+		const Eigen::Vector3f targetP = playerPos + zPos;
+
+		ObjectPostionSpring(
+			currPos,
+			springL,
+			targetP,
+			zeta,
+			omega,
+			timeStep
+		);
+
+		const Eigen::Quaternionf currRot = selectBody->GetRotation();
+		const Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
+		const Eigen::Quaternionf targetR = playerRot * targetRotation;
+
+		ObjectRotationSpring(
+			currRot,
+			springR,
+			targetR,
+			zeta0,
+			timeStep
+		);
+	}
+
+	void AttachHoldState::ObjectPostionSpring(
+		const Eigen::Vector3f& _s, Eigen::Vector3f& _v, const Eigen::Vector3f& _e,
+		float _zeta, float _omega, float _dt)
+	{
+		const float f = 1.f + 2.f * _dt * _zeta * _omega;
+		const float oo = _omega * _omega;
+		const float hoo = _dt * oo;
+		const float hhoo = _dt * hoo;
+		const float detInv = 1.f / (f + hhoo);
+		const Eigen::Vector3f detV = _v + hoo * (_e - _s);
+		
+		_v = detV * detInv;
+	}
+
+	float halflife_to_damping(float halflife, float eps = 1e-5f)
+	{
+		return (4.0f * 0.69314718056f) / (halflife + eps);
+	}
+
+	Eigen::Quaternionf quat_exp(Eigen::Vector3f v, float eps = 1e-8f)
+	{
+		float halfangle = sqrtf(v.x() * v.x() + v.y() * v.y() + v.z() * v.z());
+
+		if (halfangle < eps)
+		{
+			return Eigen::Quaternionf(1.0f, v.x(), v.y(), v.z()).normalized();
+		}
+		else
+		{
+			float c = cosf(halfangle);
+			float s = sinf(halfangle) / halfangle;
+			return Eigen::Quaternionf(c, s * v.x(), s * v.y(), s * v.z());
+		}
+	}
+
+	Eigen::Vector3f quat_log(Eigen::Quaternionf q, float eps = 1e-8f)
+	{
+		float length = sqrtf(q.x() * q.x() + q.y() * q.y() + q.z() * q.z());
+
+		if (length < eps)
+		{
+			return Eigen::Vector3f(q.x(), q.y(), q.z());
+		}
+		else
+		{
+			float halfangle = acosf(std::clamp(q.w(), -1.0f, 1.0f));
+			return halfangle * (Eigen::Vector3f(q.x(), q.y(), q.z()) / length);
+		}
+	}
+
+	Eigen::Vector3f quat_log_approx(Eigen::Quaternionf q)
+	{
+		return Eigen::Vector3f(q.x(), q.y(), q.z());
+	}
+
+	Eigen::Quaternionf quat_from_scaled_angle_axis(Eigen::Vector3f v, float eps = 1e-8f)
+	{
+		return quat_exp(v / 2.0f, eps);
+	}
+
+	Eigen::Vector3f quat_to_scaled_angle_axis(Eigen::Quaternionf q, float eps = 1e-8f)
+	{
+		return 2.0f * quat_log(q, eps);
+	}
+
+	float fast_negexp(float x)
+	{
+		return 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
+	}
+
+	void AttachHoldState::ObjectRotationSpring(
+		Eigen::Quaternionf x,
+		Eigen::Vector3f& v,
+		Eigen::Quaternionf x_goal,
+		float halflife,
+		float dt
+		)
+	{
+		float y = halflife_to_damping(halflife) / 2.0f;
+
+		Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * x_goal.inverse());
+		Eigen::Vector3f j1 = v + j0 * y;
+
+		float eydt = fast_negexp(y * dt);
+
+		x = quat_from_scaled_angle_axis(eydt * (j0 + j1 * dt)) * x_goal;
+		v = eydt * (v - j1 * y * dt);
+	}
+
+	void AttachHoldState::Spring(
+		const float& _s, float& _v, const float& _e,
+		float _zeta, float _omega, float _dt)
+	{
+		const float f = 1.0f + 2.0f * _dt * _zeta * _omega;
+		const float oo = _omega * _omega;
+		const float hoo = _dt * oo;
+		const float hhoo = _dt * hoo;
+		const float detInv = 1.0f / (f + hhoo);
+		const float detV = _v + hoo * (_e - _s);
+
+		// Update velocity vector
+		_v = detV * detInv;
+	}
+
+	void AttachHoldState::SpringYTranslate(float _distance)
+	{
+		targetPosition.y() += _distance;
+	}
+
+	void AttachHoldState::SpringZTranslate(float _distance)
+	{
+		targetPosition.z() += _distance;
 	}
 
 	void AttachHoldState::ObjectTranslate(const Eigen::Vector3f& _direction, float power)
@@ -290,14 +479,60 @@ namespace Phyzzle
 		targetVelocity += (_direction * power);
 	}
 
-	void AttachHoldState::XRotate() const
+	void AttachHoldState::ObjectXTranslate(float _distance)
 	{
+		const Eigen::Vector3f playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+		const Eigen::Vector3f objPos = selectBody->GetPosition();
+		Eigen::Vector3f forward = objPos - playerPos;
+		forward.y() = 0.f;
+		forward.normalize();
+		const Eigen::Vector3f right = Eigen::Vector3f::UnitY().cross(forward);
 
+		ObjectTranslate(right.normalized(), _distance);
 	}
 
-	void AttachHoldState::YRotate() const
+	void AttachHoldState::ObjectYTranslate(float _distance)
 	{
+		// 거리 비교해야함.
 
+		ObjectTranslate(Eigen::Vector3f::UnitY(), _distance);
+	}
+
+	void AttachHoldState::ObjectZTranslate(float _distance)
+	{
+		// 거리 비교 해야함.
+
+		const auto playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+		const auto objPos = selectBody->GetPosition();
+		Eigen::Vector3f forward = objPos - playerPos;
+		forward.y() = 0.f;
+		forward.normalize();
+
+		ObjectTranslate(forward, _distance);
+	}
+
+	void AttachHoldState::SpringRotate(const Eigen::Vector3f& _axis, float _angle)
+	{
+		targetRotation = Eigen::Quaternionf(Eigen::AngleAxisf{ _angle, _axis }) * targetRotation;
+	}
+
+	void AttachHoldState::SpringXRotate(float _angle)
+	{
+		Eigen::Vector3f dir = Eigen::Vector3f::UnitX();
+
+		SpringRotate(dir, _angle);
+	}
+
+	void AttachHoldState::SpringYRotate(float _angle)
+	{
+		const Eigen::Vector3f worldUp = Eigen::Vector3f::UnitY();
+
+		SpringRotate(worldUp, _angle);
+	}
+
+	void AttachHoldState::TryAttach() const
+	{
+		Attach();
 	}
 
 	void AttachHoldState::Attach() const
@@ -321,10 +556,15 @@ namespace Phyzzle
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const Eigen::Vector3f playerPosition = player->GetGameObject()->GetTransform()->GetWorldPosition();
 
-		const Eigen::Vector3f lookTo = objectPosition - playerPosition;
+		Eigen::Vector3f lookTo = objectPosition - playerPosition;
+		targetPosition.y() = lookTo.y();
+		lookTo.y() = 0.f;
 		LookToWorldDirection(lookTo);
+		targetPosition.z() = lookTo.size();
 
-		distance = lookTo.size();
+		const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
+		const Eigen::Quaternionf playerRotation = player->GetGameObject()->GetTransform()->GetWorldRotation();
+		targetRotation = playerRotation.inverse() * objectRotation;
 	}
 
 	void AttachHoldState::VariableReset()
@@ -338,10 +578,19 @@ namespace Phyzzle
 		}
 
 		playerVelocity = Eigen::Vector3f::Zero();
+
 		targetVelocity = Eigen::Vector3f::Zero();
+		targetAngularVelocity = Eigen::Vector3f::Zero();
+
+		springL = Eigen::Vector3f::Zero();
+		springR = Eigen::Vector3f::Zero();
+
+		targetPosition = Eigen::Vector3f::Zero();
+		targetRotation = Eigen::Quaternionf::Identity();
+
 		hasGravity = false;
 		mass = -0.1f;
-		distance = -0.1f;
+		diffWidth = -0.1f;
 		selectBody = nullptr;
 	}
 #pragma endregion Content
