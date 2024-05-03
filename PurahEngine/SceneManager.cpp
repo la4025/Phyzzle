@@ -21,7 +21,7 @@ PurahEngine::SceneManager::~SceneManager()
 PurahEngine::GameObject* PurahEngine::SceneManager::CreateGameObject(std::wstring objectName)
 {
 	GameObject* object = new GameObject(objectName);
-	objectList.push_back(object);
+	objectList[objectName] = object;
 	object->trans = object->AddComponentInit<Transform>();
 	return object;
 }
@@ -52,8 +52,9 @@ void PurahEngine::SceneManager::Update()
 	float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime("physics");
 	physicsTime += deltaTime;
 
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->UpdateEvent(eventQueue);
@@ -61,8 +62,9 @@ void PurahEngine::SceneManager::Update()
 	}
 	ExcuteEventQueue();
 
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->LateUpdateEvent(eventQueue);
@@ -72,8 +74,9 @@ void PurahEngine::SceneManager::Update()
 
 	if (physicsTime >= 0.02f)
 	{
-		for (PurahEngine::GameObject* object : objectList)
+		for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 		{
+			PurahEngine::GameObject* object = iter->second;
 			if (object->trans->GetParent() == nullptr)
 			{
 				object->FixedUpdateEvent(eventQueue);
@@ -99,24 +102,25 @@ void PurahEngine::SceneManager::LoadScene(int sceneNumber)
 
 void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 {
-	auto objectIter = std::find(objectList.begin(), objectList.end(), gameObject);
+	auto objectIter = objectList.find(gameObject->GetName());
 
 	if (objectIter != objectList.end())
 	{
-		delete* objectIter;
+		delete objectIter->second;
 		objectList.erase(objectIter);
 	}
 
-	for (int i = 0; i < objectList.size(); i++)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
-		objectList[i]->DeleteChild(gameObject);
+		iter->second->DeleteChild(gameObject);
 	}
 }
 
 void PurahEngine::SceneManager::InitializationEvent()
 {
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->PostInitializeEvent(eventQueue);
@@ -125,8 +129,9 @@ void PurahEngine::SceneManager::InitializationEvent()
 	ExcuteEventQueue();
 
 	// Awake
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->AwakeEvent(eventQueue);
@@ -135,8 +140,9 @@ void PurahEngine::SceneManager::InitializationEvent()
 	ExcuteEventQueue();
 
 	// OnEnable(활성화 직 후)
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->EnableEvent(eventQueue);
@@ -145,8 +151,9 @@ void PurahEngine::SceneManager::InitializationEvent()
 	ExcuteEventQueue();
 
 	// Start
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->StartEvent(eventQueue);
@@ -155,8 +162,9 @@ void PurahEngine::SceneManager::InitializationEvent()
 	ExcuteEventQueue();
 
 	// State Change
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->StateChangeEvent();
@@ -167,8 +175,9 @@ void PurahEngine::SceneManager::InitializationEvent()
 void PurahEngine::SceneManager::DecommissionEvent()
 {
 	// OnDisable (비활성화 상태)
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->DisableEvent(eventQueue);
@@ -177,8 +186,9 @@ void PurahEngine::SceneManager::DecommissionEvent()
 	ExcuteEventQueue();
 
 	// OnDestroy (맨 마지막프레임에 오브젝트 파괴)
-	for (PurahEngine::GameObject* object : objectList)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
+		PurahEngine::GameObject* object = iter->second;
 		if (object->trans->GetParent() == nullptr)
 		{
 			object->DestroyEvent(destroyQueue);
@@ -220,10 +230,19 @@ void PurahEngine::SceneManager::LoadScene()
 	auto& fManager = PurahEngine::FileManager::GetInstance();
 	fManager.clear();
 
-	for (int i = 0; i < objectList.size(); i++)
+
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
-		delete objectList[i];
+		bool checkDontDestroy = iter->second->GetDontDestroy();
+		PurahEngine::GameObject* object = iter->second;
+
+		if (!checkDontDestroy)
+		{
+			delete object;
+		}
 	}
+
+
 	objectList.clear();
 	sceneData = fManager.LoadData(sceneBuffer);
 	Deserialize(sceneData);
@@ -238,24 +257,27 @@ void PurahEngine::SceneManager::LoadScene()
 
 void PurahEngine::SceneManager::LoadSceneCompleteEvent()
 {
-	for (int i = 0; i < objectList.size(); i++)
+	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
-		for (int j = 0; j < objectList[i]->componentList.size(); j++)
+		PurahEngine::GameObject* object = iter->second;
+		int componentSize = object->componentList.size();
+
+		for (int i = 0; i < componentSize; i++)
 		{
-			objectList[i]->componentList[j]->OnDataLoadComplete();
+			object->componentList[i]->OnDataLoadComplete();
 		}
 	}
 }
 
 void PurahEngine::SceneManager::LoadDontDestroyObject()
 {
-	std::vector<GameObject*> dontDestroyList = DataManager::GetInstance().dontDestroyObjectList;
+	std::map<std::wstring, GameObject*> dontDestroyList = DataManager::GetInstance().dontDestroyObjectList;
 	int size = dontDestroyList.size();
 	if (size != 0)
 	{
-		for (int i = 0; i < size; i++)
+		for (auto iter = dontDestroyList.begin(); iter != dontDestroyList.end(); iter++)
 		{
-			objectList.push_back(dontDestroyList[i]);
+			objectList[iter->first] = iter->second;
 		}
 	}
 }
@@ -282,10 +304,33 @@ void PurahEngine::SceneManager::PostSerialize(json& jsonData) const
 
 void PurahEngine::SceneManager::PostDeserialize(const json& jsonData)
 {
-	for (int i = 0; i < objectList.size(); i++)
+
+	//for (int i = 0; i < objectList.size(); i++)
+	//{
+	//	objectList[i]->PostDeserialize(jsonData["gameObjects"][i]);
+	//}
+	//
+	//for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
+	//{
+	//	PurahEngine::GameObject* object = iter->second;
+	//	for (int i = 0; i < jsonData["gameObjects"].size(); i++)
+	//	{
+	//		std::wstring name = jsonData["gameObjects"][i]["name"];
+	//		if (name == iter->first)
+	//		{
+	//			object->PostDeserialize(jsonData["gameObjects"][i]);
+	//		}
+	//	}
+	//}
+
+	for (int i = 0; i < jsonData["gameObjects"].size(); i++)
 	{
-		objectList[i]->PostDeserialize(jsonData["gameObjects"][i]);
+		std::string name = jsonData["gameObjects"][i]["name"];
+		std::wstring wname(name.begin(), name.end());
+		PurahEngine::GameObject* object = objectList[wname];
+		object->PostDeserialize(jsonData["gameObjects"][i]);
 	}
+
 }
 
 void PurahEngine::SceneManager::Initialize()

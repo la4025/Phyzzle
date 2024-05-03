@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SerializableDefine.h"
+#include <map>
 
 namespace PurahEngine
 {
@@ -11,9 +12,9 @@ namespace PurahEngine
 	{
 	public:
 		void DontDestroyOnLoad(GameObject* gameObject);
-
+		void EraseDontDestroy(GameObject* gameObject);
 	public:
-		std::vector<GameObject*> dontDestroyObjectList;
+		std::map<std::wstring, GameObject*> dontDestroyObjectList;
 
 	public:
 		virtual void PreSerialize(json& jsonData) const override;

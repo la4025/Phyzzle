@@ -5,10 +5,27 @@
 
 void PurahEngine::DataManager::DontDestroyOnLoad(GameObject* gameObject)
 {
-	if (find(dontDestroyObjectList.begin(), dontDestroyObjectList.end(), gameObject) == dontDestroyObjectList.end())
+	bool isDuplication = false;
+	auto objectName = gameObject->GetName();
+
+	for (auto iter = dontDestroyObjectList.begin(); iter != dontDestroyObjectList.end(); iter++)
 	{
-		dontDestroyObjectList.push_back(gameObject);
+		std::wstring name = iter->first;
+		if (name == objectName)
+		{
+			isDuplication = true;
+		}
 	}
+
+	if (!isDuplication)
+	{
+		dontDestroyObjectList[objectName] = gameObject;
+	}
+}
+
+void PurahEngine::DataManager::EraseDontDestroy(GameObject* gameObject)
+{
+
 }
 
 void PurahEngine::DataManager::PreSerialize(json& jsonData) const

@@ -82,6 +82,9 @@ namespace PurahEngine
 		bool GetEnable();
 		bool IsRootEnable();
 
+		void SetDontDestroy(bool checkDontDestroy);
+		bool GetDontDestroy();
+
 		void StateChangeEvent(bool parentEnable = true);
 
 		Transform* GetTransform();
@@ -124,6 +127,7 @@ namespace PurahEngine
 		std::wstring name;
 		bool isEnable;
 		bool isDestroy;
+		bool isDontDestroy;
 
 		Transform* trans;
 

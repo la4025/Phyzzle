@@ -344,6 +344,8 @@ void PurahEngine::GameObject::Destroy()
 		state = ObjectState::DESTROY;
 	}
 
+	
+
 	for (int i = 0; i < trans->GetChildren().size(); i++)
 	{
 		trans->GetChildren()[i]->GetGameObject()->Destroy();
@@ -438,7 +440,7 @@ void PurahEngine::GameObject::DestroyEvent(std::queue<GameObject*>& destroyQueue
 	}
 }
 
-/// Enable부터 Component 상태 바꿀것 이거만 성공하면 자유다 기훈이한테서 벗어날 수 있다.
+
 void PurahEngine::GameObject::StateChangeEvent(bool parentEnable)
 {
 	if (state == ObjectState::CREATE)
@@ -627,6 +629,21 @@ bool PurahEngine::GameObject::IsRootEnable()
 	return ownEnable;
 }
 
+void PurahEngine::GameObject::SetDontDestroy(bool checkDontDestroy)
+{
+	isDontDestroy = checkDontDestroy;
+
+	for (int i = 0; i < trans->GetChildren().size(); i++)
+	{
+		trans->GetChildren()[i]->GetGameObject()->SetDontDestroy(checkDontDestroy);
+	}
+}
+
+bool PurahEngine::GameObject::GetDontDestroy()
+{
+	return isDontDestroy;
+}
+
 std::wstring PurahEngine::GameObject::GetName()
 {
 	return name;
@@ -648,7 +665,9 @@ void PurahEngine::GameObject::PreDeserialize(const json& jsonData)
 	fManager.SetAddress(jsonData["__Base__instanceID"], this);
 	trans->PreDeserialize(jsonData["transform"]);
 	bool active = jsonData["active"];
+	//bool checkDontDestroy = jsonData["checkDontDestroy"];
 	SetEnable(active);
+	//SetDontDestroy(checkDontDestroy);
 	for (int i = 0; i < jsonData["components"].size(); i++)
 	{
 		Component* component = AddComponentToString(jsonData["components"][i]["__Base__Component"]);
@@ -700,6 +719,7 @@ PurahEngine::GameObject::GameObject(std::wstring objectname)
 	name = objectname;
 	isEnable = true;
 	isDestroy = false;
+	isDontDestroy = false;
 }
 
 PurahEngine::GameObject::GameObject(std::wstring objectname, bool isenable)
@@ -709,6 +729,7 @@ PurahEngine::GameObject::GameObject(std::wstring objectname, bool isenable)
 	name = objectname;
 	isEnable = isenable;
 	isDestroy = false;
+	isDontDestroy = false;
 }
 
 PurahEngine::GameObject::~GameObject()
@@ -733,6 +754,7 @@ PurahEngine::GameObject::ObjectState PurahEngine::GameObject::GetState()
 void PurahEngine::GameObject::DonDestroyOnLoad()
 {
 	DataManager::GetInstance().DontDestroyOnLoad(this);
+	isDontDestroy = true;
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)

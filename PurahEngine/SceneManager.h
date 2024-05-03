@@ -7,6 +7,7 @@
 #include <queue>
 #include <functional>
 #include <eigen/Dense>
+#include <map>
 
 namespace PurahEngine
 {
@@ -82,7 +83,7 @@ namespace PurahEngine
 		std::wstring sceneBuffer;
 
 		// 씬에 생성된 오브젝트 리스트
-		std::vector<GameObject*> objectList;
+		std::map<std::wstring, GameObject*> objectList;
 
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
