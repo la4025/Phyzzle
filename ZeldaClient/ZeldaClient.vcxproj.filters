@@ -90,6 +90,9 @@
     <ClCompile Include="DefaultState.cpp">
       <Filter>KH\PLAYER\State\0. Base</Filter>
     </ClCompile>
+    <ClCompile Include="AttachIsland.cpp">
+      <Filter>KH\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Spring.h">
       <Filter>KH\ETC\Spring</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachIsland.h">
+      <Filter>KH\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

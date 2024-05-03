@@ -26,7 +26,7 @@ namespace Phyzzle
 		originMass = body->GetMass();
 	}
 
-	void Attachable::Selected()
+	void Attachable::Selected() const
 	{
 		body->SetKinematic(false);
 		body->UseGravity(false);
@@ -38,5 +38,9 @@ namespace Phyzzle
 		body->SetKinematic(isKinematic);
 		body->UseGravity(hasGravity);
 		body->SetMass(originMass);
+
+		isKinematic = false;
+		hasGravity = false;
+		originMass = -1.f;
 	}
 }

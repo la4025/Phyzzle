@@ -1,5 +1,6 @@
 #pragma once
 #include "IState.h"
+#include "Spring.h"
 
 namespace Phyzzle
 {
@@ -52,6 +53,8 @@ namespace Phyzzle
 		bool roateMode = false;
 		bool adjustmentMode = false;
 
+		PositionSpring posSpring;
+		QuaternionSpring quatSpring;
 		const float selectRange = 40.f;			// 울트라핸드 가능한 거리
 		const float pushingVelocity = 5.f;		// up, down 입력의
 		const float rotateAngle = 0.25f * std::numbers::pi_v<float>;
@@ -105,7 +108,7 @@ namespace Phyzzle
 		//	float _zeta, float _omega, float _dt);
 
 		void ObjectRotationSpring(
-			Eigen::Quaternionf x,
+			Eigen::Quaternionf& x,
 			Eigen::Vector3f& v,
 			Eigen::Quaternionf x_goal,
 			float halflife,

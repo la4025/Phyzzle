@@ -6,7 +6,9 @@
   "gravity": -29.4,
   "tag": [
     "Conductor Object",
-    "Phyzzle Player"
+    "Phyzzle Player",
+    "Attachable",
+    "Rewindable"
   ],
   "layer": [
     "Default",

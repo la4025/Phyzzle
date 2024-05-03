@@ -1,32 +1,31 @@
 #pragma once
 #include "PurahEngine.h"
 #include <vector>
-
+#include "AttachIsland.h"
 
 namespace Phyzzle
 {
-	struct AttachIsland;
-	
-	struct IslandID
-	{
-	private:
-		long long id;
-	};
-
-	class Attachable : public PurahEngine::Component
+	class Attachable final : public PurahEngine::Component
 	{
 	public:
 		~Attachable() override;
 
 		void Start() override;
 
-	public:
+	private:
 		IslandID GetIslandID() const;
-		void ValiantStore();
-		void Selected();
-		void ValiantRetrieve();
+		void ValiantStore();		// 강체 변수 저장
+		void Selected() const;		// 선택됨
+		void ValiantRetrieve();		// 강체 변수 되돌림
+
+	protected:
+		void PreSerialize(json& jsonData) const override {}
+		void PreDeserialize(const json& jsonData) override {}
+		void PostSerialize(json& jsonData) const override {}
+		void PostDeserialize(const json& jsonData) override {}
 
 	private:
+		friend class AttachSystem;
 		PurahEngine::RigidBody* body;
 		IslandID islandID;							// IslandID
 		std::vector<Attachable*> connectedObjects;	// 현 객체와 연결된 객체들
@@ -36,12 +35,6 @@ namespace Phyzzle
 		bool isKinematic = false;					
 		bool hasGravity = false;
 		float originMass = -1.f;
-	};
-
-	struct AttachIsland
-	{
-		IslandID islandID;
-		std::vector<Attachable*> elements;			// Island를 이루고 있는 객체들
 	};
 }
 

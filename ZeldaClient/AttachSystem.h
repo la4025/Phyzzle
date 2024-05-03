@@ -1,15 +1,12 @@
 #pragma once
 #include <queue>
 
+#include "AttachIsland.h"
 #include "Singleton.h"
 
 namespace Phyzzle
 {
 	class AttachIsland;
-}
-
-namespace Phyzzle
-{
 	class Attachable;
 }
 
@@ -25,21 +22,25 @@ namespace Phyzzle
 	public:
 		~AttachSystem() override;
 
+	private:
+		// ID 积己 昏力
+		IslandID CreateIslandID();
+		void RemoveIslandID(const IslandID& _id);
+
+		// 级 积己 昏力
+		IslandID CreateIsland(const std::vector<Attachable*>& _arr);
+		void RemoveIsland(const IslandID& _id);
+
 	public:
-		void Update();
-
-		bool HasSelectedBody() const;
-		void SelectBody(PurahEngine::RigidBody* _body);
-		void Cancel();
-		void XRotate(float _degree);
-		void YRotate(float _degree);
-		void Attatch(PurahEngine::RigidBody* _base, PurahEngine::RigidBody* _target);
-
+		void SelectBody(Attachable* _body) const;
+		void Attatch(Attachable* _base);
+		void Dettatch(Attachable* _base);
 
 	private:
-		std::vector<AttachIsland*> attachIsland;
+		std::vector<AttachIsland> attachIsland;
+		std::queue<IslandID> removedIndex;
 
-		PurahEngine::RigidBody* selectBody = nullptr;
+		IslandID islandID;
 		bool gravity = true;
 		float mass = 1.f;
 	};

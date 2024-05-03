@@ -3,6 +3,16 @@
 
 #include "PurahEngine.h"
 
+namespace Phyzzle
+{
+	class Rewindable;
+}
+
+namespace Phyzzle
+{
+	class Attachable;
+}
+
 namespace ZonaiPhysics
 {
 	struct ZnRaycastInfo;
@@ -154,7 +164,13 @@ namespace Phyzzle
 		void CameraReset();
 		void CameraAround();
 
-		bool CameraForwardRaycast(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
+		bool RaycastFromCamera(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
+		bool RaycastFromCamera(
+			float _distance, 
+			PurahEngine::RigidBody** _outBody, 
+			Attachable** _outAttachable, 
+			Rewindable** _outRewindable
+		);
 
 	public:
 #pragma region Á÷·ÄÈ­

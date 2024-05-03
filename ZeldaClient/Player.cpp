@@ -7,6 +7,8 @@
 #include "AttachSelectState.h"
 #include "RewindState.h"
 #include "LockState.h"
+#include "Attachable.h"
+#include "Rewindable.h"
 
 #include "Player.h"
 
@@ -388,18 +390,6 @@ namespace Phyzzle
 
 	void Player::CameraReset()
 	{
-		//data.coreStartPosition = data.cameraCore->GetLocalPosition();
-		//data.coreStartRotation = data.cameraCore->GetLocalRotation();
-
-		//data.coreTargetPosition = data.coreDefaultPosition;
-		//data.coreTargetRotation = data.coreDefaultRotation;
-
-		//data.armStartPosition =	data.cameraArm->GetLocalPosition();
-		//data.armStartRotation =	data.cameraArm->GetLocalRotation();
-
-		//data.armTargetPosition = data.armDefaultPosition;
-		//data.armTargetRotation = data.modelCore->GetLocalRotation();
-
 		data.acclerpFactor = 0.f;
 		data.cameraUpdate = true;
 
@@ -451,7 +441,7 @@ namespace Phyzzle
 		CameraCoreUpdate();
 	}
 
-	bool Player::CameraForwardRaycast(float _distance,
+	bool Player::RaycastFromCamera(float _distance,
 		PurahEngine::RigidBody** _outBody, float* _outDistance, Eigen::Vector3f* _outHitPosition)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
@@ -478,6 +468,46 @@ namespace Phyzzle
 				*_outDistance = info.distance;
 			if (_outHitPosition)
 				*_outHitPosition = info.position;
+
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
+		}
+
+		return block;
+	}
+
+	bool Player::RaycastFromCamera(
+		float _distance, 
+		PurahEngine::RigidBody** _outBody,
+		Attachable** _outAttachable,
+		Rewindable** _outRewindable
+	)
+	{
+		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
+		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
+		ZonaiPhysics::ZnRaycastInfo info;
+
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+
+		if (block)
+		{
+			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
+
+			if (!shape)
+				return false;
+
+			const PurahEngine::GameObject* obj = shape->GetGameObject();
+			PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
+
+			if (!body)
+				return false;
+
+			if (_outBody)
+				*_outBody = body;
+			if (_outAttachable)
+				*_outAttachable = obj->GetComponent<Attachable>();
+			if (_outRewindable)
+				*_outRewindable = obj->GetComponent<Rewindable>();
 
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);

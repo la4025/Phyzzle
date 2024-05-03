@@ -2,60 +2,91 @@
 
 #include <numbers>
 
+#include "Attachable.h"
 #include "RigidBody.h"
 
 
 namespace Phyzzle
 {
 	AttachSystem::~AttachSystem()
-	= default;
+		= default;
 
-	void AttachSystem::Update()
+	// ID 생성
+	IslandID AttachSystem::CreateIslandID()
 	{
+		while (!removedIndex.empty())			
+		{
+			auto result = removedIndex.front();
+			removedIndex.pop();
 
+			// 삭제된 인덱스가 있다면
+			// 그걸 재활용 함.
+			return result;
+		}
+
+		static long long Identifier = 0;
+
+		return { Identifier++ };
 	}
 
-	bool AttachSystem::HasSelectedBody() const
+	// ID 삭제
+	void AttachSystem::RemoveIslandID(const IslandID& _id)
 	{
-		return selectBody != nullptr;
+		removedIndex.push(_id);						// 삭제된 ID를 큐에 넣음
 	}
 
-	void AttachSystem::SelectBody(PurahEngine::RigidBody* _body)
+	IslandID AttachSystem::CreateIsland(const std::vector<Attachable*>& _arr)
 	{
-		selectBody = _body;
+		IslandID newID = CreateIslandID();
+		attachIsland.push_back({ newID, _arr });
 
-		gravity = selectBody->HasGravity();
-		mass = selectBody->GetMass();
-
-		selectBody->UseGravity(false);
-		selectBody->SetMass(0.001f);
+		return newID;
 	}
 
-	void AttachSystem::Cancel()
+	void AttachSystem::RemoveIsland(const IslandID& _id)
 	{
-		selectBody->UseGravity(gravity);
-		selectBody->SetMass(mass);
+		const size_t index(_id);
+		const auto& arr = attachIsland[index].elements;
 
-		selectBody = nullptr;
+		for (size_t i = 0; i < arr.size(); i++)
+		{
+			arr[i]->islandID = nullptr;				// 섬에 있는 친구들의 ID를 초기화함.
+		}
+
+		RemoveIslandID(_id);
 	}
 
-	void AttachSystem::XRotate(float _degree)
+
+	void AttachSystem::SelectBody(Attachable* _body) const
 	{
-		const float radian = (_degree / 180.f) * std::numbers::pi_v<float>;
-		 
-		const auto R = selectBody->GetRotation();
-		// Eigen::Vector3f right = Eigen::Vector3f{ 1.f, 0.f, 0.f } * R.toRotationMatrix();
+		if (const IslandID id = _body->GetIslandID())		// 섬을 이루고 있는가?
+		{
+			_body->Selected();			// 혼자만 듬
+		}
+		else
+		{
+			const size_t index(id);
+			const auto& arr = attachIsland[index].elements;		// 섬의 모두를 들어 올림
+
+			for (size_t i = 0; i < arr.size(); i++)
+			{
+				arr[i]->Selected();
+			}
+		}
 	}
 
-	void AttachSystem::YRotate(float _degree)
+	void AttachSystem::Attatch(Attachable* _object)
 	{
-		const float radian = (_degree / 180.f) * std::numbers::pi_v<float>;
-		
-		const auto R = selectBody->GetRotation();
-		// Eigen::Vector3f up = Eigen::Vector3f{ 0.f, 1.f, 0.f } * R.toRotationMatrix();
+		// 누군가에게 부착하는 기능
+
+		// 오브젝트에 부착하기 전
+		// 부착하는 오브젝트가 섬을 가지고 있을 경우
+		// 섬 ID를 삭제
+
+		// 연결해주고 새로운 ID를 부여
 	}
 
-	void AttachSystem::Attatch(PurahEngine::RigidBody* _base, PurahEngine::RigidBody* _target)
+	void AttachSystem::Dettatch(Attachable* _object)
 	{
 
 	}
