@@ -133,7 +133,7 @@ namespace Phyzzle
 	bool AttachSelectState::Search()
 	{
 		const float distance = 40.f;
-		const bool hit = player->CameraForwardRaycast(distance, &result, nullptr, nullptr);
+		const bool hit = player->RaycastFromCamera(distance, &result, nullptr, nullptr);
 
 		if (!hit)
 			return false;

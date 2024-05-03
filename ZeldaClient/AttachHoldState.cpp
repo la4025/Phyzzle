@@ -281,7 +281,7 @@ namespace Phyzzle
 
 	void AttachHoldState::TrySelect()
 	{
-		const bool hit = player->CameraForwardRaycast(selectRange, &selectBody, nullptr, nullptr);
+		const bool hit = player->RaycastFromCamera(selectRange, &selectBody, nullptr, nullptr);
 
 		if (!hit || !selectBody)
 		{
