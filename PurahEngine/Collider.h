@@ -1,6 +1,7 @@
 #pragma once
 #include "PurahEngineAPI.h"
 #include "Component.h"
+#include "EngineSetting.h"
 #include "Eigen/Dense"
 
 namespace ZonaiPhysics

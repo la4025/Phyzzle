@@ -64,9 +64,13 @@ namespace Phyzzle
 			return id == false;
 		}
 
+		// const static IslandID NONE;
+
 	private:
 		long long id;
 	};
+
+	// const IslandID IslandID::NONE{};
 
 	struct AttachIsland
 	{
@@ -77,24 +81,24 @@ namespace Phyzzle
 		AttachIsland(IslandID _id, const std::vector<Attachable*>& _e);
 		AttachIsland(IslandID _id, const std::initializer_list<Attachable*>& _e);
 
-		IslandID islandID;
+		// IslandID islandID;
 		std::vector<Attachable*> elements;			// Island를 이루고 있는 객체들
 
-		bool operator<(const AttachIsland& _island) const
-		{
-			return islandID < _island.islandID;
-		}
-		bool operator==(const AttachIsland& _island) const
-		{
-			return islandID == _island.islandID;
-		}
-		bool operator<(const IslandID& _id) const
-		{
-			return islandID < _id;
-		}
-		bool operator==(const IslandID& _id) const
-		{
-			return islandID == _id;
-		}
+		//bool operator<(const AttachIsland& _island) const
+		//{
+		//	return islandID < _island.islandID;
+		//}
+		//bool operator==(const AttachIsland& _island) const
+		//{
+		//	return islandID == _island.islandID;
+		//}
+		//bool operator<(const IslandID& _id) const
+		//{
+		//	return islandID < _id;
+		//}
+		//bool operator==(const IslandID& _id) const
+		//{
+		//	return islandID == _id;
+		//}
 	};
 }

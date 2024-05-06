@@ -6,6 +6,7 @@
 #include <Eigen/Dense>
 
 #include "MaterialEnum.h"
+#include "ZnMaterial.h"
 #include "PxPhysicsAPI.h"
 #include "omnipvd/PxOmniPvd.h"
 
@@ -59,9 +60,7 @@ namespace ZonaiPhysics
 
 	public:
 		static physx::PxScene*			CreateScene(void* _userScene, const Eigen::Vector3f& _gravity);
-		static physx::PxMaterial*		CreateMaterial(
-			float _staticFriction, float _dynamicFriction, float _restitution, 
-			eCombineMode _eFriction, eCombineMode _eRestitution);
+		static physx::PxMaterial*		CreateMaterial(const MaterialDesc& _desc);
 
 		/// rigidbody
 		static RigidBody*				CreateDynamicRigidBody(void* _userData);

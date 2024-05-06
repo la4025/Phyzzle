@@ -79,6 +79,7 @@ namespace Phyzzle
 	void AttachSelectState::Click_X()
 	{
 		StateCancel();
+
 	}
 
 	// √Îº“

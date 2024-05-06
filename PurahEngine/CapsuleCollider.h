@@ -25,6 +25,7 @@ namespace PurahEngine
 	public:
 		float radius;
 		float height;
+		std::string material;
 	};
 }
 

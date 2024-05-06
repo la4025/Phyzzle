@@ -442,7 +442,7 @@ namespace Phyzzle
 	}
 
 	bool Player::RaycastFromCamera(float _distance,
-		PurahEngine::RigidBody** _outBody, float* _outDistance, Eigen::Vector3f* _outHitPosition)
+		PurahEngine::RigidBody** _outBody)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
@@ -464,10 +464,6 @@ namespace Phyzzle
 
 			if (_outBody)
 				*_outBody = body;
-			if (_outDistance)
-				*_outDistance = info.distance;
-			if (_outHitPosition)
-				*_outHitPosition = info.position;
 
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);

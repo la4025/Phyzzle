@@ -18,6 +18,7 @@
 
 #include "ZnFactoryX.h"
 #include "ZnWorld.h"
+#include "ZnMaterial.h"
 
 
 namespace ZonaiPhysics
@@ -43,7 +44,7 @@ namespace ZonaiPhysics
 			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		defaultMaterial = ZnFactoryX::CreateMaterial(0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE);
+		defaultMaterial = ZnFactoryX::CreateMaterial({ 0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE });
 	}
 
 	void ZnPhysicsX::Simulation(float _dt)
@@ -74,13 +75,11 @@ namespace ZonaiPhysics
 		delete instance;
 	}
 
-	void ZnPhysicsX::AddMaterial(uint32_t _id, 
-		float staticFriction, float dynamicFriction, float _restitution, 
-		eCombineMode _eFriction, eCombineMode _eRestitution)
+	ZnMaterialID ZnPhysicsX::AddMaterial(const MaterialDesc& _desc)
 	{
-		const auto material = ZnFactoryX::CreateMaterial(staticFriction, dynamicFriction, _restitution, _eFriction, _eRestitution);
+		const auto material = ZnFactoryX::CreateMaterial(_desc);
 
-		ZnWorld::AddMaterial(_id, material);
+		return ZnWorld::AddMaterial(material);
 	}
 
 	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
@@ -148,11 +147,14 @@ namespace ZonaiPhysics
 	/// <summary>
 	/// 강체를 찾아서 거기에 콜라이더를 붙임.
 	/// </summary>
-	ZnCollider* ZnPhysicsX::CreateBoxCollider(void* _userData, const Eigen::Vector3f& _extend, uint32_t _material, void* _userScene)
+	ZnCollider* ZnPhysicsX::CreateBoxCollider(
+		void* _userData, 
+		const Eigen::Vector3f& _extend, 
+		ZnMaterialID _material, void* _userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, _userScene);
 
-		auto material = ZnWorld::GetMaterial(_material);
+		auto material = ZnWorld::GetPxMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
@@ -172,10 +174,13 @@ namespace ZonaiPhysics
 		return collider;
 	}
 
-	ZnCollider* ZnPhysicsX::CreateSphereCollider(void* _userData, float _radius, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateSphereCollider(
+		void* _userData, 
+		float _radius, 
+		ZnMaterialID _material, void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetMaterial(_material);
+		auto material = ZnWorld::GetPxMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
@@ -195,10 +200,13 @@ namespace ZonaiPhysics
 		return collider;
 	}
 
-	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(void* _userData, float _radius, float _height, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(
+		void* _userData, 
+		float _radius, float _height, 
+		ZnMaterialID _material, void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetMaterial(_material);
+		auto material = ZnWorld::GetPxMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
@@ -218,10 +226,13 @@ namespace ZonaiPhysics
 		return collider;
 	}
 
-	ZnCollider* ZnPhysicsX::CreateMeshCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateMeshCollider(
+		void* _userData, 
+		const std::wstring& _path, 
+		ZnMaterialID _material, void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetMaterial(_material);
+		auto material = ZnWorld::GetPxMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;
@@ -241,10 +252,13 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	ZnCollider* ZnPhysicsX::CreateConvexCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene)
+	ZnCollider* ZnPhysicsX::CreateConvexCollider(
+		void* _userData, 
+		const std::wstring& _path, 
+		ZnMaterialID _material, void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetMaterial(_material);
+		auto material = ZnWorld::GetPxMaterial(_material);
 
 		if (!material)
 			material = defaultMaterial;

@@ -19,6 +19,9 @@ namespace Phyzzle
 		void ValiantRetrieve();		// 강체 변수 되돌림
 
 	protected:
+		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+
 		void PreSerialize(json& jsonData) const override {}
 		void PreDeserialize(const json& jsonData) override {}
 		void PostSerialize(json& jsonData) const override {}

@@ -164,7 +164,11 @@ namespace Phyzzle
 		void CameraReset();
 		void CameraAround();
 
-		bool RaycastFromCamera(float _distance, PurahEngine::RigidBody** _outBody, float* _outDistance = nullptr, Eigen::Vector3f* _outHitPosition = nullptr);
+		bool RaycastFromCamera(
+			float _distance, 
+			PurahEngine::RigidBody** _outBody
+		);
+
 		bool RaycastFromCamera(
 			float _distance, 
 			PurahEngine::RigidBody** _outBody, 

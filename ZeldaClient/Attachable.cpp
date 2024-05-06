@@ -43,4 +43,31 @@ namespace Phyzzle
 		hasGravity = false;
 		originMass = -1.f;
 	}
+
+	void Attachable::OnCollisionEnter(
+		const ZonaiPhysics::ZnCollision& _collision, 
+		const PurahEngine::Collider* _collider)
+	{
+		PurahEngine::GameObject* obj = _collider->GetGameObject();
+
+		if (obj->tag.IsContain(L"Attachable"))
+		{
+			body = obj->GetComponent<PurahEngine::RigidBody>();
+		}
+	}
+
+	void Attachable::OnCollisionExit(
+		const ZonaiPhysics::ZnCollision& _collision,
+		const PurahEngine::Collider* _collider)
+	{
+		PurahEngine::GameObject* obj = _collider->GetGameObject();
+
+		if (obj->tag.IsContain(L"Attachable"))
+		{
+			if (body == obj->GetComponent<PurahEngine::RigidBody>())
+			{
+				body = nullptr;
+			}
+		}
+	}
 }

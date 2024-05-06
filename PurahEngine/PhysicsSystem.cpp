@@ -157,13 +157,16 @@ namespace PurahEngine
 		physics->SetGravity(_gravity);
 	}
 
-	void PhysicsSystem::AddMaterial(uint32_t _id, float staticFriction, float dynamicFriction, float _restitution,
+	ZonaiPhysics::ZnMaterialID PhysicsSystem::AddMaterial(float staticFriction, float dynamicFriction, float _restitution,
 		ZonaiPhysics::eCombineMode _eFriction, ZonaiPhysics::eCombineMode _eRestitution) const
 	{
-		physics->AddMaterial(_id,
-			staticFriction, dynamicFriction, _restitution,
-			_eFriction,
-			_eRestitution
+		return physics->AddMaterial(
+			ZonaiPhysics::MaterialDesc(
+				staticFriction, 
+				dynamicFriction, 
+				_restitution,
+				_eFriction,
+				_eRestitution)
 		);
 	}
 
@@ -195,21 +198,27 @@ namespace PurahEngine
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateBoxCollider(
-		void* _gameObject, float x, float y, float z) const noexcept
+		void* _gameObject, 
+		float x, float y, float z, 
+		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
 	{
-		return physics->CreateBoxCollider(_gameObject, { x, y, z }, 0);
+		return physics->CreateBoxCollider(_gameObject, { x, y, z }, _id);
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateSphereCollider(
-		void* _gameObject, float radius) const noexcept
+		void* _gameObject, 
+		float radius, 
+		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
 	{
-		return physics->CreateSphereCollider(_gameObject, radius, 0);
+		return physics->CreateSphereCollider(_gameObject, radius, _id);
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateCapsuleCollider(
-		void* _gameObject, float radius, float height) const noexcept
+		void* _gameObject, 
+		float radius, float height, 
+		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
 	{
-		return physics->CreateCapsuleCollider(_gameObject, radius, height, 0);
+		return physics->CreateCapsuleCollider(_gameObject, radius, height, _id);
 	}
 
 	ZonaiPhysics::ZnFixedJoint* PhysicsSystem::CreateFixedJoint(

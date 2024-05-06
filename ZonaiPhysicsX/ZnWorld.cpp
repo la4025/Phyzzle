@@ -9,6 +9,9 @@
 #include "ZnUtil.h"
 #include "ZnRaycastInfo.h"
 
+#include "ZnMaterial.h"
+#include "ZnResourceID.h"
+
 #include <ranges>
 
 #include "ZnTransform.h"
@@ -21,7 +24,7 @@ namespace ZonaiPhysics
 	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};
 	std::map<void*, ZnWorld::Colliders>					ZnWorld::colliderList{};
-	std::unordered_map<uint32_t, physx::PxMaterial*>	ZnWorld::materials{};
+	std::unordered_map<ZnMaterialID, physx::PxMaterial*>	ZnWorld::materialIDtable{};
 	std::vector<ZnJoint*>								ZnWorld::jointList{};
 
 	void ZnWorld::Run(float _dt)
@@ -83,13 +86,13 @@ namespace ZonaiPhysics
 
 		sceneList.clear();
 
-		for (auto& material : materials | std::views::values)
+		for (auto& material : materialIDtable | std::views::values)
 		{
 			material->release();
 			material = nullptr;
 		}
 
-		materials.clear();
+		materialIDtable.clear();
 	}
 
 	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
@@ -203,6 +206,18 @@ namespace ZonaiPhysics
 		}
 
 		return false;
+	}
+
+	void ZnWorld::CreateCharactor()
+	{
+		physx::PxControllerManager* manager = PxCreateControllerManager(*currScene);
+
+		physx::PxCapsuleControllerDesc desc;
+		desc.height;
+		desc.radius;
+		desc.position;
+
+		manager->createController(desc);
 	}
 
 	void ZnWorld::AddBody(RigidBody* _znBody, void* _userData, void* _userScene)
@@ -407,17 +422,25 @@ namespace ZonaiPhysics
 		_znJoint = nullptr;
 	}
 
-	void ZnWorld::AddMaterial(uint32_t _id, physx::PxMaterial* _material)
+	ZnMaterialID ZnWorld::AddMaterial(physx::PxMaterial* _material)
 	{
 		assert(_material != nullptr);
 
-		materials.insert(std::make_pair(_id, _material));
+		ZnMaterialID id;
+		CreateID(id);
+
+		materialIDtable.insert(std::make_pair(id, _material));
+
+		return id;
 	}
 
-	physx::PxMaterial* ZnWorld::GetMaterial(uint32_t _id)
+	physx::PxMaterial* ZnWorld::GetPxMaterial(const ZnMaterialID& _id)
 	{
-		if (materials.contains(_id))
-			return materials[_id];
+		if (_id == ZnMaterialID::None)
+			return nullptr;
+
+		if (materialIDtable.contains(_id))
+			return materialIDtable[_id];
 
 		return nullptr;
 	}
