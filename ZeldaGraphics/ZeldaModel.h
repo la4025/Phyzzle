@@ -13,6 +13,7 @@
 #include "FBXData.h"
 
 #include "ConstantBuffer.h"
+#include "RenderInfo.h"
 
 class ZeldaMesh;
 class ZeldaMaterial;
@@ -70,24 +71,19 @@ public:
 		ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-		DirectX::XMMATRIX worldMatrix,
-		ZeldaShader* shader,
-		const std::wstring& animationName,
-		float animationTime,
-		int drawIDCounter
+		RenderInfo* renderInfo,
+		ZeldaShader* shader
 	);
 
 	void RenderInstanced(
 		ID3D11DeviceContext* deviceContext,
 		ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 		ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixConstBuffer,
-		ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationConstBuffer,
+		ConstantBuffer<InstancingDataBufferType, ShaderType::VertexShaderAndPixelShader>* instancingDataConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-		const std::vector<ModelInstancingInfo>& instancingInfo,
-		ZeldaShader* shader,
-		const std::wstring& animationName,
-		int drawIDCounter
+		const std::vector<RenderInfo*>& renderInfo,
+		ZeldaShader* shader
 	);
 
 	void RenderBlendingAnimation(
@@ -96,18 +92,13 @@ public:
 		ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer,
 		ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 		ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-		DirectX::XMMATRIX worldMatrix,
-		ZeldaShader* shader,
-		const std::wstring& firstAnimationName,
-		const std::wstring& secondAnimationName,
-		float firstAnimationTime,
-		float secondAnimationTime,
-		float ratio,
-		int drawIDCounter
+		RenderInfo* renderInfo,
+		ZeldaShader* shader
 	);
 
 	std::vector<std::wstring> GetAnimationList();
 	std::vector<float> GetAnimationPlayTime();
+	unsigned int GetAnimationID(const std::wstring& animationName) const;
 
 private:
 	ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel);
@@ -129,11 +120,12 @@ private:
 	std::vector<ZeldaMesh*> meshes;
 	std::vector<unsigned int> materialIndex; // meshes[0]은 materials[materialIndex[0]]을 가짐
 	std::vector<ZeldaMaterial*> materials;
-	std::unordered_map<std::wstring, Animation*> animationTable;
+	std::map<std::wstring, Animation*> animationTable; // map을 사용해서 정렬이 되도록 해야한다.
 
 
 	// animationTable에서의 순서대로 ID를 1부터 부여한다. (0은 애니메이션이 적용되지 않은 상태)
 	std::unordered_map<std::wstring, unsigned int> animationIDTable;
+	std::unordered_map<unsigned int, std::wstring> animationNameTable;
 	// 각 애니메이션을 텍스쳐화 시킨 데이터의 TickPerSecond를 저장하는 컨테이너
 	std::unordered_map<unsigned int, float> animationTPSTable;
 

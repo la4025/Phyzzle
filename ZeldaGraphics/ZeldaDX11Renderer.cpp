@@ -17,6 +17,7 @@
 #include "MathConverter.h"
 
 #include "ConstantBufferManager.h"
+#include "RenderInfoManager.h"
 
 using namespace DirectX;
 
@@ -346,7 +347,6 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	matrixVsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>(mDevice);
 	animationConstBuffer = new ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>(mDevice);
 	instancingMatrixVsConstBuffer = new ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>(mDevice);
-	instancingAnimationVsConstBuffer = new ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>(mDevice);
 	blendingAnimationVsConstBuffer = new ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>(mDevice);
 
 	matrixPsConstBuffer = new ConstantBuffer<MatrixBufferType, ShaderType::PixelShader>(mDevice);
@@ -357,6 +357,8 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 
 	screenConstBuffer = new ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 	lightMatrixConstBuffer = new ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
+	instancingDataConstBuffer = new ConstantBuffer<InstancingDataBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
+	dataConstBuffer = new ConstantBuffer<DataBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 
 	screenConstBuffer->SetData({ { static_cast<float>(screenWidth), static_cast<float>(screenHeight) } });
 	ConstantBufferManager::GetInstance().SetBuffer();
@@ -432,6 +434,10 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	shadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapVS.cso", L"DirectionalShadowMapPS.cso", L"DirectionalShadowMapInstancingVS.cso");
 	blendingAnimationShadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapBlendingAnimationVS.cso", L"DirectionalShadowMapPS.cso", L"");
 	spriteShader = new ZeldaShader(mDevice, L"SpriteVS.cso", L"SpritePS.cso", L"");
+	fastOutLineShader = new ZeldaShader(mDevice, L"FastOutLineVS.cso", L"FastOutLinePS.cso", L"FastOutLineVS.cso");
+	outLineShader = new ZeldaShader(mDevice, L"OutLineVS.cso", L"OutLinePS.cso", L"");
+	outLineObjectShader = new ZeldaShader(mDevice, L"OutLineObjectVS.cso", L"OutLineObjectPS.cso", L"");
+	outLineBlendingAnimationObjectShader = new ZeldaShader(mDevice, L"OutLineBlendingAnimationObjectVS.cso", L"OutLineObjectPS.cso", L"");
 
 #pragma endregion Deferred Rendering
 
@@ -535,6 +541,51 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		renderTargetTextures->Release();
 	}
 	
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+		textureDesc.Width = screenWidth;
+		textureDesc.Height = screenHeight;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R32_UINT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+
+		ID3D11Texture2D* renderTargetTextures;
+
+		// Texture2D 생성
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures);
+		if (FAILED(result)) return false;
+
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+		ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+		renderTargetViewDesc.Format = textureDesc.Format;
+		renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+		// Render Target 생성
+		result = mDevice->CreateRenderTargetView(renderTargetTextures, &renderTargetViewDesc, &outlineMapRenderTarget);
+		if (FAILED(result)) return false;
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+		ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+		shaderResourceViewDesc.Format = textureDesc.Format;
+		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+		// Shader Resource View 생성
+		result = mDevice->CreateShaderResourceView(renderTargetTextures, &shaderResourceViewDesc, &outlineMapShaderResource);
+		if (FAILED(result)) return false;
+
+		renderTargetTextures->Release();
+	}
 
 #pragma endregion outline
 
@@ -635,11 +686,6 @@ void ZeldaDX11Renderer::Finalize()
 		delete instancingMatrixVsConstBuffer;
 		instancingMatrixVsConstBuffer = nullptr;
 	}
-	if (instancingAnimationVsConstBuffer)
-	{
-		delete instancingAnimationVsConstBuffer;
-		instancingAnimationVsConstBuffer = nullptr;
-	}
 	if (blendingAnimationVsConstBuffer)
 	{
 		delete blendingAnimationVsConstBuffer;
@@ -674,6 +720,16 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete lightMatrixConstBuffer;
 		lightMatrixConstBuffer = nullptr;
+	}
+	if (instancingDataConstBuffer)
+	{
+		delete instancingDataConstBuffer;
+		instancingDataConstBuffer = nullptr;
+	}
+	if (dataConstBuffer)
+	{
+		delete dataConstBuffer;
+		dataConstBuffer = nullptr;
 	}
 	if (mDepthStencilView)
 	{
@@ -779,6 +835,21 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete spriteShader;
 		spriteShader = nullptr;
+	}
+	if (fastOutLineShader)
+	{
+		delete fastOutLineShader;
+		fastOutLineShader = nullptr;
+	}
+	if (outLineShader)
+	{
+		delete outLineShader;
+		outLineShader = nullptr;
+	}
+	if (outLineObjectShader)
+	{
+		delete outLineObjectShader;
+		outLineObjectShader = nullptr;
 	}
 	if (defaultRasterState)
 	{
@@ -1008,11 +1079,9 @@ void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 	beginflag = true;
 #endif
 
-	drawIDCounter = 1;
-
 	UpdateMode();
 
-	ClearRenderInfo();
+	RenderInfoManager::GetInstance().ClearRenderInfo();
 }
 
 void ZeldaDX11Renderer::EndDraw()
@@ -1023,6 +1092,7 @@ void ZeldaDX11Renderer::EndDraw()
 	beginflag = false;
 #endif
 
+	RenderInfoManager::GetInstance().SortRenderInfo();
 
 	float gray[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -1034,7 +1104,7 @@ void ZeldaDX11Renderer::EndDraw()
 	}
 
 	// Clear the back buffer.
-	bool existLight = organizedLightRenderInfo.size() != 0;
+	bool existLight = RenderInfoManager::GetInstance().GetLightRenderInfo().size() != 0;
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, (existLight) ? (gray) : (black));
 
 	// Clear the depth buffer.
@@ -1070,214 +1140,152 @@ void ZeldaDX11Renderer::EndDraw()
 	}
 }
 
-void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, float r, float g, float b, float a)
+void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor)
 {
 	MeshID cubeID = ResourceManager::GetInstance().GetCubeID();
 
-	MeshInstancingInfo instancinInfo;
-	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-
-	// 오브젝트 그리기 대기열에 넣기
+	// Render Type
+	RenderType renderType = RenderType::Deferred_Mesh;
+	if ((wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
 	{
-		std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (forwardMeshRenderInfo) : (organizedMeshRenderInfo);
-
-		auto iter = renderInfoContainer.find({ { cubeID, texture }, { wireFrame, { r, g, b, a } } });
-
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			MeshRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.meshId = cubeID;
-			renderInfo.textureID = texture;
-			renderInfo.wireFrame = wireFrame;
-			renderInfo.color = { r, g, b, a };
-
-			renderInfoContainer[{ { cubeID, texture }, { wireFrame, { r, g, b, a } } }] = renderInfo;
-		}
+		renderType = RenderType::Forward_Mesh;
 	}
-	
-	// 그림자 그리기 대기열에 넣기
-	if (drawShadow && !(wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
-	{
-		std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo>& renderInfoContainer = shadowMeshRenderInfo;
 
-		auto iter = renderInfoContainer.find({ { cubeID, texture }, { wireFrame, { r, g, b, a } } });
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+	if (outLine)		renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
+	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
 
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			MeshRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.meshId = cubeID;
-			renderInfo.textureID = texture;
-			renderInfo.wireFrame = wireFrame;
-			renderInfo.color = { r, g, b, a };
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.meshID = cubeID;
+	instancingKey.textureID = texture;
 
-			renderInfoContainer[{ { cubeID, texture }, { wireFrame, { r, g, b, a } } }] = renderInfo;
-		}
-	}
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancingValue.color = color;
+	instancingValue.outLineColor = outLineColor;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow)
+void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
-	ModelInstancingInfo instancinInfo;
-	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancinInfo.time = 0.0f;
-
-	// 오브젝트 그리기 대기열에 넣기
+	// Render Type
+	RenderType renderType = RenderType::Deferred_Model;
+	if ((wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
 	{
-		std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (forwardModelRenderInfo) : (organizedModelRenderInfo);
-
-		auto iter = renderInfoContainer.find({ { model, L"" }, wireFrame });
-
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			ModelRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.modelID = model;
-			renderInfo.animationName = L"";
-			renderInfo.wireFrame = wireFrame;
-
-			renderInfoContainer[{ { model, L"" }, wireFrame }] = renderInfo;
-		}
+		renderType = RenderType::Forward_Model;
 	}
 
-	// 그림자 그리기 대기열에 넣기
-	if (drawShadow && !(wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
-	{
-		std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo>& renderInfoContainer = shadowModelRenderInfo;
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+	if (outLine)		renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
+	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
 
-		auto iter = renderInfoContainer.find({ { model, L"" }, wireFrame });
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.modelID = model;
+	instancingKey.animationID = 0;
 
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			ModelRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.modelID = model;
-			renderInfo.animationName = L"";
-			renderInfo.wireFrame = wireFrame;
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancingValue.animationTime = 0.0f;
+	instancingValue.outLineColor = outLineColor;
 
-			renderInfoContainer[{ { model, L"" }, wireFrame }] = renderInfo;
-		}
-	}
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow)
+void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
-	ModelInstancingInfo instancinInfo;
-	instancinInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancinInfo.time = animationTime;
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
-	// 오브젝트 그리기 대기열에 넣기
+	// Render Type
+	RenderType renderType = RenderType::Deferred_Model;
+	if ((wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
 	{
-		std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (forwardModelRenderInfo) : (organizedModelRenderInfo);
-
-		auto iter = renderInfoContainer.find({ { model, animationName }, wireFrame });
-
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			ModelRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.modelID = model;
-			renderInfo.animationName = animationName;
-			renderInfo.wireFrame = wireFrame;
-
-			renderInfoContainer[{ { model, animationName }, wireFrame }] = renderInfo;
-		}
+		renderType = RenderType::Forward_Model;
 	}
 
-	// 그림자 그리기 대기열에 넣기
-	if (drawShadow && !(wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
-	{
-		std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo>& renderInfoContainer = shadowModelRenderInfo;
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+	if (outLine)		renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
+	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
 
-		auto iter = renderInfoContainer.find({ { model, animationName }, wireFrame });
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.modelID = model;
+	instancingKey.animationID = modelInstance->GetAnimationID(animationName);
 
-		// 이미 동일한 것을 그린적이 있음
-		if (iter != renderInfoContainer.end())
-		{
-			iter->second.instancingInfo.push_back(instancinInfo);
-		}
-		// 처음 그리는 경우
-		else
-		{
-			ModelRenderInfo renderInfo;
-			renderInfo.instancingInfo.assign(1, instancinInfo);
-			renderInfo.modelID = model;
-			renderInfo.animationName = animationName;
-			renderInfo.wireFrame = wireFrame;
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancingValue.animationTime = animationTime;
+	instancingValue.outLineColor = outLineColor;
 
-			renderInfoContainer[{ { model, animationName }, wireFrame }] = renderInfo;
-		}
-	}
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow)
+void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
-	BlendingAnimationRenderInfo renderInfo;
-	renderInfo.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	renderInfo.modelID = model;
-	renderInfo.firstAnimationName = firstAnimationName;
-	renderInfo.secondAnimationName = secondAnimationName;
-	renderInfo.firstAnimationTime = firstAnimationTime;
-	renderInfo.secondAnimationTime = secondAnimationTime;
-	renderInfo.ratio = ratio;
-	renderInfo.wireFrame = wireFrame;
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
-	// 오브젝트 그리기 대기열에 넣기
+	// Render Type
+	RenderType renderType = RenderType::Deferred_BlendingAnimation;
+	if ((wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
 	{
-		std::vector<BlendingAnimationRenderInfo>& renderInfoContainer = (wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)) ? (forwardBlendingAnimationRenderInfo) : (blendingAnimationRenderInfo);
-
-		renderInfoContainer.push_back(renderInfo);
+		renderType = RenderType::Forward_BlendingAnimation;
 	}
 
-	// 그림자 그리기 대기열에 넣기
-	if (drawShadow && !(wireFrame || CheckRendererMode(RendererMode::OnWireFrameMode)))
-	{
-		std::vector<BlendingAnimationRenderInfo>& renderInfoContainer = shadowBlendingAnimationRenderInfo;
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+	if (outLine)		renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
+	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
 
-		renderInfoContainer.push_back(renderInfo);
-	}
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.modelID = model;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancingValue.blendAnimationID1 = modelInstance->GetAnimationID(firstAnimationName);
+	instancingValue.blendAnimationID2 = modelInstance->GetAnimationID(secondAnimationName);
+	instancingValue.blendAnimationTime1 = firstAnimationTime;
+	instancingValue.blendAnimationTime2 = secondAnimationTime;
+	instancingValue.ratio = ratio;
+	instancingValue.outLineColor = outLineColor;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
 void ZeldaDX11Renderer::DrawLight(LightID lightID)
 {
-	auto iter = organizedLightRenderInfo.find(lightID);
+	// Render Type
+	RenderType renderType = RenderType::Light;
 
-	// 처음 그리는 경우
-	if (iter == organizedLightRenderInfo.end())
-	{
-		organizedLightRenderInfo.insert(lightID);
-	}
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.lightID = lightID;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
 void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture, int layer)
@@ -1287,48 +1295,66 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID te
 
 void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, int layer)
 {
-	SpriteInstancingInfo instancinInfo;
-	instancinInfo.position = { position.x(), position.y() };
-	instancinInfo.size = { size.x(), size .y() };
+	// Render Type
+	RenderType renderType = RenderType::Sprite;
 
-	auto iter = organizedSpriteRenderInfo.find({ layer, texture });
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
 
-	// 이미 동일한 것을 그린적이 있음
-	if (iter != organizedSpriteRenderInfo.end())
-	{
-		iter->second.instancingInfo.push_back(instancinInfo);
-	}
-	// 처음 그리는 경우
-	else
-	{
-		SpriteRenderInfo renderInfo;
-		renderInfo.instancingInfo.assign(1, instancinInfo);
-		renderInfo.textureID = texture;
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.textureID = texture;
 
-		organizedSpriteRenderInfo[{ layer, texture }] = renderInfo;
-	}
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.position = { position.x(), position.y() };
+	instancingValue.size = { size.x(), size.y() };
+	instancingValue.layer = layer;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
 void ZeldaDX11Renderer::DrawCubeMap(TextureID texture)
 {
-	cubeMapRenderInfo = texture;
+	// Render Type
+	RenderType renderType = RenderType::CubeMap;
+
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.textureID = texture;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a)
+void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, Color color)
 {
-	StringRenderInfo renderInfo;
-	renderInfo.str = string;
-	renderInfo.x = x;
-	renderInfo.y = y;
-	renderInfo.width = width;
-	renderInfo.height = height;
-	renderInfo.fontSize = fontSize;
-	renderInfo.r = r;
-	renderInfo.g = g;
-	renderInfo.b = b;
-	renderInfo.a = a;
+	// Render Type
+	RenderType renderType = RenderType::String;
 
-	stringRenderInfo.push_back(renderInfo);
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+
+	// Instancing Key
+	InstancingKey instancingKey;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.str = string;
+	instancingValue.position = { x, y };
+	instancingValue.size = { width, height };
+	instancingValue.fontSize = fontSize;
+	instancingValue.color = color;
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
 void ZeldaDX11Renderer::CreateBasicResources()
@@ -1373,20 +1399,14 @@ void ZeldaDX11Renderer::DrawDeferred()
 	mDeviceContext->OMSetRenderTargets(Deferred::Object::Count + 1, renderTargets, mDepthStencilView);
 	//mDeviceContext->OMSetRenderTargets(Deferred::Object::Count, deferredRenderTargets + Deferred::Object::Begin, mDepthStencilView);
 
-	for (auto& iter : organizedMeshRenderInfo)
-	{
-		DrawMeshRenderInfo(iter.second, deferredObjectShader);
-	}
 
-	for (auto& iter : organizedModelRenderInfo)
-	{
-		DrawModelRenderInfo(iter.second, deferredObjectShader);
-	}
 
-	for (auto& iter : blendingAnimationRenderInfo)
-	{
-		DrawBlendingAnimationRenderInfo(iter, deferredBlendingObjectShader);
-	}
+
+	// Default Rasterizer State 사용
+	mDeviceContext->RSSetState(defaultRasterState);
+
+	DrawDeferredRenderInfo();
+
 #pragma endregion
 
 
@@ -1394,21 +1414,21 @@ void ZeldaDX11Renderer::DrawDeferred()
 	
 	LightInfoBufferType lightInfoData;
 	unsigned int lightCount = 0;
-	for (auto& iter : organizedLightRenderInfo)
+	for (auto& [key, value] : RenderInfoManager::GetInstance().GetLightRenderInfo())
 	{
-		lightInfoData.lights[lightCount] = ResourceManager::GetInstance().GetLight(iter)->GetLightInfo();
+		lightInfoData.lights[lightCount] = ResourceManager::GetInstance().GetLight(key.lightID)->GetLightInfo();
 		lightCount++;
 	}
 
 	lightInfoConstBuffer->SetData(lightInfoData);
 
 	lightCount = 0;
-	for (auto& iter : organizedLightRenderInfo)
+	for (auto& [key, value] : RenderInfoManager::GetInstance().GetLightRenderInfo())
 	{
-		ZeldaLight* light = ResourceManager::GetInstance().GetLight(iter);
+		ZeldaLight* light = ResourceManager::GetInstance().GetLight(key.lightID);
 
 		CreateShadowMap(light);
-		DrawDefferredLight(light, lightCount);
+		DrawDeferredLight(light, lightCount);
 
 		lightCount++;
 	}
@@ -1421,15 +1441,16 @@ void ZeldaDX11Renderer::DrawDeferred()
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 0, 1, deferredShaderResources + Deferred::Object::Albedo);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 1, 2, deferredShaderResources + Deferred::Light::Begin);
-	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
 
 	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
 	squareMesh->Render(mDeviceContext);
 	deferredFinalShader->Render(mDeviceContext, squareMesh->GetIndexCount());
 
 	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV[0]);
-
 #pragma endregion
+
+	DrawFastOutLine();
+	DrawOutLine();
 }
 
 void ZeldaDX11Renderer::DrawForward()
@@ -1437,21 +1458,11 @@ void ZeldaDX11Renderer::DrawForward()
 	ID3D11ShaderResourceView* nullSRV[3] = { nullptr, nullptr, nullptr };
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin, 3, nullSRV);
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->RSSetState(wireFrameRasterState);
+	
+	DrawForwardRenderInfo();
 
-	for (auto& iter : forwardMeshRenderInfo)
-	{
-		DrawMeshRenderInfo(iter.second, forwardShader);
-	}
-
-	for (auto& iter : forwardModelRenderInfo)
-	{
-		DrawModelRenderInfo(iter.second, forwardShader);
-	}
-
-	for (auto& iter : forwardBlendingAnimationRenderInfo)
-	{
-		DrawBlendingAnimationRenderInfo(iter, forwardBlendingShader);
-	}
+	mDeviceContext->RSSetState(defaultRasterState);
 }
 
 void ZeldaDX11Renderer::BeginDrawSprite()
@@ -1510,9 +1521,14 @@ void ZeldaDX11Renderer::DrawSprite()
 	}
 #pragma endregion
 
-	for (auto iter : organizedSpriteRenderInfo)
+	const auto& spriteRenderInfo = RenderInfoManager::GetInstance().GetSpriteRenderInfo();
+
+	for (auto& [key, value] : spriteRenderInfo)
 	{
-		DrawSpriteRenderInfo(iter.second);
+		for (int i = 0; i < value.size(); i++)
+		{
+			DrawSpriteRenderInfo(value[i]);
+		}
 	}
 }
 
@@ -1527,10 +1543,535 @@ void ZeldaDX11Renderer::EndDrawSprite()
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 
+void ZeldaDX11Renderer::DrawDeferredRenderInfo()
+{
+	auto& renderInfo = RenderInfoManager::GetInstance().GetDeferredRenderInfo();
+
+	for (auto& [key, value] : renderInfo)
+	{
+		assert(value.size() != 0u);
+		RenderType renderType = value[0]->renderType;
+
+		switch (renderType)
+		{
+			case RenderType::Deferred_Mesh:
+			{
+				DrawMeshRenderInfo(value, deferredObjectShader);
+				break;
+			}
+			case RenderType::Deferred_Model:
+			{
+				DrawModelRenderInfo(value, deferredObjectShader);
+				break;
+			}
+			case RenderType::Deferred_BlendingAnimation:
+			{
+				for (int i = 0; i < value.size(); i++)
+				{
+					DrawBlendingAnimationRenderInfo(value[i], deferredBlendingObjectShader);
+				}
+				break;
+			}
+			default:
+			{
+				assert(0);
+				break;
+			}
+		}
+	}
+}
+
+void ZeldaDX11Renderer::DrawForwardRenderInfo()
+{
+	auto& renderInfo = RenderInfoManager::GetInstance().GetForwardRenderInfo();
+
+	for (auto& [key, value] : renderInfo)
+	{
+		assert(value.size() != 0u);
+		RenderType renderType = value[0]->renderType;
+
+		switch (renderType)
+		{
+			case RenderType::Forward_Mesh:
+			{
+				DrawMeshRenderInfo(value, forwardShader);
+				break;
+			}
+			case RenderType::Forward_Model:
+			{
+				DrawModelRenderInfo(value, forwardShader);
+				break;
+			}
+			case RenderType::Forward_BlendingAnimation:
+			{
+				for (int i = 0; i < value.size(); i++)
+				{
+					DrawBlendingAnimationRenderInfo(value[i], forwardBlendingShader);
+				}
+				break;
+			}
+			default:
+			{
+				assert(0);
+				break;
+			}
+		}
+	}
+}
+
+void ZeldaDX11Renderer::DrawFastOutLine()
+{
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+
+	// 다음 그리기에 영향을 주지 않기 위해 뎁스스텐실을 비워놓음
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
+
+	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+	squareMesh->RenderInstanced(mDeviceContext);
+
+	const auto& fastOutLineRenderInfo = RenderInfoManager::GetInstance().GetFastOutLineRenderInfo();
+
+
+	InstancingDataBufferType* instancingData = new InstancingDataBufferType();
+	
+	int instanceCount = 0;
+	for (auto iter = fastOutLineRenderInfo.begin(); iter != fastOutLineRenderInfo.end(); iter++)
+	{
+		for (int i = 0; i < iter->second.size(); i++)
+		{
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.r;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.g;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].z = iter->second[i]->instancingValue.outLineColor.b;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].w = iter->second[i]->instancingValue.outLineColor.a;
+
+			instancingData->instancingValue2[instanceCount % INSTANCING_MAX].x = iter->second[i]->drawID;
+			
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || ((std::next(iter) == fastOutLineRenderInfo.end()) && (instanceCount == iter->second.size() - 1)))
+			{
+				instancingDataConstBuffer->SetData(*instancingData);
+				ConstantBufferManager::GetInstance().SetBuffer();
+				fastOutLineShader->RenderInstanced(mDeviceContext, squareMesh->GetIndexCount(), (instanceCount % INSTANCING_MAX) + 1, 0);
+			}
+
+			instanceCount += 1;
+		}
+	}
+
+	delete instancingData;
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
+}
+
+void ZeldaDX11Renderer::DrawOutLine()
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	float initColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+	squareMesh->RenderInstanced(mDeviceContext);
+
+	const auto& outLineRenderInfo = RenderInfoManager::GetInstance().GetOutLineRenderInfo();
+
+	for (int i = 0; i < outLineRenderInfo.size(); i++)
+	{
+		// 렌더타겟 초기화
+		mDeviceContext->ClearRenderTargetView(outlineMapRenderTarget, initColor);
+
+		// 단일 오브젝트를 그린다.
+		mDeviceContext->OMSetRenderTargets(1, &outlineMapRenderTarget, nullptr);
+
+		RenderType renderType = outLineRenderInfo[i]->renderType;
+
+		switch (renderType)
+		{
+			case RenderType::Deferred_Mesh:
+			{
+				ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(outLineRenderInfo[i]->instancingKey.meshID);
+				meshInstance->Render(mDeviceContext);
+
+				MatrixBufferType matrixBuffer;
+				matrixBuffer.world = XMMatrixTranspose(outLineRenderInfo[i]->instancingValue.worldMatrix);
+				matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+				matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+				matrixBuffer.cameraFar = currentcamera->GetFar();
+				matrixVsConstBuffer->SetData(matrixBuffer);
+
+				ObjectIDBufferType objectIDBufferType;
+				objectIDBufferType.objectID = outLineRenderInfo[i]->drawID;
+				objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				outLineObjectShader->Render(mDeviceContext, meshInstance->GetIndexCount());
+
+				break;
+			}
+			case RenderType::Deferred_Model:
+			{
+				ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(outLineRenderInfo[i]->instancingKey.modelID);
+
+				modelInstance->Render(
+					mDeviceContext,
+					matrixVsConstBuffer,
+					animationConstBuffer,
+					materialConstBuffer,
+					objectIDPSConstBuffer,
+					outLineRenderInfo[i],
+					outLineObjectShader);
+
+				break;
+			}
+			case RenderType::Deferred_BlendingAnimation:
+			{
+				ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(outLineRenderInfo[i]->instancingKey.modelID);
+
+				modelInstance->RenderBlendingAnimation(
+					mDeviceContext,
+					matrixVsConstBuffer,
+					blendingAnimationVsConstBuffer,
+					materialConstBuffer,
+					objectIDPSConstBuffer,
+					outLineRenderInfo[i],
+					outLineBlendingAnimationObjectShader);
+
+				break;
+			}
+			default:
+			{
+				assert(0);
+				break;
+			}
+		}
+
+		// OutLine을 그린다.
+		
+		// 렌더타겟을 변경
+		mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
+
+		mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
+		mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &outlineMapShaderResource);
+
+		ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+		squareMesh->Render(mDeviceContext);
+
+		ObjectIDBufferType objectIDBufferType;
+		objectIDBufferType.objectID = outLineRenderInfo[i]->drawID;
+		objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+		DataBufferType dataBufferType;
+		dataBufferType.float4Value[0].x = outLineRenderInfo[i]->instancingValue.outLineColor.r;
+		dataBufferType.float4Value[0].y = outLineRenderInfo[i]->instancingValue.outLineColor.g;
+		dataBufferType.float4Value[0].z = outLineRenderInfo[i]->instancingValue.outLineColor.b;
+		dataBufferType.float4Value[0].w = outLineRenderInfo[i]->instancingValue.outLineColor.a;
+		dataConstBuffer->SetData(dataBufferType);
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+
+		outLineShader->Render(mDeviceContext, squareMesh->GetIndexCount());
+	}
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
+	mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &nullSRV);
+}
+
+void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader)
+{
+	assert(renderInfo.size() != 0);
+
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	// Mesh
+	ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(renderInfo[0]->instancingKey.meshID);
+
+	// Texture
+	ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(renderInfo[0]->instancingKey.textureID);
+
+	// Constant Buffer
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.world = XMMatrixTranspose(renderInfo[0]->instancingValue.worldMatrix);
+	matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+	matrixBuffer.cameraFar = currentcamera->GetFar();
+	matrixVsConstBuffer->SetData(matrixBuffer);
+
+	materialConstBuffer->SetData(
+		{
+			{
+				renderInfo[0]->instancingValue.color.r,
+				renderInfo[0]->instancingValue.color.g,
+				renderInfo[0]->instancingValue.color.b,
+				renderInfo[0]->instancingValue.color.a
+			},
+			(textureInstance == nullptr),
+			(textureInstance != nullptr) && textureInstance->UseSRGB(),
+			(textureInstance != nullptr),
+			false
+		});
+
+	// Set Texture
+	if (textureInstance != nullptr)
+	{
+		textureInstance->SetDiffuseMapShaderResource(mDeviceContext);
+	}
+
+	bool instancing = (renderInfo.size() > 1u);
+
+	if (instancing)
+	{
+		meshInstance->RenderInstanced(mDeviceContext);
+
+		InstancingMatrixBufferType* instancingMatrix = new InstancingMatrixBufferType();
+		InstancingDataBufferType* instancingData = new InstancingDataBufferType();
+
+		for (size_t i = 0ull; i < renderInfo.size(); i++)
+		{
+			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+			instancingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(renderInfo[i]->instancingValue.worldMatrix);
+			instancingData->instancingValue0[i % INSTANCING_MAX] =
+			{
+				renderInfo[i]->instancingValue.color.r,
+				renderInfo[i]->instancingValue.color.g,
+				renderInfo[i]->instancingValue.color.b,
+				renderInfo[i]->instancingValue.color.a
+			};
+
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.size() - 1))
+			{
+				instancingMatrixVsConstBuffer->SetData(*instancingMatrix);
+				instancingDataConstBuffer->SetData(*instancingData);
+
+				ObjectIDBufferType objectIDBufferType;
+				objectIDBufferType.objectID = renderInfo[i]->drawID - (i % INSTANCING_MAX);
+				objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				shader->RenderInstanced(mDeviceContext, meshInstance->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
+			}
+		}
+
+		delete instancingMatrix;
+		delete instancingData;
+	}
+	else
+	{
+		meshInstance->Render(mDeviceContext);
+
+		ObjectIDBufferType objectIDBufferType;
+		objectIDBufferType.objectID = renderInfo[0]->drawID;
+		objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+		
+		shader->Render(mDeviceContext, meshInstance->GetIndexCount());
+	}
+}
+
+void ZeldaDX11Renderer::DrawModelRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader)
+{
+	assert(renderInfo.size() != 0);
+
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	// Model
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo[0]->instancingKey.modelID);
+
+	bool instancing = (renderInfo.size() > 1u);
+
+	if (instancing)
+	{
+		modelInstance->RenderInstanced(
+			mDeviceContext,
+			matrixVsConstBuffer,
+			instancingMatrixVsConstBuffer,
+			instancingDataConstBuffer,
+			materialConstBuffer,
+			objectIDPSConstBuffer,
+			renderInfo,
+			shader);
+	}
+	else
+	{
+		modelInstance->Render(
+			mDeviceContext,
+			matrixVsConstBuffer,
+			animationConstBuffer,
+			materialConstBuffer,
+			objectIDPSConstBuffer,
+			renderInfo[0],
+			shader);
+	}
+}
+
+void ZeldaDX11Renderer::DrawBlendingAnimationRenderInfo(RenderInfo* renderInfo, ZeldaShader* shader)
+{
+	assert(renderInfo != nullptr);
+
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	// Model
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo->instancingKey.modelID);
+
+	modelInstance->RenderBlendingAnimation(
+		mDeviceContext,
+		matrixVsConstBuffer,
+		blendingAnimationVsConstBuffer,
+		materialConstBuffer,
+		objectIDPSConstBuffer,
+		renderInfo,
+		shader);
+}
+
+void ZeldaDX11Renderer::DrawMeshDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	// Mesh
+	ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(renderInfo[0]->instancingKey.meshID);
+
+	// Constant Buffer
+	LightMatrixBufferType lightMatrixBuffer;
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
+	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
+
+	bool instancing = (renderInfo.size() > 1u);
+
+	if (instancing)
+	{
+		meshInstance->RenderInstanced(mDeviceContext);
+
+		InstancingMatrixBufferType* instancingMatrix = new InstancingMatrixBufferType();
+
+		for (size_t i = 0; i < renderInfo.size(); i++)
+		{
+			auto& instancingInfo = renderInfo[i];
+
+			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+			instancingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(renderInfo[i]->instancingValue.worldMatrix);
+
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.size() - 1))
+			{
+				instancingMatrixVsConstBuffer->SetData(*instancingMatrix);
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				shadowMapShader->RenderInstanced(mDeviceContext, meshInstance->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
+			}
+		}
+
+		delete instancingMatrix;
+	}
+	else
+	{
+		meshInstance->Render(mDeviceContext);
+
+		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
+		matrixVsConstBuffer->SetData({ XMMatrixTranspose(renderInfo[0]->instancingValue.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix())});
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+
+		shadowMapShader->Render(mDeviceContext, meshInstance->GetIndexCount());
+	}
+}
+
+void ZeldaDX11Renderer::DrawModelDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo[0]->instancingKey.modelID);
+
+	LightMatrixBufferType lightMatrixBuffer;
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
+	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
+
+	bool instancing = (renderInfo.size() > 1u);
+
+	if (instancing)
+	{
+		modelInstance->RenderInstanced(
+			mDeviceContext,
+			matrixVsConstBuffer,
+			instancingMatrixVsConstBuffer,
+			instancingDataConstBuffer,
+			materialConstBuffer,
+			objectIDPSConstBuffer,
+			renderInfo,
+			shadowMapShader);
+	}
+	else
+	{
+		modelInstance->Render(
+			mDeviceContext,
+			matrixVsConstBuffer,
+			animationConstBuffer,
+			materialConstBuffer,
+			objectIDPSConstBuffer,
+			renderInfo[0],
+			shadowMapShader);
+	}
+}
+
+void ZeldaDX11Renderer::DrawBlendingAnimationDirectionalShadow(RenderInfo* renderInfo, ZeldaLight* light)
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo->instancingKey.modelID);
+
+	LightMatrixBufferType lightMatrixBuffer;
+	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
+	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
+
+	modelInstance->RenderBlendingAnimation(
+		mDeviceContext,
+		matrixVsConstBuffer,
+		blendingAnimationVsConstBuffer,
+		materialConstBuffer,
+		objectIDPSConstBuffer,
+		renderInfo,
+		blendingAnimationShadowMapShader);
+}
+
+void ZeldaDX11Renderer::DrawSpriteRenderInfo(RenderInfo* renderInfo)
+{
+	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo->instancingKey.textureID);
+
+	float layer = static_cast<float>(renderInfo->instancingValue.layer);
+
+	if (renderInfo->instancingValue.size.x == 0.0f && renderInfo->instancingValue.size.y == 0.0f)
+	{
+		spriteBatch->Draw(texture->GetTexture(), renderInfo->instancingValue.position);
+	}
+	else
+	{
+		RECT rect;
+		rect.left = renderInfo->instancingValue.position.x;
+		rect.right = renderInfo->instancingValue.position.x + renderInfo->instancingValue.size.x;
+		rect.top = renderInfo->instancingValue.position.y;
+		rect.bottom = renderInfo->instancingValue.position.y + renderInfo->instancingValue.size.y;
+
+		spriteBatch->Draw(texture->GetTexture(), rect, nullptr, Colors::White, 0.0f, { 0.0f, 0.0f }, SpriteEffects_None, layer);
+	}
+}
+
 void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 {
-	// Rasterizer State 설정
-	mDeviceContext->RSSetState(shadowRasterState);
+	// Rasterizer State 설정 - (지금은 셰이더에서 bias처리를 하기 때문에 defaultRasterState를 사용한다)
+	mDeviceContext->RSSetState(defaultRasterState);
 	// Shadow DepthStencilView 비우기
 	mDeviceContext->ClearDepthStencilView(directionalShadowDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	// RenderTarget을 비우고 DepthStencilView를 설정
@@ -1541,19 +2082,40 @@ void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 
 	if (light->GetLightType() == LightType::Directional)
 	{
-		for (auto& meshIter : shadowMeshRenderInfo)
-		{
-			DrawDirectionalShadow(meshIter.second, light, shadowMapShader);
-		}
+		const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
 
-		for (auto& modelIter : shadowModelRenderInfo)
+		for (auto& [key, value] : shadowRenderInfo)
 		{
-			DrawDirectionalShadow(modelIter.second, light, shadowMapShader);
-		}
+			assert(value.size() != 0);
 
-		for (auto& animIter : shadowBlendingAnimationRenderInfo)
-		{
-			DrawDirectionalShadow(animIter, light, blendingAnimationShadowMapShader);
+			RenderType renderType = value[0]->renderType;
+
+			switch (renderType)
+			{
+				case RenderType::Deferred_Mesh:
+				{
+					DrawMeshDirectionalShadow(value, light);
+					break;
+				}
+				case RenderType::Deferred_Model:
+				{
+					DrawModelDirectionalShadow(value, light);
+					break;
+				}
+				case RenderType::Deferred_BlendingAnimation:
+				{
+					for (int i = 0; i < value.size(); i++)
+					{
+						DrawBlendingAnimationDirectionalShadow(value[i], light);
+					}
+					break;
+				}
+				default:
+				{
+					assert(0);
+					break;
+				}
+			}
 		}
 	}
 
@@ -1563,7 +2125,7 @@ void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 
-void ZeldaDX11Renderer::DrawDefferredLight(ZeldaLight* light, unsigned int lightIndex)
+void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightIndex)
 {
 	// 다음 그리기에 영향을 주지 않기 위해 뎁스스텐실을 비워놓음
 	mDeviceContext->OMSetRenderTargets(Deferred::Light::Count, deferredRenderTargets + Deferred::Light::Begin, nullptr);
@@ -1788,170 +2350,11 @@ void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambi
 	}
 }
 
-void ZeldaDX11Renderer::DrawMeshRenderInfo(MeshRenderInfo renderInfo, ZeldaShader* shader)
-{
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
-
-	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
-
-	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
-
-	MatrixBufferType matrixBuffer;
-	matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
-	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
-	matrixBuffer.cameraFar = currentcamera->GetFar();
-	matrixVsConstBuffer->SetData(matrixBuffer);
-
-	// Instancing 사용
-	if (renderInfo.instancingInfo.size() > 1)
-	{
-		cubeMesh->RenderInstanced(mDeviceContext);
-
-		UseWireFrameRasterState(renderInfo.wireFrame);
-		mDeviceContext->RSSetState(currentRasterState);
-		materialConstBuffer->SetData({
-				{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
-				(texture == nullptr),
-				(texture != nullptr) && texture->UseSRGB(),
-				(texture != nullptr),
-				false
-			});
-
-		if (texture != nullptr)
-		{
-			texture->SetDiffuseMapShaderResource(mDeviceContext);
-		}
-
-		InstancingMatrixBufferType* instacingMatrix = new InstancingMatrixBufferType();
-
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-			instacingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(instancingInfo.worldMatrix);
-
-			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
-			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.instancingInfo.size() - 1))
-			{
-				instancingMatrixVsConstBuffer->SetData(*instacingMatrix);
-
-				ObjectIDBufferType objectIDBufferType;
-				objectIDBufferType.objectID = drawIDCounter;
-				objectIDPSConstBuffer->SetData(objectIDBufferType);
-				drawIDCounter += (i % INSTANCING_MAX) + 1;
-
-				ConstantBufferManager::GetInstance().SetBuffer();
-
-				shader->RenderInstanced(mDeviceContext, cubeMesh->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
-			}
-		}
-
-		delete instacingMatrix;
-	}
-	else
-	{
-		cubeMesh->Render(mDeviceContext);
-
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			UseWireFrameRasterState(renderInfo.wireFrame);
-			mDeviceContext->RSSetState(currentRasterState);
-			materialConstBuffer->SetData({
-					{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
-					(texture == nullptr),
-					(texture != nullptr) && texture->UseSRGB(),
-					(texture != nullptr),
-					false
-				});
-
-			if (texture != nullptr)
-			{
-				texture->SetDiffuseMapShaderResource(mDeviceContext);
-			}
-
-			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-			matrixVsConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-
-			ObjectIDBufferType objectIDBufferType;
-			objectIDBufferType.objectID = drawIDCounter;
-			objectIDPSConstBuffer->SetData(objectIDBufferType);
-			drawIDCounter += 1;
-
-			ConstantBufferManager::GetInstance().SetBuffer();
-
-			shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
-		}
-	}
-}
-
-void ZeldaDX11Renderer::DrawModelRenderInfo(ModelRenderInfo renderInfo, ZeldaShader* shader)
-{
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
-
-	// Instancing 사용
-	if (renderInfo.instancingInfo.size() > 1)
-	{
-		UseWireFrameRasterState(renderInfo.wireFrame);
-		mDeviceContext->RSSetState(currentRasterState);
-
-		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName, drawIDCounter);
-		drawIDCounter += renderInfo.instancingInfo.size();
-	}
-	else
-	{
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			UseWireFrameRasterState(renderInfo.wireFrame);
-			mDeviceContext->RSSetState(currentRasterState);
-
-			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, objectIDPSConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time, drawIDCounter);
-			drawIDCounter += renderInfo.instancingInfo.size();
-		}
-	}
-}
-
-void ZeldaDX11Renderer::DrawBlendingAnimationRenderInfo(BlendingAnimationRenderInfo renderInfo, ZeldaShader* shader)
-{
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
-
-	UseWireFrameRasterState(renderInfo.wireFrame);
-	mDeviceContext->RSSetState(currentRasterState);
-
-	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio, drawIDCounter);
-	drawIDCounter += 1;
-}
-
-void ZeldaDX11Renderer::DrawSpriteRenderInfo(SpriteRenderInfo renderInfo)
-{
-	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
-
-	for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-	{
-		if (renderInfo.instancingInfo[i].size.x == 0.0f && renderInfo.instancingInfo[i].size.y == 0.0f)
-		{
-			spriteBatch->Draw(texture->GetTexture(), renderInfo.instancingInfo[i].position);
-		}
-		else
-		{
-			RECT rect;
-			rect.left = renderInfo.instancingInfo[i].position.x;
-			rect.right = renderInfo.instancingInfo[i].position.x + renderInfo.instancingInfo[i].size.x;
-			rect.top = renderInfo.instancingInfo[i].position.y;
-			rect.bottom = renderInfo.instancingInfo[i].position.y + renderInfo.instancingInfo[i].size.y;
-
-			spriteBatch->Draw(texture->GetTexture(), rect);
-		}
-	}
-}
-
 void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 {
-	if (cubeMapRenderInfo == TextureID::ID_NULL)
+	const auto& cubeMapRenderInfo = RenderInfoManager::GetInstance().GetCubeMapRenderInfo();
+
+	if (cubeMapRenderInfo == nullptr || cubeMapRenderInfo->instancingKey.textureID == TextureID::ID_NULL)
 	{
 		// CubeMap을 그리지 않음
 		return;
@@ -1967,7 +2370,7 @@ void ZeldaDX11Renderer::DrawCubeMapRenderInfo()
 	ZeldaMesh* mesh = ResourceManager::GetInstance().GetSphereMesh();
 	mesh->Render(mDeviceContext);
 
-	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(cubeMapRenderInfo);
+	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(cubeMapRenderInfo->instancingKey.textureID);
 	texture->SetCubeMapShaderResource(mDeviceContext);
 
 	// 전치해야한다.
@@ -1991,18 +2394,20 @@ void ZeldaDX11Renderer::DrawStringRenderInfo()
 {
 	d2dRenderTarget->BeginDraw();
 
-	for (auto iter = stringRenderInfo.begin(); iter != stringRenderInfo.end(); iter++)
+	const auto& stringRenderInfo = RenderInfoManager::GetInstance().GetStringRenderInfo();
+
+	for (auto& renderInfo : stringRenderInfo)
 	{
-		std::wstring str = iter->str;
-		float x = iter->x;
-		float y = iter->y;
-		float width = iter->width;
-		float height = iter->height;
-		float fontSize = iter->fontSize;
-		float r = iter->r;
-		float g = iter->g;
-		float b = iter->b;
-		float a = iter->a;
+		std::wstring str = renderInfo->instancingValue.str;
+		float x = renderInfo->instancingValue.position.x;
+		float y = renderInfo->instancingValue.position.y;
+		float width = renderInfo->instancingValue.size.x;
+		float height = renderInfo->instancingValue.size.y;
+		float fontSize = renderInfo->instancingValue.fontSize;
+		float r = renderInfo->instancingValue.color.r;
+		float g = renderInfo->instancingValue.color.g;
+		float b = renderInfo->instancingValue.color.b;
+		float a = renderInfo->instancingValue.color.a;
 
 		// 텍스트 렌더링 준비
 		ID2D1SolidColorBrush* textBrush = nullptr;
@@ -2036,170 +2441,6 @@ void ZeldaDX11Renderer::DrawStringRenderInfo()
 	}
 
 	d2dRenderTarget->EndDraw();
-}
-
-void ZeldaDX11Renderer::DrawDirectionalShadow(MeshRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
-{
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
-
-	ZeldaMesh* cubeMesh = ResourceManager::GetInstance().GetCubeMesh();
-
-	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo.textureID);
-
-	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
-	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
-	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
-
-	// Instancing 사용
-	if (renderInfo.instancingInfo.size() > 1)
-	{
-		cubeMesh->RenderInstanced(mDeviceContext);
-
-		UseWireFrameRasterState(renderInfo.wireFrame);
-		mDeviceContext->RSSetState(currentRasterState);
-		materialConstBuffer->SetData({
-				{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
-				(texture == nullptr),
-				(texture != nullptr) && texture->UseSRGB(),
-				(texture != nullptr),
-				false
-			});
-
-		if (texture != nullptr)
-		{
-			texture->SetDiffuseMapShaderResource(mDeviceContext);
-		}
-
-		InstancingMatrixBufferType* instacingMatrix = new InstancingMatrixBufferType();
-
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-			instacingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(instancingInfo.worldMatrix);
-
-			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
-			if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.instancingInfo.size() - 1))
-			{
-				instancingMatrixVsConstBuffer->SetData(*instacingMatrix);
-				ConstantBufferManager::GetInstance().SetBuffer();
-
-				shader->RenderInstanced(mDeviceContext, cubeMesh->GetIndexCount(), (i % INSTANCING_MAX) + 1, 0);
-			}
-		}
-
-		delete instacingMatrix;
-	}
-	else
-	{
-		cubeMesh->Render(mDeviceContext);
-
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			UseWireFrameRasterState(renderInfo.wireFrame);
-			mDeviceContext->RSSetState(currentRasterState);
-			materialConstBuffer->SetData({
-					{ renderInfo.color.r, renderInfo.color.g, renderInfo.color.b, renderInfo.color.a },
-					(texture == nullptr),
-					(texture != nullptr) && texture->UseSRGB(),
-					(texture != nullptr),
-					false
-				});
-
-			if (texture != nullptr)
-			{
-				texture->SetDiffuseMapShaderResource(mDeviceContext);
-			}
-
-			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-			matrixVsConstBuffer->SetData({ XMMatrixTranspose(instancingInfo.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
-
-			ConstantBufferManager::GetInstance().SetBuffer();
-
-			shader->Render(mDeviceContext, cubeMesh->GetIndexCount());
-		}
-	}
-}
-
-void ZeldaDX11Renderer::DrawDirectionalShadow(ModelRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
-{
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
-
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
-
-	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
-	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
-	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
-
-	// Instancing 사용
-	if (renderInfo.instancingInfo.size() > 1)
-	{
-		UseWireFrameRasterState(renderInfo.wireFrame);
-		mDeviceContext->RSSetState(currentRasterState);
-
-		modelData->RenderInstanced(mDeviceContext, matrixVsConstBuffer, instancingMatrixVsConstBuffer, instancingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.instancingInfo, shader, renderInfo.animationName, 0);
-	}
-	else
-	{
-		for (size_t i = 0; i < renderInfo.instancingInfo.size(); i++)
-		{
-			auto& instancingInfo = renderInfo.instancingInfo[i];
-
-			UseWireFrameRasterState(renderInfo.wireFrame);
-			mDeviceContext->RSSetState(currentRasterState);
-
-			modelData->Render(mDeviceContext, matrixVsConstBuffer, animationConstBuffer, materialConstBuffer, objectIDPSConstBuffer, instancingInfo.worldMatrix, shader, renderInfo.animationName, instancingInfo.time, 0);
-		}
-	}
-}
-
-void ZeldaDX11Renderer::DrawDirectionalShadow(BlendingAnimationRenderInfo renderInfo, ZeldaLight* light, ZeldaShader* shader)
-{
-	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
-
-	ZeldaModel* modelData = ResourceManager::GetInstance().GetModel(renderInfo.modelID);
-
-	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
-	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
-	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
-	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
-
-	UseWireFrameRasterState(renderInfo.wireFrame);
-	mDeviceContext->RSSetState(currentRasterState);
-
-	modelData->RenderBlendingAnimation(mDeviceContext, matrixVsConstBuffer, blendingAnimationVsConstBuffer, materialConstBuffer, objectIDPSConstBuffer, renderInfo.worldMatrix, shader, renderInfo.firstAnimationName, renderInfo.secondAnimationName, renderInfo.firstAnimationTime, renderInfo.secondAnimationTime, renderInfo.ratio, 0);
-}
-
-void ZeldaDX11Renderer::ClearRenderInfo()
-{
-	organizedMeshRenderInfo.clear();
-	organizedModelRenderInfo.clear();
-	organizedSpriteRenderInfo.clear();
-	organizedLightRenderInfo.clear();
-	blendingAnimationRenderInfo.clear();
-
-	forwardMeshRenderInfo.clear();
-	forwardModelRenderInfo.clear();
-	forwardBlendingAnimationRenderInfo.clear();
-
-	shadowMeshRenderInfo.clear();
-	shadowModelRenderInfo.clear();
-	shadowBlendingAnimationRenderInfo.clear();
-
-	cubeMapRenderInfo = TextureID::ID_NULL;
-
-	stringRenderInfo.clear();
 }
 
 void ZeldaDX11Renderer::UpdateMode()

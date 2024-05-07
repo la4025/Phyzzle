@@ -21,6 +21,12 @@ namespace PurahEngine
 		void SetModelName(const std::wstring& modelName);
 		void SetShadow(bool value);
 
+		void SetFastOutLine(bool value);
+		bool GetFastOutLine() const;
+
+		void SetOutLine(bool value);
+		bool GetOutLine() const;
+
 	public:
 		virtual void PreSerialize(json& jsonData) const override;
 		virtual void PreDeserialize(const json& jsonData) override;
@@ -33,6 +39,12 @@ namespace PurahEngine
 		std::wstring modelName;
 		bool shadow;
 		bool wireFrame;
+		bool fastOutLine;
+		bool outLine;
+		float outLineR;
+		float outLineG;
+		float outLineB;
+		float outLineA;
 		
 		bool isBlending;
 		std::wstring animationName1;

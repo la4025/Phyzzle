@@ -72,7 +72,7 @@ PixelInputType main(VertexInputType input)
     output.tangent = (length(output.tangent) > F_EPSILON) ? (normalize(output.tangent)) : (float3(0.0f, 0.0f, 0.0f));
     output.biNormal = (length(output.biNormal) > F_EPSILON) ? (normalize(output.biNormal)) : (float3(0.0f, 0.0f, 0.0f));
     
-    output.instance = 0u;
+    output.instance = 0xffffffffu;
     
     return output;
 }

@@ -11,7 +11,7 @@
 #include "ZeldaTexture.h"
 #include "ResourceManager.h"
 #include "ConstantBufferManager.h"
-
+#include "RenderInfoManager.h"
 
 #include <fstream>
 
@@ -83,17 +83,15 @@ void ZeldaModel::Render(
 	ConstantBuffer<AnimationBufferType, ShaderType::VertexShader>* animationConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-	DirectX::XMMATRIX worldMatrix,
-	ZeldaShader* shader,
-	const std::wstring& animationName,
-	float animationTime,
-	int drawIDCounter)
+	RenderInfo* renderInfo,
+	ZeldaShader* shader)
 {
-	assert(animationIDTable.count(animationName) > 0);
-	unsigned int animationID = animationIDTable[animationName];
+	unsigned int animationID = renderInfo->instancingKey.animationID;
+	float tps = animationTPSTable[animationID];
 
-	assert(animationTPSTable.count(animationID) > 0 || animationID);
-	float tps = animationTPSTable[animationIDTable[animationName]];
+	float animationTime = renderInfo->instancingValue.animationTime;
+	DirectX::XMMATRIX worldMatrix = renderInfo->instancingValue.worldMatrix;
+	unsigned int drawID = renderInfo->drawID;
 
 	SetAnimationTexture(deviceContext, animationID);
 
@@ -107,7 +105,7 @@ void ZeldaModel::Render(
 	animationConstBuffer->SetData(animationData);
 
 	ObjectIDBufferType objectIDBufferType;
-	objectIDBufferType.objectID = drawIDCounter;
+	objectIDBufferType.objectID = drawID;
 	objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 	// 모든 메쉬 그리기
@@ -120,7 +118,7 @@ void ZeldaModel::Render(
 		materialConstBuffer->SetData({
 			materials[materialIndex[i]]->baseColor,
 			!materials[materialIndex[i]]->useDiffuseMap,
-			materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP) ,
+			materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP),
 			materials[materialIndex[i]]->useDiffuseMap,
 			materials[materialIndex[i]]->useNormalMap
 			});
@@ -137,19 +135,14 @@ void ZeldaModel::RenderInstanced(
 	ID3D11DeviceContext* deviceContext,
 	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<InstancingMatrixBufferType, ShaderType::VertexShader>* instancingMatrixConstBuffer,
-	ConstantBuffer<InstancingAnimationBufferType, ShaderType::VertexShader>* instancingAnimationConstBuffer,
+	ConstantBuffer<InstancingDataBufferType, ShaderType::VertexShaderAndPixelShader>* instancingDataConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-	const std::vector<ModelInstancingInfo>& instancingInfo,
-	ZeldaShader* shader,
-	const std::wstring& animationName,
-	int drawIDCounter)
+	const std::vector<RenderInfo*>& renderInfo,
+	ZeldaShader* shader)
 {
-	assert(animationIDTable.count(animationName) > 0);
-	unsigned int animationID = animationIDTable[animationName];
-
-	assert(animationTPSTable.count(animationID) > 0);
-	float tps = animationTPSTable[animationIDTable[animationName]];
+	unsigned int animationID = renderInfo[0]->instancingKey.animationID;
+	float tps = animationTPSTable[animationID];
 
 	SetAnimationTexture(deviceContext, animationID);
 
@@ -163,19 +156,23 @@ void ZeldaModel::RenderInstanced(
 	matrixConstBuffer->SetData(matrixBuffer);
 
 	InstancingMatrixBufferType* instacingMatrix = new InstancingMatrixBufferType();
-	InstancingAnimationBufferType* instacingData = new InstancingAnimationBufferType();
+	InstancingDataBufferType* instacingData = new InstancingDataBufferType();
 
-	for (size_t i = 0; i < instancingInfo.size(); i++)
+	for (size_t i = 0; i < renderInfo.size(); i++)
 	{
+		float animationTime = renderInfo[i]->instancingValue.animationTime;
+		DirectX::XMMATRIX worldMatrix = renderInfo[i]->instancingValue.worldMatrix;
+		unsigned int drawID = renderInfo[i]->drawID;
+
 		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-		instacingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(instancingInfo[i].worldMatrix);
-		instacingData->animationInfo[i % INSTANCING_MAX].animationTime = instancingInfo[i].time * tps;
+		instacingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(worldMatrix);
+		instacingData->instancingValue0[i % INSTANCING_MAX].x = animationTime * tps;
 
 		// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
-		if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == instancingInfo.size() - 1))
+		if (((i % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (i == renderInfo.size() - 1))
 		{
 			instancingMatrixConstBuffer->SetData(*instacingMatrix);
-			instancingAnimationConstBuffer->SetData(*instacingData);
+			instancingDataConstBuffer->SetData(*instacingData);
 
 			// 모든 메쉬 그리기
 			for (size_t meshNum = 0; meshNum < meshes.size(); meshNum++)
@@ -193,9 +190,8 @@ void ZeldaModel::RenderInstanced(
 					});
 
 				ObjectIDBufferType objectIDBufferType;
-				objectIDBufferType.objectID = drawIDCounter;
+				objectIDBufferType.objectID = drawID - (i % INSTANCING_MAX);
 				objectIDPSConstBuffer->SetData(objectIDBufferType);
-				drawIDCounter += (i % INSTANCING_MAX) + 1;
 
 				ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -211,19 +207,25 @@ void ZeldaModel::RenderInstanced(
 }
 
 void ZeldaModel::RenderBlendingAnimation(
-	ID3D11DeviceContext* deviceContext, ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
+	ID3D11DeviceContext* deviceContext,
+	ConstantBuffer<MatrixBufferType, ShaderType::VertexShader>* matrixConstBuffer,
 	ConstantBuffer<BlendingAnimationBufferType, ShaderType::VertexShader>* blendingAnimationVsConstBuffer,
 	ConstantBuffer<MaterialBufferType, ShaderType::PixelShader>* materialConstBuffer,
 	ConstantBuffer<ObjectIDBufferType, ShaderType::PixelShader>* objectIDPSConstBuffer,
-	DirectX::XMMATRIX worldMatrix,
-	ZeldaShader* shader,
-	const std::wstring& firstAnimationName,
-	const std::wstring& secondAnimationName,
-	float firstAnimationTime,
-	float secondAnimationTime,
-	float ratio,
-	int drawIDCounter)
+	RenderInfo* renderInfo,
+	ZeldaShader* shader)
 {
+	assert(animationNameTable.count(renderInfo->instancingValue.blendAnimationID1) != 0);
+	assert(animationNameTable.count(renderInfo->instancingValue.blendAnimationID2) != 0);
+
+	std::wstring firstAnimationName = animationNameTable[renderInfo->instancingValue.blendAnimationID1];
+	std::wstring secondAnimationName = animationNameTable[renderInfo->instancingValue.blendAnimationID2];
+	float firstAnimationTime = renderInfo->instancingValue.blendAnimationTime1;
+	float secondAnimationTime = renderInfo->instancingValue.blendAnimationTime2;
+	float ratio = renderInfo->instancingValue.ratio;
+	DirectX::XMMATRIX worldMatrix = renderInfo->instancingValue.worldMatrix;
+	unsigned int drawID = renderInfo->drawID;
+
 	auto iter1 = animationTable.find(firstAnimationName);
 	auto iter2 = animationTable.find(secondAnimationName);
 
@@ -388,7 +390,7 @@ void ZeldaModel::RenderBlendingAnimation(
 	matrixConstBuffer->SetData({ XMMatrixTranspose(worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 
 	ObjectIDBufferType objectIDBufferType;
-	objectIDBufferType.objectID = drawIDCounter;
+	objectIDBufferType.objectID = drawID;
 	objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 	// 모든 메쉬 그리기
@@ -451,6 +453,13 @@ std::vector<float> ZeldaModel::GetAnimationPlayTime()
 	}
 
 	return durationResult;
+}
+
+unsigned int ZeldaModel::GetAnimationID(const std::wstring& animationName) const
+{
+	const auto& iter = animationIDTable.find(animationName);
+	
+	return iter->second;
 }
 
 ZeldaModel::ZeldaModel(ID3D11Device* device, FBXLoader::Model* fbxModel) :
@@ -597,6 +606,9 @@ void ZeldaModel::CreateAnimationResourceView(ID3D11Device* device)
 	animationIDTable.clear();
 	animationIDTable[L""] = 0u; // 기본상태의 AnimationID
 
+	animationNameTable.clear();
+	animationNameTable[0u] = L"";
+
 	animationTPSTable.clear();
 	animationTPSTable[0u] = 0.0f; // 기본상태의 TPS
 
@@ -610,6 +622,8 @@ void ZeldaModel::CreateAnimationResourceView(ID3D11Device* device)
 
 		// animationIDTable을 채운다.
 		animationIDTable[animIter->first] = currentAnimationID;
+		// animationNameTable을 채운다.
+		animationNameTable[currentAnimationID] = animIter->first;
 
 		cnt += 1;
 	}

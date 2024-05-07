@@ -20,6 +20,11 @@ struct PixelOutputType
     uint id : SV_Target4;
 };
 
+// Instancing Value 0 : Color
+// Instancing Value 1 : Not Used
+// Instancing Value 2 : Not Used
+// Instancing Value 3 : Not Used
+
 PixelOutputType main(PixelInputType input)
 {
     PixelOutputType output = (PixelOutputType) 0;
@@ -32,7 +37,14 @@ PixelOutputType main(PixelInputType input)
     
     if (useBaseColor)
     {
-        textureColor = baseColor;
+        if (input.instance == 0xffffffffu)
+        {
+            textureColor = baseColor;
+        }
+        else
+        {
+            textureColor = instancingValue0[input.instance];
+        }
     }
     else
     {
@@ -80,7 +92,14 @@ PixelOutputType main(PixelInputType input)
     output.color = textureColor;
     output.depth = float4(depth, depth, depth, 1.0f);
     
-    output.id = objectID + input.instance;
+    if (input.instance != 0xffffffffu)
+    {
+        output.id = objectID + input.instance;
+    }
+    else
+    {
+        output.id = objectID;
+    }
     
     return output;
 }
