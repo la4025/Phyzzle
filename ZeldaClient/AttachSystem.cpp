@@ -51,7 +51,12 @@ namespace Phyzzle
 
 	void AttachSystem::RemoveIsland(const IslandID& _id)
 	{
-		// const size_t index(_id);
+		if (_id == nullptr)
+			return;
+
+		if (!attachIsland.contains(_id))
+			return;
+
 		const AttachIsland& arr = attachIsland[_id];
 
 		for (size_t i = 0; i < arr.size(); i++)
