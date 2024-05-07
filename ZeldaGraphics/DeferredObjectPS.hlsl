@@ -96,6 +96,10 @@ PixelOutputType main(PixelInputType input)
     {
         output.id = objectID + input.instance;
     }
+    else
+    {
+        output.id = objectID;
+    }
     
     return output;
 }

@@ -36,15 +36,13 @@ struct InstancingKey
 	ModelID modelID;
 	LightID lightID;
 	unsigned int animationID; // 기존의 animationName을 Model class를 통해 id로 변환해서 저장하도록 하자
-	Color color;
 
 	InstancingKey() :
 		meshID(MeshID::ID_NULL),
 		textureID(TextureID::ID_NULL),
 		modelID(ModelID::ID_NULL),
 		lightID(LightID::ID_NULL),
-		animationID(0xffffffff),
-		color({ 0.0f, 0.0f, 0.0f, 0.0f })
+		animationID(0xffffffff)
 	{}
 
 	bool operator==(const InstancingKey& right) const
@@ -54,8 +52,7 @@ struct InstancingKey
 			textureID == right.textureID &&
 			modelID == right.modelID &&
 			lightID == right.lightID &&
-			animationID == right.animationID &&
-			color == right.color;
+			animationID == right.animationID;
 	}
 };
 
@@ -65,7 +62,8 @@ struct InstancingValue
 	DirectX::XMFLOAT2 position;
 	DirectX::XMFLOAT2 size;
 	float animationTime;
-	Color color; // 기존에는 InstancingKey였으나 그냥 1024종류의 색 넘겨주면서 인스턴싱 해보자
+	Color color;
+	Color outLineColor;
 	int layer;
 	float fontSize;
 	std::wstring str;
@@ -81,6 +79,7 @@ struct InstancingValue
 		size({ 0.0f, 0.0f }),
 		animationTime(0.0f),
 		color({ 1.0f, 1.0f, 1.0f, 1.0f }),
+		outLineColor({ 1.0f, 1.0f, 1.0f, 1.0f }),
 		layer(0),
 		fontSize(30.0f),
 		str(L""),
@@ -115,8 +114,7 @@ namespace std
 				hash<TextureID>{}(obj.textureID) ^
 				hash<ModelID>{}(obj.modelID) ^
 				hash<LightID>{}(obj.lightID) ^
-				hash<unsigned int>{}(obj.animationID) ^
-				hash<Color>{}(obj.color);
+				hash<unsigned int>{}(obj.animationID);
 		};
 	};
 }

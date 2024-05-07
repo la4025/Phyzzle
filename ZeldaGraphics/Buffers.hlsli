@@ -25,6 +25,7 @@ Texture2D Temp2Map : register(t7);
 Texture2D AnimationMap : register(t8);
 TextureCube cubeMap : register(t9);
 Texture2D<uint> IDMap : register(t10);
+Texture2D<uint> OutLineMap : register(t11);
 
 SamplerState Sampler : register(s0);
 SamplerComparisonState ShadowSampler : register(s1);
@@ -113,8 +114,8 @@ cbuffer InstancingDataBufferType : register(b7)
 {
     float4 instancingValue0[INSTANCING_MAX];
     float4 instancingValue1[INSTANCING_MAX];
-    float4 instancingValue2[INSTANCING_MAX];
-    float4 instancingValue3[INSTANCING_MAX];
+    uint4 instancingValue2[INSTANCING_MAX];
+    uint4 instancingValue3[INSTANCING_MAX];
 }
 
 cbuffer BlendingAnimationBufferType : register(b8)
@@ -135,6 +136,13 @@ cbuffer ObjectIDBufferType : register(b10)
 {
     unsigned int objectID;
     float3 b10padding;
+}
+
+cbuffer DataBufferType : register(b11)
+{
+    matrix matrixValue[4];
+    float4 float4Value[4];
+    uint4 uint4Value[4];
 }
 
 #endif

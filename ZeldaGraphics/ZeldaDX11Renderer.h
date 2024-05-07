@@ -118,10 +118,10 @@ public:
 	virtual void BeginDraw(float deltaTime) override;
 	virtual void EndDraw() override;
 
-	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, float r, float g, float b, float a) override;
-	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine) override;
-	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine) override;
-	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine) override;
+	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor) override;
+	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
+	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
+	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
 
 	virtual void DrawLight(LightID lightID) override;
 
@@ -130,7 +130,7 @@ public:
 
 	virtual void DrawCubeMap(TextureID texture) override;
 
-	virtual void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a) override;
+	virtual void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, Color color) override;
 
 
 	virtual TextureID CreateTexture(const std::wstring& texturePath) override;
@@ -166,6 +166,9 @@ private:
 
 	void DrawDeferredRenderInfo();
 	void DrawForwardRenderInfo();
+	void DrawFastOutLine();
+	void DrawOutLine();
+
 	void DrawMeshRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader);
 	void DrawModelRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader);
 	void DrawBlendingAnimationRenderInfo(RenderInfo* renderInfo, ZeldaShader* shader);
@@ -233,6 +236,10 @@ private:
 	ZeldaShader* shadowMapShader = nullptr;
 	ZeldaShader* blendingAnimationShadowMapShader = nullptr;
 	ZeldaShader* spriteShader = nullptr;
+	ZeldaShader* fastOutLineShader = nullptr;
+	ZeldaShader* outLineShader = nullptr;
+	ZeldaShader* outLineObjectShader = nullptr;
+	ZeldaShader* outLineBlendingAnimationObjectShader = nullptr;
 
 	DebugMode debugMode;
 	DebugMode debugModeBuffer;
@@ -283,49 +290,7 @@ private:
 	ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>* screenConstBuffer = nullptr;
 	ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>* lightMatrixConstBuffer = nullptr;
 	ConstantBuffer<InstancingDataBufferType, ShaderType::VertexShaderAndPixelShader>* instancingDataConstBuffer = nullptr;
-
-
-
-
-
-
-
-
-
-
-
-
-	//// Draw함수가 호출되면 채워진다. BeginDraw에서 ClearRenderInfo를 통해 초기화된다.
-	//std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> organizedMeshRenderInfo;
-	//std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> organizedModelRenderInfo;
-	//std::map<std::pair<int, TextureID>, SpriteRenderInfo> organizedSpriteRenderInfo;
-	//std::unordered_set<LightID> organizedLightRenderInfo;
-
-	//std::vector<BlendingAnimationRenderInfo> blendingAnimationRenderInfo;
-
-	//// 오브젝트들을 실제로 그리는 과정에서 WireFrame으로 그리도록 설정된 오브젝트들을 여기에 저장해두고 deferred render 후에 그린다.
-	//// 만약 RendererMode가 WireFrameMode라면 사용하지 않는다.
-	//std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> forwardMeshRenderInfo;
-	//std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> forwardModelRenderInfo;
-
-	//std::vector<BlendingAnimationRenderInfo> forwardBlendingAnimationRenderInfo;
-
-	//// 그림자
-	//std::unordered_map<std::pair<std::pair<MeshID, TextureID>, std::pair<bool, Color>>, MeshRenderInfo> shadowMeshRenderInfo;
-	//std::unordered_map<std::pair<std::pair<ModelID, std::wstring>, bool>, ModelRenderInfo> shadowModelRenderInfo;
-	//std::vector<BlendingAnimationRenderInfo> shadowBlendingAnimationRenderInfo;
-
-	//std::vector<StringRenderInfo> stringRenderInfo;
-
-	//TextureID cubeMapRenderInfo;
-
-
-
-
-
-
-
-
+	ConstantBuffer<DataBufferType, ShaderType::VertexShaderAndPixelShader>* dataConstBuffer = nullptr;
 
 #ifdef USE_BEGIN_FLAG
 	bool beginflag = false;

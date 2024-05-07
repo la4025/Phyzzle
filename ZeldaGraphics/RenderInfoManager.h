@@ -24,6 +24,8 @@ public:
 	const RenderInfo* GetCubeMapRenderInfo();
 
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetShadowRenderInfo() const;
+	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetFastOutLineRenderInfo() const;
+	const std::vector<RenderInfo*>& GetOutLineRenderInfo() const;
 
 private:
 	void SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer);

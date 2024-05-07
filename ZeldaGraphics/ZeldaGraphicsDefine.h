@@ -39,6 +39,7 @@ namespace Texture
 		constexpr unsigned int HeightMap = 3u;
 		constexpr unsigned int EmissionMap = 4u;
 		constexpr unsigned int IDMap = 10u;
+		constexpr unsigned int OutLineMap = 11u;
 	}
 }
 
@@ -244,8 +245,8 @@ struct InstancingDataBufferType
 {
 	DirectX::XMFLOAT4 instancingValue0[INSTANCING_MAX];
 	DirectX::XMFLOAT4 instancingValue1[INSTANCING_MAX];
-	DirectX::XMFLOAT4 instancingValue2[INSTANCING_MAX];
-	DirectX::XMFLOAT4 instancingValue3[INSTANCING_MAX];
+	DirectX::XMUINT4 instancingValue2[INSTANCING_MAX];
+	DirectX::XMUINT4 instancingValue3[INSTANCING_MAX];
 
 	constexpr static unsigned int registerNumB = 7;
 };
@@ -279,6 +280,16 @@ struct ObjectIDBufferType
 	constexpr static unsigned int registerNumB = 10;
 };
 static_assert(sizeof(ObjectIDBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
+
+struct DataBufferType
+{
+	DirectX::XMMATRIX matrixValue[4];
+	DirectX::XMFLOAT4 float4Value[4];
+	DirectX::XMUINT4 uintValue[4];
+
+	constexpr static unsigned int registerNumB = 11;
+};
+static_assert(sizeof(DataBufferType) % 16 == 0, "Constant Buffer size must be a multiple of 16 bytes");
 
 #pragma endregion
 

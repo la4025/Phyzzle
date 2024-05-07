@@ -607,36 +607,36 @@ void CoreSystem::run()
 		if (cutTime > 0.0f)
 		{
 			instMatrix(0, 3) = 0.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 			instMatrix(0, 3) = 100.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 			instMatrix(0, 3) = 200.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], cutTime, 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 		}
 		else
 		{
 			instMatrix(0, 3) = 0.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 			instMatrix(0, 3) = 100.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 			instMatrix(0, 3) = 200.0f;
-			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false);
+			renderer->DrawChangingAnimation(instMatrix, fbxID, animationList[animationNumber], animationList[animationNumber], animationPlayTimeList[animationNumber], 0.0f, animationTime / resetTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 		}
 	}
 	else
 	{
 		instMatrix(0, 3) = 0.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false);
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 		instMatrix(0, 3) = 100.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false);
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 		instMatrix(0, 3) = 200.0f;
-		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false);
+		renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 	}
 
 	//renderer->DrawModel(Eigen::Matrix4f::Identity(), fbxID, false, true);
@@ -651,11 +651,11 @@ void CoreSystem::run()
 			0, 0, 0, 1;
 	}
 	
-	renderer->DrawCube(floatingMatrix[0], TextureID::ID_NULL, false, true, false, false, 0.0f, 0.2f, 0.0f, 1.0f);
-	renderer->DrawCube(floatingMatrix[1], TextureID::ID_NULL, false, true, false, false, 0.0f, 0.4f, 0.0f, 1.0f);
-	renderer->DrawCube(floatingMatrix[2], TextureID::ID_NULL, false, true, false, false, 0.0f, 0.6f, 0.0f, 1.0f);
-	renderer->DrawCube(floatingMatrix[3], TextureID::ID_NULL, false, true, false, false, 0.0f, 0.8f, 0.0f, 1.0f);
-	renderer->DrawCube(floatingMatrix[4], TextureID::ID_NULL, false, true, false, false, 0.0f, 1.0f, 0.0f, 1.0f);
+	renderer->DrawCube(floatingMatrix[0], TextureID::ID_NULL, false, true, false, true, { 0.0f, 0.2f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[1], TextureID::ID_NULL, false, true, false, true, { 0.0f, 0.4f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[2], TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.6f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[3], TextureID::ID_NULL, false, true, false, true, { 0.0f, 0.8f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[4], TextureID::ID_NULL, false, true, false, false, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 	Eigen::Matrix4f floorMatrix;
 	floorMatrix <<
@@ -664,12 +664,12 @@ void CoreSystem::run()
 		0,		0,		500,	0,
 		0,		0,		0,		1;
 
-	renderer->DrawCube(floorMatrix, scdTextureID, false, true, 0.0f, 1.0f, 0.0f, 1.0f, false, false);
+	renderer->DrawCube(floorMatrix, scdTextureID, false, true, false, false, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
 	//renderer->DrawCube(floorMatrix, TextureID::ID_NULL, false, true, 0.3f, 0.3f, 0.3f, 1.0f);
 
 	renderer->DrawCubeMap(cubeMapID);
 
-	renderer->DrawString(L"ABCDEFG", 0, 0, 100, 100, 20, 0, 0, 0, 1);
+	renderer->DrawString(L"ABCDEFG", 0, 0, 100, 100, 20, { 0, 0, 0, 1 });
 
 	renderer->EndDraw();
 }

@@ -35,9 +35,15 @@ namespace PurahEngine
 		MeshType meshType;
 		bool wireFrame;
 		bool shadow;
+		bool fastOutLine;
+		bool outLine;
 		float r;
 		float g;
 		float b;
 		float a;
+		float outLineR;
+		float outLineG;
+		float outLineB;
+		float outLineA;
 	};
 }

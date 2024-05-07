@@ -358,6 +358,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	screenConstBuffer = new ConstantBuffer<ScreenBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 	lightMatrixConstBuffer = new ConstantBuffer<LightMatrixBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 	instancingDataConstBuffer = new ConstantBuffer<InstancingDataBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
+	dataConstBuffer = new ConstantBuffer<DataBufferType, ShaderType::VertexShaderAndPixelShader>(mDevice);
 
 	screenConstBuffer->SetData({ { static_cast<float>(screenWidth), static_cast<float>(screenHeight) } });
 	ConstantBufferManager::GetInstance().SetBuffer();
@@ -433,6 +434,10 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	shadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapVS.cso", L"DirectionalShadowMapPS.cso", L"DirectionalShadowMapInstancingVS.cso");
 	blendingAnimationShadowMapShader = new ZeldaShader(mDevice, L"DirectionalShadowMapBlendingAnimationVS.cso", L"DirectionalShadowMapPS.cso", L"");
 	spriteShader = new ZeldaShader(mDevice, L"SpriteVS.cso", L"SpritePS.cso", L"");
+	fastOutLineShader = new ZeldaShader(mDevice, L"FastOutLineVS.cso", L"FastOutLinePS.cso", L"FastOutLineVS.cso");
+	outLineShader = new ZeldaShader(mDevice, L"OutLineVS.cso", L"OutLinePS.cso", L"");
+	outLineObjectShader = new ZeldaShader(mDevice, L"OutLineObjectVS.cso", L"OutLineObjectPS.cso", L"");
+	outLineBlendingAnimationObjectShader = new ZeldaShader(mDevice, L"OutLineBlendingAnimationObjectVS.cso", L"OutLineObjectPS.cso", L"");
 
 #pragma endregion Deferred Rendering
 
@@ -536,6 +541,51 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		renderTargetTextures->Release();
 	}
 	
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+		textureDesc.Width = screenWidth;
+		textureDesc.Height = screenHeight;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R32_UINT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+
+		ID3D11Texture2D* renderTargetTextures;
+
+		// Texture2D 생성
+		result = mDevice->CreateTexture2D(&textureDesc, NULL, &renderTargetTextures);
+		if (FAILED(result)) return false;
+
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+		ZeroMemory(&renderTargetViewDesc, sizeof(renderTargetViewDesc));
+		renderTargetViewDesc.Format = textureDesc.Format;
+		renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+		// Render Target 생성
+		result = mDevice->CreateRenderTargetView(renderTargetTextures, &renderTargetViewDesc, &outlineMapRenderTarget);
+		if (FAILED(result)) return false;
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+		ZeroMemory(&shaderResourceViewDesc, sizeof(shaderResourceViewDesc));
+		shaderResourceViewDesc.Format = textureDesc.Format;
+		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+		// Shader Resource View 생성
+		result = mDevice->CreateShaderResourceView(renderTargetTextures, &shaderResourceViewDesc, &outlineMapShaderResource);
+		if (FAILED(result)) return false;
+
+		renderTargetTextures->Release();
+	}
 
 #pragma endregion outline
 
@@ -676,6 +726,11 @@ void ZeldaDX11Renderer::Finalize()
 		delete instancingDataConstBuffer;
 		instancingDataConstBuffer = nullptr;
 	}
+	if (dataConstBuffer)
+	{
+		delete dataConstBuffer;
+		dataConstBuffer = nullptr;
+	}
 	if (mDepthStencilView)
 	{
 		mDepthStencilView->Release();
@@ -780,6 +835,21 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete spriteShader;
 		spriteShader = nullptr;
+	}
+	if (fastOutLineShader)
+	{
+		delete fastOutLineShader;
+		fastOutLineShader = nullptr;
+	}
+	if (outLineShader)
+	{
+		delete outLineShader;
+		outLineShader = nullptr;
+	}
+	if (outLineObjectShader)
+	{
+		delete outLineObjectShader;
+		outLineObjectShader = nullptr;
 	}
 	if (defaultRasterState)
 	{
@@ -1070,7 +1140,7 @@ void ZeldaDX11Renderer::EndDraw()
 	}
 }
 
-void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, float r, float g, float b, float a)
+void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor)
 {
 	MeshID cubeID = ResourceManager::GetInstance().GetCubeID();
 
@@ -1095,13 +1165,14 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 	// Instancing Value
 	InstancingValue instancingValue;
 	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-	instancingValue.color = Color{ r, g, b, a };
+	instancingValue.color = color;
+	instancingValue.outLineColor = outLineColor;
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine)
+void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	// Render Type
 	RenderType renderType = RenderType::Deferred_Model;
@@ -1125,12 +1196,13 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 	InstancingValue instancingValue;
 	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 	instancingValue.animationTime = 0.0f;
+	instancingValue.outLineColor = outLineColor;
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine)
+void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
@@ -1156,12 +1228,13 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 	InstancingValue instancingValue;
 	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 	instancingValue.animationTime = animationTime;
+	instancingValue.outLineColor = outLineColor;
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine)
+void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
@@ -1190,6 +1263,7 @@ void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix
 	instancingValue.blendAnimationTime1 = firstAnimationTime;
 	instancingValue.blendAnimationTime2 = secondAnimationTime;
 	instancingValue.ratio = ratio;
+	instancingValue.outLineColor = outLineColor;
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
@@ -1260,7 +1334,7 @@ void ZeldaDX11Renderer::DrawCubeMap(TextureID texture)
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, float r, float g, float b, float a)
+void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, Color color)
 {
 	// Render Type
 	RenderType renderType = RenderType::String;
@@ -1277,7 +1351,7 @@ void ZeldaDX11Renderer::DrawString(const std::wstring& string, float x, float y,
 	instancingValue.position = { x, y };
 	instancingValue.size = { width, height };
 	instancingValue.fontSize = fontSize;
-	instancingValue.color = { r, g, b, a };
+	instancingValue.color = color;
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
@@ -1367,15 +1441,16 @@ void ZeldaDX11Renderer::DrawDeferred()
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 0, 1, deferredShaderResources + Deferred::Object::Albedo);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 1, 2, deferredShaderResources + Deferred::Light::Begin);
-	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
 
 	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
 	squareMesh->Render(mDeviceContext);
 	deferredFinalShader->Render(mDeviceContext, squareMesh->GetIndexCount());
 
 	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV[0]);
-
 #pragma endregion
+
+	DrawFastOutLine();
+	DrawOutLine();
 }
 
 void ZeldaDX11Renderer::DrawForward()
@@ -1544,6 +1619,166 @@ void ZeldaDX11Renderer::DrawForwardRenderInfo()
 	}
 }
 
+void ZeldaDX11Renderer::DrawFastOutLine()
+{
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+
+	// 다음 그리기에 영향을 주지 않기 위해 뎁스스텐실을 비워놓음
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
+
+	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+	squareMesh->RenderInstanced(mDeviceContext);
+
+	const auto& fastOutLineRenderInfo = RenderInfoManager::GetInstance().GetFastOutLineRenderInfo();
+
+
+	InstancingDataBufferType* instancingData = new InstancingDataBufferType();
+	
+	int instanceCount = 0;
+	for (auto iter = fastOutLineRenderInfo.begin(); iter != fastOutLineRenderInfo.end(); iter++)
+	{
+		for (int i = 0; i < iter->second.size(); i++)
+		{
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.r;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.g;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].z = iter->second[i]->instancingValue.outLineColor.b;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].w = iter->second[i]->instancingValue.outLineColor.a;
+
+			instancingData->instancingValue2[instanceCount % INSTANCING_MAX].x = iter->second[i]->drawID;
+			
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || ((std::next(iter) == fastOutLineRenderInfo.end()) && (instanceCount == iter->second.size() - 1)))
+			{
+				instancingDataConstBuffer->SetData(*instancingData);
+				ConstantBufferManager::GetInstance().SetBuffer();
+				fastOutLineShader->RenderInstanced(mDeviceContext, squareMesh->GetIndexCount(), (instanceCount % INSTANCING_MAX) + 1, 0);
+			}
+
+			instanceCount += 1;
+		}
+	}
+
+	delete instancingData;
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
+}
+
+void ZeldaDX11Renderer::DrawOutLine()
+{
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	float initColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+	squareMesh->RenderInstanced(mDeviceContext);
+
+	const auto& outLineRenderInfo = RenderInfoManager::GetInstance().GetOutLineRenderInfo();
+
+	for (int i = 0; i < outLineRenderInfo.size(); i++)
+	{
+		// 렌더타겟 초기화
+		mDeviceContext->ClearRenderTargetView(outlineMapRenderTarget, initColor);
+
+		// 단일 오브젝트를 그린다.
+		mDeviceContext->OMSetRenderTargets(1, &outlineMapRenderTarget, nullptr);
+
+		RenderType renderType = outLineRenderInfo[i]->renderType;
+
+		switch (renderType)
+		{
+			case RenderType::Deferred_Mesh:
+			{
+				ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(outLineRenderInfo[i]->instancingKey.meshID);
+				meshInstance->Render(mDeviceContext);
+
+				MatrixBufferType matrixBuffer;
+				matrixBuffer.world = XMMatrixTranspose(outLineRenderInfo[i]->instancingValue.worldMatrix);
+				matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+				matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+				matrixBuffer.cameraFar = currentcamera->GetFar();
+				matrixVsConstBuffer->SetData(matrixBuffer);
+
+				ObjectIDBufferType objectIDBufferType;
+				objectIDBufferType.objectID = outLineRenderInfo[i]->drawID;
+				objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				outLineObjectShader->Render(mDeviceContext, meshInstance->GetIndexCount());
+
+				break;
+			}
+			case RenderType::Deferred_Model:
+			{
+				ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(outLineRenderInfo[i]->instancingKey.modelID);
+
+				modelInstance->Render(
+					mDeviceContext,
+					matrixVsConstBuffer,
+					animationConstBuffer,
+					materialConstBuffer,
+					objectIDPSConstBuffer,
+					outLineRenderInfo[i],
+					outLineObjectShader);
+
+				break;
+			}
+			case RenderType::Deferred_BlendingAnimation:
+			{
+				ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(outLineRenderInfo[i]->instancingKey.modelID);
+
+				modelInstance->RenderBlendingAnimation(
+					mDeviceContext,
+					matrixVsConstBuffer,
+					blendingAnimationVsConstBuffer,
+					materialConstBuffer,
+					objectIDPSConstBuffer,
+					outLineRenderInfo[i],
+					outLineBlendingAnimationObjectShader);
+
+				break;
+			}
+			default:
+			{
+				assert(0);
+				break;
+			}
+		}
+
+		// OutLine을 그린다.
+		
+		// 렌더타겟을 변경
+		mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
+
+		mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &idMapShaderResource);
+		mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &outlineMapShaderResource);
+
+		ZeldaMesh* squareMesh = ResourceManager::GetInstance().GetSquareMesh();
+		squareMesh->Render(mDeviceContext);
+
+		ObjectIDBufferType objectIDBufferType;
+		objectIDBufferType.objectID = outLineRenderInfo[i]->drawID;
+		objectIDPSConstBuffer->SetData(objectIDBufferType);
+
+		DataBufferType dataBufferType;
+		dataBufferType.float4Value[0].x = outLineRenderInfo[i]->instancingValue.outLineColor.r;
+		dataBufferType.float4Value[0].y = outLineRenderInfo[i]->instancingValue.outLineColor.g;
+		dataBufferType.float4Value[0].z = outLineRenderInfo[i]->instancingValue.outLineColor.b;
+		dataBufferType.float4Value[0].w = outLineRenderInfo[i]->instancingValue.outLineColor.a;
+		dataConstBuffer->SetData(dataBufferType);
+
+		ConstantBufferManager::GetInstance().SetBuffer();
+
+		outLineShader->Render(mDeviceContext, squareMesh->GetIndexCount());
+	}
+
+	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
+	mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &nullSRV);
+}
+
 void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader)
 {
 	assert(renderInfo.size() != 0);
@@ -1612,7 +1847,7 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 				instancingDataConstBuffer->SetData(*instancingData);
 
 				ObjectIDBufferType objectIDBufferType;
-				objectIDBufferType.objectID = renderInfo[i]->drawID;
+				objectIDBufferType.objectID = renderInfo[i]->drawID - (i % INSTANCING_MAX);
 				objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 				ConstantBufferManager::GetInstance().SetBuffer();

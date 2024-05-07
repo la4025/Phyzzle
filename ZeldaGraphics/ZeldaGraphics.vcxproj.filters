@@ -134,7 +134,7 @@
     <ClInclude Include="RenderInfoManager.h">
       <Filter>Core\RenderInfo</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
+    <ClInclude Include="header\Color.h">
       <Filter>Struct</Filter>
     </ClInclude>
   </ItemGroup>
@@ -283,6 +283,15 @@
       <Filter>Shader\OutLine</Filter>
     </FxCompile>
     <FxCompile Include="OutLineVS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="OutLineObjectVS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="OutLineObjectPS.hlsl">
+      <Filter>Shader\OutLine</Filter>
+    </FxCompile>
+    <FxCompile Include="OutLineBlendingAnimationObjectVS.hlsl">
       <Filter>Shader\OutLine</Filter>
     </FxCompile>
   </ItemGroup>

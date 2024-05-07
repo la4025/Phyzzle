@@ -184,6 +184,16 @@ const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoMan
 	return shadowRenderInfo;
 }
 
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetFastOutLineRenderInfo() const
+{
+	return fastOutLineRenderInfo;
+}
+
+const std::vector<RenderInfo*>& RenderInfoManager::GetOutLineRenderInfo() const
+{
+	return outLineRenderInfo;
+}
+
 void RenderInfoManager::SortRenderInfo(RenderInfo* renderInfo, std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& targetContainer)
 {
 	auto iter = targetContainer.find(renderInfo->instancingKey);
