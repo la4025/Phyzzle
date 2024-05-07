@@ -7,6 +7,7 @@
 #include <queue>
 #include <functional>
 #include <eigen/Dense>
+#include <map>
 
 namespace PurahEngine
 {
@@ -15,6 +16,7 @@ namespace PurahEngine
 	class GameObject;
 	class Camera;
 	class Transform;
+	class DataManager;
 
 	class PURAHENGINE_API SceneManager : public Serializable
 	{
@@ -53,10 +55,9 @@ namespace PurahEngine
 	private:
 		void LoadScene();
 		void LoadSceneCompleteEvent();
-
+		void LoadDontDestroyObject();
 	protected:
 		json sceneData;
-
 	public:
 		virtual void PreSerialize(json& jsonData) const override;
 		virtual void PreDeserialize(const json& jsonData) override;
@@ -82,8 +83,8 @@ namespace PurahEngine
 		std::wstring sceneBuffer;
 
 		// 씬에 생성된 오브젝트 리스트
-		std::vector<GameObject*> objectList;
-		std::queue<GameObject*> ExcuteObject;
+		std::map<std::wstring, GameObject*> objectList;
+
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
 		Eigen::Vector3f cameraPosition;

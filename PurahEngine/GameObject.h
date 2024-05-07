@@ -22,6 +22,7 @@ namespace PurahEngine
 	class SceneManager;
 	class Transform;
 	class Collider;
+	class DataManager;
 
 	template <typename T>
 	concept componentType = std::is_base_of_v<Component, T>;
@@ -81,6 +82,9 @@ namespace PurahEngine
 		bool GetEnable();
 		bool IsRootEnable();
 
+		void SetDontDestroy(bool checkDontDestroy);
+		bool GetDontDestroy();
+
 		void StateChangeEvent(bool parentEnable = true);
 
 		Transform* GetTransform();
@@ -123,11 +127,14 @@ namespace PurahEngine
 		std::wstring name;
 		bool isEnable;
 		bool isDestroy;
+		bool isDontDestroy;
 
 		Transform* trans;
 
 	public:
 		ObjectState GetState();
+		void DontDestroyOnLoad();
+		void EraseDontDestroy();
 
 	public:
 		// ComponentList·Î Component Ãß°¡

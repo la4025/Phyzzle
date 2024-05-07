@@ -1,5 +1,6 @@
 #pragma once
 #include "PurahEngine.h"
+#include <iostream>
 
 namespace PurahEngine
 {

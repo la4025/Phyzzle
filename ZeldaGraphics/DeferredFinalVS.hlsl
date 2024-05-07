@@ -23,7 +23,5 @@ VertexOut main(VertexIn input)
     output.pos = float4((input.position * 2.0f).xyz, 1.0f);
     output.uv = input.tex;
     
-    matrix tmp = viewMatrix;
-    
     return output;
 }

@@ -156,7 +156,7 @@ void PurahEngine::GraphicsManager::Render(float deltaTime)
 	// String
 	for (auto& renderInfo : stringList)
 	{
-		graphicsModule->DrawString(renderInfo.str, renderInfo.x, renderInfo.y, renderInfo.width, renderInfo.height, renderInfo.fontSize, renderInfo.r, renderInfo.g, renderInfo.b, renderInfo.a);
+		graphicsModule->DrawString(renderInfo.str, renderInfo.x, renderInfo.y, renderInfo.width, renderInfo.height, renderInfo.fontSize, { renderInfo.r, renderInfo.g, renderInfo.b, renderInfo.a });
 	}
 	stringList.clear();
 

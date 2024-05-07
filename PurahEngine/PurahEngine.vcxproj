@@ -47,6 +47,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Componentmanager.h" />
+    <ClInclude Include="DataManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DistanceJoint.h" />
     <ClInclude Include="EasingFunc.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />
     <ClCompile Include="EasingFunc.cpp" />
