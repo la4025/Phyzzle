@@ -1,6 +1,7 @@
 #include "AttachHoldState.h"
 
-#include "../GraphicsTest/CoreSystem.h"
+#include "Attachable.h"
+#include "AttachSystem.h"
 
 namespace Phyzzle
 {
@@ -281,9 +282,9 @@ namespace Phyzzle
 
 	void AttachHoldState::TrySelect()
 	{
-		const bool hit = player->RaycastFromCamera(selectRange, &selectBody, nullptr, nullptr);
+		const bool hit = player->RaycastFromCamera(selectRange, &selectBody, &attachble, nullptr);
 
-		if (!hit || !selectBody)
+		if (!hit || !attachble)
 		{
 			player->ChangeState(Player::ATTACH_SELECT);
 		}
@@ -324,10 +325,10 @@ namespace Phyzzle
 
 	void AttachHoldState::SpringCalculate()
 	{
-		float zeta = 0.7f;												// Damping ratio
-		float zeta0 = 0.1f;												// Damping ratio
-		float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
-		float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
+		constexpr float zeta = 0.7f;												// Damping ratio
+		constexpr float zeta0 = 0.1f;												// Damping ratio
+		constexpr float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
+		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
 
 		Eigen::Vector3f currPos = selectBody->GetPosition();
 		currPos.y() = 0.f;				// stick R 입력으로 오브젝트를 움직일 때는 스프링이 아니므로..
@@ -359,35 +360,6 @@ namespace Phyzzle
 			timeStep);
 
 		selectBody->SetRotation(currRot);
-	}
-
-	void AttachHoldState::ObjectPostionSpring(
-		const Eigen::Vector3f& _s, Eigen::Vector3f& _v, const Eigen::Vector3f& _e,
-		float _zeta, float _omega, float _dt)
-	{
-		const float f = 1.f + 2.f * _dt * _zeta * _omega;
-		const float oo = _omega * _omega;
-		const float hoo = _dt * oo;
-		const float hhoo = _dt * hoo;
-		const float detInv = 1.f / (f + hhoo);
-		const Eigen::Vector3f detV = _v + hoo * (_e - _s);
-		
-		_v = detV * detInv;
-	}
-
-	void AttachHoldState::Spring(
-		const float& _s, float& _v, const float& _e,
-		float _zeta, float _omega, float _dt)
-	{
-		const float f = 1.0f + 2.0f * _dt * _zeta * _omega;
-		const float oo = _omega * _omega;
-		const float hoo = _dt * oo;
-		const float hhoo = _dt * hoo;
-		const float detInv = 1.0f / (f + hhoo);
-		const float detV = _v + hoo * (_e - _s);
-
-		// Update velocity vector
-		_v = detV * detInv;
 	}
 
 	void AttachHoldState::SpringYTranslate(float _distance)
@@ -456,14 +428,18 @@ namespace Phyzzle
 		SpringRotate(worldUp, _angle);
 	}
 
-	void AttachHoldState::TryAttach() const
-	{
-		Attach();
-	}
-
 	void AttachHoldState::Attach() const
 	{
+		if (TryAttach())
+			StateCancel();
+	}
 
+	bool AttachHoldState::TryAttach() const
+	{
+		if (!attachble)
+			return false;
+
+		return AttachSystem::Instance()->Attach(attachble);
 	}
 
 	void AttachHoldState::VariableSet()

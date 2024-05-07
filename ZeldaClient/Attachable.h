@@ -1,7 +1,7 @@
 #pragma once
 #include "PurahEngine.h"
 #include <vector>
-#include "AttachIsland.h"
+#include "IslandID.h"
 
 namespace Phyzzle
 {
@@ -20,6 +20,7 @@ namespace Phyzzle
 
 	protected:
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 
 		void PreSerialize(json& jsonData) const override {}
@@ -29,9 +30,13 @@ namespace Phyzzle
 
 	private:
 		friend class AttachSystem;
+		Attachable* attachable;
 		PurahEngine::RigidBody* body;
+		Eigen::Vector3f worldAnchor = Eigen::Vector3f::Zero();
+
 		IslandID islandID;							// IslandID
 		std::vector<Attachable*> connectedObjects;	// 현 객체와 연결된 객체들
+
 
 	private:
 		// Select되면 객체의 상태를 저장하기 위한 변수

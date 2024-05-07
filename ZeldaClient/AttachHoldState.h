@@ -4,12 +4,14 @@
 
 namespace Phyzzle
 {
+	class Attachable;
+
 	class AttachHoldState final : public IState
 	{
 	public:
 		AttachHoldState() = delete;
 		explicit AttachHoldState(Player* _player)
-			: IState(_player)
+			: IState(_player), selectBody(), attachble()
 		{}
 		~AttachHoldState() override;
 
@@ -76,7 +78,8 @@ namespace Phyzzle
 		Eigen::Vector3f targetPosition = Eigen::Vector3f::Zero();			// 
 		Eigen::Quaternionf targetRotation = Eigen::Quaternionf::Identity();
 
-		PurahEngine::RigidBody* selectBody = nullptr;
+		PurahEngine::RigidBody* selectBody;
+		Attachable* attachble;
 
 	private:
 		void SetSelectObject();
@@ -126,8 +129,8 @@ namespace Phyzzle
 		void SpringXRotate(float _angle);										// 스프링 회전
 		void SpringYRotate(float _angle);										// 스프링 회전
 
-		void TryAttach() const;									// 부착
 		void Attach() const;									// 부착
+		bool TryAttach() const;									// 부착
 
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화

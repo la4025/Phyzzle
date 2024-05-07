@@ -90,7 +90,7 @@
     <ClCompile Include="DefaultState.cpp">
       <Filter>KH\PLAYER\State\0. Base</Filter>
     </ClCompile>
-    <ClCompile Include="AttachIsland.cpp">
+    <ClCompile Include="IslandID.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,7 +215,7 @@
     <ClInclude Include="Spring.h">
       <Filter>KH\ETC\Spring</Filter>
     </ClInclude>
-    <ClInclude Include="AttachIsland.h">
+    <ClInclude Include="IslandID.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
   </ItemGroup>

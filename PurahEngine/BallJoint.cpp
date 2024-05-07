@@ -19,7 +19,7 @@ namespace PurahEngine
 
 	void BallJoint::OnDataLoadComplete()
 	{
-		auto& instance = PhysicsSystem::GetInstance();
+		const auto& instance = PhysicsSystem::GetInstance();
 
 		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <queue>
+#include <unordered_map>
+#include <Eigen/Dense>
 
-#include "AttachIsland.h"
+#include "IslandID.h"
 #include "Singleton.h"
 
 namespace Phyzzle
@@ -32,12 +34,23 @@ namespace Phyzzle
 		void RemoveIsland(const IslandID& _id);
 
 	public:
-		void SelectBody(Attachable* _body) const;
-		void Attatch(Attachable* _base);
-		void Dettatch(Attachable* _base);
+		void SelectBody(Attachable* _body);
+		bool Attach(Attachable* _base);
+		bool Dettach(Attachable* _base);
+
+		void ConnectNode(Attachable* _base, Attachable* _other);
+		void ConnectJoint(Attachable* _base, Attachable* _other);
+		void CalculateLocalAnchor(
+			const Eigen::Vector3f& _anchorP, 
+			const Eigen::Quaternionf& _anchorQ, 
+			Attachable* _base,
+			Eigen::Vector3f& _outP, 
+			Eigen::Quaternionf& _outQ
+		);
 
 	private:
-		std::vector<AttachIsland> attachIsland;
+		using AttachIsland = std::vector<Attachable*>;
+		std::unordered_map<IslandID, AttachIsland> attachIsland;
 		std::queue<IslandID> removedIndex;
 
 		IslandID islandID;

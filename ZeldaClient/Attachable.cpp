@@ -53,6 +53,31 @@ namespace Phyzzle
 		if (obj->tag.IsContain(L"Attachable"))
 		{
 			body = obj->GetComponent<PurahEngine::RigidBody>();
+			attachable = obj->GetComponent<Attachable>();
+
+			// ¾ÞÄ¿ À§Ä¡
+			Eigen::Vector3f acc = Eigen::Vector3f::Zero();
+			for (int i = 0; i < _collision.contactCount; i++)
+			{
+				acc += _collision.contacts[i].point;
+			}
+			worldAnchor = (acc / _collision.contactCount);
+		}
+	}
+
+	void Attachable::OnCollisionStay(const ZonaiPhysics::ZnCollision& _collision,
+		const PurahEngine::Collider* _collider)
+	{
+		PurahEngine::GameObject* obj = _collider->GetGameObject();
+
+		if (attachable == obj->GetComponent<Attachable>())
+		{
+			Eigen::Vector3f acc = Eigen::Vector3f::Zero();
+			for (int i = 0; i < _collision.contactCount; i++)
+			{
+				acc += _collision.contacts[i].point;
+			}
+			worldAnchor = (acc / _collision.contactCount);
 		}
 	}
 
@@ -64,9 +89,12 @@ namespace Phyzzle
 
 		if (obj->tag.IsContain(L"Attachable"))
 		{
-			if (body == obj->GetComponent<PurahEngine::RigidBody>())
+			if (attachable == obj->GetComponent<Attachable>())
 			{
 				body = nullptr;
+				attachable = nullptr;
+
+				worldAnchor = Eigen::Vector3f::Zero();
 			}
 		}
 	}
