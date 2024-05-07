@@ -1,6 +1,7 @@
 #include "Test2.h"
 #include "TestSingleton.h"
 
+
 PurahEngine::Test2::Test2()
 {
 
@@ -13,12 +14,12 @@ PurahEngine::Test2::~Test2()
 
 void PurahEngine::Test2::Awake()
 {
-	
+
 }
 
 void PurahEngine::Test2::Start()
 {
-
+	GetGameObject()->DontDestroyOnLoad();
 }
 
 void PurahEngine::Test2::Update()
@@ -51,7 +52,13 @@ void PurahEngine::Test2::Update()
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetUp() * 0.1f));
 	}
-	GetGameObject()->DonDestroyOnLoad();
+	if (inputManager.IsKeyPressed(eKey::eKEY_P))
+	{
+		GetGameObject()->EraseDontDestroy();
+	}
+
+	std::wcout << GetGameObject()->GetName() << std::endl;
+	std::cout << trans->GetLocalPosition() << std::endl << std::endl;
 }
 
 void PurahEngine::Test2::FixedUpdate()

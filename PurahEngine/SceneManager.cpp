@@ -229,7 +229,7 @@ void PurahEngine::SceneManager::LoadScene()
 
 	auto& fManager = PurahEngine::FileManager::GetInstance();
 	fManager.clear();
-
+	DataManager::GetInstance().ClearDontDestroy();
 
 	for (auto iter = objectList.begin(); iter != objectList.end(); iter++)
 	{
@@ -240,7 +240,11 @@ void PurahEngine::SceneManager::LoadScene()
 		{
 			delete object;
 		}
-	}
+		else
+		{
+			DataManager::GetInstance().DontDestroyOnLoad(object);
+		}
+	} 
 
 
 	objectList.clear();

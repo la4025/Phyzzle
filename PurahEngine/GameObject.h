@@ -133,7 +133,8 @@ namespace PurahEngine
 
 	public:
 		ObjectState GetState();
-		void DonDestroyOnLoad();
+		void DontDestroyOnLoad();
+		void EraseDontDestroy();
 
 	public:
 		// ComponentList·Î Component Ãß°¡

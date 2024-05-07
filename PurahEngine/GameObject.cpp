@@ -751,10 +751,14 @@ PurahEngine::GameObject::ObjectState PurahEngine::GameObject::GetState()
 	return state;
 }
 
-void PurahEngine::GameObject::DonDestroyOnLoad()
+void PurahEngine::GameObject::DontDestroyOnLoad()
 {
-	DataManager::GetInstance().DontDestroyOnLoad(this);
 	isDontDestroy = true;
+}
+
+void PurahEngine::GameObject::EraseDontDestroy()
+{
+	SetDontDestroy(false);
 }
 
 PurahEngine::Component* PurahEngine::GameObject::AddComponentToString(std::string componentName)

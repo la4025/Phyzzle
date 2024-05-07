@@ -12,7 +12,7 @@ namespace PurahEngine
 	{
 	public:
 		void DontDestroyOnLoad(GameObject* gameObject);
-		void EraseDontDestroy(GameObject* gameObject);
+		void ClearDontDestroy();
 	public:
 		std::map<std::wstring, GameObject*> dontDestroyObjectList;
 

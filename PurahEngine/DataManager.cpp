@@ -23,9 +23,9 @@ void PurahEngine::DataManager::DontDestroyOnLoad(GameObject* gameObject)
 	}
 }
 
-void PurahEngine::DataManager::EraseDontDestroy(GameObject* gameObject)
+void PurahEngine::DataManager::ClearDontDestroy()
 {
-
+	dontDestroyObjectList.clear();
 }
 
 void PurahEngine::DataManager::PreSerialize(json& jsonData) const
