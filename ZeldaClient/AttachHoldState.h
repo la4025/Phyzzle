@@ -62,8 +62,6 @@ namespace Phyzzle
 		const float rotateAngle = 0.25f * std::numbers::pi_v<float>;
 
 	private:
-		bool hasGravity = false;
-		float mass = -0.1f;
 		float diffWidth = -0.1f;
 		float diffHeight = -0.1f;
 
@@ -131,6 +129,8 @@ namespace Phyzzle
 
 		void Attach() const;									// 부착
 		bool TryAttach() const;									// 부착
+
+		void Put();
 
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화

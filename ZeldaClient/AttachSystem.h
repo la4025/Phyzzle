@@ -25,6 +25,15 @@ namespace Phyzzle
 		~AttachSystem() override;
 
 	private:
+		using AttachIsland = std::vector<Attachable*>;
+		std::unordered_map<IslandID, AttachIsland> attachIsland;
+		std::queue<IslandID> removedIndex;
+
+		IslandID islandID;
+		bool gravity = true;
+		float mass = 1.f;
+
+	private:
 		// ID 생성 삭제
 		IslandID CreateIslandID();
 		void RemoveIslandID(const IslandID& _id);
@@ -35,27 +44,20 @@ namespace Phyzzle
 
 	public:
 		void SelectBody(Attachable* _body);
+		void DeselectBody(Attachable* _body);
 		bool Attach(Attachable* _base);
 		bool Dettach(Attachable* _base);
 
 		void ConnectNode(Attachable* _base, Attachable* _other);
 		void ConnectJoint(Attachable* _base, Attachable* _other);
+
+		bool HasAttachIsland(const IslandID& _id, AttachIsland& _island);
+
 		void CalculateLocalAnchor(
-			const Eigen::Vector3f& _anchorP, 
-			const Eigen::Quaternionf& _anchorQ, 
-			Attachable* _base,
-			Eigen::Vector3f& _outP, 
-			Eigen::Quaternionf& _outQ
+			const Eigen::Vector3f& _anchorP, const Eigen::Quaternionf& _anchorQ,
+			const Attachable* _base,
+			Eigen::Vector3f& _outP, Eigen::Quaternionf& _outQ
 		);
-
-	private:
-		using AttachIsland = std::vector<Attachable*>;
-		std::unordered_map<IslandID, AttachIsland> attachIsland;
-		std::queue<IslandID> removedIndex;
-
-		IslandID islandID;
-		bool gravity = true;
-		float mass = 1.f;
 	};
 }
 

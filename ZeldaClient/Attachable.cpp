@@ -91,7 +91,6 @@ namespace Phyzzle
 		{
 			if (attachable == obj->GetComponent<Attachable>())
 			{
-				body = nullptr;
 				attachable = nullptr;
 
 				worldAnchor = Eigen::Vector3f::Zero();

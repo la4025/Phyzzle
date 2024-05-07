@@ -65,18 +65,55 @@ namespace Phyzzle
 
 	void AttachSystem::SelectBody(Attachable* _body)
 	{
-		if (const IslandID id = _body->GetIslandID())		// 섬을 이루고 있는가?
+		const IslandID id = _body->GetIslandID();
+
+		if (id == nullptr)		// 섬을 이루고 있는가?
 		{
+			_body->ValiantStore();
 			_body->Selected();			// 혼자만 듬
 		}
 		else
 		{
-			// const size_t index(id);
-			const AttachIsland& arr = attachIsland[id];		// 섬의 모두를 들어 올림
-
-			for (size_t i = 0; i < arr.size(); i++)
+			if (attachIsland.contains(id))
 			{
-				arr[i]->Selected();
+				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를 들어 올림
+
+				for (size_t i = 0; i < arr.size(); i++)
+				{
+					arr[i]->ValiantStore();
+					arr[i]->Selected();
+				}
+			}
+
+			else
+			{
+				assert(0);
+			}
+		}
+	}
+
+	void AttachSystem::DeselectBody(Attachable* _body)
+	{
+		const IslandID id = _body->GetIslandID();
+
+		if (id == nullptr)		// 섬을 이루고 있는가?
+		{
+			_body->ValiantRetrieve();			// 혼자만 듬
+		}
+		else
+		{
+			if (attachIsland.contains(id))
+			{
+				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를 들어 올림
+
+				for (size_t i = 0; i < arr.size(); i++)
+				{
+					arr[i]->ValiantRetrieve();
+				}
+			}
+			else
+			{
+				assert(0);
 			}
 		}
 	}
@@ -91,21 +128,14 @@ namespace Phyzzle
 		const IslandID obj0ID = _object->GetIslandID();
 		const IslandID obj1ID = _other->GetIslandID();
 
+		// 섬을 가지고 있는지 아닌지 체크
 		AttachIsland island0;
-		AttachIsland island1;
+		if (!HasAttachIsland(obj0ID, island0))
+			island0.push_back(_other);
 
-		// 부착하는 오브젝트가 섬을 가지고 있을 경우
-		// 섬 ID를 삭제
-		if (obj0ID != nullptr)
-		{
-			island0 = attachIsland[obj0ID];
-			RemoveIslandID(obj0ID);
-		}
-		if (obj1ID != nullptr)
-		{
-			island1 = attachIsland[obj1ID];
-			RemoveIslandID(obj1ID);
-		}
+		AttachIsland island1;
+		if (!HasAttachIsland(obj1ID, island1))
+			island1.push_back(_object);
 
 		// 연결해주고
 		ConnectNode(_object, _other);
@@ -123,8 +153,6 @@ namespace Phyzzle
 		// 연결된게 없으면 아무것도 못함.
 		if (_object->connectedObjects.empty())
 			return false;
-
-
 
 		// 연결됐었던 객체들 일단 저장해둠.
 		const AttachIsland temp = _object->connectedObjects;
@@ -176,37 +204,54 @@ namespace Phyzzle
 		const Eigen::Vector3f worldP = _base->worldAnchor;
 		const Eigen::Quaternionf worldQ = Eigen::Quaternionf::Identity();
 
+		// 각자의 로컬 앵커 계산해주고
 		Eigen::Vector3f baseP;
 		Eigen::Quaternionf baseQ;
 		CalculateLocalAnchor(worldP, worldQ, _base, baseP, baseQ);
 
 		Eigen::Vector3f otherP;
 		Eigen::Quaternionf otherQ;
-		CalculateLocalAnchor(worldP, worldQ, _base, otherP, otherQ);
+		CalculateLocalAnchor(worldP, worldQ, _other, otherP, otherQ);
 
+		// 앵커 적용
 		joint->SetAnchor(baseP, baseQ, otherP, otherQ);
 	}
 
-	void AttachSystem::CalculateLocalAnchor(
-		const Eigen::Vector3f& _anchorP,
-		const Eigen::Quaternionf& _anchorQ,
-		Attachable* _base,
-		Eigen::Vector3f& _outP,
-		Eigen::Quaternionf& _outQ)
+	bool AttachSystem::HasAttachIsland(const IslandID& _id, AttachIsland& _outIsland)
 	{
-		const Eigen::Matrix4f anchorMat = 
-			_anchorQ.matrix() * 
-			_anchorP.matrix();
+		// 섬을 가지고 있을 경우
+		if (_id != nullptr)
+		{
+			// 섬 ID를 삭제
+			_outIsland = attachIsland[_id];
+			RemoveIslandID(_id);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-		const Eigen::Matrix4f bodyMat = 
-			_base->gameObject->GetTransform()->GetWorldRotation().matrix() * 
-			_base->gameObject->GetTransform()->GetWorldPosition().matrix();
+	void AttachSystem::CalculateLocalAnchor(
+		const Eigen::Vector3f& _anchorP, const Eigen::Quaternionf& _anchorQ,
+		const Attachable* _base,
+		Eigen::Vector3f& _outP, Eigen::Quaternionf& _outQ)
+	{
+		const Eigen::Vector3f one = Eigen::Vector3f( 1.f, 1.f, 1.f );
 
-		Eigen::Matrix4f local = bodyMat.inverse() * anchorMat;
+		Eigen::Affine3f anchorMat = Eigen::Affine3f::Identity();
+		anchorMat.fromPositionOrientationScale(_anchorP, _anchorQ, one);
 
-		_outP = local.block<3, 1>(0, 3);
+		Eigen::Affine3f bodyMat = Eigen::Affine3f::Identity();
+		bodyMat.fromPositionOrientationScale(
+			_base->gameObject->GetTransform()->GetWorldPosition(), 
+			_base->gameObject->GetTransform()->GetWorldRotation(), 
+			one);
 
-		const Eigen::Matrix3f rot = local.block<3, 3>(0, 0);
-		_outQ = Eigen::Quaternionf(rot);
+		Eigen::Transform localT = bodyMat.inverse() * anchorMat;
+
+		_outP = localT.translation();
+		_outQ = localT.rotation();
 	}
 }

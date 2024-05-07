@@ -12,7 +12,7 @@ namespace PurahEngine
 		~HingeJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		// 관절 각도

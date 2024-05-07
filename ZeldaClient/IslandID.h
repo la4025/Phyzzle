@@ -58,7 +58,7 @@ namespace Phyzzle
 		}
 		bool operator==(std::nullptr_t) const
 		{
-			return id == false;
+			return id == -1;
 		}
 #pragma endregion operator
 

@@ -12,7 +12,7 @@ namespace PurahEngine
 		~SpringJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		// 현재 조인트 거리

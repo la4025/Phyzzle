@@ -17,7 +17,7 @@ namespace PurahEngine
 		~JointT() override = default;
 
 	protected:
-		void OnDataLoadComplete() override
+		void PostInitialize() override
 		{
 			SetBreakForce(breakForce, breakTorque);
 			EnableCollision(enableCollision);

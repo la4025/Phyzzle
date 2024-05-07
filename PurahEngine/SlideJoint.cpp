@@ -19,7 +19,7 @@ namespace PurahEngine
 		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
-	void SlideJoint::OnDataLoadComplete()
+	void SlideJoint::PostInitialize()
 	{
 		const auto& instance = PhysicsSystem::GetInstance();
 

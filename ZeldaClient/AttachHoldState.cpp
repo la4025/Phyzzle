@@ -79,6 +79,8 @@ namespace Phyzzle
 	// Ãë¼Ò
 	void AttachHoldState::Click_A()
 	{
+		Put();
+
 		StateCancel();
 	}
 
@@ -284,7 +286,7 @@ namespace Phyzzle
 	{
 		const bool hit = player->RaycastFromCamera(selectRange, &selectBody, &attachble, nullptr);
 
-		if (!hit || !attachble)
+		if (!hit || !attachble || !selectBody)
 		{
 			player->ChangeState(Player::ATTACH_SELECT);
 		}
@@ -442,18 +444,22 @@ namespace Phyzzle
 		return AttachSystem::Instance()->Attach(attachble);
 	}
 
+	void AttachHoldState::Put()
+	{
+		if (attachble)
+		{
+			AttachSystem::Instance()->DeselectBody(attachble);
+		}
+	}
+
 	void AttachHoldState::VariableSet()
 	{
 		using namespace Eigen;
 
-		if (selectBody == nullptr)
+		if (!attachble || !selectBody)
 			return;
 
-		hasGravity = selectBody->HasGravity();
-		mass = selectBody->GetMass();
-
-		selectBody->UseGravity(false);
-		selectBody->SetMass(0.001f);
+		AttachSystem::Instance()->SelectBody(attachble);
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const Eigen::Vector3f playerPosition = player->GetGameObject()->GetTransform()->GetWorldPosition();
@@ -473,10 +479,9 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (selectBody)
+		if (selectBody || attachble)
 		{
-			selectBody->UseGravity(hasGravity);
-			selectBody->SetMass(mass);
+			AttachSystem::Instance()->SelectBody(attachble);
 		}
 
 		playerVelocity = Eigen::Vector3f::Zero();
@@ -490,8 +495,6 @@ namespace Phyzzle
 		targetPosition = Eigen::Vector3f::Zero();
 		targetRotation = Eigen::Quaternionf::Identity();
 
-		hasGravity = false;
-		mass = -0.1f;
 		diffWidth = -0.1f;
 		selectBody = nullptr;
 	}

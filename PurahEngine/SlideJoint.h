@@ -12,7 +12,7 @@ namespace PurahEngine
 		~SlideJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		float GetPosition() const;

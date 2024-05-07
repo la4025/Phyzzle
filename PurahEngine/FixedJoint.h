@@ -12,7 +12,7 @@ namespace PurahEngine
 		~FixedJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		void PreSerialize(json& jsonData) const override;
