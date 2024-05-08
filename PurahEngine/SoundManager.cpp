@@ -85,7 +85,7 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, T
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 	std::string str = converter.to_bytes(filePath);
 
-	result = system->createSound(str.c_str(), FMOD_3D, 0, &(newSound.sound));
+	result = system->createSound(str.c_str(), FMOD_3D_LINEARSQUAREROLLOFF, 0, &(newSound.sound));
 	assert(result == FMOD_OK);
 
 	newSound.soundName = soundName;
@@ -96,7 +96,7 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, T
 	newSound.lastPos = { 0.0f, 0.0f, 0.0f };
 
 	newSound.channel->setChannelGroup(effectChannelGroup);
-	newSound.sound->set3DMinMaxDistance(5.0f, 10000.0f);
+	newSound.sound->set3DMinMaxDistance(1.0f, 50.0f);
 
 	soundMap[audioSource] = newSound;
 }
@@ -145,9 +145,7 @@ void PurahEngine::SoundManager::Update()
 {
 	FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-	vel.x = (listenerPosition.x - lastPos.x);
-	vel.y = (listenerPosition.y - lastPos.y);
-	vel.z = (listenerPosition.z - lastPos.z);
+
 
 	if (listenerTransform != nullptr)
 	{
@@ -168,7 +166,7 @@ void PurahEngine::SoundManager::Update()
 	}
 
 	SetObject3DAttributes();
-	system->set3DListenerAttributes(0, &listenerPosition, &vel, &listenerForward, &listenerUp);
+	system->set3DListenerAttributes(0, &listenerPosition, 0, &listenerForward, &listenerUp);
 
 	system->update();
 	lastPos = listenerPosition;
@@ -190,12 +188,7 @@ void PurahEngine::SoundManager::SetObject3DAttributes()
 		position.y = pos.y();
 		position.z = pos.z();
 
-		FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-		vel.x = (position.x - purahSound.lastPos.x);
-		vel.y = (position.y - purahSound.lastPos.y);
-		vel.z = (position.z - purahSound.lastPos.z);
-
-		auto r = purahSound.channel->set3DAttributes(&position, &vel);
+		auto r = purahSound.channel->set3DAttributes(&position, 0);
 
 		purahSound.lastPos = position;
 	}
@@ -214,7 +207,7 @@ PurahEngine::SoundManager::SoundManager()
 
 PurahEngine::SoundManager::~SoundManager()
 {
-
+	
 }
 
 PurahEngine::SoundManager& PurahEngine::SoundManager::GetInstance()

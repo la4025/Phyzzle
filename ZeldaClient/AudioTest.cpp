@@ -1,5 +1,5 @@
 #include "AudioTest.h"
-#include "CameraMovement.h"
+
 
 PurahEngine::AudioTest::AudioTest()
 {
@@ -24,13 +24,18 @@ void PurahEngine::AudioTest::OnDataLoadComplete()
 
 void PurahEngine::AudioTest::Update()
 {
-	
+	auto& inputManager = PurahEngine::InputManager::Getinstance();
+
+	if (inputManager.IsKeyPressed(eKey::eKEY_M))
+	{
+		auto& soundManager = PurahEngine::SoundManager::GetInstance();
+		soundManager.PlayEffect(audioSource->GetSoundName(), audioSource);
+	}
 }
 
 void PurahEngine::AudioTest::OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const Collider*)
 {
-	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.PlayEffect(audioSource->GetSoundName(), audioSource);
+	
 }
 
 void PurahEngine::AudioTest::PreSerialize(json& jsonData) const

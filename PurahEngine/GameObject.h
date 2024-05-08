@@ -45,7 +45,7 @@ namespace PurahEngine
 
 		// Upate 후에 한번 더 업데이트 (주로 카메라 관련에서 사용한다고 한다)
 		virtual void LateUpdateEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
-		
+
 		void DeleteChild(GameObject* child);
 
 		void Destroy();
@@ -88,7 +88,7 @@ namespace PurahEngine
 		void StateChangeEvent(bool parentEnable = true);
 
 		Transform* GetTransform();
-		std::vector<Component*> GetComponents();
+		std::vector<Component*> GetComponentList();
 
 		std::wstring GetName();
 		bool GetStateEnable();
@@ -178,6 +178,22 @@ namespace PurahEngine
 			}
 
 			return nullptr; // 해당 타입의 컴포넌트를 찾지 못했을 때 nullptr 반환
+		}
+
+		template<componentType T>
+		std::vector<T*> GetComponents() const
+		{
+			std::vector<T*> components;
+			for (auto component : componentList)
+			{
+				T* t = dynamic_cast<T*>(component);
+				if (t != nullptr)
+				{
+					components.push_back(t);
+				}
+			}
+
+			return components; // 해당 타입의 컴포넌트를 찾지 못했을 때 nullptr 반환
 		}
 
 	private:
