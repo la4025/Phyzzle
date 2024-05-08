@@ -13,9 +13,9 @@ namespace PurahEngine
 		physicsSystem.FreeObject(znCollider, this->GetGameObject());
 	}
 
-	void BoxCollider::OnDataLoadComplete()
+	void BoxCollider::PostInitialize()
 	{
-		Collider::OnDataLoadComplete();
+		Collider::PostInitialize();
 
 		const auto scale = transform->GetWorldScale();
 

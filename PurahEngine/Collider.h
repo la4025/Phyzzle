@@ -27,11 +27,12 @@ namespace PurahEngine
         ~Collider() override;
 
     public:
-        void OnDataLoadComplete() override;
+        void PostInitialize() override;
         void SetUserData();
 
     public:
         void SetPositionOffset(const Eigen::Vector3f& _pos);
+        void SetRotationOffset(const Eigen::Quaternionf& _rot);
 
         void SetDynamic(bool _value);
 

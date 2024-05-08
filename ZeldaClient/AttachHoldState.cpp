@@ -35,7 +35,6 @@ namespace Phyzzle
 
 	void AttachHoldState::StateStay()
 	{
-
 		SpringCalculate();
 		ApplyObjectVelocity();
 		ResetObjectVelocity();
@@ -80,7 +79,6 @@ namespace Phyzzle
 	void AttachHoldState::Click_A()
 	{
 		Put();
-
 		StateCancel();
 	}
 
@@ -89,18 +87,24 @@ namespace Phyzzle
 	{
 		// 오브젝트를 이동시킬수 있는 상태라면
 		// 붙일 수 있어야함.
-		TryAttach();
+		if (TryAttach())
+		{
+			Put();
+			StateCancel();
+		}
 	}
 
 	// 취소
 	void AttachHoldState::Click_X()
 	{
+		Put();
 		StateCancel();
 	}
 
 	// 취소
 	void AttachHoldState::Click_Y()
 	{
+		Put();
 		StateCancel();
 	}
 
@@ -430,26 +434,20 @@ namespace Phyzzle
 		SpringRotate(worldUp, _angle);
 	}
 
-	void AttachHoldState::Attach() const
-	{
-		if (TryAttach())
-			StateCancel();
-	}
-
 	bool AttachHoldState::TryAttach() const
 	{
 		if (!attachble)
 			return false;
 
-		return AttachSystem::Instance()->Attach(attachble);
+		return AttachSystem::Instance()->TryAttach(attachble);
 	}
 
-	void AttachHoldState::Put()
+	void AttachHoldState::Put() const
 	{
-		if (attachble)
-		{
-			AttachSystem::Instance()->DeselectBody(attachble);
-		}
+		if (!attachble)
+			return;
+
+		AttachSystem::Instance()->DeselectBody(attachble);
 	}
 
 	void AttachHoldState::VariableSet()
@@ -479,11 +477,6 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (selectBody || attachble)
-		{
-			AttachSystem::Instance()->SelectBody(attachble);
-		}
-
 		playerVelocity = Eigen::Vector3f::Zero();
 
 		targetVelocity = Eigen::Vector3f::Zero();
@@ -497,6 +490,7 @@ namespace Phyzzle
 
 		diffWidth = -0.1f;
 		selectBody = nullptr;
+		attachble = nullptr;
 	}
 #pragma endregion Content
 

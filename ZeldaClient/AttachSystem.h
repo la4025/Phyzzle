@@ -14,6 +14,7 @@ namespace Phyzzle
 
 namespace PurahEngine
 {
+	class FixedJoint;
 	class RigidBody;
 }
 
@@ -43,21 +44,27 @@ namespace Phyzzle
 		void RemoveIsland(const IslandID& _id);
 
 	public:
-		void SelectBody(Attachable* _body);
-		void DeselectBody(Attachable* _body);
-		bool Attach(Attachable* _base);
-		bool Dettach(Attachable* _base);
+		void						SelectBody(Attachable* _body);
+		void						DeselectBody(Attachable* _body);
 
-		void ConnectNode(Attachable* _base, Attachable* _other);
-		void ConnectJoint(Attachable* _base, Attachable* _other);
+		bool						TryAttach(Attachable* _base);
+		bool						Dettach(Attachable* _base);
 
-		bool HasAttachIsland(const IslandID& _id, AttachIsland& _island);
+		void						ConnectNode(Attachable* _base, Attachable* _other, PurahEngine::FixedJoint* _joint);
+		void						DisconnectNode(Attachable* _base, Attachable* _other);
 
-		void CalculateLocalAnchor(
-			const Eigen::Vector3f& _anchorP, const Eigen::Quaternionf& _anchorQ,
-			const Attachable* _base,
-			Eigen::Vector3f& _outP, Eigen::Quaternionf& _outQ
-		);
+		PurahEngine::FixedJoint*	CreateJoint(Attachable* _base, Attachable* _other);
+		void						BreakJoint(Attachable* _base, Attachable* _other);
+
+		bool						HasAttachIsland(const IslandID& _id, AttachIsland& _island);
+
+		void						CalculateLocalAnchor(
+										const Eigen::Vector3f& _anchorP, 
+										const Eigen::Quaternionf& _anchorQ,
+										const Attachable* _base,
+										Eigen::Vector3f& _outP, 
+										Eigen::Quaternionf& _outQ
+									);
 	};
 }
 

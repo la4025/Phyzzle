@@ -35,6 +35,9 @@ namespace Phyzzle
 
 	void Attachable::ValiantRetrieve()
 	{
+		if (originMass == -1.f)
+			return;
+
 		body->SetKinematic(isKinematic);
 		body->UseGravity(hasGravity);
 		body->SetMass(originMass);
@@ -52,7 +55,6 @@ namespace Phyzzle
 
 		if (obj->tag.IsContain(L"Attachable"))
 		{
-			body = obj->GetComponent<PurahEngine::RigidBody>();
 			attachable = obj->GetComponent<Attachable>();
 
 			// ¾ÞÄ¿ À§Ä¡

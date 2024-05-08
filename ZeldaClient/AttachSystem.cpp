@@ -37,6 +37,7 @@ namespace Phyzzle
 		removedIndex.push(_id);						// 삭제된 ID를 큐에 넣음
 	}
 
+	// 섬 생성
 	IslandID AttachSystem::CreateIsland(const AttachIsland& _arr)
 	{
 		IslandID newID = CreateIslandID();
@@ -49,6 +50,7 @@ namespace Phyzzle
 		return newID;
 	}
 
+	// 섬 삭제
 	void AttachSystem::RemoveIsland(const IslandID& _id)
 	{
 		if (_id == nullptr)
@@ -67,7 +69,7 @@ namespace Phyzzle
 		RemoveIslandID(_id);
 	}
 
-
+	// 물체 선택
 	void AttachSystem::SelectBody(Attachable* _body)
 	{
 		const IslandID id = _body->GetIslandID();
@@ -89,7 +91,6 @@ namespace Phyzzle
 					arr[i]->Selected();
 				}
 			}
-
 			else
 			{
 				assert(0);
@@ -97,19 +98,20 @@ namespace Phyzzle
 		}
 	}
 
+	// 물체 선택 해제
 	void AttachSystem::DeselectBody(Attachable* _body)
 	{
 		const IslandID id = _body->GetIslandID();
 
 		if (id == nullptr)		// 섬을 이루고 있는가?
 		{
-			_body->ValiantRetrieve();			// 혼자만 듬
+			_body->ValiantRetrieve();							// 혼자만
 		}
 		else
 		{
 			if (attachIsland.contains(id))
 			{
-				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를 들어 올림
+				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를
 
 				for (size_t i = 0; i < arr.size(); i++)
 				{
@@ -123,32 +125,47 @@ namespace Phyzzle
 		}
 	}
 
-	bool AttachSystem::Attach(Attachable* _object)
+	// 물체 부착
+	bool AttachSystem::TryAttach(Attachable* _object)
 	{
-		Attachable* _other = _object->attachable;
+		// 선택한 오브젝트가 섬을 가지고 있는지 아닌지 체크
+
+		const IslandID obj0ID = _object->GetIslandID();
+
+		AttachIsland island0;
+		if (!HasAttachIsland(obj0ID, island0))
+			island0.push_back(_object);
+
+		Attachable* _other = nullptr;
+
+		for (const auto& e : island0)
+		{
+			if (e->attachable && (_object != e->attachable))
+			{
+				_other = e->attachable;
+				break;
+			}
+		}
 
 		if (!_other)
 			return false;
 
-		const IslandID obj0ID = _object->GetIslandID();
 		const IslandID obj1ID = _other->GetIslandID();
-
-		// 섬을 가지고 있는지 아닌지 체크
-		AttachIsland island0;
-		if (!HasAttachIsland(obj0ID, island0))
-			island0.push_back(_other);
 
 		AttachIsland island1;
 		if (!HasAttachIsland(obj1ID, island1))
-			island1.push_back(_object);
+			island1.push_back(_other);
 
 		// 연결해주고
-		ConnectNode(_object, _other);
-		ConnectJoint(_object, _other);
+		const auto joint = CreateJoint(_object, _other);
+		ConnectNode(_object, _other, joint);
 
 		// 새로운 ID를 부여
 		island0.insert(island0.end(), island1.begin(), island1.end());
 		CreateIsland(island0);
+
+		_object->attachable = nullptr;
+		_other->attachable = nullptr;
 
 		return true;
 	}
@@ -165,16 +182,8 @@ namespace Phyzzle
 		// 연결된 객체 순회하면서 연결을 끊어줌
 		for (auto& _other : temp)
 		{
-			const auto itr0 = std::ranges::find(_object->connectedObjects, _other);
-			if (itr0 == _object->connectedObjects.end())
-			{
-				_object->connectedObjects.erase(itr0);
-			}
-			const auto itr1 = std::ranges::find(_other->connectedObjects, _object);
-			if (itr1 == _other->connectedObjects.end())
-			{
-				_other->connectedObjects.erase(itr1);
-			}
+			DisconnectNode(_object, _other);
+			BreakJoint(_object, _other);
 		}
 
 		// 연결됐었던 객체들 순회하면서 Island를 만들어줌.
@@ -194,16 +203,30 @@ namespace Phyzzle
 		return true;
 	}
 
-	void AttachSystem::ConnectNode(Attachable* _base, Attachable* _other)
+	void AttachSystem::ConnectNode(Attachable* _base, Attachable* _other, PurahEngine::FixedJoint* _joint)
 	{
 		_base->connectedObjects.push_back(_other);
 		_other->connectedObjects.push_back(_other);
 	}
 
-	void AttachSystem::ConnectJoint(Attachable* _base, Attachable* _other)
+	void AttachSystem::DisconnectNode(Attachable* _base, Attachable* _other)
+	{
+		const auto itr0 = std::ranges::find(_base->connectedObjects, _other);
+		if (itr0 != _base->connectedObjects.end())
+		{
+			_base->connectedObjects.erase(itr0);
+		}
+		const auto itr1 = std::ranges::find(_other->connectedObjects, _base);
+		if (itr1 != _other->connectedObjects.end())
+		{
+			_other->connectedObjects.erase(itr1);
+		}
+	}
+
+	PurahEngine::FixedJoint* AttachSystem::CreateJoint(Attachable* _base, Attachable* _other)
 	{
 		// 조인트 만들어주고
-		auto joint = _base->GetGameObject()->AddComponent<PurahEngine::FixedJoint>();
+		const auto joint = _base->GetGameObject()->AddComponent<PurahEngine::FixedJoint>();
 		joint->SetRigidbody(_other->GetGameObject()->GetComponent<PurahEngine::RigidBody>());
 
 		const Eigen::Vector3f worldP = _base->worldAnchor;
@@ -220,21 +243,28 @@ namespace Phyzzle
 
 		// 앵커 적용
 		joint->SetAnchor(baseP, baseQ, otherP, otherQ);
+
+		return joint;
+	}
+
+	void AttachSystem::BreakJoint(Attachable* _base, Attachable* _other)
+	{
+		// _base->GetGameObject()->GetComponents<PurahEngine::FixedJoint>();
 	}
 
 	bool AttachSystem::HasAttachIsland(const IslandID& _id, AttachIsland& _outIsland)
 	{
-		// 섬을 가지고 있을 경우
-		if (_id != nullptr)
+		// 섬을 가지고 있지 않으면
+		if (_id == nullptr)
+		{
+			return false;
+		}
+		else
 		{
 			// 섬 ID를 삭제
 			_outIsland = attachIsland[_id];
 			RemoveIslandID(_id);
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 

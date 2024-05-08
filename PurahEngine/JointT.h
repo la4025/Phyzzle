@@ -59,11 +59,7 @@ namespace PurahEngine
 			return joint;
 		}
 	public:
-		/**
-		오브젝트를 조인트로 연결함.
-		둘 중 하나는 NULL일 수 있음.
-		*/
-		void		SetRigidbody(RigidBody* _other) noexcept
+		void		SetRigidbody(RigidBody* _other) noexcept override
 		{
 			connectedBody = _other;
 		}

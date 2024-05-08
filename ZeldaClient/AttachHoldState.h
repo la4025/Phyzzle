@@ -84,7 +84,7 @@ namespace Phyzzle
 
 		void PlayerMove(float _speed) const;					// 이동
 		void CameraAround() const;								// 카메라 회전
-		void StateCancel() const;								// Default 모드로 돌아감
+		void StateCancel() const;										// Default 모드로 돌아감
 
 		void TrySelect();										// 선택
 
@@ -127,10 +127,9 @@ namespace Phyzzle
 		void SpringXRotate(float _angle);										// 스프링 회전
 		void SpringYRotate(float _angle);										// 스프링 회전
 
-		void Attach() const;									// 부착
 		bool TryAttach() const;									// 부착
 
-		void Put();
+		void Put() const;
 
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화

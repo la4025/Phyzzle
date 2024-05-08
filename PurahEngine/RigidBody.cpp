@@ -25,10 +25,10 @@ namespace PurahEngine
 		body = PhysicsSystem::GetInstance().CreateRigidBody(GetGameObject());
 		PhysicsSystem::GetInstance().bodies.push_back(this);
 		body->SetUserData(this);
-		// awake = false;
+		awake = false;
 	}
 
-	void RigidBody::OnDataLoadComplete()
+	void RigidBody::PostInitialize()
 	{
 		const auto trans = GetGameObject()->GetTransform();
 		body->SetPosition(trans->GetWorldPosition());
@@ -59,41 +59,41 @@ namespace PurahEngine
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept
 	{
-		// if (awake)
-		// {
-		// 	auto trans = GetGameObject()->GetTransform();
-		// 	trans->SetWorldPosition(_pos);
-		// }
-		// else
-		// {
+		if (awake)
+		{
+			auto trans = GetGameObject()->GetTransform();
+			trans->SetWorldPosition(_pos);
+		}
+		else
+		{
 			body->SetPosition(_pos);
-		// }
+		}
 	}
 
 	Eigen::Vector3f RigidBody::GetPosition() noexcept
 	{
-		// if (awake)
-		// {
-		// 	auto trans = GetGameObject()->GetTransform();
-		// 	return trans->GetWorldPosition();
-		// }
-		// else
-		// {
+		if (awake)
+		{
+			auto trans = GetGameObject()->GetTransform();
+			return trans->GetWorldPosition();
+		}
+		else
+		{
 			return body->GetPosition();
-		// }
+		}
 	}
 
 	void RigidBody::SetRotation(const Eigen::Quaternionf& _rot) noexcept
 	{
-		// if (awake)
-		// {
-		// 	auto trans = GetGameObject()->GetTransform();
-		// 	trans->SetWorldRotation(_rot);
-		// }
-		// else
-		// {
-			body->SetQuaternion(_rot);
-		// }
+		 if (awake)
+		 {
+		 	auto trans = GetGameObject()->GetTransform();
+		 	trans->SetWorldRotation(_rot);
+		 }
+		 else
+		 {
+		body->SetQuaternion(_rot);
+		 }
 	}
 
 	Eigen::Quaternionf RigidBody::GetRotation() noexcept

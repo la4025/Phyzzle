@@ -20,7 +20,7 @@ namespace PurahEngine
 
 	public:
 		void		Initialize() override;
-		void		OnDataLoadComplete() override;
+		void		PostInitialize() override;
 		void		Awake() override;
 
 	public:
@@ -126,7 +126,7 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		// bool awake{ true };
+		bool awake{ true };
 		bool isKinematic{ false };
 		bool useGravity{ true };
 
