@@ -12,7 +12,7 @@ namespace PurahEngine
 		~DistanceJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		// 현재 조인트 거리
@@ -42,11 +42,6 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		Eigen::Vector3f LocalAnchor;
-		Eigen::Quaternionf LocalAnchorRotation;
-		Eigen::Vector3f connectedLocalAnchor;
-		Eigen::Quaternionf connectedLocalAnchorRotation;
-
 		bool useMinDistance = false;
 		float minDistance = 0.f;
 		float maxDistance = 0.f;

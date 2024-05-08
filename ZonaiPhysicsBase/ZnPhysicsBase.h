@@ -3,6 +3,8 @@
 #include <Eigen/Dense>
 
 #include "MaterialEnum.h"
+#include "ZnResourceID.h"
+#include "ZnMaterial.h"
 #include "ZnBase.h"
 
 namespace ZonaiPhysics
@@ -28,27 +30,19 @@ namespace ZonaiPhysics
 	class ZnTransform;
 	struct ZnRaycastInfo;
 
+	struct MaterialDesc;
+
 	class ZnPhysicsBase : public ZnBase
 	{
 	public:
-		virtual ~ZnPhysicsBase() = default;
+		virtual						~ZnPhysicsBase() = default;
 	
 	public:
-		/// <summary>
-		/// 
-		/// </summary>
 		virtual void				Initialize(ZnSimulationCallback* = nullptr) = 0;
 		virtual void				Simulation(float _dt) = 0;
 		virtual void				Finalize() = 0;
 
-		virtual void				AddMaterial(
-			uint32_t _id, 
-			float staticFriction,	
-			float dynamicFriction, 
-			float _restitution,
-			eCombineMode _eFriction,
-			eCombineMode _eRestitution
-		) = 0;
+		virtual ZnMaterialID		AddMaterial(const MaterialDesc& _desc) = 0;
 
 		virtual void				CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) = 0;
 		virtual void				LoadScene(void* _userScene) = 0;
@@ -74,11 +68,11 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Create Collider
 		/// </summary>
-		virtual ZnCollider*			CreateBoxCollider(void* _userData, const Eigen::Vector3f& extend, uint32_t _material, void* userScene = nullptr) = 0;
-		virtual ZnCollider*			CreateSphereCollider(void* _userData, float _radius, uint32_t _material, void* userScene = nullptr) = 0;
-		virtual ZnCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, uint32_t _material, void* userScene = nullptr) = 0;
-		virtual ZnCollider*			CreateMeshCollider(void* _userData, const std::wstring&, uint32_t _material, void* userScene = nullptr) = 0;
-		virtual ZnCollider*			CreateConvexCollider(void* _userData, const std::wstring&, uint32_t _material, void* userScene = nullptr) = 0;
+		virtual ZnCollider*			CreateBoxCollider(void* _userData, const Eigen::Vector3f& extend, ZnMaterialID _material, void* userScene = nullptr) = 0;
+		virtual ZnCollider*			CreateSphereCollider(void* _userData, float _radius, ZnMaterialID _material, void* userScene = nullptr) = 0;
+		virtual ZnCollider*			CreateCapsuleCollider(void* _userData, float _radius, float _height, ZnMaterialID _material, void* userScene = nullptr) = 0;
+		virtual ZnCollider*			CreateMeshCollider(void* _userData, const std::wstring&, ZnMaterialID _material, void* userScene = nullptr) = 0;
+		virtual ZnCollider*			CreateConvexCollider(void* _userData, const std::wstring&, ZnMaterialID _material, void* userScene = nullptr) = 0;
 		// virtual ZnCollider*		CreateCustomCollider(const std::wstring&) = 0;
 
 		/// <summary>

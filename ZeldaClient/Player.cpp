@@ -7,6 +7,8 @@
 #include "AttachSelectState.h"
 #include "RewindState.h"
 #include "LockState.h"
+#include "Attachable.h"
+#include "Rewindable.h"
 
 #include "Player.h"
 
@@ -56,11 +58,16 @@ namespace Phyzzle
 				return 	start.slerp(_t, end);
 			};
 
-		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
-		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
 		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
+		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
+
+		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
 		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
 		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
+
+		stateChange.insert(ATTACH_SELECT);
+		stateChange.insert(REWIND_SELECT);
+		stateChange.insert(LOCK_SELECT);
 	}
 
 	void Player::Update()
@@ -69,8 +76,6 @@ namespace Phyzzle
 
 		DebugDraw();
 		GamePadInput();
-
-		stateSystem[currState]->Input();
 
 		if (prevState != currState)
 		{
@@ -157,6 +162,23 @@ namespace Phyzzle
 			100, 200, 
 			400, 100, 15,
 			255, 255, 255, 255);
+
+		if (!data.jumping)
+		{
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"can Jump",
+				500, 200,
+				400, 200, 15,
+				255, 255, 255, 255);
+		}
+		else
+		{
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"Jumping",
+				500, 200,
+				400, 200, 15,
+				255, 255, 255, 255);
+		}
 	}
 
 	void Player::GamePadInput()
@@ -179,11 +201,15 @@ namespace Phyzzle
 				stateSystem[currState]->Click_LB();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_L))
 				stateSystem[currState]->Pressing_LB();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_L))
+				stateSystem[currState]->Up_LB();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_R))
 				stateSystem[currState]->Click_RB();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_R))
 				stateSystem[currState]->Pressing_RB();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_R))
+				stateSystem[currState]->Up_RB();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
 				stateSystem[currState]->Click_A();
@@ -232,11 +258,8 @@ namespace Phyzzle
 	{
 		if (!data.jumping)
 		{
-			// auto curr = data.playerRigidbody->GetLinearVelocity();
-			// curr.y() = data.jumpPower;
-			// data.playerRigidbody->SetLinearVelocity(curr);
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
-			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Impulse);
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Force);
 			data.jumping = true;
 		}
 	}
@@ -246,7 +269,6 @@ namespace Phyzzle
 		const auto velo = zn_collision.thisPostLinearVelocity;
 
 		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		// const Eigen::Vector3f direction{ zn_collision.impulses.normalized() };
 		const Eigen::Vector3f direction{ velo };
 		float cosTheta1 = up.dot(direction);
 		cosTheta1 = std::clamp(cosTheta1, -1.f, 1.f);
@@ -366,72 +388,8 @@ namespace Phyzzle
 		}
 	}
 
-	bool Player::CameraUpdate()
-	{
-		//PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
-
-		//const float deltaTime = time.GetDeltaTime();
-
-		//data.acclerpFactor += deltaTime;
-
-		//if (data.acclerpFactor < 1.f)
-		//{
-		//	const float t = data.acclerpFactor / data.lerpFactor;
-
-		//	auto coreP = lerp(data.coreStartPosition, data.coreTargetPosition, t);
-		//	auto coreR = slerp(data.coreStartRotation, data.coreTargetRotation, t);
-
-		//	auto armP = lerp(data.armStartPosition, data.armTargetPosition, t);
-		//	auto armR = slerp(data.armStartRotation, data.armTargetRotation, t);
-
-		//	data.cameraCore->SetLocalPosition(coreP);
-		//	data.cameraCore->SetLocalRotation(coreR);
-
-		//	std::wstring str0 = std::to_wstring(coreP.x()) +
-		//		L" " + std::to_wstring(coreP.y()) +
-		//		L" " + std::to_wstring(coreP.z());
-
-		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
-		//		str0, 1000, 600, 100, 100, 20, 255, 255, 255, 255);
-
-		//	data.cameraArm->SetLocalPosition(armP);
-		//	data.cameraArm->SetLocalRotation(armR);
-
-		//	std::wstring str1 = std::to_wstring(armP.x()) +
-		//		L" " + std::to_wstring(armP.y()) +
-		//		L" " + std::to_wstring(armP.z());
-
-		//	PurahEngine::GraphicsManager::GetInstance().DrawString(
-		//		str1, 1000, 700, 100, 100, 20, 255, 255, 255, 255);
-
-		//	return false;
-		//}
-		//else
-		//{
-		//	data.acclerpFactor = 1.f;
-
-		//	data.cameraUpdate = false;
-
-		//	return true;
-		//}
-
-		return false;
-	}
-
 	void Player::CameraReset()
 	{
-		//data.coreStartPosition = data.cameraCore->GetLocalPosition();
-		//data.coreStartRotation = data.cameraCore->GetLocalRotation();
-
-		//data.coreTargetPosition = data.coreDefaultPosition;
-		//data.coreTargetRotation = data.coreDefaultRotation;
-
-		//data.armStartPosition =	data.cameraArm->GetLocalPosition();
-		//data.armStartRotation =	data.cameraArm->GetLocalRotation();
-
-		//data.armTargetPosition = data.armDefaultPosition;
-		//data.armTargetRotation = data.modelCore->GetLocalRotation();
-
 		data.acclerpFactor = 0.f;
 		data.cameraUpdate = true;
 
@@ -483,8 +441,8 @@ namespace Phyzzle
 		CameraCoreUpdate();
 	}
 
-	bool Player::CameraForwardRaycast(float _distance,
-		PurahEngine::RigidBody** _outBody, float* _outDistance, Eigen::Vector3f* _outHitPosition)
+	bool Player::RaycastFromCamera(float _distance,
+		PurahEngine::RigidBody** _outBody)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
@@ -503,15 +461,49 @@ namespace Phyzzle
 
 			if (!body)
 				return false;
-			if (body->IsKinematic())
+
+			if (_outBody)
+				*_outBody = body;
+
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
+		}
+
+		return block;
+	}
+
+	bool Player::RaycastFromCamera(
+		float _distance, 
+		PurahEngine::RigidBody** _outBody,
+		Attachable** _outAttachable,
+		Rewindable** _outRewindable
+	)
+	{
+		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
+		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
+		ZonaiPhysics::ZnRaycastInfo info;
+
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+
+		if (block)
+		{
+			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
+
+			if (!shape)
+				return false;
+
+			const PurahEngine::GameObject* obj = shape->GetGameObject();
+			PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
+
+			if (!body)
 				return false;
 
 			if (_outBody)
 				*_outBody = body;
-			if (_outDistance)
-				*_outDistance = info.distance;
-			if (_outHitPosition)
-				*_outHitPosition = info.position;
+			if (_outAttachable)
+				*_outAttachable = obj->GetComponent<Attachable>();
+			if (_outRewindable)
+				*_outRewindable = obj->GetComponent<Rewindable>();
 
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);

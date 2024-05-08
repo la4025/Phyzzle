@@ -21,7 +21,8 @@ namespace PurahEngine
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateBoxCollider(
 			this->GetGameObject(),
-			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z()
+			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z(),
+			ZonaiPhysics::ZnMaterialID::None
 		);
 
 		Collider::SetUserData();

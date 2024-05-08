@@ -26,12 +26,6 @@
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="AttachSelectState.cpp">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClCompile>
-    <ClCompile Include="RewindState.cpp">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClCompile>
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="AttachSystem.cpp">
       <Filter>KH\System</Filter>
@@ -51,14 +45,8 @@
     <ClCompile Include="DisconnectedWire.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
-    <ClCompile Include="DefaultState.cpp">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClCompile>
     <ClCompile Include="RewindSystem.cpp">
       <Filter>KH\System</Filter>
-    </ClCompile>
-    <ClCompile Include="AttachHoldState.cpp">
-      <Filter>KH\PLAYER\State</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>KH\PLAYER\player</Filter>
@@ -72,9 +60,6 @@
     <ClCompile Include="Rewindable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="LockState.cpp">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerCamera.cpp">
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
@@ -86,6 +71,27 @@
     </ClCompile>
     <ClCompile Include="SceneLoadSupport.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EventSystem.cpp">
+      <Filter>KH\ETC\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachHoldState.cpp">
+      <Filter>KH\PLAYER\State\1. Attach</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachSelectState.cpp">
+      <Filter>KH\PLAYER\State\1. Attach</Filter>
+    </ClCompile>
+    <ClCompile Include="RewindState.cpp">
+      <Filter>KH\PLAYER\State\2. Rewind</Filter>
+    </ClCompile>
+    <ClCompile Include="LockState.cpp">
+      <Filter>KH\PLAYER\State\3. Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultState.cpp">
+      <Filter>KH\PLAYER\State\0. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="IslandID.cpp">
+      <Filter>KH\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,12 +121,6 @@
       <Filter>KH\Object</Filter>
     </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="AttachSelectState.h">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClInclude>
-    <ClInclude Include="RewindState.h">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClInclude>
     <ClInclude Include="eObjectProperty.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
@@ -152,14 +152,8 @@
     <ClInclude Include="ElectricalDevice.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultState.h">
-      <Filter>KH\PLAYER\State</Filter>
-    </ClInclude>
     <ClInclude Include="RewindSystem.h">
       <Filter>KH\System</Filter>
-    </ClInclude>
-    <ClInclude Include="AttachHoldState.h">
-      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>KH\PLAYER\player</Filter>
@@ -168,7 +162,7 @@
       <Filter>KH\PLAYER\Controller</Filter>
     </ClInclude>
     <ClInclude Include="IState.h">
-      <Filter>KH\PLAYER\State\Base</Filter>
+      <Filter>KH\PLAYER\State\0. Base</Filter>
     </ClInclude>
     <ClInclude Include="Holder.h">
       <Filter>KH\PLAYER\player</Filter>
@@ -181,9 +175,6 @@
     </ClInclude>
     <ClInclude Include="Snapshot.h">
       <Filter>KH\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="LockState.h">
-      <Filter>KH\PLAYER\State</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCamera.h">
       <Filter>KH\PLAYER\player</Filter>
@@ -199,6 +190,33 @@
     </ClInclude>
     <ClInclude Include="SceneLoadSupport.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="EventSystem.h">
+      <Filter>KH\ETC\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="IEvent.h">
+      <Filter>KH\ETC\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachHoldState.h">
+      <Filter>KH\PLAYER\State\1. Attach</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachSelectState.h">
+      <Filter>KH\PLAYER\State\1. Attach</Filter>
+    </ClInclude>
+    <ClInclude Include="RewindState.h">
+      <Filter>KH\PLAYER\State\2. Rewind</Filter>
+    </ClInclude>
+    <ClInclude Include="LockState.h">
+      <Filter>KH\PLAYER\State\3. Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultState.h">
+      <Filter>KH\PLAYER\State\0. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring.h">
+      <Filter>KH\ETC\Spring</Filter>
+    </ClInclude>
+    <ClInclude Include="IslandID.h">
+      <Filter>KH\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,11 +265,26 @@
     <Filter Include="KH\PLAYER\player">
       <UniqueIdentifier>{47d937ba-85a6-4d65-82a3-edc8a443434f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="KH\PLAYER\State\Base">
-      <UniqueIdentifier>{f6c2598c-888c-4205-9a79-ac89b2ee3273}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{f699f263-adde-4526-b6b9-8c1a94fd71bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\ETC\Event">
+      <UniqueIdentifier>{deb837b3-6858-40ac-8d7e-ad77d6f59a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State\1. Attach">
+      <UniqueIdentifier>{7109f2c3-c018-4c1e-852a-211d37186a5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State\2. Rewind">
+      <UniqueIdentifier>{c55d0c0d-984a-42bd-952b-03573e3889e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State\3. Lock">
+      <UniqueIdentifier>{3188c28a-1336-4d77-9305-4beebb7af609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\PLAYER\State\0. Base">
+      <UniqueIdentifier>{f6c2598c-888c-4205-9a79-ac89b2ee3273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\ETC\Spring">
+      <UniqueIdentifier>{a669704a-870c-42bc-abbf-ff43288a54a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

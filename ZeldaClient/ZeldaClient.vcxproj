@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="Attachable.cpp" />
+    <ClCompile Include="IslandID.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
     <ClCompile Include="ButtonDevice.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="DoorParts.cpp" />
     <ClCompile Include="ElectricWire.cpp" />
     <ClCompile Include="DefaultState.cpp" />
+    <ClCompile Include="EventSystem.cpp" />
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="LockState.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -183,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Attachable.h" />
+    <ClInclude Include="IslandID.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
     <ClInclude Include="ButtonDevice.h" />
@@ -194,10 +197,12 @@
     <ClInclude Include="DoorParts.h" />
     <ClInclude Include="ElectricalDevice.h" />
     <ClInclude Include="ElectricWire.h" />
+    <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Hold.h" />
     <ClInclude Include="IElectricalDevice.h" />
     <ClInclude Include="DefaultState.h" />
     <ClInclude Include="Holder.h" />
+    <ClInclude Include="IEvent.h" />
     <ClInclude Include="LockState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="AttachHoldState.h" />
@@ -208,6 +213,7 @@
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />
     <ClInclude Include="Snapshot.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="TemplateFlag.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="IMaker.h" />

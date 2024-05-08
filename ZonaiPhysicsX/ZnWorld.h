@@ -3,6 +3,8 @@
 #include <set>
 #include <vector>
 #include <queue>
+#include "ZnMaterial.h"
+#include "ZnResourceID.h"
 
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)
@@ -47,6 +49,8 @@ namespace ZonaiPhysics
 		static bool					Boxcast(float _x, float _y, float _z, const ZnTransform& trans);
 
 	public:
+		static void					CreateCharactor();
+
 		static void					AddBody(RigidBody* _znBody, void* _userData, void* _userScene = nullptr);
 		static void					RemoveBody(RigidBody* _znBody, void* _userData, void* _userScene = nullptr);
 
@@ -60,12 +64,9 @@ namespace ZonaiPhysics
 		static void					AddJoint(ZnJoint* znJoint);
 		static void					RemoveJoint(ZnJoint* _znJoint, void* _userData, void* _userScene = nullptr);
 
-		static void					AddMaterial(uint32_t, physx::PxMaterial*);
-		static physx::PxMaterial*	GetMaterial(uint32_t);
+		static ZnMaterialID			AddMaterial(physx::PxMaterial*);
+		static physx::PxMaterial*	GetPxMaterial(const ZnMaterialID& _id);
 		
-
-		// static bool Gometrycast();
-
 	private:
 		static void					ReleaseBody(RigidBody**, void* _data, physx::PxScene*, bool);
 
@@ -80,7 +81,7 @@ namespace ZonaiPhysics
 		using Colliders = std::map<void*, std::vector<Collider*>>;						// [userData, Colliders]
 		static std::map<void*, Colliders>	colliderList;								// [pxScene, [userData, Colliders]]
 
-		static std::unordered_map<uint32_t, physx::PxMaterial*> materials;	// [id, pxMaterial]
+		static std::unordered_map<ZnMaterialID, physx::PxMaterial*> materialIDtable;			// [id, pxMaterial]
 
 		static std::vector<ZnJoint*> jointList;
 	};

@@ -12,7 +12,7 @@ namespace PurahEngine
 		~BallJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		void GetLimitAngle(float& _outY, float& _outZ) const;
@@ -35,12 +35,6 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		Eigen::Vector3f LocalAnchor;
-		Eigen::Quaternionf LocalAnchorRotation;
-
-		Eigen::Vector3f connectedLocalAnchor;
-		Eigen::Quaternionf connectedLocalAnchorRotation;
-
 		bool useSpring = false;
 		float spring = 0.0f;
 		float damping = 0.0f;

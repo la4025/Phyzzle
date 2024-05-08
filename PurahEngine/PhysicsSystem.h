@@ -5,6 +5,7 @@
 #include <vector>
 #include <windows.h>
 #include "ZnRaycastInfo.h"
+#include "ZnMaterial.h"
 #include "MaterialEnum.h"
 
 namespace ZonaiPhysics
@@ -59,8 +60,10 @@ namespace PurahEngine
 	private:
 		friend class Physics;
 		Eigen::Vector3f GetGravity() const;
+
 		void SetGravity(const Eigen::Vector3f&) const;
-		void AddMaterial(uint32_t _id,
+
+		ZonaiPhysics::ZnMaterialID AddMaterial(
 			float staticFriction,
 			float dynamicFriction,
 			float _restitution,
@@ -84,9 +87,21 @@ namespace PurahEngine
 		ZonaiPhysics::ZnRigidBody*	CreateRigidBody(void* _gameObject) const noexcept;
 
 	public:
-		ZonaiPhysics::ZnCollider*	CreateBoxCollider(void* _gameObject, float x, float y, float z) const noexcept;
-		ZonaiPhysics::ZnCollider*	CreateSphereCollider(void* _gameObject, float radius) const noexcept;
-		ZonaiPhysics::ZnCollider*	CreateCapsuleCollider(void* _gameObject, float radius, float height) const noexcept;
+		ZonaiPhysics::ZnCollider*	CreateBoxCollider(
+			void* _gameObject, 
+			float x, float y, float z,
+			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+
+		ZonaiPhysics::ZnCollider*	CreateSphereCollider(
+			void* _gameObject, 
+			float radius,
+			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+
+		ZonaiPhysics::ZnCollider*	CreateCapsuleCollider(
+			void* _gameObject, 
+			float radius, float height,
+			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+
 		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;
 
 	public:

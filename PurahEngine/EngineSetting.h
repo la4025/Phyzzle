@@ -1,6 +1,8 @@
 #pragma once
 #include "PurahEngineAPI.h"
 #include "SerializableDefine.h"
+#include "ZnMaterial.h"
+#include "ZnResourceID.h"
 
 #include <unordered_map>
 
@@ -20,6 +22,10 @@ namespace PurahEngine
 		std::wstring LayerIDtoLayer(int layer) const;
 		int LayertoLayerID(const std::wstring& layer) const;
 		int LayerSize();
+
+		std::wstring MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID layer) const;
+		ZonaiPhysics::ZnMaterialID MaterialtoMaterialID(const std::wstring& layer) const;
+		int MaterialSize();
 
 		float GetShadowAreaRange();
 		float GetShadowAreaOffset();
@@ -42,6 +48,10 @@ namespace PurahEngine
 		std::unordered_map<std::wstring, int> layerTable;
 		std::unordered_map<int, std::wstring> layerIDTable;
 		unsigned int layerSize;
+
+		std::unordered_map<std::wstring, ZonaiPhysics::ZnMaterialID> materialTable;
+		std::unordered_map<ZonaiPhysics::ZnMaterialID, std::wstring> materialIDTable;
+		unsigned int materialSize;
 
 		float shadowAreaRange;
 		float shadowAreaOffset;

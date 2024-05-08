@@ -10,9 +10,6 @@
     <ClInclude Include="ZnCollision.h">
       <Filter>01. Struct</Filter>
     </ClInclude>
-    <ClInclude Include="ZnMaterial.h">
-      <Filter>01. Struct</Filter>
-    </ClInclude>
     <ClInclude Include="ZnTransform.h">
       <Filter>01. Struct</Filter>
     </ClInclude>
@@ -61,6 +58,12 @@
     <ClInclude Include="MaterialEnum.h">
       <Filter>02. Enum</Filter>
     </ClInclude>
+    <ClInclude Include="ZnResourceID.h">
+      <Filter>01. Struct\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnMaterial.h">
+      <Filter>01. Struct\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">
@@ -80,6 +83,9 @@
     </Filter>
     <Filter Include="00. Base\collider">
       <UniqueIdentifier>{0859ca70-cb44-475a-962a-0a4fdba25eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Struct\Resource">
+      <UniqueIdentifier>{993b72bd-fe1e-4602-ad82-6bb90f85f53e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

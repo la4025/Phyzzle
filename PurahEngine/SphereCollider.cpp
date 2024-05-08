@@ -24,7 +24,8 @@ namespace PurahEngine
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateSphereCollider(
 			this->GetGameObject(),
-			radius * maxScale
+			radius * maxScale,
+			ZonaiPhysics::ZnMaterialID::None
 		);
 
 		Collider::SetUserData();

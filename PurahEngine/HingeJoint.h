@@ -12,7 +12,7 @@ namespace PurahEngine
 		~HingeJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		// 관절 각도
@@ -62,12 +62,6 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-        Eigen::Vector3f LocalAnchor;
-		Eigen::Quaternionf LocalAnchorRotation;
-
-        Eigen::Vector3f connectedLocalAnchor;
-		Eigen::Quaternionf connectedLocalAnchorRotation;
-
         bool useSpring = false;
         float spring = 0.0f;
         float damper = 0.0f;

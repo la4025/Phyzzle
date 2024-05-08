@@ -147,13 +147,13 @@ namespace ZonaiPhysics
 		return scene;
 	}
 
-	physx::PxMaterial* ZnFactoryX::CreateMaterial(float _staticFriction, float _dynamicFriction, float _restitution,
-		eCombineMode _eFriction, eCombineMode _eRestitution)
+	physx::PxMaterial* ZnFactoryX::CreateMaterial(const MaterialDesc& _desc)
 	{
-		physx::PxMaterial* newMaterial = pxFactory->createMaterial(_dynamicFriction, _staticFriction, _restitution);
+		physx::PxMaterial* newMaterial = pxFactory->createMaterial(
+			_desc.dynamicFriction, _desc.staticFriction, _desc.restitution);
 
-		newMaterial->setFrictionCombineMode(static_cast<physx::PxCombineMode::Enum>(_eFriction));
-		newMaterial->setRestitutionCombineMode(static_cast<physx::PxCombineMode::Enum>(_eRestitution));
+		newMaterial->setFrictionCombineMode(static_cast<physx::PxCombineMode::Enum>(_desc.eFriction));
+		newMaterial->setRestitutionCombineMode(static_cast<physx::PxCombineMode::Enum>(_desc.eRestitution));
 
 		return newMaterial;
 	}

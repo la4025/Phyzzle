@@ -16,9 +16,9 @@ namespace PurahEngine
 		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
-	void FixedJoint::OnDataLoadComplete()
+	void FixedJoint::PostInitialize()
 	{
-		auto& instance = PhysicsSystem::GetInstance();
+		const auto& instance = PhysicsSystem::GetInstance();
 
 		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
 
