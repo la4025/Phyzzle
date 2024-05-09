@@ -308,14 +308,18 @@ namespace Phyzzle
 
 	void AttachHoldState::LookToWorldDirection(const Eigen::Vector3f& _to)
 	{
+#if _DEBUG
 		debugVector1 = _to.normalized();
+#endif _DEBUG
 
 		player->LookInWorldDirection(_to.normalized());
 	}
 
 	void AttachHoldState::LookToLocalDirection(const Eigen::Vector3f& _to)
 	{
+#if _DEBUG
 		debugVector2 = _to.normalized();
+#endif _DEBUG
 
 		player->LookInLocalDirection(_to.normalized());
 	}

@@ -20,6 +20,34 @@
     "Trigger",
     "Player"
   ],
+  "physicsMaterials": [
+    {
+      "name": "Wood",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
+      "restitution": 0.5,
+      "eFriction": 2,
+      "eRestitution": 2
+    },
+    {
+      "name": "Steel",
+      "staticFriction": 0.3,
+      "dynamicFriction": 0.3,
+      "restitution": 0.2,
+      "eFriction": 2,
+      "eRestitution": 2
+    },
+    {
+      "name": "Ice",
+      "staticFriction": 0.1,
+      "dynamicFriction": 0.1,
+      "restitution": 0.3,
+      "eFriction": 2,
+      "eRestitution": 2
+    }
+  ],
+
+
   "collisionSetting": [
     [
       true,
