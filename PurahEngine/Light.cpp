@@ -53,7 +53,9 @@ namespace PurahEngine
 			direction = GetGameObject()->GetTransform()->GetWorldMatrix().block<3, 3>(0, 0) * direction;
 			direction.normalize();
 
-			renderer->UpdateLight(lightID, ambient, diffuse, specular, direction, {}, range, angle);
+			Eigen::Vector3f worldPosition = GetGameObject()->GetTransform()->GetWorldPosition();
+
+			renderer->UpdateLight(lightID, ambient, diffuse, specular, shadowColor, direction, worldPosition, range, angle);
 			renderer->DrawLight(lightID);
 		}
 	}
@@ -66,7 +68,7 @@ namespace PurahEngine
 		direction = GetGameObject()->GetTransform()->GetWorldMatrix().block<3, 3>(0, 0) * direction;
 		direction.normalize();
 
-		lightID = GraphicsManager::GetInstance().resourceManager->CreateDirectionalLight(ambient, diffuse, specular, direction);
+		lightID = GraphicsManager::GetInstance().resourceManager->CreateDirectionalLight(ambient, diffuse, specular, shadowColor, direction);
 	}
 
 	void Light::CreatePointLight(float range)
@@ -75,7 +77,7 @@ namespace PurahEngine
 
 		Eigen::Vector3f position = GetGameObject()->GetTransform()->GetWorldPosition();
 
-		lightID = GraphicsManager::GetInstance().resourceManager->CreatePointLight(ambient, diffuse, specular, position, range);
+		lightID = GraphicsManager::GetInstance().resourceManager->CreatePointLight(ambient, diffuse, specular, shadowColor, position, range);
 	}
 
 	void Light::CreateSpotLight(float range, float angle)
@@ -87,7 +89,7 @@ namespace PurahEngine
 		direction.normalize();
 		Eigen::Vector3f position = GetGameObject()->GetTransform()->GetWorldPosition();
 
-		lightID = GraphicsManager::GetInstance().resourceManager->CreateSpotLight(ambient, diffuse, specular, direction, position, range, angle);
+		lightID = GraphicsManager::GetInstance().resourceManager->CreateSpotLight(ambient, diffuse, specular, shadowColor, direction, position, range, angle);
 	}
 
 	void Light::ReleaseLight()
@@ -110,6 +112,7 @@ namespace PurahEngine
 		PREDESERIALIZE_VECTOR3F(ambient);
 		PREDESERIALIZE_VECTOR3F(diffuse);
 		PREDESERIALIZE_VECTOR3F(specular);
+		PREDESERIALIZE_VECTOR3F(shadowColor);
 	}
 
 	void Light::PostSerialize(json& jsonData) const

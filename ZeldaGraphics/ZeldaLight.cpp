@@ -8,6 +8,7 @@ ZeldaLight::ZeldaLight(LightType type) :
 	ambient({ 0.2f, 0.2f, 0.2f, 1.0f }),
 	diffuse({ 1.0f, 1.0f, 1.0f, 1.0f }),
 	specular({ 1.0f, 1.0f, 1.0f, 1.0f }),
+	shadowColor({ 0.2f, 0.2f, 0.2f, 1.0f }),
 	position({ 0.0f, 0.0f, 0.0f, 0.0f }),
 	direction({ 0.0f, 0.0f, 1.0f, 0.0f }),
 	type(type),
@@ -37,6 +38,11 @@ void ZeldaLight::SetSpecular(float red, float green, float blue)
 	specular = XMFLOAT4(red, green, blue, 1.0f);
 }
 
+void ZeldaLight::SetShadowColor(float red, float green, float blue)
+{
+	shadowColor = XMFLOAT4(red, green, blue, 1.0f);
+}
+
 DirectX::XMFLOAT4 ZeldaLight::GetAmbient()
 {
 	return ambient;
@@ -50,6 +56,11 @@ DirectX::XMFLOAT4 ZeldaLight::GetDiffuseColor()
 DirectX::XMFLOAT4 ZeldaLight::GetSpecular()
 {
 	return specular;
+}
+
+DirectX::XMFLOAT4 ZeldaLight::GetShadowColor()
+{
+	return shadowColor;
 }
 
 DirectX::XMMATRIX ZeldaLight::GetViewMatrix(ZeldaCamera* maincamera)
@@ -201,6 +212,7 @@ LightInfo ZeldaLight::GetLightInfo()
 	lightInfo.color.ambient = ambient;
 	lightInfo.color.diffuse = diffuse;
 	lightInfo.color.specular = specular;
+	lightInfo.color.shadow = shadowColor;
 	lightInfo.position = position;
 	lightInfo.direction = direction;
 	lightInfo.type = type;

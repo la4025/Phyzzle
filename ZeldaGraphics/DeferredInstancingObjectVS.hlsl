@@ -23,8 +23,8 @@ struct PixelInputType
     uint instance : InstanceID;
 };
 
-// Instancing Value 0 : Animation Frame Info        float4(frame, 0.0f, 0.0f, 0.0f)
-// Instancing Value 1 : Not Used
+// Instancing Value 0 : Animation Frame Info        float4(frame, 0.0f, 0.0f, 0.0f)     // inst vs
+// Instancing Value 1 : Color                       float4(r, g, b, a)                  // ps
 // Instancing Value 2 : Not Used
 // Instancing Value 3 : Not Used
 

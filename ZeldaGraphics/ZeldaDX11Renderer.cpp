@@ -540,7 +540,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 
 		renderTargetTextures->Release();
 	}
-	
+
 	{
 		D3D11_TEXTURE2D_DESC textureDesc;
 		ZeroMemory(&textureDesc, sizeof(textureDesc));
@@ -850,6 +850,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		delete outLineObjectShader;
 		outLineObjectShader = nullptr;
+	}
+	if (outLineBlendingAnimationObjectShader)
+	{
+		delete outLineBlendingAnimationObjectShader;
+		outLineBlendingAnimationObjectShader = nullptr;
 	}
 	if (defaultRasterState)
 	{
@@ -1411,7 +1416,7 @@ void ZeldaDX11Renderer::DrawDeferred()
 
 
 #pragma region Draw Deferred Light
-	
+
 	LightInfoBufferType lightInfoData;
 	unsigned int lightCount = 0;
 	for (auto& [key, value] : RenderInfoManager::GetInstance().GetLightRenderInfo())
@@ -1459,7 +1464,7 @@ void ZeldaDX11Renderer::DrawForward()
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin, 3, nullSRV);
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 	mDeviceContext->RSSetState(wireFrameRasterState);
-	
+
 	DrawForwardRenderInfo();
 
 	mDeviceContext->RSSetState(defaultRasterState);
@@ -1476,7 +1481,7 @@ void ZeldaDX11Renderer::DrawSprite()
 	const static long wsize = 240;
 	const static long hsize = 135;
 	const static long space = 20;
-	
+
 	const static unsigned int DebugInfoCount = Deferred::BufferCount + 1;
 	long fullsize = wsize * DebugInfoCount + max(DebugInfoCount - 1, 0) * space;
 
@@ -1635,7 +1640,7 @@ void ZeldaDX11Renderer::DrawFastOutLine()
 
 
 	InstancingDataBufferType* instancingData = new InstancingDataBufferType();
-	
+
 	int instanceCount = 0;
 	for (auto iter = fastOutLineRenderInfo.begin(); iter != fastOutLineRenderInfo.end(); iter++)
 	{
@@ -1647,7 +1652,7 @@ void ZeldaDX11Renderer::DrawFastOutLine()
 			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].w = iter->second[i]->instancingValue.outLineColor.a;
 
 			instancingData->instancingValue2[instanceCount % INSTANCING_MAX].x = iter->second[i]->drawID;
-			
+
 			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
 			if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || ((std::next(iter) == fastOutLineRenderInfo.end()) && (instanceCount == iter->second.size() - 1)))
 			{
@@ -1749,7 +1754,7 @@ void ZeldaDX11Renderer::DrawOutLine()
 		}
 
 		// OutLine을 그린다.
-		
+
 		// 렌더타겟을 변경
 		mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
 
@@ -1773,10 +1778,10 @@ void ZeldaDX11Renderer::DrawOutLine()
 		ConstantBufferManager::GetInstance().SetBuffer();
 
 		outLineShader->Render(mDeviceContext, squareMesh->GetIndexCount());
-	}
 
-	mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
-	mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &nullSRV);
+		mDeviceContext->PSSetShaderResources(Texture::Slot::IDMap, 1, &nullSRV);
+		mDeviceContext->PSSetShaderResources(Texture::Slot::OutLineMap, 1, &nullSRV);
+	}
 }
 
 void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader)
@@ -1799,20 +1804,6 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 	matrixBuffer.cameraFar = currentcamera->GetFar();
 	matrixVsConstBuffer->SetData(matrixBuffer);
 
-	materialConstBuffer->SetData(
-		{
-			{
-				renderInfo[0]->instancingValue.color.r,
-				renderInfo[0]->instancingValue.color.g,
-				renderInfo[0]->instancingValue.color.b,
-				renderInfo[0]->instancingValue.color.a
-			},
-			(textureInstance == nullptr),
-			(textureInstance != nullptr) && textureInstance->UseSRGB(),
-			(textureInstance != nullptr),
-			false
-		});
-
 	// Set Texture
 	if (textureInstance != nullptr)
 	{
@@ -1823,6 +1814,21 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 
 	if (instancing)
 	{
+		MaterialBufferType materialBufferType;
+		materialBufferType.baseColor =
+		{
+			renderInfo[0]->instancingValue.color.r,
+			renderInfo[0]->instancingValue.color.g,
+			renderInfo[0]->instancingValue.color.b,
+			renderInfo[0]->instancingValue.color.a
+		};
+		materialBufferType.useBaseColor = (textureInstance == nullptr);
+		materialBufferType.useSRGB = (textureInstance != nullptr) && textureInstance->UseSRGB();
+		materialBufferType.useDiffuse = (textureInstance != nullptr);
+		materialBufferType.useNormal = false;
+		materialBufferType.useInstancingColor = true;
+		materialConstBuffer->SetData(materialBufferType);
+
 		meshInstance->RenderInstanced(mDeviceContext);
 
 		InstancingMatrixBufferType* instancingMatrix = new InstancingMatrixBufferType();
@@ -1832,7 +1838,7 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 		{
 			// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
 			instancingMatrix->instancingWorldMatrix[i % INSTANCING_MAX] = XMMatrixTranspose(renderInfo[i]->instancingValue.worldMatrix);
-			instancingData->instancingValue0[i % INSTANCING_MAX] =
+			instancingData->instancingValue1[i % INSTANCING_MAX] =
 			{
 				renderInfo[i]->instancingValue.color.r,
 				renderInfo[i]->instancingValue.color.g,
@@ -1861,6 +1867,21 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 	}
 	else
 	{
+		MaterialBufferType materialBufferType;
+		materialBufferType.baseColor =
+		{
+			renderInfo[0]->instancingValue.color.r,
+			renderInfo[0]->instancingValue.color.g,
+			renderInfo[0]->instancingValue.color.b,
+			renderInfo[0]->instancingValue.color.a
+		};
+		materialBufferType.useBaseColor = (textureInstance == nullptr);
+		materialBufferType.useSRGB = (textureInstance != nullptr) && textureInstance->UseSRGB();
+		materialBufferType.useDiffuse = (textureInstance != nullptr);
+		materialBufferType.useNormal = false;
+		materialBufferType.useInstancingColor = false;
+		materialConstBuffer->SetData(materialBufferType);
+
 		meshInstance->Render(mDeviceContext);
 
 		ObjectIDBufferType objectIDBufferType;
@@ -1868,7 +1889,7 @@ void ZeldaDX11Renderer::DrawMeshRenderInfo(const std::vector<RenderInfo*>& rende
 		objectIDPSConstBuffer->SetData(objectIDBufferType);
 
 		ConstantBufferManager::GetInstance().SetBuffer();
-		
+
 		shader->Render(mDeviceContext, meshInstance->GetIndexCount());
 	}
 }
@@ -1975,7 +1996,7 @@ void ZeldaDX11Renderer::DrawMeshDirectionalShadow(const std::vector<RenderInfo*>
 		meshInstance->Render(mDeviceContext);
 
 		// 셰이더에 넘기는 행렬을 전치를 한 후 넘겨야 한다.
-		matrixVsConstBuffer->SetData({ XMMatrixTranspose(renderInfo[0]->instancingValue.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix())});
+		matrixVsConstBuffer->SetData({ XMMatrixTranspose(renderInfo[0]->instancingValue.worldMatrix), XMMatrixTranspose(currentcamera->GetViewMatrix()), XMMatrixTranspose(currentcamera->GetProjMatrix()) });
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -2260,7 +2281,7 @@ bool ZeldaDX11Renderer::UpdateCamera(CameraID cameraID, const Eigen::Matrix4f& w
 	return true;
 }
 
-LightID ZeldaDX11Renderer::CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction)
+LightID ZeldaDX11Renderer::CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction)
 {
 	LightID lightID = ResourceManager::GetInstance().CreateDirectionalLight();
 
@@ -2269,13 +2290,14 @@ LightID ZeldaDX11Renderer::CreateDirectionalLight(const Eigen::Vector3f& ambient
 	light->SetAmbient(ambient.x(), ambient.y(), ambient.z());
 	light->SetDiffuseColor(diffuse.x(), diffuse.y(), diffuse.z());
 	light->SetSpecular(specular.x(), specular.y(), specular.z());
+	light->SetShadowColor(shadowColor.x(), shadowColor.y(), shadowColor.z());
 
 	light->SetDirection(direction.x(), direction.y(), direction.z());
 
 	return lightID;
 }
 
-LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& position, float range)
+LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range)
 {
 	LightID lightID = ResourceManager::GetInstance().CreatePointLight();
 
@@ -2284,6 +2306,7 @@ LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, cons
 	light->SetAmbient(ambient.x(), ambient.y(), ambient.z());
 	light->SetDiffuseColor(diffuse.x(), diffuse.y(), diffuse.z());
 	light->SetSpecular(specular.x(), specular.y(), specular.z());
+	light->SetShadowColor(shadowColor.x(), shadowColor.y(), shadowColor.z());
 
 	light->SetPosition(position.x(), position.y(), position.z());
 	light->SetRange(range);
@@ -2291,7 +2314,7 @@ LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, cons
 	return lightID;
 }
 
-LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
+LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
 {
 	LightID lightID = ResourceManager::GetInstance().CreateSpotLight();
 
@@ -2300,6 +2323,7 @@ LightID ZeldaDX11Renderer::CreateSpotLight(const Eigen::Vector3f& ambient, const
 	light->SetAmbient(ambient.x(), ambient.y(), ambient.z());
 	light->SetDiffuseColor(diffuse.x(), diffuse.y(), diffuse.z());
 	light->SetSpecular(specular.x(), specular.y(), specular.z());
+	light->SetShadowColor(shadowColor.x(), shadowColor.y(), shadowColor.z());
 
 	light->SetDirection(direction.x(), direction.y(), direction.z());
 	light->SetPosition(position.x(), position.y(), position.z());
@@ -2314,12 +2338,13 @@ void ZeldaDX11Renderer::ReleaseLight(LightID lightID)
 	ResourceManager::GetInstance().ReleaseLight(lightID);
 }
 
-void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
+void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
 {
 	ZeldaLight* light = ResourceManager::GetInstance().GetLight(lightID);
 	light->SetAmbient(ambient.x(), ambient.y(), ambient.z());
 	light->SetDiffuseColor(diffuse.x(), diffuse.y(), diffuse.z());
 	light->SetSpecular(specular.x(), specular.y(), specular.z());
+	light->SetShadowColor(shadowColor.x(), shadowColor.y(), shadowColor.z());
 
 	switch (light->GetLightType())
 	{

@@ -115,13 +115,14 @@ void ZeldaModel::Render(
 		currentMesh->Render(deviceContext);
 		int indexCount = currentMesh->GetIndexCount();
 
-		materialConstBuffer->SetData({
-			materials[materialIndex[i]]->baseColor,
-			!materials[materialIndex[i]]->useDiffuseMap,
-			materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP),
-			materials[materialIndex[i]]->useDiffuseMap,
-			materials[materialIndex[i]]->useNormalMap
-			});
+		MaterialBufferType materialBufferType;
+		materialBufferType.baseColor = materials[materialIndex[i]]->baseColor;
+		materialBufferType.useBaseColor = !materials[materialIndex[i]]->useDiffuseMap;
+		materialBufferType.useSRGB = materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP);
+		materialBufferType.useDiffuse = materials[materialIndex[i]]->useDiffuseMap;
+		materialBufferType.useNormal = materials[materialIndex[i]]->useNormalMap;
+		materialBufferType.useInstancingColor = false;
+		materialConstBuffer->SetData(materialBufferType);
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -181,13 +182,14 @@ void ZeldaModel::RenderInstanced(
 				currentMesh->RenderInstanced(deviceContext);
 				int indexCount = currentMesh->GetIndexCount();
 
-				materialConstBuffer->SetData({
-					materials[materialIndex[meshNum]]->baseColor,
-					!materials[materialIndex[meshNum]]->useDiffuseMap,
-					materials[materialIndex[meshNum]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP),
-					materials[materialIndex[meshNum]]->useDiffuseMap,
-					materials[materialIndex[meshNum]]->useNormalMap
-					});
+				MaterialBufferType materialBufferType;
+				materialBufferType.baseColor = materials[materialIndex[meshNum]]->baseColor;
+				materialBufferType.useBaseColor = !materials[materialIndex[meshNum]]->useDiffuseMap;
+				materialBufferType.useSRGB = materials[materialIndex[meshNum]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP);
+				materialBufferType.useDiffuse = materials[materialIndex[meshNum]]->useDiffuseMap;
+				materialBufferType.useNormal = materials[materialIndex[meshNum]]->useNormalMap;
+				materialBufferType.useInstancingColor = false;
+				materialConstBuffer->SetData(materialBufferType);
 
 				ObjectIDBufferType objectIDBufferType;
 				objectIDBufferType.objectID = drawID - (i % INSTANCING_MAX);
@@ -400,13 +402,14 @@ void ZeldaModel::RenderBlendingAnimation(
 		currentMesh->Render(deviceContext);
 		int indexCount = currentMesh->GetIndexCount();
 
-		materialConstBuffer->SetData({
-			materials[materialIndex[i]]->baseColor,
-			!materials[materialIndex[i]]->useDiffuseMap,
-			materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP),
-			materials[materialIndex[i]]->useDiffuseMap,
-			materials[materialIndex[i]]->useNormalMap
-			});
+		MaterialBufferType materialBufferType;
+		materialBufferType.baseColor = materials[materialIndex[i]]->baseColor;
+		materialBufferType.useBaseColor = !materials[materialIndex[i]]->useDiffuseMap;
+		materialBufferType.useSRGB = materials[materialIndex[i]]->UseSRGB(ZeldaMaterial::DIFFUSE_MAP);
+		materialBufferType.useDiffuse = materials[materialIndex[i]]->useDiffuseMap;
+		materialBufferType.useNormal = materials[materialIndex[i]]->useNormalMap;
+		materialBufferType.useInstancingColor = false;
+		materialConstBuffer->SetData(materialBufferType);
 
 		ConstantBufferManager::GetInstance().SetBuffer();
 

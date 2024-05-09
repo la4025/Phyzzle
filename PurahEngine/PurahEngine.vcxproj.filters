@@ -277,6 +277,9 @@
     <ClCompile Include="DataManager.cpp">
       <Filter>Core\Manager\DataManager</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Component\3. Renderer\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -477,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="DataManager.h">
       <Filter>Core\Manager\DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Component\3. Renderer\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

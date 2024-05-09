@@ -43,6 +43,7 @@
 // Graphics
 #include "Camera.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
 #include "ModelRenderer.h"
 #include "MeshRenderer.h"
 #include "Animator.h"

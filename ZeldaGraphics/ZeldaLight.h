@@ -14,10 +14,12 @@ public:
 	void SetAmbient(float red, float green, float blue);
 	void SetDiffuseColor(float red, float green, float blue);
 	void SetSpecular(float red, float green, float blue);
+	void SetShadowColor(float red, float green, float blue);
 
 	DirectX::XMFLOAT4 GetAmbient();
 	DirectX::XMFLOAT4 GetDiffuseColor();
 	DirectX::XMFLOAT4 GetSpecular();
+	DirectX::XMFLOAT4 GetShadowColor();
 
 	DirectX::XMMATRIX GetViewMatrix(ZeldaCamera* maincamera);
 	DirectX::XMMATRIX GetOrthoMatrix();
@@ -48,6 +50,7 @@ private:
 	DirectX::XMFLOAT4 ambient;
 	DirectX::XMFLOAT4 diffuse;
 	DirectX::XMFLOAT4 specular;
+	DirectX::XMFLOAT4 shadowColor;
 
 	DirectX::XMFLOAT4 position;
 	DirectX::XMFLOAT4 direction;

@@ -35,15 +35,6 @@ float CalculateShadowFactor(SamplerComparisonState shadowsampler, Texture2D posi
 {
     float depth = shadowPos.z;
     
-    const float delta = 1.0f / mapSize;
-    
-    const float2 offsets[9] =
-    {
-        float2(-delta, -delta), float2(0.0f, -delta), float2(delta, -delta),
-		float2(-delta, 0.0f), float2(0.0f, 0.0f), float2(delta, 0.0f),
-		float2(-delta, +delta), float2(0.0f, +delta), float2(delta, +delta)
-    };
-    
     float2 uv = shadowPos.xy;
     uv.y = -uv.y;
     uv = uv * 0.5f + 0.5f;
@@ -57,41 +48,13 @@ float CalculateShadowFactor(SamplerComparisonState shadowsampler, Texture2D posi
     if (uv.y > 1)
         return 1.0f;
     
-    float result[9];
-    [unroll]
-    for (int i = 0; i < 9; i++)
-    {
-        float shadowDepth = shadowMap.Sample(Sampler, uv + offsets[i]).r;
-        result[i] = shadowDepth >= depth;
-    }
+    float shadowDepth = shadowMap.Sample(Sampler, uv).r;
+    float result = shadowDepth >= depth;
     
-    float interpolatedResult =
-        /*
-        MedianFilter(
-            result[0], result[1], result[2],
-            result[3], result[4], result[5],
-            result[6], result[7], result[8]
-        );
-        //*/
-        
-        //*
-        (
-            result[0] + result[1] + result[2] +
-            result[3] + result[4] + result[5] +
-            result[6] + result[7] + result[8]
-        ) / 9.0f;
-        //*/
-    
-        ///*
-        //result[5];
-        //*/
-    
-    return interpolatedResult;
-    
-    //return 1.0f;
+    return result;
 }
 
-void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 diffuse, out float4 ambient, out float4 specular)
+void CalculateLight(int lightIndex, float3 normal, float3 viewPos, float2 uv, out float4 diffuse, out float4 ambient, out float4 specular)
 {
     diffuse = float4(0.f, 0.f, 0.f, 0.f);
     ambient = float4(0.f, 0.f, 0.f, 0.f);
@@ -102,10 +65,10 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 di
     if (lights[lightIndex].type == LIGHT_TYPE_DIRECTIONAL)
     {
         float3 lightVec = normalize(mul(float4(lights[lightIndex].direction.xyz, 0.f), viewMatrix).xyz);
-        ambient = lights[lightIndex].color.ambient;
         
         float diffuseFactor = dot(-lightVec, normal);
         
+        ambient = lights[lightIndex].color.ambient;
         // Original Phong 반사벡터 사용
         float3 reflectDir = normalize(lightVec + 2.0f * (dot(-lightVec, normal) * normal));
         float specFactor = pow(max(dot(-viewDirection, reflectDir), 0.0f), 16.0f);
@@ -120,15 +83,46 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, out float4 di
         //specular = specFactor * lights[lightIndex].color.specular;
         
         
-        float4 worldPos = mul(float4(viewPos, 1.0f), inverse(viewMatrix));
-        float4 lightViewPos = mul(worldPos, lightViewMatrix);
-        lightViewPos.z -= shadowMapDepthBias; // View좌표계에서 Depth Bias 적용
-        float4 shadowClipPos = mul(lightViewPos, lightProjectionMatrix);
+        // Shadow
+        if (length(diffuse.xyz) > 0.00001)
+        {
+            // filterSize x filterSize 크기의 필터 사용
+            const int filterSize = 5;
         
-        float shadow = CalculateShadowFactor(ShadowSampler, Temp0Map, Temp2Map, shadowClipPos, shadowMapSize);
+            const float deltaX = 1.0f / screenSize.x;
+            const float deltaY = 1.0f / screenSize.y;
+            float shadowResult[filterSize * filterSize];
+            float shadowFactor = 0.0f;
         
-        diffuse *= shadow;
-        specular *= shadow;
+            [unroll]
+            for (int i = 0; i < filterSize * filterSize; i++)
+            {
+                int x = (i % filterSize) - (filterSize / 2);
+                int y = (i / filterSize) - (filterSize / 2);
+            
+                float2 offset = float2(deltaX * x, deltaY * y);
+            
+                float3 currentViewPos = Temp0Map.Sample(Sampler, uv + offset).xyz;
+            
+                float4 worldPos = mul(float4(currentViewPos, 1.0f), inverse(viewMatrix));
+                float4 lightViewPos = mul(worldPos, lightViewMatrix);
+                lightViewPos.z -= shadowMapDepthBias; // View좌표계에서 Depth Bias 적용
+                float4 shadowClipPos = mul(lightViewPos, lightProjectionMatrix);
+            
+                shadowResult[i] = CalculateShadowFactor(ShadowSampler, Temp0Map, Temp2Map, shadowClipPos, shadowMapSize);
+            
+                shadowFactor += shadowResult[i];
+            }
+            shadowFactor /= (float) (filterSize * filterSize);
+        
+            if (shadowFactor < 0.99f)
+            {
+                ambient = lights[lightIndex].color.shadow;
+            }
+            
+            diffuse *= shadowFactor;
+            specular *= shadowFactor;
+        }
     }
     else if (lights[lightIndex].type == LIGHT_TYPE_POINT)
     {

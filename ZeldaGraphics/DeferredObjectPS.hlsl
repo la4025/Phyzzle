@@ -20,8 +20,8 @@ struct PixelOutputType
     uint id : SV_Target4;
 };
 
-// Instancing Value 0 : Color
-// Instancing Value 1 : Not Used
+// Instancing Value 0 : Animation Frame Info        float4(frame, 0.0f, 0.0f, 0.0f)     // inst vs
+// Instancing Value 1 : Color                       float4(r, g, b, a)                  // ps
 // Instancing Value 2 : Not Used
 // Instancing Value 3 : Not Used
 
@@ -37,13 +37,13 @@ PixelOutputType main(PixelInputType input)
     
     if (useBaseColor)
     {
-        if (input.instance == 0xffffffffu)
+        if (useInstancingColor)
         {
-            textureColor = baseColor;
+            textureColor = instancingValue1[input.instance];
         }
         else
         {
-            textureColor = instancingValue0[input.instance];
+            textureColor = baseColor;
         }
     }
     else
