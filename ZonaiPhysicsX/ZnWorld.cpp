@@ -24,7 +24,6 @@ namespace ZonaiPhysics
 	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};
 	std::map<void*, ZnWorld::Colliders>					ZnWorld::colliderList{};
-	std::unordered_map<ZnMaterialID, physx::PxMaterial*>	ZnWorld::materialIDtable{};
 	std::vector<ZnJoint*>								ZnWorld::jointList{};
 
 	void ZnWorld::Run(float _dt)
@@ -85,14 +84,6 @@ namespace ZonaiPhysics
 		}
 
 		sceneList.clear();
-
-		for (auto& material : materialIDtable | std::views::values)
-		{
-			material->release();
-			material = nullptr;
-		}
-
-		materialIDtable.clear();
 	}
 
 	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
@@ -420,29 +411,6 @@ namespace ZonaiPhysics
 		jointList.erase(std::ranges::find(jointList, _znJoint));
 
 		_znJoint = nullptr;
-	}
-
-	ZnMaterialID ZnWorld::AddMaterial(physx::PxMaterial* _material)
-	{
-		assert(_material != nullptr);
-
-		ZnMaterialID id;
-		CreateID(id);
-
-		materialIDtable.insert(std::make_pair(id, _material));
-
-		return id;
-	}
-
-	physx::PxMaterial* ZnWorld::GetPxMaterial(const ZnMaterialID& _id)
-	{
-		if (_id == ZnMaterialID::None)
-			return nullptr;
-
-		if (materialIDtable.contains(_id))
-			return materialIDtable[_id];
-
-		return nullptr;
 	}
 
 	void ZnWorld::ReleaseBody(RigidBody** _znBody, void* _data, physx::PxScene* _scene, bool _hasBody)

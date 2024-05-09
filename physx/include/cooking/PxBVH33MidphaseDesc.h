@@ -48,8 +48,8 @@ struct PX_DEPRECATED PxMeshCookingHint
 {
 	enum Enum
 	{
-		eSIM_PERFORMANCE = 0,		//!< Default value. Favors higher quality hierarchy with higher runtime performance over cooking speed.
-		eCOOKING_PERFORMANCE = 1	//!< Enables fast cooking path at the expense of somewhat lower quality hierarchy construction.
+		eSIM_PERFORMANCE = 0,		//!< 기본값. 실행 시 성능을 높이기 위해 빠른 쿠킹 속도를 선택합니다.
+		eCOOKING_PERFORMANCE = 1	//!< 상대적으로 낮은 품질의 계층 구성을 희생하고 빠른 쿠킹 경로를 활성화합니다.
 	};
 };
 

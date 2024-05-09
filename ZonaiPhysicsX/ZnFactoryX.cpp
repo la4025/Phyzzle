@@ -3,11 +3,6 @@
 #include "RigidBodyHelper.h"
 #include "RigidBody.h"
 
-#include "BoxCollider.h"
-#include "SphereCollider.h"
-#include "CapsuleCollider.h"
-#include "MeshCollider.h"
-
 #include "FixedJoint.h"
 #include "PrismaticJoint.h"
 #include "DistanceJoint.h"
@@ -20,7 +15,6 @@
 
 #include "ZnFactoryX.h"
 
-#include "ConvexCollider.h"
 #include "../ZeldaFBXLoader/FBXLoader.h"
 
 namespace ZonaiPhysics
@@ -181,58 +175,35 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape); 
-
-		return znBoxCollider;
+		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
 	}
 
-	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _znBody, float _radius, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateSphereShape(float _radius, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
-
-		assert(pxShape != nullptr);
-
-		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znSphereCollider;
+		return pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
 	}
 
-	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _znBody, float _radius, float _height, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-
-		const auto pxShape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
-
-		assert(pxShape != nullptr);
-
-		const physx::PxQuat rotation(physx::PxPi / 2.f, physx::PxVec3(0.f, 0.f, 1.f));
-		pxShape->setLocalPose(physx::PxTransform(rotation));
-
-		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znCapsuleCollider;
+		return pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
 	}
 
-	MeshCollider* ZnFactoryX::CreateMeshCollider(void* _znBody, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateTriagleMesh(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
+		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
+		return pxFactory->createShape(physx::PxTriangleMeshGeometry(_mesh), *_material);
+	}
 
+	physx::PxShape* ZnFactoryX::CreateConvexMesh(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
+		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
+	{
+		return pxFactory->createShape(physx::PxConvexMeshGeometry(_mesh), *_material);
+	}
+
+	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(const physx::PxMaterial* _material)
+	{
 		const physx::PxVec3 meshVerts[] = {
 			physx::PxVec3(0,1,0),
 			physx::PxVec3(1,0,0),
@@ -246,6 +217,31 @@ namespace ZonaiPhysics
 			0, 2, 3
 		};
 
+		physx::PxCookingParams params(pxFactory->getTolerancesScale());
+
+		// 메시 정리 비활성화 - 개발 구성에서 메시 유효성 검사 수행
+		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+
+		// 엣지 사전 계산 비활성화, 각 삼각형에 대해 엣지가 설정됩니다. 이는 접촉 생성을 느리게 합니다.
+		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+
+		// 내부 메시의 계층 구조를 낮춥니다.
+		// params.meshCookingHint = physx::PxMeshCookingHint::eCOOKING_PERFORMANCE;
+		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eWELD_VERTICES;
+		// params.meshPreprocessParams ^= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+
+		//physx::PxSDFDesc sdfDesc;
+		//sdfDesc.spacing = sdfSpacing;
+		//sdfDesc.subgridSize = sdfSubgridSize;
+		//sdfDesc.bitsPerSubgridPixel = bitsPerSdfSubgridPixel;
+		//sdfDesc.numThreadsForSdfConstruction = 8;
+		// 
+		//if (enableGpuAcceleratedCooking)
+		//{
+		//	//If sdfBuilder is NULL, the sdf will get cooked on the CPU using the number of threads specified above
+		//	sdfDesc.sdfBuilder = physx::PxGetPhysicsGpu()->createSDFBuilder(cudaContextManager);
+		//}
+
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
 		meshDesc.points.count = sizeof(meshVerts) / sizeof(physx::PxVec3);
@@ -256,16 +252,10 @@ namespace ZonaiPhysics
 		meshDesc.triangles.stride = sizeof(physx::PxU32);
 		meshDesc.triangles.data = meshIndies;
 
+		meshDesc.sdfDesc;
 		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
 
-		physx::PxCookingParams params(pxFactory->getTolerancesScale());
-		// 메시 정리 비활성화 - 개발 구성에서 메시 유효성 검사 수행
-		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-		// 엣지 사전 계산 비활성화, 각 삼각형에 대해 엣지가 설정됩니다. 이는 접촉 생성을 느리게 합니다.
-		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-		// 내부 메시의 계층 구조를 낮춥니다.
-		// params.meshCookingHint = physx::PxMeshCookingHint::eCOOKING_PERFORMANCE;
-		//
+
 //#ifdef _DEBUG
 //// 메시가 정리되지 않은 상태로 쿠킹하기 전에 메시를 유효성 검사해야 합니다.
 //		bool res = PxValidateTriangleMesh(params, meshDesc);
@@ -283,21 +273,10 @@ namespace ZonaiPhysics
 
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxTriangleMeshGeometry(triangleMesh), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znMeshCollider = new MeshCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znMeshCollider;
 	}
 
-	ConvexCollider* ZnFactoryX::CreateConvexCollider(void* _znBody, const physx::PxMaterial* _material)
+	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
 		FBXLoader::FBXLoader loader;
 
 		// 이부분은 바뀔 예정
@@ -328,15 +307,6 @@ namespace ZonaiPhysics
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
 		physx::PxConvexMesh* convexMesh = pxFactory->createConvexMesh(input);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxConvexMeshGeometry(convexMesh), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znConvexCollider = new ConvexCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znConvexCollider;
 	}
 
 	FixedJoint* ZnFactoryX::CreateFixedJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)

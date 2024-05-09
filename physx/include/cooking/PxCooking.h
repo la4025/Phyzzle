@@ -147,38 +147,44 @@ struct PxMeshPreprocessingFlag
 	enum Enum
 	{
 		/**
-		\brief When set, mesh welding is performed. See PxCookingParams::meshWeldTolerance. Mesh cleaning must be enabled.
+		\brief	설정 시, 메시 용접이 수행됩니다.
+
+		PxCookingParams::meshWeldTolerance를 참조하십시오.
+
+		메시 클리닝이 활성화되어 있어야 합니다.
 		*/
 		eWELD_VERTICES	=	1 << 0, 
 
 		/**
-		\brief When set, mesh cleaning is disabled. This makes cooking faster.
+		\brief 설정 시, 메시 클리닝이 비활성화됩니다. 이는 쿠킹을 더 빠르게 만듭니다.
 
-		When mesh cleaning is disabled, mesh welding is also disabled.
+		메시 클리닝이 비활성화되면 메시 용접도 비활성화됩니다.
 
-		It is recommended to use only meshes that passed during validateTriangleMesh.
+		validateTriangleMesh 중 통과한 메시만 사용하는 것이 권장됩니다.
 		*/
 		eDISABLE_CLEAN_MESH	=	1 << 1, 
 
 		/**
-		\brief When set, active edges are not computed and just enabled for all edges. This makes cooking faster but contact generation slower.
+		\brief 설정 시, 활성 엣지를 계산하지 않고 모든 엣지에 대해 활성화만 합니다.
+
+		이는 쿠킹을 더 빠르게 만듭니다만, 접촉 생성은 느려집니다.
 		*/
 		eDISABLE_ACTIVE_EDGES_PRECOMPUTE	=	1 << 2,
 
 		/**
-		\brief When set, 32-bit indices will always be created regardless of triangle count.
+		\brief 설정 시, 삼각형 수와 상관없이 항상 32비트 인덱스가 생성됩니다.
 
-		\note By default mesh will be created with 16-bit indices for triangle count <= 0xFFFF and 32-bit otherwise.
+		\note 기본적으로 메시는 삼각형 수가 0xFFFF 이하인 경우 16비트 인덱스로 생성되고, 그 이외의 경우에는 32비트로 생성됩니다.
 		*/
 		eFORCE_32BIT_INDICES	=	1 << 3,
 
 		/**
-		\brief When set, a list of triangles will be created for each associated vertex in the mesh.
+		\brief 설정 시, 메시에 연결된 각 정점마다 삼각형 목록이 생성됩니다.
 		*/
 		eENABLE_VERT_MAPPING	=   1 << 4,
 
 		/**
-		\brief When set, inertia tensor is calculated for the mesh.
+		\brief 설정 시, 메시의 관성 텐서가 계산됩니다.
 		*/
 		eENABLE_INERTIA	= 1 << 5
 	};

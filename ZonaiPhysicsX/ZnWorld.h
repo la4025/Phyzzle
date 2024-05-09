@@ -64,9 +64,6 @@ namespace ZonaiPhysics
 		static void					AddJoint(ZnJoint* znJoint);
 		static void					RemoveJoint(ZnJoint* _znJoint, void* _userData, void* _userScene = nullptr);
 
-		static ZnMaterialID			AddMaterial(physx::PxMaterial*);
-		static physx::PxMaterial*	GetPxMaterial(const ZnMaterialID& _id);
-		
 	private:
 		static void					ReleaseBody(RigidBody**, void* _data, physx::PxScene*, bool);
 
@@ -80,8 +77,6 @@ namespace ZonaiPhysics
 
 		using Colliders = std::map<void*, std::vector<Collider*>>;						// [userData, Colliders]
 		static std::map<void*, Colliders>	colliderList;								// [pxScene, [userData, Colliders]]
-
-		static std::unordered_map<ZnMaterialID, physx::PxMaterial*> materialIDtable;			// [id, pxMaterial]
 
 		static std::vector<ZnJoint*> jointList;
 	};
