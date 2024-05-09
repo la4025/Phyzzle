@@ -47,6 +47,7 @@ namespace PurahEngine
 		virtual void LateUpdateEvent(std::queue<std::pair<Component*, std::function<void(Component&)>>>& eventQueue, bool parentEnable = true);
 
 		void DeleteChild(GameObject* child);
+		void DeleteComponent(Component* component);
 
 		void Destroy();
 
