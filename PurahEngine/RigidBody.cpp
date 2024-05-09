@@ -98,15 +98,15 @@ namespace PurahEngine
 
 	Eigen::Quaternionf RigidBody::GetRotation() noexcept
 	{
-		// if (awake)
-		// {
-		// 	auto trans = GetGameObject()->GetTransform();
-		// 	return trans->GetWorldRotation();
-		// }
-		// else
-		// {
-			return body->GetQuaternion();
-		// }
+		if (awake)
+		{
+			auto trans = GetGameObject()->GetTransform();
+			return trans->GetWorldRotation();
+		}
+		else
+		{
+		return body->GetQuaternion();
+		}
 	}
 
 	/// \brief 스크립트에서 호출하지 말아라
@@ -124,158 +124,158 @@ namespace PurahEngine
 	/// 
 	uint8_t RigidBody::GetDynamicLockFlags() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return freeze;
-		// }
-		// else
-		// {
-			return body->GetDynamicLockFlags();
-		// }
+		if (awake)
+		{
+			return freeze;
+		}
+		else
+		{
+		return body->GetDynamicLockFlags();
+		}
 	}
 
 	void RigidBody::SetDynamicLockFlag(ZonaiPhysics::FreezeFlag flag, bool value) noexcept
 	{
-		// if (awake)
-		// {
-		// 	value ? freeze |= flag : freeze &= flag;
-		// }
-		// else
-		// {
-			body->SetDynamicLockFlag(flag, value);
-		// }
+		 if (awake)
+		 {
+		 	value ? freeze |= flag : freeze &= flag;
+		 }
+		 else
+		 {
+		body->SetDynamicLockFlag(flag, value);
+		 }
 	}
 
 	void RigidBody::SetDynamicLockFlags(uint8_t flags) noexcept
 	{
-		// if (awake)
-		// {
-		// 	freeze = flags;
-		// }
-		// else
-		// {
-			body->SetDynamicLockFlags(flags);
-		// }
+		 if (awake)
+		 {
+		 	freeze = flags;
+		 }
+		 else
+		 {
+		body->SetDynamicLockFlags(flags);
+		 }
 	}
 
 	float RigidBody::GetMass() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return mass;
-		// }
-		// else
-		// {
-			return  body->GetMass();
-		// }
+		 if (awake)
+		 {
+		 	return mass;
+		 }
+		 else
+		 {
+		return  body->GetMass();
+		 }
 	}
 
 	void RigidBody::SetMass(float _mass) noexcept
 	{
-		// if (awake)
-		// {
-		// 	mass = _mass;
-		// }
-		// else
-		// {
-			body->SetMass(_mass);
-		// }
+		if (awake)
+		{
+			mass = _mass;
+		}
+		else
+		{
+		body->SetMass(_mass);
+		}
 	}
 
 	float RigidBody::GetLinearDamping() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return linearDamping;
-		// }
-		// else
-		// {
-			return body->GetLinearDamping();
-		// }
+		 if (awake)
+		 {
+		 	return linearDamping;
+		 }
+		 else
+		 {
+		return body->GetLinearDamping();
+		 }
 	}
 
 	void RigidBody::SetLinearDamping(float _damping) noexcept
 	{
-		// if (awake)
-		// {
-		// 	linearDamping = _damping;
-		// }
-		// else
-		// {
+		if (awake)
+		{
+			linearDamping = _damping;
+		}
+		else
+		{
 			body->SetLinearDamping(_damping);
-		// }
+		}
 	}
 
 	float RigidBody::GetAngularDamping() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return angularDamping;
-		// }
-		// else
-		// {
-			return body->GetAngularDamping();
-		// }
+		if (awake)
+		{
+			return angularDamping;
+		}
+		else
+		{
+		return body->GetAngularDamping();
+		}
 	}
 
 	void RigidBody::SetAngularDamping(float _damping) noexcept
 	{
-		// if (awake)
-		// {
-		// 	angularDamping = _damping;
-		// }
-		// else
-		// {
-			body->SetAngularDamping(_damping);
-		// }
+		if (awake)
+		{
+			angularDamping = _damping;
+		}
+		else
+		{
+		body->SetAngularDamping(_damping);
+		}
 	}
 
 	Eigen::Vector3f RigidBody::GetLinearVelocity() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return linearVelocity;
-		// }
-		// else
-		// {
-			return body->GetLinearVelocity();
-		// }
+		if (awake)
+		{
+			return linearVelocity;
+		}
+		else
+		{
+		return body->GetLinearVelocity();
+		}
 	}
 
 	void RigidBody::SetLinearVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
-		// if (awake)
-		// {
-		// 	linearVelocity = _velocity;
-		// }
-		// else
-		// {
-			body->SetLinearVelocity(_velocity);
-		// }
+		if (awake)
+		{
+			linearVelocity = _velocity;
+		}
+		else
+		{
+		body->SetLinearVelocity(_velocity);
+		}
 	}
 
 	Eigen::Vector3f RigidBody::GetAngularVelocity() const noexcept
 	{
-		// if (awake)
-		// {
-		// 	return angularVelocity;
-		// }
-		// else
-		// {
-			return body->GetAngularVelocity();
-		// }
+		if (awake)
+		{
+			return angularVelocity;
+		}
+		else
+		{
+		return body->GetAngularVelocity();
+		}
 	}
 
 	void RigidBody::SetAngularVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
-		// if (awake)
-		// {
-		// 	angularVelocity = _velocity;
-		// }
-		// else
-		// {
-			body->SetAngularVelocity(_velocity);
-		// }
+		 if (awake)
+		 {
+		 	angularVelocity = _velocity;
+		 }
+		 else
+		 {
+		body->SetAngularVelocity(_velocity);
+		 }
 	}
 
 // 	float RigidBody::GetMaxLinearVelocity() const noexcept
@@ -300,14 +300,14 @@ namespace PurahEngine
 
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ZonaiPhysics::ForceType _type) noexcept
 	{
-		// if (awake)
-		// {
-		// 	force = _force;
-		// }
-		// else
-		// {
+		if (awake)
+		{
+			force = _force;
+		}
+		else
+		{
 			body->AddForce(_force, _type);
-		// }
+		}
 	}
 
 	void RigidBody::ClearForce() noexcept
@@ -317,14 +317,14 @@ namespace PurahEngine
 
 	void RigidBody::AddTorque(const Eigen::Vector3f& _torque, ZonaiPhysics::ForceType _type) noexcept
 	{
-		// if (awake)
-		// {
-		// 	torque = _torque;
-		// }
-		// else
-		// {
-			body->AddTorque(_torque, _type);
-		// }
+		 if (awake)
+		 {
+		 	torque = _torque;
+		 }
+		 else
+		 {
+		body->AddTorque(_torque, _type);
+		 }
 	}
 
 	void RigidBody::ClearTorque() noexcept
@@ -334,14 +334,14 @@ namespace PurahEngine
 
 	void RigidBody::SetKinematic(bool value) noexcept
 	{
-		// if (awake)
-		// {
-		// 	isKinematic = value;
-		// }
-		// else
-		// {
-			body->SetKinematic(value);
-		// }
+		if (awake)
+		{
+			isKinematic = value;
+		}
+		else
+		{
+		body->SetKinematic(value);
+		}
 	}
 
 	bool RigidBody::IsKinematic() const
@@ -351,14 +351,14 @@ namespace PurahEngine
 
 	void RigidBody::UseGravity(bool _value)
 	{
-		// if (awake)
-		// {
-		// 	useGravity = _value;
-		// }
-		// else
-		// {
-			body->UseGravity(_value);
-		// }
+		if (awake)
+		{
+			useGravity = _value;
+		}
+		else
+		{
+		body->UseGravity(_value);
+		}
 	}
 
 	bool RigidBody::HasGravity() const

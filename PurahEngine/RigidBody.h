@@ -140,8 +140,8 @@ namespace PurahEngine
 		float mass{ 1.f };
 		float linearDamping{ 0.1f };
 		float angularDamping{ 0.1f };
-		// Eigen::Vector3f force{ 0.f, 0.f, 0.f };
-		// Eigen::Vector3f torque{ 0.f, 0.f, 0.f };
+		Eigen::Vector3f force{ 0.f, 0.f, 0.f };
+		Eigen::Vector3f torque{ 0.f, 0.f, 0.f };
 
 	private:
 		ZonaiPhysics::ZnRigidBody* body{};

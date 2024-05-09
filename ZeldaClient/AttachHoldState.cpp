@@ -6,7 +6,9 @@
 namespace Phyzzle
 {
 	AttachHoldState::~AttachHoldState()
-	= default;
+	{
+		AttachSystem::Instance()->Clear();
+	}
 
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()

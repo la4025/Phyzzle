@@ -50,17 +50,16 @@ struct PxMeshFlag
 	enum Enum
 	{
 		/**
-		\brief Specifies if the SDK should flip normals.
+		\brief SDK가 법선을 뒤집어야 하는지 여부를 지정합니다.
 
-		The PhysX libraries assume that the face normal of a triangle with vertices [a,b,c] can be computed as:
+		PhysX 라이브러리는 꼭짓점 [a,b,c]을 가진 삼각형의 면 법선을 다음과 같이 계산한다고 가정합니다:
 		edge1 = b-a
 		edge2 = c-a
 		face_normal = edge1 x edge2.
 
-		Note: This is the same as a counterclockwise winding in a right handed coordinate system or
-		alternatively a clockwise winding order in a left handed coordinate system.
+		참고: 이는 오른손 좌표계에서 시계 반대 방향으로의 위향(Counterclockwise) 또는 왼손 좌표계에서 시계 방향의 위향 순서와 동일합니다.
 
-		If this does not match the winding order for your triangles, raise the below flag.
+		만약 이것이 귀하의 삼각형의 위향 순서와 일치하지 않는다면, 아래 플래그를 설정하십시오.
 		*/
 		eFLIPNORMALS		=	(1<<0),
 		e16_BIT_INDICES		=	(1<<1)	//!< Denotes the use of 16-bit vertex indices

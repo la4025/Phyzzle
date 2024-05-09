@@ -51,11 +51,26 @@ namespace Phyzzle
 		const ZonaiPhysics::ZnCollision& _collision, 
 		const PurahEngine::Collider* _collider)
 	{
+		if (attachable)
+			return;
+
 		PurahEngine::GameObject* obj = _collider->GetGameObject();
 
 		if (obj->tag.IsContain(L"Attachable"))
 		{
 			attachable = obj->GetComponent<Attachable>();
+
+			const bool otherIDNull = attachable->islandID == nullptr;
+			const bool myIDNull = islandID == nullptr;
+			const bool sameNull = otherIDNull && myIDNull;
+			const bool sameID = attachable->islandID && islandID;
+			bool diffID = !sameNull && sameID;					// 같은 섬에 있는 친구는 무시함.
+
+			if (diffID)
+			{
+				attachable = nullptr;
+				return;
+			}
 
 			// 앵커 위치
 			Eigen::Vector3f acc = Eigen::Vector3f::Zero();
@@ -70,6 +85,9 @@ namespace Phyzzle
 	void Attachable::OnCollisionStay(const ZonaiPhysics::ZnCollision& _collision,
 		const PurahEngine::Collider* _collider)
 	{
+		if (!attachable)
+			return;
+
 		PurahEngine::GameObject* obj = _collider->GetGameObject();
 
 		if (attachable == obj->GetComponent<Attachable>())
@@ -87,6 +105,9 @@ namespace Phyzzle
 		const ZonaiPhysics::ZnCollision& _collision,
 		const PurahEngine::Collider* _collider)
 	{
+		if (!attachable)
+			return;
+
 		PurahEngine::GameObject* obj = _collider->GetGameObject();
 
 		if (obj->tag.IsContain(L"Attachable"))

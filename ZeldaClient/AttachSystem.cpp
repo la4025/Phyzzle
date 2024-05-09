@@ -69,6 +69,16 @@ namespace Phyzzle
 		RemoveIslandID(_id);
 	}
 
+	void AttachSystem::Clear()
+	{
+		attachIsland.clear();
+
+		while (!removedIndex.empty())
+		{
+			removedIndex.pop();
+		}
+	}
+
 	// 물체 선택
 	void AttachSystem::SelectBody(Attachable* _body)
 	{
@@ -249,7 +259,39 @@ namespace Phyzzle
 
 	void AttachSystem::BreakJoint(Attachable* _base, Attachable* _other)
 	{
-		// _base->GetGameObject()->GetComponents<PurahEngine::FixedJoint>();
+		using BodySet = std::pair<PurahEngine::RigidBody*, PurahEngine::RigidBody*>;
+		BodySet duo = std::minmax(_base->body, _other->body);
+
+		auto joints0 = _base->GetGameObject()->GetComponents<PurahEngine::FixedJoint>();
+		auto joints1 = _other->GetGameObject()->GetComponents<PurahEngine::FixedJoint>();
+
+		for (auto& joint : joints0)
+		{
+			PurahEngine::RigidBody* body0 = nullptr;
+			PurahEngine::RigidBody* body1 = nullptr;
+			joint->GetRigidbody(body0, body1);
+			BodySet test = std::minmax(body0, body1);
+
+			if (duo == test)
+			{
+				delete joint;
+				joint = nullptr;
+			}
+		}
+
+		for (auto& joint : joints1)
+		{
+			PurahEngine::RigidBody* body0 = nullptr;
+			PurahEngine::RigidBody* body1 = nullptr;
+			joint->GetRigidbody(body0, body1);
+			BodySet test = std::minmax(body0, body1);
+
+			if (duo == test)
+			{
+				delete joint;
+				joint = nullptr;
+			}
+		}
 	}
 
 	bool AttachSystem::HasAttachIsland(const IslandID& _id, AttachIsland& _outIsland)

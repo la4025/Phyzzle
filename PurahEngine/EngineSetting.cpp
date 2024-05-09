@@ -1,6 +1,8 @@
 #include "EngineSetting.h"
 
 #include "FileManager.h"
+#include "Physics.h"
+#include "PhysicsSystem.h"
 
 void PurahEngine::EngineSetting::Initialize()
 {
@@ -81,20 +83,20 @@ int PurahEngine::EngineSetting::LayerSize()
 	return layerSize;
 }
 
-std::wstring PurahEngine::EngineSetting::MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID material) const
-{
-	auto iter = materialIDTable.find(material);
-
-	if (materialIDTable.end() != iter)
-	{
-		return iter->second;
-	}
-	else
-	{
-		assert(0);
-		return nullptr;
-	}
-}
+//std::wstring PurahEngine::EngineSetting::MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID material) const
+//{
+//	auto iter = materialIDTable.find(material);
+//
+//	if (materialIDTable.end() != iter)
+//	{
+//		return iter->second;
+//	}
+//	else
+//	{
+//		assert(0);
+//		return nullptr;
+//	}
+//}
 
 ZonaiPhysics::ZnMaterialID PurahEngine::EngineSetting::MaterialtoMaterialID(const std::wstring& material) const
 {
@@ -113,7 +115,7 @@ ZonaiPhysics::ZnMaterialID PurahEngine::EngineSetting::MaterialtoMaterialID(cons
 
 int PurahEngine::EngineSetting::MaterialSize()
 {
-	return materialSize;
+	return materialsSize;
 }
 
 float PurahEngine::EngineSetting::GetShadowAreaRange()
@@ -204,6 +206,31 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 		layerTable[wLayerName] = layerIDCount;
 		layerIDTable[layerIDCount] = wLayerName;
 	}
+
+	materialTable.clear();
+
+	/*
+	const json& materials = jsonData["physicsMaterials"];
+	materialsSize = materials.size();
+	for (int materialIDCount = 0; materialIDCount < materials.size(); materialIDCount++)
+	{
+		std::string materialName = materials[materialIDCount]["name"];
+		float		staticFriction = materials[materialIDCount]["staticFriction"];
+		float		dynamicFriction = materials[materialIDCount]["dynamicFriction"];
+		float		restitution = materials[materialIDCount]["restitution"];
+		int			eFriction = materials[materialIDCount]["eFriction"];
+		int			eRestitution = materials[materialIDCount]["eRestitution"];
+
+		std::wstring wMaterialName(materialName.begin(), materialName.end());
+
+		ZonaiPhysics::ZnMaterialID materialID =
+			Physics::AddMaterial(staticFriction, dynamicFriction,
+				restitution,
+				eFriction, eRestitution);
+
+		materialTable[wMaterialName] = materialID;
+	}
+	*/
 
 	const json& collisionInfo = jsonData["collisionSetting"];
 	collisionSetting.resize(collisionInfo.size(), std::vector<bool>(collisionInfo.size(), false));

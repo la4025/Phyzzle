@@ -28,6 +28,7 @@ namespace PurahEngine
 		ZonaiJoint* joint;
 
 	protected:
+		RigidBody* body = nullptr;
 		RigidBody* connectedBody = nullptr;
 		Eigen::Vector3f LocalAnchor = Eigen::Vector3f::Zero();
 		Eigen::Quaternionf LocalAnchorRotation = Eigen::Quaternionf::Identity();
@@ -75,7 +76,7 @@ namespace PurahEngine
 
 		void		GetRigidbody(RigidBody*& _obj0, RigidBody*& _obj1) const noexcept
 		{
-			_obj1 = GetGameObject()->GetComponent<RigidBody>();
+			_obj1 = body;
 			_obj1 = connectedBody;
 		}
 

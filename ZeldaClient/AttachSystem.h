@@ -30,10 +30,6 @@ namespace Phyzzle
 		std::unordered_map<IslandID, AttachIsland> attachIsland;
 		std::queue<IslandID> removedIndex;
 
-		IslandID islandID;
-		bool gravity = true;
-		float mass = 1.f;
-
 	private:
 		// ID 생성 삭제
 		IslandID CreateIslandID();
@@ -44,6 +40,8 @@ namespace Phyzzle
 		void RemoveIsland(const IslandID& _id);
 
 	public:
+		void						Clear();
+
 		void						SelectBody(Attachable* _body);
 		void						DeselectBody(Attachable* _body);
 

@@ -65,7 +65,7 @@ namespace Phyzzle
 		// const static IslandID NONE;
 
 	private:
-		friend struct std::hash<Phyzzle::IslandID>;
+		friend struct std::hash<IslandID>;
 		long long id;
 	};
 
@@ -76,10 +76,12 @@ namespace Phyzzle
 
 namespace std
 {
+	using namespace Phyzzle;
+
 	template<>
-	struct hash<Phyzzle::IslandID>
+	struct hash<IslandID>
 	{
-		size_t operator()(const Phyzzle::IslandID& r) const noexcept
+		size_t operator()(const IslandID& r) const noexcept
 		{
 			return std::hash<size_t>()(r.id);
 		}

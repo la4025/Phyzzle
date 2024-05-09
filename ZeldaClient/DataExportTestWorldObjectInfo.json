@@ -450,6 +450,7 @@
         {
           "__Base__instanceID": 29842,
           "__Base__Component": "FixedJoint",
+          "__ID__body": 29854,
           "LocalAnchor": {
             "x": 0.0,
             "y": 0.0,
@@ -635,6 +636,7 @@
         {
           "__Base__instanceID": 29652,
           "__Base__Component": "FixedJoint",
+          "__ID__body": 29670,
           "LocalAnchor": {
             "x": 8.87072531E-07,
             "y": -4.16790073E-07,
@@ -818,6 +820,7 @@
         {
           "__Base__instanceID": 29916,
           "__Base__Component": "DistanceJoint",
+          "__ID__body": 29900,
           "LocalAnchor": {
             "x": 0.9999995,
             "y": 4.11587564E-08,
@@ -853,6 +856,7 @@
         {
           "__Base__instanceID": 29914,
           "__Base__Component": "SpringJoint",
+          "__ID__body": 29900,
           "LocalAnchor": {
             "x": -1.00000012,
             "y": -2.11722323E-07,
@@ -968,6 +972,7 @@
         {
           "__Base__instanceID": 29870,
           "__Base__Component": "BallJoint",
+          "__ID__body": 29866,
           "LocalAnchor": {
             "x": -1.779641E-06,
             "y": -1.99999833,
@@ -1082,6 +1087,7 @@
         {
           "__Base__instanceID": 29924,
           "__Base__Component": "SlideJoint",
+          "__ID__body": 29928,
           "LocalAnchor": {
             "x": 0.5000009,
             "y": -4.094024E-07,
@@ -1216,6 +1222,7 @@
         {
           "__Base__instanceID": 29742,
           "__Base__Component": "SlideJoint",
+          "__ID__body": 29746,
           "LocalAnchor": {
             "x": 3.00000072,
             "y": -5.794128E-07,
@@ -1299,6 +1306,7 @@
         {
           "__Base__instanceID": 29946,
           "__Base__Component": "HingeJoint",
+          "__ID__body": 29950,
           "LocalAnchor": {
             "x": -9.450002,
             "y": 6.00735063E-07,

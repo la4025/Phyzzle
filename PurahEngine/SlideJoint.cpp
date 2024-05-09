@@ -23,9 +23,7 @@ namespace PurahEngine
 	{
 		const auto& instance = PhysicsSystem::GetInstance();
 
-		const RigidBody* body0 = GetGameObject()->GetComponent<RigidBody>();
-
-		assert(body0 != nullptr);
+		assert(body != nullptr);
 
 		ZonaiPhysics::ZnRigidBody* connect = nullptr;
 
@@ -35,7 +33,7 @@ namespace PurahEngine
 		}
 
 		joint = instance.CreateSlideJoint(
-			body0->body, { LocalAnchor, LocalAnchorRotation },
+			body->body, { LocalAnchor, LocalAnchorRotation },
 			connect, { connectedLocalAnchor, connectedLocalAnchorRotation }
 		);
 
@@ -171,8 +169,11 @@ namespace PurahEngine
 
 	void SlideJoint::PostDeserialize(const json& jsonData)
 	{
+		POSTDESERIALIZE_PTR(body);
+		assert(body != nullptr);
+
 		POSTDESERIALIZE_PTR(connectedBody);
-		if (connectedBody == GetGameObject()->GetComponent<RigidBody>())
+		if (connectedBody == body)
 		{
 			connectedBody = nullptr;
 		}

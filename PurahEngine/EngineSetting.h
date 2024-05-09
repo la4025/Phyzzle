@@ -23,7 +23,7 @@ namespace PurahEngine
 		int LayertoLayerID(const std::wstring& layer) const;
 		int LayerSize();
 
-		std::wstring MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID layer) const;
+		// std::wstring MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID layer) const;
 		ZonaiPhysics::ZnMaterialID MaterialtoMaterialID(const std::wstring& layer) const;
 		int MaterialSize();
 
@@ -49,9 +49,9 @@ namespace PurahEngine
 		std::unordered_map<int, std::wstring> layerIDTable;
 		unsigned int layerSize;
 
+		// std::unordered_map<ZonaiPhysics::ZnMaterialID, std::wstring> materialIDTable;
 		std::unordered_map<std::wstring, ZonaiPhysics::ZnMaterialID> materialTable;
-		std::unordered_map<ZonaiPhysics::ZnMaterialID, std::wstring> materialIDTable;
-		unsigned int materialSize;
+		unsigned int materialsSize;
 
 		float shadowAreaRange;
 		float shadowAreaOffset;

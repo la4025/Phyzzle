@@ -233,16 +233,30 @@ namespace ZonaiPhysics
 	{
 		assert(_znBody != nullptr);
 
+		const physx::PxVec3 meshVerts[] = {
+			physx::PxVec3(0,1,0),
+			physx::PxVec3(1,0,0),
+			physx::PxVec3(-1,0,0),
+			physx::PxVec3(0,0,1),
+			physx::PxVec3(0,0,-1)
+		};
+
+		const physx::PxU32 meshIndies[] = {
+			0, 1, 2,
+			0, 2, 3
+		};
+
+		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
-		meshDesc.points.count;
-		meshDesc.points.stride;
-		meshDesc.points.data;
+		meshDesc.points.count = sizeof(meshVerts) / sizeof(physx::PxVec3);
+		meshDesc.points.stride = sizeof(physx::PxVec3);
+		meshDesc.points.data = meshVerts;
 
-		meshDesc.triangles.count;
-		meshDesc.triangles.stride;
-		meshDesc.triangles.data;
+		meshDesc.triangles.count = sizeof(meshIndies) / sizeof(physx::PxU32);
+		meshDesc.triangles.stride = sizeof(physx::PxU32);
+		meshDesc.triangles.data = meshIndies;
 
-		// meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
+		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
 
 		physx::PxCookingParams params(pxFactory->getTolerancesScale());
 		// 메시 정리 비활성화 - 개발 구성에서 메시 유효성 검사 수행
@@ -296,6 +310,7 @@ namespace ZonaiPhysics
 			physx::PxVec3(0,0,-1)
 		};
 
+		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
 		convexDesc.points.count = sizeof(convexVerts) / sizeof(physx::PxVec3);
 		convexDesc.points.stride = sizeof(physx::PxVec3);
@@ -304,11 +319,13 @@ namespace ZonaiPhysics
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
 
+		// 정점 메모리 버퍼
 		physx::PxDefaultMemoryOutputStream buf;
 		physx::PxConvexMeshCookingResult::Enum result;
 		if (!PxCookConvexMesh(params, convexDesc, buf, &result))
 			return NULL;
 
+		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
 		physx::PxConvexMesh* convexMesh = pxFactory->createConvexMesh(input);
 

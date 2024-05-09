@@ -4,20 +4,18 @@
 
 namespace PurahEngine
 {
-	// void Physics::AddMaterial(
-	// 	int _id, 
-	// 	float _staticFriction, float _dynamicFriction, float _restitution,
-	// 	ZonaiPhysics::eCombineMode _friction, ZonaiPhysics::eCombineMode _eRestitution)
-	// {
-	// 	return PhysicsSystem::GetInstance().AddMaterial(
-	// 		_id, 
-	// 		_staticFriction, 
-	// 		_dynamicFriction,
-	// 		_restitution,
-	// 		_friction,
-	// 		_eRestitution
-	// 	);
-	// }
+	ZonaiPhysics::ZnMaterialID Physics::AddMaterial(
+		float _staticFriction, float _dynamicFriction, float _restitution,
+		int _combineFriction, int _combineRestitution)
+	{
+		return PhysicsSystem::GetInstance().AddMaterial(
+			_staticFriction, 
+			_dynamicFriction,
+			_restitution,
+			static_cast<ZonaiPhysics::eCombineMode>(_combineFriction),
+			static_cast<ZonaiPhysics::eCombineMode>(_combineRestitution)
+		);
+	}
 
 	bool Physics::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distace, ZonaiPhysics::ZnRaycastInfo& _info)
 	{
