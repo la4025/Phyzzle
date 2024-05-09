@@ -28,9 +28,9 @@ PS_OUT main(PixelIn input)
     
     LightColor color;
     
-    CalculateLight(lightIndex, viewNormal, viewPos, color.diffuse, color.ambient, color.specular);
+    CalculateLight(lightIndex, viewNormal, viewPos, input.uv, color.diffuse, color.ambient, color.specular);
     
-    output.diffuse = float4((color.diffuse + color.ambient).xyz, 1.0f);
+    output.diffuse = float4(saturate(color.diffuse + color.ambient).xyz, 1.0f);
     output.specular = float4((color.specular).xyz, 1.0f);
     
     

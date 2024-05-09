@@ -59,25 +59,25 @@ namespace PurahEngine
 		}
 	}
 
-	LightID GraphicsResourceManager::CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction)
+	LightID GraphicsResourceManager::CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction)
 	{
-		LightID lightID = graphicsModule->CreateDirectionalLight(ambient, diffuse, specular, direction);
+		LightID lightID = graphicsModule->CreateDirectionalLight(ambient, diffuse, specular, shadowColor, direction);
 		lightSet.insert(lightID);
 
 		return lightID;
 	}
 
-	LightID GraphicsResourceManager::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& position, float range)
+	LightID GraphicsResourceManager::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range)
 	{
-		LightID lightID = graphicsModule->CreatePointLight(ambient, diffuse, specular, position, range);
+		LightID lightID = graphicsModule->CreatePointLight(ambient, diffuse, specular, shadowColor, position, range);
 		lightSet.insert(lightID);
 
 		return lightID;
 	}
 
-	LightID GraphicsResourceManager::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
+	LightID GraphicsResourceManager::CreateSpotLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
 	{
-		LightID lightID = graphicsModule->CreateSpotLight(ambient, diffuse, specular, direction, position, range, angle);
+		LightID lightID = graphicsModule->CreateSpotLight(ambient, diffuse, specular, shadowColor, direction, position, range, angle);
 		lightSet.insert(lightID);
 
 		return lightID;

@@ -171,6 +171,7 @@ struct LightColor
 	DirectX::XMFLOAT4 ambient;
 	DirectX::XMFLOAT4 diffuse;
 	DirectX::XMFLOAT4 specular;
+	DirectX::XMFLOAT4 shadow;
 };
 
 struct LightInfo
@@ -213,12 +214,12 @@ struct MaterialBufferType
 	unsigned int useARM;
 	unsigned int useHeight;
 	unsigned int useEmission;
-	unsigned int useTemp0;
+	unsigned int useInstancingColor;
 
+	unsigned int useTemp0;
 	unsigned int useTemp1;
 	unsigned int useTemp2;
 	unsigned int useTemp3;
-	unsigned int useTemp4;
 
 	constexpr static unsigned int registerNumB = 4;
 };

@@ -79,6 +79,7 @@
     <ClInclude Include="MomentumManager.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PreTimerHandler.h" />
     <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="MomentumManager.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PreTimerHandler.cpp" />
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Renderer.cpp" />

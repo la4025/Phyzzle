@@ -55,6 +55,7 @@ struct LightColor
     float4 ambient;
     float4 diffuse;
     float4 specular;
+    float4 shadow;
 };
 
 struct LightInfo
@@ -91,12 +92,12 @@ cbuffer MaterialBufferType : register(b4)
     unsigned int useARM;
     unsigned int useHeight;
     unsigned int useEmission;
-    unsigned int useTemp0;
+    unsigned int useInstancingColor;
     
+    unsigned int useTemp0;
     unsigned int useTemp1;
     unsigned int useTemp2;
     unsigned int useTemp3;
-    unsigned int useTemp4;
 };
 
 cbuffer ScreenBufferType : register(b5)

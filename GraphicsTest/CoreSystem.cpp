@@ -286,15 +286,11 @@ void CoreSystem::run()
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
 
-		//fbxID2 = renderer->CreateModel(L"D:\\GA4th4Q_Project\\Tree\\5_Project\\ZeldaEngine\\Resources\\FBX\\Boss\\Boss.fbx");
-		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
-		//fbxID2 = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
+		fbxID2 = renderer->CreateModel(L"D:\\Sheikah_Project\\GraphicsTest\\Basic Meshes\\Cube\\Cube.fbx");
 
-		//fbxID2 = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Planets_1\\Meshes\\Planet_5.fbx");
-
-		dirLightID = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
-		dirLightID2 = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
-		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, pointLightPos, pointLightRange);
+		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 1.0f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID2 = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.2f, 0.2f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
+		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, pointLightPos, pointLightRange);
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -308,9 +304,6 @@ void CoreSystem::run()
 
 		animationList = renderer->GetAnimationListByModel(fbxID);
 		animationPlayTimeList = renderer->GetAnimationPlayTime(fbxID);
-
-		//animationList2 = renderer->GetAnimationListByModel(fbxID2);
-		//animationPlayTimeList2 = renderer->GetAnimationPlayTime(fbxID2);
 	}
 
 	const static float moveSpeed = 0.5f;
@@ -362,7 +355,7 @@ void CoreSystem::run()
 		{
 			pointLightRange = pointLightRange_Max;
 		}
-		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, {}, pointLightPos, pointLightRange, 0.0f);
+		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, {}, pointLightPos, pointLightRange, 0.0f);
 	}
 	if (GetAsyncKeyState('P'))
 	{
@@ -371,7 +364,7 @@ void CoreSystem::run()
 		{
 			pointLightRange = pointLightRange_Min;
 		}
-		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, {}, pointLightPos, pointLightRange, 0.0f);
+		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, {}, pointLightPos, pointLightRange, 0.0f);
 	}
 
 	Eigen::Matrix4f cameraRotateY;
@@ -670,6 +663,21 @@ void CoreSystem::run()
 	renderer->DrawCubeMap(cubeMapID);
 
 	renderer->DrawString(L"ABCDEFG", 0, 0, 100, 100, 20, { 0, 0, 0, 1 });
+
+
+	Eigen::Matrix4f w = Eigen::Matrix4f::Identity();
+	w(0, 0) = 15.0f;
+	w(1, 1) = 15.0f;
+	w(2, 2) = 15.0f;
+
+	w(0, 3) = 0.0f;
+	w(1, 3) = 50.0f;
+	w(2, 3) = 0.0f;
+	renderer->DrawModel(w, fbxID2, false, false, false, false, { 0.0f, 0.0f, 0.0f, 0.0f });
+	w(0, 3) = 30.0f;
+	renderer->DrawModel(w, fbxID2, false, false, false, false, { 0.0f, 0.0f, 0.0f, 0.0f });
+	w(0, 3) = 60.0f;
+	renderer->DrawModel(w, fbxID2, false, false, false, false, { 0.0f, 0.0f, 0.0f, 0.0f });
 
 	renderer->EndDraw();
 }

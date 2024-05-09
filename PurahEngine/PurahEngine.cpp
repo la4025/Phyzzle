@@ -28,6 +28,7 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 
 	ComponentFactory::GetInstance().RegisterComponent<Camera>("Camera");
 	ComponentFactory::GetInstance().RegisterComponent<DirectionalLight>("DirectionalLight");
+	ComponentFactory::GetInstance().RegisterComponent<PointLight>("PointLight");
 	ComponentFactory::GetInstance().RegisterComponent<ModelRenderer>("ModelRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<MeshRenderer>("MeshRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<Animator>("Animator");
