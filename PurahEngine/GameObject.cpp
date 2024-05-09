@@ -519,7 +519,7 @@ PurahEngine::Transform* PurahEngine::GameObject::GetTransform()
 	return trans;
 }
 
-std::vector<PurahEngine::Component*> PurahEngine::GameObject::GetComponents()
+std::vector<PurahEngine::Component*> PurahEngine::GameObject::GetComponentList()
 {
 	return componentList;
 }

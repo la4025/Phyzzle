@@ -23,7 +23,8 @@ namespace PurahEngine
 
 		this->znCollider = PhysicsSystem::GetInstance().CreateCapsuleCollider(
 			this->GetGameObject(),
-			radius * maxScale, height * scale.y()
+			radius * maxScale, height * scale.y(),
+			ZonaiPhysics::ZnMaterialID::None
 		);
 
 		Collider::SetUserData();

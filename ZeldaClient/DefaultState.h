@@ -15,7 +15,6 @@ namespace Phyzzle
 		~DefaultState() override;
 
 	private:
-		void Input() override;
 		void StateEnter() override;
 		void StateExit() override;
 		void StateStay() override;

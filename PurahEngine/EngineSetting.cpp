@@ -81,6 +81,41 @@ int PurahEngine::EngineSetting::LayerSize()
 	return layerSize;
 }
 
+std::wstring PurahEngine::EngineSetting::MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID material) const
+{
+	auto iter = materialIDTable.find(material);
+
+	if (materialIDTable.end() != iter)
+	{
+		return iter->second;
+	}
+	else
+	{
+		assert(0);
+		return nullptr;
+	}
+}
+
+ZonaiPhysics::ZnMaterialID PurahEngine::EngineSetting::MaterialtoMaterialID(const std::wstring& material) const
+{
+	auto iter = materialTable.find(material);
+
+	if (materialTable.end() != iter)
+	{
+		return iter->second;
+	}
+	else
+	{
+		assert(0);
+		return ZonaiPhysics::ZnMaterialID::None;
+	}
+}
+
+int PurahEngine::EngineSetting::MaterialSize()
+{
+	return materialSize;
+}
+
 float PurahEngine::EngineSetting::GetShadowAreaRange()
 {
 	return shadowAreaRange;

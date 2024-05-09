@@ -17,7 +17,7 @@ namespace PurahEngine
 		~JointT() override = default;
 
 	protected:
-		void OnDataLoadComplete() override
+		void PostInitialize() override
 		{
 			SetBreakForce(breakForce, breakTorque);
 			EnableCollision(enableCollision);
@@ -28,7 +28,12 @@ namespace PurahEngine
 		ZonaiJoint* joint;
 
 	protected:
-		RigidBody* connectedBody;
+		RigidBody* connectedBody = nullptr;
+		Eigen::Vector3f LocalAnchor = Eigen::Vector3f::Zero();
+		Eigen::Quaternionf LocalAnchorRotation = Eigen::Quaternionf::Identity();
+		Eigen::Vector3f connectedLocalAnchor = Eigen::Vector3f::Zero();
+		Eigen::Quaternionf connectedLocalAnchorRotation = Eigen::Quaternionf::Identity();
+
 		float breakForce = FLT_MAX;
 		float breakTorque = FLT_MAX;
 		bool enableCollision = false;
@@ -58,8 +63,25 @@ namespace PurahEngine
 		오브젝트를 조인트로 연결함.
 		둘 중 하나는 NULL일 수 있음.
 		*/
-		//virtual void		SetObject(ZnObject*, ZnObject*) noexcept = 0;
-		//virtual void		GetObject(ZnObject*&, ZnObject*&) const noexcept = 0;
+		void		SetRigidbody(RigidBody* _other) noexcept
+		{
+			connectedBody = _other;
+		}
+		void		SetAnchor(
+			const Eigen::Vector3f& _localP0, const Eigen::Quaternionf& _localR0, 
+			const Eigen::Vector3f& _localP1, const Eigen::Quaternionf& _localR1)
+		{
+			LocalAnchor = _localP0;
+			LocalAnchorRotation = _localR0;
+			connectedLocalAnchor = _localP1;
+			connectedLocalAnchorRotation = _localR1;
+		}
+
+		void		GetRigidbody(RigidBody*& _obj0, RigidBody*& _obj1) const noexcept
+		{
+			_obj1 = GetGameObject()->GetComponent<RigidBody>();
+			_obj1 = connectedBody;
+		}
 
 		void		SetLocalPosition(int _index, const Eigen::Vector3f& _localPos) override
 		{

@@ -12,7 +12,7 @@ namespace PurahEngine
 		~SpringJoint() override;
 
 	public:
-		void OnDataLoadComplete() override;
+		void PostInitialize() override;
 
 	public:
 		// 현재 조인트 거리
@@ -56,11 +56,6 @@ namespace PurahEngine
 		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		Eigen::Vector3f LocalAnchor;
-		Eigen::Quaternionf LocalAnchorRotation;
-		Eigen::Vector3f connectedLocalAnchor;
-		Eigen::Quaternionf connectedLocalAnchorRotation;
-
 		bool useSpring = false;
 		float spring = 10.0f;
 		float damper = 0.2f;

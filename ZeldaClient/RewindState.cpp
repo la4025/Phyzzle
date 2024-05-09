@@ -7,11 +7,6 @@ namespace Phyzzle
 	RewindState::~RewindState()
 	= default;
 
-	void RewindState::Input()
-	{
-		IState::Input();
-	}
-
 	void RewindState::StateEnter()
 	{
 	}

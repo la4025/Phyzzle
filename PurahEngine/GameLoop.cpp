@@ -97,6 +97,7 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_K,
 		eKey::eKEY_L,
 		eKey::eKEY_U,
+		eKey::eKEY_M,
 
 		eKey::eKEY_LEFT,
 		eKey::eKEY_RIGHT,
@@ -213,6 +214,37 @@ void PurahEngine::GameLoop::run()
 	GraphicsManager::GetInstance().UpdateAnimator(deltaTime);
 	GraphicsManager::GetInstance().Render(deltaTime);
 	SceneManager::GetInstance().DecommissionEvent();
+
+
+	if (TimeController::GetInstance().GetDeltaTime() != 0.f)
+	{
+		static int currFPS = 0;
+		static float count = 0;
+		static int minFPS = FLT_MAX;
+		static int maxFPS = FLT_MIN;
+
+		minFPS = min(minFPS, currFPS);
+		maxFPS = max(maxFPS, currFPS);
+
+		currFPS = (int)TimeController::GetInstance().GetFPS();
+		count += TimeController::GetInstance().GetDeltaTime();
+
+		if (count > 1.f)
+		{
+			SetWindowText((HWND)hWnd,
+				(
+					L"fps : " + std::to_wstring(currFPS) +
+					L", min : " + std::to_wstring(minFPS) +
+					L", max : " + std::to_wstring(maxFPS)
+					).c_str()
+			);
+
+			count -= 1.f;
+			minFPS = INT_MAX;
+			maxFPS = INT_MIN;
+		}
+	}
+
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

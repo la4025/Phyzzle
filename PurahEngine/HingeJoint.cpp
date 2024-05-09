@@ -16,7 +16,7 @@ namespace PurahEngine
 		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
-	void HingeJoint::OnDataLoadComplete()
+	void HingeJoint::PostInitialize()
 	{
 		const auto& instance = PhysicsSystem::GetInstance();
 

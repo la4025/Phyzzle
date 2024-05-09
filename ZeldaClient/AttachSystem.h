@@ -1,15 +1,14 @@
 #pragma once
 #include <queue>
+#include <unordered_map>
+#include <Eigen/Dense>
 
+#include "IslandID.h"
 #include "Singleton.h"
 
 namespace Phyzzle
 {
 	class AttachIsland;
-}
-
-namespace Phyzzle
-{
 	class Attachable;
 }
 
@@ -25,23 +24,40 @@ namespace Phyzzle
 	public:
 		~AttachSystem() override;
 
-	public:
-		void Update();
-
-		bool HasSelectedBody() const;
-		void SelectBody(PurahEngine::RigidBody* _body);
-		void Cancel();
-		void XRotate(float _degree);
-		void YRotate(float _degree);
-		void Attatch(PurahEngine::RigidBody* _base, PurahEngine::RigidBody* _target);
-
-
 	private:
-		std::vector<AttachIsland*> attachIsland;
+		using AttachIsland = std::vector<Attachable*>;
+		std::unordered_map<IslandID, AttachIsland> attachIsland;
+		std::queue<IslandID> removedIndex;
 
-		PurahEngine::RigidBody* selectBody = nullptr;
+		IslandID islandID;
 		bool gravity = true;
 		float mass = 1.f;
+
+	private:
+		// ID 积己 昏力
+		IslandID CreateIslandID();
+		void RemoveIslandID(const IslandID& _id);
+
+		// 级 积己 昏力
+		IslandID CreateIsland(const std::vector<Attachable*>& _arr);
+		void RemoveIsland(const IslandID& _id);
+
+	public:
+		void SelectBody(Attachable* _body);
+		void DeselectBody(Attachable* _body);
+		bool Attach(Attachable* _base);
+		bool Dettach(Attachable* _base);
+
+		void ConnectNode(Attachable* _base, Attachable* _other);
+		void ConnectJoint(Attachable* _base, Attachable* _other);
+
+		bool HasAttachIsland(const IslandID& _id, AttachIsland& _island);
+
+		void CalculateLocalAnchor(
+			const Eigen::Vector3f& _anchorP, const Eigen::Quaternionf& _anchorQ,
+			const Attachable* _base,
+			Eigen::Vector3f& _outP, Eigen::Quaternionf& _outQ
+		);
 	};
 }
 

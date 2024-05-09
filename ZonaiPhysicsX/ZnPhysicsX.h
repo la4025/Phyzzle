@@ -11,6 +11,7 @@
 #include <queue>
 
 #include "MaterialEnum.h"
+#include "ZnMaterial.h"
 
 namespace physx
 {
@@ -38,8 +39,6 @@ namespace ZonaiPhysics
 	class ZnTransform;
 
 	struct ZnRaycastInfo;
-	struct ZnMaterial;
-
 
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
@@ -56,13 +55,7 @@ namespace ZonaiPhysics
 		void Finalize() override;
 
 	public:
-		void AddMaterial(
-			uint32_t _id,
-			float staticFriction,
-			float dynamicFriction,
-			float _restitution,
-			eCombineMode _eFriction = eAVERAGE,
-			eCombineMode _eRestitution = eAVERAGE) override;
+		ZnMaterialID AddMaterial(const MaterialDesc& _desc) override;
 
 		void CreateScene(
 			void* _userScene, 
@@ -98,22 +91,34 @@ namespace ZonaiPhysics
 		/// Create Collider
 		/// </summary>
 		ZnCollider* CreateBoxCollider(
-			void* _userData, const Eigen::Vector3f& extend, 
-			uint32_t _material, 
+			void* _userData, 
+			const Eigen::Vector3f& extend, 
+			ZnMaterialID _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateSphereCollider(
-			void* _userData, float radius, 
-			uint32_t _material,
+			void* _userData, 
+			float radius, 
+			ZnMaterialID _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateCapsuleCollider(
-			void* _userData, float radius, float height, 
-			uint32_t _material,
+			void* _userData, 
+			float radius, float height, 
+			ZnMaterialID _material,
 			void* userScene = nullptr) override;
 
-		ZnCollider* CreateMeshCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene = nullptr) override;
-		ZnCollider* CreateConvexCollider(void* _userData, const std::wstring& _path, uint32_t _material, void* userScene = nullptr) override;
+		ZnCollider* CreateMeshCollider(
+			void* _userData, 
+			const std::wstring& _path, 
+			ZnMaterialID _material,
+			void* userScene = nullptr) override;
+
+		ZnCollider* CreateConvexCollider(
+			void* _userData, 
+			const std::wstring& _path, 
+			ZnMaterialID _material,
+			void* userScene = nullptr) override;
 
 		/// <summary>
 		/// Create Joint

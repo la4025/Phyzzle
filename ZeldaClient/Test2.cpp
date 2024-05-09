@@ -14,7 +14,7 @@ PurahEngine::Test2::~Test2()
 
 void PurahEngine::Test2::Awake()
 {
-
+	
 }
 
 void PurahEngine::Test2::Start()

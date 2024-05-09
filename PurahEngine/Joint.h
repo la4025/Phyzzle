@@ -20,6 +20,9 @@ namespace PurahEngine
 		virtual void*				GetZnJoint() = 0;
 
 	public:
+		virtual void				SetRigidbody(RigidBody* _other) noexcept = 0;
+		virtual void				GetRigidbody(RigidBody*& _obj0, RigidBody*& _obj1) const noexcept = 0;
+
 		/**
 		오브젝트의 포지션
 		*/

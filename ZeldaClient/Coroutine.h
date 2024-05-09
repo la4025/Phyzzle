@@ -4,8 +4,17 @@
 #include <exception>
 #include <optional>
 
+#define COROUTINE_FUNC()
+#define COROUTINE_AWAIT()
+#define CO_AWAIT co_await std::suspend_always{};
+
+struct ICoroutine
+{
+	virtual bool done() = 0;
+};
+
 template<typename T>
-struct Coroutine
+struct Coroutine : public ICoroutine
 {
 	struct promise_type;
 
@@ -77,7 +86,7 @@ struct Coroutine
 		return ret;
 	}
 
-	bool done()
+	bool done() override
 	{
 		return handler_.done();
 	}
@@ -148,11 +157,17 @@ struct CoroutineVoid
 		return ret;
 	}
 
-	bool done()
+	bool done() override
 	{
 		return handler_.done();
 	}
 
 private:
 	handle_type handler_;
+};
+
+class CoroutineSystem
+{
+public:
+	static std::map<int, ICoroutine> coroutine;
 };

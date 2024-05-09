@@ -17,7 +17,7 @@ namespace PurahEngine
 		instance.joints.erase(std::ranges::find(instance.joints, this));
 	}
 
-	void SpringJoint::OnDataLoadComplete()
+	void SpringJoint::PostInitialize()
 	{
 		const auto& instance = PhysicsSystem::GetInstance();
 
@@ -49,8 +49,7 @@ namespace PurahEngine
 		SetMaxDistance(maxDistance);
 		SetTolerance(Tolerance);
 
-
-		JointT::OnDataLoadComplete();
+		JointT::PostInitialize();
 	}
 
 	float SpringJoint::GetDistance() const
