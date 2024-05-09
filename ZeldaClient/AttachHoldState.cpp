@@ -113,6 +113,7 @@ namespace Phyzzle
 	// √Îº“
 	void AttachHoldState::Click_LB()
 	{
+		Put();
 		StateCancel();
 	}
 
