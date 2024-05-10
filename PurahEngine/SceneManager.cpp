@@ -244,7 +244,7 @@ void PurahEngine::SceneManager::LoadScene()
 		{
 			DataManager::GetInstance().DontDestroyOnLoad(object);
 		}
-	} 
+	}
 
 
 	objectList.clear();
@@ -281,6 +281,10 @@ void PurahEngine::SceneManager::LoadDontDestroyObject()
 	{
 		for (auto iter = dontDestroyList.begin(); iter != dontDestroyList.end(); iter++)
 		{
+			if (objectList[iter->first] != nullptr)
+			{
+				delete objectList[iter->first];
+			}
 			objectList[iter->first] = iter->second;
 		}
 	}
