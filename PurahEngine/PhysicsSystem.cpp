@@ -25,6 +25,7 @@ namespace PurahEngine
 		if (ZonaiPhysicsXDLL == nullptr)
 		{
 			// DLL 로드 실패
+			PHYSCIS_CAUTUON(DLL not found!)
 			assert(0);
 		}
 
@@ -35,6 +36,7 @@ namespace PurahEngine
 		if (createZonaiPhysics == nullptr)
 		{
 			// DLL 함수를 찾을 수 없습니다.
+			PHYSCIS_CAUTUON(Physcis DLL Initialize Function Load Failed!)
 			assert(0);
 		}
 
@@ -43,6 +45,7 @@ namespace PurahEngine
 		if (releaseFuntion == nullptr)
 		{
 			// DLL 함수를 찾을 수 없습니다.
+			PHYSCIS_CAUTUON(Physcis DLL Finalize Function Load Failed!)
 			assert(0);
 		}
 
@@ -50,6 +53,7 @@ namespace PurahEngine
 
 		if (physics == nullptr)
 		{
+			PHYSCIS_CAUTUON(Physcis Initialize Failed!)
 			assert(0);
 		}
 
@@ -68,6 +72,23 @@ namespace PurahEngine
 			for (size_t j = 0; j < LayerData[i].size(); j++)
 			{
 				physics->SetCollisionLayer(i, j, LayerData[i][j]);
+			}
+		}
+
+		auto materialData = EngineSetting::GetInstance().GetPhysicsMaterials();
+		for (size_t i = 0; i < materialData.size(); i++)
+		{
+			using namespace ZonaiPhysics;
+			auto& [name, sFriction, dFriction, restitution, eFriction, eRestitution] = materialData[i];
+
+			auto id = physics->CreateMaterial({ sFriction, dFriction, restitution, (eCombineMode)eFriction,(eCombineMode)eRestitution});
+
+			if (id == ZnMaterialID::None)
+				PHYSCIS_CAUTUON(Material Create Error)
+
+			if (BindMaterial(name, id) == false)
+			{
+				PHYSCIS_CAUTUON(Material Bind Error)
 			}
 		}
 	}
@@ -157,19 +178,6 @@ namespace PurahEngine
 		physics->SetGravity(_gravity);
 	}
 
-	ZonaiPhysics::ZnMaterialID PhysicsSystem::AddMaterial(float staticFriction, float dynamicFriction, float _restitution,
-		ZonaiPhysics::eCombineMode _eFriction, ZonaiPhysics::eCombineMode _eRestitution) const
-	{
-		return physics->AddMaterial(
-			ZonaiPhysics::MaterialDesc(
-				staticFriction, 
-				dynamicFriction, 
-				_restitution,
-				_eFriction,
-				_eRestitution)
-		);
-	}
-
 	void PhysicsSystem::FreeObject(ZonaiPhysics::ZnRigidBody* _object, void* _gameObject) const
 	{
 		assert(_object != nullptr);
@@ -189,6 +197,24 @@ namespace PurahEngine
 		assert(_object != nullptr);
 
 		physics->ReleaseJoint(_object, _gameObject);
+	}
+
+	bool PhysicsSystem::BindMaterial(
+		const std::wstring& _name, const ZonaiPhysics::ZnMaterialID& _id)
+	{
+		if (materialNameTable.contains(_name))
+			return false;
+
+		materialNameTable.insert({ _name, _id });
+		return true;
+	}
+
+	const ZonaiPhysics::ZnMaterialID& PhysicsSystem::GetMaterialID(const std::wstring& _name)
+	{
+		if (_name.empty() || !materialNameTable.contains(_name))
+			return ZonaiPhysics::ZnMaterialID::None;
+
+		return materialNameTable[_name];
 	}
 
 	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(

@@ -18,6 +18,11 @@ namespace ZonaiPhysics
 	std::unordered_map<ZnHeightID, physx::PxHeightField*>
 	ResourceManager::heightIDTable{};
 
+	void ResourceManager::Initialize()
+	{
+
+	}
+
 	void ResourceManager::Release()
 	{
 		for (auto& material : materialIDTable | std::views::values)
@@ -54,12 +59,15 @@ namespace ZonaiPhysics
 
 	}
 
-	ZnMaterialID ResourceManager::AddMaterial(physx::PxMaterial* _pxMaterial)
+	ZnMaterialID ResourceManager::RegistMaterial(physx::PxMaterial* _pxMaterial)
 	{
 		assert(_pxMaterial != nullptr);
 
 		ZnMaterialID id;
-		CreateID(id);
+		do
+		{
+			CreateID(id);
+		} while (materialIDTable.contains(id));
 
 		materialIDTable.insert(std::make_pair(id, _pxMaterial));
 

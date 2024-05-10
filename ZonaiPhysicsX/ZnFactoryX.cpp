@@ -108,7 +108,6 @@ namespace ZonaiPhysics
 			PX_RELEASE(transport);
 		}
 		PX_RELEASE(foundation);
-
 	}
 
 	physx::PxScene* ZnFactoryX::CreateScene(void* _userScene, const Eigen::Vector3f& _gravity)
@@ -187,16 +186,21 @@ namespace ZonaiPhysics
 
 	physx::PxShape* ZnFactoryX::CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material)
 	{
-		return pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
+		physx::PxShape* shape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
+
+		const physx::PxQuat rotation(physx::PxPi / 2.f, physx::PxVec3(0.f, 0.f, 1.f));
+		shape->setLocalPose(physx::PxTransform(rotation));
+
+		return shape;
 	}
 
-	physx::PxShape* ZnFactoryX::CreateTriagleMesh(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
+	physx::PxShape* ZnFactoryX::CreateTriagleMeshShape(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
 		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
 		return pxFactory->createShape(physx::PxTriangleMeshGeometry(_mesh), *_material);
 	}
 
-	physx::PxShape* ZnFactoryX::CreateConvexMesh(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
+	physx::PxShape* ZnFactoryX::CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
 		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
 		return pxFactory->createShape(physx::PxConvexMeshGeometry(_mesh), *_material);
@@ -273,6 +277,8 @@ namespace ZonaiPhysics
 
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
+
+		return triangleMesh;
 	}
 
 	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(const physx::PxMaterial* _material)
@@ -307,6 +313,8 @@ namespace ZonaiPhysics
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
 		physx::PxConvexMesh* convexMesh = pxFactory->createConvexMesh(input);
+
+		return convexMesh;
 	}
 
 	FixedJoint* ZnFactoryX::CreateFixedJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)

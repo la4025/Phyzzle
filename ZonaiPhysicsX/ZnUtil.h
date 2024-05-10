@@ -3,9 +3,22 @@
 #pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
+#include "windows.h"
 #include "FBXData.h"
 #pragma warning (pop)
 
+#define ZONAI_CAUTUON(string, heder) \
+MessageBox(0,					\
+	L#string,					\
+	L#heder,					\
+	MB_OK | MB_ICONEXCLAMATION	\
+);
+
+#define NULL_POINTER_REFERENCE(pointer, error_path)		\
+if(pointer == nullptr)									\
+{														\
+	ZONAI_CAUTUON(Null Pointer Reference, error_path)	\
+};
 
 namespace ZonaiPhysics
 {

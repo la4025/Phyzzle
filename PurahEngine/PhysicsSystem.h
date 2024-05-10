@@ -8,6 +8,13 @@
 #include "ZnMaterial.h"
 #include "MaterialEnum.h"
 
+#define PHYSCIS_CAUTUON(string) \
+MessageBox(0,					\
+	L"Physics System",			\
+	L#string,					\
+	MB_OK | MB_ICONEXCLAMATION	\
+);
+
 namespace ZonaiPhysics
 {
 	class ZnPhysicsBase;
@@ -63,25 +70,24 @@ namespace PurahEngine
 
 		void SetGravity(const Eigen::Vector3f&) const;
 
-		ZonaiPhysics::ZnMaterialID AddMaterial(
-			float staticFriction,
-			float dynamicFriction,
-			float _restitution,
-			ZonaiPhysics::eCombineMode _eFriction,
-			ZonaiPhysics::eCombineMode _eRestitution) const;
-
 	public:
 		void FreeObject(ZonaiPhysics::ZnRigidBody*, void* _gameObject) const;
 		void FreeObject(ZonaiPhysics::ZnCollider*, void* _gameObject) const;
 		void FreeObject(ZonaiPhysics::ZnJoint*, void* _gameObject) const;
 
 	public:
+		std::unordered_map<std::wstring, ZonaiPhysics::ZnMaterialID> materialNameTable;
+
 		std::vector<PurahEngine::RigidBody*> bodies;
 		std::vector<PurahEngine::Collider*> dynamicColliders;
 		std::vector<PurahEngine::Collider*> staticColliders;
 		std::vector<PurahEngine::Joint*> joints;
 		std::queue<PurahEngine::Joint*> removejointBuffer;
 		EventCallbackSystem* callbackSystem;
+
+	public:
+		bool							BindMaterial(const std::wstring&, const ZonaiPhysics::ZnMaterialID& _id);
+		const ZonaiPhysics::ZnMaterialID& GetMaterialID(const std::wstring& _name);
 
 	public:
 		ZonaiPhysics::ZnRigidBody*	CreateRigidBody(void* _gameObject) const noexcept;

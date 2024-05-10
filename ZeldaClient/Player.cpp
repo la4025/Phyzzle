@@ -77,8 +77,6 @@ namespace Phyzzle
 		DebugDraw();
 		GamePadInput();
 
-		std::cout << sizeof(Eigen::Vector3f);
-
 		if (prevState != currState)
 		{
 			stateSystem[prevState]->StateExit();
@@ -261,7 +259,7 @@ namespace Phyzzle
 		if (!data.jumping)
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
-			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Force);
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
 			data.jumping = true;
 		}
 	}

@@ -335,6 +335,11 @@ void PurahEngine::GameObject::DeleteChild(GameObject* child)
 	}
 }
 
+void PurahEngine::GameObject::DeleteComponent(Component* component)
+{
+	component->state = Component::ComponentState::DESTROY;
+}
+
 void PurahEngine::GameObject::Destroy()
 {
 	SetEnable(false);
@@ -343,8 +348,6 @@ void PurahEngine::GameObject::Destroy()
 	{
 		state = ObjectState::DESTROY;
 	}
-
-	
 
 	for (int i = 0; i < trans->GetChildren().size(); i++)
 	{
@@ -429,6 +432,19 @@ void PurahEngine::GameObject::DestroyEvent(std::queue<GameObject*>& destroyQueue
 		}
 	}
 
+	for (std::vector<Component*>::iterator iter = componentList.begin(); iter != componentList.end();)
+	{
+		if ((*iter)->GetState() == Component::ComponentState::DESTROY)
+		{
+			delete *iter;
+			iter = componentList.erase(iter);
+		}
+		else
+		{
+			iter++;
+		}
+	}
+
 	for (int i = 0; i < trans->GetChildren().size(); i++)
 	{
 		trans->GetChildren()[i]->GetGameObject()->DestroyEvent(destroyQueue);
@@ -474,6 +490,10 @@ void PurahEngine::GameObject::StateChangeEvent(bool parentEnable)
 				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent(false);
 			}
 
+			for (int i = 0; i < componentList.size(); i++)
+			{
+				componentList[i]->state = Component::ComponentState::DESTROY;
+			}
 		}
 		else if (parentEnable == true && isEnable == true)
 		{
@@ -502,7 +522,21 @@ void PurahEngine::GameObject::StateChangeEvent(bool parentEnable)
 	}
 	else if (state == ObjectState::DISABLE)
 	{
-		if (isEnable == true)
+		if (isDestroy == true)
+		{
+			state = ObjectState::DESTROY;
+
+			for (int i = 0; i < trans->GetChildren().size(); i++)
+			{
+				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent(false);
+			}
+
+			for (int i = 0; i < componentList.size(); i++)
+			{
+				componentList[i]->state = Component::ComponentState::DESTROY;
+			}
+		}
+		else if (isEnable == true)
 		{
 			state = ObjectState::ENABLE;
 
@@ -734,11 +768,6 @@ PurahEngine::GameObject::GameObject(std::wstring objectname, bool isenable)
 
 PurahEngine::GameObject::~GameObject()
 {
-	//for (int i = 0; i < trans->GetChildren().size(); i++)
-	//{
-	//	delete trans->GetChildren()[i]->GetGameObject();
-	//}
-
 	for (int i = 0; i < componentList.size(); i++)
 	{
 		delete componentList[i];

@@ -55,6 +55,7 @@ void PurahEngine::Test2::Update()
 	if (inputManager.IsKeyPressed(eKey::eKEY_P))
 	{
 		GetGameObject()->EraseDontDestroy();
+		GetGameObject()->DeleteComponent(this);
 	}
 
 	std::wcout << GetGameObject()->GetName() << std::endl;

@@ -42,7 +42,7 @@ namespace ZonaiPhysics
 		virtual void				Simulation(float _dt) = 0;
 		virtual void				Finalize() = 0;
 
-		virtual ZnMaterialID		AddMaterial(const MaterialDesc& _desc) = 0;
+		virtual ZnMaterialID		CreateMaterial(const MaterialDesc& _desc) = 0;
 
 		virtual void				CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) = 0;
 		virtual void				LoadScene(void* _userScene) = 0;

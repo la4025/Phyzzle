@@ -49,6 +49,7 @@ namespace PurahEngine
         ColliderType cType = ColliderType::STATIC;
 
     protected:
+        std::wstring physicsMaterial;
         bool isTrigger = false;
         uint32_t layer = 0;
         ZonaiPhysics::ZnCollider* znCollider = nullptr;

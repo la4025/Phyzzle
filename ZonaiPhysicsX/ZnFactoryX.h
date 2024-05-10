@@ -13,6 +13,8 @@
 #include "MaterialEnum.h"
 #include "ZnMaterial.h"
 
+#include "RigidBodyHelper.h"
+
 #include <Eigen/Dense>
 #include "PxPhysicsAPI.h"
 #include "omnipvd/PxOmniPvd.h"
@@ -80,13 +82,13 @@ namespace ZonaiPhysics
 		static physx::PxShape*			CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
 		static physx::PxShape*			CreateSphereShape(float _radius, const physx::PxMaterial* _material);
 		static physx::PxShape*			CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material);
-		static physx::PxShape*			CreateTriagleMesh(
+		static physx::PxShape*			CreateTriagleMeshShape(
 			physx::PxTriangleMesh* _mesh, 
 			const Eigen::Vector3f& _scale, 
 			const Eigen::Quaternionf& _rotation, 
 			const physx::PxMaterial* _material
 		);
-		static physx::PxShape*			CreateConvexMesh(
+		static physx::PxShape*			CreateConvexMeshShape(
 			physx::PxConvexMesh* _mesh,
 			const Eigen::Vector3f& _scale,
 			const Eigen::Quaternionf& _rotation,
@@ -111,8 +113,8 @@ namespace ZonaiPhysics
 			return zn_collider;
 		}
 
-		static MeshCollider*			CreateMeshCollider(void* _znBody , const physx::PxMaterial* _material);
-		static ConvexCollider*			CreateConvexCollider(void* _znBody , const physx::PxMaterial* _material);
+		static MeshCollider*			CreateMeshCollider(void* _znBody, const physx::PxMaterial* _material);
+		static ConvexCollider*			CreateConvexCollider(void* _znBody, const physx::PxMaterial* _material);
 
 		/// joint
 		static FixedJoint*				CreateFixedJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);

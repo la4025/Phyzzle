@@ -55,7 +55,10 @@ namespace ZonaiPhysics
 		void					Finalize() override;
 
 	public:
-		ZnMaterialID			AddMaterial(const MaterialDesc& _desc) override;
+		ZnMaterialID			CreateMaterial(const MaterialDesc& _desc) override;
+
+		bool					ConvexMeshLoadFromPath(const std::wstring& _path);
+		ZnConvexID				CreateConvexMesh(const std::wstring& _path);
 
 	public:
 		void					CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) override;
@@ -151,7 +154,7 @@ namespace ZonaiPhysics
 		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) override;
 
 	private:
-		physx::PxMaterial* defaultMaterial;
+		ZnMaterialID defaultMaterial;
 
 	private:
 		static ZnPhysicsX* instance;

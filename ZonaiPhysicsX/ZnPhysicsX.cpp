@@ -45,7 +45,7 @@ namespace ZonaiPhysics
 			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		defaultMaterial = ZnFactoryX::CreateMaterial({ 0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE });
+		defaultMaterial = CreateMaterial({ 0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE });
 	}
 
 	void ZnPhysicsX::Simulation(float _dt)
@@ -55,9 +55,9 @@ namespace ZonaiPhysics
 
 	void ZnPhysicsX::Finalize()
 	{
-		ResourceManager::Release();
 		ZnLayer::Clear();
 		ZnWorld::Release();
+		ResourceManager::Release();
 		ZnFactoryX::Release();
 	}
 
@@ -77,11 +77,15 @@ namespace ZonaiPhysics
 		delete instance;
 	}
 
-	ZnMaterialID ZnPhysicsX::AddMaterial(const MaterialDesc& _desc)
+	ZnMaterialID ZnPhysicsX::CreateMaterial(const MaterialDesc& _desc)
 	{
 		const auto material = ZnFactoryX::CreateMaterial(_desc);
+		ZnMaterialID result = ZnMaterialID::None;
 
-		return ResourceManager::AddMaterial(material);
+		if (material)
+			result = ResourceManager::RegistMaterial(material);
+
+		return result;
 	}
 
 	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
@@ -152,15 +156,24 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateBoxCollider(
 		void* _userData, 
 		const Eigen::Vector3f& _extend, 
-		const ZnMaterialID& _material, 
+		const ZnMaterialID& _material,
 		void* _userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, _userScene);
 
-		auto material = ResourceManager::GetPxMaterial(_material);
+		physx::PxMaterial* material = nullptr;
 
-		if (!material)
-			material = defaultMaterial;
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -181,14 +194,24 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateSphereCollider(
 		void* _userData, 
 		float _radius, 
-		const ZnMaterialID& _material, 
+		const ZnMaterialID& _material,
 		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ResourceManager::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -213,10 +236,20 @@ namespace ZonaiPhysics
 		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ResourceManager::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -243,10 +276,20 @@ namespace ZonaiPhysics
 		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ResourceManager::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -259,7 +302,7 @@ namespace ZonaiPhysics
 
 		const auto rawShape = ResourceManager::GetPxMeshShape(_id);
 
-		const auto shape = ZnFactoryX::CreateTriagleMesh(rawShape, _scale, _rot, material);
+		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
 		ZnWorld::AddCollider(collider, _userData, userScene);
 
@@ -275,10 +318,20 @@ namespace ZonaiPhysics
 		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ResourceManager::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -291,7 +344,7 @@ namespace ZonaiPhysics
 
 		const auto rawShape = ResourceManager::GetPxConvexShape(_id);
 
-		const auto shape = ZnFactoryX::CreateConvexMesh(rawShape, _scale, _rot, material);
+		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
 		ZnWorld::AddCollider(collider, _userData, userScene);
 

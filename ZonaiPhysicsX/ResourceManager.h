@@ -39,10 +39,11 @@ namespace ZonaiPhysics
 		static std::unordered_map<ZnHeightID, physx::PxHeightField*>	heightIDTable;
 
 	public:
+		static void						Initialize();
 		static void						Release();
 
 	public:
-		static ZnMaterialID				AddMaterial(physx::PxMaterial*);
+		static ZnMaterialID				RegistMaterial(physx::PxMaterial*);
 		static physx::PxMaterial*		GetPxMaterial(const ZnMaterialID& _material);
 		static void						ReleasePxMaterial(const ZnMaterialID& _material);
 

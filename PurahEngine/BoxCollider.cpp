@@ -17,12 +17,16 @@ namespace PurahEngine
 	{
 		Collider::PostInitialize();
 
+		auto& physics = PhysicsSystem::GetInstance();
+
 		const auto scale = transform->GetWorldScale();
 
-		this->znCollider = PhysicsSystem::GetInstance().CreateBoxCollider(
+		const auto id = physics.GetMaterialID(physicsMaterial);
+
+		this->znCollider = physics.CreateBoxCollider(
 			this->GetGameObject(),
 			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z(),
-			ZonaiPhysics::ZnMaterialID::None
+			id
 		);
 
 		Collider::SetUserData();
@@ -62,6 +66,7 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(isTrigger);
 		PREDESERIALIZE_VALUE(layer);
 		PREDESERIALIZE_VECTOR3F(positionOffset);
+		PREDESERIALIZE_WSTRING(physicsMaterial);
 	}
 
 	void BoxCollider::PostSerialize(json& jsonData) const

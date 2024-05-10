@@ -58,28 +58,28 @@ namespace ZonaiPhysics
 	/// </summary>
 	Eigen::Vector3f Collider::GetPosition() const
 	{
-		assert(znBody != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		return znBody->GetPosition();
 	}
 
 	void Collider::SetPosition(const Eigen::Vector3f& _position)
 	{
-		assert(znBody != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		znBody->SetPosition(_position);
 	}
 
 	Eigen::Vector3f Collider::GetLocalPosition() const
 	{
-		assert(pxShape != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		return ColliderHelper::GetLocalPosition(pxShape);
 	}
 
 	void Collider::SetLocalPosition(const Eigen::Vector3f& _position)
 	{
-		assert(pxShape != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetLocalPosition(pxShape, _position);
@@ -90,24 +90,28 @@ namespace ZonaiPhysics
 
 	Eigen::Quaternionf Collider::GetQuaternion() const
 	{
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
+
 		return znBody->GetQuaternion();
 	}
 
 	void Collider::SetQuaternion(const Eigen::Quaternionf& _quaternion)
 	{
-		assert(znBody != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		znBody->SetQuaternion(_quaternion);
 	}
 
 	Eigen::Quaternionf Collider::GetLocalQuaternion() const
 	{
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
+
 		return ColliderHelper::GetLocalQuaternion(pxShape);
 	}
 
 	void Collider::SetLocalQuaternion(const Eigen::Quaternionf& _quaternion)
 	{
-		assert(pxShape != nullptr);
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		RigidBodyHelper::Detach(znBody->pxBody, pxShape);
 		ColliderHelper::SetLocalQuaternion(pxShape, _quaternion);
@@ -128,7 +132,8 @@ namespace ZonaiPhysics
 
 	void Collider::UpdateInertiaTensor() const
 	{
-		assert(pxShape != nullptr && znBody != nullptr);
+		NULL_POINTER_REFERENCE(pxShape, ZnCollider)
+		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
 		// auto pos = pxShape->getLocalPose().p;
 		// znBody->pxBody->setCMassLocalPose(pxShape->getLocalPose());

@@ -1,10 +1,13 @@
 #pragma once
+#include <queue>
+
 #include "PurahEngineAPI.h"
 #include "SerializableDefine.h"
 #include "ZnMaterial.h"
 #include "ZnResourceID.h"
 
 #include <unordered_map>
+#include <tuple>
 
 namespace PurahEngine
 {
@@ -23,10 +26,6 @@ namespace PurahEngine
 		int LayertoLayerID(const std::wstring& layer) const;
 		int LayerSize();
 
-		// std::wstring MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID layer) const;
-		ZonaiPhysics::ZnMaterialID MaterialtoMaterialID(const std::wstring& layer) const;
-		int MaterialSize();
-
 		float GetShadowAreaRange();
 		float GetShadowAreaOffset();
 		int GetShadowMapSize();
@@ -39,6 +38,8 @@ namespace PurahEngine
 		std::vector<std::wstring> GetPreLoadModels();
 		std::vector<std::vector<bool>> GetCollsionSetting();
 
+		const std::vector<std::tuple<std::wstring, float, float, float, int, int>>& GetPhysicsMaterials() const;
+
 	private:
 		// 게임 실행전에 완료되어야 하는 설정
 		std::unordered_map<std::wstring, int> tagTable;
@@ -49,8 +50,7 @@ namespace PurahEngine
 		std::unordered_map<int, std::wstring> layerIDTable;
 		unsigned int layerSize;
 
-		// std::unordered_map<ZonaiPhysics::ZnMaterialID, std::wstring> materialIDTable;
-		std::unordered_map<std::wstring, ZonaiPhysics::ZnMaterialID> materialTable;
+		std::vector<std::tuple<std::wstring, float, float, float, int, int>> physicsMaterials;
 		unsigned int materialsSize;
 
 		float shadowAreaRange;
