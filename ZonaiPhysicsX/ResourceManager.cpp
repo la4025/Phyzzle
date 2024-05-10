@@ -89,7 +89,32 @@ namespace ZonaiPhysics
 
 	ZnConvexID ResourceManager::LoadConvex(const std::wstring& _path)
 	{
+		FBXLoader::FBXLoader loader;
 
+		FBXLoader::Model* model = loader.CreateModelFromFBX(_path);
+
+		using MeshList = std::vector<FBXLoader::Mesh*>;
+		MeshList& meshList = model->meshList;
+
+		using Vertices = std::vector<FBXLoader::Vertex>;
+
+		for (int i = 0; i < meshList.size(); i++)
+		{
+			Vertices& vertices = meshList[i]->vertices;
+
+			for (size_t j = 0; j < vertices.size(); j++)
+			{
+				vertices[j].position.x;
+
+			}
+		}
+
+
+
+
+		loader.ReleaseModel(model);
+
+		return {};
 	}
 
 	ZnConvexID ResourceManager::AddConvex(physx::PxConvexMesh* _mesh)
@@ -127,7 +152,7 @@ namespace ZonaiPhysics
 
 	ZnMeshID ResourceManager::LoadMesh(const std::wstring& _path)
 	{
-
+		return {};
 	}
 
 	ZnMeshID ResourceManager::AddMesh(physx::PxTriangleMesh* _mesh)
@@ -165,7 +190,7 @@ namespace ZonaiPhysics
 
 	ZnHeightID ResourceManager::LoadHeightField(const std::wstring& _path)
 	{
-
+		return {};
 	}
 
 	ZnHeightID ResourceManager::AddHeightField(physx::PxHeightField* _mesh)

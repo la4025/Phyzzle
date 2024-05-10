@@ -3,8 +3,8 @@
 
 namespace ZonaiPhysics
 {
-	struct ZnConvex
+	struct ZnConvexMesh
 	{
-		// std::vector<>
+
 	};
 }

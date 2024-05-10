@@ -3,7 +3,6 @@
 
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)
-#include <Eigen/Dense>
 
 #include "BoxCollider.h"
 #include "SphereCollider.h"
@@ -13,6 +12,8 @@
 
 #include "MaterialEnum.h"
 #include "ZnMaterial.h"
+
+#include <Eigen/Dense>
 #include "PxPhysicsAPI.h"
 #include "omnipvd/PxOmniPvd.h"
 

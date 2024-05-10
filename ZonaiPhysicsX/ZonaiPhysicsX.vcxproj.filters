@@ -147,11 +147,14 @@
     <ClInclude Include="TemplateJoint.h">
       <Filter>Object\Joint\Base</Filter>
     </ClInclude>
-    <ClInclude Include="ZnConvex.h">
-      <Filter>0. Core\Resource\Convex</Filter>
+    <ClInclude Include="ZnConvexMesh.h">
+      <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
-    <ClInclude Include="ZnTriangle.h">
-      <Filter>0. Core\Resource\Triangle</Filter>
+    <ClInclude Include="ZnTriangleMesh.h">
+      <Filter>0. Core\Resource\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnPoint.h">
+      <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +185,8 @@
     <Filter Include="Object\Joint\Base">
       <UniqueIdentifier>{fb53a09a-2223-4c85-99a8-f0d8f56ad2d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="0. Core\Resource\Convex">
-      <UniqueIdentifier>{ce78767a-c079-4879-ae07-d3763d91ae65}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="0. Core\Resource\Triangle">
-      <UniqueIdentifier>{83b7bf70-f414-409d-98b9-c6847327dc8c}</UniqueIdentifier>
+    <Filter Include="0. Core\Resource\Struct">
+      <UniqueIdentifier>{14cfabdb-8d5b-47c8-977e-0ccd85c350e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

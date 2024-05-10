@@ -23,7 +23,7 @@
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderHelper.h" />
-    <ClInclude Include="ZnConvex.h" />
+    <ClInclude Include="ZnConvexMesh.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="DistanceJoint.h" />
     <ClInclude Include="EventCallback.h" />
@@ -43,7 +43,8 @@
     <ClInclude Include="ZnLayer.h" />
     <ClInclude Include="ZnPhysicsX.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="ZnTriangle.h" />
+    <ClInclude Include="ZnPoint.h" />
+    <ClInclude Include="ZnTriangleMesh.h" />
     <ClInclude Include="ZnUtil.h" />
     <ClInclude Include="ZnWorld.h" />
     <ClInclude Include="ZonaiPhysicsX.h" />

@@ -77,6 +77,8 @@ namespace Phyzzle
 		DebugDraw();
 		GamePadInput();
 
+		std::cout << sizeof(Eigen::Vector3f);
+
 		if (prevState != currState)
 		{
 			stateSystem[prevState]->StateExit();

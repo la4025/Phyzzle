@@ -3,6 +3,7 @@
 #pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
+#include "FBXData.h"
 #pragma warning (pop)
 
 
@@ -12,7 +13,13 @@ namespace ZonaiPhysics
 
 	Eigen::Quaternionf PhysxToEigen(const physx::PxQuat& _quat);
 
+	physx::PxVec3 LoadDataToPhysX(const FBXLoader::Float3& _point);
+
+	physx::PxQuat LoadDataToPhysX(const FBXLoader::Quaternion& _quat);
+
 	physx::PxVec3 EigenToPhysx(const Eigen::Vector3f& _vec);
 
 	physx::PxQuat EigenToPhysx(const Eigen::Quaternionf& _quat);
+
+
 }

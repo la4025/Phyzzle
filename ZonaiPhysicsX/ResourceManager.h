@@ -29,6 +29,10 @@ namespace ZonaiPhysics
 	class ResourceManager
 	{
 	private:
+		static std::unordered_map<std::wstring, ZnConvexID>				convexPathTable;
+		static std::unordered_map<std::wstring, ZnMeshID>				trianglePathTable;
+		static std::unordered_map<std::wstring, ZnHeightID>				heightPathTable;
+
 		static std::unordered_map<ZnMaterialID, physx::PxMaterial*>		materialIDTable;
 		static std::unordered_map<ZnConvexID, physx::PxConvexMesh*>		convexIDTable;
 		static std::unordered_map<ZnMeshID, physx::PxTriangleMesh*>		triangleIDTable;
