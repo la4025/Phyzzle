@@ -25,7 +25,6 @@ namespace ZonaiPhysics
 	public:
 		SphereCollider() = delete;
 		SphereCollider(physx::PxShape*, RigidBody*);
-		// SphereCollider(physx::PxPhysics*&, RigidBody*&, const float&, physx::PxMaterial*&);
 		~SphereCollider() override;
 	};
 } // ZonaiPhysics

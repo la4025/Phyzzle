@@ -95,8 +95,8 @@ namespace ZonaiPhysics
 			const physx::PxMaterial* _material
 		);
 
-		static physx::PxTriangleMesh*	CookTriagleMesh(const physx::PxMaterial* _material);
-		static physx::PxConvexMesh*		CookConvexMesh(const physx::PxMaterial* _material);
+		static physx::PxTriangleMesh*	CookTriagleMesh(FBXLoader::Model* _model);
+		static physx::PxConvexMesh*		CookConvexMesh(FBXLoader::Model* _model);
 
 		/// collider
 		template <znCollider collider>

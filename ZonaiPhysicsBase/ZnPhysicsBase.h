@@ -43,6 +43,13 @@ namespace ZonaiPhysics
 		virtual void				Finalize() = 0;
 
 		virtual ZnMaterialID		CreateMaterial(const MaterialDesc& _desc) = 0;
+		virtual ZnConvexID			ConvexMeshLoadFromPath(const std::wstring& _path) = 0;
+		virtual ZnMeshID			TriangleMeshLoadFromPath(const std::wstring& _path) = 0;
+
+		virtual bool				ReleaseMaterial(const ZnMaterialID& _id) = 0;
+		virtual bool				ReleaseConvexMesh(const ZnConvexID& _id) = 0;
+		virtual bool				ReleaseTriangleMesh(const ZnMeshID& _id) = 0;
+
 
 		virtual void				CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) = 0;
 		virtual void				LoadScene(void* _userScene) = 0;

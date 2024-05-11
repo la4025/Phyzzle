@@ -5,10 +5,10 @@
 #pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
+#include <queue>
 #pragma warning (pop)
 
 #include "ZnLayer.h"
-#include <queue>
 
 #include "MaterialEnum.h"
 #include "ZnMaterial.h"
@@ -56,9 +56,12 @@ namespace ZonaiPhysics
 
 	public:
 		ZnMaterialID			CreateMaterial(const MaterialDesc& _desc) override;
+		ZnConvexID				ConvexMeshLoadFromPath(const std::wstring& _path) override;
+		ZnMeshID				TriangleMeshLoadFromPath(const std::wstring& _path) override;
 
-		bool					ConvexMeshLoadFromPath(const std::wstring& _path);
-		ZnConvexID				CreateConvexMesh(const std::wstring& _path);
+		bool					ReleaseMaterial(const ZnMaterialID& _id) override;
+		bool					ReleaseConvexMesh(const ZnConvexID& _id) override;
+		bool					ReleaseTriangleMesh(const ZnMeshID& _id) override;
 
 	public:
 		void					CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) override;

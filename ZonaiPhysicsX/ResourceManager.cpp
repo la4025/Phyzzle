@@ -6,6 +6,15 @@
 
 namespace ZonaiPhysics
 {
+	std::unordered_map<std::wstring, ZnConvexID>				
+	ResourceManager::convexPathTable{};
+
+	std::unordered_map<std::wstring, ZnMeshID>				
+	ResourceManager::trianglePathTable{};
+
+	std::unordered_map<std::wstring, ZnHeightID>				
+	ResourceManager::heightPathTable{};
+
 	std::unordered_map<ZnMaterialID, physx::PxMaterial*>
 	ResourceManager::materialIDTable{};
 
@@ -59,6 +68,12 @@ namespace ZonaiPhysics
 
 	}
 
+	void ResourceManager::UnloadModel(FBXLoader::Model* _model)
+	{
+		FBXLoader::FBXLoader loader;
+		loader.ReleaseModel(_model);
+	}
+
 	ZnMaterialID ResourceManager::RegistMaterial(physx::PxMaterial* _pxMaterial)
 	{
 		assert(_pxMaterial != nullptr);
@@ -85,44 +100,30 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	void ResourceManager::ReleasePxMaterial(const ZnMaterialID& _id)
+	bool ResourceManager::ReleasePxMaterial(const ZnMaterialID& _id)
 	{
-		if (materialIDTable.contains(_id))
-		{
-			const auto material = materialIDTable[_id];
-			material->release();
-			materialIDTable.erase(_id);
-		}
+		if (!materialIDTable.contains(_id))
+			return false;
+
+		const auto& material = materialIDTable[_id];
+		if (!material->isReleasable())
+			return false;
+
+		material->release();
+		materialIDTable.erase(_id);
+
+		return true;
 	}
 
-	ZnConvexID ResourceManager::LoadConvex(const std::wstring& _path)
+	FBXLoader::Model* ResourceManager::LoadConvex(const std::wstring& _path)
 	{
-		FBXLoader::FBXLoader loader;
+		if (convexPathTable.contains(_path))
+			return nullptr;
 
+		FBXLoader::FBXLoader loader;
 		FBXLoader::Model* model = loader.CreateModelFromFBX(_path);
 
-		using MeshList = std::vector<FBXLoader::Mesh*>;
-		MeshList& meshList = model->meshList;
-
-		using Vertices = std::vector<FBXLoader::Vertex>;
-
-		for (int i = 0; i < meshList.size(); i++)
-		{
-			Vertices& vertices = meshList[i]->vertices;
-
-			for (size_t j = 0; j < vertices.size(); j++)
-			{
-				vertices[j].position.x;
-
-			}
-		}
-
-
-
-
-		loader.ReleaseModel(model);
-
-		return {};
+		return model;
 	}
 
 	ZnConvexID ResourceManager::AddConvex(physx::PxConvexMesh* _mesh)
@@ -130,7 +131,10 @@ namespace ZonaiPhysics
 		assert(_mesh != nullptr);
 
 		ZnConvexID id;
-		CreateID(id);
+		do
+		{
+			CreateID(id);
+		} while (convexIDTable.contains(id));
 
 		convexIDTable.insert(std::make_pair(id, _mesh));
 
@@ -148,19 +152,30 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	void ResourceManager::ReleaseConvexMesh(const ZnConvexID& _id)
+	bool ResourceManager::ReleaseConvexMesh(const ZnConvexID& _id)
 	{
-		if (convexIDTable.contains(_id))
-		{
-			const auto material = convexIDTable[_id];
-			material->release();
-			convexIDTable.erase(_id);
-		}
+		if (!convexIDTable.contains(_id))
+			return false;
+
+		const auto& convex = convexIDTable[_id];
+		if (!convex->isReleasable())
+			return false;
+
+		convex->release();
+		convexIDTable.erase(_id);
+
+		return true;
 	}
 
-	ZnMeshID ResourceManager::LoadMesh(const std::wstring& _path)
+	FBXLoader::Model* ResourceManager::LoadMesh(const std::wstring& _path)
 	{
-		return {};
+		if (trianglePathTable.contains(_path))
+			return nullptr;
+
+		FBXLoader::FBXLoader loader;
+		FBXLoader::Model* model = loader.CreateModelFromFBX(_path);
+
+		return model;
 	}
 
 	ZnMeshID ResourceManager::AddMesh(physx::PxTriangleMesh* _mesh)
@@ -168,7 +183,10 @@ namespace ZonaiPhysics
 		assert(_mesh != nullptr);
 
 		ZnMeshID id;
-		CreateID(id);
+		do
+		{
+			CreateID(id);
+		} while (triangleIDTable.contains(id));
 
 		triangleIDTable.insert(std::make_pair(id, _mesh));
 
@@ -186,19 +204,30 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	void ResourceManager::ReleaseTriangleMesh(const ZnMeshID& _id)
+	bool ResourceManager::ReleaseTriangleMesh(const ZnMeshID& _id)
 	{
-		if (triangleIDTable.contains(_id))
-		{
-			const auto material = triangleIDTable[_id];
-			material->release();
-			triangleIDTable.erase(_id);
-		}
+		if (!triangleIDTable.contains(_id))
+			return false;
+
+		const auto& mesh = triangleIDTable[_id];
+		if (!mesh->isReleasable())
+			return false;
+
+		mesh->release();
+		triangleIDTable.erase(_id);
+
+		return true;
 	}
 
-	ZnHeightID ResourceManager::LoadHeightField(const std::wstring& _path)
+	FBXLoader::Model* ResourceManager::LoadHeightField(const std::wstring& _path)
 	{
-		return {};
+		if (heightPathTable.contains(_path))
+			return nullptr;
+
+		FBXLoader::FBXLoader loader;
+		FBXLoader::Model* model = loader.CreateModelFromFBX(_path);
+
+		return model;
 	}
 
 	ZnHeightID ResourceManager::AddHeightField(physx::PxHeightField* _mesh)
@@ -206,7 +235,10 @@ namespace ZonaiPhysics
 		assert(_mesh != nullptr);
 
 		ZnHeightID id;
-		CreateID(id);
+		do
+		{
+			CreateID(id);
+		} while (heightIDTable.contains(id));
 
 		heightIDTable.insert(std::make_pair(id, _mesh));
 
@@ -224,13 +256,18 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	void ResourceManager::ReleaseHeightField(const ZnHeightID& _id)
+	bool ResourceManager::ReleaseHeightField(const ZnHeightID& _id)
 	{
-		if (heightIDTable.contains(_id))
-		{
-			const auto material = heightIDTable[_id];
-			material->release();
-			heightIDTable.erase(_id);
-		}
+		if (!heightIDTable.contains(_id))
+			return false;
+
+		const auto& height = heightIDTable[_id];
+		if (!height->isReleasable())
+			return false;
+
+		height->release();
+		heightIDTable.erase(_id);
+
+		return true;
 	}
 }

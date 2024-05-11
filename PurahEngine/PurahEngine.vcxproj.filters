@@ -115,6 +115,12 @@
     <Filter Include="Core\Manager\DataManager">
       <UniqueIdentifier>{11bad62e-4ec1-449d-8cae-50d160c6df47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\2. Physics\Collider\Primitive">
+      <UniqueIdentifier>{1195e42d-5a58-400a-8a81-ff93b20bbbd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\2. Physics\Collider\Custom">
+      <UniqueIdentifier>{24fa6f73-b036-4f88-b39e-4daf824a248e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -135,9 +141,6 @@
     <ClCompile Include="PurahEngine.cpp" />
     <ClCompile Include="Componentmanager.cpp">
       <Filter>Component\1. Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>Component\2. Physics\Collider</Filter>
     </ClCompile>
     <ClCompile Include="FixedJoint.cpp">
       <Filter>Component\2. Physics\Joint</Filter>
@@ -195,12 +198,6 @@
     </ClCompile>
     <ClCompile Include="Tween.cpp">
       <Filter>Core\Time\Tween</Filter>
-    </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
-      <Filter>Component\2. Physics\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="CapsuleCollider.cpp">
-      <Filter>Component\2. Physics\Collider</Filter>
     </ClCompile>
     <ClCompile Include="GamePad.cpp">
       <Filter>Core\Manager\InputManager\GamePad</Filter>
@@ -280,6 +277,24 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Component\3. Renderer\Light</Filter>
     </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvexCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCollider.cpp">
+      <Filter>Component\2. Physics\Collider\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -303,9 +318,6 @@
     </ClInclude>
     <ClInclude Include="Componentmanager.h">
       <Filter>Component\1. Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>Component\2. Physics\Collider</Filter>
     </ClInclude>
     <ClInclude Include="FixedJoint.h">
       <Filter>Component\2. Physics\Joint</Filter>
@@ -375,12 +387,6 @@
     </ClInclude>
     <ClInclude Include="Tween.h">
       <Filter>Core\Time\Tween</Filter>
-    </ClInclude>
-    <ClInclude Include="SphereCollider.h">
-      <Filter>Component\2. Physics\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="CapsuleCollider.h">
-      <Filter>Component\2. Physics\Collider</Filter>
     </ClInclude>
     <ClInclude Include="ePad.h">
       <Filter>Core\Manager\InputManager\GamePad</Filter>
@@ -483,6 +489,24 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Component\3. Renderer\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleCollider.h">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Component\2. Physics\Collider\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvexCollider.h">
+      <Filter>Component\2. Physics\Collider\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.h">
+      <Filter>Component\2. Physics\Collider\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCollider.h">
+      <Filter>Component\2. Physics\Collider\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

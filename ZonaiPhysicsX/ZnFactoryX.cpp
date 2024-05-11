@@ -206,20 +206,21 @@ namespace ZonaiPhysics
 		return pxFactory->createShape(physx::PxConvexMeshGeometry(_mesh), *_material);
 	}
 
-	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(const physx::PxMaterial* _material)
+	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
 	{
-		const physx::PxVec3 meshVerts[] = {
-			physx::PxVec3(0,1,0),
-			physx::PxVec3(1,0,0),
-			physx::PxVec3(-1,0,0),
-			physx::PxVec3(0,0,1),
-			physx::PxVec3(0,0,-1)
-		};
+		std::vector<Eigen::Vector3f> verties;
+		auto& pos = _model->meshList[0]->vertices;
+		for (size_t i = 0; i < pos.size(); i++)
+		{
+			verties.emplace_back(pos[i].position.x, pos[i].position.y, pos[i].position.z);
+		}
 
-		const physx::PxU32 meshIndies[] = {
-			0, 1, 2,
-			0, 2, 3
-		};
+		std::vector<unsigned int> indies;
+		auto& index = _model->meshList[0]->indices;
+		for (size_t i = 0; i < index.size(); i++)
+		{
+			indies.emplace_back(index[i]);
+		}
 
 		physx::PxCookingParams params(pxFactory->getTolerancesScale());
 
@@ -231,8 +232,6 @@ namespace ZonaiPhysics
 
 		// 내부 메시의 계층 구조를 낮춥니다.
 		// params.meshCookingHint = physx::PxMeshCookingHint::eCOOKING_PERFORMANCE;
-		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eWELD_VERTICES;
-		// params.meshPreprocessParams ^= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
 
 		//physx::PxSDFDesc sdfDesc;
 		//sdfDesc.spacing = sdfSpacing;
@@ -248,13 +247,13 @@ namespace ZonaiPhysics
 
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
-		meshDesc.points.count = sizeof(meshVerts) / sizeof(physx::PxVec3);
-		meshDesc.points.stride = sizeof(physx::PxVec3);
-		meshDesc.points.data = meshVerts;
+		meshDesc.points.count = verties.size();
+		meshDesc.points.stride = sizeof(Eigen::Vector3f);
+		meshDesc.points.data = &verties[0];
 
-		meshDesc.triangles.count = sizeof(meshIndies) / sizeof(physx::PxU32);
-		meshDesc.triangles.stride = sizeof(physx::PxU32);
-		meshDesc.triangles.data = meshIndies;
+		meshDesc.triangles.count = indies.size();
+		meshDesc.triangles.stride = sizeof(unsigned int);
+		meshDesc.triangles.data = &indies[0];
 
 		meshDesc.sdfDesc;
 		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
@@ -281,25 +280,21 @@ namespace ZonaiPhysics
 		return triangleMesh;
 	}
 
-	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(const physx::PxMaterial* _material)
+	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(FBXLoader::Model* _model)
 	{
-		FBXLoader::FBXLoader loader;
+		std::vector<Eigen::Vector3f> verties;
+		auto& pos = _model->meshList[0]->vertices;
 
-		// 이부분은 바뀔 예정
-		// 정점 갯수, 정점 데이터, 정점 크기를 받아서 Convex를 만들어야함.
-		const physx::PxVec3 convexVerts[] = {
-			physx::PxVec3(0,1,0),
-			physx::PxVec3(1,0,0),
-			physx::PxVec3(-1,0,0),
-			physx::PxVec3(0,0,1),
-			physx::PxVec3(0,0,-1)
-		};
+		for (size_t i = 0; i < pos.size(); i++)
+		{
+			verties.emplace_back(pos[i].position.x, pos[i].position.y, pos[i].position.z);
+		}
 
 		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
-		convexDesc.points.count = sizeof(convexVerts) / sizeof(physx::PxVec3);
-		convexDesc.points.stride = sizeof(physx::PxVec3);
-		convexDesc.points.data = convexVerts;
+		convexDesc.points.count = verties.size();
+		convexDesc.points.stride = sizeof(Eigen::Vector3f);
+		convexDesc.points.data = &verties[0];
 		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
@@ -308,7 +303,7 @@ namespace ZonaiPhysics
 		physx::PxDefaultMemoryOutputStream buf;
 		physx::PxConvexMeshCookingResult::Enum result;
 		if (!PxCookConvexMesh(params, convexDesc, buf, &result))
-			return NULL;
+			return nullptr;
 
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());

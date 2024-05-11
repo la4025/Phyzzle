@@ -88,6 +88,41 @@ namespace ZonaiPhysics
 		return result;
 	}
 
+	ZnConvexID ZnPhysicsX::ConvexMeshLoadFromPath(const std::wstring& _path)
+	{
+		auto model = ResourceManager::LoadConvex(_path);
+		
+		auto pxMesh = ZnFactoryX::CookConvexMesh(model);
+		ResourceManager::UnloadModel(model);
+
+		return ResourceManager::AddConvex(pxMesh);
+	}
+
+	ZnMeshID ZnPhysicsX::TriangleMeshLoadFromPath(const std::wstring& _path)
+	{
+		auto model = ResourceManager::LoadMesh(_path);
+
+		auto pxMesh = ZnFactoryX::CookTriagleMesh(model);
+		ResourceManager::UnloadModel(model);
+
+		return 	ResourceManager::AddMesh(pxMesh);
+	}
+
+	bool ZnPhysicsX::ReleaseMaterial(const ZnMaterialID& _id)
+	{
+		return ResourceManager::ReleasePxMaterial(_id);
+	}
+
+	bool ZnPhysicsX::ReleaseConvexMesh(const ZnConvexID& _id)
+	{
+		return ResourceManager::ReleaseConvexMesh(_id);
+	}
+
+	bool ZnPhysicsX::ReleaseTriangleMesh(const ZnMeshID& _id)
+	{
+		return ResourceManager::ReleaseTriangleMesh(_id);
+	}
+
 	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
 	void ZnPhysicsX::CreateScene(void* _userScene, const Eigen::Vector3f& _gravity)
 	{
@@ -443,6 +478,7 @@ namespace ZonaiPhysics
 
 		ZnWorld::RemoveJoint(_joint, _userData, _userScene);
 	}
+
 
 	extern "C"
 	{

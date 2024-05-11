@@ -147,13 +147,10 @@
     <ClInclude Include="TemplateJoint.h">
       <Filter>Object\Joint\Base</Filter>
     </ClInclude>
-    <ClInclude Include="ZnConvexMesh.h">
+    <ClInclude Include="ZnConvexMeshData.h">
       <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
-    <ClInclude Include="ZnTriangleMesh.h">
-      <Filter>0. Core\Resource\Struct</Filter>
-    </ClInclude>
-    <ClInclude Include="ZnPoint.h">
+    <ClInclude Include="ZnTriangleMeshData.h">
       <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
   </ItemGroup>

@@ -43,23 +43,25 @@ namespace ZonaiPhysics
 		static void						Release();
 
 	public:
+		static void						UnloadModel(FBXLoader::Model* _model);
+
 		static ZnMaterialID				RegistMaterial(physx::PxMaterial*);
 		static physx::PxMaterial*		GetPxMaterial(const ZnMaterialID& _material);
-		static void						ReleasePxMaterial(const ZnMaterialID& _material);
+		static bool						ReleasePxMaterial(const ZnMaterialID& _material);
 
-		static ZnConvexID				LoadConvex(const std::wstring& _path);
+		static FBXLoader::Model*		LoadConvex(const std::wstring& _path);
 		static ZnConvexID				AddConvex(physx::PxConvexMesh*);
 		static physx::PxConvexMesh*		GetPxConvexShape(const ZnConvexID& _id);
-		static void						ReleaseConvexMesh(const ZnConvexID& _id);
+		static bool						ReleaseConvexMesh(const ZnConvexID& _id);
 
-		static ZnMeshID					LoadMesh(const std::wstring& _path);
+		static FBXLoader::Model*		LoadMesh(const std::wstring& _path);
 		static ZnMeshID					AddMesh(physx::PxTriangleMesh*);
 		static physx::PxTriangleMesh*	GetPxMeshShape(const ZnMeshID& _id);
-		static void						ReleaseTriangleMesh(const ZnMeshID& _id);
+		static bool						ReleaseTriangleMesh(const ZnMeshID& _id);
 
-		static ZnHeightID				LoadHeightField(const std::wstring& _path);
+		static FBXLoader::Model*		LoadHeightField(const std::wstring& _path);
 		static ZnHeightID				AddHeightField(physx::PxHeightField*);
 		static physx::PxHeightField*	GetPxHeightField(const ZnHeightID& _id);
-		static void						ReleaseHeightField(const ZnHeightID& _id);
+		static bool						ReleaseHeightField(const ZnHeightID& _id);
 	};
 }

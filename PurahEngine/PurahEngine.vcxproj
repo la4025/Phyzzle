@@ -47,6 +47,8 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Componentmanager.h" />
+    <ClInclude Include="ConvexCollider.h" />
+    <ClInclude Include="CustomCollider.h" />
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -73,6 +75,7 @@
     <ClInclude Include="Joint.h" />
     <ClInclude Include="JointT.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MeshCollider.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="GamePad.h" />
@@ -116,6 +119,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
+    <ClCompile Include="CustomCollider.cpp" />
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />
@@ -133,6 +137,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="GamePad.cpp" />
@@ -160,6 +165,7 @@
     <ClCompile Include="TweenHandler.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UnifiedInputManager.cpp" />
+    <ClCompile Include="ConvexCollider.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -18,7 +18,7 @@
 
 namespace PurahEngine
 {
-	void PhysicsSystem::Initialize() noexcept
+	void PhysicsSystem::Initialize()
 	{
 		ZonaiPhysicsXDLL = LoadLibrary(L"ZonaiPhysicsX.dll");
 
@@ -91,6 +91,40 @@ namespace PurahEngine
 				PHYSCIS_CAUTUON(Material Bind Error)
 			}
 		}
+
+		//auto preLoadData = EngineSetting::GetInstance().GetPhysicsMaterials();
+		//for (size_t i = 0; i < materialData.size(); i++)
+		//{
+		//	using namespace ZonaiPhysics;
+		//	auto& name = std::get<0>(materialData[i]);
+		//
+		//	auto id = physics->ConvexMeshLoadFromPath(name);
+		//
+		//	if (id == ZnConvexID::None)
+		//		PHYSCIS_CAUTUON(Convex Create Error)
+		//
+		//		if (BindConvex(name, id) == false)
+		//		{
+		//			PHYSCIS_CAUTUON(Convex Bind Error)
+		//		}
+		//}
+
+		//auto preLoadData = EngineSetting::GetInstance().GetPhysicsMaterials();
+		//for (size_t i = 0; i < materialData.size(); i++)
+		//{
+		//	using namespace ZonaiPhysics;
+		//	auto& name = std::get<0>(materialData[i]);
+		//
+		//	auto id = physics->TriangleMeshLoadFromPath(name);
+		//
+		//	if (id == ZnMeshID::None)
+		//		PHYSCIS_CAUTUON(Mesh Create Error)
+		//
+		//		if (BindConvex(name, id) == false)
+		//		{
+		//			PHYSCIS_CAUTUON(Mesh Bind Error)
+		//		}
+		//}
 	}
 
 	void PhysicsSystem::PreStep() const
@@ -104,7 +138,7 @@ namespace PurahEngine
 		}
 	}
 
-	void PhysicsSystem::Simulation(float _dt) const noexcept
+	void PhysicsSystem::Simulation(float _dt) const
 	{
 		static float acc = 0.f;
 
@@ -128,7 +162,7 @@ namespace PurahEngine
 		}
 	}
 
-	void PhysicsSystem::Finalize() noexcept
+	void PhysicsSystem::Finalize()
 	{
 		// 강제 종료 되는 경우 아니면
 		// 여기서 컴포넌트를 삭제하는 일은 없을 것임.
@@ -199,17 +233,136 @@ namespace PurahEngine
 		physics->ReleaseJoint(_object, _gameObject);
 	}
 
-	bool PhysicsSystem::BindMaterial(
-		const std::wstring& _name, const ZonaiPhysics::ZnMaterialID& _id)
+	ZonaiPhysics::ZnConvexID PhysicsSystem::CreateConvexMeshFromPath(const std::wstring& _path, bool _make)
 	{
-		if (materialNameTable.contains(_name))
+		ZonaiPhysics::ZnConvexID result = ZonaiPhysics::ZnConvexID::None;
+
+		if (_path.empty())
+			return result;
+
+		bool hasSame = convexNameTable.contains(_path);
+
+		// 중복 아님
+		if (!hasSame)
+		{
+			result = physics->ConvexMeshLoadFromPath(_path);
+
+			BindConvex(_path, result, _make);
+		}
+		// 중복이면 새로 만듬
+		else if (hasSame && _make)
+		{
+			// 기존게 지워짐?
+			if (ReleaseConvexMesh(convexNameTable[_path]))
+			{
+				result = physics->ConvexMeshLoadFromPath(_path);
+
+				BindConvex(_path, result, _make);
+			}
+			// 못지우면 새로 만드는건 실패한 거임
+			else
+			{
+				result = ZonaiPhysics::ZnConvexID::None;
+			}
+		}
+		// 중복이면 기존 것을 반환함
+		else if (hasSame && !_make)
+		{
+			result = convexNameTable[_path];
+		}
+
+		return result;
+	}
+
+	ZonaiPhysics::ZnMeshID PhysicsSystem::CreateTriangleMeshFromPath(const std::wstring& _path, bool _make)
+	{
+		ZonaiPhysics::ZnMeshID result = ZonaiPhysics::ZnMeshID::None;
+
+		if (_path.empty())
+			return result;
+
+		bool hasSame = meshNameTable.contains(_path);
+
+		// 중복 아님
+		if (!hasSame)
+		{
+			result = physics->TriangleMeshLoadFromPath(_path);
+
+			BindMesh(_path, result, _make);
+		}
+		// 중복이면 새로 만듬
+		else if (hasSame && _make)
+		{
+			// 기존게 지워짐?
+			if (ReleaseTriangleMesh(meshNameTable[_path]))
+			{
+				result = physics->TriangleMeshLoadFromPath(_path);
+
+				BindMesh(_path, result, _make);
+			}
+			// 못지우면 새로 만드는건 실패한 거임
+			else
+			{
+				result = ZonaiPhysics::ZnMeshID::None;
+			}
+		}
+		// 중복이면 기존 것을 반환함
+		else if (hasSame && !_make)
+		{
+			result = meshNameTable[_path];
+		}
+
+		return result;
+	}
+
+	bool PhysicsSystem::ReleaseConvexMesh(const ZonaiPhysics::ZnConvexID& _id)
+	{
+		return physics->ReleaseConvexMesh(_id);
+	}
+
+	bool PhysicsSystem::ReleaseTriangleMesh(const ZonaiPhysics::ZnMeshID& _id)
+	{
+		return physics->ReleaseTriangleMesh(_id);
+	}
+
+	bool PhysicsSystem::BindMaterial(const std::wstring& _name, const ZonaiPhysics::ZnMaterialID& _id, bool _make)
+	{
+		bool hasSame = materialNameTable.contains(_name);
+
+		// 중복을 허용하지 않음.
+		if (hasSame && !_make)
 			return false;
 
 		materialNameTable.insert({ _name, _id });
 		return true;
 	}
 
-	const ZonaiPhysics::ZnMaterialID& PhysicsSystem::GetMaterialID(const std::wstring& _name)
+	bool PhysicsSystem::BindConvex(const std::wstring& _name, const ZonaiPhysics::ZnConvexID& _id, bool _make)
+	{
+		bool hasSame = convexNameTable.contains(_name);
+
+		// 중복을 허용하지 않음.
+		if (hasSame && !_make)
+			return false;
+
+		convexNameTable.insert({ _name, _id });
+		return true;
+	}
+
+	bool PhysicsSystem::BindMesh(const std::wstring& _name, const ZonaiPhysics::ZnMeshID& _id, bool _make)
+	{
+		bool hasSame = meshNameTable.contains(_name);
+		
+		// 중복을 허용하지 않음.
+		if (hasSame && !_make)
+			return false;
+
+		// 중복을 허락함.
+		meshNameTable.insert({ _name, _id });
+		return true;
+	}
+
+	ZonaiPhysics::ZnMaterialID PhysicsSystem::GetMaterialID(const std::wstring& _name)
 	{
 		if (_name.empty() || !materialNameTable.contains(_name))
 			return ZonaiPhysics::ZnMaterialID::None;
@@ -217,8 +370,23 @@ namespace PurahEngine
 		return materialNameTable[_name];
 	}
 
-	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(
-		void* _gameObject) const noexcept
+	ZonaiPhysics::ZnConvexID PhysicsSystem::GetConvexID(const std::wstring& _name)
+	{
+		if (_name.empty() || !convexNameTable.contains(_name))
+			return ZonaiPhysics::ZnConvexID::None;
+
+		return convexNameTable[_name];
+	}
+
+	ZonaiPhysics::ZnMeshID PhysicsSystem::GetMeshID(const std::wstring& _name)
+	{
+		if (_name.empty() || !meshNameTable.contains(_name))
+			return ZonaiPhysics::ZnMeshID::None;
+
+		return meshNameTable[_name];
+	}
+
+	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(void* _gameObject) const
 	{
 		return physics->CreateRigidBody(_gameObject);
 	}
@@ -226,25 +394,67 @@ namespace PurahEngine
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateBoxCollider(
 		void* _gameObject, 
 		float x, float y, float z, 
-		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
+		const std::wstring& _materialName)
 	{
-		return physics->CreateBoxCollider(_gameObject, { x, y, z }, _id);
+		auto materialID = GetMaterialID(_materialName);
+
+		return physics->CreateBoxCollider(_gameObject, { x, y, z }, materialID);
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateSphereCollider(
 		void* _gameObject, 
 		float radius, 
-		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
+		const std::wstring& _materialName)
 	{
-		return physics->CreateSphereCollider(_gameObject, radius, _id);
+		auto materialID = GetMaterialID(_materialName);
+
+		return physics->CreateSphereCollider(_gameObject, radius, materialID);
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateCapsuleCollider(
 		void* _gameObject, 
 		float radius, float height, 
-		const ZonaiPhysics::ZnMaterialID& _id) const noexcept
+		const std::wstring& _materialName)
 	{
-		return physics->CreateCapsuleCollider(_gameObject, radius, height, _id);
+		auto materialID = GetMaterialID(_materialName);
+
+		return physics->CreateCapsuleCollider(_gameObject, radius, height, materialID);
+	}
+
+	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateConvexCollider(
+		void* _gameObject, 
+		const std::wstring& _path, 
+		const Eigen::Quaternionf& _rot, 
+		const Eigen::Vector3f& _scale, 
+		const std::wstring& _materialName)
+	{
+		auto materialID = GetMaterialID(_materialName);
+		auto convexID = GetConvexID(_path);
+
+		if (convexID == nullptr)
+		{
+			convexID = physics->ConvexMeshLoadFromPath(_path);
+		}
+
+		return physics->CreateConvexCollider(_gameObject, convexID, _rot, _scale, materialID);
+	}
+
+	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateMeshCollider(
+		void* _gameObject, 
+		const std::wstring& _path, 
+		const Eigen::Quaternionf& _rot, 
+		const Eigen::Vector3f& _scale, 
+		const std::wstring& _materialName)
+	{
+		auto materialID = GetMaterialID(_materialName);
+		auto meshid = GetMeshID(_path);
+
+		if (meshid == nullptr)
+		{
+			meshid = physics->TriangleMeshLoadFromPath(_path);
+		}
+
+		return physics->CreateMeshCollider(_gameObject, meshid, _rot, _scale, materialID);
 	}
 
 	ZonaiPhysics::ZnFixedJoint* PhysicsSystem::CreateFixedJoint(

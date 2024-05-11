@@ -43,13 +43,13 @@ namespace PurahEngine
 	class PURAHENGINE_API PhysicsSystem
 	{
 	public:
-		PhysicsSystem() noexcept = default;
-		~PhysicsSystem() noexcept = default;
+		PhysicsSystem() = default;
+		~PhysicsSystem() = default;
 
-		PhysicsSystem(const PhysicsSystem&) noexcept = delete;
+		PhysicsSystem(const PhysicsSystem&) = delete;
 		PhysicsSystem(PhysicsSystem&&) noexcept = delete;
 
-		PhysicsSystem& operator=(const PhysicsSystem&) noexcept = delete;
+		PhysicsSystem& operator=(const PhysicsSystem&) = delete;
 		PhysicsSystem& operator=(PhysicsSystem&&) noexcept = delete;
 
 	private:
@@ -58,11 +58,11 @@ namespace PurahEngine
 		std::function<void()> releaseFuntion;
 
 	public:
-		void Initialize() noexcept;
+		void Initialize();
 		void PreStep() const;
-		void Simulation(float _dt) const noexcept;
+		void Simulation(float _dt) const;
 		void SimulateResult() const;
-		void Finalize() noexcept;
+		void Finalize();
 
 	private:
 		friend class Physics;
@@ -77,6 +77,8 @@ namespace PurahEngine
 
 	public:
 		std::unordered_map<std::wstring, ZonaiPhysics::ZnMaterialID> materialNameTable;
+		std::unordered_map<std::wstring, ZonaiPhysics::ZnConvexID> convexNameTable;
+		std::unordered_map<std::wstring, ZonaiPhysics::ZnMeshID> meshNameTable;
 
 		std::vector<PurahEngine::RigidBody*> bodies;
 		std::vector<PurahEngine::Collider*> dynamicColliders;
@@ -86,47 +88,76 @@ namespace PurahEngine
 		EventCallbackSystem* callbackSystem;
 
 	public:
-		bool							BindMaterial(const std::wstring&, const ZonaiPhysics::ZnMaterialID& _id);
-		const ZonaiPhysics::ZnMaterialID& GetMaterialID(const std::wstring& _name);
+		ZonaiPhysics::ZnConvexID		CreateConvexMeshFromPath(const std::wstring&, bool _make = false);
+		ZonaiPhysics::ZnMeshID			CreateTriangleMeshFromPath(const std::wstring&, bool _make = false);
+
+		bool							ReleaseConvexMesh(const ZonaiPhysics::ZnConvexID&);
+		bool							ReleaseTriangleMesh(const ZonaiPhysics::ZnMeshID&);
+
+		bool							BindMaterial(const std::wstring&, const ZonaiPhysics::ZnMaterialID& _id, bool _make = false);
+		bool							BindConvex(const std::wstring&, const ZonaiPhysics::ZnConvexID& _id, bool _make = false);
+		bool							BindMesh(const std::wstring&, const ZonaiPhysics::ZnMeshID& _id, bool _make = false);
+
+		ZonaiPhysics::ZnMaterialID		GetMaterialID(const std::wstring& _name);
+		ZonaiPhysics::ZnConvexID		GetConvexID(const std::wstring& _name);
+		ZonaiPhysics::ZnMeshID			GetMeshID(const std::wstring& _name);
 
 	public:
-		ZonaiPhysics::ZnRigidBody*	CreateRigidBody(void* _gameObject) const noexcept;
+		ZonaiPhysics::ZnRigidBody*		CreateRigidBody(void* _gameObject) const;
 
 	public:
-		ZonaiPhysics::ZnCollider*	CreateBoxCollider(
-			void* _gameObject, 
+		ZonaiPhysics::ZnCollider*		CreateBoxCollider(
+			void* _gameObject,
 			float x, float y, float z,
-			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+			const std::wstring&);
 
-		ZonaiPhysics::ZnCollider*	CreateSphereCollider(
-			void* _gameObject, 
+		ZonaiPhysics::ZnCollider*		CreateSphereCollider(
+			void* _gameObject,
 			float radius,
-			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+			const std::wstring&);
 
-		ZonaiPhysics::ZnCollider*	CreateCapsuleCollider(
-			void* _gameObject, 
+		ZonaiPhysics::ZnCollider*		CreateCapsuleCollider(
+			void* _gameObject,
 			float radius, float height,
-			const ZonaiPhysics::ZnMaterialID&) const noexcept;
+			const std::wstring&);
 
-		// ZonaiPhysics::ZnCollider*	CreateCustomCollider(void* _gameObject) noexcept;
+		ZonaiPhysics::ZnCollider*		CreateConvexCollider(
+			void* _gameObject,
+			const std::wstring& _path,
+			const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _scale,
+			const std::wstring&);
+
+		ZonaiPhysics::ZnCollider*		CreateMeshCollider(
+			void* _gameObject,
+			const std::wstring& _path,
+			const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _scale,
+			const std::wstring&);
 
 	public:
-		ZonaiPhysics::ZnFixedJoint*			CreateFixedJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
+		ZonaiPhysics::ZnFixedJoint*		CreateFixedJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0,
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-		ZonaiPhysics::ZnPrismaticJoint*		CreateSlideJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnPrismaticJoint*	CreateSlideJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-		ZonaiPhysics::ZnHingeJoint*			CreateHingeJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnHingeJoint*		CreateHingeJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-		ZonaiPhysics::ZnSphericalJoint*		CreateBallJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnSphericalJoint*	CreateBallJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-		ZonaiPhysics::ZnDistanceJoint*		CreateDistanceJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnDistanceJoint*	CreateDistanceJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
-		ZonaiPhysics::ZnDistanceJoint*		CreateSpringJoint(ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
+		ZonaiPhysics::ZnDistanceJoint*	CreateSpringJoint(
+			ZonaiPhysics::ZnRigidBody* _body0, const ZonaiPhysics::ZnTransform& _localTm0, 
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
 	private:
