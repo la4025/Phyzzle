@@ -60,10 +60,18 @@ namespace PurahEngine
 			return joint;
 		}
 	public:
-		void		SetRigidbody(RigidBody* _other) noexcept override
+		void		SetRigidbody(RigidBody* _base, RigidBody* _other) noexcept override
 		{
+			body = _base;
 			connectedBody = _other;
 		}
+
+		void		GetRigidbody(RigidBody*& _obj0, RigidBody*& _obj1) const noexcept
+		{
+			_obj0 = body;
+			_obj1 = connectedBody;
+		}
+
 		void		SetAnchor(
 			const Eigen::Vector3f& _localP0, const Eigen::Quaternionf& _localR0, 
 			const Eigen::Vector3f& _localP1, const Eigen::Quaternionf& _localR1)
@@ -72,12 +80,6 @@ namespace PurahEngine
 			LocalAnchorRotation = _localR0;
 			connectedLocalAnchor = _localP1;
 			connectedLocalAnchorRotation = _localR1;
-		}
-
-		void		GetRigidbody(RigidBody*& _obj0, RigidBody*& _obj1) const noexcept
-		{
-			_obj1 = body;
-			_obj1 = connectedBody;
 		}
 
 		void		SetLocalPosition(int _index, const Eigen::Vector3f& _localPos) override

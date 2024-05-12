@@ -24,10 +24,14 @@ namespace Phyzzle
 		isKinematic = body->IsKinematic();
 		hasGravity = body->HasGravity();
 		originMass = body->GetMass();
+
+		assert(originMass > 0.01f);
 	}
 
-	void Attachable::Selected() const
+	void Attachable::Selected()
 	{
+		ValiantStore();
+
 		body->SetKinematic(false);
 		body->UseGravity(false);
 		body->SetMass(0.001f);
@@ -35,8 +39,10 @@ namespace Phyzzle
 
 	void Attachable::ValiantRetrieve()
 	{
-		if (originMass == -1.f)
+		if (originMass < 0.f)
 			return;
+
+		assert(originMass > 0.01f);
 
 		body->SetKinematic(isKinematic);
 		body->UseGravity(hasGravity);

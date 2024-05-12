@@ -128,6 +128,7 @@ namespace Phyzzle
 		void SpringYRotate(float _angle);										// 스프링 회전
 
 		bool TryAttach() const;									// 부착
+		bool TryDettach() const;									// 부착
 
 		void Put() const;
 

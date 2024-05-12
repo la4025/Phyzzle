@@ -15,7 +15,7 @@ namespace Phyzzle
 	private:
 		IslandID GetIslandID() const;
 		void ValiantStore();		// 강체 변수 저장
-		void Selected() const;		// 선택됨
+		void Selected();			// 선택
 		void ValiantRetrieve();		// 강체 변수 되돌림
 
 	protected:

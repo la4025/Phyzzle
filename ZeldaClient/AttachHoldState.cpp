@@ -106,8 +106,7 @@ namespace Phyzzle
 	// 취소
 	void AttachHoldState::Click_Y()
 	{
-		Put();
-		StateCancel();
+		TryDettach();
 	}
 
 	// 취소
@@ -447,6 +446,14 @@ namespace Phyzzle
 			return false;
 
 		return AttachSystem::Instance()->TryAttach(attachble);
+	}
+
+	bool AttachHoldState::TryDettach() const
+	{
+		if (!attachble)
+			return false;
+
+		return AttachSystem::Instance()->Dettach(attachble);
 	}
 
 	void AttachHoldState::Put() const

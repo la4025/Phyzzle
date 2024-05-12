@@ -86,7 +86,6 @@ namespace Phyzzle
 
 		if (id == nullptr)		// 섬을 이루고 있는가?
 		{
-			_body->ValiantStore();
 			_body->Selected();			// 혼자만 듬
 		}
 		else
@@ -97,7 +96,6 @@ namespace Phyzzle
 
 				for (size_t i = 0; i < arr.size(); i++)
 				{
-					arr[i]->ValiantStore();
 					arr[i]->Selected();
 				}
 			}
@@ -192,9 +190,13 @@ namespace Phyzzle
 		// 연결된 객체 순회하면서 연결을 끊어줌
 		for (auto& _other : temp)
 		{
-			DisconnectNode(_object, _other);
 			BreakJoint(_object, _other);
-		}
+			DisconnectNode(_object, _other);
+
+			_other->ValiantRetrieve();
+		} 
+
+		_object->islandID = nullptr;
 
 		// 연결됐었던 객체들 순회하면서 Island를 만들어줌.
 		for (auto& _other : temp)
@@ -206,7 +208,10 @@ namespace Phyzzle
 
 			while (!search.empty())
 			{
-				
+				auto obj = search.front();
+				search.pop();
+
+
 			}
 		}
 
@@ -216,7 +221,7 @@ namespace Phyzzle
 	void AttachSystem::ConnectNode(Attachable* _base, Attachable* _other, PurahEngine::FixedJoint* _joint)
 	{
 		_base->connectedObjects.push_back(_other);
-		_other->connectedObjects.push_back(_other);
+		_other->connectedObjects.push_back(_base);
 	}
 
 	void AttachSystem::DisconnectNode(Attachable* _base, Attachable* _other)
@@ -237,7 +242,10 @@ namespace Phyzzle
 	{
 		// 조인트 만들어주고
 		const auto joint = _base->GetGameObject()->AddComponent<PurahEngine::FixedJoint>();
-		joint->SetRigidbody(_other->GetGameObject()->GetComponent<PurahEngine::RigidBody>());
+
+		const auto baseBody = _base->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+		const auto otherBody = _other->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+		joint->SetRigidbody(baseBody, otherBody);
 
 		const Eigen::Vector3f worldP = _base->worldAnchor;
 		const Eigen::Quaternionf worldQ = Eigen::Quaternionf::Identity();
@@ -274,8 +282,8 @@ namespace Phyzzle
 
 			if (duo == test)
 			{
-				delete joint;
-				joint = nullptr;
+				auto obj = joint->GetGameObject();
+				obj->DeleteComponent(joint);
 			}
 		}
 
@@ -288,8 +296,8 @@ namespace Phyzzle
 
 			if (duo == test)
 			{
-				delete joint;
-				joint = nullptr;
+				auto obj = joint->GetGameObject();
+				obj->DeleteComponent(joint);
 			}
 		}
 	}
