@@ -1,6 +1,7 @@
 #include "FileManager.h"
 #include <fstream>
 
+#include <Windows.h>
 
 json PurahEngine::FileManager::LoadData(const std::wstring& filename)
 {
@@ -11,6 +12,10 @@ json PurahEngine::FileManager::LoadData(const std::wstring& filename)
 		data >> jsonData;
 
 		data.close();
+	}
+	else
+	{
+		MessageBox(0, (L"Failed to Load Data \"" + filename + L"\"").c_str(), L"PurahEngine::FileManager Error", MB_OK);
 	}
 
 	return jsonData;

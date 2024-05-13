@@ -83,41 +83,6 @@ int PurahEngine::EngineSetting::LayerSize()
 	return layerSize;
 }
 
-//std::wstring PurahEngine::EngineSetting::MaterialIDtoMaterial(ZonaiPhysics::ZnMaterialID material) const
-//{
-//	auto iter = materialIDTable.find(material);
-//
-//	if (materialIDTable.end() != iter)
-//	{
-//		return iter->second;
-//	}
-//	else
-//	{
-//		assert(0);
-//		return nullptr;
-//	}
-//}
-
-ZonaiPhysics::ZnMaterialID PurahEngine::EngineSetting::MaterialtoMaterialID(const std::wstring& material) const
-{
-	auto iter = materialTable.find(material);
-
-	if (materialTable.end() != iter)
-	{
-		return iter->second;
-	}
-	else
-	{
-		assert(0);
-		return ZonaiPhysics::ZnMaterialID::None;
-	}
-}
-
-int PurahEngine::EngineSetting::MaterialSize()
-{
-	return materialsSize;
-}
-
 float PurahEngine::EngineSetting::GetShadowAreaRange()
 {
 	return shadowAreaRange;
@@ -172,6 +137,11 @@ std::vector<std::vector<bool>> PurahEngine::EngineSetting::GetCollsionSetting()
 	return collisionSetting;
 }
 
+const std::unordered_map<std::wstring, std::tuple<float, float, float, int, int>>& PurahEngine::EngineSetting::GetMaterialTable() const
+{
+	return materialTable;
+}
+
 void PurahEngine::EngineSetting::PreSerialize(json& jsonData) const
 {
 
@@ -208,8 +178,6 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 	}
 
 	materialTable.clear();
-
-	/*
 	const json& materials = jsonData["physicsMaterials"];
 	materialsSize = materials.size();
 	for (int materialIDCount = 0; materialIDCount < materials.size(); materialIDCount++)
@@ -223,14 +191,9 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 
 		std::wstring wMaterialName(materialName.begin(), materialName.end());
 
-		ZonaiPhysics::ZnMaterialID materialID =
-			Physics::AddMaterial(staticFriction, dynamicFriction,
-				restitution,
-				eFriction, eRestitution);
-
-		materialTable[wMaterialName] = materialID;
+		assert(materialTable.count(wMaterialName) == 0);
+		materialTable[wMaterialName] = { staticFriction, dynamicFriction, restitution, eFriction, eRestitution };
 	}
-	*/
 
 	const json& collisionInfo = jsonData["collisionSetting"];
 	collisionSetting.resize(collisionInfo.size(), std::vector<bool>(collisionInfo.size(), false));
