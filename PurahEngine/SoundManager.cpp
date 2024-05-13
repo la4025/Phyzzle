@@ -96,7 +96,7 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, T
 	newSound.lastPos = { 0.0f, 0.0f, 0.0f };
 
 	newSound.channel->setChannelGroup(effectChannelGroup);
-	newSound.sound->set3DMinMaxDistance(1.0f, 50.0f);
+	newSound.sound->set3DMinMaxDistance(1.0f, 500.0f);
 
 	soundMap[audioSource] = newSound;
 }

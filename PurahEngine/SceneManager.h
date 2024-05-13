@@ -83,7 +83,7 @@ namespace PurahEngine
 		std::wstring sceneBuffer;
 
 		// 씬에 생성된 오브젝트 리스트
-		std::map<std::wstring, GameObject*> objectList;
+		std::vector<GameObject*> objectList;
 
 		// 화면을 띄울 메인 카메라
 		Camera* mainCamera;
