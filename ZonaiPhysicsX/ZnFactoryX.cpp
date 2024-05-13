@@ -260,7 +260,7 @@ namespace ZonaiPhysics
 
 		for (size_t i = 0; i < pos.size(); i++)
 		{
-			verties.emplace_back(pos[i].position.x, pos[i].position.y, pos[i].position.z);
+			verties.emplace_back(std::isnan(pos[i].position.x), std::isnan(pos[i].position.y), std::isnan(pos[i].position.z));
 		}
 
 		//for (size_t i = 0; i < _model->meshList.size(); i++)
@@ -282,7 +282,7 @@ namespace ZonaiPhysics
 		// convexDesc.indices.count = _model->meshList[0]->indices.size();
 		// convexDesc.indices.stride;
 		// convexDesc.indices.data;
-		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX | physx::PxConvexFlag::e16_BIT_INDICES;
+		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
 

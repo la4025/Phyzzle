@@ -226,7 +226,7 @@ void PurahEngine::GameLoop::run()
 		minFPS = min(minFPS, currFPS);
 		maxFPS = max(maxFPS, currFPS);
 
-		currFPS = (int)TimeController::GetInstance().GetFPS();
+		currFPS = (int) (1.f / TimeController::GetInstance().GetFPS());
 		count += TimeController::GetInstance().GetDeltaTime();
 
 		if (count > 1.f)

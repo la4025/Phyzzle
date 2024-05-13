@@ -113,9 +113,6 @@ namespace ZonaiPhysics
 			return zn_collider;
 		}
 
-		static MeshCollider*			CreateMeshCollider(void* _znBody, const physx::PxMaterial* _material);
-		static ConvexCollider*			CreateConvexCollider(void* _znBody, const physx::PxMaterial* _material);
-
 		/// joint
 		static FixedJoint*				CreateFixedJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
 		static PrismaticJoint*			CreatePrismaticJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
