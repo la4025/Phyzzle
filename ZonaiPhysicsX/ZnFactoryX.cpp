@@ -197,13 +197,17 @@ namespace ZonaiPhysics
 	physx::PxShape* ZnFactoryX::CreateTriagleMeshShape(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
 		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
-		return pxFactory->createShape(physx::PxTriangleMeshGeometry(_mesh), *_material);
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxTriangleMeshGeometry geom(_mesh, scale);
+		return pxFactory->createShape(geom, *_material);
 	}
 
 	physx::PxShape* ZnFactoryX::CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
 		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
-		return pxFactory->createShape(physx::PxConvexMeshGeometry(_mesh), *_material);
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxConvexMeshGeometry geom(_mesh, scale);
+		return pxFactory->createShape(geom, *_material);
 	}
 
 	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
@@ -222,29 +226,6 @@ namespace ZonaiPhysics
 			indies.emplace_back(index[i]);
 		}
 
-		physx::PxCookingParams params(pxFactory->getTolerancesScale());
-
-		// 메시 정리 비활성화 - 개발 구성에서 메시 유효성 검사 수행
-		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-
-		// 엣지 사전 계산 비활성화, 각 삼각형에 대해 엣지가 설정됩니다. 이는 접촉 생성을 느리게 합니다.
-		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-
-		// 내부 메시의 계층 구조를 낮춥니다.
-		// params.meshCookingHint = physx::PxMeshCookingHint::eCOOKING_PERFORMANCE;
-
-		//physx::PxSDFDesc sdfDesc;
-		//sdfDesc.spacing = sdfSpacing;
-		//sdfDesc.subgridSize = sdfSubgridSize;
-		//sdfDesc.bitsPerSubgridPixel = bitsPerSdfSubgridPixel;
-		//sdfDesc.numThreadsForSdfConstruction = 8;
-		// 
-		//if (enableGpuAcceleratedCooking)
-		//{
-		//	//If sdfBuilder is NULL, the sdf will get cooked on the CPU using the number of threads specified above
-		//	sdfDesc.sdfBuilder = physx::PxGetPhysicsGpu()->createSDFBuilder(cudaContextManager);
-		//}
-
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
 		meshDesc.points.count = verties.size();
@@ -258,15 +239,7 @@ namespace ZonaiPhysics
 		meshDesc.sdfDesc;
 		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
 
-
-//#ifdef _DEBUG
-//// 메시가 정리되지 않은 상태로 쿠킹하기 전에 메시를 유효성 검사해야 합니다.
-//		bool res = PxValidateTriangleMesh(params, meshDesc);
-//		PX_ASSERT(res);
-//#endif
-//
-//		physx::PxTriangleMesh* aTriangleMesh = PxCreateTriangleMesh(params, meshDesc,
-//			pxFactory->getPhysicsInsertionCallback());
+		physx::PxCookingParams params(pxFactory->getTolerancesScale());
 
 		physx::PxDefaultMemoryOutputStream writeBuffer;
 		physx::PxTriangleMeshCookingResult::Enum result;
@@ -290,19 +263,34 @@ namespace ZonaiPhysics
 			verties.emplace_back(pos[i].position.x, pos[i].position.y, pos[i].position.z);
 		}
 
+		//for (size_t i = 0; i < _model->meshList.size(); i++)
+		//{
+		//	auto& mesh = _model->meshList[i];
+		//	auto& points = mesh->vertices;
+
+		//	for (size_t i = 0; i < points.size(); i++)
+		//	{
+		//		verties.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
+		//	}
+		//}
+
 		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
 		convexDesc.points.count = verties.size();
 		convexDesc.points.stride = sizeof(Eigen::Vector3f);
 		convexDesc.points.data = &verties[0];
-		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
+		// convexDesc.indices.count = _model->meshList[0]->indices.size();
+		// convexDesc.indices.stride;
+		// convexDesc.indices.data;
+		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX | physx::PxConvexFlag::e16_BIT_INDICES;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
 
 		// 정점 메모리 버퍼
 		physx::PxDefaultMemoryOutputStream buf;
 		physx::PxConvexMeshCookingResult::Enum result;
-		if (!PxCookConvexMesh(params, convexDesc, buf, &result))
+		const bool status = PxCookConvexMesh(params, convexDesc, buf, &result);
+		if (!status)
 			return nullptr;
 
 		// 버퍼를 바탕으로 Mesh 생성

@@ -38,6 +38,8 @@ namespace Phyzzle
 		std::vector<Attachable*> connectedObjects;	// 현 객체와 연결된 객체들
 
 	private:
+		bool select = false;
+
 		// Select되면 객체의 상태를 저장하기 위한 변수
 		bool isKinematic = false;					
 		bool hasGravity = false;

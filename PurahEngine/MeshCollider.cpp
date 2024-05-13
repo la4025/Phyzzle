@@ -17,15 +17,15 @@ namespace PurahEngine
 	{
 		Collider::PostInitialize();
 
-		const auto scale = transform->GetWorldScale();
 		const auto rot = transform->GetWorldRotation();
+		const auto scale = transform->GetWorldScale();
 
 		auto& physics = PhysicsSystem::GetInstance();
 		this->znCollider = physics.CreateMeshCollider(
 			this->GetGameObject(),
 			modelName,
-			rot,
-			scale,
+			rot * rotationOffset,
+			{ scale.x() * scaleOffset.x(), scale.y() * scaleOffset.y(), scale.z() * scaleOffset.z() },
 			physicsMaterial
 		);
 

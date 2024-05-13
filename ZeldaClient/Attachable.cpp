@@ -30,16 +30,21 @@ namespace Phyzzle
 
 	void Attachable::Selected()
 	{
+		if (select)
+			return;
+
 		ValiantStore();
 
 		body->SetKinematic(false);
 		body->UseGravity(false);
-		body->SetMass(0.001f);
+		body->SetMass(1.f);
+
+		select = true;
 	}
 
 	void Attachable::ValiantRetrieve()
 	{
-		if (originMass < 0.f)
+		if (!select)
 			return;
 
 		assert(originMass > 0.01f);
@@ -51,6 +56,8 @@ namespace Phyzzle
 		isKinematic = false;
 		hasGravity = false;
 		originMass = -1.f;
+
+		select = false;
 	}
 
 	void Attachable::OnCollisionEnter(
@@ -69,8 +76,8 @@ namespace Phyzzle
 			const bool otherIDNull = attachable->islandID == nullptr;
 			const bool myIDNull = islandID == nullptr;
 			const bool sameNull = otherIDNull && myIDNull;
-			const bool sameID = attachable->islandID && islandID;
-			bool diffID = !sameNull && sameID;					// 같은 섬에 있는 친구는 무시함.
+			const bool sameID = attachable->islandID == islandID;
+			bool diffID = !sameNull && sameID;					// 둘 다 널이 아니고 
 
 			if (diffID)
 			{

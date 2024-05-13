@@ -47,6 +47,7 @@ namespace ZonaiPhysics
 		// Áú·®
 		float				GetMass() const override;
 		void				SetMass(float) override;
+		void				SetDensity(float) override;
 		float				GetInvMass() const override;
 
 		Eigen::Vector3f		GetInertiaTensor() const override;

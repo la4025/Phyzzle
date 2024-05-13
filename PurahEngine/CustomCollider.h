@@ -19,5 +19,7 @@ namespace PurahEngine
 
 	protected:
 		std::wstring modelName;
+		Eigen::Quaternionf rotationOffset;
+		Eigen::Vector3f scaleOffset;
 	};
 }

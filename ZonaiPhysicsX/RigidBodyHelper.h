@@ -42,6 +42,7 @@ namespace ZonaiPhysics
 		// Áú·®
 		static float			GetMass(void*);
 		static void				SetMass(void*,float);
+		static void				SetDensity(void*,float);
 		static float			GetInvMass(void*);
 
 		static Eigen::Vector3f	GetInertiaTensor(void*);

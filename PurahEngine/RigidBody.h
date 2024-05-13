@@ -21,7 +21,6 @@ namespace PurahEngine
 	public:
 		void		Initialize() override;
 		void		PostInitialize() override;
-		void		Awake() override;
 
 	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
@@ -57,6 +56,7 @@ namespace PurahEngine
 		*/
 		float		GetMass() const noexcept;
 		void		SetMass(float) noexcept;
+		void		SetDensity(float);
 
 		/**
 		선형 감쇠 계수
@@ -137,7 +137,9 @@ namespace PurahEngine
 		uint8_t freeze{ 0 };
 		Eigen::Vector3f linearVelocity{ 0.f, 0.f, 0.f };
 		Eigen::Vector3f angularVelocity{ 0.f, 0.f, 0.f };
+		bool useAutoMass{ false };
 		float mass{ 1.f };
+		float density{};
 		float linearDamping{ 0.1f };
 		float angularDamping{ 0.1f };
 		Eigen::Vector3f force{ 0.f, 0.f, 0.f };

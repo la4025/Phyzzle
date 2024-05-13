@@ -30,28 +30,39 @@ namespace Phyzzle
 	}
 
 	// ID 삭제
-	void AttachSystem::RemoveIslandID(const IslandID& _id)
+	void AttachSystem::RemoveIslandID(IslandID _id)
 	{
-		attachIsland.erase(_id);
+		if (!attachIsland.contains(_id))
+			return;
 
+		attachIsland.erase(_id);
 		removedIndex.push(_id);						// 삭제된 ID를 큐에 넣음
 	}
 
 	// 섬 생성
 	IslandID AttachSystem::CreateIsland(const AttachIsland& _arr)
 	{
-		IslandID newID = CreateIslandID();
+		IslandID newID;;
+		
+		if (_arr.size() < 2)
+		{
+			newID = nullptr;
+		}
+		else
+		{
+			newID = CreateIslandID();
+
+			attachIsland.insert(std::make_pair(newID, _arr));
+		}
 
 		for (auto& e : _arr)
 			e->islandID = newID;
-
-		attachIsland.insert(std::make_pair(newID, _arr));
 
 		return newID;
 	}
 
 	// 섬 삭제
-	void AttachSystem::RemoveIsland(const IslandID& _id)
+	void AttachSystem::RemoveIsland(IslandID _id)
 	{
 		if (_id == nullptr)
 			return;
@@ -141,41 +152,56 @@ namespace Phyzzle
 		const IslandID obj0ID = _object->GetIslandID();
 
 		AttachIsland island0;
+
+		// 섬이 없으면 임시 배열을 만듬
 		if (!HasAttachIsland(obj0ID, island0))
 			island0.push_back(_object);
 
-		Attachable* _other = nullptr;
+		Attachable* base = nullptr;
+		Attachable* other = nullptr;
 
 		for (const auto& e : island0)
 		{
 			if (e->attachable && (_object != e->attachable))
 			{
-				_other = e->attachable;
+				base = e;
+				other = e->attachable;
 				break;
 			}
 		}
 
-		if (!_other)
+		if (!other)
 			return false;
 
-		const IslandID obj1ID = _other->GetIslandID();
+		const IslandID obj1ID = other->GetIslandID();
 
 		AttachIsland island1;
-		if (!HasAttachIsland(obj1ID, island1))
-			island1.push_back(_other);
 
-		// 연결해주고
-		const auto joint = CreateJoint(_object, _other);
-		ConnectNode(_object, _other, joint);
+		// 섬이 없으면 임시 배열을 만듬
+		if (!HasAttachIsland(obj1ID, island1))
+			island1.push_back(other);
+
+		// 조인트로 연결해주고
+		const auto joint = CreateJoint(base, other);
+		
+		// 노드도 연결해줌
+		ConnectNode(base, other, joint);
 
 		// 새로운 ID를 부여
 		island0.insert(island0.end(), island1.begin(), island1.end());
+		RemoveIslandID(obj0ID);
+		RemoveIslandID(obj1ID);
 		CreateIsland(island0);
 
-		_object->attachable = nullptr;
-		_other->attachable = nullptr;
+		base->attachable = nullptr;
+		other->attachable = nullptr;
 
 		return true;
+	}
+
+	bool AttachSystem::Attach(Attachable* _base, Attachable* _other)
+	{
+		return false;
 	}
 
 	bool AttachSystem::Dettach(Attachable* _object)
@@ -184,26 +210,25 @@ namespace Phyzzle
 		if (_object->connectedObjects.empty())
 			return false;
 
+		// 섬을 지우고
+		RemoveIsland(_object->islandID);
+
 		// 연결됐었던 객체들 일단 저장해둠.
 		const AttachIsland temp = _object->connectedObjects;
 
 		// 연결된 객체 순회하면서 연결을 끊어줌
 		for (auto& _other : temp)
 		{
-			BreakJoint(_object, _other);
 			DisconnectNode(_object, _other);
-
-			_other->ValiantRetrieve();
+			BreakJoint(_object, _other);
 		} 
-
-		_object->islandID = nullptr;
 
 		// 연결됐었던 객체들 순회하면서 Island를 만들어줌.
 		for (auto& _other : temp)
 		{
-			// 
+			AttachIsland island;
+			
 			std::queue<Attachable*> search;
-
 			search.push(_other);
 
 			while (!search.empty())
@@ -211,8 +236,20 @@ namespace Phyzzle
 				auto obj = search.front();
 				search.pop();
 
+				// 선택 해제
+				obj->ValiantRetrieve();
 
+				island.push_back(obj);
+
+				for (auto& e : obj->connectedObjects)
+				{
+					// 연결된 애들중에 선택 되어있는 친구들을 큐에 넣고 탐색
+					if (e->select)
+						search.push(e);
+				}
 			}
+
+			CreateIsland(island);
 		}
 
 		return true;
@@ -313,7 +350,6 @@ namespace Phyzzle
 		{
 			// 섬 ID를 삭제
 			_outIsland = attachIsland[_id];
-			RemoveIslandID(_id);
 			return true;
 		}
 	}
