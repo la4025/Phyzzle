@@ -35,15 +35,6 @@ namespace PurahEngine
 		body->SetQuaternion(trans->GetWorldRotation());
 		trans->SetRigidBody(this);
 
-		if (useAutoMass)
-		{
-			this->SetDensity(density);
-		}
-		else
-		{
-			this->SetMass(mass);
-		}
-
 		this->SetDynamicLockFlags(freeze);
 		this->SetKinematic(isKinematic);
 		this->UseGravity(useGravity);
@@ -59,6 +50,18 @@ namespace PurahEngine
 		}
 		// AddForce(force);
 		// AddTorque(torque);
+	}
+
+	void RigidBody::Awake()
+	{
+		if (useAutoMass)
+		{
+			this->SetDensity(density);
+		}
+		else
+		{
+			this->SetMass(mass);
+		}
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept

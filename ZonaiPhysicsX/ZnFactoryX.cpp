@@ -258,30 +258,22 @@ namespace ZonaiPhysics
 		std::vector<Eigen::Vector3f> verties;
 		auto& pos = _model->meshList[0]->vertices;
 
-		for (size_t i = 0; i < pos.size(); i++)
+		for (size_t i = 0; i < _model->meshList.size(); i++)
 		{
-			verties.emplace_back(std::isnan(pos[i].position.x), std::isnan(pos[i].position.y), std::isnan(pos[i].position.z));
+			auto& mesh = _model->meshList[i];
+			auto& points = mesh->vertices;
+
+			for (size_t i = 0; i < points.size(); i++)
+			{
+				verties.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
+			}
 		}
-
-		//for (size_t i = 0; i < _model->meshList.size(); i++)
-		//{
-		//	auto& mesh = _model->meshList[i];
-		//	auto& points = mesh->vertices;
-
-		//	for (size_t i = 0; i < points.size(); i++)
-		//	{
-		//		verties.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
-		//	}
-		//}
 
 		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
 		convexDesc.points.count = verties.size();
 		convexDesc.points.stride = sizeof(Eigen::Vector3f);
 		convexDesc.points.data = &verties[0];
-		// convexDesc.indices.count = _model->meshList[0]->indices.size();
-		// convexDesc.indices.stride;
-		// convexDesc.indices.data;
 		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
