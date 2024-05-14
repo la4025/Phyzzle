@@ -5,21 +5,9 @@
 
 void PurahEngine::DataManager::DontDestroyOnLoad(GameObject* gameObject)
 {
-	bool isDuplication = false;
-	auto objectName = gameObject->GetName();
-
-	for (auto iter = dontDestroyObjectList.begin(); iter != dontDestroyObjectList.end(); iter++)
+	if (find(dontDestroyObjectList.begin(), dontDestroyObjectList.end(), gameObject) == dontDestroyObjectList.end())
 	{
-		std::wstring name = iter->first;
-		if (name == objectName)
-		{
-			isDuplication = true;
-		}
-	}
-
-	if (!isDuplication)
-	{
-		dontDestroyObjectList[objectName] = gameObject;
+		dontDestroyObjectList.push_back(gameObject);
 	}
 }
 

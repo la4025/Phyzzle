@@ -14,7 +14,7 @@ namespace PurahEngine
 		void DontDestroyOnLoad(GameObject* gameObject);
 		void ClearDontDestroy();
 	public:
-		std::map<std::wstring, GameObject*> dontDestroyObjectList;
+		std::vector<GameObject*> dontDestroyObjectList;
 
 	public:
 		virtual void PreSerialize(json& jsonData) const override;
