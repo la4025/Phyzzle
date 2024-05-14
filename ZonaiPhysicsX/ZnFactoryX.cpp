@@ -213,17 +213,27 @@ namespace ZonaiPhysics
 	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
 	{
 		std::vector<Eigen::Vector3f> verties;
-		auto& pos = _model->meshList[0]->vertices;
-		for (size_t i = 0; i < pos.size(); i++)
-		{
-			verties.emplace_back(pos[i].position.x, pos[i].position.y, pos[i].position.z);
-		}
-
 		std::vector<unsigned int> indies;
-		auto& index = _model->meshList[0]->indices;
-		for (size_t i = 0; i < index.size(); i++)
+
+		int accIndex = 0;
+
+		for (size_t i = 0; i < _model->meshList.size(); i++)
 		{
-			indies.emplace_back(index[i]);
+			auto& mesh = _model->meshList[i];
+			auto& points = mesh->vertices;
+			auto& index = mesh->indices;
+
+			for (size_t j = 0; j < points.size(); j++)
+			{
+				verties.emplace_back(points[j].position.x, points[j].position.y, points[j].position.z);
+			}
+
+			for (size_t j = 0; j < index.size(); j++)
+			{
+				indies.emplace_back(accIndex + index[j]);
+			}
+
+			accIndex += index.size();
 		}
 
 		// 정점 정보
@@ -256,8 +266,7 @@ namespace ZonaiPhysics
 	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(FBXLoader::Model* _model)
 	{
 		std::vector<Eigen::Vector3f> verties;
-		auto& pos = _model->meshList[0]->vertices;
-
+		
 		for (size_t i = 0; i < _model->meshList.size(); i++)
 		{
 			auto& mesh = _model->meshList[i];
