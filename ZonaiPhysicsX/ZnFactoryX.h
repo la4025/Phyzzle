@@ -107,8 +107,12 @@ namespace ZonaiPhysics
 
 			const auto znBody = static_cast<RigidBody*>(_znBody);
 
-			const auto zn_collider = new collider(_pxShape, znBody);
-			RigidBodyHelper::Attach(znBody->pxBody, _pxShape);
+			auto zn_collider = new collider(_pxShape, znBody);
+			if (!RigidBodyHelper::Attach(znBody->pxBody, _pxShape))
+			{
+				delete zn_collider;
+				zn_collider = nullptr;
+			}
 
 			return zn_collider;
 		}

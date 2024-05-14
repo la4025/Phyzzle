@@ -221,7 +221,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateBoxShape(_extend, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<BoxCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, _userScene);
+
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, _userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -259,7 +267,14 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateSphereShape(_radius, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<SphereCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -297,7 +312,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateCapsuleShape(_radius, _height, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<CapsuleCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -339,9 +362,17 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
 
-		return nullptr;
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
+
+		return collider;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateConvexCollider(
@@ -381,7 +412,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+		
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
