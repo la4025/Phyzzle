@@ -288,7 +288,7 @@ void CoreSystem::run()
 
 		fbxID2 = renderer->CreateModel(L"D:\\Sheikah_Project\\GraphicsTest\\Basic Meshes\\Cube\\Cube.fbx");
 
-		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ -1.0f, -5.0f, 1.0f }.normalized());
 		dirLightID2 = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
 		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, pointLightPos, pointLightRange);
 
@@ -587,9 +587,9 @@ void CoreSystem::run()
 	}
 
 	instMatrix = Eigen::Matrix4f::Identity();
-	instMatrix(0, 0) = 1.0f;
-	instMatrix(1, 1) = 1.0f;
-	instMatrix(2, 2) = 1.0f;
+	instMatrix(0, 0) = 0.1f;
+	instMatrix(1, 1) = 0.1f;
+	instMatrix(2, 2) = 0.1f;
 
 	instMatrix(0, 3) = 0.0f;
 	instMatrix(1, 3) = 1.0f;
@@ -632,7 +632,7 @@ void CoreSystem::run()
 	//	renderer->DrawAnimation(instMatrix, fbxID, animationList[animationNumber], animationTime, false, true, false, false, { 1.0f, 1.0f, 0.0f, 1.0f });
 	//}
 
-	renderer->DrawModel(instMatrix, fbxID, false, true, false, false, { 1.0f, 1.0f, 1.0f, 1.0f });
+	renderer->DrawModel(instMatrix, fbxID, false, true, false, true, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 	Eigen::Matrix4f floatingMatrix[5];
 	for (int i = 0; i < 5; i++)
@@ -645,9 +645,9 @@ void CoreSystem::run()
 	}
 	
 	renderer->DrawCube(floatingMatrix[0], TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.2f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
-	renderer->DrawCube(floatingMatrix[1], TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.4f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[1], TextureID::ID_NULL, false, true, false, true, { 0.0f, 0.4f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 	renderer->DrawCube(floatingMatrix[2], TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.6f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
-	renderer->DrawCube(floatingMatrix[3], TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.8f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	renderer->DrawCube(floatingMatrix[3], TextureID::ID_NULL, false, true, false, true, { 0.0f, 0.8f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f });
 	renderer->DrawCube(floatingMatrix[4], TextureID::ID_NULL, false, true, false, false, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 	Eigen::Matrix4f floorMatrix;
