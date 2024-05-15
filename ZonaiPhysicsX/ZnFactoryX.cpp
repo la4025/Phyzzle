@@ -261,24 +261,24 @@ namespace ZonaiPhysics
 		meshDesc.points.stride = sizeof(Eigen::Vector3f);
 		meshDesc.points.data = &vertices.front();
 
-		meshDesc.triangles.count = (physx::PxU32)indies.size();
+		meshDesc.triangles.count = (physx::PxU32)(indies.size() / 3);
 		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
 		meshDesc.triangles.data = &indies.front();
 
 		const physx::PxTolerancesScale scale;
 		physx::PxCookingParams params(scale);
-		params.meshPreprocessParams =
-			physx::PxMeshPreprocessingFlags(
-				physx::PxMeshPreprocessingFlag::eWELD_VERTICES);
+		params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
+		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
 
-		physx::PxDefaultMemoryOutputStream writeBuffer;
-		physx::PxTriangleMeshCookingResult::Enum result;
-		const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
-		if (!status)
-			return NULL;
-
-		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
+		//physx::PxDefaultMemoryOutputStream writeBuffer;
+		//physx::PxTriangleMeshCookingResult::Enum result;
+		//const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
+		//if (!status)
+		//	return NULL;
+		//physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+		// physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
+		physx::PxTriangleMesh* triangleMesh = PxCreateTriangleMesh(params, meshDesc);
 
 		return triangleMesh;
 	}
