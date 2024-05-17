@@ -174,6 +174,22 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
+	physx::PxControllerManager* ZnFactoryX::CreateControllerManager(physx::PxScene* _scene)
+	{
+		physx::PxControllerManager* manager = PxCreateControllerManager(*_scene);
+
+		return manager;
+	}
+
+	physx::PxController* ZnFactoryX::CreateController(physx::PxControllerManager* _manager)
+	{
+		physx::PxCapsuleControllerDesc desc;
+		// desc.c
+		_manager->createController(desc);
+
+		return nullptr;
+	}
+
 	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
 		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
@@ -240,21 +256,6 @@ namespace ZonaiPhysics
 			accIndex += index.size();
 		}
 
-		//physx::PxSDFDesc sdfDesc;
-		//physx::PxReal sdfSpacing = 0.01f;
-		//physx::PxU32 sdfSubgridSize = 6;
-		//physx::PxSdfBitsPerSubgridPixel::Enum bitPerSdfSubgridPixel = physx::PxSdfBitsPerSubgridPixel::e16_BIT_PER_PIXEL;
-
-		//if (sdfSpacing > 0.f)
-		//{
-		//	sdfDesc.spacing = sdfSpacing;
-		//	sdfDesc.subgridSize = sdfSubgridSize;
-		//	sdfDesc.bitsPerSubgridPixel = bitPerSdfSubgridPixel;
-		//	sdfDesc.numThreadsForSdfConstruction = 16;
-
-
-		//}
-
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
 		meshDesc.points.count = (physx::PxU32)vertices.size();
@@ -265,20 +266,25 @@ namespace ZonaiPhysics
 		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
 		meshDesc.triangles.data = &indies.front();
 
-		const physx::PxTolerancesScale scale;
-		physx::PxCookingParams params(scale);
-		params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
-		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-		params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+		//const physx::PxTolerancesScale scale;
+		//physx::PxCookingParams params(scale);
+		//params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
+		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+		//physx::PxTriangleMesh* triangleMesh = PxCreateTriangleMesh(params, meshDesc);
+		
+		physx::PxCookingParams params(pxFactory->getTolerancesScale());
+		physx::PxDefaultMemoryOutputStream writeBuffer;
+		physx::PxTriangleMeshCookingResult::Enum result;
+		const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
+		if (!status)
+		{
+			ZONAI_CAUTUON(ZonaiPhysics, Create Mesh Collider Error!)
+			return NULL;
+		}
 
-		//physx::PxDefaultMemoryOutputStream writeBuffer;
-		//physx::PxTriangleMeshCookingResult::Enum result;
-		//const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
-		//if (!status)
-		//	return NULL;
-		//physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-		// physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
-		physx::PxTriangleMesh* triangleMesh = PxCreateTriangleMesh(params, meshDesc);
+		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+		 physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
 
 		return triangleMesh;
 	}
@@ -312,7 +318,10 @@ namespace ZonaiPhysics
 		physx::PxConvexMeshCookingResult::Enum result;
 		const bool status = PxCookConvexMesh(params, convexDesc, buf, &result);
 		if (!status)
+		{
+			ZONAI_CAUTUON(ZonaiPhysics, Create Convex Collider Error!)
 			return nullptr;
+		}
 
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());

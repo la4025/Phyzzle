@@ -92,14 +92,23 @@ namespace Phyzzle
 			float halflife,
 			float dt)
 		{
+			Eigen::Quaternionf goal = x_goal;
+			Eigen::Quaternionf minusGoal = { -x_goal.w(), -x_goal.x() , -x_goal.y() , -x_goal.z() };
+
+			float xDot = x.dot(x_goal);
+			float minusDot = x.dot(minusGoal);
+
+			if (xDot < minusDot)
+				goal = minusGoal;
+
 			const float y = halflife_to_damping(halflife) / 2.0f;
 
-			const Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * x_goal.inverse());
+			const Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * goal.inverse());
 			const Eigen::Vector3f j1 = v + j0 * y;
 
 			float eydt = fast_negexp(y * dt);
 
-			x = quat_from_scaled_angle_axis(eydt * (j0 + j1 * dt)) * x_goal;
+			x = quat_from_scaled_angle_axis(eydt * (j0 + j1 * dt)) * goal;
 			v = eydt * (v - j1 * y * dt);
 		}
 	};

@@ -1,9 +1,10 @@
 #pragma once
+#include <Eigen/Dense>
 #include <string>
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo
+	struct ZnQueryInfo
 	{
 		void* bodyData;					// 오브젝트 포인터
 		void* colliderData;				// 콜라이더 포인터

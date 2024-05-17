@@ -78,22 +78,14 @@ namespace ZonaiPhysics
 		static RigidBody*				CreateDynamicRigidBody(void* _userData);
 		static RigidBody*				CreateStaticRigidBody(void* _userData);
 
+		static physx::PxControllerManager* CreateControllerManager(physx::PxScene* _scene);
+		static physx::PxController*		CreateController(physx::PxControllerManager*);
 
 		static physx::PxShape*			CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
 		static physx::PxShape*			CreateSphereShape(float _radius, const physx::PxMaterial* _material);
 		static physx::PxShape*			CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material);
-		static physx::PxShape*			CreateTriagleMeshShape(
-			physx::PxTriangleMesh* _mesh, 
-			const Eigen::Vector3f& _scale, 
-			const Eigen::Quaternionf& _rotation, 
-			const physx::PxMaterial* _material
-		);
-		static physx::PxShape*			CreateConvexMeshShape(
-			physx::PxConvexMesh* _mesh,
-			const Eigen::Vector3f& _scale,
-			const Eigen::Quaternionf& _rotation,
-			const physx::PxMaterial* _material
-		);
+		static physx::PxShape*			CreateTriagleMeshShape(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale, const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material);
+		static physx::PxShape*			CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale, const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material);
 
 		static physx::PxTriangleMesh*	CookTriagleMesh(FBXLoader::Model* _model);
 		static physx::PxConvexMesh*		CookConvexMesh(FBXLoader::Model* _model);

@@ -2,6 +2,8 @@
 
 #include "QueryFilterCallback.h"
 
+#include <vector>
+
 #include "ZnLayer.h"
 
 namespace ZonaiPhysics
@@ -14,22 +16,28 @@ namespace ZonaiPhysics
         if (!shape)
             return physx::PxQueryHitType::eNONE;
 
+        // 트리거는 X
+        if (PxFilterObjectIsTrigger(shape->getFlags()))
+            return physx::PxQueryHitType::eNONE;
+
         // 레이어가 다르면 X
         const physx::PxFilterData shapeFilter = shape->getQueryFilterData();
+
+        // const std::vector<int> layer = (filterData.word0);
+
         const bool test = ZnLayer::CanCollide(filterData.word0, shapeFilter.word0);
-        // if ((filterData.word0 & shapeFilter.word0) == 0)
         if (!test)
-        {
             return physx::PxQueryHitType::eNONE;
-        }
+
+        return physx::PxQueryHitType::eBLOCK;
 
         // Check if skip triggers
-        const bool hitTriggers = filterData.word2 != 0;
-        if (!hitTriggers && shape->getFlags() & physx::PxShapeFlag::eTRIGGER_SHAPE)
-            return physx::PxQueryHitType::eNONE;
+        //const bool hitTriggers = filterData.word2 != 0;
+        //if (!hitTriggers && PxFilterObjectIsTrigger(shape->getFlags()))
+        //    return physx::PxQueryHitType::eNONE;
 
-        const bool blockSingle = filterData.word1 != 0;
-        return blockSingle ? physx::PxQueryHitType::eBLOCK : physx::PxQueryHitType::eTOUCH;
+        //const bool blockSingle = filterData.word1 != 0;
+        // return blockSingle ? physx::PxQueryHitType::eBLOCK : physx::PxQueryHitType::eTOUCH;
 	}
 
 	physx::PxQueryHitType::Enum QueryFilter::postFilter(

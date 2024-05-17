@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="Attachable.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="BeomJoon.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NaDong.cpp" />
     <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Rewindable.cpp" />
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
@@ -185,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Attachable.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="BeomJoon.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="AttachSystem.h" />
     <ClInclude Include="LauncherPlatform.h" />
     <ClInclude Include="PlayerCamera.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />

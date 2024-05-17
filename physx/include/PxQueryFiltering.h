@@ -55,9 +55,9 @@ struct PxQueryFlag
 {
 	enum Enum
 	{
-		eSTATIC							= (1<<0),	//!< 정적 형태를 통과합니다.
+		eSTATIC							= (1<<0),	//!< 정적 형태를 탐색합니다.
 
-		eDYNAMIC						= (1<<1),	//!< 동적 형태를 통과합니다.
+		eDYNAMIC						= (1<<1),	//!< 동적 형태를 탐색합니다.
 
 		ePREFILTER						= (1<<2),	//!< 사전 교차 검사 필터(pre-intersection-test filter)를 실행합니다.
 													//!< (PxQueryFilterCallback::preFilter() 참조)
@@ -65,7 +65,7 @@ struct PxQueryFlag
 		ePOSTFILTER						= (1<<3),	//!< 사후 교차 검사 필터(post-intersection-test filter)를 실행합니다.
 													//!< (PxQueryFilterCallback::postFilter() 참조)
 
-		eANY_HIT						= (1<<4),	//!< 발견된 즉시 모든 통과를 중단하고 콜백을 통해 해당 히트를 반환합니다.
+		eANY_HIT						= (1<<4),	//!< 발견된 즉시 모든 탐색를 중단하고 콜백을 통해 해당 히트를 반환합니다.
 													//!< 쿼리 성능을 향상시킵니다. 이 플래그는 eTOUCH와 eBLOCK hitTypes가 모두 해당 플래그로 인해 히트로 간주됩니다.
 
 		eNO_BLOCK						= (1<<5),	//!< 모든 히트를 접촉(touching)으로 보고합니다. 사용자 필터에서 eBLOCK을 eTOUCH로 변경하여 eBLOCK이 반환되는 것을 재정의합니다.
@@ -153,24 +153,28 @@ struct PxQueryFilterData
 };
 
 /**
-\brief Scene query filtering callbacks.
+\brief 씬 쿼리 필터링 콜백입니다.
 
-Custom filtering logic for scene query intersection candidates. If an intersection candidate object passes the data based filter
-(see #PxQueryFilterData), filtering callbacks are executed if requested (see #PxQueryFilterData.flags)
+씬 쿼리 교차 후보에 대한 사용자 정의 필터링 로직입니다. 교차 후보 객체가 데이터 기반 필터(#PxQueryFilterData 참조)를 통과하면,
+필터링 콜백이 요청된 경우(#PxQueryFilterData.flags 참조),
 
-\li If #PxQueryFlag::ePREFILTER is set, the preFilter function runs before exact intersection tests.
-If this function returns #PxQueryHitType::eTOUCH or #PxQueryHitType::eBLOCK, exact testing is performed to
-determine the intersection location.
+\li #PxQueryFlag::ePREFILTER가 설정된 경우,
+	preFilter 함수가 정확한 교차 테스트 이전에 실행됩니다.
+	이 함수가 #PxQueryHitType::eTOUCH 또는 #PxQueryHitType::eBLOCK을 반환하면
+	정확한 테스트가 수행되어 교차 위치가 결정됩니다.
 
-The preFilter function may overwrite the copy of queryFlags it receives as an argument to specify any of #PxHitFlag::eMODIFIABLE_FLAGS
-on a per-shape basis. Changes apply only to the shape being filtered, and changes to other flags are ignored.
+preFilter 함수는 인수로 전달받은 queryFlags의 사본을 덮어쓸 수 있어서,
+#PxHitFlag::eMODIFIABLE_FLAGS 중 일부를 개별 모양 기준으로 지정할 수 있습니다.
+변경 사항은 필터링된 모양에만 적용되며, 다른 플래그에 대한 변경은 무시됩니다.
 
-\li If #PxQueryFlag::ePREFILTER is not set, precise intersection testing is performed using the original query's filterData.flags.
+\li #PxQueryFlag::ePREFILTER가 설정되지 않은 경우,
+	원래 쿼리의 filterData.flags를 사용하여 정확한 교차 테스트가 수행됩니다.
 
-\li If #PxQueryFlag::ePOSTFILTER is set, the postFilter function is called for each intersection to determine the touch/block status.
-This overrides any touch/block status previously returned from the preFilter function for this shape.
+\li #PxQueryFlag::ePOSTFILTER가 설정된 경우,
+	각 교차에 대해 postFilter 함수가 호출되어 터치/블록 상태를 결정합니다.
+	이는 이 모양에 대해 이전에 preFilter 함수에서 반환된 터치/블록 상태를 재정의합니다.
 
-Filtering calls are not guaranteed to be sorted along the ray or sweep direction.
+필터링 호출은 광선이나 스위핑 방향을 따라 정렬되지 않습니다.
 
 @see PxScene.raycast PxScene.sweep PxScene.overlap PxQueryFlags PxHitFlags
 */

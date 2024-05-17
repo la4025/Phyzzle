@@ -446,9 +446,9 @@ namespace Phyzzle
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnRaycastInfo info;
+		ZonaiPhysics::ZnQueryInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, {}, info);
 
 		if (block)
 		{
@@ -481,9 +481,9 @@ namespace Phyzzle
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnRaycastInfo info;
+		ZonaiPhysics::ZnQueryInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, {}, info);
 
 		if (block)
 		{

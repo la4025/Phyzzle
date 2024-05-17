@@ -23,6 +23,7 @@
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderHelper.h" />
+    <ClInclude Include="ZnController.h" />
     <ClInclude Include="ZnConvexMeshData.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -67,6 +68,7 @@
     <ClCompile Include="RigidBodyHelper.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
+    <ClCompile Include="ZnController.cpp" />
     <ClCompile Include="ZnFactoryX.cpp" />
     <ClCompile Include="ZnLayer.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />

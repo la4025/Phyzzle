@@ -93,6 +93,12 @@
     <ClCompile Include="IslandID.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -217,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="IslandID.h">
       <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>KH\PLAYER\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
