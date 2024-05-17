@@ -16,6 +16,9 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 		ComponentFactory::GetInstance().RegisterComponent<BoxCollider>("BoxCollider");
 		ComponentFactory::GetInstance().RegisterComponent<SphereCollider>("SphereCollider");
 		ComponentFactory::GetInstance().RegisterComponent<CapsuleCollider>("CapsuleCollider");
+		ComponentFactory::GetInstance().RegisterComponent<MeshCollider>("MeshCollider");
+		ComponentFactory::GetInstance().RegisterComponent<ConvexCollider>("ConvexCollider");
+
 		ComponentFactory::GetInstance().RegisterComponent<FixedJoint>("FixedJoint");
 		ComponentFactory::GetInstance().RegisterComponent<SlideJoint>("SlideJoint");
 		ComponentFactory::GetInstance().RegisterComponent<HingeJoint>("HingeJoint");

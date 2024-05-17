@@ -50,88 +50,93 @@ struct PxConvexFlag
 	enum Enum
 	{
 		/**
-		Denotes the use of 16-bit vertex indices in PxConvexMeshDesc::triangles or PxConvexMeshDesc::polygons.
-		(otherwise, 32-bit indices are assumed)
+		PxConvexMeshDesc::triangles 또는 PxConvexMeshDesc::polygons에서 16비트 정점 인덱스의 사용을 나타냅니다.
+		(그렇지 않으면 32비트 인덱스가 가정됩니다)
 		@see #PxConvexMeshDesc.indices
 		*/
 		e16_BIT_INDICES		=	(1<<0),
 
 		/**
-		Automatically recomputes the hull from the vertices. If this flag is not set, you must provide the entire geometry manually.
+		정점에서 오목 다각형을 자동으로 다시 계산합니다. 이 플래그가 설정되지 않은 경우 전체 기하 구조를 수동으로 제공해야 합니다.
 
-		\note There are two different algorithms for hull computation, please see PxConvexMeshCookingType. 
+		\note 오목 볼록 다각형 계산에는 두 가지 다른 알고리즘이 있습니다. PxConvexMeshCookingType를 참조하십시오.
 
 		@see PxConvexMeshCookingType
 		*/
 		eCOMPUTE_CONVEX		=	(1<<1),	
 
 		/**
-		\brief Checks and removes almost zero-area triangles during convex hull computation. 
-		The rejected area size is specified in PxCookingParams::areaTestEpsilon
+		오목 볼록 다각형 계산 중에 거의 제로 면적 삼각형을 확인하고 제거합니다.
+		거부된 면적 크기는 PxCookingParams::areaTestEpsilon에서 지정됩니다.
 
-		\note This flag is only used in combination with eCOMPUTE_CONVEX.
+		\note 이 플래그는 eCOMPUTE_CONVEX와 함께만 사용됩니다.
 
 		@see PxCookingParams PxCookingParams::areaTestEpsilon
-		*/		
+		*/
 		eCHECK_ZERO_AREA_TRIANGLES		=	(1<<2),
 
 		/**
-		\brief Quantizes the input vertices using the k-means clustering
+		입력 정점을 k-평균 클러스터링을 사용하여 양자화합니다.
 
-		\note The input vertices are quantized to PxConvexMeshDesc::quantizedCount
-		see http://en.wikipedia.org/wiki/K-means_clustering
+		\note 입력 정점은 PxConvexMeshDesc::quantizedCount로 양자화됩니다.
+		http://en.wikipedia.org/wiki/K-means_clustering을 참조하십시오.
 
 		*/
 		eQUANTIZE_INPUT = (1 << 3),
 
 		/**
-		\brief Disables the convex mesh validation to speed-up hull creation. Please use separate validation
-		function in checked/debug builds. Creating a convex mesh with invalid input data without prior validation
-		may result in undefined behavior. 
+		볼록 메쉬 유효성 검사를 비활성화하여 헐 생성 속도를 높입니다. 
+		디버그 빌드에서 별도의 유효성 검사 함수를 사용하십시오.
+
+		이전에 유효성 검사를 수행하지 않고 유효하지 않은 
+		입력 데이터로 볼록 메쉬를 생성하면 정의되지 않은 동작이 발생할 수 있습니다.
 
 		@see PxCooking::validateConvexMesh
 		*/
 		eDISABLE_MESH_VALIDATION = (1 << 4),
 
 		/**
-		\brief Enables plane shifting vertex limit algorithm.
+		정점 제한 알고리즘에 플레인 시프팅을 활성화합니다.
 
-		Plane shifting is an alternative algorithm for the case when the computed hull has more vertices 
-		than the specified vertex limit.
+		플레인 시프팅은 계산된 헐이 지정된 정점 제한보다 많은 정점을 가지고 있는 경우에 대한 대안 알고리즘입니다.
 
-		The default algorithm computes the full hull, and an OBB around the input vertices. This OBB is then sliced
-		with the hull planes until the vertex limit is reached.The default algorithm requires the vertex limit 
-		to be set to at least 8, and typically produces results that are much better quality than are produced 
-		by plane shifting.
+		기본 알고리즘은 전체 헐과 입력 정점 주위의 OBB를 계산합니다. 
+		이 OBB는 그 후 헐 플레인과 슬라이스됩니다
+		정점 제한이 도달될 때까지. 
+		기본 알고리즘은 정점 제한을 적어도 8로 설정해야 하며 일반적으로 플레인 시프팅보다 훨씬
+		품질이 좋은 결과를 생성합니다.
 
-		When plane shifting is enabled, the hull computation stops when vertex limit is reached. The hull planes
-		are then shifted to contain all input vertices, and the new plane intersection points are then used to 
-		generate the final hull with the given vertex limit.Plane shifting may produce sharp edges to vertices 
-		very far away from the input cloud, and does not guarantee that all input vertices are inside the resulting
-		hull.However, it can be used with a vertex limit as low as 4.
+		플레인 시프팅이 활성화되면 헐 계산은 정점 제한에 도달할 때 중지됩니다. 
+		그런 다음 헐 플레인은 모든 입력 정점을 포함하도록 이동되며
+		새로운 평면 교차점은 지정된 정점 제한으로 최종 헐을 생성하기 위해 사용됩니다. 
+		플레인 시프팅은 입력 클라우드에서 매우 먼 정점에 대해
+		날카로운 모서리를 생성할 수 있으며 결과적인 헐 내에 모든 입력 정점이 포함되지 않을 수 있습니다. 
+		그러나 정점 제한을 4로 설정할 수 있습니다.
 		*/
 		ePLANE_SHIFTING = (1 << 5),
 
 		/**
-		\brief Inertia tensor computation is faster using SIMD code, but the precision is lower, which may result 
-		in incorrect inertia for very thin hulls.
+		SIMD 코드를 사용하여 관성 텐서를 계산합니다. 
+		그러나 정밀도가 낮아 매우 얇은 헐의 경우 잘못된 관성을 초래할 수 있습니다.
 		*/
 		eFAST_INERTIA_COMPUTATION = (1 << 6),
 
 		/**
-		\brief Convex hulls are created with respect to GPU simulation limitations. Vertex limit and polygon limit 
-		is set to 64 and vertex limit per face is internally set to 32.
-		\note Can be used only with eCOMPUTE_CONVEX flag.
+		GPU 시뮬레이션 제한을 고려하여 볼록 헐을 생성합니다.
+		정점 제한 및 다각형 제한은 64로 설정되고
+		각 면의 정점 제한은 내부적으로 32로 설정됩니다.
+		\note eCOMPUTE_CONVEX 플래그와 함께만 사용할 수 있습니다.
 
-		@deprecated since PhysX 5.2. Setting #PxCookingParams::buildGPUData to true always cooks GPU-compatible meshes.
+		@deprecated PhysX 5.2 이후. #PxCookingParams::buildGPUData를 true로 설정하면 항상 GPU 호환 메쉬를 쿡합니다.
 		*/
 		eGPU_COMPATIBLE PX_DEPRECATED = (1 << 7),
 
 		/**
-		\brief Convex hull input vertices are shifted to be around origin to provide better computation stability.
-		It is recommended to provide input vertices around the origin, otherwise use this flag to improve 
-		numerical stability.
-		\note Is used only with eCOMPUTE_CONVEX flag.
+		입력 정점을 더 나은 계산 안정성을 제공하기 위해 원점 주변으로 이동합니다.
+		원점 주변의 입력 정점을 제공하는 것이 좋습니다.
+		그렇지 않으면 이 플래그를 사용하여
+		수치적 안정성을 향상시킵니다.
+		\note eCOMPUTE_CONVEX 플래그와 함께만 사용됩니다.
 		*/
 		eSHIFT_VERTICES = (1 << 8)
 	};

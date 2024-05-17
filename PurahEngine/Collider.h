@@ -35,13 +35,17 @@ namespace PurahEngine
         void SetRotationOffset(const Eigen::Quaternionf& _rot);
 
         void SetDynamic(bool _value);
-
         void SetTrigger(bool _value) const;
-
         void SetLayer(uint32_t _value) const;
 
     public:
         virtual void PreStep();
+
+    public:
+        void PreSerialize(json& jsonData) const override {};
+		void PreDeserialize(const json& jsonData) override;
+        void PostSerialize(json& jsonData) const override {};
+        void PostDeserialize(const json& jsonData) override {};
 
     protected:
         bool awake = true;
@@ -49,6 +53,7 @@ namespace PurahEngine
         ColliderType cType = ColliderType::STATIC;
 
     protected:
+        std::wstring physicsMaterial;
         bool isTrigger = false;
         uint32_t layer = 0;
         ZonaiPhysics::ZnCollider* znCollider = nullptr;

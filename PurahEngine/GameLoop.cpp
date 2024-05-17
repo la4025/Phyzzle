@@ -21,7 +21,6 @@
 #include "GamePadManager.h"
 #include "../ZonaiPhysicsBase/ZnCollider.h"
 #include "../ZonaiPhysicsBase/ZnRigidBody.h"
-#include "../ZonaiMath/ZonaiMath.h"
 
 ZonaiPhysics::ZnCollider* collider;
 ZonaiPhysics::ZnRigidBody* rigidBody;

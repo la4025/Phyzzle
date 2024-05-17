@@ -53,6 +53,8 @@ namespace ZonaiPhysics
 		*/
 		virtual float			GetMass() const = 0;
 		virtual void			SetMass(float) = 0;
+		virtual void			SetDensity(float) = 0;
+
 		virtual float			GetInvMass() const = 0;
 
 		virtual Eigen::Vector3f	GetInertiaTensor() const = 0;

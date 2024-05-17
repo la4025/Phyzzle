@@ -133,4 +133,15 @@ namespace PurahEngine
         znCollider->SetPosition(transform->GetWorldPosition());
         znCollider->SetQuaternion(transform->GetWorldRotation());
     }
+
+    void Collider::PreDeserialize(const json& jsonData)
+    {
+        PREDESERIALIZE_BASE();
+
+		PREDESERIALIZE_VALUE(cType);
+		PREDESERIALIZE_VALUE(isTrigger);
+		PREDESERIALIZE_VALUE(layer);
+		PREDESERIALIZE_VECTOR3F(positionOffset);
+		PREDESERIALIZE_WSTRING(physicsMaterial);
+    }
 }

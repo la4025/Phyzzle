@@ -54,7 +54,14 @@ namespace PurahEngine
 
 	void RigidBody::Awake()
 	{
-		this->SetMass(mass);
+		if (useAutoMass)
+		{
+			this->SetDensity(density);
+		}
+		else
+		{
+			this->SetMass(mass);
+		}
 	}
 
 	void RigidBody::SetPosition(const Eigen::Vector3f& _pos) noexcept
@@ -160,14 +167,14 @@ namespace PurahEngine
 
 	float RigidBody::GetMass() const noexcept
 	{
-		 if (awake)
-		 {
-		 	return mass;
-		 }
-		 else
-		 {
-		return  body->GetMass();
-		 }
+		if (awake)
+		{
+		return mass;
+		}
+		else
+		{
+			return  body->GetMass();
+		}
 	}
 
 	void RigidBody::SetMass(float _mass) noexcept
@@ -178,7 +185,19 @@ namespace PurahEngine
 		}
 		else
 		{
-		body->SetMass(_mass);
+			body->SetMass(_mass);
+		}
+	}
+
+	void RigidBody::SetDensity(float _density)
+	{
+		if (awake)
+		{
+			density = _density;
+		}
+		else
+		{
+			body->SetDensity(density);
 		}
 	}
 
@@ -391,7 +410,9 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(dynamicLock);
 		this->freeze = (uint8_t)dynamicLock;
 
+		PREDESERIALIZE_VALUE(useAutoMass);
 		PREDESERIALIZE_VALUE(mass);
+		PREDESERIALIZE_VALUE(density);
 		PREDESERIALIZE_VALUE(linearDamping);
 		PREDESERIALIZE_VALUE(angularDamping);
 	}

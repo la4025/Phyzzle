@@ -5,10 +5,10 @@
 #pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
 #include <Eigen/Dense>
+#include <queue>
 #pragma warning (pop)
 
 #include "ZnLayer.h"
-#include <queue>
 
 #include "MaterialEnum.h"
 #include "ZnMaterial.h"
@@ -43,41 +43,36 @@ namespace ZonaiPhysics
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
 	public:
-		ZnPhysicsX() = default;
-		~ZnPhysicsX() override = default;
+								ZnPhysicsX() = default;
+								~ZnPhysicsX() override = default;
 
 		static ZnPhysicsX*&		Instance();
 		static void				Release();
 
 	public:
-		void Initialize(ZnSimulationCallback*) override;
-		void Simulation(float _dt) override;
-		void Finalize() override;
+		void					Initialize(ZnSimulationCallback*) override;
+		void					Simulation(float _dt) override;
+		void					Finalize() override;
 
 	public:
-		ZnMaterialID AddMaterial(const MaterialDesc& _desc) override;
+		ZnMaterialID			CreateMaterial(const MaterialDesc& _desc) override;
+		ZnConvexID				ConvexMeshLoadFromPath(const std::wstring& _path) override;
+		ZnMeshID				TriangleMeshLoadFromPath(const std::wstring& _path) override;
 
-		void CreateScene(
-			void* _userScene, 
-			const Eigen::Vector3f& _gravity) override;
+		bool					ReleaseMaterial(const ZnMaterialID& _id) override;
+		bool					ReleaseConvexMesh(const ZnConvexID& _id) override;
+		bool					ReleaseTriangleMesh(const ZnMeshID& _id) override;
 
-		void LoadScene(void* _userScene) override;
+	public:
+		void					CreateScene(void* _userScene, const Eigen::Vector3f& _gravity) override;
+		void					LoadScene(void* _userScene) override;
+		void					UnloadScene(void* _userScene) override;
 
-		void UnloadScene(void* _userScene) override;
+		Eigen::Vector3f			GetGravity(void* _userScene) override;
+		void					SetGravity(const Eigen::Vector3f& _gravity, void* _userScene) override;
 
-		Eigen::Vector3f GetGravity(void* _userScene) override;
-
-		void SetGravity(
-			const Eigen::Vector3f& _gravity,
-			void* _userScene) override;
-
-		void SetCollisionLayer(
-			uint32_t _layer, 
-			uint32_t _collision, bool _value) override;
-
-		void SetCollisionLayerData(
-			uint32_t _layer, 
-			const std::initializer_list<uint32_t>& _data) override;
+		void					SetCollisionLayer(uint32_t _layer, uint32_t _collision, bool _value) override;
+		void					SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) override;
 
 	public:
 		/// <summary>
@@ -93,31 +88,35 @@ namespace ZonaiPhysics
 		ZnCollider* CreateBoxCollider(
 			void* _userData, 
 			const Eigen::Vector3f& extend, 
-			ZnMaterialID _material,
+			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateSphereCollider(
 			void* _userData, 
 			float radius, 
-			ZnMaterialID _material,
+			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateCapsuleCollider(
 			void* _userData, 
 			float radius, float height, 
-			ZnMaterialID _material,
+			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateMeshCollider(
 			void* _userData, 
-			const std::wstring& _path, 
-			ZnMaterialID _material,
+			const ZnMeshID& _path,
+			const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _scale,
+			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
 
 		ZnCollider* CreateConvexCollider(
 			void* _userData, 
-			const std::wstring& _path, 
-			ZnMaterialID _material,
+			const ZnConvexID& _path,
+			const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _scale,
+			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
 
 		/// <summary>
@@ -158,7 +157,7 @@ namespace ZonaiPhysics
 		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) override;
 
 	private:
-		physx::PxMaterial* defaultMaterial;
+		ZnMaterialID defaultMaterial;
 
 	private:
 		static ZnPhysicsX* instance;

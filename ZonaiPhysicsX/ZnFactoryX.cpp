@@ -3,11 +3,6 @@
 #include "RigidBodyHelper.h"
 #include "RigidBody.h"
 
-#include "BoxCollider.h"
-#include "SphereCollider.h"
-#include "CapsuleCollider.h"
-#include "MeshCollider.h"
-
 #include "FixedJoint.h"
 #include "PrismaticJoint.h"
 #include "DistanceJoint.h"
@@ -20,7 +15,6 @@
 
 #include "ZnFactoryX.h"
 
-#include "ConvexCollider.h"
 #include "../ZeldaFBXLoader/FBXLoader.h"
 
 namespace ZonaiPhysics
@@ -114,7 +108,6 @@ namespace ZonaiPhysics
 			PX_RELEASE(transport);
 		}
 		PX_RELEASE(foundation);
-
 	}
 
 	physx::PxScene* ZnFactoryX::CreateScene(void* _userScene, const Eigen::Vector3f& _gravity)
@@ -181,99 +174,82 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
-	BoxCollider* ZnFactoryX::CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znBoxCollider = new BoxCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape); 
-
-		return znBoxCollider;
+		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
 	}
 
-	SphereCollider* ZnFactoryX::CreateSphereCollider(void* _znBody, float _radius, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateSphereShape(float _radius, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
-
-		assert(pxShape != nullptr);
-
-		const auto znSphereCollider = new SphereCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znSphereCollider;
+		return pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
 	}
 
-	CapsuleCollider* ZnFactoryX::CreateCapsuleCollider(void* _znBody, float _radius, float _height, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
-
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-
-		const auto pxShape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
-
-		assert(pxShape != nullptr);
+		physx::PxShape* shape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
 
 		const physx::PxQuat rotation(physx::PxPi / 2.f, physx::PxVec3(0.f, 0.f, 1.f));
-		pxShape->setLocalPose(physx::PxTransform(rotation));
+		shape->setLocalPose(physx::PxTransform(rotation));
 
-		const auto znCapsuleCollider = new CapsuleCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znCapsuleCollider;
+		return shape;
 	}
 
-	MeshCollider* ZnFactoryX::CreateMeshCollider(void* _znBody, const physx::PxMaterial* _material)
+	physx::PxShape* ZnFactoryX::CreateTriagleMeshShape(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
+		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
 	{
-		assert(_znBody != nullptr);
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxTriangleMeshGeometry geom(_mesh, scale);
+		return pxFactory->createShape(geom, *_material);
+	}
 
-		const physx::PxVec3 meshVerts[] = {
-			physx::PxVec3(0,1,0),
-			physx::PxVec3(1,0,0),
-			physx::PxVec3(-1,0,0),
-			physx::PxVec3(0,0,1),
-			physx::PxVec3(0,0,-1)
-		};
+	physx::PxShape* ZnFactoryX::CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
+		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
+	{
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxConvexMeshGeometry geom(_mesh, scale);
+		return pxFactory->createShape(geom, *_material);
+	}
 
-		const physx::PxU32 meshIndies[] = {
-			0, 1, 2,
-			0, 2, 3
-		};
+	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
+	{
+		std::vector<Eigen::Vector3f> verties;
+		std::vector<unsigned int> indies;
+
+		int accIndex = 0;
+
+		for (size_t i = 0; i < _model->meshList.size(); i++)
+		{
+			auto& mesh = _model->meshList[i];
+			auto& points = mesh->vertices;
+			auto& index = mesh->indices;
+
+			for (size_t j = 0; j < points.size(); j++)
+			{
+				verties.emplace_back(points[j].position.x, points[j].position.y, points[j].position.z);
+			}
+
+			for (size_t j = 0; j < index.size(); j++)
+			{
+				indies.emplace_back(accIndex + index[j]);
+			}
+
+			accIndex += index.size();
+		}
 
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
-		meshDesc.points.count = sizeof(meshVerts) / sizeof(physx::PxVec3);
-		meshDesc.points.stride = sizeof(physx::PxVec3);
-		meshDesc.points.data = meshVerts;
+		meshDesc.points.count = verties.size();
+		meshDesc.points.stride = sizeof(Eigen::Vector3f);
+		meshDesc.points.data = &verties[0];
 
-		meshDesc.triangles.count = sizeof(meshIndies) / sizeof(physx::PxU32);
-		meshDesc.triangles.stride = sizeof(physx::PxU32);
-		meshDesc.triangles.data = meshIndies;
+		meshDesc.triangles.count = indies.size();
+		meshDesc.triangles.stride = sizeof(unsigned int);
+		meshDesc.triangles.data = &indies[0];
 
+		meshDesc.sdfDesc;
 		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
 
 		physx::PxCookingParams params(pxFactory->getTolerancesScale());
-		// 메시 정리 비활성화 - 개발 구성에서 메시 유효성 검사 수행
-		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-		// 엣지 사전 계산 비활성화, 각 삼각형에 대해 엣지가 설정됩니다. 이는 접촉 생성을 느리게 합니다.
-		// params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-		// 내부 메시의 계층 구조를 낮춥니다.
-		// params.meshCookingHint = physx::PxMeshCookingHint::eCOOKING_PERFORMANCE;
-		//
-//#ifdef _DEBUG
-//// 메시가 정리되지 않은 상태로 쿠킹하기 전에 메시를 유효성 검사해야 합니다.
-//		bool res = PxValidateTriangleMesh(params, meshDesc);
-//		PX_ASSERT(res);
-//#endif
-//
-//		physx::PxTriangleMesh* aTriangleMesh = PxCreateTriangleMesh(params, meshDesc,
-//			pxFactory->getPhysicsInsertionCallback());
 
 		physx::PxDefaultMemoryOutputStream writeBuffer;
 		physx::PxTriangleMeshCookingResult::Enum result;
@@ -284,37 +260,29 @@ namespace ZonaiPhysics
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
 
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxTriangleMeshGeometry(triangleMesh), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znMeshCollider = new MeshCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znMeshCollider;
+		return triangleMesh;
 	}
 
-	ConvexCollider* ZnFactoryX::CreateConvexCollider(void* _znBody, const physx::PxMaterial* _material)
+	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(FBXLoader::Model* _model)
 	{
-		assert(_znBody != nullptr);
+		std::vector<Eigen::Vector3f> verties;
+		
+		for (size_t i = 0; i < _model->meshList.size(); i++)
+		{
+			auto& mesh = _model->meshList[i];
+			auto& points = mesh->vertices;
 
-		FBXLoader::FBXLoader loader;
-
-		// 이부분은 바뀔 예정
-		// 정점 갯수, 정점 데이터, 정점 크기를 받아서 Convex를 만들어야함.
-		const physx::PxVec3 convexVerts[] = {
-			physx::PxVec3(0,1,0),
-			physx::PxVec3(1,0,0),
-			physx::PxVec3(-1,0,0),
-			physx::PxVec3(0,0,1),
-			physx::PxVec3(0,0,-1)
-		};
+			for (size_t i = 0; i < points.size(); i++)
+			{
+				verties.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
+			}
+		}
 
 		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
-		convexDesc.points.count = sizeof(convexVerts) / sizeof(physx::PxVec3);
-		convexDesc.points.stride = sizeof(physx::PxVec3);
-		convexDesc.points.data = convexVerts;
+		convexDesc.points.count = verties.size();
+		convexDesc.points.stride = sizeof(Eigen::Vector3f);
+		convexDesc.points.data = &verties[0];
 		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
@@ -322,21 +290,15 @@ namespace ZonaiPhysics
 		// 정점 메모리 버퍼
 		physx::PxDefaultMemoryOutputStream buf;
 		physx::PxConvexMeshCookingResult::Enum result;
-		if (!PxCookConvexMesh(params, convexDesc, buf, &result))
-			return NULL;
+		const bool status = PxCookConvexMesh(params, convexDesc, buf, &result);
+		if (!status)
+			return nullptr;
 
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
 		physx::PxConvexMesh* convexMesh = pxFactory->createConvexMesh(input);
 
-		const auto znBody = static_cast<RigidBody*>(_znBody);
-		const auto pxShape = pxFactory->createShape(physx::PxConvexMeshGeometry(convexMesh), *_material);
-		assert(pxShape != nullptr);
-
-		const auto znConvexCollider = new ConvexCollider(pxShape, znBody);
-		RigidBodyHelper::Attach(znBody->pxBody, pxShape);
-
-		return znConvexCollider;
+		return convexMesh;
 	}
 
 	FixedJoint* ZnFactoryX::CreateFixedJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)

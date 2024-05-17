@@ -3,10 +3,19 @@
 
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)
-#include <Eigen/Dense>
+
+#include "BoxCollider.h"
+#include "SphereCollider.h"
+#include "CapsuleCollider.h"
+#include "MeshCollider.h"
+#include "ConvexCollider.h"
 
 #include "MaterialEnum.h"
 #include "ZnMaterial.h"
+
+#include "RigidBodyHelper.h"
+
+#include <Eigen/Dense>
 #include "PxPhysicsAPI.h"
 #include "omnipvd/PxOmniPvd.h"
 
@@ -50,6 +59,9 @@ namespace ZonaiPhysics
 
 namespace ZonaiPhysics
 {
+	template <typename Ty>
+	concept znCollider = std::is_base_of_v<ZnCollider, Ty>;
+
 	class ZnFactoryX
 	{
 	public:
@@ -66,12 +78,40 @@ namespace ZonaiPhysics
 		static RigidBody*				CreateDynamicRigidBody(void* _userData);
 		static RigidBody*				CreateStaticRigidBody(void* _userData);
 
+
+		static physx::PxShape*			CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
+		static physx::PxShape*			CreateSphereShape(float _radius, const physx::PxMaterial* _material);
+		static physx::PxShape*			CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material);
+		static physx::PxShape*			CreateTriagleMeshShape(
+			physx::PxTriangleMesh* _mesh, 
+			const Eigen::Vector3f& _scale, 
+			const Eigen::Quaternionf& _rotation, 
+			const physx::PxMaterial* _material
+		);
+		static physx::PxShape*			CreateConvexMeshShape(
+			physx::PxConvexMesh* _mesh,
+			const Eigen::Vector3f& _scale,
+			const Eigen::Quaternionf& _rotation,
+			const physx::PxMaterial* _material
+		);
+
+		static physx::PxTriangleMesh*	CookTriagleMesh(FBXLoader::Model* _model);
+		static physx::PxConvexMesh*		CookConvexMesh(FBXLoader::Model* _model);
+
 		/// collider
-		static BoxCollider*				CreateBoxCollider(void* _znBody, const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
-		static SphereCollider*			CreateSphereCollider(void* _znBody, float _radius, const physx::PxMaterial* _material);
-		static CapsuleCollider*			CreateCapsuleCollider(void* _znBody, float _radius, float _height, const physx::PxMaterial* _material);
-		static MeshCollider*			CreateMeshCollider(void* _znBody , const physx::PxMaterial* _material);
-		static ConvexCollider*			CreateConvexCollider(void* _znBody , const physx::PxMaterial* _material);
+		template <znCollider collider>
+		static collider*				CreateZnCollider(void* _znBody, physx::PxShape* _pxShape)
+		{
+			assert(_znBody != nullptr);
+			assert(_pxShape != nullptr);
+
+			const auto znBody = static_cast<RigidBody*>(_znBody);
+
+			const auto zn_collider = new collider(_pxShape, znBody);
+			RigidBodyHelper::Attach(znBody->pxBody, _pxShape);
+
+			return zn_collider;
+		}
 
 		/// joint
 		static FixedJoint*				CreateFixedJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);

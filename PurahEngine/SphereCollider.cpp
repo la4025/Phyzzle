@@ -19,13 +19,13 @@ namespace PurahEngine
 		Collider::PostInitialize();
 
 		const auto scale = transform->GetWorldScale();
-
 		const float maxScale = max(max(scale.x(), scale.y()), scale.z());
 
+		auto& physics = PhysicsSystem::GetInstance();
 		this->znCollider = PhysicsSystem::GetInstance().CreateSphereCollider(
 			this->GetGameObject(),
 			radius * maxScale,
-			ZonaiPhysics::ZnMaterialID::None
+			physicsMaterial
 		);
 
 		Collider::SetUserData();
@@ -58,12 +58,9 @@ namespace PurahEngine
 
 	void SphereCollider::PreDeserialize(const json& jsonData)
 	{
-		PREDESERIALIZE_BASE();
-		PREDESERIALIZE_VALUE(cType);
+		Collider::PreDeserialize(jsonData);
+
 		PREDESERIALIZE_VALUE(radius);
-		PREDESERIALIZE_VALUE(isTrigger);
-		PREDESERIALIZE_VALUE(layer);
-		PREDESERIALIZE_VECTOR3F(positionOffset);
 	}
 
 	void SphereCollider::PostSerialize(json& jsonData) const

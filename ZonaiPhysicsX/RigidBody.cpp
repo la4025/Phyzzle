@@ -94,6 +94,13 @@ namespace ZonaiPhysics
 		RigidBodyHelper::SetMass(pxBody, _mass);
 	}
 
+	void RigidBody::SetDensity(float _density)
+	{
+		assert(pxBody != nullptr);
+
+		RigidBodyHelper::SetDensity(pxBody, _density);
+	}
+
 	float RigidBody::GetInvMass() const
 	{
 		return RigidBodyHelper::GetInvMass(pxBody);

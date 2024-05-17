@@ -32,6 +32,8 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
+#include "MeshCollider.h"
+#include "ConvexCollider.h"
 
 #include "FixedJoint.h"
 #include "HingeJoint.h"

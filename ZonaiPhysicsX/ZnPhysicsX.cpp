@@ -16,6 +16,7 @@
 #include "ZnPhysicsX.h"
 #include <ranges>
 
+#include "ResourceManager.h"
 #include "ZnFactoryX.h"
 #include "ZnWorld.h"
 #include "ZnMaterial.h"
@@ -44,7 +45,7 @@ namespace ZonaiPhysics
 			ZnLayer::SetCollisionData(0, {0, 1, 2, 3});
 		}
 
-		defaultMaterial = ZnFactoryX::CreateMaterial({ 0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE });
+		defaultMaterial = CreateMaterial({ 0.5f, 0.5f, 0.2f, eAVERAGE, eAVERAGE });
 	}
 
 	void ZnPhysicsX::Simulation(float _dt)
@@ -56,6 +57,7 @@ namespace ZonaiPhysics
 	{
 		ZnLayer::Clear();
 		ZnWorld::Release();
+		ResourceManager::Release();
 		ZnFactoryX::Release();
 	}
 
@@ -75,11 +77,50 @@ namespace ZonaiPhysics
 		delete instance;
 	}
 
-	ZnMaterialID ZnPhysicsX::AddMaterial(const MaterialDesc& _desc)
+	ZnMaterialID ZnPhysicsX::CreateMaterial(const MaterialDesc& _desc)
 	{
 		const auto material = ZnFactoryX::CreateMaterial(_desc);
+		ZnMaterialID result = ZnMaterialID::None;
 
-		return ZnWorld::AddMaterial(material);
+		if (material)
+			result = ResourceManager::RegistMaterial(material);
+
+		return result;
+	}
+
+	ZnConvexID ZnPhysicsX::ConvexMeshLoadFromPath(const std::wstring& _path)
+	{
+		auto model = ResourceManager::LoadConvex(_path);
+		
+		auto pxMesh = ZnFactoryX::CookConvexMesh(model);
+		ResourceManager::UnloadModel(model);
+
+		return ResourceManager::AddConvex(pxMesh);
+	}
+
+	ZnMeshID ZnPhysicsX::TriangleMeshLoadFromPath(const std::wstring& _path)
+	{
+		auto model = ResourceManager::LoadMesh(_path);
+
+		auto pxMesh = ZnFactoryX::CookTriagleMesh(model);
+		ResourceManager::UnloadModel(model);
+
+		return 	ResourceManager::AddMesh(pxMesh);
+	}
+
+	bool ZnPhysicsX::ReleaseMaterial(const ZnMaterialID& _id)
+	{
+		return ResourceManager::ReleasePxMaterial(_id);
+	}
+
+	bool ZnPhysicsX::ReleaseConvexMesh(const ZnConvexID& _id)
+	{
+		return ResourceManager::ReleaseConvexMesh(_id);
+	}
+
+	bool ZnPhysicsX::ReleaseTriangleMesh(const ZnMeshID& _id)
+	{
+		return ResourceManager::ReleaseTriangleMesh(_id);
 	}
 
 	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
@@ -150,14 +191,24 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateBoxCollider(
 		void* _userData, 
 		const Eigen::Vector3f& _extend, 
-		ZnMaterialID _material, void* _userScene)
+		const ZnMaterialID& _material,
+		void* _userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, _userScene);
 
-		auto material = ZnWorld::GetPxMaterial(_material);
+		physx::PxMaterial* material = nullptr;
 
-		if (!material)
-			material = defaultMaterial;
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -168,7 +219,8 @@ namespace ZonaiPhysics
 			znBody->SetKinematic(true);
 		}
 
-		const auto collider = ZnFactoryX::CreateBoxCollider(znBody, _extend, material);
+		const auto shape = ZnFactoryX::CreateBoxShape(_extend, material);
+		const auto collider = ZnFactoryX::CreateZnCollider<BoxCollider>(znBody, shape);
 		ZnWorld::AddCollider(collider, _userData, _userScene);
 
 		return collider;
@@ -177,13 +229,24 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateSphereCollider(
 		void* _userData, 
 		float _radius, 
-		ZnMaterialID _material, void* userScene)
+		const ZnMaterialID& _material,
+		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -194,7 +257,8 @@ namespace ZonaiPhysics
 			znBody->SetKinematic(true);
 		}
 
-		const auto collider = ZnFactoryX::CreateSphereCollider(znBody, _radius, material);
+		const auto shape = ZnFactoryX::CreateSphereShape(_radius, material);
+		const auto collider = ZnFactoryX::CreateZnCollider<SphereCollider>(znBody, shape);
 		ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return collider;
@@ -203,13 +267,24 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateCapsuleCollider(
 		void* _userData, 
 		float _radius, float _height, 
-		ZnMaterialID _material, void* userScene)
+		const ZnMaterialID& _material, 
+		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -220,7 +295,8 @@ namespace ZonaiPhysics
 			znBody->SetKinematic(true);
 		}
 
-		const auto collider = ZnFactoryX::CreateCapsuleCollider(znBody, _radius, _height, material);
+		const auto shape = ZnFactoryX::CreateCapsuleShape(_radius, _height, material);
+		const auto collider = ZnFactoryX::CreateZnCollider<CapsuleCollider>(znBody, shape);
 		ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return collider;
@@ -228,14 +304,27 @@ namespace ZonaiPhysics
 
 	ZnCollider* ZnPhysicsX::CreateMeshCollider(
 		void* _userData, 
-		const std::wstring& _path, 
-		ZnMaterialID _material, void* userScene)
+		const ZnMeshID& _id,
+		const Eigen::Quaternionf& _rot,
+		const Eigen::Vector3f& _scale,
+		const ZnMaterialID& _material, 
+		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -246,22 +335,38 @@ namespace ZonaiPhysics
 			znBody->SetKinematic(true);
 		}
 
-		// const auto collider = ZnFactoryX::CreateMeshCollider(znBody, material);
-		// ZnWorld::AddCollider(collider, _userData, userScene);
+		const auto rawShape = ResourceManager::GetPxMeshShape(_id);
+
+		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, _rot, material);
+		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
+		ZnWorld::AddCollider(collider, _userData, userScene);
 
 		return nullptr;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateConvexCollider(
 		void* _userData, 
-		const std::wstring& _path, 
-		ZnMaterialID _material, void* userScene)
+		const ZnConvexID& _id,
+		const Eigen::Quaternionf& _rot,
+		const Eigen::Vector3f& _scale,
+		const ZnMaterialID& _material,
+		void* userScene)
 	{
 		auto znBody = ZnWorld::GetBody(_userData, userScene);
-		auto material = ZnWorld::GetPxMaterial(_material);
 
-		if (!material)
-			material = defaultMaterial;
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
 
 		if (!znBody)
 		{
@@ -272,15 +377,14 @@ namespace ZonaiPhysics
 			znBody->SetKinematic(true);
 		}
 
-		// const auto collider = ZnFactoryX::CreateConvexCollider(znBody, material);
+		const auto rawShape = ResourceManager::GetPxConvexShape(_id);
 
-		return nullptr;
+		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
+		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
+		ZnWorld::AddCollider(collider, _userData, userScene);
+
+		return collider;
 	}
-
-	// 	ZnCollider* ZnPhysicsX::CreateCustomCollider(const std::wstring&)
-	// 	{
-	// 
-	// 	}
 
 	ZnFixedJoint* ZnPhysicsX::CreateFixedJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
 	                                           ZnRigidBody* _object1, const ZnTransform& _transform1)
@@ -374,6 +478,7 @@ namespace ZonaiPhysics
 
 		ZnWorld::RemoveJoint(_joint, _userData, _userScene);
 	}
+
 
 	extern "C"
 	{

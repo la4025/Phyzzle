@@ -33,11 +33,11 @@ namespace Phyzzle
 	private:
 		// ID 积己 昏力
 		IslandID CreateIslandID();
-		void RemoveIslandID(const IslandID& _id);
+		void RemoveIslandID(IslandID _id);
 
 		// 级 积己 昏力
 		IslandID CreateIsland(const std::vector<Attachable*>& _arr);
-		void RemoveIsland(const IslandID& _id);
+		void RemoveIsland(IslandID _id);
 
 	public:
 		void						Clear();
@@ -46,6 +46,7 @@ namespace Phyzzle
 		void						DeselectBody(Attachable* _body);
 
 		bool						TryAttach(Attachable* _base);
+		bool						Attach(Attachable* _base, Attachable* _other);
 		bool						Dettach(Attachable* _base);
 
 		void						ConnectNode(Attachable* _base, Attachable* _other, PurahEngine::FixedJoint* _joint);
