@@ -41,6 +41,8 @@ namespace Texture
 		constexpr unsigned int IDMap = 10u;
 		constexpr unsigned int OutLineMap = 11u;
 	}
+
+	constexpr float UnitSize = 100.0f;
 }
 
 namespace Model

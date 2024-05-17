@@ -9,5 +9,6 @@ struct PixelInputType
 float4 main(PixelInputType input) : SV_TARGET
 {
     float4 result = DiffuseMap.Sample(Sampler, input.uv);
+    
     return result;
 }

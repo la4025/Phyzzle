@@ -16,7 +16,8 @@ enum class RenderType
 	Sprite,
 	String,
 	Light,
-	CubeMap
+	CubeMap,
+	BillBoard
 };
 
 using RenderOption = unsigned int;
@@ -72,6 +73,7 @@ struct InstancingValue
 	float blendAnimationTime1;
 	float blendAnimationTime2;
 	float ratio;
+	float ccwRadianAngle;
 
 	InstancingValue() :
 		worldMatrix(DirectX::XMMatrixIdentity()),
@@ -87,7 +89,8 @@ struct InstancingValue
 		blendAnimationID2(0u),
 		blendAnimationTime1(0.0f),
 		blendAnimationTime2(0.0f),
-		ratio(0.0f)
+		ratio(0.0f),
+		ccwRadianAngle(0.0f)
 	{}
 };
 

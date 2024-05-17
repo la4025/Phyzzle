@@ -294,6 +294,9 @@
     <FxCompile Include="OutLineBlendingAnimationObjectVS.hlsl">
       <Filter>Shader\OutLine</Filter>
     </FxCompile>
+    <FxCompile Include="SpriteInstancingVS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Buffers.hlsli">

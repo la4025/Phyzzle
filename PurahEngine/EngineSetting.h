@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+
 #include "PurahEngineAPI.h"
 #include "SerializableDefine.h"
 #include "ZnMaterial.h"
@@ -36,7 +38,7 @@ namespace PurahEngine
 		std::vector<std::wstring> GetPreLoadModels();
 		std::vector<std::vector<bool>> GetCollsionSetting();
 
-		const std::unordered_map<std::wstring, std::tuple<float, float, float, int, int>>& GetMaterialTable() const;
+		const std::vector<std::tuple<std::wstring, float, float, float, int, int>>& GetPhysicsMaterials() const;
 
 	private:
 		// 게임 실행전에 완료되어야 하는 설정
@@ -48,7 +50,7 @@ namespace PurahEngine
 		std::unordered_map<int, std::wstring> layerIDTable;
 		unsigned int layerSize;
 
-		std::unordered_map<std::wstring, std::tuple<float, float, float, int, int>> materialTable;
+		std::vector<std::tuple<std::wstring, float, float, float, int, int>> physicsMaterials;
 		unsigned int materialsSize;
 
 		float shadowAreaRange;

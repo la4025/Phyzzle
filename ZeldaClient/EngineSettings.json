@@ -92,36 +92,28 @@
   ],
   "physicsMaterials": [
     {
-      "name": "SampleMaterial001",
-      "staticFriction": 0.1,
-      "dynamicFriction": 0.1,
-      "restitution": 0.1,
+      "name": "playerBody",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
+      "restitution": 0.0,
       "eFriction": 0,
       "eRestitution": 0
     },
     {
-      "name": "SampleMaterial002",
-      "staticFriction": 0.2,
-      "dynamicFriction": 0.2,
+      "name": "123123123123123131231231",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
       "restitution": 0.2,
-      "eFriction": 1,
-      "eRestitution": 1
+      "eFriction": 0,
+      "eRestitution": 0
     },
     {
-      "name": "SampleMaterial003",
-      "staticFriction": 0.3,
-      "dynamicFriction": 0.3,
-      "restitution": 0.3,
-      "eFriction": 2,
-      "eRestitution": 2
-    },
-    {
-      "name": "SampleMaterial004",
-      "staticFriction": 0.4,
-      "dynamicFriction": 0.4,
-      "restitution": 0.4,
-      "eFriction": 3,
-      "eRestitution": 3
+      "name": "1",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
+      "restitution": 0.2,
+      "eFriction": 0,
+      "eRestitution": 0
     }
   ]
 }

@@ -21,6 +21,7 @@ public:
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetSpriteRenderInfo() const;
 	const std::unordered_map<InstancingKey, RenderInfo*>& GetLightRenderInfo() const;
 	const std::vector<RenderInfo*>& GetStringRenderInfo() const;
+	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetBillBoardRenderInfo() const;
 	const RenderInfo* GetCubeMapRenderInfo();
 
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetShadowRenderInfo() const;
@@ -40,7 +41,8 @@ private:
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;		// ID 3
 	std::unordered_map<InstancingKey, RenderInfo*> lightRenderInfo;						// ID 4
 	std::vector<RenderInfo*> stringRenderInfo;											// ID 5
-	RenderInfo* cubeMapRenderInfo;														// ID 6
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> billBoardRenderInfo;	// ID 6
+	RenderInfo* cubeMapRenderInfo;														// ID 7
 	
 	// Option RenderInfo
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> shadowRenderInfo;

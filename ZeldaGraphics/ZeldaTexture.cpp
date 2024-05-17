@@ -33,6 +33,9 @@ ZeldaTexture::ZeldaTexture(ID3D11Device* device, const std::wstring& filePath) :
 		assert(0);
 	}
 
+	width = metaData.width;
+	height = metaData.height;
+
 	if (metaData.format == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB ||
 		metaData.format == DXGI_FORMAT_B8G8R8X8_UNORM_SRGB ||
 		metaData.format == DXGI_FORMAT_BC1_UNORM_SRGB ||
@@ -69,6 +72,16 @@ ID3D11ShaderResourceView* ZeldaTexture::GetTexture()
 bool ZeldaTexture::UseSRGB()
 {
 	return useSRGB;
+}
+
+unsigned long long ZeldaTexture::GetWidth()
+{
+	return width;
+}
+
+unsigned long long ZeldaTexture::GetHeight()
+{
+	return height;
 }
 
 void ZeldaTexture::SetDiffuseMapShaderResource(ID3D11DeviceContext* deviceContext)

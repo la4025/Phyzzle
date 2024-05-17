@@ -7,6 +7,8 @@
 #include "EngineSetting.h"
 #include "DataManager.h"
 
+#include "GameLoop.h"
+
 PurahEngine::SceneManager::SceneManager()
 	: mainCamera(nullptr), cameraPosition(Eigen::Vector3f(0.0f, 0.0f, -10.0f)), state(RunningState::AWAKE), physicsTime(0.0f), sceneBuffer(L"")
 {
@@ -246,10 +248,13 @@ void PurahEngine::SceneManager::LoadScene()
 		}
 	} 
 
-
 	objectList.clear();
 	sceneData = fManager.LoadData(sceneBuffer);
+
+	ErrorType originErrorType = GameLoop::errorType;
+	GameLoop::errorType = ErrorType::Failed_Deserialize;
 	Deserialize(sceneData);
+	GameLoop::errorType = originErrorType;
 
 	LoadSceneCompleteEvent();
 

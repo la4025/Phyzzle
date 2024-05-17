@@ -7,6 +7,12 @@ namespace PurahEngine
 	class SceneManager;
 	class GraphicsManager;
 
+	enum class ErrorType
+	{
+		UnKnown,
+		Failed_Deserialize
+	};
+
 	class GameLoop
 	{
 	private:
@@ -23,13 +29,18 @@ namespace PurahEngine
 		void Run(_In_ int nCmdShow);
 		void Finalize();
 
+	public:
+		static ErrorType errorType;
+
 	private:
 		bool moving = false;
 		HWND hWnd;
+
 		// 내부적으로 Run()함수에서 돌아갈 함수
 		void run();
 
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		static LONG WINAPI UnhandledExceptionFilter(PEXCEPTION_POINTERS pExceptionInfo);
 
 		// Singleton
 	public:

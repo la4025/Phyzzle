@@ -137,9 +137,9 @@ std::vector<std::vector<bool>> PurahEngine::EngineSetting::GetCollsionSetting()
 	return collisionSetting;
 }
 
-const std::unordered_map<std::wstring, std::tuple<float, float, float, int, int>>& PurahEngine::EngineSetting::GetMaterialTable() const
+const std::vector<std::tuple<std::wstring, float, float, float, int, int>>& PurahEngine::EngineSetting::GetPhysicsMaterials() const
 {
-	return materialTable;
+	return physicsMaterials;
 }
 
 void PurahEngine::EngineSetting::PreSerialize(json& jsonData) const
@@ -177,7 +177,7 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 		layerIDTable[layerIDCount] = wLayerName;
 	}
 
-	materialTable.clear();
+	physicsMaterials.clear();
 	const json& materials = jsonData["physicsMaterials"];
 	materialsSize = materials.size();
 	for (int materialIDCount = 0; materialIDCount < materials.size(); materialIDCount++)
@@ -191,8 +191,7 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 
 		std::wstring wMaterialName(materialName.begin(), materialName.end());
 
-		assert(materialTable.count(wMaterialName) == 0);
-		materialTable[wMaterialName] = { staticFriction, dynamicFriction, restitution, eFriction, eRestitution };
+		physicsMaterials.push_back({ wMaterialName, staticFriction, dynamicFriction, restitution, eFriction, eRestitution });
 	}
 
 	const json& collisionInfo = jsonData["collisionSetting"];

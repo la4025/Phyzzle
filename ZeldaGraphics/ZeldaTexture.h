@@ -13,6 +13,9 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	bool UseSRGB();
 
+	unsigned long long GetWidth();
+	unsigned long long GetHeight();
+
 	void SetDiffuseMapShaderResource(ID3D11DeviceContext* deviceContext);
 	void SetNormalMapShaderResource(ID3D11DeviceContext* deviceContext);
 	void SetCubeMapShaderResource(ID3D11DeviceContext* deviceContext);
@@ -24,6 +27,8 @@ private:
 	ID3D11ShaderResourceView* textureView;
 
 	bool useSRGB;
+	unsigned long long width;
+	unsigned long long height;
 
 	friend class ZeldaMaterial;
 	friend class ResourceManager;
