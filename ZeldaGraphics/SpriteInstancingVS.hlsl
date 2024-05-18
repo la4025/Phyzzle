@@ -26,7 +26,7 @@ VertexOut main(VertexIn input)
     output.pos = input.position;
     
     // 월드, 뷰, 프로젝션 행렬들을 이용해 정점의 위치를 계산한다.
-    output.pos = mul(output.pos, worldMatrix);
+    output.pos = mul(output.pos, instancingWorldMatrix[input.instance]);
     output.pos = mul(output.pos, viewMatrix);
     output.pos = mul(output.pos, projectionMatrix);
     

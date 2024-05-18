@@ -282,6 +282,7 @@ void CoreSystem::run()
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Ganondorf (TotK).fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying6.fbx");
 		fbxID = renderer->CreateModel(L"Player\\Player.fbx");
+		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\TTTest\\akai_Idle.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\KOCCA62\\Desktop\\Sponza\\sponza.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Strut Walking.fbx");
 		//fbxID = renderer->CreateModel(L"C:\\Users\\BEOMJOON\\Downloads\\Ganondorf-3d-model-dl\\source\\Ganondorf (TotK) 3D Model\\Dying.fbx");
@@ -689,6 +690,16 @@ void CoreSystem::run()
 	w(1, 3) = 10.0f + 0.0f;
 	w(2, 3) = 0.0f + 3.0f;
 	renderer->DrawCube(w, TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
+
+
+	Eigen::Matrix4f billboardTestMatrix = Eigen::Matrix4f::Identity();
+	billboardTestMatrix(0, 0) = 10.0f;
+	billboardTestMatrix(1, 1) = 10.0f;
+	billboardTestMatrix(2, 2) = 10.0f;
+	billboardTestMatrix(1, 3) = -30.0f;
+	renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
+	renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+
 
 	renderer->EndDraw();
 }

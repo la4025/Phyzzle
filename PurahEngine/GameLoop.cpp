@@ -26,6 +26,7 @@ ZonaiPhysics::ZnCollider* collider;
 ZonaiPhysics::ZnRigidBody* rigidBody;
 
 static std::string timeInit = "Init";
+PurahEngine::ErrorType PurahEngine::GameLoop::errorType = PurahEngine::ErrorType::UnKnown;
 
 PurahEngine::GameLoop::GameLoop()
 {
@@ -39,6 +40,8 @@ PurahEngine::GameLoop::~GameLoop()
 
 void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigned int width, unsigned int height)
 {
+	SetUnhandledExceptionFilter(UnhandledExceptionFilter);
+
 	// 내가 쓸 윈도우를 등록
 	WNDCLASSEXW wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -285,6 +288,30 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 		}
 	}
 	return 0;
+}
+
+LONG WINAPI PurahEngine::GameLoop::UnhandledExceptionFilter(PEXCEPTION_POINTERS pExceptionInfo)
+{
+	switch (errorType)
+	{
+		case PurahEngine::ErrorType::UnKnown:
+		{
+			MessageBox(0, L"Unknown Error Type\n", L"PurahEngine::GameLoop Error", MB_OK);
+			break;
+		}
+		case PurahEngine::ErrorType::Failed_Deserialize:
+		{
+			MessageBox(0, L"Failed to deserialize data\n", L"PurahEngine::GameLoop Error", MB_OK);
+			break;
+		}
+		default:
+		{
+			MessageBox(0, L"Not Defined Error Type\nPlease Check PurahEngine::GameLoop::UnhandledExceptionFilter", L"PurahEngine::GameLoop Error", MB_OK);
+			break;
+		}
+	}
+
+	return EXCEPTION_EXECUTE_HANDLER;
 }
 
 PurahEngine::GameLoop& PurahEngine::GameLoop::GetInstance()

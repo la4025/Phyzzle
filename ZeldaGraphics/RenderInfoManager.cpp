@@ -13,6 +13,7 @@ void RenderInfoManager::SortRenderInfo()
 	spriteRenderInfo.clear();
 	lightRenderInfo.clear();
 	stringRenderInfo.clear();
+	billBoardRenderInfo.clear();
 	cubeMapRenderInfo = nullptr;
 
 	shadowRenderInfo.clear();
@@ -80,6 +81,11 @@ void RenderInfoManager::SortRenderInfo()
 				cubeMapRenderInfo = &renderInfo;
 				break;
 			}
+			case RenderType::BillBoard:
+			{
+				SortRenderInfo(&renderInfo, billBoardRenderInfo);
+				break;
+			}
 			default:
 			{
 				assert(0);
@@ -131,6 +137,15 @@ void RenderInfoManager::SortRenderInfo()
 		drawIDCounter += 1;
 	}
 
+	for (auto& [key, value] : billBoardRenderInfo)
+	{
+		for (auto& renderInfo : value)
+		{
+			renderInfo->drawID = drawIDCounter;
+			drawIDCounter += 1;
+		}
+	}
+
 	if (cubeMapRenderInfo != nullptr)
 	{
 		cubeMapRenderInfo->drawID = drawIDCounter;
@@ -172,6 +187,11 @@ const std::unordered_map<InstancingKey, RenderInfo*>& RenderInfoManager::GetLigh
 const std::vector<RenderInfo*>& RenderInfoManager::GetStringRenderInfo() const
 {
 	return stringRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetBillBoardRenderInfo() const
+{
+	return billBoardRenderInfo;
 }
 
 const RenderInfo* RenderInfoManager::GetCubeMapRenderInfo()
