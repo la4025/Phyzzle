@@ -17,7 +17,6 @@ void PurahEngine::SoundManager::Initialize()
 
 	// Initialize FMOD.
 	result = system->init(100, FMOD_INIT_NORMAL, nullptr);
-
 	assert(result == FMOD_OK);
 
 	result = system->set3DSettings(1.0, 1.0, 1.0);
