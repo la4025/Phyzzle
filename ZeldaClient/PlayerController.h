@@ -4,10 +4,12 @@
 
 namespace  Phyzzle
 {
-	class PlayerController : public PurahEngine::Component
+	class PlayerController final : public PurahEngine::Component
 	{
 	public:
 		~PlayerController() override;
+
+		void Start() override;
 
 	public:
 		void Move(const Eigen::Vector3f& _dir, float _speed);
@@ -22,6 +24,17 @@ namespace  Phyzzle
 		bool IsWall();
 		bool IsObstacle();
 
+	public:
+		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+
+	protected:
+		void PreSerialize(json& jsonData) const override {}
+		void PreDeserialize(const json& jsonData) override {}
+		void PostSerialize(json& jsonData) const override {}
+		void PostDeserialize(const json& jsonData) override {}
+
 	private:
 		PurahEngine::RigidBody* body;
 		PurahEngine::Transform* model;
@@ -29,6 +42,8 @@ namespace  Phyzzle
 	private:
 		bool jumping = false;
 		float slope;
+
+		ZonaiPhysics::ZnQueryDesc groundCheck;
 	};
 }
 

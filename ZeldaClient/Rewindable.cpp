@@ -8,7 +8,6 @@
 #include "Rewindable.h"
 
 #include "RewindSystem.h"
-#include "../ZonaiPhysicsX/ZnUtil.h"
 
 namespace Phyzzle
 {
@@ -20,9 +19,8 @@ namespace Phyzzle
 	{
 		body = gameObject->GetComponent<PurahEngine::RigidBody>();
 
-		if (body)
+		if (!body)
 		{
-			ZONAI_CAUTUON(null reference, Rewindable Component);
 			gameObject->DeleteComponent(this);
 			assert(body != nullptr);
 		}

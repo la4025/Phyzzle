@@ -24,6 +24,7 @@
 #include "EasingFunc.h"
 
 #include "ZnQueryInfo.h"
+#include "ZnQueryDesc.h"
 
 #include "PhysicsSystem.h"
 #include "Physics.h"
