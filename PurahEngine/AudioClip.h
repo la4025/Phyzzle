@@ -1,47 +1,33 @@
 #pragma once
+#include "PurahEngineAPI.h"
+#include "Component.h"
+#include "PurahSound.h"
+
+#include "Transform.h"
 #include "SoundManager.h"
 
 namespace PurahEngine
 {
-	enum class SoundType
-	{
-		BGM,
-		EFFECT
-	};
-
-	struct PurahSound
-	{
-	public:
-		std::wstring soundName;
-		Transform* transform;
-		FMOD::Sound* sound;
-		FMOD::Channel* channel;
-		FMOD::ChannelGroup* group;
-		SoundType type;
-		FMOD_VECTOR lastPos;
-		bool isPlaying;
-	};
-
 	class SoundManager;
 
-	class AudioClip
+	class AudioClip : public Component
 	{
 	public:
 		AudioClip();
 		~AudioClip();
 
-		void Play();
-		void Stop();
-		void Set3DAttributes();
-		void SetLoop();
+		void Initialize();
+		void OnDataLoadComplete();
+		void Set3DAttributes(const Eigen::Vector3f pos);
 
+	public:
+		void PreSerialize(json& jsonData) const override;
+		void PreDeserialize(const json& jsonData) override;
+		void PostSerialize(json& jsonData) const override;
+		void PostDeserialize(const json& jsonData) override;
 
 	private:
-		FMOD::Sound* mSound;
-		FMOD::Channel* mChannel;
-		float mMinDistance;
-		float mMaxDistance;
-		bool isLoop;
+		PurahEngine::PurahSound newSound;
 
 	private:
 		SoundManager& soundManager = SoundManager::GetInstance();

@@ -27,6 +27,7 @@ void PurahEngine::SoundManager::Initialize()
 void PurahEngine::SoundManager::Finalize()
 {
 	system->release();
+	system = nullptr;
 }
 
 void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type)
@@ -92,10 +93,9 @@ void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, T
 	newSound.isPlaying = false;
 	newSound.channel = 0;
 	newSound.type = SoundType::EFFECT;
-	newSound.lastPos = { 0.0f, 0.0f, 0.0f };
 
 	newSound.channel->setChannelGroup(effectChannelGroup);
-	newSound.sound->set3DMinMaxDistance(1.0f, 500.0f);
+	newSound.sound->set3DMinMaxDistance(1.0f, 100.0f);
 
 	soundMap[audioSource] = newSound;
 }
@@ -130,11 +130,6 @@ void PurahEngine::SoundManager::PlayEffect(const std::wstring& soundName, AudioS
 			system->playSound(purahSound.sound, 0, false, &purahSound.channel);
 		}
 
-		position.x = purahSound.transform->GetWorldPosition().x();
-		position.y = purahSound.transform->GetWorldPosition().y();
-		position.z = purahSound.transform->GetWorldPosition().z();
-
-		auto r = purahSound.channel->set3DAttributes(&position, 0);
 		purahSound.channel->setPaused(false);
 		purahSound.isPlaying = purahSound.channel->getCurrentSound(&purahSound.sound);
 	}
@@ -142,55 +137,21 @@ void PurahEngine::SoundManager::PlayEffect(const std::wstring& soundName, AudioS
 
 void PurahEngine::SoundManager::Update()
 {
-	FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
-	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-
-
-	if (listenerTransform != nullptr)
-	{
-		Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
-		listenerPosition.x = pos.x();
-		listenerPosition.y = pos.y();
-		listenerPosition.z = pos.z();
-
-		Eigen::Vector3f forward = listenerTransform->GetFront();
-		listenerForward.x = forward.x();
-		listenerForward.y = forward.y();
-		listenerForward.z = forward.z();
-
-		Eigen::Vector3f up = listenerTransform->GetUp();
-		listenerUp.x = up.x();
-		listenerUp.y = up.y();
-		listenerUp.z = up.z();
-	}
-
-	SetObject3DAttributes();
-	system->set3DListenerAttributes(0, &listenerPosition, 0, &listenerForward, &listenerUp);
-
 	system->update();
-	lastPos = listenerPosition;
 }
 
-void PurahEngine::SoundManager::SetListenerTransform(PurahEngine::Transform* transform)
+void PurahEngine::SoundManager::Set3DListenerAttributes(const PurahEngine::Transform* listenerTransform)
 {
-	listenerTransform = transform;
-}
+	Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
+	FMOD_VECTOR listenerPosition = { pos.x(), pos.y(), pos.z() };
 
-void PurahEngine::SoundManager::SetObject3DAttributes()
-{
-	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
-	{
-		auto purahSound = soundMap.at(iter->first);
+	Eigen::Vector3f forward = listenerTransform->GetFront();
+	FMOD_VECTOR listenerForward = { forward.x(), forward.y(), forward.z() };
 
-		Eigen::Vector3f pos = purahSound.transform->GetWorldPosition();
-		position.x = pos.x();
-		position.y = pos.y();
-		position.z = pos.z();
+	Eigen::Vector3f up = listenerTransform->GetUp();
+	FMOD_VECTOR listenerUp = { up.x(), up.y(), up.z() };
 
-		auto r = purahSound.channel->set3DAttributes(&position, 0);
-
-		purahSound.lastPos = position;
-	}
+	system->set3DListenerAttributes(0, &listenerPosition, 0, &listenerForward, &listenerUp);
 }
 
 FMOD::System* PurahEngine::SoundManager::GetSystem() const
@@ -199,7 +160,7 @@ FMOD::System* PurahEngine::SoundManager::GetSystem() const
 }
 
 PurahEngine::SoundManager::SoundManager()
-	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr), listenerTransform(nullptr)
+	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr)
 {
 
 }

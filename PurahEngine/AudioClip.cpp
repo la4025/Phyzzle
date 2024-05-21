@@ -1,29 +1,55 @@
 #include "AudioClip.h"
 
-
 PurahEngine::AudioClip::AudioClip()
-	: mSound(nullptr), mChannel(nullptr), mMinDistance(1.0f), mMaxDistance(1000.0f), isLoop(false)
 {
 
 }
 
 PurahEngine::AudioClip::~AudioClip()
 {
-	mSound->release();
-	mSound = nullptr;
+	newSound.sound->release();
+	newSound.sound = nullptr;
 }
 
-void PurahEngine::AudioClip::Play()
+void PurahEngine::AudioClip::Initialize()
 {
-	if (isLoop)
-	{
-		mSound->setMode(FMOD_LOOP_NORMAL);
-	}
 
-	//soundManager.PlayEffect();
 }
 
-void PurahEngine::AudioClip::Set3DAttributes()
+void PurahEngine::AudioClip::OnDataLoadComplete()
+{
+	
+}
+
+void PurahEngine::AudioClip::Set3DAttributes(const Eigen::Vector3f pos)
+{
+	FMOD_VECTOR fmodPos(pos.x(), pos.y(), pos.z());
+	FMOD_VECTOR fmodVel(0.0f, 0.0f, 0.0f);
+
+	newSound.channel->set3DAttributes(&fmodPos, &fmodVel);
+}
+
+void PurahEngine::AudioClip::PreSerialize(json& jsonData) const
 {
 
+}
+
+void PurahEngine::AudioClip::PreDeserialize(const json& jsonData)
+{
+	PREDESERIALIZE_BASE();
+	PREDESERIALIZE_VALUE(newSound.type);
+	PREDESERIALIZE_VALUE(newSound.minDistance);
+	PREDESERIALIZE_VALUE(newSound.maxDistance);
+	PREDESERIALIZE_WSTRING(newSound.soundName);
+
+}
+
+void PurahEngine::AudioClip::PostSerialize(json& jsonData) const
+{
+
+}
+
+void PurahEngine::AudioClip::PostDeserialize(const json& jsonData)
+{
+	POSTDESERIALIZE_PTR(newSound.transform);
 }

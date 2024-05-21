@@ -11,9 +11,7 @@ PurahEngine::AudioListener::AudioListener()
 
 PurahEngine::AudioListener::~AudioListener()
 {
-	listenerTransform = nullptr;
-	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.SetListenerTransform(listenerTransform);
+
 }
 
 void PurahEngine::AudioListener::Initialize()
@@ -24,7 +22,7 @@ void PurahEngine::AudioListener::Initialize()
 void PurahEngine::AudioListener::Update()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.SetListenerTransform(listenerTransform);
+	soundManager.Set3DListenerAttributes(listenerTransform);
 }
 
 void PurahEngine::AudioListener::PreSerialize(json& jsonData) const
