@@ -60,9 +60,6 @@
     <ClCompile Include="Rewindable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCamera.cpp">
-      <Filter>KH\PLAYER\player</Filter>
-    </ClCompile>
     <ClCompile Include="Attachable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
@@ -92,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="IslandID.cpp">
       <Filter>KH\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>KH\PLAYER\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +179,6 @@
     <ClInclude Include="Snapshot.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerCamera.h">
-      <Filter>KH\PLAYER\player</Filter>
-    </ClInclude>
     <ClInclude Include="Attachable.h">
       <Filter>KH\Object</Filter>
     </ClInclude>
@@ -217,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="IslandID.h">
       <Filter>KH\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>KH\PLAYER\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>KH\PLAYER\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace Phyzzle
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 	class Collider;
 }
 

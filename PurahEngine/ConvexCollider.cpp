@@ -25,11 +25,17 @@ namespace PurahEngine
 			this->GetGameObject(),
 			modelName,
 			rot * rotationOffset,
-			// rot,
+			//rot,
 			{ scale.x() * scaleOffset.x(), scale.y() * scaleOffset.y(), scale.z() * scaleOffset.z() },
 			// { scale.x() , scale.y(), scale.z() },
 			physicsMaterial
 		);
+
+		if (!znCollider)
+		{
+			GetGameObject()->DeleteComponent(this);
+			return;
+		}
 
 		Collider::SetUserData();
 

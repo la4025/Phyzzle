@@ -39,6 +39,7 @@ namespace Phyzzle
 	private:
 		bool select = false;
 		PurahEngine::RigidBody* result = nullptr;
+		Attachable* attachable = nullptr;
 
 	private:
 		void PlayerMove(float _speed) const;
@@ -51,6 +52,7 @@ namespace Phyzzle
 		void LookToLocalDirection(const Eigen::Vector3f& _to);
 
 		bool Search();
+		void EnableOutline(bool) const;
 #pragma endregion Content
 		
 #if _DEBUG

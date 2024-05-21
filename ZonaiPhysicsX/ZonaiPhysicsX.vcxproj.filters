@@ -71,6 +71,9 @@
     <ClCompile Include="Collider.cpp">
       <Filter>Object\Collider\Base</Filter>
     </ClCompile>
+    <ClCompile Include="ZnController.cpp">
+      <Filter>Object\CharactorController</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h" />
@@ -153,6 +156,9 @@
     <ClInclude Include="ZnTriangleMeshData.h">
       <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
+    <ClInclude Include="ZnController.h">
+      <Filter>Object\CharactorController</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="0. Core">
@@ -184,6 +190,9 @@
     </Filter>
     <Filter Include="0. Core\Resource\Struct">
       <UniqueIdentifier>{14cfabdb-8d5b-47c8-977e-0ccd85c350e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\CharactorController">
+      <UniqueIdentifier>{4a32c85e-36c2-455f-bff8-046d0bafbe2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

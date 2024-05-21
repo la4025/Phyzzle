@@ -38,7 +38,7 @@ namespace ZonaiPhysics
 
 	class ZnTransform;
 
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 
 	class ZnPhysicsX : public ZnPhysicsBase
 	{
@@ -122,39 +122,46 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Create Joint
 		/// </summary>
-		// °íÁ¤ Á¶ÀÎÆ®
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		ZnFixedJoint* CreateFixedJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
-		// °Å¸® Á¶ÀÎÆ®
+		// ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		ZnDistanceJoint* CreateDistanceJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
-		// ±¸Çü Á¶ÀÎÆ®
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		ZnSphericalJoint* CreateSphericalJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
-		// È¸Àü Á¶ÀÎÆ®
+		// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		ZnHingeJoint* CreateHingeJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
-		// ÇÁ¸®Áò Á¶ÀÎÆ®
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 		ZnPrismaticJoint* CreatePrismaticJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
 
 	public:
-		bool Raycast(
-			const Eigen::Vector3f& _from,
-			const Eigen::Vector3f& _to,
-			float _distance,
-			ZnRaycastInfo& _out) override;
+		bool				Raycast(
+			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
+
+		bool				Boxcast(
+			const Eigen::Vector3f& _extend, 
+			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
+		bool				Spherecast(
+			float _radius, 
+			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
+		bool				Capsulecast(
+			float _radius, float _height, 
+			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
 
 		void ReleaseRigidBody(ZnRigidBody*, void* _userData, void* _userScene = nullptr) override;
 		void ReleaseCollider(ZnCollider*, void* _userData, void* _userScene = nullptr) override;
 		void ReleaseJoint(ZnJoint*, void* _userData, void* _userScene = nullptr) override;
 
-		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnRaycastInfo&) override;
+		// bool Boxcast(const Eigen::Vector3f&, const Eigen::Vector3f&, float, ZnQueryInfo&) override;
 
 	private:
 		ZnMaterialID defaultMaterial;

@@ -16,7 +16,7 @@
     <ClInclude Include="ForceType.h">
       <Filter>02. Enum</Filter>
     </ClInclude>
-    <ClInclude Include="ZnRaycastInfo.h">
+    <ClInclude Include="ZnQueryInfo.h">
       <Filter>01. Struct</Filter>
     </ClInclude>
     <ClInclude Include="ZnSimulationCallback.h">
@@ -63,6 +63,12 @@
     </ClInclude>
     <ClInclude Include="ZnMaterial.h">
       <Filter>01. Struct\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnAABB.h">
+      <Filter>01. Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnQueryDesc.h">
+      <Filter>01. Struct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,10 +2,22 @@
 
 #include "Physics.h"
 
+#include "ZnQueryDesc.h"
+
 namespace PurahEngine
 {
-	bool Physics::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distace, ZonaiPhysics::ZnRaycastInfo& _info)
+	bool Physics::Raycast(
+		const Eigen::Vector3f& _from, 
+		const Eigen::Vector3f& _to, float _distace,
+		const std::vector<int>& _layers,
+		ZonaiPhysics::ZnQueryInfo& _info)
 	{
-		return PhysicsSystem::GetInstance().Raycast(_from, _to, _distace, _info);
+		ZonaiPhysics::ZnQueryDesc desc;
+		desc.position = _from;
+		desc.direction = _to;
+		desc.distance = _distace;
+		desc.queryLayer = _layers;
+
+		return PhysicsSystem::GetInstance().Raycast(desc, _info);
 	}
 }

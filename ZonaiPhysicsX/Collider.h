@@ -55,6 +55,8 @@ namespace ZonaiPhysics
 		void*				GetUserData() const final;
 		void				SetUserData(void* _userData) final;
 
+		Eigen::Vector2f		GetAABB();
+
 	public:
 
 		void				UpdateInertiaTensor() const;

@@ -113,28 +113,28 @@ public:
 											PxGeometryQueryFlags queryFlags = PxGeometryQueryFlag::eDEFAULT, PxOverlapThreadContext* threadContext=NULL);
 
 	/**
-	\brief Sweep a specified geometry object in space and test for collision with a given object.
+	\brief 지정된 지오메트리 객체를 공간에서 스위핑하고 주어진 객체와 충돌을 테스트합니다.
 
-	The following combinations are supported.
+	다음 조합이 지원됩니다.
 
 	\li PxSphereGeometry vs. {PxSphereGeometry, PxPlaneGeometry, PxCapsuleGeometry, PxBoxGeometry, PxConvexMeshGeometry, PxTriangleMeshGeometry, PxHeightFieldGeometry}
 	\li PxCapsuleGeometry vs. {PxSphereGeometry, PxPlaneGeometry, PxCapsuleGeometry, PxBoxGeometry, PxConvexMeshGeometry, PxTriangleMeshGeometry, PxHeightFieldGeometry}
 	\li PxBoxGeometry vs. {PxSphereGeometry, PxPlaneGeometry, PxCapsuleGeometry, PxBoxGeometry, PxConvexMeshGeometry, PxTriangleMeshGeometry, PxHeightFieldGeometry}
 	\li PxConvexMeshGeometry vs. {PxSphereGeometry, PxPlaneGeometry, PxCapsuleGeometry, PxBoxGeometry, PxConvexMeshGeometry, PxTriangleMeshGeometry, PxHeightFieldGeometry}
 
-	\param[in] unitDir			Normalized direction along which object geom0 should be swept
-	\param[in] maxDist			Maximum sweep distance, has to be in the [0, inf) range
-	\param[in] geom0			The geometry object to sweep. Supported geometries are #PxSphereGeometry, #PxCapsuleGeometry, #PxBoxGeometry and #PxConvexMeshGeometry
-	\param[in] pose0			Pose of the geometry object to sweep
-	\param[in] geom1			The geometry object to test the sweep against
-	\param[in] pose1			Pose of the geometry object to sweep against
-	\param[out] sweepHit		The sweep hit information. Only valid if this method returns true.
-	\param[in] hitFlags			Specify which properties per hit should be computed and written to result hit array. Combination of #PxHitFlag flags
-	\param[in] inflation		Surface of the swept shape is additively extruded in the normal direction, rounding corners and edges.
-	\param[in] queryFlags		Optional flags controlling the query.
-	\param[in] threadContext	Optional user-defined per-thread context.
+	\param[in] unitDir 지오메트리 geom0가 스위핑할 정규화된 방향
+	\param[in] maxDist 최대 스위핑 거리. [0, inf) 범위여야 합니다.
+	\param[in] geom0 스위핑할 지오메트리 객체. 지원되는 지오메트리는 #PxSphereGeometry, #PxCapsuleGeometry, #PxBoxGeometry, #PxConvexMeshGeometry입니다.
+	\param[in] pose0 스위핑할 지오메트리 객체의 포즈
+	\param[in] geom1 스위핑 대상으로 테스트할 지오메트리 객체
+	\param[in] pose1 스위핑 대상 지오메트리 객체의 포즈
+	\param[out] sweepHit 스위핑 충돌 정보. 이 메서드가 true를 반환할 때만 유효합니다.
+	\param[in] hitFlags 각 충돌에 대해 계산하고 결과 충돌 배열에 작성할 속성을 지정합니다. #PxHitFlag 플래그의 조합
+	\param[in] inflation 스위핑된 모양의 표면이 정상 방향으로 추가적으로 확장됩니다. 모서리와 꼭지점을 둥글게 만듭니다.
+	\param[in] queryFlags 쿼리를 제어하는 선택적 플래그
+	\param[in] threadContext 선택적 사용자 정의 스레드별 컨텍스트
 
-	\return True if the swept geometry object geom0 hits the object geom1
+	\return 스위핑된 지오메트리 객체 geom0이 지오메트리 객체 geom1과 충돌하는 경우 true를 반환합니다.
 
 	@see PxGeomSweepHit PxGeometry PxTransform
 	*/
@@ -204,14 +204,16 @@ public:
 													PxGeometryQueryFlags queryFlags = PxGeometryQueryFlag::eDEFAULT);
 
 	/**
-	\brief computes the bounds for a geometry object
+	\brief 지오메트리 객체의 경계를 계산합니다.
 
-	\param[out] bounds		Returned computed bounds
-	\param[in] geom			The geometry object
-	\param[in] pose			Pose of the geometry object
-	\param[in] offset		Offset for computed bounds. This value is added to the geom's extents.
-	\param[in] inflation	Scale factor for computed bounds. The geom's extents are multiplied by this value.
-	\param[in] queryFlags	Optional flags controlling the query.
+	\param[out] bounds		계산된 경계를 반환합니다.
+	\param[in] geom			지오메트리 객체
+	\param[in] pose			지오메트리 객체의 포즈(위치와 회전)
+	\param[in] offset		계산된 경계에 추가할 오프셋.
+							이 값은 지오메트리의 범위(Extents)에 추가됩니다.
+	\param[in] inflation	계산된 경계에 대한 스케일 팩터.
+							지오메트리의 범위(Extents)에 이 값을 곱합니다.
+	\param[in] queryFlags	선택적인 플래그로 쿼리를 제어합니다.
 
 	@see PxGeometry PxTransform
 	*/

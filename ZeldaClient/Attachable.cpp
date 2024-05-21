@@ -1,5 +1,7 @@
 #include "Attachable.h"
 
+#include "AttachSystem.h"
+
 
 namespace Phyzzle
 {
@@ -12,6 +14,27 @@ namespace Phyzzle
 		body = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
 
 		assert(body != nullptr);
+	}
+
+	void Attachable::Update()
+	{
+		if (attachable)
+		{
+			bool enter = !preState && select;
+			bool stay = preState && select;
+			bool exit = preState && !select;
+
+			if (enter || stay)
+			{
+				AttachSystem::Instance()->EnableOutline(attachable, true, PurahColor::Yellow);
+			}
+			else if (exit)
+			{
+				AttachSystem::Instance()->EnableOutline(attachable, false);
+			}
+		}
+
+		preState = select;
 	}
 
 	IslandID Attachable::GetIslandID() const
@@ -127,8 +150,12 @@ namespace Phyzzle
 		{
 			if (attachable == obj->GetComponent<Attachable>())
 			{
-				attachable = nullptr;
+				if (select)
+				{
+					AttachSystem::Instance()->EnableOutline(attachable, false);
+				}
 
+				attachable = nullptr;
 				worldAnchor = Eigen::Vector3f::Zero();
 			}
 		}

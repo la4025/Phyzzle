@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 
 #include "IslandID.h"
+#include "PurahColor.h"
 #include "Singleton.h"
 
 namespace Phyzzle
@@ -44,6 +45,8 @@ namespace Phyzzle
 
 		void						SelectBody(Attachable* _body);
 		void						DeselectBody(Attachable* _body);
+
+		void						EnableOutline(Attachable*, bool, const Eigen::Vector4f& _targetColor = PurahColor::BlueViolet, const Eigen::Vector4f& _subColor = PurahColor::Yellow);
 
 		bool						TryAttach(Attachable* _base);
 		bool						Attach(Attachable* _base, Attachable* _other);

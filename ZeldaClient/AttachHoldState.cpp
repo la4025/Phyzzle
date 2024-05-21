@@ -32,6 +32,7 @@ namespace Phyzzle
 			player->data.cameraCore->SetLocalPosition(p);
 		}
 
+		EnableOutline(false);
 		VariableReset();
 	}
 
@@ -337,7 +338,7 @@ namespace Phyzzle
 
 	void AttachHoldState::SpringCalculate()
 	{
-		constexpr float zeta = 0.7f;												// Damping ratio
+		constexpr float zeta = 0.5f;												// Damping ratio
 		constexpr float zeta0 = 0.1f;												// Damping ratio
 		constexpr float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
@@ -363,6 +364,26 @@ namespace Phyzzle
 		Eigen::Quaternionf currRot = selectBody->GetRotation();
 		const Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
 		const Eigen::Quaternionf targetR = playerRot * targetRotation;
+
+		PurahEngine::GraphicsManager::GetInstance().DrawString(
+			L"현재 회전 : " +
+			std::to_wstring(currRot.w()) + L"\n" +
+			std::to_wstring(currRot.x()) + L"\n" +
+			std::to_wstring(currRot.y()) + L"\n" +
+			std::to_wstring(currRot.z()) + L"\n",
+			1200, 300,
+			200, 600, 15,
+			255, 255, 255, 255);
+
+		PurahEngine::GraphicsManager::GetInstance().DrawString(
+			L"타겟 회전 : " +
+			std::to_wstring(targetR.w()) + L"\n" +
+			std::to_wstring(targetR.x()) + L"\n" +
+			std::to_wstring(targetR.y()) + L"\n" +
+			std::to_wstring(targetR.z()) + L"\n",
+			1200, 500,
+			200, 600, 15,
+			255, 255, 255, 255);
 
 		quatSpring.Update(
 			currRot,
@@ -464,6 +485,14 @@ namespace Phyzzle
 		AttachSystem::Instance()->DeselectBody(attachble);
 	}
 
+	void AttachHoldState::EnableOutline(bool _value) const
+	{
+		if (!selectBody || !attachble)
+			return;
+
+		AttachSystem::Instance()->EnableOutline(attachble, _value, PurahColor::BlueViolet, PurahColor::BlueViolet);
+	}
+
 	void AttachHoldState::VariableSet()
 	{
 		using namespace Eigen;
@@ -472,9 +501,10 @@ namespace Phyzzle
 			return;
 
 		AttachSystem::Instance()->SelectBody(attachble);
+		EnableOutline(true);
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
-		const Eigen::Vector3f playerPosition = player->GetGameObject()->GetTransform()->GetWorldPosition();
+		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
 
 		Eigen::Vector3f lookTo = objectPosition - playerPosition;
 		targetPosition.y() = lookTo.y();
@@ -483,7 +513,7 @@ namespace Phyzzle
 		targetPosition.z() = lookTo.norm();
 
 		const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
-		const Eigen::Quaternionf playerRotation = player->GetGameObject()->GetTransform()->GetWorldRotation();
+		const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
 		targetRotation = playerRotation.inverse() * objectRotation;
 	}
 

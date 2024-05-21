@@ -1,5 +1,7 @@
 #include "AttachSelectState.h"
 
+#include "AttachSystem.h"
+
 namespace Phyzzle
 {
 	AttachSelectState::~AttachSelectState()
@@ -33,7 +35,16 @@ namespace Phyzzle
 	// Update
 	void AttachSelectState::StateStay()
 	{
+		EnableOutline(false);
+		result = nullptr;
+		attachable = nullptr;
+
 		select = Search();
+
+		if (select)
+		{
+			EnableOutline(true);
+		}
 
 #if _DEBUG
 		SearchDebugDraw(select);
@@ -113,6 +124,7 @@ namespace Phyzzle
 
 	void AttachSelectState::StateCancel() const
 	{
+		EnableOutline(false);
 		player->ChangeState(Player::State::DEFAULT);
 	}
 
@@ -134,7 +146,7 @@ namespace Phyzzle
 	bool AttachSelectState::Search()
 	{
 		const float distance = 40.f;
-		const bool hit = player->RaycastFromCamera(distance, &result, nullptr, nullptr);
+		const bool hit = player->RaycastFromCamera(distance, &result, &attachable, nullptr);
 
 		if (!hit)
 			return false;
@@ -146,6 +158,14 @@ namespace Phyzzle
 			return false;
 
 		return true;
+	}
+
+	void AttachSelectState::EnableOutline(bool _value) const
+	{
+		if (!result || !attachable)
+			return;
+
+		AttachSystem::Instance()->EnableOutline(attachable, _value);
 	}
 #pragma endregion Content
 
