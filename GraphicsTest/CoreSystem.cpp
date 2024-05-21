@@ -700,6 +700,10 @@ void CoreSystem::run()
 	renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
 	renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
+	renderer->DrawSprite({ 0.0f, 0.0f }, scdTextureID, -1);
+	renderer->DrawSprite({ 50.0f, 50.0f }, scdTextureID, +0);
+	renderer->DrawSprite({ 100.0f, 100.0f }, scdTextureID, +1);
+	renderer->DrawSprite({ 150.0f, 150.0f }, msTextureID, +1);
 
 	renderer->EndDraw();
 }
