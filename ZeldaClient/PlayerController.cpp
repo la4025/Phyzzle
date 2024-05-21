@@ -61,11 +61,14 @@ namespace Phyzzle
 	bool PlayerController::IsWall()
 	{
 
+
 		return true;
 	}
 
 	bool PlayerController::IsObstacle()
 	{
+
+
 		return true;
 	}
 }

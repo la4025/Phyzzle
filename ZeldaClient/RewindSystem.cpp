@@ -1,4 +1,5 @@
 #include "Rewindable.h"
+#include "Snapshot.h"
 
 #include "RewindSystem.h"
 
@@ -6,86 +7,54 @@ namespace Phyzzle
 {
 	Rewindable* RewindSystem::target = nullptr;
 
-	void RewindSystem::Update()
+	void RewindSystem::SetRewindableTime(float _step)
 	{
-		Rewind();
+		rewindableTime = _step;
 	}
 
-	void RewindSystem::Rewind()
+	void RewindSystem::Rewind(Rewindable* _target)
 	{
-		if (!target)
+		// 이미 진행 중인게 있으면 ㄴㄴ
+		if (target)
 			return;
 
-		// target->Restore(history[target].front());
-	}
+		// 포인터가 null이면 ㄴㄴ
+		if (!_target)
+			return;
 
-	void RewindSystem::Select(Rewindable* _target)
-	{
-		target = _target;
+		if (histories.contains(_target))
+		{
+			_target->Rewind(histories[_target].second);
+			target = _target;
+		}
 	}
 
 	void RewindSystem::Cancel()
 	{
-		if (target)
-		{
-			target->Cancel();
-			target = nullptr;
-		}
-	}
+		// 진행 중인게 없으면 ㄴㄴ
+		if (!target)
+			return;
 
-	void RewindSystem::Active()
-	{
-	}
-
-	void RewindSystem::Deactive()
-	{
+		target->Cancel();
+		target = nullptr;
 	}
 
 	void RewindSystem::Store(Rewindable* _object, Snapshot* _snapshot)
 	{
-		//const auto itr = history.find(_object);
+		float dt = _snapshot->step;
 
-		//if (itr != history.end())
-		//{
-		//	auto& [object, list] = (*itr);
+		auto& [accum, history] = histories[_object];
 
-		//	bool check = Check(list.back(), _snapshot);
+		accum += dt;
+		history.emplace_back(_snapshot);
 
-		//	if (Check(list.back(), _snapshot))
-		//	{
-
-		//	}
-		//}
+		while (accum > rewindableTime)
+		{
+			Snapshot* snapshot = history.front();
+			history.pop_front();
+			accum -= snapshot->step;
+			delete snapshot;
+			snapshot = nullptr;
+		}
 	}
-
-	bool RewindSystem::Check(Snapshot* _last, Snapshot* _newSnapshot)
-	{
-		return true;
-	}
-
-	//void RewindSystem::Active()
-	//{
-	//	while (!activateObject.empty())
-	//	{
-	//		Rewindable* object = activateObject.front();
-	//		activatedObject.push_back(object);
-	//		activateObject.pop();
-	//	}
-	//}
-	//
-	//void RewindSystem::Deactive()
-	//{
-	//	while (!deactivateObject.empty())
-	//	{
-	//		Rewindable* object = deactivateObject.front();
-	//		const auto itr = std::ranges::find(activatedObject, object);
-	//
-	//		if (itr != activatedObject.end())
-	//		{
-	//			activatedObject.erase(itr);
-	//		}
-	//
-	//		deactivateObject.pop();
-	//	}
-	//}
 }
