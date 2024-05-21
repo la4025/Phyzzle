@@ -3,11 +3,11 @@
 #include <Eigen/Dense>
 
 #include "MaterialEnum.h"
-#include "ZnRaycastInfo.h"
+#include "ZnQueryInfo.h"
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 }
 
 namespace PurahEngine
@@ -15,6 +15,9 @@ namespace PurahEngine
 	class PURAHENGINE_API Physics
 	{
 	public:
-		static bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distace, ZonaiPhysics::ZnRaycastInfo& _info);
+		static bool Raycast(const Eigen::Vector3f& _from,
+			const Eigen::Vector3f& _to, float _distace,
+			const std::vector<int>& _layers,
+			ZonaiPhysics::ZnQueryInfo& _info);
 	};
 }

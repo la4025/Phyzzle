@@ -7,11 +7,11 @@
 #include "FBXData.h"
 #pragma warning (pop)
 
-#define ZONAI_CAUTUON(string, heder) \
-MessageBox(0,					\
-	L#string,					\
-	L#heder,					\
-	MB_OK | MB_ICONEXCLAMATION	\
+#define ZONAI_CAUTUON(string, heder)	\
+MessageBox(0,							\
+	L#string,							\
+	L#heder,							\
+	MB_OK | MB_ICONEXCLAMATION			\
 );
 
 #define NULL_POINTER_REFERENCE(pointer, error_path)		\

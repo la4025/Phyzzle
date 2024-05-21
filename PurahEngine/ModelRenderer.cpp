@@ -82,6 +82,14 @@ namespace PurahEngine
 		outLine = value;
 	}
 
+	void ModelRenderer::SetOutLineColor(const Eigen::Vector4f& _color)
+	{
+		outLineR = _color.x();
+		outLineG = _color.y();
+		outLineB = _color.z();
+		outLineA = _color.w();
+	}
+
 	bool ModelRenderer::GetOutLine() const
 	{
 		return outLine;

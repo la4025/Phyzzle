@@ -26,9 +26,10 @@ namespace Phyzzle
 
 	private:
 		void		Rewind();
+		void		Rewind(std::list<Snapshot*>*);
 
 		bool		Check() const;
-		void		Store() const;
+		void		Store();
 		void		Restore(Snapshot* _data);
 		bool		Complete();
 		void		Cancel();
@@ -40,15 +41,15 @@ namespace Phyzzle
 		void PostDeserialize(const json& jsonData) override {}
 
 	private:
-		long long REWIDABLE_ID;
-
-	private:
 		bool rewinding = false;
 		Snapshot* prev;
 		Snapshot* curr;
 		Snapshot* next;
 
 	private:
+		float step;
 		PurahEngine::RigidBody* body;
+
+		std::list<Snapshot*>* container;
 	};
 }

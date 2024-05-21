@@ -174,6 +174,22 @@ namespace ZonaiPhysics
 		return nullptr;
 	}
 
+	physx::PxControllerManager* ZnFactoryX::CreateControllerManager(physx::PxScene* _scene)
+	{
+		physx::PxControllerManager* manager = PxCreateControllerManager(*_scene);
+
+		return manager;
+	}
+
+	physx::PxController* ZnFactoryX::CreateController(physx::PxControllerManager* _manager)
+	{
+		physx::PxCapsuleControllerDesc desc;
+		// desc.c
+		_manager->createController(desc);
+
+		return nullptr;
+	}
+
 	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
 		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
@@ -199,7 +215,9 @@ namespace ZonaiPhysics
 	{
 		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
 		physx::PxTriangleMeshGeometry geom(_mesh, scale);
-		return pxFactory->createShape(geom, *_material);
+		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material);
+
+		return pxShape;
 	}
 
 	physx::PxShape* ZnFactoryX::CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
@@ -207,15 +225,17 @@ namespace ZonaiPhysics
 	{
 		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
 		physx::PxConvexMeshGeometry geom(_mesh, scale);
-		return pxFactory->createShape(geom, *_material);
+		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material);
+		
+		return pxShape;
 	}
 
 	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
 	{
-		std::vector<Eigen::Vector3f> verties;
-		std::vector<unsigned int> indies;
+		std::vector<physx::PxVec3> vertices;
+		std::vector<physx::PxU32> indies;
 
-		int accIndex = 0;
+		physx::PxU32 accIndex = 0;
 
 		for (size_t i = 0; i < _model->meshList.size(); i++)
 		{
@@ -225,7 +245,7 @@ namespace ZonaiPhysics
 
 			for (size_t j = 0; j < points.size(); j++)
 			{
-				verties.emplace_back(points[j].position.x, points[j].position.y, points[j].position.z);
+				vertices.emplace_back(points[j].position.x, points[j].position.y, points[j].position.z);
 			}
 
 			for (size_t j = 0; j < index.size(); j++)
@@ -238,34 +258,40 @@ namespace ZonaiPhysics
 
 		// 정점 정보
 		physx::PxTriangleMeshDesc meshDesc;
-		meshDesc.points.count = verties.size();
+		meshDesc.points.count = (physx::PxU32)vertices.size();
 		meshDesc.points.stride = sizeof(Eigen::Vector3f);
-		meshDesc.points.data = &verties[0];
+		meshDesc.points.data = &vertices.front();
 
-		meshDesc.triangles.count = indies.size();
-		meshDesc.triangles.stride = sizeof(unsigned int);
-		meshDesc.triangles.data = &indies[0];
+		meshDesc.triangles.count = (physx::PxU32)(indies.size() / 3);
+		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
+		meshDesc.triangles.data = &indies.front();
 
-		meshDesc.sdfDesc;
-		meshDesc.flags = physx::PxMeshFlag::e16_BIT_INDICES;
-
+		//const physx::PxTolerancesScale scale;
+		//physx::PxCookingParams params(scale);
+		//params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
+		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+		//physx::PxTriangleMesh* triangleMesh = PxCreateTriangleMesh(params, meshDesc);
+		
 		physx::PxCookingParams params(pxFactory->getTolerancesScale());
-
 		physx::PxDefaultMemoryOutputStream writeBuffer;
 		physx::PxTriangleMeshCookingResult::Enum result;
 		const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
 		if (!status)
+		{
+			ZONAI_CAUTUON(ZonaiPhysics, Create Mesh Collider Error!)
 			return NULL;
+		}
 
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
+		 physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
 
 		return triangleMesh;
 	}
 
 	physx::PxConvexMesh* ZnFactoryX::CookConvexMesh(FBXLoader::Model* _model)
 	{
-		std::vector<Eigen::Vector3f> verties;
+		std::vector<physx::PxVec3> vertices;
 		
 		for (size_t i = 0; i < _model->meshList.size(); i++)
 		{
@@ -274,15 +300,15 @@ namespace ZonaiPhysics
 
 			for (size_t i = 0; i < points.size(); i++)
 			{
-				verties.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
+				vertices.emplace_back(points[i].position.x, points[i].position.y, points[i].position.z);
 			}
 		}
 
 		// 정점 정보
 		physx::PxConvexMeshDesc convexDesc;
-		convexDesc.points.count = verties.size();
-		convexDesc.points.stride = sizeof(Eigen::Vector3f);
-		convexDesc.points.data = &verties[0];
+		convexDesc.points.count = vertices.size();
+		convexDesc.points.stride = sizeof(physx::PxVec3);
+		convexDesc.points.data = &vertices.front();
 		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
 		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
@@ -292,7 +318,10 @@ namespace ZonaiPhysics
 		physx::PxConvexMeshCookingResult::Enum result;
 		const bool status = PxCookConvexMesh(params, convexDesc, buf, &result);
 		if (!status)
+		{
+			ZONAI_CAUTUON(ZonaiPhysics, Create Convex Collider Error!)
 			return nullptr;
+		}
 
 		// 버퍼를 바탕으로 Mesh 생성
 		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());

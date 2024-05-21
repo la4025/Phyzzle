@@ -11,6 +11,7 @@ namespace Phyzzle
 		~Attachable() override;
 
 		void Start() override;
+		void Update() override;
 
 	private:
 		IslandID GetIslandID() const;
@@ -38,6 +39,7 @@ namespace Phyzzle
 		std::vector<Attachable*> connectedObjects;	// 현 객체와 연결된 객체들
 
 	private:
+		bool preState = false;
 		bool select = false;
 
 		// Select되면 객체의 상태를 저장하기 위한 변수

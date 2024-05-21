@@ -106,6 +106,7 @@
     <ClInclude Include="TweenHandler.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UnifiedInputManager.h" />
+    <ClInclude Include="PurahColor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />

@@ -15,7 +15,7 @@ namespace Phyzzle
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 	class Collider;
 }
 
@@ -28,6 +28,13 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
+		enum AnimationState
+		{
+			IDLE,
+			WALK,
+			ABILITY,
+		};
+
 		enum State
 		{
 			ATTACH_HOLD		= -1,	// 물건을 든 상태
@@ -66,6 +73,10 @@ namespace Phyzzle
 
 			float moveSpeed = 10.f;
 			float holdSpeed = 5.f;
+
+			float rewindableTime = 10.f;
+			float timeOffset = 0.5f;
+
 			float sensitivity = 90.f;
 
 			float jumpPower = 10.f;

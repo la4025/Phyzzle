@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClInclude Include="FreezeFlag.h" />
     <ClInclude Include="MaterialEnum.h" />
+    <ClInclude Include="ZnQueryDesc.h" />
+    <ClInclude Include="ZnAABB.h" />
     <ClInclude Include="ZnResourceID.h" />
     <ClInclude Include="ZnBase.h" />
     <ClInclude Include="ZnBoxcastInfo.h" />
@@ -36,7 +38,7 @@
     <ClInclude Include="ZnMaterial.h" />
     <ClInclude Include="ZnObject.h" />
     <ClInclude Include="ZnPhysicsBase.h" />
-    <ClInclude Include="ZnRaycastInfo.h" />
+    <ClInclude Include="ZnQueryInfo.h" />
     <ClInclude Include="ZnRigidBody.h" />
     <ClInclude Include="ZnSimulationCallback.h" />
     <ClInclude Include="ZnTransform.h" />
