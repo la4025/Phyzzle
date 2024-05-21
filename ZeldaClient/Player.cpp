@@ -74,8 +74,8 @@ namespace Phyzzle
 	{
 		prevState = currState;
 
-		DebugDraw();
 		GamePadInput();
+		DebugDraw();
 
 		if (prevState != currState)
 		{
@@ -98,7 +98,7 @@ namespace Phyzzle
 		if (!data.jumping)
 			return;
 
-		JumpCheck(zn_collision, collider);
+		// JumpCheck(zn_collision, collider);
 	}
 
 	void Player::DebugDraw()
@@ -163,7 +163,7 @@ namespace Phyzzle
 			400, 100, 15,
 			255, 255, 255, 255);
 
-		if (!data.jumping)
+		if (data.jumping == false)
 		{
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				L"can Jump",
@@ -256,7 +256,7 @@ namespace Phyzzle
 
 	void Player::Jump()
 	{
-		if (!data.jumping)
+		if (data.jumping == false)
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);

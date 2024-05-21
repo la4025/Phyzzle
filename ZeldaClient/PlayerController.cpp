@@ -3,9 +3,17 @@
 
 namespace Phyzzle
 {
+	void PlayerController::Start()
+	{
+		groundCheck.direction = -1.f * Eigen::Vector3f::UnitY();
+		groundCheck.distance;
+	}
+
 	void PlayerController::Move(const Eigen::Vector3f& _dir, float _speed)
 	{
 		const Eigen::Vector3f movement = _dir * _speed;
+
+		// sweep해서 갈 수 있는 곳인지 아닌지 체크
 	}
 
 	void PlayerController::LookTo(const Eigen::Vector3f& _worldDirection)
@@ -55,6 +63,8 @@ namespace Phyzzle
 
 	bool PlayerController::IsGround()
 	{
+		// PurahEngine::Physics::Capsulecast()
+
 		return true;
 	}
 
@@ -70,5 +80,27 @@ namespace Phyzzle
 
 
 		return true;
+	}
+
+	void PlayerController::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
+	{
+		for (size_t i = 0; i < zn_collision.contactCount; i++)
+		{
+			// zn_collision.contacts[i].normal;
+
+		}
+	}
+
+	void PlayerController::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
+	{
+
+	}
+
+	void PlayerController::OnCollisionExit(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
+	{
+
 	}
 }

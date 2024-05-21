@@ -8,15 +8,15 @@ namespace Phyzzle
 	{
 		Snapshot() : step(),
 			position(Eigen::Vector3f::Zero()), rotation(Eigen::Quaternionf::Identity()),
-			linearVelocity(Eigen::Vector3f::Zero()), angularVelocity(Eigen::Quaternionf::Identity())
+			linearVelocity(Eigen::Vector3f::Zero()), angularVelocity(Eigen::Vector3f::Zero())
 		{}
 		Snapshot(const Snapshot& _other) : step(_other.step),
 			position(_other.position), rotation(_other.rotation),
-			linearVelocity(_other.linearVelocity), angularVelocity(_other.linearVelocity)
+			linearVelocity(_other.linearVelocity), angularVelocity(_other.angularVelocity)
 		{}
 		Snapshot(Snapshot&& _other) noexcept : step(_other.step),
 			position(_other.position), rotation(_other.rotation),
-			linearVelocity(_other.linearVelocity), angularVelocity(_other.linearVelocity)
+			linearVelocity(_other.linearVelocity), angularVelocity(_other.angularVelocity)
 		{}
 		Snapshot& operator=(const Snapshot& _other)
 		{

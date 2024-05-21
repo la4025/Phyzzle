@@ -24,7 +24,7 @@ namespace Phyzzle
 
 		if (histories.contains(_target))
 		{
-			_target->Rewind(histories[_target].second);
+			_target->Rewind(&histories[_target].second);
 			target = _target;
 		}
 	}
@@ -58,3 +58,7 @@ namespace Phyzzle
 		}
 	}
 }
+
+/// 할 것
+///	스냅샷 정보를 저장하는 것 까지는 했음.
+///	이제 물체를 선택하고 그걸 보간하는 것만 하자.
