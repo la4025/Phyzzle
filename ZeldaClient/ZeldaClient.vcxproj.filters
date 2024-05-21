@@ -60,9 +60,6 @@
     <ClCompile Include="Rewindable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerCamera.cpp">
-      <Filter>KH\PLAYER\player</Filter>
-    </ClCompile>
     <ClCompile Include="Attachable.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
@@ -181,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="Snapshot.h">
       <Filter>KH\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerCamera.h">
-      <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
     <ClInclude Include="Attachable.h">
       <Filter>KH\Object</Filter>

@@ -89,7 +89,7 @@ namespace Phyzzle
 			Eigen::Quaternionf x,
 			Eigen::Vector3f& v,
 			const Eigen::Quaternionf& x_goal,
-			float halflife,
+			const float halflife,
 			float dt)
 		{
 			Eigen::Quaternionf goal = x_goal;
@@ -106,7 +106,7 @@ namespace Phyzzle
 			const Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * goal.inverse());
 			const Eigen::Vector3f j1 = v + j0 * y;
 
-			float eydt = fast_negexp(y * dt);
+			const float eydt = fast_negexp(y * dt);
 
 			x = quat_from_scaled_angle_axis(eydt * (j0 + j1 * dt)) * goal;
 			v = eydt * (v - j1 * y * dt);

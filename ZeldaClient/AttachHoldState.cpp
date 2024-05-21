@@ -32,6 +32,7 @@ namespace Phyzzle
 			player->data.cameraCore->SetLocalPosition(p);
 		}
 
+		EnableOutline(false);
 		VariableReset();
 	}
 
@@ -337,7 +338,7 @@ namespace Phyzzle
 
 	void AttachHoldState::SpringCalculate()
 	{
-		constexpr float zeta = 0.7f;												// Damping ratio
+		constexpr float zeta = 0.5f;												// Damping ratio
 		constexpr float zeta0 = 0.1f;												// Damping ratio
 		constexpr float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
@@ -484,6 +485,14 @@ namespace Phyzzle
 		AttachSystem::Instance()->DeselectBody(attachble);
 	}
 
+	void AttachHoldState::EnableOutline(bool _value) const
+	{
+		if (!selectBody || !attachble)
+			return;
+
+		AttachSystem::Instance()->EnableOutline(attachble, _value, PurahColor::BlueViolet, PurahColor::BlueViolet);
+	}
+
 	void AttachHoldState::VariableSet()
 	{
 		using namespace Eigen;
@@ -492,10 +501,10 @@ namespace Phyzzle
 			return;
 
 		AttachSystem::Instance()->SelectBody(attachble);
+		EnableOutline(true);
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
-		const Eigen::Quaternionf playerRotation2 = player->data.modelCore->GetWorldRotation();
 
 		Eigen::Vector3f lookTo = objectPosition - playerPosition;
 		targetPosition.y() = lookTo.y();

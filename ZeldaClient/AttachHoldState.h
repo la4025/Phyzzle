@@ -96,25 +96,6 @@ namespace Phyzzle
 
 		void SpringCalculate();
 
-		void ObjectPostionSpring(
-			const Eigen::Vector3f& _s, Eigen::Vector3f& _v, const Eigen::Vector3f& _e,
-			 float _zeta, float _omega, float _dt);
-
-		void Spring(
-			const float& _s, float& _v, const float& _e,
-			float _zeta, float _omega, float _dt);
-
-		//void ObjectRotationSpring(
-		//	const Eigen::Quaternionf& _s, Eigen::Vector3f& _v, const Eigen::Quaternionf& _e,
-		//	float _zeta, float _omega, float _dt);
-
-		void ObjectRotationSpring(
-			Eigen::Quaternionf& x,
-			Eigen::Vector3f& v,
-			Eigen::Quaternionf x_goal,
-			float halflife,
-			float dt);
-
 		void SpringYTranslate(float _distance);									// 스프링 이동
 		void SpringZTranslate(float _distance);									// 스프링 이동
 
@@ -131,6 +112,8 @@ namespace Phyzzle
 		bool TryDettach() const;									// 부착
 
 		void Put() const;
+
+		void EnableOutline(bool ) const;
 
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화

@@ -25,6 +25,7 @@ namespace PurahEngine
 		bool GetFastOutLine() const;
 
 		void SetOutLine(bool value);
+		void SetOutLineColor(const Eigen::Vector4f& _color);
 		bool GetOutLine() const;
 
 	public:

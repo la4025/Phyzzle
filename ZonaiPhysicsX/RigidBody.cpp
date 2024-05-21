@@ -15,6 +15,8 @@ namespace ZonaiPhysics
 	{
 		_pxBody->userData = this;
 		pxBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
+
+		pxBody->setSolverIterationCounts(10, 3);
 	}
 
 	RigidBody::~RigidBody()

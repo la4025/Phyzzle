@@ -144,6 +144,50 @@ namespace Phyzzle
 		}
 	}
 
+	void AttachSystem::EnableOutline(
+		Attachable* _obj, 
+		bool _value, 
+		const Eigen::Vector4f& _targetColor, 
+		const Eigen::Vector4f& _subColor)
+	{
+		const IslandID objID = _obj->GetIslandID();
+		AttachIsland island;
+
+		if (!HasAttachIsland(objID, island))
+			island.push_back(_obj);
+
+		for (auto& obj : island)
+		{
+			auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+			if (model)
+			{
+				model->SetOutLineColor(_subColor);
+				model->SetOutLine(_value);
+			}
+
+			auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+			if (mesh)
+			{
+				mesh->SetOutLineColor(_subColor);
+				mesh->SetOutLine(_value);
+			}
+		}
+
+		auto model = _obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+		if (model)
+		{
+			model->SetOutLineColor(_targetColor);
+			model->SetOutLine(_value);
+		}
+
+		auto mesh = _obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+		if (mesh)
+		{
+			mesh->SetOutLineColor(_targetColor);
+			mesh->SetOutLine(_value);
+		}
+	}
+
 	// ¹°Ã¼ ºÎÂø
 	bool AttachSystem::TryAttach(Attachable* _object)
 	{
@@ -250,6 +294,8 @@ namespace Phyzzle
 			}
 
 			CreateIsland(island);
+
+			EnableOutline(island.front(), false);
 		}
 
 		return true;
