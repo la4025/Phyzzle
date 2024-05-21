@@ -77,15 +77,11 @@ namespace Phyzzle
 	void Rewindable::Restore(Snapshot* _data)
 	{
 		// 시간 간격
-		/*std::chrono::duration<float> d = next->time - curr->time;*/
-		/*float difference = d.count();*/
 
 		// dt를 
 		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
-		/*auto a = dt / difference;*/
 
 		// 물리 정보를 꺼냄.
-		/*_data->time;*/
 		_data->linearVelocity;
 		_data->angularVelocity;
 	}
@@ -97,6 +93,7 @@ namespace Phyzzle
 
 	void Rewindable::Cancel()
 	{
-
+		rewinding = false;
+		container = nullptr;
 	}
 }

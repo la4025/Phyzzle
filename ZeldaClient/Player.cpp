@@ -592,6 +592,10 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(animator);
 		data.animator = animator;
 
+		auto crossHead = data.crossHead;
+		POSTDESERIALIZE_PTR(crossHead);
+		data.crossHead = crossHead;
+
 		//auto holder = data.holder;
 		//POSTDESERIALIZE_PTR(holder);
 		//data.holder = holder;
