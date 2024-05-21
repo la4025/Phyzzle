@@ -9,7 +9,7 @@ namespace ZonaiPhysics
 		Eigen::Quaternionf rotation = Eigen::Quaternionf::Identity();
 		Eigen::Vector3f direction = Eigen::Vector3f::Zero();
 		float distance = 0.f;
-		std::vector<int> queryLayer;
+		unsigned long queryLayer;
 		float offset = 0.f;
 	};
 }

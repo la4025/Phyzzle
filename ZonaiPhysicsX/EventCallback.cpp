@@ -68,6 +68,7 @@ namespace ZonaiPhysics
 			return;
 
 		ZnCollision collision;
+		ZnCollision otherCollision;
 		PxContactPairExtraDataIterator pairData(pairHeader.extraDataStream, pairHeader.extraDataStreamSize);
 
 		for (physx::PxU32 i = 0; i < nbPairs; i++)
@@ -97,10 +98,18 @@ namespace ZonaiPhysics
 
 				collision.contactCount = itr.getTotalContactCount();
 
+				///
+				otherCollision.contactCount = collision.contactCount;
+				///
+
 				if (!collision.contactCount)
 					continue;
 
 				collision.contacts = new ZnContact[collision.contactCount];
+
+				///
+				otherCollision.contacts = new ZnContact[collision.contactCount];
+				///
 
 				while (itr.hasNextContact())
 				{
@@ -120,6 +129,12 @@ namespace ZonaiPhysics
 					contact.normal = normal;
 					contact.point = point;
 					contact.separation = separation;
+
+					///
+					otherCollision.contacts[contacts].normal = normal * -1.f;
+					otherCollision.contacts[contacts].point = point;
+					otherCollision.contacts[contacts].separation = separation;
+					///
 
 					contacts++;
 				}
@@ -147,24 +162,38 @@ namespace ZonaiPhysics
 
 					collision.thisPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[0]);
 					collision.otherPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[1]);
+
+					///
+					otherCollision.thisPostLinearVelocity = collision.thisPostLinearVelocity;
+					otherCollision.otherPostLinearVelocity = collision.otherPostLinearVelocity;
+					otherCollision.thisPostAngularVelocity = collision.thisPostAngularVelocity;
+					otherCollision.otherPostAngularVelocity = collision.otherPostAngularVelocity;
+					///
 				}
 			}
 
 			collision.impulses = totalImpulse;
+			otherCollision.impulses = totalImpulse * -1.f;
 
 			if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-				callback->OnCollisionEnter(thisCollider, otherCollider, collision);
+				callback->OnCollisionEnter(thisCollider, otherCollider, collision, otherCollision);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
-				callback->OnCollisionStay(thisCollider, otherCollider, collision);
+				callback->OnCollisionStay(thisCollider, otherCollider, collision, otherCollision);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-				callback->OnCollisionExit(thisCollider, otherCollider, collision);
+				callback->OnCollisionExit(thisCollider, otherCollider, collision, otherCollision);
 			else
 				assert(false);
 
 			if (collision.contacts)
+			{
 				delete[] collision.contacts;
+				delete[] otherCollision.contacts;
+
+				collision.contacts = nullptr;
+				otherCollision.contacts = nullptr;
+			}
 		}
 	}
 

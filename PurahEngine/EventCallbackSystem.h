@@ -24,11 +24,14 @@ namespace PurahEngine
 
 		void OnTriggerExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*) override;
 
-		void OnCollisionEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollision&) override;
+		void OnCollisionEnter(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, 
+			const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollision&) override;
 
-		void OnCollisionStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollision&) override;
+		void OnCollisionStay(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, 
+			const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollision&) override;
 
-		void OnCollisionExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollision&) override;
+		void OnCollisionExit(const ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnCollider*, 
+			const ZonaiPhysics::ZnCollision&, const ZonaiPhysics::ZnCollision&) override;
 	};
 }
 
