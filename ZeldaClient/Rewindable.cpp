@@ -7,21 +7,25 @@
 
 #include "Rewindable.h"
 
+#include "RewindSystem.h"
+#include "../ZonaiPhysicsX/ZnUtil.h"
+
 namespace Phyzzle
 {
-	Rewindable::Rewindable()
+	Rewindable::Rewindable(): prev(nullptr), curr(nullptr), next(nullptr), step(0), body(nullptr), container(nullptr)
 	{
-		static long long ID = 0;
-
-		REWIDABLE_ID = ID;
-		ID++;
 	}
 
 	void Rewindable::Awake()
 	{
 		body = gameObject->GetComponent<PurahEngine::RigidBody>();
 
-		assert(body != nullptr);
+		if (body)
+		{
+			ZONAI_CAUTUON(null reference, Rewindable Component);
+			gameObject->DeleteComponent(this);
+			assert(body != nullptr);
+		}
 	}
 
 	void Rewindable::Update()
@@ -40,22 +44,36 @@ namespace Phyzzle
 
 	void Rewindable::Rewind()
 	{
+		if (container->empty())
+		{
+			rewinding = false;
+			return;
+		}
 
+		Snapshot* snap = container->back();
 	}
 
-	void Rewindable::Store() const
+	void Rewindable::Rewind(std::list<Snapshot*>* _history)
+	{
+		container = _history;
+		rewinding = true;
+	}
+
+	void Rewindable::Store()
 	{
 		assert(body != nullptr);
 
-		// this->prev = curr;
+		this->step = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		// 물리 정보를 저장.
-		Snapshot* snapshot			= new Snapshot;
-		/*snapshot->time				= std::chrono::system_clock::now();*/
-		snapshot->position			= body->GetPosition();
-		snapshot->rotation			= body->GetRotation();
-		snapshot->linearVelocity	= body->GetLinearVelocity();
-		snapshot->angularVelocity	= body->GetAngularVelocity();
+		Snapshot* snapshot = new Snapshot;
+		snapshot->step = step;
+		snapshot->position = body->GetPosition();
+		snapshot->rotation = body->GetRotation();
+		snapshot->linearVelocity = body->GetLinearVelocity();
+		snapshot->angularVelocity = body->GetAngularVelocity();
+
+		RewindSystem::Instance()->Store(this, snapshot);
 	}
 
 	void Rewindable::Restore(Snapshot* _data)
