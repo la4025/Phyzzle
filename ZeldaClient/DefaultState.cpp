@@ -16,7 +16,7 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
-		CrossHeadRender(true);
+		
 	}
 
 	void DefaultState::StateExit()
@@ -25,18 +25,7 @@ namespace Phyzzle
 
 	void DefaultState::StateStay()
 	{
-		static bool value = true;
 
-		if (PurahEngine::InputManager::Getinstance().GetKey(PurahEngine::eKey::eKEY_W))
-		{
-			value = true;
-		}
-		if (PurahEngine::InputManager::Getinstance().GetKey(PurahEngine::eKey::eKEY_S))
-		{
-			value = false;
-		}
-
-		CrossHeadRender(value);
 	}
 
 	void DefaultState::Stick_L()
@@ -171,12 +160,5 @@ namespace Phyzzle
 		}
 
 		player->data.state = newState;
-	}
-	void DefaultState::CrossHeadRender(bool _value)
-	{
-		if (player->data.crossHead)
-		{
-			player->data.crossHead->SetEnable(_value);
-		}
 	}
 }

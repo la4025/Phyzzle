@@ -46,7 +46,5 @@ namespace Phyzzle
 		void LookToWorldDirection(const Eigen::Vector3f& _to) const;
 		void LookToLocalDirection(const Eigen::Vector3f& _to) const;
 		void ChangeState(bool _value) const;
-
-		void CrossHeadRender(bool _value);
 	};
 }
