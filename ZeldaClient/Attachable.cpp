@@ -92,6 +92,7 @@ namespace Phyzzle
 
 		PurahEngine::GameObject* obj = _collider->GetGameObject();
 
+		
 		if (obj->tag.IsContain(L"Attachable"))
 		{
 			attachable = obj->GetComponent<Attachable>();

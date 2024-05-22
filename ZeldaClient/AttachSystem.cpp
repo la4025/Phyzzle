@@ -158,33 +158,45 @@ namespace Phyzzle
 
 		for (auto& obj : island)
 		{
-			auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+			auto children = obj->GetGameObject()->GetTransform()->GetChildren();
+
+			for (auto& child : children)
+			{
+				auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+
+				if (model)
+				{
+					model->SetOutLineColor(_subColor);
+					model->SetOutLine(_value);
+				}
+
+				auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+				if (mesh)
+				{
+					mesh->SetOutLineColor(_subColor);
+					mesh->SetOutLine(_value);
+				}
+			}
+		}
+
+		auto children = _obj->GetGameObject()->GetTransform()->GetChildren();
+
+		for (auto& child : children)
+		{
+			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+
 			if (model)
 			{
-				model->SetOutLineColor(_subColor);
+				model->SetOutLineColor(_targetColor);
 				model->SetOutLine(_value);
 			}
 
-			auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
 			if (mesh)
 			{
-				mesh->SetOutLineColor(_subColor);
+				mesh->SetOutLineColor(_targetColor);
 				mesh->SetOutLine(_value);
 			}
-		}
-
-		auto model = _obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
-		if (model)
-		{
-			model->SetOutLineColor(_targetColor);
-			model->SetOutLine(_value);
-		}
-
-		auto mesh = _obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
-		if (mesh)
-		{
-			mesh->SetOutLineColor(_targetColor);
-			mesh->SetOutLine(_value);
 		}
 	}
 

@@ -1,9 +1,9 @@
 {
   "shadowAreaRange": 64.0,
   "shadowAreaOffset": 32.0,
-  "shadowMapSize": 16384,
+  "shadowMapSize": 2048,
   "shadowMapDepthBias": 0.1,
-  "gravity": -29.4,
+  "gravity": -9.81,
   "tag": [
     "Conductor Object",
     "Phyzzle Player",
@@ -109,6 +109,22 @@
     },
     {
       "name": "1",
+      "staticFriction": 1.0,
+      "dynamicFriction": 1.0,
+      "restitution": 0.0,
+      "eFriction": 0,
+      "eRestitution": 0
+    },
+    {
+      "name": "Rock",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.7,
+      "restitution": 0.05,
+      "eFriction": 0,
+      "eRestitution": 0
+    },
+    {
+      "name": "Device",
       "staticFriction": 0.5,
       "dynamicFriction": 0.5,
       "restitution": 0.2,
