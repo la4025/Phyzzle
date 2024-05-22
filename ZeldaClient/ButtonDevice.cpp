@@ -84,8 +84,7 @@ namespace Phyzzle
 
 	void ButtonDevice::FixedUpdate()
 	{
-		// Pushable Object의 속도 고정
-		pushableRigidbody->SetLinearVelocity({ 0.0f, releasedSpeed, 0.0f });
+		pushableRigidbody->AddForce({ 0.0f, releasedSpeed, 0.0f }, ZonaiPhysics::Impulse);
 	}
 
 	void ButtonDevice::TargetPowerOn()
