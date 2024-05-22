@@ -6,7 +6,7 @@
 #include "GamePadManager.h"
 
 PurahEngine::AudioSource::AudioSource()
-	: soundTransform(nullptr), soundClip(nullptr)
+	: soundTransform(nullptr)
 {
 
 }
@@ -39,22 +39,12 @@ void PurahEngine::AudioSource::Update()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
-	soundClip->Set3DAttributes(soundPosition);
+	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
 }
 
 std::wstring PurahEngine::AudioSource::GetSoundName()
 {
 	return soundName;
-}
-
-void PurahEngine::AudioSource::SetClip(AudioClip* clip)
-{
-	soundClip = clip;
-}
-
-PurahEngine::AudioClip* PurahEngine::AudioSource::GetClip()
-{
-	return soundClip;
 }
 
 void PurahEngine::AudioSource::PreSerialize(json& jsonData) const

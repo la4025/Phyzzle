@@ -1,7 +1,6 @@
 #pragma once
 #include "PurahEngineAPI.h"
 #include "Component.h"
-#include "AudioClip.h"
 
 #include "Transform.h"
 #include "SoundManager.h"
@@ -11,7 +10,6 @@ namespace PurahEngine
 	class Transform;
 	class GameObject;
 	class SoundManager;
-	class AudioClip;
 
 	class PURAHENGINE_API AudioSource : public Component
 	{
@@ -26,9 +24,6 @@ namespace PurahEngine
 		void Update();
 		std::wstring GetSoundName();
 
-		void SetClip(AudioClip* clip);
-		AudioClip* GetClip();
-
 	public:
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
@@ -38,7 +33,6 @@ namespace PurahEngine
 	private:
 		Transform* soundTransform;
 		std::wstring soundName;
-		AudioClip* soundClip;
 	};
 }
 

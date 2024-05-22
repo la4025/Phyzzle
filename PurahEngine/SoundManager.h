@@ -34,7 +34,9 @@ namespace PurahEngine
 
 		void Update();
 
-		void Set3DListenerAttributes(const PurahEngine::Transform* listenerTransform);
+		void SetListenerTransform(PurahEngine::Transform* transform);
+
+		void SetObject3DAttributes();
 
 		FMOD::System* GetSystem() const;
 
@@ -44,9 +46,15 @@ namespace PurahEngine
 		FMOD::Channel* effectChannel;
 		FMOD::ChannelGroup* effectChannelGroup;
 
+		PurahEngine::Transform* listenerTransform;
+
 		std::unordered_map<PurahEngine::AudioSource*, PurahSound> soundMap;
 
 		FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR listenerPosition = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR listenerForward = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR listenerUp = { 0.0f, 0.0f, 0.0f };
+
 
 	private:
 		SoundManager();

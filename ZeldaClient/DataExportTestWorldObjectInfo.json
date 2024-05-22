@@ -1,22 +1,22 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": 24792,
-      "name": "Main Camera",
+      "__Base__instanceID": 24832,
+      "name": "Camera",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 24798,
+        "__Base__instanceID": 24842,
         "position": {
           "x": 0.0,
-          "y": 2.77,
-          "z": -7.18
+          "y": 0.0,
+          "z": -2.85
         },
         "rotation": {
-          "x": 0.241456583,
+          "x": 0.0,
           "y": 0.0,
           "z": 0.0,
-          "w": 0.9704116
+          "w": 1.0
         },
         "scale": {
           "x": 1.0,
@@ -28,7 +28,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 24800,
+          "__Base__instanceID": 24836,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
@@ -36,27 +36,22 @@
           "fieldOfView": 1.04719758
         },
         {
-          "__Base__instanceID": 24802,
-          "__Base__Component": "AudioListener",
-          "__ID__listenerTransform": 24798
-        },
-        {
-          "__Base__instanceID": 24804,
+          "__Base__instanceID": 24834,
           "__Base__Component": "CameraMovement"
         }
       ]
     },
     {
-      "__Base__instanceID": 24730,
+      "__Base__instanceID": 24786,
       "name": "Directional Light",
-      "active": true,
+      "active": false,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 24734,
+        "__Base__instanceID": 24792,
         "position": {
-          "x": 0.0,
-          "y": 3.0,
-          "z": 0.0
+          "x": 386.2838,
+          "y": 123.82132,
+          "z": 113.196152
         },
         "rotation": {
           "x": 0.408217877,
@@ -74,7 +69,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 24736,
+          "__Base__instanceID": 24788,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -102,12 +97,340 @@
       ]
     },
     {
-      "__Base__instanceID": 24774,
-      "name": "Cube",
+      "__Base__instanceID": 24822,
+      "name": "Canvas",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 24780,
+        "__Base__instanceID": 24830,
+        "position": {
+          "x": 960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          24846,
+          24804,
+          24814,
+          24796,
+          24864
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 24844,
+      "name": "Start",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24846,
+        "position": {
+          "x": 440.0,
+          "y": 140.0,
+          "z": -0.3
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          24830
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 24852,
+          "__Base__Component": "Button",
+          "selectedWithAwake": true,
+          "__ID__targetImage": 24848,
+          "selectedImage": "UI/btn_Hover.png",
+          "unselectedImage": "UI/btn_Off.png",
+          "pushedImage": "",
+          "__ID__objectOnOffEventList": [],
+          "loadSceneEventBuffer": ""
+        },
+        {
+          "__Base__instanceID": 24850,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1400.0,
+            "y": 400.0
+          },
+          "size": {
+            "x": 300.0,
+            "y": 150.0
+          }
+        },
+        {
+          "__Base__instanceID": 24848,
+          "__Base__Component": "Image",
+          "textureName": "UI/btn_Off.png",
+          "layer": 0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 24802,
+      "name": "Options",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24804,
+        "position": {
+          "x": 440.0,
+          "y": -60.0,
+          "z": -0.3
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          24830
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 24810,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 24806,
+          "selectedImage": "UI/btn_Hover.png",
+          "unselectedImage": "UI/btn_Off.png",
+          "pushedImage": "",
+          "__ID__objectOnOffEventList": [],
+          "loadSceneEventBuffer": ""
+        },
+        {
+          "__Base__instanceID": 24808,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1400.0,
+            "y": 600.0
+          },
+          "size": {
+            "x": 300.0,
+            "y": 150.0
+          }
+        },
+        {
+          "__Base__instanceID": 24806,
+          "__Base__Component": "Image",
+          "textureName": "UI/btn_Off.png",
+          "layer": 0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 24812,
+      "name": "Exit",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24814,
+        "position": {
+          "x": 440.0,
+          "y": -260.0,
+          "z": -0.3
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          24830
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 24820,
+          "__Base__Component": "Button",
+          "selectedWithAwake": false,
+          "__ID__targetImage": 24816,
+          "selectedImage": "UI/btn_Hover.png",
+          "unselectedImage": "UI/btn_Off.png",
+          "pushedImage": "",
+          "__ID__objectOnOffEventList": [],
+          "loadSceneEventBuffer": ""
+        },
+        {
+          "__Base__instanceID": 24818,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1400.0,
+            "y": 800.0
+          },
+          "size": {
+            "x": 300.0,
+            "y": 150.0
+          }
+        },
+        {
+          "__Base__instanceID": 24816,
+          "__Base__Component": "Image",
+          "textureName": "UI/btn_Off.png",
+          "layer": 0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 24794,
+      "name": "BackGround",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24796,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          24830
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 24800,
+          "__Base__Component": "Image",
+          "textureName": "UI/Tittle_Back.png",
+          "layer": 1
+        },
+        {
+          "__Base__instanceID": 24798,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 1920.0,
+            "y": 1080.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 24862,
+      "name": "ButtonGruop",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24864,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          24830
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 24866,
+          "__Base__Component": "ButtonGroup",
+          "layoutType": 0,
+          "__ID__contents": [
+            24852,
+            24810,
+            24820
+          ],
+          "neighborGroupSelect": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "__ID__neighborGroups": [
+            24866,
+            24866,
+            24866,
+            24866
+          ]
+        },
+        {
+          "__Base__instanceID": 24868,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 24854,
+      "name": "EventSystem",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 24860,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -127,224 +450,7 @@
         "__ID__parentTransform": [],
         "__ID__children": []
       },
-      "components": [
-        {
-          "__Base__instanceID": 24784,
-          "__Base__Component": "AudioSource",
-          "__ID__soundTransform": 24780,
-          "soundName": "EffectTest003.mp3"
-        },
-        {
-          "__Base__instanceID": 24786,
-          "__Base__Component": "Test2"
-        },
-        {
-          "__Base__instanceID": 24788,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.176219314,
-          "g": 0.314758033,
-          "b": 0.6792453,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        },
-        {
-          "__Base__instanceID": 24790,
-          "__Base__Component": "AudioTest",
-          "__ID__audioSource": 24784
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 24762,
-      "name": "Cube (1)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": 24770,
-        "position": {
-          "x": 2.12,
-          "y": 0.5,
-          "z": -1.88402176
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 24772,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.52245307,
-          "g": 0.6981132,
-          "b": 0.260145962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 24738,
-      "name": "Cube (3)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": 24746,
-        "position": {
-          "x": 4.21,
-          "y": 0.51,
-          "z": -1.88402176
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 24748,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.52245307,
-          "g": 0.6981132,
-          "b": 0.260145962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 24750,
-      "name": "Cube (2)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": 24758,
-        "position": {
-          "x": -0.583195448,
-          "y": -1.29,
-          "z": -2.164981
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 13.92,
-          "y": 1.0,
-          "z": 19.97
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 24760,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.216803148,
-          "g": 0.5283019,
-          "b": 0.48423025,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": 24718,
-      "name": "Sphere",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": 24720,
-        "position": {
-          "x": -1.03,
-          "y": 1.91,
-          "z": -1.88402176
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": 24728,
-          "__Base__Component": "ModelRenderer",
-          "modelName": "Primitive/Sphere.fbx",
-          "shadow": false,
-          "wireFrame": false,
-          "fastOutLine": false,
-          "outLine": false,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
+      "components": []
     }
   ]
 }

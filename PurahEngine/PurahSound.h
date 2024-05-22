@@ -19,10 +19,9 @@ namespace PurahEngine
 		Transform* transform;
 		FMOD::Sound* sound;
 		FMOD::Channel* channel;
+		FMOD::ChannelGroup* group;
 		SoundType type;
-		float minDistance;
-		float maxDistance;
+		FMOD_VECTOR lastPos;
 		bool isPlaying;
-		bool isLoop;
 	};
 }
