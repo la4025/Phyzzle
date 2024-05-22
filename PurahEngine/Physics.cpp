@@ -4,6 +4,7 @@
 
 #include <bitset>
 
+#include "EngineSetting.h"
 #include "ZnQueryDesc.h"
 
 namespace PurahEngine
@@ -73,8 +74,21 @@ namespace PurahEngine
 		return PhysicsSystem::GetInstance().Spherecast(radius, desc, _info);
 	}
 
+	bool Physics::Spherecast(float radius, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
+		const Eigen::Vector3f& _dir, float _distance, unsigned int _layers, ZonaiPhysics::ZnQueryInfo& _info)
+	{
+		ZonaiPhysics::ZnQueryDesc desc;
+		desc.position = _pos;
+		desc.rotation = _rot;
+		desc.direction = _dir;
+		desc.distance = _distance;
+		desc.queryLayer = _layers;
+
+		return PhysicsSystem::GetInstance().Spherecast(radius, desc, _info);
+	}
+
 	bool Physics::Capsulecast(float height, float radius, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
-		const Eigen::Vector3f& _dir, float _distance, const std::vector<int>& _layers, ZonaiPhysics::ZnQueryInfo& _info)
+	                          const Eigen::Vector3f& _dir, float _distance, const std::vector<int>& _layers, ZonaiPhysics::ZnQueryInfo& _info)
 	{
 		ZonaiPhysics::ZnQueryDesc desc;
 		desc.position = _pos;
@@ -88,5 +102,10 @@ namespace PurahEngine
 		desc.queryLayer = layer.to_ulong();
 
 		return PhysicsSystem::GetInstance().Capsulecast(radius, height, desc, _info);
+	}
+
+	int Physics::GetLayerID(const std::wstring& _name)
+	{
+		return EngineSetting::GetInstance().LayertoLayerID(_name);
 	}
 }

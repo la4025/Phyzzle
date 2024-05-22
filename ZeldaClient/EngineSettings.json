@@ -1,7 +1,7 @@
 {
   "shadowAreaRange": 64.0,
   "shadowAreaOffset": 32.0,
-  "shadowMapSize": 2048,
+  "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
   "gravity": -9.81,
   "tag": [
@@ -17,7 +17,12 @@
     "Floor",
     "Water",
     "UI",
-    "Trigger"
+    "Trigger",
+    "Object",
+    "Ground",
+    "Player",
+    "Obstacle",
+    "PrisonBars"
   ],
   "collisionSetting": [
     [
@@ -27,36 +32,61 @@
       true,
       true,
       false,
-      true
-    ],
-    [
       true,
       true,
       true,
       true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true
-    ],
-    [
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
+      false,
       false
     ],
     [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
       true,
       true,
       true,
@@ -72,6 +102,11 @@
       true,
       true,
       true,
+      true,
+      true,
+      true,
+      true,
+      true,
       true
     ],
     [
@@ -81,7 +116,82 @@
       false,
       true,
       true,
-      false
+      false,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
     ]
   ],
   "preLoadModels": [],
@@ -120,14 +230,6 @@
       "staticFriction": 0.5,
       "dynamicFriction": 0.7,
       "restitution": 0.05,
-      "eFriction": 0,
-      "eRestitution": 0
-    },
-    {
-      "name": "Device",
-      "staticFriction": 0.5,
-      "dynamicFriction": 0.5,
-      "restitution": 0.2,
       "eFriction": 0,
       "eRestitution": 0
     }

@@ -161,7 +161,8 @@ namespace ZonaiPhysics
 
 	bool ZnWorld::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		const physx::PxVec3 dir(EigenToPhysx(_desc.direction));
+		const physx::PxVec3 from(EigenToPhysx(_desc.position));
+		const physx::PxVec3 to(EigenToPhysx(_desc.direction));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxRaycastBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
@@ -176,8 +177,8 @@ namespace ZonaiPhysics
 		const physx::PxQueryCache* cache = nullptr;
 
 		if (bool hit = currScene->raycast(
-			EigenToPhysx(_desc.position),
-			dir,
+			from,
+			to,
 			distance,
 			result,
 			flag,
@@ -209,6 +210,7 @@ namespace ZonaiPhysics
 		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
 		filter.flags |= physx::PxQueryFlag::ePREFILTER;
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
+		filter.flags |= physx::PxQueryFlag::eSTATIC;
 		filter.data.setToDefault();
 		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
 

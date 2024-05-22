@@ -58,8 +58,8 @@ namespace ZonaiPhysics
 	{
 		ValidateLayer(_layerID0);
 
-		uint32_t data = layerData[_layerID0].to_ulong();
+		// uint32_t data = layerData[_layerID0].to_ulong();
 
-		return _layerData & data;
+		return _layerData & (1 << _layerID0);
 	}
 }
