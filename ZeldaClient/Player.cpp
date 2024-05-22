@@ -98,7 +98,7 @@ namespace Phyzzle
 		if (!data.jumping)
 			return;
 
-		// JumpCheck(zn_collision, collider);
+		JumpCheck(zn_collision, collider);
 	}
 
 	void Player::DebugDraw()
@@ -266,16 +266,30 @@ namespace Phyzzle
 
 	void Player::JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		const auto velo = zn_collision.thisPostLinearVelocity;
-
-		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		const Eigen::Vector3f direction{ velo };
-		float cosTheta1 = up.dot(direction);
-		cosTheta1 = std::clamp(cosTheta1, -1.f, 1.f);
-
-		if ((cosTheta1 >= 0.5f))
+		for (size_t i = 0; i < zn_collision.contactCount; i++)
 		{
-			data.jumping = false;
+			const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
+			Eigen::Vector3f velo = zn_collision.thisPostLinearVelocity;
+			velo.x() = 0.f;
+			velo.z() = 0.f;
+			velo.normalize();
+			auto normal = zn_collision.contacts[i].normal;
+			normal.normalize();
+
+			const float cosTheta0 = velo.dot(normal);
+			float theta = std::acosf(cosTheta0);
+			bool diffDir = theta > (std::numbers::pi_v<float> / 2.f) && theta < (std::numbers::pi_v<float> * 1.5f);
+
+			float cosTheta = up.dot(normal);
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+			float slope = std::acosf(cosTheta);
+			bool isGround = slope <= (std::numbers::pi_v<float> / 5.f);
+
+			if (isGround && diffDir)
+			{
+				data.jumping = false;
+				return;
+			}
 		}
 	}
 
@@ -362,6 +376,10 @@ namespace Phyzzle
 	{
 		auto currP = data.cameraCore->GetLocalPosition();
 
+		auto modelPos = data.cameraArm->GetWorldPosition();
+		auto dir = data.cameraCore->GetFront();
+		ZonaiPhysics::ZnQueryInfo info;
+
 		// 각도에 따라 카메라 위치를 움직임.
 		if (data.xAngle > 0.f)
 		{
@@ -372,8 +390,6 @@ namespace Phyzzle
 				};
 
 			currP.z() = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
-
-			data.cameraCore->SetLocalPosition(currP);
 		}
 		else if (data.xAngle < 0.f)
 		{
@@ -384,8 +400,21 @@ namespace Phyzzle
 				};
 
 			currP.z() = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
-			data.cameraCore->SetLocalPosition(currP);
 		}
+
+		bool hit = PurahEngine::Physics::Spherecast(
+			0.5f,
+			modelPos, Eigen::Quaternionf::Identity(),
+			dir * -1.f,
+			currP.z() * -1.f,
+			{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, info);
+
+		if (hit)
+		{
+			currP.z() = info.distance * -1.f;
+		}
+
+		data.cameraCore->SetLocalPosition(currP);
 	}
 
 	void Player::CameraReset()
@@ -483,7 +512,7 @@ namespace Phyzzle
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		ZonaiPhysics::ZnQueryInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, {}, info);
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, 0x7fffffff, info);
 
 		if (block)
 		{
@@ -562,6 +591,10 @@ namespace Phyzzle
 		auto animator = data.animator;
 		POSTDESERIALIZE_PTR(animator);
 		data.animator = animator;
+
+		auto crossHead = data.crossHead;
+		POSTDESERIALIZE_PTR(crossHead);
+		data.crossHead = crossHead;
 
 		//auto holder = data.holder;
 		//POSTDESERIALIZE_PTR(holder);

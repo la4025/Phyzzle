@@ -17,6 +17,8 @@ namespace Phyzzle
 
 			player->data.cameraCore->SetLocalPosition(p);
 		}
+
+		CrossHeadRender(true);
 	}
 
 	// 상태 나가기
@@ -30,6 +32,8 @@ namespace Phyzzle
 
 			player->data.cameraCore->SetLocalPosition(p);
 		}
+
+		CrossHeadRender(false);
 	}
 
 	// Update
@@ -190,4 +194,9 @@ namespace Phyzzle
 		}
 	}
 #endif _DEBUG
+
+	void AttachSelectState::CrossHeadRender(bool _value)
+	{
+		player->data.crossHead->SetEnable(_value);
+	}
 }

@@ -59,6 +59,7 @@ namespace Phyzzle
 	private:
 		void SearchDebugDraw(bool _value);
 #endif _DEBUG
+		void CrossHeadRender(bool _value);
 	};
 }
 

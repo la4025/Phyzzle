@@ -23,6 +23,11 @@ namespace Phyzzle
 		Cancel();
 	}
 
+	void LockState::Aim()
+	{
+
+	}
+
 	void LockState::Cancel() const
 	{
 		player->ChangeState(Player::State::DEFAULT);

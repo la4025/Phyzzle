@@ -20,6 +20,11 @@ namespace PurahEngine
 			const std::vector<int>& _layers,
 			ZonaiPhysics::ZnQueryInfo& _info);
 
+		static bool Raycast(const Eigen::Vector3f& _from,
+			const Eigen::Vector3f& _to, float _distace,
+			unsigned int _layers,
+			ZonaiPhysics::ZnQueryInfo& _info);
+
 		static bool Boxcast(const Eigen::Vector3f& _extend, 
 			const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _dir, float _distance,

@@ -19,8 +19,17 @@ namespace ZonaiPhysics
 
 	public:
 		static void Clear();
+
+		// 콜리전 데이터 설정
 		static void SetCollisionData(uint32_t _layerID, const std::initializer_list<uint32_t>& _collisionLayers);
+
+		// 콜리전 레이어 설정
 		static void SetCollisionLayer(uint32_t _layerID, uint32_t _collisionLayerID, bool _value);
+
+		// 레이어와 레이어
 		static bool CanCollide(uint32_t _layerID0, uint32_t _layerID1);
+
+		// 콜리전 데이터와 레이어
+		static bool IsCollide(uint32_t _layerData, uint32_t _layerID0);
 	};
 }
