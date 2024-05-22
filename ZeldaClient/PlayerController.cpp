@@ -5,6 +5,14 @@ namespace Phyzzle
 {
 	void PlayerController::Start()
 	{
+		gameObject->AddComponent<PurahEngine::RigidBody>();
+		auto capsule = gameObject->AddComponent<PurahEngine::CapsuleCollider>();
+		capsule->radius;
+		capsule->height;
+	}
+
+	void PlayerController::Update()
+	{
 		groundCheck.direction = -1.f * Eigen::Vector3f::UnitY();
 		groundCheck.distance;
 	}
@@ -48,7 +56,9 @@ namespace Phyzzle
 		if (!CanJump())
 			return;
 
-
+		Eigen::Vector3f power = Eigen::Vector3f::UnitY() * jumpPower;
+		body->AddForce(power, ZonaiPhysics::ForceType::Accelration);
+		jumping = true;
 	}
 
 	void PlayerController::SetSlope(float _angle)
@@ -56,9 +66,9 @@ namespace Phyzzle
 		slope = _angle;
 	}
 
-	bool PlayerController::CanJump()
+	bool PlayerController::CanJump() const
 	{
-		return !jumping;
+		return jumping == false;
 	}
 
 	bool PlayerController::IsGround()
@@ -87,7 +97,6 @@ namespace Phyzzle
 	{
 		for (size_t i = 0; i < zn_collision.contactCount; i++)
 		{
-			// zn_collision.contacts[i].normal;
 
 		}
 	}

@@ -49,6 +49,7 @@ namespace Phyzzle
 #pragma region Struct
 		struct PlayerData
 		{
+			PurahEngine::GameObject* crossHead;
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
 			PurahEngine::Transform* cameraArm;
@@ -63,23 +64,23 @@ namespace Phyzzle
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
 
-			float xAngle = 0.f;
-			const float limitHighAngle = 80.f;
-			const float limitLowAngle = -70.f;
+			float xAngle = 0.f;					// 현재 앵글
+			const float limitHighAngle = 80.f;	// 하이 앵글
+			const float limitLowAngle = -70.f;	// 로우 앵글
 
-			bool cameraUpdate = true;
-			float lerpFactor = 0.2f;
-			float acclerpFactor = 0.f;
+			bool cameraUpdate = true;			// 
+			float lerpFactor = 0.2f;			// 
+			float acclerpFactor = 0.f;			// 
 
-			float moveSpeed = 10.f;
-			float holdSpeed = 5.f;
+			float moveSpeed = 10.f;				// 기본 속도
+			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 
-			float rewindableTime = 10.f;
-			float timeOffset = 0.5f;
+			float rewindableTime = 10.f;		// 리와인트 시간
+			float timeOffset = 0.5f;			
 
-			float sensitivity = 90.f;
+			float sensitivity = 90.f;			// 카메라 회전 속도
 
-			float jumpPower = 10.f;
+			float jumpPower = 10.f;				// 점프 힘
 			bool jumping = false;
 		};
 

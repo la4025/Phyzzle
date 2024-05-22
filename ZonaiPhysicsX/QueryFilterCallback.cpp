@@ -23,9 +23,8 @@ namespace ZonaiPhysics
         // 레이어가 다르면 X
         const physx::PxFilterData shapeFilter = shape->getQueryFilterData();
 
-        // const std::vector<int> layer = (filterData.word0);
+        const bool test = ZnLayer::IsCollide(filterData.word0, shapeFilter.word0);
 
-        const bool test = ZnLayer::CanCollide(filterData.word0, shapeFilter.word0);
         if (!test)
             return physx::PxQueryHitType::eNONE;
 

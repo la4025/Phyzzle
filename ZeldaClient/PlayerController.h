@@ -10,6 +10,7 @@ namespace  Phyzzle
 		~PlayerController() override;
 
 		void Start() override;
+		void Update() override;
 
 	public:
 		void Move(const Eigen::Vector3f& _dir, float _speed);
@@ -19,7 +20,7 @@ namespace  Phyzzle
 
 		void SetSlope(float _angle);
 
-		bool CanJump();
+		bool CanJump() const;
 		bool IsGround();
 		bool IsWall();
 		bool IsObstacle();
@@ -40,6 +41,7 @@ namespace  Phyzzle
 		PurahEngine::Transform* model;
 
 	private:
+		float jumpPower = 0.f;
 		bool jumping = false;
 		float slope;
 

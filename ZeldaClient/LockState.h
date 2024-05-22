@@ -21,6 +21,7 @@ namespace Phyzzle
 		void Click_LB() override;
 
 	private:
+		void Aim();
 		void Cancel() const;
 	};
 }

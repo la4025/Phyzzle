@@ -161,30 +161,24 @@ namespace ZonaiPhysics
 
 	bool ZnWorld::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		const physx::PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
 		const physx::PxVec3 dir(EigenToPhysx(_desc.direction));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxRaycastBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
+
 		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
 		filter.flags |= physx::PxQueryFlag::ePREFILTER;
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
 		filter.data.setToDefault();
-
-		std::bitset<32> layer;
-		for(auto& e : _desc.queryLayer)
-		{
-			layer.set(e);
-		}
-		// filter.data.word1 = layer;
+		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
 
 		physx::PxQueryFilterCallback* callback = &queryFilter;
 		const physx::PxQueryCache* cache = nullptr;
 
 		if (bool hit = currScene->raycast(
 			EigenToPhysx(_desc.position),
-			EigenToPhysx(_desc.direction),
-			_desc.distance, 
+			dir,
+			distance,
 			result,
 			flag,
 			filter,
@@ -211,11 +205,13 @@ namespace ZonaiPhysics
 		const physx::PxReal distance(_desc.distance);
 		physx::PxSweepBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
+
 		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
 		filter.flags |= physx::PxQueryFlag::ePREFILTER;
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
 		filter.data.setToDefault();
-		filter.data.word0 = physx::PxU32(&_desc.queryLayer.front());
+		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+
 		physx::PxQueryFilterCallback* callback = &queryFilter;
 		const physx::PxQueryCache* cache = nullptr;
 		physx::PxReal offset = _desc.offset;
