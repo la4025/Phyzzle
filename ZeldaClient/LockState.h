@@ -20,8 +20,14 @@ namespace Phyzzle
 	private:
 		void Click_LB() override;
 
+#pragma region Content
 	private:
-		void Aim();
+		PurahEngine::RigidBody* result = nullptr;
+		PzObject* pzObject = nullptr;
+
+	private:
+		bool Aim();
 		void Cancel() const;
+#pragma endregion Content
 	};
 }

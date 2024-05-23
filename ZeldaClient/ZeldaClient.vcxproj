@@ -146,7 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
-    <ClCompile Include="Attachable.cpp" />
+    <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
     <ClCompile Include="AudioTest.cpp" />
@@ -185,7 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="Attachable.h" />
+    <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />
     <ClInclude Include="AudioTest.h" />

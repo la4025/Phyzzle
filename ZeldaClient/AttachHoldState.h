@@ -4,7 +4,7 @@
 
 namespace Phyzzle
 {
-	class Attachable;
+	class PzObject;
 
 	class AttachHoldState final : public IState
 	{
@@ -77,7 +77,7 @@ namespace Phyzzle
 		Eigen::Quaternionf targetRotation = Eigen::Quaternionf::Identity();
 
 		PurahEngine::RigidBody* selectBody;
-		Attachable* attachble;
+		PzObject* attachble;
 
 	private:
 		void SetSelectObject();

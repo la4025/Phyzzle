@@ -7,7 +7,7 @@
 #include "AttachSelectState.h"
 #include "RewindState.h"
 #include "LockState.h"
-#include "Attachable.h"
+#include "PzObject.h"
 #include "Rewindable.h"
 
 #include "Player.h"
@@ -405,7 +405,7 @@ namespace Phyzzle
 		unsigned int layers = ~(1 << PurahEngine::Physics::GetLayerID(L"Player"));
 
 		bool hit = PurahEngine::Physics::Spherecast(
-			0.5f,
+			0.3f,
 			modelPos, Eigen::Quaternionf::Identity(),
 			dir * -1.f,
 			currP.z() * -1.f,
@@ -509,7 +509,7 @@ namespace Phyzzle
 	bool Player::RaycastFromCamera(
 		float _distance, 
 		PurahEngine::RigidBody** _outBody,
-		Attachable** _outAttachable,
+		PzObject** _outPzObject,
 		Rewindable** _outRewindable
 	)
 	{
@@ -537,8 +537,8 @@ namespace Phyzzle
 
 			if (_outBody)
 				*_outBody = body;
-			if (_outAttachable)
-				*_outAttachable = obj->GetComponent<Attachable>();
+			if (_outPzObject)
+				*_outPzObject = obj->GetComponent<PzObject>();
 			if (_outRewindable)
 				*_outRewindable = obj->GetComponent<Rewindable>();
 

@@ -24,7 +24,7 @@ namespace ZonaiPhysics
         const physx::PxFilterData shapeFilter = shape->getSimulationFilterData();
 
         const bool test = ZnLayer::IsCollide(filterData.word0, shapeFilter.word0);
-
+         
         if (!test)
             return physx::PxQueryHitType::eNONE;
 

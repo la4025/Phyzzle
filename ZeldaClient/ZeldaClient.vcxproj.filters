@@ -22,9 +22,6 @@
     <ClCompile Include="YongHun.cpp">
       <Filter>YH</Filter>
     </ClCompile>
-    <ClCompile Include="IObject.cpp">
-      <Filter>KH\Object</Filter>
-    </ClCompile>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="AudioTest.cpp" />
     <ClCompile Include="AttachSystem.cpp">
@@ -57,10 +54,7 @@
     <ClCompile Include="Holder.cpp">
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
-    <ClCompile Include="Rewindable.cpp">
-      <Filter>KH\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Attachable.cpp">
+    <ClCompile Include="PzObject.cpp">
       <Filter>KH\Object</Filter>
     </ClCompile>
     <ClCompile Include="ButtonDevice.cpp">
@@ -96,6 +90,12 @@
     <ClCompile Include="PlayerController.cpp">
       <Filter>KH\PLAYER\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="IObject.cpp">
+      <Filter>KH\DontUse</Filter>
+    </ClCompile>
+    <ClCompile Include="Rewindable.cpp">
+      <Filter>KH\DontUse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -120,13 +120,7 @@
     <ClInclude Include="Singleton.h">
       <Filter>KH\ETC</Filter>
     </ClInclude>
-    <ClInclude Include="IObject.h">
-      <Filter>KH\Object</Filter>
-    </ClInclude>
     <ClInclude Include="AnimationTestController.h" />
-    <ClInclude Include="eObjectProperty.h">
-      <Filter>KH\Object</Filter>
-    </ClInclude>
     <ClInclude Include="TemplateFlag.h">
       <Filter>KH\ETC</Filter>
     </ClInclude>
@@ -170,20 +164,11 @@
     <ClInclude Include="Holder.h">
       <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
-    <ClInclude Include="Rewindable.h">
-      <Filter>KH\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Hold.h">
       <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
-    <ClInclude Include="Snapshot.h">
+    <ClInclude Include="PzObject.h">
       <Filter>KH\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Attachable.h">
-      <Filter>KH\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Coroutine.h">
-      <Filter>KH\ETC</Filter>
     </ClInclude>
     <ClInclude Include="ButtonDevice.h">
       <Filter>Device\Electrical Device</Filter>
@@ -223,6 +208,21 @@
     </ClInclude>
     <ClInclude Include="PlayerController.h">
       <Filter>KH\PLAYER\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="eObjectProperty.h">
+      <Filter>KH\DontUse</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h">
+      <Filter>KH\DontUse</Filter>
+    </ClInclude>
+    <ClInclude Include="Coroutine.h">
+      <Filter>KH\DontUse</Filter>
+    </ClInclude>
+    <ClInclude Include="Snapshot.h">
+      <Filter>KH\DontUse</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewindable.h">
+      <Filter>KH\DontUse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +291,9 @@
     </Filter>
     <Filter Include="KH\ETC\Spring">
       <UniqueIdentifier>{a669704a-870c-42bc-abbf-ff43288a54a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KH\DontUse">
+      <UniqueIdentifier>{c4dd7df6-5422-4dd4-a7b5-cbbe304f3e1f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

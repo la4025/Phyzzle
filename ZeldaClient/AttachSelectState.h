@@ -39,7 +39,7 @@ namespace Phyzzle
 	private:
 		bool select = false;
 		PurahEngine::RigidBody* result = nullptr;
-		Attachable* attachable = nullptr;
+		PzObject* attachable = nullptr;
 
 	private:
 		void PlayerMove(float _speed) const;
