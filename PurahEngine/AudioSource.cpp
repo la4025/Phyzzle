@@ -35,6 +35,7 @@ void PurahEngine::AudioSource::OnDataLoadComplete()
 	for (auto name : fileName)
 	{
 		soundMap[name] = new AudioClip;
+		soundMap[name]->CreateSound();
 	}
 }
 
@@ -53,7 +54,7 @@ void PurahEngine::AudioSource::Update()
 
 void PurahEngine::AudioSource::Play(std::wstring name)
 {
-	soundMap[name]->Play(newSound);
+	soundMap[name]->Play();
 }
 
 

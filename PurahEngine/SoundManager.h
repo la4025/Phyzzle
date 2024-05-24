@@ -26,13 +26,13 @@ namespace PurahEngine
 
 		void LoadBGMSound(PurahSound newSound, FMOD::Sound** sound);
 
-		void LoadEffectSound(PurahSound newSound, FMOD::Sound** sound);
+		void LoadSfxSound(PurahSound newSound, FMOD::Sound** sound);
 
 		void Play(PurahSound newSound, FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel);
 
-		void PlayEffect(FMOD::Sound* sound, FMOD::Channel** channel);
+		void PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void Update();
 

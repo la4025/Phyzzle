@@ -37,7 +37,9 @@ namespace PurahEngine
 		Transform* soundTransform;
 		std::vector<std::wstring> fileName;
 		std::map<std::wstring, AudioClip*> soundMap;
-		PurahSound newSound;
+		
 	};
 }
 
+// AudioSource는 AudioClip을 관리만 해야한다. 여기서 구조체에 음원을 등록하게되면
+// 여러개의 음원을 관리하는 AudioSource가 일처리를 제대로 못할 것 같다.

@@ -12,8 +12,8 @@ namespace PurahEngine
 		AudioClip();
 		~AudioClip();
 
-		void CreateSound(PurahSound newSound);
-		void Play(PurahSound newSound);
+		void CreateSound();
+		void Play();
 		void Stop();
 		void Set3DAttributes(FMOD_VECTOR pos);
 		void SetLoop();
@@ -23,8 +23,12 @@ namespace PurahEngine
 		FMOD::Sound* mSound;
 		FMOD::Channel* mChannel;
 
+		PurahSound newSound;
 	private:
 		SoundManager& soundManager = SoundManager::GetInstance();
 
 	};
 }
+
+// AudioClip에서 구조체를 가지고, 실행, 등록을 하자.
+// AudioSource는 등록된 AudioClip을 관리하는 역할로만 하는게 맞을 것 같다.

@@ -13,12 +13,12 @@ PurahEngine::AudioClip::~AudioClip()
 	mSound = nullptr;
 }
 
-void PurahEngine::AudioClip::CreateSound(PurahSound newSound)
+void PurahEngine::AudioClip::CreateSound()
 {
 	soundManager.LoadSound(newSound, &mSound);
 }
 
-void PurahEngine::AudioClip::Play(PurahSound newSound)
+void PurahEngine::AudioClip::Play()
 {
 	soundManager.Play(newSound, mSound, &mChannel);
 }

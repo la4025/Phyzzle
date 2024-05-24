@@ -38,7 +38,7 @@ void PurahEngine::SoundManager::LoadSound(PurahSound newSound, FMOD::Sound** sou
 		}
 		case SoundType::EFFECT:
 		{
-			LoadEffectSound(newSound, sound);
+			LoadSfxSound(newSound, sound);
 			break;
 		}
 	}
@@ -62,10 +62,10 @@ void PurahEngine::SoundManager::LoadBGMSound(PurahSound newSound, FMOD::Sound** 
 	assert(result == FMOD_OK);
 }
 
-void PurahEngine::SoundManager::LoadEffectSound(PurahSound newSound, FMOD::Sound** sound)
+void PurahEngine::SoundManager::LoadSfxSound(PurahSound newSound, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
-	std::wstring filePath = L"../Sound/Effect/Test/" + newSound.soundName;
+	std::wstring filePath = L"../Sound/SFX/Test/" + newSound.soundName;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -88,7 +88,7 @@ void PurahEngine::SoundManager::Play(PurahSound newSound, FMOD::Sound* sound, FM
 		}
 		case SoundType::EFFECT:
 		{
-			PlayEffect(sound, channel);
+			PlaySfx(sound, channel);
 			break;
 		}
 	}
@@ -107,7 +107,7 @@ void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** chan
 	system->playSound(sound, 0, false, channel);
 }
 
-void PurahEngine::SoundManager::PlayEffect(FMOD::Sound* sound, FMOD::Channel** channel)
+void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel)
 {
 	bool isPlaying = true;
 	(*channel)->isPlaying(&isPlaying);

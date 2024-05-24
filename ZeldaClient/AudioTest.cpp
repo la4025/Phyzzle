@@ -29,8 +29,7 @@ void PurahEngine::AudioTest::Update()
 	if (inputManager.IsKeyPressed(eKey::eKEY_M))
 	{
 		auto& soundManager = PurahEngine::SoundManager::GetInstance();
-		//soundManager.PlayEffect(audioSource->GetSoundName(), audioSource);
-		//soundManager.PlaySound()
+		GetGameObject()->GetComponent<AudioSource>()->Play()
 	}
 }
 
