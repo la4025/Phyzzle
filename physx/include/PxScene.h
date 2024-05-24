@@ -1618,11 +1618,11 @@ class PxScene : public PxSceneSQSystem
 	virtual			PxU32				getContactReportStreamBufferSize() const = 0;
 
 	/**
-	\brief Sets the number of actors required to spawn a separate rigid body solver thread.
+	\brief 별도의 강체 바디 솔버 스레드를 생성하기 위해 필요한 액터의 수를 설정합니다.
 
-	\note Do not use this method while the simulation is running.
+	\note 시뮬레이션이 실행 중일 때는 이 메서드를 사용하지 마십시오.
 
-	\param[in] solverBatchSize Number of actors required to spawn a separate rigid body solver thread.
+	\param[in] solverBatchSize 별도의 강체 바디 솔버 스레드를 생성하기 위해 필요한 액터의 수.
 
 	@see PxSceneDesc.solverBatchSize getSolverBatchSize()
 	*/
@@ -1638,11 +1638,11 @@ class PxScene : public PxSceneSQSystem
 	virtual PxU32						getSolverBatchSize() const = 0;
 
 	/**
-	\brief Sets the number of articulations required to spawn a separate rigid body solver thread.
+	\brief 별도의 강체 바디 솔버 스레드를 생성하기 위해 필요한 관절의 수를 설정합니다.
 
-	\note Do not use this method while the simulation is running.
+	\note 시뮬레이션이 실행 중일 때는 이 메서드를 사용하지 마십시오.
 
-	\param[in] solverBatchSize Number of articulations required to spawn a separate rigid body solver thread.
+	\param[in] solverBatchSize 별도의 강체 바디 솔버 스레드를 생성하기 위해 필요한 관절의 수.
 
 	@see PxSceneDesc.solverBatchSize getSolverArticulationBatchSize()
 	*/

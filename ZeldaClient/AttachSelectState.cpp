@@ -1,5 +1,7 @@
 #include "AttachSelectState.h"
 
+#include "AttachSystem.h"
+
 namespace Phyzzle
 {
 	AttachSelectState::~AttachSelectState()
@@ -15,6 +17,8 @@ namespace Phyzzle
 
 			player->data.cameraCore->SetLocalPosition(p);
 		}
+
+		CrossHeadRender(true);
 	}
 
 	// 상태 나가기
@@ -28,12 +32,23 @@ namespace Phyzzle
 
 			player->data.cameraCore->SetLocalPosition(p);
 		}
+
+		CrossHeadRender(false);
 	}
 
 	// Update
 	void AttachSelectState::StateStay()
 	{
+		EnableOutline(false);
+		result = nullptr;
+		attachable = nullptr;
+
 		select = Search();
+
+		if (select)
+		{
+			EnableOutline(true);
+		}
 
 #if _DEBUG
 		SearchDebugDraw(select);
@@ -113,6 +128,7 @@ namespace Phyzzle
 
 	void AttachSelectState::StateCancel() const
 	{
+		EnableOutline(false);
 		player->ChangeState(Player::State::DEFAULT);
 	}
 
@@ -134,7 +150,7 @@ namespace Phyzzle
 	bool AttachSelectState::Search()
 	{
 		const float distance = 40.f;
-		const bool hit = player->RaycastFromCamera(distance, &result, nullptr, nullptr);
+		const bool hit = player->RaycastFromCamera(distance, &result, &attachable, nullptr);
 
 		if (!hit)
 			return false;
@@ -145,7 +161,18 @@ namespace Phyzzle
 		if (result->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
 			return false;
 
+		if (!attachable)
+			return false;
+
 		return true;
+	}
+
+	void AttachSelectState::EnableOutline(bool _value) const
+	{
+		if (!result || !attachable)
+			return;
+
+		AttachSystem::Instance()->EnableOutline(attachable, _value);
 	}
 #pragma endregion Content
 
@@ -170,4 +197,9 @@ namespace Phyzzle
 		}
 	}
 #endif _DEBUG
+
+	void AttachSelectState::CrossHeadRender(bool _value)
+	{
+		player->data.crossHead->SetEnable(_value);
+	}
 }

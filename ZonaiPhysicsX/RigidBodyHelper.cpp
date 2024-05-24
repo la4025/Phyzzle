@@ -19,15 +19,17 @@ namespace ZonaiPhysics
 		pxBody->detachShape(*pxShape);
 	}
 
-	void RigidBodyHelper::Attach(void* _pxBody, void* _pxShape)
+	bool RigidBodyHelper::Attach(void* _pxBody, void* _pxShape)
 	{
 		assert(_pxBody != nullptr);
 		assert(_pxShape != nullptr);
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		const auto pxShape = static_cast<physx::PxShape*>(_pxShape);
-
-		pxBody->attachShape(*pxShape);
+		
+		bool result = pxBody->attachShape(*pxShape);
+		
+		return result;
 	}
 
 	void RigidBodyHelper::Release(void* _pxBody)

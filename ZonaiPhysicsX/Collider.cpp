@@ -130,6 +130,16 @@ namespace ZonaiPhysics
 		userData = _userData;
 	}
 
+	Eigen::Vector2f Collider::GetAABB()
+	{
+		const physx::PxGeometry& geom = pxShape->getGeometry();
+		physx::PxTransform pose = znBody->pxBody->getGlobalPose();
+		physx::PxBounds3 aabb;
+		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.1f);
+
+		return Eigen::Vector2f();
+	}
+
 	void Collider::UpdateInertiaTensor() const
 	{
 		NULL_POINTER_REFERENCE(pxShape, ZnCollider)

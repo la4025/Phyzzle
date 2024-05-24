@@ -7,16 +7,18 @@
 #include "ZnCollider.h"
 #include "ZnJoint.h"
 #include "ZnUtil.h"
-#include "ZnRaycastInfo.h"
+#include "ZnQueryDesc.h"
+#include "ZnQueryInfo.h"
 
 #include "ZnMaterial.h"
 #include "ZnResourceID.h"
 
 #include <ranges>
+#include <bitset>
 
 #include "ZnTransform.h"
-
 #include "ZnWorld.h"
+
 
 namespace ZonaiPhysics
 {
@@ -25,6 +27,7 @@ namespace ZonaiPhysics
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};
 	std::map<void*, ZnWorld::Colliders>					ZnWorld::colliderList{};
 	std::vector<ZnJoint*>								ZnWorld::jointList{};
+	QueryFilter											ZnWorld::queryFilter;
 
 	void ZnWorld::Run(float _dt)
 	{
@@ -156,25 +159,77 @@ namespace ZonaiPhysics
 			currScene->setGravity(EigenToPhysx(_gravity));
 	}
 
-	bool ZnWorld::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out)
+	bool ZnWorld::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		physx::PxRaycastBuffer temp;
+		const physx::PxVec3 from(EigenToPhysx(_desc.position));
+		const physx::PxVec3 to(EigenToPhysx(_desc.direction));
+		const physx::PxReal distance(_desc.distance);
+		physx::PxRaycastBuffer result;
+		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
+
+		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
+		filter.flags |= physx::PxQueryFlag::ePREFILTER;
+		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
+		filter.data.setToDefault();
+		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+
+		physx::PxQueryFilterCallback* callback = &queryFilter;
+		const physx::PxQueryCache* cache = nullptr;
 
 		if (bool hit = currScene->raycast(
-			EigenToPhysx(_from), 
-			EigenToPhysx(_to),
-			_distance, 
-			temp
-			// ,physx::PxHitFlag::eDEFAULT, 
-			// physx::PxQueryFilterData{}
+			from,
+			to,
+			distance,
+			result,
+			flag,
+			filter,
+			callback,
+			cache
 		))
 		{
-			const auto object0 = static_cast<ZnObject*>(static_cast<ZnBase*>(temp.block.actor->userData));
-			const auto object1 = static_cast<ZnObject*>(static_cast<ZnBase*>(temp.block.shape->userData));
-			_out.bodyData = static_cast<ZonaiPhysics::RigidBody*>(object0)->GetUserData();
-			_out.colliderData = static_cast<ZonaiPhysics::Collider*>(object1)->GetUserData();
-			_out.position = PhysxToEigen(temp.block.position);
-			_out.distance = temp.block.distance;
+			_out.bodyData = static_cast<RigidBody*>(result.block.actor->userData)->GetUserData();
+			_out.colliderData = static_cast<Collider*>(result.block.shape->userData)->GetUserData();
+			_out.position = PhysxToEigen(result.block.position);
+			_out.distance = result.block.distance;
+			_out.normal = PhysxToEigen(result.block.normal);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ZnWorld::GeometrySweep(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		const physx::PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
+		const physx::PxVec3 dir(EigenToPhysx(_desc.direction));
+		const physx::PxReal distance(_desc.distance);
+		physx::PxSweepBuffer result;
+		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
+
+		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
+		filter.flags |= physx::PxQueryFlag::ePREFILTER;
+		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
+		filter.flags |= physx::PxQueryFlag::eSTATIC;
+		filter.data.setToDefault();
+		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+
+		physx::PxQueryFilterCallback* callback = &queryFilter;
+		const physx::PxQueryCache* cache = nullptr;
+		physx::PxReal offset = _desc.offset;
+
+		if (bool hit = currScene->sweep(
+			_geom, 
+			transform, dir, distance, 
+			result, flag, 
+			filter, callback, 
+			cache, offset))
+		{
+			_out.bodyData = static_cast<RigidBody*>(result.block.actor->userData)->GetUserData();
+			_out.colliderData = static_cast<Collider*>(result.block.shape->userData)->GetUserData();
+			_out.position = PhysxToEigen(result.block.position);
+			_out.distance = result.block.distance;
+			_out.normal = PhysxToEigen(result.block.normal);
 
 			return true;
 		}
@@ -183,20 +238,25 @@ namespace ZonaiPhysics
 	}
 
 	/// 구현 필요
-	bool ZnWorld::Boxcast(float _x, float _y, float _z, const ZnTransform& trans)
+	bool ZnWorld::Boxcast(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		physx::PxOverlapBuffer temp;
+		physx::PxBoxGeometry geom(_extend.x(), _extend.y(), _extend.z());
 
-		const physx::PxTransform transform(EigenToPhysx(trans.position), EigenToPhysx(trans.quaternion));
+		return GeometrySweep(geom, _desc, _out);
+	}
 
-		if (bool hit = currScene->overlap(physx::PxBoxGeometry(_x, _y, _z), transform, temp))
-		{
-			// temp.
+	bool ZnWorld::Spherecast(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		physx::PxSphereGeometry geom(_radius);
 
-			return true;
-		}
+		return GeometrySweep(geom, _desc, _out);
+	}
 
-		return false;
+	bool ZnWorld::Capsulecast(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		physx::PxCapsuleGeometry geom(_radius, _height);
+
+		return GeometrySweep(geom, _desc, _out);
 	}
 
 	void ZnWorld::CreateCharactor()
@@ -204,9 +264,9 @@ namespace ZonaiPhysics
 		physx::PxControllerManager* manager = PxCreateControllerManager(*currScene);
 
 		physx::PxCapsuleControllerDesc desc;
-		desc.height;
-		desc.radius;
-		desc.position;
+		// desc.height;
+		// desc.radius;
+		// desc.position;
 
 		manager->createController(desc);
 	}

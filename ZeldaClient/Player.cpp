@@ -7,7 +7,7 @@
 #include "AttachSelectState.h"
 #include "RewindState.h"
 #include "LockState.h"
-#include "Attachable.h"
+#include "PzObject.h"
 #include "Rewindable.h"
 
 #include "Player.h"
@@ -74,8 +74,8 @@ namespace Phyzzle
 	{
 		prevState = currState;
 
-		DebugDraw();
 		GamePadInput();
+		DebugDraw();
 
 		if (prevState != currState)
 		{
@@ -163,7 +163,7 @@ namespace Phyzzle
 			400, 100, 15,
 			255, 255, 255, 255);
 
-		if (!data.jumping)
+		if (data.jumping == false)
 		{
 			PurahEngine::GraphicsManager::GetInstance().DrawString(
 				L"can Jump",
@@ -256,7 +256,7 @@ namespace Phyzzle
 
 	void Player::Jump()
 	{
-		if (!data.jumping)
+		if (data.jumping == false)
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
@@ -266,16 +266,30 @@ namespace Phyzzle
 
 	void Player::JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		const auto velo = zn_collision.thisPostLinearVelocity;
-
-		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		const Eigen::Vector3f direction{ velo };
-		float cosTheta1 = up.dot(direction);
-		cosTheta1 = std::clamp(cosTheta1, -1.f, 1.f);
-
-		if ((cosTheta1 >= 0.5f))
+		for (size_t i = 0; i < zn_collision.contactCount; i++)
 		{
-			data.jumping = false;
+			const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
+			Eigen::Vector3f velo = zn_collision.thisPostLinearVelocity;
+			velo.x() = 0.f;
+			velo.z() = 0.f;
+			velo.normalize();
+			auto normal = zn_collision.contacts[i].normal;
+			normal.normalize();
+
+			const float cosTheta0 = velo.dot(normal);
+			float theta = std::acosf(cosTheta0);
+			bool diffDir = theta > (std::numbers::pi_v<float> / 2.f) && theta < (std::numbers::pi_v<float> * 1.5f);
+
+			float cosTheta = up.dot(normal);
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+			float slope = std::acosf(cosTheta);
+			bool isGround = slope <= (std::numbers::pi_v<float> / 5.f);
+
+			if (isGround && diffDir)
+			{
+				data.jumping = false;
+				return;
+			}
 		}
 	}
 
@@ -362,6 +376,10 @@ namespace Phyzzle
 	{
 		auto currP = data.cameraCore->GetLocalPosition();
 
+		auto modelPos = data.cameraArm->GetWorldPosition();
+		auto dir = data.cameraCore->GetFront();
+		ZonaiPhysics::ZnQueryInfo info;
+
 		// 각도에 따라 카메라 위치를 움직임.
 		if (data.xAngle > 0.f)
 		{
@@ -372,8 +390,6 @@ namespace Phyzzle
 				};
 
 			currP.z() = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
-
-			data.cameraCore->SetLocalPosition(currP);
 		}
 		else if (data.xAngle < 0.f)
 		{
@@ -384,8 +400,23 @@ namespace Phyzzle
 				};
 
 			currP.z() = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
-			data.cameraCore->SetLocalPosition(currP);
 		}
+
+		unsigned int layers = ~(1 << PurahEngine::Physics::GetLayerID(L"Player"));
+
+		bool hit = PurahEngine::Physics::Spherecast(
+			0.3f,
+			modelPos, Eigen::Quaternionf::Identity(),
+			dir * -1.f,
+			currP.z() * -1.f,
+			layers, info);
+
+		if (hit)
+		{
+			currP.z() = info.distance * -1.f;
+		}
+
+		data.cameraCore->SetLocalPosition(currP);
 	}
 
 	void Player::CameraReset()
@@ -446,9 +477,12 @@ namespace Phyzzle
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnRaycastInfo info;
+		ZonaiPhysics::ZnQueryInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+		int culling = (1 << PurahEngine::Physics::GetLayerID(L"Player")) | (1 << PurahEngine::Physics::GetLayerID(L"PrisonBars"));
+	 	int layers = ~culling;
+
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
 
 		if (block)
 		{
@@ -475,15 +509,18 @@ namespace Phyzzle
 	bool Player::RaycastFromCamera(
 		float _distance, 
 		PurahEngine::RigidBody** _outBody,
-		Attachable** _outAttachable,
+		PzObject** _outPzObject,
 		Rewindable** _outRewindable
 	)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnRaycastInfo info;
+		ZonaiPhysics::ZnQueryInfo info;
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, info);
+		unsigned int culling = (1 << PurahEngine::Physics::GetLayerID(L"Player")) | (1 << PurahEngine::Physics::GetLayerID(L"PrisonBars"));
+		unsigned int layers = ~culling;
+
+		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
 
 		if (block)
 		{
@@ -500,8 +537,8 @@ namespace Phyzzle
 
 			if (_outBody)
 				*_outBody = body;
-			if (_outAttachable)
-				*_outAttachable = obj->GetComponent<Attachable>();
+			if (_outPzObject)
+				*_outPzObject = obj->GetComponent<PzObject>();
 			if (_outRewindable)
 				*_outRewindable = obj->GetComponent<Rewindable>();
 
@@ -562,6 +599,10 @@ namespace Phyzzle
 		auto animator = data.animator;
 		POSTDESERIALIZE_PTR(animator);
 		data.animator = animator;
+
+		auto crossHead = data.crossHead;
+		POSTDESERIALIZE_PTR(crossHead);
+		data.crossHead = crossHead;
 
 		//auto holder = data.holder;
 		//POSTDESERIALIZE_PTR(holder);

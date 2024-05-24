@@ -16,12 +16,11 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
-
+		
 	}
 
 	void DefaultState::StateExit()
 	{
-
 	}
 
 	void DefaultState::StateStay()

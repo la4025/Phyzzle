@@ -28,9 +28,9 @@ namespace ZonaiPhysics
 		virtual void OnTriggerStay(ZnCollider const*, ZnCollider const*) = 0;
 		virtual void OnTriggerExit(ZnCollider const*, ZnCollider const*) = 0;
 
-		virtual void OnCollisionEnter(ZnCollider const*, ZnCollider const*, const ZnCollision&) = 0;
-		virtual void OnCollisionStay(ZnCollider const*, ZnCollider const*, const ZnCollision&) = 0;
-		virtual void OnCollisionExit(ZnCollider const*, ZnCollider const*, const ZnCollision&) = 0;
+		virtual void OnCollisionEnter(ZnCollider const*, ZnCollider const*, const ZnCollision&, const ZnCollision&) = 0;
+		virtual void OnCollisionStay(ZnCollider const*, ZnCollider const*, const ZnCollision&, const ZnCollision&) = 0;
+		virtual void OnCollisionExit(ZnCollider const*, ZnCollider const*, const ZnCollision&, const ZnCollision&) = 0;
 	};
 }
 

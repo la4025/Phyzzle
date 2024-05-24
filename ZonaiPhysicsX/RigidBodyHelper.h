@@ -13,7 +13,7 @@ namespace ZonaiPhysics
 	{
 	public:
 		static void				Detach(void* _body, void* _shape);
-		static void				Attach(void* _body, void* _shape);
+		static bool				Attach(void* _body, void* _shape);
 
 	public:
 		static void				Release(void*);

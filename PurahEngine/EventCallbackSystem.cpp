@@ -78,7 +78,7 @@ namespace PurahEngine
 	}
 
 	void EventCallbackSystem::OnCollisionEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
-		const ZonaiPhysics::ZnCollision& _collision)
+		const ZonaiPhysics::ZnCollision& _collision, const ZonaiPhysics::ZnCollision& _otherCol)
 	{
 		auto user0 = _c0->GetUserData();
 		assert(user0 != nullptr);
@@ -89,11 +89,11 @@ namespace PurahEngine
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
 		purahCollider0->GetGameObject()->OnCollisionEnter(_collision, purahCollider1);
-		purahCollider1->GetGameObject()->OnCollisionEnter(_collision, purahCollider0);
+		purahCollider1->GetGameObject()->OnCollisionEnter(_otherCol, purahCollider0);
 	}
 
 	void EventCallbackSystem::OnCollisionStay(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
-		const ZonaiPhysics::ZnCollision& _collision)
+		const ZonaiPhysics::ZnCollision& _collision, const ZonaiPhysics::ZnCollision& _otherCol)
 	{
 		auto user0 = _c0->GetUserData();
 		assert(user0 != nullptr);
@@ -104,11 +104,11 @@ namespace PurahEngine
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
 		purahCollider0->GetGameObject()->OnCollisionStay(_collision, purahCollider1);
-		purahCollider1->GetGameObject()->OnCollisionStay(_collision, purahCollider0);
+		purahCollider1->GetGameObject()->OnCollisionStay(_otherCol, purahCollider0);
 	}
 
 	void EventCallbackSystem::OnCollisionExit(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1,
-		const ZonaiPhysics::ZnCollision& _collision)
+		const ZonaiPhysics::ZnCollision& _collision, const ZonaiPhysics::ZnCollision& _otherCol)
 	{
 		const auto user0 = _c0->GetUserData();
 		assert(user0 != nullptr);
@@ -119,6 +119,6 @@ namespace PurahEngine
 		const auto purahCollider1 = static_cast<Collider*>(user1);
 
 		purahCollider0->GetGameObject()->OnCollisionExit(_collision, purahCollider1);
-		purahCollider1->GetGameObject()->OnCollisionExit(_collision, purahCollider0);
+		purahCollider1->GetGameObject()->OnCollisionExit(_otherCol, purahCollider0);
 	}
 }

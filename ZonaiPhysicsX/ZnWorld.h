@@ -9,13 +9,16 @@
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)
 #include <Eigen/Dense>
+
+#include "QueryFilterCallback.h"
 #pragma warning (pop)
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 	class EventCallback;
 	class ZnTransform;
+	class ZnQueryDesc;
 	class RigidBody;
 	class Collider;
 
@@ -43,10 +46,13 @@ namespace ZonaiPhysics
 
 		static Eigen::Vector3f		GetGravity(void* _userScene);
 		static void					SetGravity(const Eigen::Vector3f&, void* _userScene);
-		static bool					Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance,
-											ZnRaycastInfo& _out);
 
-		static bool					Boxcast(float _x, float _y, float _z, const ZnTransform& trans);
+		static bool					Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+
+		static bool					GeometrySweep(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		static bool					Boxcast(const Eigen::Vector3f& _extend,		const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		static bool					Spherecast(float _radius,					const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		static bool					Capsulecast(float _radius, float _height,	const ZnQueryDesc& _desc, ZnQueryInfo& _out);
 
 	public:
 		static void					CreateCharactor();
@@ -79,6 +85,8 @@ namespace ZonaiPhysics
 		static std::map<void*, Colliders>	colliderList;								// [pxScene, [userData, Colliders]]
 
 		static std::vector<ZnJoint*> jointList;
+
+		static QueryFilter queryFilter;
 	};
 }
 

@@ -10,12 +10,12 @@ namespace Phyzzle
 
 namespace Phyzzle
 {
-	class Attachable;
+	class PzObject;
 }
 
 namespace ZonaiPhysics
 {
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 	class Collider;
 }
 
@@ -28,6 +28,13 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
+		enum AnimationState
+		{
+			IDLE,
+			WALK,
+			ABILITY,
+		};
+
 		enum State
 		{
 			ATTACH_HOLD		= -1,	// 물건을 든 상태
@@ -42,13 +49,19 @@ namespace Phyzzle
 #pragma region Struct
 		struct PlayerData
 		{
+			float moveSpeed = 10.f;				// 기본 속도
+			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
+
+			float sensitivity = 90.f;			// 카메라 회전 속도
+			float jumpPower = 10.f;				// 점프 힘
+			bool jumping = false;
+
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
-
-			State state = ATTACH_SELECT;
+			PurahEngine::GameObject* crossHead;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
@@ -56,20 +69,15 @@ namespace Phyzzle
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
 
-			float xAngle = 0.f;
-			const float limitHighAngle = 80.f;
-			const float limitLowAngle = -70.f;
+			float xAngle = 0.f;					// 현재 앵글
+			const float limitHighAngle = 80.f;	// 하이 앵글
+			const float limitLowAngle = -70.f;	// 로우 앵글
 
-			bool cameraUpdate = true;
-			float lerpFactor = 0.2f;
-			float acclerpFactor = 0.f;
+			bool cameraUpdate = true;			// 
+			float lerpFactor = 0.2f;			// 
+			float acclerpFactor = 0.f;			//
 
-			float moveSpeed = 10.f;
-			float holdSpeed = 5.f;
-			float sensitivity = 90.f;
-
-			float jumpPower = 10.f;
-			bool jumping = false;
+			State state = ATTACH_SELECT;
 		};
 
 		struct StickData
@@ -172,7 +180,7 @@ namespace Phyzzle
 		bool RaycastFromCamera(
 			float _distance, 
 			PurahEngine::RigidBody** _outBody, 
-			Attachable** _outAttachable, 
+			PzObject** _outAttachable, 
 			Rewindable** _outRewindable
 		);
 

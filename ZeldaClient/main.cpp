@@ -22,7 +22,7 @@
 #include "SceneLoadSupport.h"
 
 /// 각자 만드는 것들
-#include "Attachable.h"
+#include "PzObject.h"
 #include "NaDong.h"
 #include "BeomJoon.h"
 #include "Holder.h"
@@ -64,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
-	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Attachable>("Attachable");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PzObject>("PzObject");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Rewindable>("Rewindable");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ButtonDevice>("ButtonDevice");

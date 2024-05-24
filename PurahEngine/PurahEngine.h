@@ -23,7 +23,8 @@
 // Physics
 #include "EasingFunc.h"
 
-#include "ZnRaycastInfo.h"
+#include "ZnQueryInfo.h"
+#include "ZnQueryDesc.h"
 
 #include "PhysicsSystem.h"
 #include "Physics.h"

@@ -15,6 +15,7 @@
 #include "PhysicsSystem.h"
 
 #include "GameObject.h"
+#include "ZnQueryDesc.h"
 
 namespace PurahEngine
 {
@@ -25,7 +26,7 @@ namespace PurahEngine
 		if (ZonaiPhysicsXDLL == nullptr)
 		{
 			// DLL 로드 실패
-			PHYSCIS_CAUTUON(DLL not found!)
+			PHYSCIS_CAUTUON(PhysicsSystem, DLL not found!)
 			assert(0);
 		}
 
@@ -36,7 +37,7 @@ namespace PurahEngine
 		if (createZonaiPhysics == nullptr)
 		{
 			// DLL 함수를 찾을 수 없습니다.
-			PHYSCIS_CAUTUON(Physcis DLL Initialize Function Load Failed!)
+			PHYSCIS_CAUTUON(PhysicsSystem, Physcis DLL Initialize Function Load Failed!)
 			assert(0);
 		}
 
@@ -44,16 +45,16 @@ namespace PurahEngine
 
 		if (releaseFuntion == nullptr)
 		{
-			// DLL 함수를 찾을 수 없습니다.
-			PHYSCIS_CAUTUON(Physcis DLL Finalize Function Load Failed!)
+			PHYSCIS_CAUTUON(PhysicsSystem, Physcis DLL Finalize Function Load Failed!)
 			assert(0);
 		}
+		// DLL 함수를 찾을 수 없습니다.
 
 		physics = createZonaiPhysics();
 
 		if (physics == nullptr)
 		{
-			PHYSCIS_CAUTUON(Physcis Initialize Failed!)
+			PHYSCIS_CAUTUON(PhysicsSystem, Physcis Initialize Failed!)
 			assert(0);
 		}
 
@@ -69,7 +70,7 @@ namespace PurahEngine
 		auto LayerData(EngineSetting::GetInstance().GetCollsionSetting());
 		for (size_t i = 0; i < LayerData.size(); i++)
 		{
-			for (size_t j = 0; j < LayerData[i].size(); j++)
+			for (size_t j = i; j < LayerData[i].size(); j++)
 			{
 				physics->SetCollisionLayer(i, j, LayerData[i][j]);
 			}
@@ -84,11 +85,11 @@ namespace PurahEngine
 			auto id = physics->CreateMaterial({ sFriction, dFriction, restitution, (eCombineMode)eFriction,(eCombineMode)eRestitution});
 
 			if (id == ZnMaterialID::None)
-				PHYSCIS_CAUTUON(Material Create Error)
+				PHYSCIS_CAUTUON(PhysicsSystem, Material Create Error)
 
 			if (BindMaterial(name, id) == false)
 			{
-				PHYSCIS_CAUTUON(Material Bind Error)
+				PHYSCIS_CAUTUON(PhysicsSystem, Material Bind Error)
 			}
 		}
 
@@ -434,6 +435,7 @@ namespace PurahEngine
 		if (convexID == nullptr)
 		{
 			convexID = physics->ConvexMeshLoadFromPath(_path);
+			NULL_POINTER_REFERENCE(convexID, PhysicsSystem, Convex Collider Load Error)
 		}
 
 		return physics->CreateConvexCollider(_gameObject, convexID, _rot, _scale, materialID);
@@ -512,10 +514,27 @@ namespace PurahEngine
 	}
 
 	bool PhysicsSystem::Raycast(
-		const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, 
-		float _distance, ZonaiPhysics::ZnRaycastInfo& _out)
+		const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out)
 	{
-		return physics->Raycast(_from, _to, _distance, _out);
+		return physics->Raycast(_desc, _out);
+	}
+
+	bool PhysicsSystem::Boxcast(const Eigen::Vector3f _extend, const ZonaiPhysics::ZnQueryDesc& _desc,
+		ZonaiPhysics::ZnQueryInfo& _out)
+	{
+		return physics->Boxcast(_extend, _desc, _out);
+	}
+
+	bool PhysicsSystem::Spherecast(float _radius, const ZonaiPhysics::ZnQueryDesc& _desc,
+		ZonaiPhysics::ZnQueryInfo& _out)
+	{
+		return physics->Spherecast(_radius, _desc, _out);
+	}
+
+	bool PhysicsSystem::Capsulecast(float _radius, float _height, const ZonaiPhysics::ZnQueryDesc& _desc,
+		ZonaiPhysics::ZnQueryInfo& _out)
+	{
+		return physics->Capsulecast(_radius, _height, _desc, _out);
 	}
 
 	PurahEngine::PhysicsSystem& PurahEngine::PhysicsSystem::GetInstance()

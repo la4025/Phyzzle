@@ -28,6 +28,12 @@ namespace PurahEngine
 			physicsMaterial
 		);
 
+		if (!znCollider)
+		{
+			GetGameObject()->DeleteComponent(this);
+			return;
+		}
+
 		Collider::SetUserData();
 
 		awake = false;

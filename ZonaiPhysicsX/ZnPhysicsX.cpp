@@ -10,7 +10,7 @@
 #include "PrismaticJoint.h"
 #include "SphericalJoint.h"
 
-#include "ZnRaycastInfo.h"
+#include "ZnQueryInfo.h"
 #include "FilterCallback.h"
 
 #include "ZnPhysicsX.h"
@@ -20,6 +20,7 @@
 #include "ZnFactoryX.h"
 #include "ZnWorld.h"
 #include "ZnMaterial.h"
+#include "ZnUtil.h"
 
 
 namespace ZonaiPhysics
@@ -126,6 +127,7 @@ namespace ZonaiPhysics
 	// 유저의 Scene 포인터를 key로 PxScene을 만든다.
 	void ZnPhysicsX::CreateScene(void* _userScene, const Eigen::Vector3f& _gravity)
 	{
+		NULL_POINTER_REFERENCE(_userScene, Load Scene Error!);
 		assert(_userScene != nullptr);
 
 		ZnWorld::AddScene(_userScene, ZnFactoryX::CreateScene(_userScene, _gravity));
@@ -133,6 +135,7 @@ namespace ZonaiPhysics
 
 	void ZnPhysicsX::LoadScene(void* _userScene)
 	{
+		NULL_POINTER_REFERENCE(_userScene, Load Scene Error!);
 		assert(_userScene != nullptr);
 
 		ZnWorld::LoadScene(_userScene);
@@ -140,7 +143,9 @@ namespace ZonaiPhysics
 
 	void ZnPhysicsX::UnloadScene(void* _userScene)
 	{
+		NULL_POINTER_REFERENCE(_userScene, Unload Scene Error!);
 		assert(_userScene != nullptr);
+
 
 		ZnWorld::UnloadScene(_userScene);
 	}
@@ -221,7 +226,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateBoxShape(_extend, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<BoxCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, _userScene);
+
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, _userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -259,7 +272,14 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateSphereShape(_radius, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<SphereCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -297,7 +317,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateCapsuleShape(_radius, _height, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<CapsuleCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -339,9 +367,17 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
 
-		return nullptr;
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
+
+		return collider;
 	}
 
 	ZnCollider* ZnPhysicsX::CreateConvexCollider(
@@ -381,7 +417,15 @@ namespace ZonaiPhysics
 
 		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
-		ZnWorld::AddCollider(collider, _userData, userScene);
+		
+		if (collider)
+		{
+			ZnWorld::AddCollider(collider, _userData, userScene);
+		}
+		else
+		{
+			OutputDebugStringW(L"Zonai Collider Initialize Error");
+		}
 
 		return collider;
 	}
@@ -447,9 +491,24 @@ namespace ZonaiPhysics
 		return joint;
 	}
 
-	bool ZnPhysicsX::Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out)
+	bool ZnPhysicsX::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		return ZnWorld::Raycast(_from, _to, _distance, _out);
+		return ZnWorld::Raycast(_desc, _out);
+	}
+
+	bool ZnPhysicsX::Boxcast(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		return ZnWorld::Boxcast(_extend, _desc, _out);
+	}
+
+	bool ZnPhysicsX::Spherecast(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		return ZnWorld::Spherecast(_radius, _desc, _out);
+	}
+
+	bool ZnPhysicsX::Capsulecast(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		return ZnWorld::Capsulecast(_radius, _height, _desc, _out);
 	}
 
 	void ZnPhysicsX::ReleaseRigidBody(ZnRigidBody* _body, void* _userData, void* _userScene)

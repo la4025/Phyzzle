@@ -9,6 +9,7 @@
 
 namespace ZonaiPhysics
 {
+	struct ZnQueryDesc;
 	class ZnSimulationCallback;
 	class ZnPrismaticJoint;
 	class ZnHingeJoint;
@@ -28,7 +29,7 @@ namespace ZonaiPhysics
 	class ZnJoint;
 
 	class ZnTransform;
-	struct ZnRaycastInfo;
+	struct ZnQueryInfo;
 
 	struct MaterialDesc;
 
@@ -125,6 +126,10 @@ namespace ZonaiPhysics
 		virtual ZnPrismaticJoint*	CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) = 0;
 
 	public:
-		virtual bool				Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZnRaycastInfo& _out) = 0;
+		virtual bool				Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
+
+		virtual bool				Boxcast(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
+		virtual bool				Spherecast(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
+		virtual bool				Capsulecast(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
 	};
 }

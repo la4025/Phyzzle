@@ -24,6 +24,10 @@ namespace PurahEngine
 		void SetColor(float r, float g, float b, float a);
 		void SetShadow(bool value);
 
+		void SetOutLine(bool value);
+		void SetOutLineColor(const Eigen::Vector4f& _color);
+		bool GetOutLine() const;
+
 	public:
 		virtual void PreSerialize(json& jsonData) const override;
 		virtual void PreDeserialize(const json& jsonData) override;

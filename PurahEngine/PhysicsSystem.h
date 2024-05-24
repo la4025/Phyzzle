@@ -4,19 +4,26 @@
 #include <queue>
 #include <vector>
 #include <windows.h>
-#include "ZnRaycastInfo.h"
+#include "ZnQueryInfo.h"
 #include "ZnMaterial.h"
 #include "MaterialEnum.h"
 
-#define PHYSCIS_CAUTUON(string) \
-MessageBox(0,					\
-	L"Physics System",			\
-	L#string,					\
-	MB_OK | MB_ICONEXCLAMATION	\
-);
+#define PHYSCIS_CAUTUON(header, string)	\
+		MessageBox(0,					\
+			L#header,					\
+			L#string,					\
+			MB_OK | MB_ICONEXCLAMATION	\
+		);								\
+
+#define NULL_POINTER_REFERENCE(pointer, header, error_path)\
+if(pointer == nullptr)					\
+	PHYSCIS_CAUTUON(header, error_path)	\
+	assert(pointer != nullptr);			\
+
 
 namespace ZonaiPhysics
 {
+	struct ZnQueryDesc;
 	class ZnPhysicsBase;
 
 	class ZnRigidBody;
@@ -161,7 +168,11 @@ namespace PurahEngine
 			ZonaiPhysics::ZnRigidBody* _body1, const ZonaiPhysics::ZnTransform& _localTm1) const;
 
 	private:
-		bool Raycast(const Eigen::Vector3f& _from, const Eigen::Vector3f& _to, float _distance, ZonaiPhysics::ZnRaycastInfo& _out);
+		bool Raycast(const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
+
+		bool Boxcast(const Eigen::Vector3f _extend, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
+		bool Spherecast(float _radius, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
+		bool Capsulecast(float _radius, float _height, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
 
 	public:
 		static PhysicsSystem& GetInstance();
