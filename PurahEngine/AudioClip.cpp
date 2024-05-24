@@ -2,7 +2,7 @@
 
 
 PurahEngine::AudioClip::AudioClip()
-	: mSound(nullptr), mChannel(nullptr), mMinDistance(1.0f), mMaxDistance(1000.0f), isLoop(false)
+	: mSound(nullptr), mChannel(nullptr)
 {
 
 }
@@ -13,17 +13,17 @@ PurahEngine::AudioClip::~AudioClip()
 	mSound = nullptr;
 }
 
-void PurahEngine::AudioClip::Play()
+void PurahEngine::AudioClip::CreateSound(PurahSound newSound)
 {
-	if (isLoop)
-	{
-		mSound->setMode(FMOD_LOOP_NORMAL);
-	}
-
-	//soundManager.PlayEffect();
+	soundManager.LoadSound(newSound, &mSound);
 }
 
-void PurahEngine::AudioClip::Set3DAttributes()
+void PurahEngine::AudioClip::Play(PurahSound newSound)
 {
+	soundManager.Play(newSound, mSound, &mChannel);
+}
 
+void PurahEngine::AudioClip::Set3DAttributes(FMOD_VECTOR pos)
+{
+	mChannel->set3DAttributes(&pos, 0);
 }

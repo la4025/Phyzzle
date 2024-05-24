@@ -4,6 +4,7 @@
 
 #include "Transform.h"
 #include "SoundManager.h"
+#include "AudioClip.h"
 
 namespace PurahEngine
 {
@@ -22,7 +23,9 @@ namespace PurahEngine
 		void Initialize();
 		void OnDataLoadComplete();
 		void Update();
-		std::wstring GetSoundName();
+
+
+		void Play(std::wstring name);
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -32,7 +35,9 @@ namespace PurahEngine
 
 	private:
 		Transform* soundTransform;
-		std::wstring soundName;
+		std::vector<std::wstring> fileName;
+		std::map<std::wstring, AudioClip*> soundMap;
+		PurahSound newSound;
 	};
 }
 

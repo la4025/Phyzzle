@@ -31,8 +31,11 @@ void PurahEngine::AudioSource::Initialize()
 
 void PurahEngine::AudioSource::OnDataLoadComplete()
 {
-	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.LoadSound(soundName, soundTransform, this, SoundType::EFFECT);
+	// 파일 이름을 map에 넣고, value로 audioclip을 생성
+	for (auto name : fileName)
+	{
+		soundMap[name] = new AudioClip;
+	}
 }
 
 void PurahEngine::AudioSource::Update()
@@ -40,12 +43,19 @@ void PurahEngine::AudioSource::Update()
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
+	
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	{
+		iter->second->Set3DAttributes(pos);
+	}
 }
 
-std::wstring PurahEngine::AudioSource::GetSoundName()
+
+void PurahEngine::AudioSource::Play(std::wstring name)
 {
-	return soundName;
+	soundMap[name]->Play(newSound);
 }
+
 
 void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 {
@@ -55,7 +65,7 @@ void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 void PurahEngine::AudioSource::PreDeserialize(const json& jsonData)
 {
 	PREDESERIALIZE_BASE();
-	PREDESERIALIZE_WSTRING(soundName);
+	PREDESERIALIZE_VECTOR(fileName);
 }
 
 void PurahEngine::AudioSource::PostSerialize(json& jsonData) const

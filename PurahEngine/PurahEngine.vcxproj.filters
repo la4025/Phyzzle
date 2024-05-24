@@ -121,7 +121,7 @@
     <Filter Include="Component\2. Physics\Collider\Custom">
       <UniqueIdentifier>{24fa6f73-b036-4f88-b39e-4daf824a248e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Manager\SoundManager\AudioClip">
+    <Filter Include="Component\4. Sound\AudioClip">
       <UniqueIdentifier>{0b0a6354-3c82-4c1a-bdd8-81327887e8e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -299,7 +299,7 @@
       <Filter>Component\2. Physics\Collider\Base</Filter>
     </ClCompile>
     <ClCompile Include="AudioClip.cpp">
-      <Filter>Core\Manager\SoundManager\AudioClip</Filter>
+      <Filter>Component\4. Sound\AudioClip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,7 +515,7 @@
       <Filter>Component\2. Physics\Collider\Base</Filter>
     </ClInclude>
     <ClInclude Include="AudioClip.h">
-      <Filter>Core\Manager\SoundManager\AudioClip</Filter>
+      <Filter>Component\4. Sound\AudioClip</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
