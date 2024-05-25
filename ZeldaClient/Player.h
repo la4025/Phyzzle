@@ -10,7 +10,7 @@ namespace Phyzzle
 
 namespace Phyzzle
 {
-	class Attachable;
+	class PzObject;
 }
 
 namespace ZonaiPhysics
@@ -49,14 +49,19 @@ namespace Phyzzle
 #pragma region Struct
 		struct PlayerData
 		{
-			PurahEngine::GameObject* crossHead;
+			float moveSpeed = 10.f;				// 기본 속도
+			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
+
+			float sensitivity = 90.f;			// 카메라 회전 속도
+			float jumpPower = 10.f;				// 점프 힘
+			bool jumping = false;
+
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
-
-			State state = ATTACH_SELECT;
+			PurahEngine::GameObject* crossHead;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
@@ -70,18 +75,9 @@ namespace Phyzzle
 
 			bool cameraUpdate = true;			// 
 			float lerpFactor = 0.2f;			// 
-			float acclerpFactor = 0.f;			// 
+			float acclerpFactor = 0.f;			//
 
-			float moveSpeed = 10.f;				// 기본 속도
-			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
-
-			float rewindableTime = 10.f;		// 리와인트 시간
-			float timeOffset = 0.5f;			
-
-			float sensitivity = 90.f;			// 카메라 회전 속도
-
-			float jumpPower = 10.f;				// 점프 힘
-			bool jumping = false;
+			State state = ATTACH_SELECT;
 		};
 
 		struct StickData
@@ -184,7 +180,7 @@ namespace Phyzzle
 		bool RaycastFromCamera(
 			float _distance, 
 			PurahEngine::RigidBody** _outBody, 
-			Attachable** _outAttachable, 
+			PzObject** _outAttachable, 
 			Rewindable** _outRewindable
 		);
 

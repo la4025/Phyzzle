@@ -70,7 +70,7 @@ namespace PurahEngine
 		auto LayerData(EngineSetting::GetInstance().GetCollsionSetting());
 		for (size_t i = 0; i < LayerData.size(); i++)
 		{
-			for (size_t j = 0; j < LayerData[i].size(); j++)
+			for (size_t j = i; j < LayerData[i].size(); j++)
 			{
 				physics->SetCollisionLayer(i, j, LayerData[i][j]);
 			}

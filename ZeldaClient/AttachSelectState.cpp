@@ -161,6 +161,9 @@ namespace Phyzzle
 		if (result->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
 			return false;
 
+		if (!attachable)
+			return false;
+
 		return true;
 	}
 

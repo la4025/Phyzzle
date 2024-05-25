@@ -10,7 +10,7 @@
 namespace Phyzzle
 {
 	class AttachIsland;
-	class Attachable;
+	class PzObject;
 }
 
 namespace PurahEngine
@@ -27,7 +27,7 @@ namespace Phyzzle
 		~AttachSystem() override;
 
 	private:
-		using AttachIsland = std::vector<Attachable*>;
+		using AttachIsland = std::vector<PzObject*>;
 		std::unordered_map<IslandID, AttachIsland> attachIsland;
 		std::queue<IslandID> removedIndex;
 
@@ -37,33 +37,34 @@ namespace Phyzzle
 		void RemoveIslandID(IslandID _id);
 
 		// 级 积己 昏力
-		IslandID CreateIsland(const std::vector<Attachable*>& _arr);
+		IslandID CreateIsland(const std::vector<PzObject*>& _arr);
 		void RemoveIsland(IslandID _id);
 
 	public:
 		void						Clear();
 
-		void						SelectBody(Attachable* _body);
-		void						DeselectBody(Attachable* _body);
+		void						SelectBody(PzObject* _body);
+		void						DeselectBody(PzObject* _body);
 
-		void						EnableOutline(Attachable*, bool, const Eigen::Vector4f& _targetColor = PurahColor::BlueViolet, const Eigen::Vector4f& _subColor = PurahColor::Yellow);
+		void						EnableOutline(PzObject*, bool, const Eigen::Vector4f& _targetColor = PurahColor::BlueViolet, const Eigen::Vector4f& _subColor = PurahColor::Yellow);
 
-		bool						TryAttach(Attachable* _base);
-		bool						Attach(Attachable* _base, Attachable* _other);
-		bool						Dettach(Attachable* _base);
+		bool						TryAttach(PzObject* _base);
+		bool						Attach(PzObject* _base, PzObject* _other);
+		bool						Dettach(PzObject* _base);
 
-		void						ConnectNode(Attachable* _base, Attachable* _other, PurahEngine::FixedJoint* _joint);
-		void						DisconnectNode(Attachable* _base, Attachable* _other);
+		void						ConnectNode(PzObject* _base, PzObject* _other, PurahEngine::FixedJoint* _joint);
+		void						DisconnectNode(PzObject* _base, PzObject* _other);
 
-		PurahEngine::FixedJoint*	CreateJoint(Attachable* _base, Attachable* _other);
-		void						BreakJoint(Attachable* _base, Attachable* _other);
+		PurahEngine::FixedJoint*	CreateJoint(PzObject* _base, PzObject* _other);
+		void						BreakJoint(PzObject* _base, PzObject* _other);
 
 		bool						HasAttachIsland(const IslandID& _id, AttachIsland& _island);
+		void						RebuildIsland(PzObject* _base, PzObject* _other);
 
 		void						CalculateLocalAnchor(
 										const Eigen::Vector3f& _anchorP, 
 										const Eigen::Quaternionf& _anchorQ,
-										const Attachable* _base,
+										const PzObject* _base,
 										Eigen::Vector3f& _outP, 
 										Eigen::Quaternionf& _outQ
 									);

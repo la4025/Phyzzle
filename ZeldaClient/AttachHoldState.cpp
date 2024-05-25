@@ -1,6 +1,6 @@
 #include "AttachHoldState.h"
 
-#include "Attachable.h"
+#include "PzObject.h"
 #include "AttachSystem.h"
 
 namespace Phyzzle

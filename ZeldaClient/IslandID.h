@@ -3,7 +3,7 @@
 
 namespace Phyzzle
 {
-	class Attachable;
+	class PzObject;
 
 	struct IslandID
 	{
