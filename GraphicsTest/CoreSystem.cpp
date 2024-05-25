@@ -530,8 +530,8 @@ void CoreSystem::run()
 	//renderer->DrawLight(dirLightID2);
 	//renderer->DrawLight(pointLightID);
 
-	renderer->DrawSprite({ scdX, 0 }, msTextureID, 0);
-	renderer->DrawSprite({ 1920 - scdX - 280, 800 }, msTextureID, 0);
+	renderer->DrawImage({ scdX, 0 }, msTextureID, 0u);
+	renderer->DrawImage({ 1920 - scdX - 280, 800 }, msTextureID, 0u);
 
 	//Eigen::Matrix4f cubeMatrix = Eigen::Matrix4f::Identity();
 	//cubeMatrix(0, 0) = 50.0f;
@@ -700,10 +700,10 @@ void CoreSystem::run()
 	renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
 	renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
-	renderer->DrawSprite({ 0.0f, 0.0f }, scdTextureID, -1);
-	renderer->DrawSprite({ 50.0f, 50.0f }, scdTextureID, +0);
-	renderer->DrawSprite({ 100.0f, 100.0f }, scdTextureID, +1);
-	renderer->DrawSprite({ 150.0f, 150.0f }, msTextureID, +1);
+	renderer->DrawImage({ 0.0f, 0.0f }, scdTextureID, 1u);
+	renderer->DrawImage({ 50.0f, 50.0f }, scdTextureID, 2u);
+	renderer->DrawImage({ 100.0f, 100.0f }, scdTextureID, 4u);
+	renderer->DrawImage({ 0.0f, 160.0f }, msTextureID, 8u);
 
 	renderer->EndDraw();
 }

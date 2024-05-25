@@ -22,7 +22,7 @@ namespace PurahEngine
 		if (textureName != L"")
 		{
 			textureID = GetTextureID(textureName);
-			renderer->DrawSprite(position, size, textureID, layer);
+			renderer->DrawImage(position, size, textureID, layer);
 		}
 	}
 

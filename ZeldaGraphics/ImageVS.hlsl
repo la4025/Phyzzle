@@ -8,6 +8,7 @@ struct VertexIn
     float2 tex : TEXCOORD0;
     uint4 boneIndices : BLENDINDICES;
     float4 weight : BLENDWEIGHT;
+    uint instance : SV_InstanceID;
 };
 
 struct VertexOut
@@ -18,16 +19,9 @@ struct VertexOut
 
 VertexOut main(VertexIn input)
 {
-    input.position.w = 1.0f;
-    
     VertexOut output = (VertexOut) 0;
     
-    output.pos = input.position;
-    
-    // 월드, 뷰, 프로젝션 행렬들을 이용해 정점의 위치를 계산한다.
-    output.pos = mul(output.pos, worldMatrix);
-    output.pos = mul(output.pos, viewMatrix);
-    output.pos = mul(output.pos, projectionMatrix);
+    output.pos = float4((input.position * 2.0f).xyz, 1.0f);
     
     output.uv = input.tex;
     

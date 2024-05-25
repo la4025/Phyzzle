@@ -8,7 +8,13 @@ struct PixelInputType
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    float4 result = DiffuseMap.Sample(Sampler, input.uv);
+    float4 textureColor = DiffuseMap.Sample(Sampler, input.uv);
     
-    return result;
+    if (useSRGB)
+    {
+        // SRGB 색 공간에서 선형 색 공간으로
+        textureColor = pow(textureColor, 1.0f / 2.2f);
+    }
+    
+    return textureColor;
 }

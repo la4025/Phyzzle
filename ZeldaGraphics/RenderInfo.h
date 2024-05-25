@@ -17,7 +17,8 @@ enum class RenderType
 	String,
 	Light,
 	CubeMap,
-	BillBoard
+	BillBoard,
+	Image
 };
 
 using RenderOption = unsigned int;
@@ -65,7 +66,7 @@ struct InstancingValue
 	float animationTime;
 	Color color;
 	Color outLineColor;
-	int layer;
+	unsigned int layer;
 	float fontSize;
 	std::wstring str;
 	unsigned int blendAnimationID1;
@@ -82,7 +83,7 @@ struct InstancingValue
 		animationTime(0.0f),
 		color({ 1.0f, 1.0f, 1.0f, 1.0f }),
 		outLineColor({ 1.0f, 1.0f, 1.0f, 1.0f }),
-		layer(0),
+		layer(0u),
 		fontSize(30.0f),
 		str(L""),
 		blendAnimationID1(0u),
