@@ -263,6 +263,7 @@ namespace ZonaiPhysics
 
 	bool ZnWorld::GeometryOverLap(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
+		return true;
 	}
 
 	void ZnWorld::CreateCharactor()
