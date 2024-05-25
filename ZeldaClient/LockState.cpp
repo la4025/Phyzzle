@@ -18,6 +18,11 @@ namespace Phyzzle
 
 	}
 
+	void LockState::Click_B()
+	{
+		IState::Click_B();
+	}
+
 	void LockState::Click_LB()
 	{
 		Cancel();
@@ -38,6 +43,11 @@ namespace Phyzzle
 			return false;
 
 		return true;
+	}
+
+	void LockState::Select()
+	{
+
 	}
 
 	void LockState::Cancel() const

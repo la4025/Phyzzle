@@ -18,6 +18,7 @@ namespace Phyzzle
 		void StateStay() override;
 
 	private:
+		void Click_B() override;
 		void Click_LB() override;
 
 #pragma region Content
@@ -27,6 +28,7 @@ namespace Phyzzle
 
 	private:
 		bool Aim();
+		void Select();
 		void Cancel() const;
 #pragma endregion Content
 	};
