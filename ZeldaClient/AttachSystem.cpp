@@ -42,21 +42,19 @@ namespace Phyzzle
 	// 섬 생성
 	IslandID AttachSystem::CreateIsland(const AttachIsland& _arr)
 	{
-		IslandID newID;;
-		
 		if (_arr.size() < 2)
 		{
-			newID = nullptr;
+			return nullptr;
 		}
-		else
-		{
-			newID = CreateIslandID();
 
-			attachIsland.insert(std::make_pair(newID, _arr));
-		}
+		IslandID newID = CreateIslandID();
+
+		attachIsland.insert(std::make_pair(newID, _arr));
 
 		for (auto& e : _arr)
+		{
 			e->islandID = newID;
+		}
 
 		return newID;
 	}
@@ -64,17 +62,16 @@ namespace Phyzzle
 	// 섬 삭제
 	void AttachSystem::RemoveIsland(IslandID _id)
 	{
-		if (_id == nullptr)
+		if (_id == nullptr || !attachIsland.contains(_id))
+		{
 			return;
-
-		if (!attachIsland.contains(_id))
-			return;
+		}
 
 		const AttachIsland& arr = attachIsland[_id];
 
-		for (size_t i = 0; i < arr.size(); i++)
+		for (auto& e : arr)
 		{
-			arr[i]->islandID = nullptr;				// 섬에 있는 친구들의 ID를 초기화함.
+			e->islandID = nullptr;
 		}
 
 		RemoveIslandID(_id);
@@ -84,10 +81,8 @@ namespace Phyzzle
 	{
 		attachIsland.clear();
 
-		while (!removedIndex.empty())
-		{
-			removedIndex.pop();
-		}
+		std::queue<IslandID> emptyQueue;
+		std::swap(removedIndex, emptyQueue);
 	}
 
 	// 물체 선택
@@ -95,25 +90,14 @@ namespace Phyzzle
 	{
 		const IslandID id = _body->GetIslandID();
 
-		if (id == nullptr)		// 섬을 이루고 있는가?
-		{
-			_body->Selected();			// 혼자만 듬
-		}
-		else
-		{
-			if (attachIsland.contains(id))
-			{
-				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를 들어 올림
+		AttachIsland island;
 
-				for (size_t i = 0; i < arr.size(); i++)
-				{
-					arr[i]->Selected();
-				}
-			}
-			else
-			{
-				assert(0);
-			}
+		if (!HasAttachIsland(id, island))
+			island.emplace_back(_body);
+
+		for (size_t i = 0; i < island.size(); i++)
+		{
+			island[i]->Selected();
 		}
 	}
 
@@ -122,24 +106,35 @@ namespace Phyzzle
 	{
 		const IslandID id = _body->GetIslandID();
 
-		if (id == nullptr)		// 섬을 이루고 있는가?
-		{
-			_body->ValiantRetrieve();							// 혼자만
-		}
-		else
-		{
-			if (attachIsland.contains(id))
-			{
-				const AttachIsland& arr = attachIsland[id];		// 섬의 모두를
+		AttachIsland island;
 
-				for (size_t i = 0; i < arr.size(); i++)
-				{
-					arr[i]->ValiantRetrieve();
-				}
-			}
-			else
+		if (!HasAttachIsland(id, island))
+			island.emplace_back(_body);
+
+		for (size_t i = 0; i < island.size(); i++)
+		{
+			island[i]->ValiantRetrieve();
+		}
+	}
+
+	void AttachSystem::ApplyOutlineSettings(PzObject* obj, const Eigen::Vector4f& color, bool value)
+	{
+		auto children = obj->GetGameObject()->GetTransform()->GetChildren();
+
+		for (auto& child : children)
+		{
+			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+			if (model)
 			{
-				assert(0);
+				model->SetOutLineColor(color);
+				model->SetOutLine(value);
+			}
+
+			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+			if (mesh)
+			{
+				mesh->SetOutLineColor(color);
+				mesh->SetOutLine(value);
 			}
 		}
 	}
@@ -154,93 +149,50 @@ namespace Phyzzle
 		AttachIsland island;
 
 		if (!HasAttachIsland(objID, island))
-			island.push_back(_obj);
+			island.emplace_back(_obj);
 
 		for (auto& obj : island)
 		{
-			auto children = obj->GetGameObject()->GetTransform()->GetChildren();
-
-			for (auto& child : children)
-			{
-				auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
-
-				if (model)
-				{
-					model->SetOutLineColor(_subColor);
-					model->SetOutLine(_value);
-				}
-
-				auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
-				if (mesh)
-				{
-					mesh->SetOutLineColor(_subColor);
-					mesh->SetOutLine(_value);
-				}
-			}
+			ApplyOutlineSettings(obj, _subColor, _value);
 		}
 
-		auto children = _obj->GetGameObject()->GetTransform()->GetChildren();
-
-		for (auto& child : children)
-		{
-			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
-
-			if (model)
-			{
-				model->SetOutLineColor(_targetColor);
-				model->SetOutLine(_value);
-			}
-
-			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
-			if (mesh)
-			{
-				mesh->SetOutLineColor(_targetColor);
-				mesh->SetOutLine(_value);
-			}
-		}
+		ApplyOutlineSettings(_obj, _targetColor, _value);
 	}
 
 	// 물체 부착
 	bool AttachSystem::TryAttach(PzObject* _object)
 	{
 		// 선택한 오브젝트가 섬을 가지고 있는지 아닌지 체크
-
 		const IslandID obj0ID = _object->GetIslandID();
-
 		AttachIsland island0;
 
-		// 섬이 없으면 임시 배열을 만듬
 		if (!HasAttachIsland(obj0ID, island0))
-			island0.push_back(_object);
-
-		PzObject* base = nullptr;
-		PzObject* other = nullptr;
+			island0.emplace_back(_object);
 
 		for (const auto& e : island0)
 		{
-			if (e->attachable && (_object != e->attachable))
+			if (e->attachable && _object != e->attachable)
 			{
-				base = e;
-				other = e->attachable;
-				break;
+				Attach(e, e->attachable);
+				e->attachable = nullptr;
+				e->attachable->attachable = nullptr;
+				return true;
 			}
 		}
 
-		if (!other)
-			return false;
-
-		Attach(base, other);
-
-		base->attachable = nullptr;
-		other->attachable = nullptr;
-
-		return true;
+		return false;
 	}
 
 	bool AttachSystem::Attach(PzObject* _base, PzObject* _other)
 	{
 		// 조인트로 연결해주고 노드도 연결해줌
 		const auto joint = CreateJoint(_base, _other);
+		if (!joint)
+		{
+			MessageBox(0, L"Joint is NULL", L"Attach Error", MB_OK | MB_ICONEXCLAMATION);
+			return false;
+		}
+
 		ConnectNode(_base, _other, joint);
 
 		// 섬 다시 만듬
@@ -255,11 +207,8 @@ namespace Phyzzle
 		if (_object->connectedObjects.empty())
 			return false;
 
-		// 섬을 지우고
 		RemoveIsland(_object->islandID);
-
-		// 연결됐었던 객체들 일단 저장해둠.
-		const AttachIsland temp = _object->connectedObjects;
+		AttachIsland temp = _object->connectedObjects;
 
 		// 연결된 객체 순회하면서 연결을 끊어줌
 		for (auto& _other : temp)
@@ -272,7 +221,6 @@ namespace Phyzzle
 		for (auto& _other : temp)
 		{
 			AttachIsland island;
-			
 			std::queue<PzObject*> search;
 			search.push(_other);
 
@@ -283,8 +231,7 @@ namespace Phyzzle
 
 				// 선택 해제
 				obj->ValiantRetrieve();
-
-				island.push_back(obj);
+				island.emplace_back(obj);
 
 				for (auto& e : obj->connectedObjects)
 				{

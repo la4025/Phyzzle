@@ -217,7 +217,6 @@ namespace Phyzzle
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
 
-
 	private:
 		/// 사라질 변수들
 		Eigen::Vector3f		highPosition;

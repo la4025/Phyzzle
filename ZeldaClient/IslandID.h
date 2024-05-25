@@ -13,6 +13,7 @@ namespace Phyzzle
 		IslandID(long long _id) : id(_id) {}
 		IslandID(const IslandID& _id) : id(_id.id) {}
 		IslandID(IslandID&& _id) noexcept : id(_id.id) {}
+		IslandID(std::nullptr_t _value) noexcept : id(-1ll) {}
 #pragma endregion constructor
 
 #pragma region operator

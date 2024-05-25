@@ -218,18 +218,20 @@ namespace ZonaiPhysics
 		const physx::PxQueryCache* cache = nullptr;
 		physx::PxReal offset = _desc.offset;
 
-		if (bool hit = currScene->sweep(
+		if (bool block = currScene->sweep(
 			_geom, 
 			transform, dir, distance, 
 			result, flag, 
 			filter, callback, 
 			cache, offset))
 		{
-			_out.bodyData = static_cast<RigidBody*>(result.block.actor->userData)->GetUserData();
-			_out.colliderData = static_cast<Collider*>(result.block.shape->userData)->GetUserData();
-			_out.position = PhysxToEigen(result.block.position);
-			_out.distance = result.block.distance;
-			_out.normal = PhysxToEigen(result.block.normal);
+			const physx::PxSweepHit* hit = &result.block;
+
+			_out.bodyData = static_cast<RigidBody*>(hit->actor->userData)->GetUserData();
+			_out.colliderData = static_cast<Collider*>(hit->shape->userData)->GetUserData();
+			_out.position = PhysxToEigen(hit->position);
+			_out.distance = hit->distance;
+			_out.normal = PhysxToEigen(hit->normal);
 
 			return true;
 		}
@@ -257,6 +259,10 @@ namespace ZonaiPhysics
 		physx::PxCapsuleGeometry geom(_radius, _height);
 
 		return GeometrySweep(geom, _desc, _out);
+	}
+
+	bool ZnWorld::GeometryOverLap(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
 	}
 
 	void ZnWorld::CreateCharactor()
