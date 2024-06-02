@@ -13,6 +13,9 @@
 #include "ZnQueryInfo.h"
 #include "FilterCallback.h"
 
+#include "CapsuleController.h"
+#include "BoxController.h"
+
 #include "ZnPhysicsX.h"
 #include <ranges>
 
@@ -168,6 +171,49 @@ namespace ZonaiPhysics
 	void ZnPhysicsX::SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data)
 	{
 		ZnLayer::SetCollisionData(_layer, _data);
+	}
+
+	ZonaiPhysics::ZnCapsuleController* ZnPhysicsX::CreateCapsuleController(
+		void* _userScene,
+		float _radius, float _height, const ZnControllerDecs& _desc, float _density, const ZnMaterialID& _material)
+	{
+		physx::PxScene* scene = ZnWorld::GetScene(_userScene);
+
+		if (scene != nullptr)
+		{
+			scene = ZnWorld::GetCurrentScene();
+		}
+		
+		physx::PxControllerManager* manager = ZnWorld::GetManager(scene);
+
+		if (manager != nullptr)
+		{
+			manager = ZnFactoryX::CreateControllerManager(scene);
+		}
+
+		physx::PxMaterial* material = nullptr;
+
+		if (_material == ZnMaterialID::None)
+		{
+			material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+		else
+		{
+			material = ResourceManager::GetPxMaterial(_material);
+
+			if (!material)
+				material = ResourceManager::GetPxMaterial(defaultMaterial);
+		}
+
+		ZnFactoryX::CreateCapsuleController(manager, _radius, _height, _desc, _density, material);
+	
+		ZnCapsuleController* result = new CapsuleController;
+	}
+
+	ZonaiPhysics::ZnBoxController* ZnPhysicsX::CreateBoxController(
+		void* _userScene,
+		const Eigen::Vector3f& _extend, const ZnControllerDecs& _desc, float _density, const ZnMaterialID& _material)
+	{
 	}
 
 	/// <summary>

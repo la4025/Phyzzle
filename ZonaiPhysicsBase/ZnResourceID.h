@@ -22,6 +22,7 @@ namespace ZonaiPhysics
 		ZnResourceID(ZnResourceID&& _id) noexcept;
 		ZnResourceID& operator=(const ZnResourceID& _id);
 		ZnResourceID& operator=(ZnResourceID&& _id) noexcept;
+		ZnResourceID& operator=(std::nullptr_t) noexcept;
 
 		static const ZnResourceID None;
 
@@ -86,6 +87,15 @@ namespace ZonaiPhysics
 			data1 = std::move(_id.data1);
 			data2 = std::move(_id.data2);
 		}
+
+		return *this;
+	}
+
+	template <ResourceType _Ty>
+	ZnResourceID<_Ty>& ZnResourceID<_Ty>::operator=(std::nullptr_t) noexcept
+	{
+		data1 = 0;
+		data2 = 0;
 
 		return *this;
 	}

@@ -61,14 +61,40 @@ namespace Phyzzle
 		jumping = true;
 	}
 
-	void PlayerController::SetSlope(float _angle)
+	Eigen::Vector3f PlayerController::ComputeDirectionToSlope(const Eigen::Vector3f& _direction)
 	{
-		slope = _angle;
+		Eigen::Vector3f::
+	}
+
+	void PlayerController::SetSlopeDegLimiit(float _degree)
+	{
+		slopeLimit = _degree;
 	}
 
 	bool PlayerController::CanJump() const
 	{
 		return jumping == false;
+	}
+
+	bool PlayerController::IsSlopeLimit()
+	{
+		Eigen::Vector3f position = model->GetWorldPosition();
+		Eigen::Vector3f direction = Eigen::Vector3f::UnitY() * -1.f;
+		float distance = 0.5f;
+		unsigned int culling = 1 << PurahEngine::Physics::GetLayerID(L"Player");
+		unsigned int layers = ~culling;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Raycast(position, direction, distance, layers, info);
+		if (hit)
+		{
+			float cosTheta = Eigen::Vector3f::UnitY().dot(info.normal);
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+			float theta = std::acosf(cosTheta);
+			return (theta != 0.f) && (theta < slopeLimit);
+		}
+
+		return false;
 	}
 
 	bool PlayerController::IsGround()

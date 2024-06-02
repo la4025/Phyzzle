@@ -419,12 +419,22 @@ namespace Phyzzle
 		data.cameraCore->SetLocalPosition(currP);
 	}
 
+	void Player::CameraArmReset()
+	{
+		data.cameraArm->SetLocalPosition(Eigen::Vector3f::Zero());
+		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
+	}
+
+	void Player::CameraCoreReset()
+	{
+		data.cameraCore->SetLocalPosition(Eigen::Vector3f(0.f, 0.f, -9.f));
+		data.cameraCore->SetLocalRotation(Eigen::Quaternionf::Identity());
+	}
+
 	void Player::CameraReset()
 	{
-		data.acclerpFactor = 0.f;
-		data.cameraUpdate = true;
-
-		data.xAngle = 0.f;
+		CameraArmReset();
+		CameraCoreReset();
 	}
 
 	void Player::CameraAround()
@@ -470,6 +480,16 @@ namespace Phyzzle
 		}
 
 		CameraCoreUpdate();
+	}
+
+	void Player::CameraLookTo(const Eigen::Vector3f& _direction)
+	{
+
+	}
+
+	void Player::CameraLookAt(const Eigen::Vector3f& _position)
+	{
+
 	}
 
 	bool Player::RaycastFromCamera(float _distance,

@@ -89,6 +89,23 @@ namespace ZonaiPhysics
 		sceneList.clear();
 	}
 
+	physx::PxScene* ZnWorld::GetScene(void* _userScene)
+	{
+		if (sceneList.contains(_userScene))
+		{
+			return sceneList[_userScene];
+		}
+
+		return nullptr;
+	}
+
+	physx::PxScene* ZnWorld::GetCurrentScene()
+	{
+		assert(currScene != nullptr);
+
+		return currScene;
+	}
+
 	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
 	{
 		assert(_userScene != nullptr && _pxScene != nullptr);
@@ -139,6 +156,28 @@ namespace ZonaiPhysics
 
 		PX_RELEASE(scene);
 		sceneList.erase(_userScene);
+	}
+
+	void ZnWorld::SetManager(void* _userScene, physx::PxControllerManager* _manager)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			_manager->release();
+		}
+		else
+		{
+			controllerManager.insert({_userScene, _manager});
+		}
+	}
+
+	physx::PxControllerManager* ZnWorld::GetManager(void* _userScene)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			return controllerManager[_userScene];
+		}
+
+		return nullptr;
 	}
 
 	Eigen::Vector3f ZnWorld::GetGravity(void* _userScene)

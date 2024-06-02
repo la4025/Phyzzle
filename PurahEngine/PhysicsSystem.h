@@ -27,6 +27,8 @@ namespace ZonaiPhysics
 	class ZnPhysicsBase;
 
 	class ZnRigidBody;
+	class ZnBoxController;
+	class ZnCapsuleController;
 
 	class ZnCollider;
 
@@ -110,7 +112,10 @@ namespace PurahEngine
 		ZonaiPhysics::ZnMeshID			GetMeshID(const std::wstring& _name);
 
 	public:
-		ZonaiPhysics::ZnRigidBody*		CreateRigidBody(void* _gameObject) const;
+		ZonaiPhysics::ZnBoxController*			CreateBoxController(void* _gameObject) const;
+		ZonaiPhysics::ZnCapsuleController*		CreateCapsuleController(void* _gameObject) const;
+
+		ZonaiPhysics::ZnRigidBody*				CreateRigidBody(void* _gameObject) const;
 
 	public:
 		ZonaiPhysics::ZnCollider*		CreateBoxCollider(

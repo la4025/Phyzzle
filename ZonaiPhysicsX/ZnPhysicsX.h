@@ -75,6 +75,18 @@ namespace ZonaiPhysics
 		void					SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) override;
 
 	public:
+		ZnCapsuleController* CreateCapsuleController(
+			void* _userScene,
+			float _radius, float _height,
+			const ZnControllerDecs& _desc,
+			float _density, const ZnMaterialID& _material) override;
+
+		ZnBoxController* CreateBoxController(
+			void* _userScene,
+			const Eigen::Vector3f& _extend,
+			const ZnControllerDecs& _desc,
+			float _density, const ZnMaterialID& _material) override;
+
 		/// <summary>
 		/// Create RigidBoby
 		/// </summary>

@@ -12,6 +12,7 @@
 #include "ZnUtil.h"
 
 #include "ZnTransform.h"
+#include "ZnControllerDecs.h"
 
 #include "ZnFactoryX.h"
 
@@ -181,13 +182,54 @@ namespace ZonaiPhysics
 		return manager;
 	}
 
-	physx::PxController* ZnFactoryX::CreateController(physx::PxControllerManager* _manager)
+	physx::PxCapsuleController* ZnFactoryX::CreateCapsuleController(
+		physx::PxControllerManager* _manager, 
+		float _radius, float _height, 
+		const ZnControllerDecs& _desc, 
+		float _density, 
+		physx::PxMaterial* _material)
 	{
-		physx::PxCapsuleControllerDesc desc;
-		// desc.c
-		_manager->createController(desc);
+		using namespace physx;
 
-		return nullptr;
+		PxCapsuleControllerDesc desc;
+		desc.height = _height;
+		desc.radius = _radius;
+		desc.position = PxExtendedVec3( _desc.position.x(), _desc.position.y(), _desc.position.z());
+		desc.upDirection = EigenToPhysx(_desc.upDirection);
+		desc.stepOffset = _desc.stepOffset;
+		desc.slopeLimit = physx::PxDegToRad(_desc.slopeLimitDeg);
+		desc.contactOffset = _desc.contactOffset;
+		desc.density = _density;
+		desc.material = _material;
+		PxController* controller = _manager->createController(desc);
+		PxCapsuleController* capsuleController = dynamic_cast<PxCapsuleController*>(controller);
+
+		return capsuleController;
+	}
+
+	physx::PxBoxController* ZnFactoryX::CreateBoxController(
+		physx::PxControllerManager* _manager, 
+		const Eigen::Vector3f& _extend, 
+		const ZnControllerDecs& _desc,
+		float _density, physx::PxMaterial* _material)
+	{
+		using namespace physx;
+
+		PxBoxControllerDesc desc;
+		desc.halfSideExtent = _extend.x();
+		desc.halfHeight = _extend.y();
+		desc.halfForwardExtent = _extend.z();
+		desc.position = PxExtendedVec3(_desc.position.x(), _desc.position.y(), _desc.position.z());
+		desc.upDirection = EigenToPhysx(_desc.upDirection);
+		desc.stepOffset = _desc.stepOffset;
+		desc.slopeLimit = PxDegToRad(_desc.slopeLimitDeg);
+		desc.contactOffset = _desc.contactOffset;
+		desc.density = _density;
+		desc.material = _material;
+		PxController* controller = _manager->createController(desc);
+		PxBoxController* boxController = dynamic_cast<PxBoxController*>(controller);
+
+		return boxController;
 	}
 
 	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)

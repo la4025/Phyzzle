@@ -121,6 +121,20 @@ namespace Phyzzle
 	{
 		auto children = obj->GetGameObject()->GetTransform()->GetChildren();
 
+		auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+		if (model)
+		{
+			model->SetOutLineColor(color);
+			model->SetOutLine(value);
+		}
+
+		auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+		if (mesh)
+		{
+			mesh->SetOutLineColor(color);
+			mesh->SetOutLine(value);
+		}
+
 		for (auto& child : children)
 		{
 			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
@@ -174,8 +188,8 @@ namespace Phyzzle
 			if (e->attachable && _object != e->attachable)
 			{
 				Attach(e, e->attachable);
-				e->attachable = nullptr;
 				e->attachable->attachable = nullptr;
+				e->attachable = nullptr;
 				return true;
 			}
 		}

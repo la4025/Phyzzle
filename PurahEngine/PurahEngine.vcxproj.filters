@@ -121,6 +121,9 @@
     <Filter Include="Component\2. Physics\Collider\Custom">
       <UniqueIdentifier>{24fa6f73-b036-4f88-b39e-4daf824a248e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\2. Physics\CharacterController">
+      <UniqueIdentifier>{d5564171-4f26-4196-87fa-d5bea053c564}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -294,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="CustomCollider.cpp">
       <Filter>Component\2. Physics\Collider\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterController.cpp">
+      <Filter>Component\2. Physics\CharacterController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -510,6 +516,9 @@
     </ClInclude>
     <ClInclude Include="PurahColor.h">
       <Filter>Component\3. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterController.h">
+      <Filter>Component\2. Physics\CharacterController</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

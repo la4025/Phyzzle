@@ -387,6 +387,15 @@ namespace PurahEngine
 		return meshNameTable[_name];
 	}
 
+	ZonaiPhysics::ZnBoxController* PhysicsSystem::CreateBoxController(void* _gameObject) const
+	{
+	}
+
+	ZonaiPhysics::ZnCapsuleController* PhysicsSystem::CreateCapsuleController(void* _gameObject) const
+	{
+
+	}
+
 	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(void* _gameObject) const
 	{
 		return physics->CreateRigidBody(_gameObject);
