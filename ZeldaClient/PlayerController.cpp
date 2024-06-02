@@ -63,7 +63,7 @@ namespace Phyzzle
 
 	Eigen::Vector3f PlayerController::ComputeDirectionToSlope(const Eigen::Vector3f& _direction)
 	{
-		Eigen::Vector3f::
+		return Eigen::Vector3f::Zero();
 	}
 
 	void PlayerController::SetSlopeDegLimiit(float _degree)

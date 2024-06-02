@@ -22,6 +22,8 @@
 
 namespace ZonaiPhysics
 {
+	std::unordered_map<void*, physx::PxControllerManager*> ZnWorld::controllerManager{};
+
 	physx::PxScene*										ZnWorld::currScene = nullptr;
 	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};

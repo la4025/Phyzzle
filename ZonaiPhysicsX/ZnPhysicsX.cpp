@@ -207,13 +207,15 @@ namespace ZonaiPhysics
 
 		ZnFactoryX::CreateCapsuleController(manager, _radius, _height, _desc, _density, material);
 	
-		ZnCapsuleController* result = new CapsuleController;
+		// ZnCapsuleController* result = new CapsuleController;
+		return nullptr;
 	}
 
 	ZonaiPhysics::ZnBoxController* ZnPhysicsX::CreateBoxController(
 		void* _userScene,
 		const Eigen::Vector3f& _extend, const ZnControllerDecs& _desc, float _density, const ZnMaterialID& _material)
 	{
+		return nullptr;
 	}
 
 	/// <summary>

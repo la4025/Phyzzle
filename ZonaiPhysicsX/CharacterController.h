@@ -1,9 +1,14 @@
 #pragma once
 #include <Eigen/Dense>
 
+namespace physx
+{
+	class PxController;
+}
+
 namespace ZonaiPhysics
 {
-	template <typename _Base, typename _Ty>
+	// template <typename _Base, typename _Ty>
 	class CharacterController
 	{
 	public:

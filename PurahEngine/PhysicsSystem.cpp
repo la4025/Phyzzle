@@ -389,11 +389,12 @@ namespace PurahEngine
 
 	ZonaiPhysics::ZnBoxController* PhysicsSystem::CreateBoxController(void* _gameObject) const
 	{
+		return nullptr;
 	}
 
 	ZonaiPhysics::ZnCapsuleController* PhysicsSystem::CreateCapsuleController(void* _gameObject) const
 	{
-
+		return nullptr;
 	}
 
 	ZonaiPhysics::ZnRigidBody* PhysicsSystem::CreateRigidBody(void* _gameObject) const

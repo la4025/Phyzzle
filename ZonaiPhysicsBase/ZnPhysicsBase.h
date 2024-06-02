@@ -72,11 +72,13 @@ namespace ZonaiPhysics
 
 	public:
 		virtual ZnCapsuleController* CreateCapsuleController(
+			void* _userScene,
 			float _radius, float _height,
 			const ZnControllerDecs& _desc,
 			float _density, const ZnMaterialID& _material) = 0;
 
 		virtual ZnBoxController* CreateBoxController(
+			void* _userScene,
 			const Eigen::Vector3f& _extend,
 			const ZnControllerDecs& _desc,
 			float _density, const ZnMaterialID& _material) = 0;
