@@ -12,6 +12,12 @@ namespace Phyzzle
 	{
 		auto& othertag = other->GetGameObject()->tag;
 		
+		// containTag가 없다면 리턴
+		if (containTags.size() == 0)
+		{
+			return;
+		}
+
 		for (auto& containTag : containTags)
 		{
 			if (othertag.IsContain(containTag) == false)
@@ -32,6 +38,12 @@ namespace Phyzzle
 	void TriggerDevice::OnTriggerExit(const PurahEngine::Collider* other)
 	{
 		auto& othertag = other->GetGameObject()->tag;
+
+		// containTag가 없다면 리턴
+		if (containTags.size() == 0)
+		{
+			return;
+		}
 
 		for (auto& containTag : containTags)
 		{
