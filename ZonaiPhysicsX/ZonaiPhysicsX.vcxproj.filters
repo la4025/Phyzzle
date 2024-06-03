@@ -71,7 +71,13 @@
     <ClCompile Include="Collider.cpp">
       <Filter>Object\Collider\Base</Filter>
     </ClCompile>
-    <ClCompile Include="ZnController.cpp">
+    <ClCompile Include="CharacterController.cpp">
+      <Filter>Object\CharactorController</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxController.cpp">
+      <Filter>Object\CharactorController</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleController.cpp">
       <Filter>Object\CharactorController</Filter>
     </ClCompile>
   </ItemGroup>
@@ -156,7 +162,13 @@
     <ClInclude Include="ZnTriangleMeshData.h">
       <Filter>0. Core\Resource\Struct</Filter>
     </ClInclude>
-    <ClInclude Include="ZnController.h">
+    <ClInclude Include="CharacterController.h">
+      <Filter>Object\CharactorController</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxController.h">
+      <Filter>Object\CharactorController</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleController.h">
       <Filter>Object\CharactorController</Filter>
     </ClInclude>
   </ItemGroup>

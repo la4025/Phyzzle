@@ -18,9 +18,12 @@ namespace  Phyzzle
 		void LookAt(const Eigen::Vector3f& _worldPosition);
 		void Jump();
 
-		void SetSlope(float _angle);
+		Eigen::Vector3f ComputeDirectionToSlope(const Eigen::Vector3f& _direction);
+
+		void SetSlopeDegLimiit(float _angle);
 
 		bool CanJump() const;
+		bool IsSlopeLimit();
 		bool IsGround();
 		bool IsWall();
 		bool IsObstacle();
@@ -43,7 +46,7 @@ namespace  Phyzzle
 	private:
 		float jumpPower = 0.f;
 		bool jumping = false;
-		float slope;
+		float slopeLimit;
 
 		ZonaiPhysics::ZnQueryDesc groundCheck;
 	};

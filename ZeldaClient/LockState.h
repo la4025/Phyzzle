@@ -18,6 +18,8 @@ namespace Phyzzle
 		void StateStay() override;
 
 	private:
+		void Stick_L() override;
+		void Stick_R() override;
 		void Click_B() override;
 		void Click_LB() override;
 
@@ -27,6 +29,7 @@ namespace Phyzzle
 		PzObject* pzObject = nullptr;
 
 	private:
+		void CameraAround();
 		bool Aim();
 		void Select();
 		void Cancel() const;

@@ -114,18 +114,18 @@ typedef PxFlags<PxControllerCollisionFlag::Enum, PxU8> PxControllerCollisionFlag
 PX_FLAGS_OPERATORS(PxControllerCollisionFlag::Enum, PxU8)
 
 /**
-\brief Describes a controller's internal state.
+\brief 컨트롤러의 내부 상태를 설명합니다.
 */
 struct PxControllerState
 {
-	PxVec3				deltaXP;				//!< delta position vector for the object the CCT is standing/riding on. Not always match the CCT delta when variable timesteps are used.
-	PxShape*			touchedShape;			//!< Shape on which the CCT is standing
-	PxRigidActor*		touchedActor;			//!< Actor owning 'touchedShape'
-	PxObstacleHandle	touchedObstacleHandle;	// Obstacle on which the CCT is standing
-	PxU32				collisionFlags;			//!< Last known collision flags (PxControllerCollisionFlag)
-	bool				standOnAnotherCCT;		//!< Are we standing on another CCT?
-	bool				standOnObstacle;		//!< Are we standing on a user-defined obstacle?
-	bool				isMovingUp;				//!< is CCT moving up or not? (i.e. explicit jumping)
+	PxVec3				deltaXP;				//!< CCT가 서 있는/타고 있는 객체의 위치 변경 벡터입니다. 가변 시간 간격을 사용할 때 항상 CCT의 위치 변경과 일치하지는 않습니다.
+	PxShape*			touchedShape;			//!< CCT가 서 있는 모양입니다.
+	PxRigidActor*		touchedActor;			//!< 'touchedShape'을 소유하는 액터입니다.
+	PxObstacleHandle	touchedObstacleHandle;	// CCT가 서 있는 장애물입니다.
+	PxU32				collisionFlags;			//!< 마지막으로 알려진 충돌 플래그입니다 (PxControllerCollisionFlag).
+	bool				standOnAnotherCCT;		//!< 다른 CCT 위에 서 있습니까?
+	bool				standOnObstacle;		//!< 사용자 정의 장애물 위에 서 있습니까?
+	bool				isMovingUp;				//!< CCT가 위로 이동 중인가요? (즉, 명시적인 점프)
 };
 
 /**
@@ -663,50 +663,48 @@ public:
 	virtual		PxControllerCollisionFlags	move(const PxVec3& disp, PxF32 minDist, PxF32 elapsedTime, const PxControllerFilters& filters, const PxObstacleContext* obstacles=NULL) = 0;
 
 	/**
-	\brief Sets controller's position.
+	\brief 컨트롤러의 위치를 설정합니다.
 
-	The position controlled by this function is the center of the collision shape.
+	이 함수로 제어되는 위치는 충돌 모양의 중심입니다.
 
-	\warning This is a 'teleport' function, it doesn't check for collisions.
-	\warning The character's position must be such that it does not overlap the static geometry.
+	\warning 이 함수는 '텔레포트' 기능으로 충돌을 확인하지 않습니다.
+	\warning 캐릭터의 위치는 정적 지오메트리와 겹치지 않아야 합니다.
 
-	To move the character under normal conditions use the #move() function.
+	일반적인 조건에서 캐릭터를 이동시키려면 #move() 함수를 사용하세요.
 
-	\param[in] position The new (center) positon for the controller.
-	\return Currently always returns true.
+	\param[in] position 컨트롤러의 새로운 (중심) 위치입니다.
+	\return 현재 항상 true를 반환합니다.
 
 	@see PxControllerDesc.position getPosition() getFootPosition() setFootPosition() move()
 	*/
 	virtual		bool					setPosition(const PxExtendedVec3& position) = 0;
 
 	/**
-	\brief Retrieve the raw position of the controller.
+	\brief 컨트롤러의 실제 위치를 가져옵니다.
 
-	The position retrieved by this function is the center of the collision shape. To retrieve the bottom position of the shape,
-	a.k.a. the foot position, use the getFootPosition() function.
+	이 함수로 가져오는 위치는 충돌 모양의 중심입니다. 모양의 하단 위치, 즉 발 위치를 가져오려면 getFootPosition() 함수를 사용하세요.
 
-	The position is updated by calls to move(). Calling this method without calling
-	move() will return the last position or the initial position of the controller.
+	이 위치는 move() 호출로 업데이트됩니다. move()를 호출하지 않고 이 메서드를 호출하면 마지막 위치나 컨트롤러의 초기 위치가 반환됩니다.
 
-	\return The controller's center position
+	\return 컨트롤러의 중심 위치
 
 	@see PxControllerDesc.position setPosition() getFootPosition() setFootPosition() move()
 	*/
 	virtual		const PxExtendedVec3&	getPosition()			const	= 0;
 
 	/**
-	\brief Set controller's foot position.
+	\brief 컨트롤러의 발 위치를 설정합니다.
 
-	The position controlled by this function is the bottom of the collision shape, a.k.a. the foot position.
+	이 함수로 제어되는 위치는 충돌 모양의 하단, 즉 발 위치입니다.
 
-	\note The foot position takes the contact offset into account
+	\note 발 위치는 접촉 오프셋을 고려합니다.
 
-	\warning This is a 'teleport' function, it doesn't check for collisions.
+	\warning 이 함수는 '텔레포트' 기능으로 충돌을 확인하지 않습니다.
 
-	To move the character under normal conditions use the #move() function.
+	일반적인 조건에서 캐릭터를 이동시키려면 #move() 함수를 사용하세요.
 
-	\param[in] position The new (bottom) positon for the controller.
-	\return Currently always returns true.
+	\param[in] position 컨트롤러의 새로운 (하단) 위치입니다.
+	\return 현재 항상 true를 반환합니다.
 
 	@see PxControllerDesc.position setPosition() getPosition() getFootPosition() move()
 	*/
@@ -733,9 +731,9 @@ public:
 	virtual		PxRigidDynamic*			getActor()				const	= 0;
 
 	/**
-	\brief The step height.
+	\brief 스텝 높이.
 
-	\param[in] offset The new step offset for the controller.
+	\param[in] offset 컨트롤러의 새로운 스텝 오프셋입니다.
 
 	@see PxControllerDesc.stepOffset
 	*/
@@ -751,9 +749,9 @@ public:
 	virtual	    PxF32					getStepOffset()						const		=0;
 
 	/**
-	\brief Sets the non-walkable mode for the CCT.
+	\brief CCT의 비보행 모드를 설정합니다.
 
-	\param[in] flag The new value of the non-walkable mode.
+	\param[in] flag 비보행 모드의 새로운 값입니다.
 
 	@see PxControllerNonWalkableMode
 	*/
@@ -769,18 +767,18 @@ public:
 	virtual		PxControllerNonWalkableMode::Enum	getNonWalkableMode()				const		= 0;
 
 	/**
-	\brief Retrieve the contact offset.
+	\brief 접촉 오프셋을 가져옵니다.
 
-	\return The contact offset for the controller.
+	\return 컨트롤러의 접촉 오프셋.
 
 	@see PxControllerDesc.contactOffset
 	*/
 	virtual	    PxF32					getContactOffset()					const		=0;
 
 	/**
-	\brief Sets the contact offset.
+	\brief 접촉 오프셋을 설정합니다.
 
-	\param[in] offset	The contact offset for the controller.
+	\param[in] offset 컨트롤러의 접촉 오프셋.
 
 	@see PxControllerDesc.contactOffset
 	*/
@@ -805,39 +803,42 @@ public:
 	virtual		void					setUpDirection(const PxVec3& up)				=0;
 
 	/**
-	\brief Retrieve the slope limit.
+	\brief 경사 한계를 가져옵니다.
 
-	\return The slope limit for the controller.
+	\return 컨트롤러의 경사 한계.
 
 	@see PxControllerDesc.slopeLimit
 	*/
 	virtual	    PxF32					getSlopeLimit()						const		=0;
 
 	/**
-	\brief Sets the slope limit.
+	\brief 경사 제한을 설정합니다.
 
-	\note	This feature can not be enabled at runtime, i.e. if the slope limit is zero when creating the CCT
-	(which disables the feature) then changing the slope limit at runtime will not have any effect, and the call
-	will be ignored.
+	\note	이 기능은 런타임에서 활성화할 수 없습니다.
+			즉, CCT를 생성할 때 경사 제한이 0인 경우(이 기능이 비활성화됨)
+			런타임에서 경사 제한을 변경해도 효과가 없으며 호출은 무시됩니다.
 
-	\param[in]	slopeLimit	The slope limit for the controller.
+	\param[in] slopeLimit 컨트롤러의 경사 제한입니다.
 
 	@see PxControllerDesc.slopeLimit
 	*/
 	virtual	    void					setSlopeLimit(PxF32 slopeLimit)					=0;
 
 	/**
-	\brief Flushes internal geometry cache.
-	
-	The character controller uses caching in order to speed up collision testing. The cache is
-	automatically flushed when a change to static objects is detected in the scene. For example when a
-	static shape is added, updated, or removed from the scene, the cache is automatically invalidated.
-	
-	However there may be situations that cannot be automatically detected, and those require manual
-	invalidation of the cache. Currently the user must call this when the filtering behavior changes (the
-	PxControllerFilters parameter of the PxController::move call).  While the controller in principle 
-	could detect a change in these parameters, it cannot detect a change in the behavior of the filtering 
-	function.
+	\brief 내부 지오메트리 캐시를 플러시합니다.
+
+	캐릭터 컨트롤러는 충돌 테스트를 가속화하기 위해 캐싱을 사용합니다.
+	캐시는 장면에서 정적 객체에 변경이 감지될 때 자동으로 플러시됩니다.
+	예를 들어, 정적 모양이 장면에 추가,
+	업데이트 또는 제거될 때 캐시가 자동으로 무효화됩니다.
+
+	그러나 자동으로 감지할 수 없는 상황이 있을 수 있으며,
+	이러한 경우 캐시를 수동으로 무효화해야 합니다.
+	현재 사용자는 필터링 동작이 변경될 때
+	(즉, PxController::move 호출의 PxControllerFilters 매개변수)
+	이 기능을 호출해야 합니다.
+	이론적으로 컨트롤러는 이러한 매개변수의 변경을 감지할 수 있지만,
+	필터링 함수의 동작 변경은 감지할 수 없습니다.
 
 	@see PxController.move
 	*/
@@ -869,9 +870,9 @@ public:
 	virtual		void					setUserData(void* userData)		= 0;
 
 	/**
-	\brief Returns information about the controller's internal state.
+	\brief 컨트롤러의 내부 상태에 대한 정보를 반환합니다.
 
-	\param[out] state The controller's internal state
+	\param[out] state 컨트롤러의 내부 상태
 
 	@see PxControllerState
 	*/

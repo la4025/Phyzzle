@@ -38,6 +38,7 @@ namespace ZonaiPhysics
 {
 	class ZnSimulationCallback;
 
+	struct ZnControllerDecs;
 	class RigidBody;
 
 	class Collider;
@@ -79,7 +80,16 @@ namespace ZonaiPhysics
 		static RigidBody*				CreateStaticRigidBody(void* _userData);
 
 		static physx::PxControllerManager* CreateControllerManager(physx::PxScene* _scene);
-		static physx::PxController*		CreateController(physx::PxControllerManager*);
+		static physx::PxCapsuleController* CreateCapsuleController(
+			physx::PxControllerManager*, 
+			float _radius, float _height, 
+			const ZnControllerDecs& _desc, 
+			float _density, physx::PxMaterial* _material);
+		static physx::PxBoxController*		CreateBoxController(
+			physx::PxControllerManager*, 
+			const Eigen::Vector3f& _extend,
+			const ZnControllerDecs& _desc,
+			float _density, physx::PxMaterial* _material);
 
 		static physx::PxShape*			CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material);
 		static physx::PxShape*			CreateSphereShape(float _radius, const physx::PxMaterial* _material);

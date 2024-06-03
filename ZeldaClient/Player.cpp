@@ -404,27 +404,37 @@ namespace Phyzzle
 
 		unsigned int layers = ~(1 << PurahEngine::Physics::GetLayerID(L"Player"));
 
-		bool hit = PurahEngine::Physics::Spherecast(
-			0.3f,
-			modelPos, Eigen::Quaternionf::Identity(),
-			dir * -1.f,
-			currP.z() * -1.f,
-			layers, info);
+		//bool hit = PurahEngine::Physics::Spherecast(
+		//	0.3f,
+		//	modelPos, Eigen::Quaternionf::Identity(),
+		//	dir * -1.f,
+		//	currP.z() * -1.f,
+		//	layers, info);
 
-		if (hit)
-		{
-			currP.z() = info.distance * -1.f;
-		}
+		//if (hit)
+		//{
+		//	currP.z() = info.distance * -1.f;
+		//}
 
 		data.cameraCore->SetLocalPosition(currP);
 	}
 
+	void Player::CameraArmReset()
+	{
+		data.cameraArm->SetLocalPosition(Eigen::Vector3f::Zero());
+		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
+	}
+
+	void Player::CameraCoreReset()
+	{
+		data.cameraCore->SetLocalPosition(Eigen::Vector3f(0.f, 0.f, -9.f));
+		data.cameraCore->SetLocalRotation(Eigen::Quaternionf::Identity());
+	}
+
 	void Player::CameraReset()
 	{
-		data.acclerpFactor = 0.f;
-		data.cameraUpdate = true;
-
-		data.xAngle = 0.f;
+		CameraArmReset();
+		CameraCoreReset();
 	}
 
 	void Player::CameraAround()
@@ -472,6 +482,16 @@ namespace Phyzzle
 		CameraCoreUpdate();
 	}
 
+	void Player::CameraLookTo(const Eigen::Vector3f& _direction)
+	{
+
+	}
+
+	void Player::CameraLookAt(const Eigen::Vector3f& _position)
+	{
+
+	}
+
 	bool Player::RaycastFromCamera(float _distance,
 		PurahEngine::RigidBody** _outBody)
 	{
@@ -517,7 +537,9 @@ namespace Phyzzle
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		ZonaiPhysics::ZnQueryInfo info;
 
-		unsigned int culling = (1 << PurahEngine::Physics::GetLayerID(L"Player")) | (1 << PurahEngine::Physics::GetLayerID(L"PrisonBars"));
+		unsigned int playerLayer = 1ul << PurahEngine::Physics::GetLayerID(L"Player");
+		unsigned int tempLayer = 1ul << PurahEngine::Physics::GetLayerID(L"PrisonBars");
+		unsigned int culling = (playerLayer | tempLayer);
 		unsigned int layers = ~culling;
 
 		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);

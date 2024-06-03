@@ -41,6 +41,8 @@ namespace Phyzzle
 		SpringCalculate();
 		ApplyObjectVelocity();
 		ResetObjectVelocity();
+
+		CameraUpdate();
 	}
 #pragma endregion StateEvent
 
@@ -279,9 +281,18 @@ namespace Phyzzle
 		player->PlayerMove(_speed);
 	}
 
-	void AttachHoldState::CameraAround() const
+	void AttachHoldState::CameraUpdate() const
 	{
-		player->CameraAround();
+		auto playerPos = player->data.modelCore->GetWorldPosition();
+		auto bodyPos = selectBody->GetPosition();
+		auto focus = (bodyPos - playerPos) / 2.f;
+
+		player->CameraLookTo(playerPos + focus);
+	}
+
+	void AttachHoldState::CameraReset() const
+	{
+		player->CameraReset();
 	}
 
 	void AttachHoldState::StateCancel() const
@@ -326,6 +337,9 @@ namespace Phyzzle
 
 	void AttachHoldState::ApplyObjectVelocity() const
 	{
+		// selectBody->AddForce(targetVelocity + springL, ZonaiPhysics::Velocity_Change);
+		// selectBody->AddTorque(targetAngularVelocity + springR, ZonaiPhysics::Velocity_Change);
+		
 		selectBody->SetLinearVelocity(targetVelocity + springL);
 		selectBody->SetAngularVelocity(targetAngularVelocity + springR);
 	}
@@ -425,7 +439,6 @@ namespace Phyzzle
 	void AttachHoldState::ObjectYTranslate(float _distance)
 	{
 		// 거리 비교해야함.
-
 		ObjectTranslate(Eigen::Vector3f::UnitY(), _distance);
 	}
 

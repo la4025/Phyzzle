@@ -22,6 +22,8 @@
 
 namespace ZonaiPhysics
 {
+	std::unordered_map<void*, physx::PxControllerManager*> ZnWorld::controllerManager{};
+
 	physx::PxScene*										ZnWorld::currScene = nullptr;
 	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};
@@ -89,6 +91,23 @@ namespace ZonaiPhysics
 		sceneList.clear();
 	}
 
+	physx::PxScene* ZnWorld::GetScene(void* _userScene)
+	{
+		if (sceneList.contains(_userScene))
+		{
+			return sceneList[_userScene];
+		}
+
+		return nullptr;
+	}
+
+	physx::PxScene* ZnWorld::GetCurrentScene()
+	{
+		assert(currScene != nullptr);
+
+		return currScene;
+	}
+
 	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
 	{
 		assert(_userScene != nullptr && _pxScene != nullptr);
@@ -141,6 +160,28 @@ namespace ZonaiPhysics
 		sceneList.erase(_userScene);
 	}
 
+	void ZnWorld::SetManager(void* _userScene, physx::PxControllerManager* _manager)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			_manager->release();
+		}
+		else
+		{
+			controllerManager.insert({_userScene, _manager});
+		}
+	}
+
+	physx::PxControllerManager* ZnWorld::GetManager(void* _userScene)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			return controllerManager[_userScene];
+		}
+
+		return nullptr;
+	}
+
 	Eigen::Vector3f ZnWorld::GetGravity(void* _userScene)
 	{
 		assert(currScene != nullptr);
@@ -170,8 +211,9 @@ namespace ZonaiPhysics
 		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
 		filter.flags |= physx::PxQueryFlag::ePREFILTER;
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
+		filter.flags |= physx::PxQueryFlag::eSTATIC;
 		filter.data.setToDefault();
-		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+		filter.data.word1 = static_cast<physx::PxU32>(_desc.queryLayer);
 
 		physx::PxQueryFilterCallback* callback = &queryFilter;
 		const physx::PxQueryCache* cache = nullptr;

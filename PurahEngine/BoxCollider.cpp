@@ -10,7 +10,11 @@ namespace PurahEngine
 	{
 		auto& physicsSystem = PhysicsSystem::GetInstance();
 
-		physicsSystem.FreeObject(znCollider, this->GetGameObject());
+		if (znCollider)
+		{
+			physicsSystem.FreeObject(znCollider, this->GetGameObject());
+			znCollider = nullptr;
+		}
 	}
 
 	void BoxCollider::PostInitialize()
@@ -25,12 +29,6 @@ namespace PurahEngine
 			size.x() * 0.5f * scale.x(), size.y() * 0.5f * scale.y(), size.z() * 0.5f * scale.z(),
 			physicsMaterial
 		);
-
-		if (!znCollider)
-		{
-			GetGameObject()->DeleteComponent(this);
-			return;
-		}
 
 		Collider::SetUserData();
 

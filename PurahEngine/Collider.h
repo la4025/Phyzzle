@@ -56,6 +56,7 @@ namespace PurahEngine
         std::wstring physicsMaterial;
         bool isTrigger = false;
         uint32_t layer = 0;
+        bool run = false;
         ZonaiPhysics::ZnCollider* znCollider = nullptr;
         Eigen::Vector3f positionOffset{ Eigen::Vector3f::Zero() };
         Eigen::Quaternionf rotationOffset{ Eigen::Quaternionf::Identity() };
