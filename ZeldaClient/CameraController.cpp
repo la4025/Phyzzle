@@ -7,6 +7,14 @@ namespace Phyzzle
 
 	}
 
+	void CameraController::Update()
+	{
+		if (newTransform)
+		{
+
+		}
+	}
+
 	Eigen::Vector3f CameraController::GetArmWorldDirection()
 	{
 		return cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitZ();
@@ -24,7 +32,6 @@ namespace Phyzzle
 
 	void CameraController::CoreReset()
 	{
-
 	}
 
 	void CameraController::ArmRotateY(float _angle)
@@ -49,6 +56,20 @@ namespace Phyzzle
 		const Eigen::Vector3f cameraRight = cameraCore->GetWorldRotation() * Eigen::Vector3f::UnitX();
 
 		cameraCore->Rotate(cameraRight, _angle);
+	}
+
+	void CameraController::CoreXTranslate(float _distance)
+	{
+	}
+
+	void CameraController::CoreYTranslate(float _distance)
+	{
+
+	}
+
+	void CameraController::CoreZTranslate(float _distance)
+	{
+
 	}
 
 	void CameraController::ArmRotate(const Eigen::Vector3f& _axis, float _angle)

@@ -46,7 +46,9 @@ namespace Phyzzle
 		void						SelectBody(PzObject* _body);
 		void						DeselectBody(PzObject* _body);
 
+		void						ApplyOutlineSettings(PzObject* obj, const Eigen::Vector4f& color, bool value);
 		void						EnableOutline(PzObject*, bool, const Eigen::Vector4f& _targetColor = PurahColor::BlueViolet, const Eigen::Vector4f& _subColor = PurahColor::Yellow);
+
 
 		bool						TryAttach(PzObject* _base);
 		bool						Attach(PzObject* _base, PzObject* _other);

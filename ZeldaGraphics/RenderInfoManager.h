@@ -23,6 +23,7 @@ public:
 	const std::vector<RenderInfo*>& GetStringRenderInfo() const;
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetBillBoardRenderInfo() const;
 	const RenderInfo* GetCubeMapRenderInfo();
+	const std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>>& GetImageRenderInfo();
 
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetShadowRenderInfo() const;
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetFastOutLineRenderInfo() const;
@@ -43,6 +44,7 @@ private:
 	std::vector<RenderInfo*> stringRenderInfo;											// ID 5
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> billBoardRenderInfo;	// ID 6
 	RenderInfo* cubeMapRenderInfo;														// ID 7
+	std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>> imageRenderInfo;									// ID 8
 	
 	// Option RenderInfo
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> shadowRenderInfo;

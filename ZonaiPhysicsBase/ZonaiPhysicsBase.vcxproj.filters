@@ -70,6 +70,18 @@
     <ClInclude Include="ZnQueryDesc.h">
       <Filter>01. Struct</Filter>
     </ClInclude>
+    <ClInclude Include="ZnControllerDecs.h">
+      <Filter>01. Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnCapsuleController.h">
+      <Filter>00. Base\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnBoxController.h">
+      <Filter>00. Base\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnCharaterController.h">
+      <Filter>00. Base\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">
@@ -92,6 +104,9 @@
     </Filter>
     <Filter Include="01. Struct\Resource">
       <UniqueIdentifier>{993b72bd-fe1e-4602-ad82-6bb90f85f53e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Base\controller">
+      <UniqueIdentifier>{12f63489-f59d-4451-93cd-8390c1732640}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

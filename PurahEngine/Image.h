@@ -20,7 +20,7 @@ namespace PurahEngine
 		UI* ui;
 
 	private:
-		int layer;
+		unsigned int layer;
 		std::wstring textureName;
 
 	private:

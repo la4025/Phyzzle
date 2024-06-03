@@ -297,6 +297,12 @@
     <FxCompile Include="SpriteInstancingVS.hlsl">
       <Filter>Shader\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="ImageVS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="ImagePS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Buffers.hlsli">

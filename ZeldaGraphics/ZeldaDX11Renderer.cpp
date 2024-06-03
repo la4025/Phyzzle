@@ -325,6 +325,21 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	result = mDevice->CreateRasterizerState(&shadowRasterDesc, &shadowRasterState);
 	if (FAILED(result)) return false;
 
+	// Setup the raster description which will determine how and what polygons will be drawn.
+	shadowRasterDesc.AntialiasedLineEnable = false;
+	shadowRasterDesc.CullMode = D3D11_CULL_BACK;
+	shadowRasterDesc.DepthBias = 0;
+	shadowRasterDesc.DepthBiasClamp = 0.0f;
+	shadowRasterDesc.DepthClipEnable = false;
+	shadowRasterDesc.FillMode = D3D11_FILL_SOLID;
+	shadowRasterDesc.FrontCounterClockwise = false;
+	shadowRasterDesc.MultisampleEnable = false;
+	shadowRasterDesc.ScissorEnable = false;
+	shadowRasterDesc.SlopeScaledDepthBias = 1.0f;
+	// Create the rasterizer state from the description we just filled out.
+	result = mDevice->CreateRasterizerState(&shadowRasterDesc, &spriteRasterState);
+	if (FAILED(result)) return false;
+
 	// Set up the viewport for rendering.
 	defaultViewPort.Width = (float)screenWidth;
 	defaultViewPort.Height = (float)screenHeight;
@@ -589,33 +604,55 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 
 #pragma endregion outline
 
+	{
+		// 깊이 스텐실 스테이트 생성
+		D3D11_DEPTH_STENCIL_DESC cubeMapDepthStencilDesc = {};
+		cubeMapDepthStencilDesc.DepthEnable = TRUE; // 깊이 테스트를 활성화합니다.
+		cubeMapDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // 깊이 버퍼에 쓰기를 허용합니다.
+		cubeMapDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL; // 깊이 테스트 함수를 설정합니다. 여기서는 깊이가 작은 값일 때만 통과하도록 설정했습니다.
+		cubeMapDepthStencilDesc.StencilEnable = FALSE; // 스텐실 테스트를 비활성화합니다.
 
-	// 깊이 스텐실 스테이트 생성
-	D3D11_DEPTH_STENCIL_DESC cubeMapDepthStencilDesc = {};
-	cubeMapDepthStencilDesc.DepthEnable = TRUE; // 깊이 테스트를 활성화합니다.
-	cubeMapDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // 깊이 버퍼에 쓰기를 허용합니다.
-	cubeMapDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL; // 깊이 테스트 함수를 설정합니다. 여기서는 깊이가 작은 값일 때만 통과하도록 설정했습니다.
-	cubeMapDepthStencilDesc.StencilEnable = FALSE; // 스텐실 테스트를 비활성화합니다.
-
-	mDevice->CreateDepthStencilState(&cubeMapDepthStencilDesc, &cubeMapDepthStencilState);
-
+		mDevice->CreateDepthStencilState(&cubeMapDepthStencilDesc, &cubeMapDepthStencilState);
+	}
 
 	// 블렌드 상태 정의
-	D3D11_BLEND_DESC blendDesc;
-	ZeroMemory(&blendDesc, sizeof(blendDesc));
-	blendDesc.AlphaToCoverageEnable = FALSE;
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	{
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory(&blendDesc, sizeof(blendDesc));
+		blendDesc.AlphaToCoverageEnable = FALSE;
+		blendDesc.RenderTarget[0].BlendEnable = TRUE;
+		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	// 블렌드 스테이트 생성
-	result = mDevice->CreateBlendState(&blendDesc, &alphaBlendState);
-	if (FAILED(result)) return false;
+		// 블렌드 스테이트 생성
+		result = mDevice->CreateBlendState(&blendDesc, &alphaBlendState);
+		if (FAILED(result)) return false;
+	}
+
+	{
+		// 블렌드 상태 정의
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory(&blendDesc, sizeof(blendDesc));
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.IndependentBlendEnable = false;
+		blendDesc.RenderTarget[0].BlendEnable = TRUE; // 블렌딩을 활성화
+		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // 소스 색상의 알파 값 사용
+		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA; // 대상 색상의 알파 값 사용
+		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD; // 블렌딩 연산: 소스 색상 * 소스 알파 + (1 - 소스 알파) * 대상 색상
+		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		// 블렌드 스테이트 생성
+		result = mDevice->CreateBlendState(&blendDesc, &spriteBlendState);
+		if (FAILED(result)) return false;
+	}
 
 	debugMode = DebugMode::Normal;
 	debugModeBuffer = DebugMode::Normal;
@@ -665,6 +702,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		alphaBlendState->Release();
 		alphaBlendState = nullptr;
+	}
+	if (spriteBlendState)
+	{
+		spriteBlendState->Release();
+		spriteBlendState = nullptr;
 	}
 	if (cubeMapDepthStencilState)
 	{
@@ -880,6 +922,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		shadowRasterState->Release();
 		shadowRasterState = nullptr;
+	}
+	if (spriteRasterState)
+	{
+		spriteRasterState->Release();
+		spriteRasterState = nullptr;
 	}
 	if (directionalShadowDepthStencilView)
 	{
@@ -1128,9 +1175,8 @@ void ZeldaDX11Renderer::EndDraw()
 
 	DrawBillBoardRenderInfo();
 
-	BeginDrawSprite();
 	DrawSprite();
-	EndDrawSprite();
+	DrawImage();
 
 	DrawStringRenderInfo();
 
@@ -1295,15 +1341,15 @@ void ZeldaDX11Renderer::DrawLight(LightID lightID)
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, TextureID texture, int layer)
+void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer)
 {
-	DrawSprite(position, { 0.0f, 0.0f }, texture, layer);
+	DrawImage(position, { 0.0f, 0.0f }, texture, layer);
 }
 
-void ZeldaDX11Renderer::DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, int layer)
+void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer)
 {
 	// Render Type
-	RenderType renderType = RenderType::Sprite;
+	RenderType renderType = RenderType::Image;
 
 	// Render Option
 	RenderOption renderOption = RenderInfoOption::None;
@@ -1522,14 +1568,11 @@ void ZeldaDX11Renderer::DrawForward()
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 
-void ZeldaDX11Renderer::BeginDrawSprite()
-{
-	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-	spriteBatch->Begin(SpriteSortMode_Immediate, commonStates->NonPremultiplied(), nullptr, mDepthStencilState);
-}
-
 void ZeldaDX11Renderer::DrawSprite()
 {
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	spriteBatch->Begin(SpriteSortMode_Immediate, commonStates->NonPremultiplied(), nullptr, mDepthStencilState, spriteRasterState);
+
 	const static long wsize = 240;
 	const static long hsize = 135;
 	const static long space = 20;
@@ -1578,23 +1621,30 @@ void ZeldaDX11Renderer::DrawSprite()
 	}
 #pragma endregion
 
-	const auto& spriteRenderInfo = RenderInfoManager::GetInstance().GetSpriteRenderInfo();
-
-	for (auto& [key, value] : spriteRenderInfo)
-	{
-		for (int i = 0; i < value.size(); i++)
-		{
-			DrawSpriteRenderInfo(value[i]);
-		}
-	}
-}
-
-void ZeldaDX11Renderer::EndDrawSprite()
-{
 	spriteBatch->End();
 
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 	// Sprite Batch에서 사용하는 0번 슬롯의 리소스를 해제한다.
+	mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
+	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+	mDeviceContext->RSSetState(defaultRasterState);
+}
+
+void ZeldaDX11Renderer::DrawImage()
+{
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->RSSetState(spriteRasterState);
+	float alphaBlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	mDeviceContext->OMSetBlendState(spriteBlendState, alphaBlendFactor, 0xFFFFFFFF);
+
+	const auto& imageRenderInfo = RenderInfoManager::GetInstance().GetImageRenderInfo();
+
+	for (auto& [key, value] : imageRenderInfo)
+	{
+		DrawImageRenderInfo(value);
+	}
+
+	ID3D11ShaderResourceView* nullSRV = nullptr;
 	mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
 	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 	mDeviceContext->RSSetState(defaultRasterState);
@@ -2179,26 +2229,44 @@ void ZeldaDX11Renderer::DrawBlendingAnimationDirectionalShadow(RenderInfo* rende
 		blendingAnimationShadowMapShader);
 }
 
-void ZeldaDX11Renderer::DrawSpriteRenderInfo(RenderInfo* renderInfo)
+void ZeldaDX11Renderer::DrawImageRenderInfo(RenderInfo* renderInfo)
 {
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 	ZeldaTexture* texture = ResourceManager::GetInstance().GetTexture(renderInfo->instancingKey.textureID);
+	ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetSquareMesh();
+
+	if (renderInfo->instancingValue.size.x <= 0.0f)
+	{
+		renderInfo->instancingValue.size.x = texture->GetWidth();
+	}
+
+	if (renderInfo->instancingValue.size.y <= 0.0f)
+	{
+		renderInfo->instancingValue.size.y = texture->GetHeight();
+	}
 
 	float layer = static_cast<float>(renderInfo->instancingValue.layer);
 
-	if (renderInfo->instancingValue.size.x == 0.0f && renderInfo->instancingValue.size.y == 0.0f)
-	{
-		spriteBatch->Draw(texture->GetTexture(), renderInfo->instancingValue.position);
-	}
-	else
-	{
-		RECT rect;
-		rect.left = renderInfo->instancingValue.position.x;
-		rect.right = renderInfo->instancingValue.position.x + renderInfo->instancingValue.size.x;
-		rect.top = renderInfo->instancingValue.position.y;
-		rect.bottom = renderInfo->instancingValue.position.y + renderInfo->instancingValue.size.y;
+	XMMATRIX scale = XMMatrixScaling(renderInfo->instancingValue.size.x, renderInfo->instancingValue.size.y, 1.0f);
+	XMMATRIX translation = XMMatrixTranslation(renderInfo->instancingValue.size.x / 2.0f + renderInfo->instancingValue.position.x - static_cast<float>(screenWidth) / 2.0f, -renderInfo->instancingValue.size.y / 2.0f - renderInfo->instancingValue.position.y + static_cast<float>(screenHeight) / 2.0f, layer);
 
-		spriteBatch->Draw(texture->GetTexture(), rect, nullptr, Colors::White, 0.0f, { 0.0f, 0.0f }, SpriteEffects_None, layer);
-	}
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.world = XMMatrixTranspose(scale * translation);
+	matrixBuffer.view = XMMatrixTranspose(XMMatrixIdentity());
+	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetOrthoMatrix());
+	matrixBuffer.cameraFar = currentcamera->GetFar();
+	matrixVsConstBuffer->SetData(matrixBuffer);
+
+	MaterialBufferType materialBufferType;
+	materialBufferType.useSRGB = texture->UseSRGB();
+	materialConstBuffer->SetData(materialBufferType);
+
+	ConstantBufferManager::GetInstance().SetBuffer();
+
+	meshInstance->Render(mDeviceContext);
+	texture->SetDiffuseMapShaderResource(mDeviceContext);
+
+	spriteShader->Render(mDeviceContext, meshInstance->GetIndexCount());
 }
 
 void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)

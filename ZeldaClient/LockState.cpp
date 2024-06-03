@@ -18,9 +18,29 @@ namespace Phyzzle
 
 	}
 
+	void LockState::Stick_L()
+	{
+
+	}
+
+	void LockState::Stick_R()
+	{
+		CameraAround();
+	}
+
+	void LockState::Click_B()
+	{
+		IState::Click_B();
+	}
+
 	void LockState::Click_LB()
 	{
 		Cancel();
+	}
+
+	void LockState::CameraAround()
+	{
+		player->CameraAround();
 	}
 
 	bool LockState::Aim()
@@ -38,6 +58,11 @@ namespace Phyzzle
 			return false;
 
 		return true;
+	}
+
+	void LockState::Select()
+	{
+
 	}
 
 	void LockState::Cancel() const

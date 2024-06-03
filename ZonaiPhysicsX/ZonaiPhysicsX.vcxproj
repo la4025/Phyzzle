@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BoxController.h" />
     <ClInclude Include="CapsuleCollider.h" />
+    <ClInclude Include="CapsuleController.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderHelper.h" />
-    <ClInclude Include="ZnController.h" />
+    <ClInclude Include="CharacterController.h" />
     <ClInclude Include="ZnConvexMeshData.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -51,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="BoxController.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
+    <ClCompile Include="CapsuleController.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderHelper.cpp" />
     <ClCompile Include="ConvexCollider.cpp" />
@@ -68,7 +72,7 @@
     <ClCompile Include="RigidBodyHelper.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
-    <ClCompile Include="ZnController.cpp" />
+    <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="ZnFactoryX.cpp" />
     <ClCompile Include="ZnLayer.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />

@@ -169,8 +169,12 @@ namespace Phyzzle
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
 		void CameraCoreUpdate();
+		void CameraArmReset();
+		void CameraCoreReset();
 		void CameraReset();
 		void CameraAround();
+		void CameraLookTo(const Eigen::Vector3f& _direction);
+		void CameraLookAt(const Eigen::Vector3f& _position);
 
 		bool RaycastFromCamera(
 			float _distance, 
@@ -216,7 +220,6 @@ namespace Phyzzle
 		PlayerData data;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
-
 
 	private:
 		/// 사라질 변수들

@@ -22,6 +22,8 @@
 
 namespace ZonaiPhysics
 {
+	std::unordered_map<void*, physx::PxControllerManager*> ZnWorld::controllerManager{};
+
 	physx::PxScene*										ZnWorld::currScene = nullptr;
 	std::unordered_map<void*, physx::PxScene*>			ZnWorld::sceneList{};
 	std::map<void*, ZnWorld::Bodies>					ZnWorld::bodyList{};
@@ -89,6 +91,23 @@ namespace ZonaiPhysics
 		sceneList.clear();
 	}
 
+	physx::PxScene* ZnWorld::GetScene(void* _userScene)
+	{
+		if (sceneList.contains(_userScene))
+		{
+			return sceneList[_userScene];
+		}
+
+		return nullptr;
+	}
+
+	physx::PxScene* ZnWorld::GetCurrentScene()
+	{
+		assert(currScene != nullptr);
+
+		return currScene;
+	}
+
 	void ZnWorld::AddScene(void* _userScene, physx::PxScene* _pxScene)
 	{
 		assert(_userScene != nullptr && _pxScene != nullptr);
@@ -139,6 +158,28 @@ namespace ZonaiPhysics
 
 		PX_RELEASE(scene);
 		sceneList.erase(_userScene);
+	}
+
+	void ZnWorld::SetManager(void* _userScene, physx::PxControllerManager* _manager)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			_manager->release();
+		}
+		else
+		{
+			controllerManager.insert({_userScene, _manager});
+		}
+	}
+
+	physx::PxControllerManager* ZnWorld::GetManager(void* _userScene)
+	{
+		if (controllerManager.contains(_userScene))
+		{
+			return controllerManager[_userScene];
+		}
+
+		return nullptr;
 	}
 
 	Eigen::Vector3f ZnWorld::GetGravity(void* _userScene)
@@ -218,18 +259,20 @@ namespace ZonaiPhysics
 		const physx::PxQueryCache* cache = nullptr;
 		physx::PxReal offset = _desc.offset;
 
-		if (bool hit = currScene->sweep(
+		if (bool block = currScene->sweep(
 			_geom, 
 			transform, dir, distance, 
 			result, flag, 
 			filter, callback, 
 			cache, offset))
 		{
-			_out.bodyData = static_cast<RigidBody*>(result.block.actor->userData)->GetUserData();
-			_out.colliderData = static_cast<Collider*>(result.block.shape->userData)->GetUserData();
-			_out.position = PhysxToEigen(result.block.position);
-			_out.distance = result.block.distance;
-			_out.normal = PhysxToEigen(result.block.normal);
+			const physx::PxSweepHit* hit = &result.block;
+
+			_out.bodyData = static_cast<RigidBody*>(hit->actor->userData)->GetUserData();
+			_out.colliderData = static_cast<Collider*>(hit->shape->userData)->GetUserData();
+			_out.position = PhysxToEigen(hit->position);
+			_out.distance = hit->distance;
+			_out.normal = PhysxToEigen(hit->normal);
 
 			return true;
 		}
@@ -257,6 +300,11 @@ namespace ZonaiPhysics
 		physx::PxCapsuleGeometry geom(_radius, _height);
 
 		return GeometrySweep(geom, _desc, _out);
+	}
+
+	bool ZnWorld::GeometryOverLap(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		return true;
 	}
 
 	void ZnWorld::CreateCharactor()

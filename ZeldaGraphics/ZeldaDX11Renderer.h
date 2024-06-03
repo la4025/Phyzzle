@@ -125,8 +125,8 @@ public:
 
 	virtual void DrawLight(LightID lightID) override;
 
-	virtual void DrawSprite(const Eigen::Vector2f& position, TextureID texture, int layer) override;
-	virtual void DrawSprite(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, int layer) override;
+	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer) override;
+	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) override;
 
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize) override;
 
@@ -162,9 +162,8 @@ private:
 
 	void DrawDeferred();
 	void DrawForward();
-	void BeginDrawSprite();
 	void DrawSprite();
-	void EndDrawSprite();
+	void DrawImage();
 	void DrawBillBoardRenderInfo();
 
 	void DrawDeferredRenderInfo();
@@ -180,7 +179,7 @@ private:
 	void DrawModelDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light);
 	void DrawBlendingAnimationDirectionalShadow(RenderInfo* renderInfo, ZeldaLight* light);
 
-	void DrawSpriteRenderInfo(RenderInfo* renderInfo);
+	void DrawImageRenderInfo(RenderInfo* renderInfo);
 
 	void CreateShadowMap(ZeldaLight* light);
 	void DrawDeferredLight(ZeldaLight* light, unsigned int lightIndex);
@@ -211,9 +210,11 @@ private:
 	ID3D11RasterizerState* pointLightRasterState = nullptr;
 	ID3D11RasterizerState* cubeMapRasterState = nullptr;
 	ID3D11RasterizerState* shadowRasterState = nullptr;
+	ID3D11RasterizerState* spriteRasterState = nullptr;
 	ID3D11RasterizerState* currentRasterState = nullptr;
 
 	ID3D11BlendState* alphaBlendState = nullptr;
+	ID3D11BlendState* spriteBlendState = nullptr;
 
 	ID3D11DepthStencilState* cubeMapDepthStencilState = nullptr;
 

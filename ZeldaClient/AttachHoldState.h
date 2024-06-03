@@ -83,7 +83,8 @@ namespace Phyzzle
 		void SetSelectObject();
 
 		void PlayerMove(float _speed) const;					// 이동
-		void CameraAround() const;								// 카메라 회전
+		void CameraUpdate() const;								// 카메라 회전
+		void CameraReset() const;								// 카메라 회전
 		void StateCancel() const;										// Default 모드로 돌아감
 
 		void TrySelect();										// 선택
