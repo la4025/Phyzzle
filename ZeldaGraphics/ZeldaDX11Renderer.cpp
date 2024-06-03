@@ -1175,8 +1175,10 @@ void ZeldaDX11Renderer::EndDraw()
 
 	DrawBillBoardRenderInfo();
 
-	DrawSprite();
+	DrawSpriteRenderInfo();
 	DrawImage();
+
+	DrawDebugInfo();
 
 	DrawStringRenderInfo();
 
@@ -1418,6 +1420,55 @@ void ZeldaDX11Renderer::DrawBillBoard(const Eigen::Matrix4f& worldMatrix, Textur
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
+void ZeldaDX11Renderer::DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize)
+{
+	MeshID meshID = ResourceManager::GetInstance().GetSquareID();
+	ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(texture);
+
+	// Render Type
+	RenderType renderType = RenderType::Sprite;
+
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.meshID = meshID;
+	instancingKey.textureID = texture;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+
+	if (keepOriginSize)
+	{
+		DirectX::XMMATRIX sizeMatrix = DirectX::XMMatrixScaling(static_cast<float>(textureInstance->GetWidth()) / Texture::UnitSize, static_cast<float>(textureInstance->GetHeight()) / Texture::UnitSize, 1.0f);
+		DirectX::XMMATRIX matrixSRT = sizeMatrix * MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+
+		DirectX::XMVECTOR s;
+		DirectX::XMVECTOR r;
+		DirectX::XMVECTOR t;
+		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
+
+		// 크기를 조정하고 회전하지 않은 상태의 행렬로 가공하여 저장한다.
+		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+	}
+	else
+	{
+		DirectX::XMMATRIX matrixSRT = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+
+		DirectX::XMVECTOR s;
+		DirectX::XMVECTOR r;
+		DirectX::XMVECTOR t;
+		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
+
+		// 회전하지 않은 상태의 행렬로 가공하여 저장한다.
+		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+	}
+
+	// Register
+	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
+}
+
 void ZeldaDX11Renderer::DrawCubeMap(TextureID texture)
 {
 	// Render Type
@@ -1568,9 +1619,9 @@ void ZeldaDX11Renderer::DrawForward()
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 
-void ZeldaDX11Renderer::DrawSprite()
+void ZeldaDX11Renderer::DrawDebugInfo()
 {
-	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);
 	spriteBatch->Begin(SpriteSortMode_Immediate, commonStates->NonPremultiplied(), nullptr, mDepthStencilState, spriteRasterState);
 
 	const static long wsize = 240;
@@ -1628,6 +1679,53 @@ void ZeldaDX11Renderer::DrawSprite()
 	mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
 	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 	mDeviceContext->RSSetState(defaultRasterState);
+}
+
+void ZeldaDX11Renderer::DrawSpriteRenderInfo()
+{
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->RSSetState(defaultRasterState);
+
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	const auto& renderInfo = RenderInfoManager::GetInstance().GetSpriteRenderInfo();
+
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+	matrixBuffer.cameraFar = currentcamera->GetFar();
+	matrixVsConstBuffer->SetData(matrixBuffer);
+
+	InstancingMatrixBufferType* instancingMatrix = new InstancingMatrixBufferType();
+
+	for (auto& [key, value] : renderInfo)
+	{
+		ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(key.meshID);
+		meshInstance->RenderInstanced(mDeviceContext);
+
+		ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(key.textureID);
+		textureInstance->SetDiffuseMapShaderResource(mDeviceContext);
+
+		int instanceCount = 0;
+		for (int i = 0; i < value.size(); i++)
+		{
+			// Transpose해서 셰이더로 넘긴다.
+			instancingMatrix->instancingWorldMatrix[instanceCount % INSTANCING_MAX] = XMMatrixTranspose(value[i]->instancingValue.worldMatrix);
+
+			// 인스턴싱 가능한 최대 갯수로 끊어서 그리기
+			if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (instanceCount == value.size() - 1))
+			{
+				instancingMatrixVsConstBuffer->SetData(*instancingMatrix);
+				ConstantBufferManager::GetInstance().SetBuffer();
+
+				spriteShader->RenderInstanced(mDeviceContext, meshInstance->GetIndexCount(), (instanceCount % INSTANCING_MAX) + 1, 0);
+			}
+
+			instanceCount += 1;
+		}
+	}
+
+	delete instancingMatrix;
 }
 
 void ZeldaDX11Renderer::DrawImage()

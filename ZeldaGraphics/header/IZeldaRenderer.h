@@ -84,8 +84,22 @@ public:
 	// sprite를 size크기로 position 위치에 그린다. (size를 (0, 0)으로 설정하면 원본 크기로 그려진다.)
 	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) abstract;
 
-	// 빌보드를 그린다.
+	/// <summary>
+	/// 빌보드를 그린다.
+	/// </summary>
+	/// <param name="worldMatrix">: 중심 위치 </param>
+	/// <param name="texture">: 사용할 이미지 </param>
+	/// <param name="ccwRadianAngle">: 빌보드의 반시계 방향 회전 값(Radian) </param>
+	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize) abstract;
+
+	/// <summary>
+	/// Sprite를 그린다.
+	/// </summary>
+	/// <param name="worldMatrix">: 월드 변환 행렬 </param>
+	/// <param name="texture">: 사용할 이미지 </param>
+	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
+	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) abstract;
 
 	// 큐브맵을 그린다. 마지막으로 그린 단 하나만 그려진다.
 	virtual void DrawCubeMap(TextureID texture) abstract;
