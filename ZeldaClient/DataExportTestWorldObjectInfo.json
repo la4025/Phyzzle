@@ -585,7 +585,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 8,
+          "layer": 10,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -596,7 +596,7 @@
             "y": 0.9,
             "z": 0.9
           },
-          "physicsMaterial": "123123123123123131231231"
+          "physicsMaterial": "Object"
         },
         {
           "__Base__instanceID": -7142,
@@ -611,36 +611,9 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": 26990,
-          "__Base__Component": "BoxCollider",
-          "cType": 1,
-          "disableQuery": false,
-          "disableSimulation": false,
-          "isTrigger": false,
-          "layer": 8,
-          "positionOffset": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "size": {
-            "x": 0.9,
-            "y": 0.9,
-            "z": 0.9
-          },
-          "physicsMaterial": "123123123123123131231231"
-        },
-        {
-          "__Base__instanceID": 26994,
-          "__Base__Component": "RigidBody",
-          "isKinematic": false,
-          "useGravity": true,
-          "dynamicLock": 0,
-          "useAutoMass": false,
-          "density": 1.0,
-          "mass": 1.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.05
+          "__Base__instanceID": -16200,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -741,7 +714,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 11,
+          "layer": 10,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -752,11 +725,12 @@
             "y": 0.915,
             "z": 0.915
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         },
         {
-          "__Base__instanceID": -7782,
-          "__Base__Component": "Rewindable"
+          "__Base__instanceID": -17106,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -1252,7 +1226,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 8,
+          "layer": 10,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -1263,7 +1237,7 @@
             "y": 0.04,
             "z": 0.2297
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         }
       ]
     },
@@ -1383,6 +1357,11 @@
           },
           "modelName": "Prefab\\OneTon.fbx",
           "physicsMaterial": "Object"
+        },
+        {
+          "__Base__instanceID": -21990,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -1433,7 +1412,7 @@
     {
       "__Base__instanceID": -2350,
       "name": "OneTon (1)",
-      "active": false,
+      "active": true,
       "tag": [
         "Attachable",
         "Rewindable"
@@ -1477,17 +1456,13 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -2368,
-          "__Base__Component": "Rewindable"
-        },
-        {
           "__Base__instanceID": -2370,
           "__Base__Component": "ConvexCollider",
           "cType": 1,
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 8,
+          "layer": 10,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -1505,7 +1480,12 @@
             "z": 1.0
           },
           "modelName": "Prefab\\OneTon.fbx",
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
+        },
+        {
+          "__Base__instanceID": -21988,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -1588,17 +1568,13 @@
       },
       "components": [
         {
-          "__Base__instanceID": -6072,
-          "__Base__Component": "Rewindable"
-        },
-        {
           "__Base__instanceID": -6074,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 11,
+          "layer": 10,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -1609,7 +1585,7 @@
             "y": 0.05,
             "z": 2.18
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         },
         {
           "__Base__instanceID": -6080,
@@ -1624,20 +1600,9 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": 27022,
-          "__Base__Component": "RigidBody",
-          "isKinematic": false,
-          "useGravity": true,
-          "dynamicLock": 0,
-          "useAutoMass": false,
-          "density": 1.0,
-          "mass": 10.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.05
-        },
-        {
-          "__Base__instanceID": 27016,
-          "__Base__Component": "Rewindable"
+          "__Base__instanceID": -19658,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -1689,10 +1654,7 @@
       "__Base__instanceID": 26896,
       "name": "Abnor_Block",
       "active": true,
-      "tag": [
-        "Attachable",
-        "Rewindable"
-      ],
+      "tag": [],
       "transform": {
         "__Base__instanceID": 26894,
         "position": {
@@ -1720,10 +1682,6 @@
       },
       "components": [
         {
-          "__Base__instanceID": -9210,
-          "__Base__Component": "Rewindable"
-        },
-        {
           "__Base__instanceID": -9214,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
@@ -1742,7 +1700,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 11,
+          "layer": 10,
           "positionOffset": {
             "x": -1.013,
             "y": 0.47,
@@ -1753,7 +1711,7 @@
             "y": 1.98,
             "z": 1.98
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         },
         {
           "__Base__instanceID": -9220,
@@ -1762,7 +1720,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 11,
+          "layer": 10,
           "positionOffset": {
             "x": 1.0,
             "y": -0.5,
@@ -1773,7 +1731,12 @@
             "y": 1.98,
             "z": 1.98
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
+        },
+        {
+          "__Base__instanceID": -23864,
+          "__Base__Component": "PzObject",
+          "connectedObject": []
         }
       ]
     },
@@ -1825,11 +1788,7 @@
       "__Base__instanceID": 26804,
       "name": "Abnor_Block (1)",
       "active": true,
-      "tag": [
-        "Attachable",
-        "Rewindable",
-        "Trigger Object"
-      ],
+      "tag": [],
       "transform": {
         "__Base__instanceID": 26802,
         "position": {
@@ -1909,7 +1868,7 @@
           "physicsMaterial": "Object"
         },
         {
-          "__Base__instanceID": 26808,
+          "__Base__instanceID": -23862,
           "__Base__Component": "PzObject",
           "connectedObject": []
         }
@@ -4002,7 +3961,7 @@
             "y": 3.28,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Ground"
         }
       ]
     },
@@ -47123,7 +47082,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47134,7 +47093,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47174,7 +47133,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47185,7 +47144,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47225,7 +47184,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47236,7 +47195,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47276,7 +47235,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47287,7 +47246,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47327,7 +47286,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47338,7 +47297,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47378,7 +47337,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47389,7 +47348,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },
@@ -47429,7 +47388,7 @@
           "disableQuery": false,
           "disableSimulation": false,
           "isTrigger": false,
-          "layer": 0,
+          "layer": 7,
           "positionOffset": {
             "x": 0.0,
             "y": 0.0,
@@ -47440,7 +47399,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Wall"
         }
       ]
     },

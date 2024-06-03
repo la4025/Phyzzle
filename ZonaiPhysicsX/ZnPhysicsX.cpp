@@ -253,6 +253,7 @@ namespace ZonaiPhysics
 
 		if (_material == ZnMaterialID::None)
 		{
+			ZONAI_CAUTUON(Material is Null, Zonai Physics Error);
 			material = ResourceManager::GetPxMaterial(defaultMaterial);
 		}
 		else
@@ -299,6 +300,7 @@ namespace ZonaiPhysics
 
 		if (_material == ZnMaterialID::None)
 		{
+			ZONAI_CAUTUON(Material is Null, Zonai Physics Error);
 			material = ResourceManager::GetPxMaterial(defaultMaterial);
 		}
 		else
@@ -344,6 +346,7 @@ namespace ZonaiPhysics
 
 		if (_material == ZnMaterialID::None)
 		{
+			ZONAI_CAUTUON(Material is Null, Zonai Physics Error);
 			material = ResourceManager::GetPxMaterial(defaultMaterial);
 		}
 		else
@@ -392,6 +395,7 @@ namespace ZonaiPhysics
 
 		if (_material == ZnMaterialID::None)
 		{
+			ZONAI_CAUTUON(Material is Null, Zonai Physics Error);
 			material = ResourceManager::GetPxMaterial(defaultMaterial);
 		}
 		else
@@ -442,6 +446,7 @@ namespace ZonaiPhysics
 
 		if (_material == ZnMaterialID::None)
 		{
+			ZONAI_CAUTUON(Material is Null, Zonai Physics Error);
 			material = ResourceManager::GetPxMaterial(defaultMaterial);
 		}
 		else
