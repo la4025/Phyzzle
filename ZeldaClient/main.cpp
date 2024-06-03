@@ -14,6 +14,7 @@
 
 #include "LauncherPlatform.h"
 
+#include "TriggerDevice.h"
 #include "ButtonDevice.h"
 #include "DisconnectedWire.h"
 #include "Door.h"
@@ -67,6 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PzObject>("PzObject");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Rewindable>("Rewindable");
 
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::TriggerDevice>("TriggerDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ButtonDevice>("ButtonDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DisconnectedWire>("DisconnectedWire");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Door>("Door");

@@ -181,6 +181,7 @@
     <ClCompile Include="TestMovement.cpp" />
     <ClCompile Include="TestSingleton.cpp" />
     <ClCompile Include="AttachSelectState.cpp" />
+    <ClCompile Include="TriggerDevice.cpp" />
     <ClCompile Include="YongHun.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +232,7 @@
     <ClInclude Include="TestMovement.h" />
     <ClInclude Include="TestSingleton.h" />
     <ClInclude Include="AttachSelectState.h" />
+    <ClInclude Include="TriggerDevice.h" />
     <ClInclude Include="YongHun.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

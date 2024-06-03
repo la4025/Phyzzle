@@ -16,6 +16,7 @@ namespace PurahEngine
 		~Tag();
 
 		bool IsContain(const std::wstring& element) const;
+		bool IsExclude(const std::wstring& element) const;
 
 		bool operator==(const Tag& right) const;
 		bool operator!=(const Tag& right) const;
