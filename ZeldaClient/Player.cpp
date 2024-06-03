@@ -404,17 +404,17 @@ namespace Phyzzle
 
 		unsigned int layers = ~(1 << PurahEngine::Physics::GetLayerID(L"Player"));
 
-		bool hit = PurahEngine::Physics::Spherecast(
-			0.3f,
-			modelPos, Eigen::Quaternionf::Identity(),
-			dir * -1.f,
-			currP.z() * -1.f,
-			layers, info);
+		//bool hit = PurahEngine::Physics::Spherecast(
+		//	0.3f,
+		//	modelPos, Eigen::Quaternionf::Identity(),
+		//	dir * -1.f,
+		//	currP.z() * -1.f,
+		//	layers, info);
 
-		if (hit)
-		{
-			currP.z() = info.distance * -1.f;
-		}
+		//if (hit)
+		//{
+		//	currP.z() = info.distance * -1.f;
+		//}
 
 		data.cameraCore->SetLocalPosition(currP);
 	}
@@ -537,7 +537,9 @@ namespace Phyzzle
 		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		ZonaiPhysics::ZnQueryInfo info;
 
-		unsigned int culling = (1 << PurahEngine::Physics::GetLayerID(L"Player")) | (1 << PurahEngine::Physics::GetLayerID(L"PrisonBars"));
+		unsigned int playerLayer = 1ul << PurahEngine::Physics::GetLayerID(L"Player");
+		unsigned int tempLayer = 1ul << PurahEngine::Physics::GetLayerID(L"PrisonBars");
+		unsigned int culling = (playerLayer | tempLayer);
 		unsigned int layers = ~culling;
 
 		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);

@@ -19,14 +19,22 @@ namespace PurahEngine
         case ColliderType::DYNAMIC:
         {
             auto& colliders = physicsSystem.dynamicColliders;
-            colliders.erase(std::ranges::find(colliders, this));
+            auto itr = std::ranges::find(colliders, this);
+            if (itr != colliders.end())
+            {
+                colliders.erase(std::ranges::find(colliders, this));
+            }
         }
         break;
 
         case ColliderType::STATIC:
         {
             auto& colliders = physicsSystem.staticColliders;
-            colliders.erase(std::ranges::find(colliders, this));
+            auto itr = std::ranges::find(colliders, this);
+            if (itr != colliders.end())
+            {
+				colliders.erase(std::ranges::find(colliders, this));
+            }
         }
         break;
 

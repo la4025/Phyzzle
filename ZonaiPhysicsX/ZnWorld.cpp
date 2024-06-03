@@ -211,8 +211,9 @@ namespace ZonaiPhysics
 		physx::PxQueryFilterData filter = physx::PxQueryFilterData();
 		filter.flags |= physx::PxQueryFlag::ePREFILTER;
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
+		filter.flags |= physx::PxQueryFlag::eSTATIC;
 		filter.data.setToDefault();
-		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+		filter.data.word1 = static_cast<physx::PxU32>(_desc.queryLayer);
 
 		physx::PxQueryFilterCallback* callback = &queryFilter;
 		const physx::PxQueryCache* cache = nullptr;

@@ -21,9 +21,9 @@ namespace ZonaiPhysics
             return physx::PxQueryHitType::eNONE;
 
         // 레이어가 다르면 X
-        const physx::PxFilterData shapeFilter = shape->getSimulationFilterData();
+        const physx::PxFilterData shapeFilter = shape->getQueryFilterData();
 
-        const bool test = ZnLayer::IsCollide(filterData.word0, shapeFilter.word0);
+        const bool test = ZnLayer::IsCollide(filterData.word1, shapeFilter.word1);
          
         if (!test)
             return physx::PxQueryHitType::eNONE;
