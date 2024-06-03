@@ -116,6 +116,7 @@ namespace Phyzzle
 
 		void EnableOutline(bool ) const;
 
+		void Snap();
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화
 #pragma endregion Content

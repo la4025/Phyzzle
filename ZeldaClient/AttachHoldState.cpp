@@ -506,6 +506,75 @@ namespace Phyzzle
 		AttachSystem::Instance()->EnableOutline(attachble, _value, PurahColor::BlueViolet, PurahColor::BlueViolet);
 	}
 
+	void AttachHoldState::Snap()
+	{
+		using namespace Eigen;
+
+		const Vector3f objectPosition = selectBody->GetPosition();
+		const Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
+
+		const Vector3f direction[3] = {
+				{1.f, 0.f, 0.f},
+
+				{0.f, 1.f, 0.f},
+
+				{0.f, 0.f, 1.f}
+		};
+
+		Vector3f objectToPlayer = playerPosition - objectPosition;
+		objectToPlayer.normalize();
+
+		int index = 0;
+		int axis = 0;
+		float max = 0.f;
+		for (int i = 0; i < 6; i++)
+		{
+			float cosTheta = 0.f;
+			Vector3f dir = direction[i % 2];
+
+			if (i % 2)
+			{
+				dir = -dir;
+			}
+
+			dir = selectBody->GetRotation() * dir;
+
+			cosTheta = objectToPlayer.dot(dir);
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+
+			if (max < cosTheta)
+			{
+				max = cosTheta;
+				index = i;
+				axis = i % 2;
+			}
+		}
+
+		float theta = std::acosf(max);
+
+		constexpr float pi_inv8 = std::numbers::phi_v<float> / 8.f;
+		constexpr float pi_inv4 = std::numbers::phi_v<float> / 4.f;
+		constexpr float pi_inv2 = std::numbers::phi_v<float> / 2.f;
+
+		bool floor = pi_inv8 < theta;
+
+		if (floor)
+		{
+		float temp;
+			
+		}
+
+		Vector3f dir = direction[index % 2];
+
+		Vector3f subDir0;
+		Vector3f subDir1;
+
+		for (size_t i = 0; i < 6; i++)
+		{
+
+		}
+	}
+
 	void AttachHoldState::VariableSet()
 	{
 		using namespace Eigen;
@@ -524,6 +593,8 @@ namespace Phyzzle
 		lookTo.y() = 0.f;
 		LookToWorldDirection(lookTo);
 		targetPosition.z() = lookTo.norm();
+
+		Snap();
 
 		const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
 		const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
