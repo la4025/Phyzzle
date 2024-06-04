@@ -11,7 +11,11 @@ namespace PurahEngine
 	{
 		auto& physicsSystem = PhysicsSystem::GetInstance();
 
-		physicsSystem.FreeObject(znCollider, this->GetGameObject());
+		if (znCollider)
+		{
+			physicsSystem.FreeObject(znCollider, this->GetGameObject());
+			znCollider = nullptr;
+		}
 	}
 
 	void SphereCollider::PostInitialize()
@@ -27,12 +31,6 @@ namespace PurahEngine
 			radius * maxScale,
 			physicsMaterial
 		);
-
-		if (!znCollider)
-		{
-			GetGameObject()->DeleteComponent(this);
-			return;
-		}
 
 		Collider::SetUserData();
 

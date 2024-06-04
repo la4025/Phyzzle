@@ -37,14 +37,14 @@ private:
 	std::vector<RenderInfo> renderInfoList;
 
 	// Sorted RenderInfo
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;		// ID 1
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;		// ID 2
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;		// ID 3
-	std::unordered_map<InstancingKey, RenderInfo*> lightRenderInfo;						// ID 4
-	std::vector<RenderInfo*> stringRenderInfo;											// ID 5
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> billBoardRenderInfo;	// ID 6
-	RenderInfo* cubeMapRenderInfo;														// ID 7
-	std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>> imageRenderInfo;									// ID 8
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;			// ID 1
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;			// ID 2
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;			// ID 3
+	std::unordered_map<InstancingKey, RenderInfo*> lightRenderInfo;							// ID 4
+	std::vector<RenderInfo*> stringRenderInfo;												// ID 5
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> billBoardRenderInfo;		// ID 6
+	RenderInfo* cubeMapRenderInfo;															// ID 7
+	std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>> imageRenderInfo;	// ID 8
 	
 	// Option RenderInfo
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> shadowRenderInfo;

@@ -76,7 +76,7 @@ namespace ZonaiPhysics
 				pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
 			}
 			pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
-			pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
+			// pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
 
 			return physx::PxFilterFlag::eDEFAULT;
 		}
@@ -106,7 +106,7 @@ namespace ZonaiPhysics
 			pairFlags |= physx::PxPairFlag::eSOLVE_CONTACT;
 
 			pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
-			pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
+			// pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;

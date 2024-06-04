@@ -130,6 +130,8 @@ public:
 
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize) override;
 
+	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) override;
+
 	virtual void DrawCubeMap(TextureID texture) override;
 
 	virtual void DrawString(const std::wstring& string, float x, float y, float width, float height, float fontSize, Color color) override;
@@ -162,7 +164,8 @@ private:
 
 	void DrawDeferred();
 	void DrawForward();
-	void DrawSprite();
+	void DrawDebugInfo();
+	void DrawSpriteRenderInfo();
 	void DrawImage();
 	void DrawBillBoardRenderInfo();
 

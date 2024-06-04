@@ -56,10 +56,9 @@ namespace ZonaiPhysics
 
 	bool ZnLayer::IsCollide(uint32_t _layerData, uint32_t _layerID0)
 	{
-		ValidateLayer(_layerID0);
+		assert(_layerData != 0);
+		assert(_layerID0 != 0);
 
-		// uint32_t data = layerData[_layerID0].to_ulong();
-
-		return _layerData & (1 << _layerID0);
+		return _layerData & _layerID0;
 	}
 }

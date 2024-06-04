@@ -14,7 +14,7 @@ namespace ZonaiPhysics
 	RigidBody::RigidBody(physx::PxRigidDynamic * _pxBody, void* _userData) : pxBody(_pxBody)
 	{
 		_pxBody->userData = this;
-		pxBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
+		// pxBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
 	}
 
 	RigidBody::~RigidBody()

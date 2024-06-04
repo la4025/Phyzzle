@@ -698,6 +698,8 @@ void CoreSystem::run()
 	billboardTestMatrix(2, 2) = 10.0f;
 	billboardTestMatrix(1, 3) = -30.0f;
 	renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
+	//renderer->DrawSprite(billboardTestMatrix, scdTextureID, false);
+
 	renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
 	renderer->DrawImage({ 0.0f, 0.0f }, scdTextureID, 1u);

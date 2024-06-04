@@ -104,6 +104,7 @@ void RenderInfoManager::SortRenderInfo()
 	// ID를 부여한다.
 	int drawIDCounter = 1;
 
+	// 1
 	for (auto& [key, value] : deferredRenderInfo)
 	{
 		for (auto& renderInfo : value)
@@ -113,6 +114,7 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+	// 2
 	for (auto& [key, value] : forwardRenderInfo)
 	{
 		for (auto& renderInfo : value)
@@ -122,6 +124,7 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+	// 3
 	for (auto& [key, value] : spriteRenderInfo)
 	{
 		for (auto& renderInfo : value)
@@ -131,18 +134,21 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+	// 4
 	for (auto& [key, value] : lightRenderInfo)
 	{
 		value->drawID = drawIDCounter;
 		drawIDCounter += 1;
 	}
 
+	// 5
 	for (auto& iter : stringRenderInfo)
 	{
 		iter->drawID = drawIDCounter;
 		drawIDCounter += 1;
 	}
 
+	// 6
 	for (auto& [key, value] : billBoardRenderInfo)
 	{
 		for (auto& renderInfo : value)
@@ -152,12 +158,14 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+	// 7
 	if (cubeMapRenderInfo != nullptr)
 	{
 		cubeMapRenderInfo->drawID = drawIDCounter;
 		drawIDCounter += 1;
 	}
 
+	// 8
 	for (auto& [key, value] : imageRenderInfo)
 	{
 		value->drawID = drawIDCounter;
