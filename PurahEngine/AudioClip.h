@@ -1,10 +1,11 @@
 #pragma once
 #include "SoundManager.h"
-#include "PurahSound.h"
 
 namespace PurahEngine
 {
 	class SoundManager;
+
+
 
 	class AudioClip
 	{
@@ -12,8 +13,10 @@ namespace PurahEngine
 		AudioClip();
 		~AudioClip();
 
+		AudioClip(std::wstring fileName, SoundType type, float minDistance, float maxDistance);
+
 		void CreateSound();
-		void Play();
+		void PlayAudio();
 		void Stop();
 		void Set3DAttributes(FMOD_VECTOR pos);
 		void SetLoop();
@@ -23,7 +26,10 @@ namespace PurahEngine
 		FMOD::Sound* mSound;
 		FMOD::Channel* mChannel;
 
-		PurahSound newSound;
+		std::wstring name;
+		SoundType soundType;
+		float mMinDistance;
+		float mMaxDistance;
 	private:
 		SoundManager& soundManager = SoundManager::GetInstance();
 

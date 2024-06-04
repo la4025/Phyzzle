@@ -15,6 +15,15 @@ namespace PurahEngine
 	class PURAHENGINE_API AudioSource : public Component
 	{
 	public:
+		struct Sound
+		{
+			std::string name;
+			SoundType soundType;
+			float minDistance;
+			float maxDistance;
+		};
+
+	public:
 		AudioSource();
 		~AudioSource();
 
@@ -25,7 +34,7 @@ namespace PurahEngine
 		void Update();
 
 
-		void Play(std::wstring name);
+		void PlayAudio(std::wstring name);
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -35,9 +44,9 @@ namespace PurahEngine
 
 	private:
 		Transform* soundTransform;
-		std::vector<std::wstring> fileName;
+		std::vector<Sound> soundFile;
 		std::map<std::wstring, AudioClip*> soundMap;
-		
+
 	};
 }
 

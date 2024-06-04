@@ -27,18 +27,18 @@ void PurahEngine::SoundManager::Finalize()
 	system->release();
 }
 
-void PurahEngine::SoundManager::LoadSound(PurahSound newSound, FMOD::Sound** sound)
+void PurahEngine::SoundManager::CreateSound(SoundType soundType, std::wstring name, FMOD::Sound** sound)
 {
-	switch (newSound.type)
+	switch (soundType)
 	{
 		case SoundType::BGM:
 		{
-			LoadBGMSound(newSound, sound);
+			CreateBGMSound(name, sound);
 			break;
 		}
 		case SoundType::EFFECT:
 		{
-			LoadSfxSound(newSound, sound);
+			CreateSfxSound(name, sound);
 			break;
 		}
 	}
@@ -49,10 +49,10 @@ void PurahEngine::SoundManager::ReleaseSound(AudioSource* audioSource)
 
 }
 
-void PurahEngine::SoundManager::LoadBGMSound(PurahSound newSound, FMOD::Sound** sound)
+void PurahEngine::SoundManager::CreateBGMSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
-	std::wstring filePath = L"../Sound/BGM/Test/" + newSound.soundName;
+	std::wstring filePath = L"../Sound/BGM/Test/" + name;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -62,10 +62,10 @@ void PurahEngine::SoundManager::LoadBGMSound(PurahSound newSound, FMOD::Sound** 
 	assert(result == FMOD_OK);
 }
 
-void PurahEngine::SoundManager::LoadSfxSound(PurahSound newSound, FMOD::Sound** sound)
+void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
-	std::wstring filePath = L"../Sound/SFX/Test/" + newSound.soundName;
+	std::wstring filePath = L"../Sound/SFX/Test/" + name;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -73,13 +73,11 @@ void PurahEngine::SoundManager::LoadSfxSound(PurahSound newSound, FMOD::Sound** 
 
 	result = system->createSound(str.c_str(), FMOD_3D_LINEARSQUAREROLLOFF, 0, sound);
 	assert(result == FMOD_OK);
-
-	(*sound)->set3DMinMaxDistance(newSound.mMinDistance, newSound.mMaxDistance);
 }
 
-void PurahEngine::SoundManager::Play(PurahSound newSound, FMOD::Sound* sound, FMOD::Channel** channel)
+void PurahEngine::SoundManager::PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel)
 {
-	switch (newSound.type)
+	switch (soundType)
 	{
 		case SoundType::BGM:
 		{

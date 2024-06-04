@@ -32,9 +32,10 @@ void PurahEngine::AudioSource::Initialize()
 void PurahEngine::AudioSource::OnDataLoadComplete()
 {
 	// 파일 이름을 map에 넣고, value로 audioclip을 생성
-	for (auto name : fileName)
+	for (auto sound : soundFile)
 	{
-		soundMap[name] = new AudioClip;
+		std::wstring name = std::wstring(sound.name.begin(), sound.name.end());
+		soundMap[name] = new AudioClip(name, sound.soundType, sound.minDistance, sound.maxDistance);
 		soundMap[name]->CreateSound();
 	}
 }
@@ -52,9 +53,9 @@ void PurahEngine::AudioSource::Update()
 }
 
 
-void PurahEngine::AudioSource::Play(std::wstring name)
+void PurahEngine::AudioSource::PlayAudio(std::wstring name)
 {
-	soundMap[name]->Play();
+	soundMap[name]->PlayAudio();
 }
 
 
@@ -66,7 +67,16 @@ void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 void PurahEngine::AudioSource::PreDeserialize(const json& jsonData)
 {
 	PREDESERIALIZE_BASE();
-	PREDESERIALIZE_VECTOR(fileName);
+
+	for (int i = 0; i < jsonData["soundFile"].size(); i++)
+	{
+		Sound sound;
+		sound.name = jsonData["soundFile"][i]["fileName"];
+		sound.soundType = jsonData["soundFile"][i]["soundType"];
+		sound.minDistance = jsonData["soundFile"][i]["minDistance"];
+		sound.maxDistance = jsonData["soundFile"][i]["maxDistance"];
+		soundFile.push_back(sound);
+	}
 }
 
 void PurahEngine::AudioSource::PostSerialize(json& jsonData) const

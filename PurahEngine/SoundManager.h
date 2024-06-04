@@ -1,8 +1,6 @@
 #pragma once
 #include "PurahEngineAPI.h"
 
-#include "PurahSound.h"
-
 #include <fmod.h>
 #include <fmod.hpp>
 #include <fmod_errors.h>
@@ -14,21 +12,27 @@ namespace PurahEngine
 	class Transform;
 	class AudioSource;
 
+	enum class SoundType
+	{
+		BGM,
+		EFFECT
+	};
+
 	class PURAHENGINE_API SoundManager
 	{
 	public:
 		void Initialize();
 		void Finalize();
 
-		void LoadSound(PurahSound newSound, FMOD::Sound** sound);
+		void CreateSound(SoundType soundType, std::wstring name, FMOD::Sound** sound);
 		
 		void ReleaseSound(AudioSource* audioSource);
 
-		void LoadBGMSound(PurahSound newSound, FMOD::Sound** sound);
+		void CreateBGMSound(std::wstring name, FMOD::Sound** sound);
 
-		void LoadSfxSound(PurahSound newSound, FMOD::Sound** sound);
+		void CreateSfxSound(std::wstring name, FMOD::Sound** sound);
 
-		void Play(PurahSound newSound, FMOD::Sound* sound, FMOD::Channel** channel);
+		void PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel);
 
