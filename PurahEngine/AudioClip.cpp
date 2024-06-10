@@ -36,6 +36,11 @@ void PurahEngine::AudioClip::PlayAudio()
 	soundManager.PlayAudio(soundType, mSound, &mChannel);
 }
 
+void PurahEngine::AudioClip::Stop()
+{
+	mChannel->stop();
+}
+
 void PurahEngine::AudioClip::Set3DAttributes(FMOD_VECTOR pos)
 {
 	mChannel->set3DAttributes(&pos, 0);

@@ -13,7 +13,7 @@ PurahEngine::AudioTest::~AudioTest()
 
 void PurahEngine::AudioTest::Awake()
 {
-	GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"BGMTest001.mp3");
+	GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"BGMTest002.mp3");
 }
 
 void PurahEngine::AudioTest::OnDataLoadComplete()

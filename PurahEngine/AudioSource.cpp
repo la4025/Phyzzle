@@ -15,6 +15,12 @@ PurahEngine::AudioSource::~AudioSource()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	soundManager.ReleaseSound(this);
+
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	{
+		delete iter->second;
+	}
+	soundMap.clear();
 }
 
 void PurahEngine::AudioSource::Awake()
@@ -45,17 +51,23 @@ void PurahEngine::AudioSource::Update()
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
-	
+
 	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
 	{
-		iter->second->Set3DAttributes(pos);
+		if (iter->second != nullptr)
+		{
+			iter->second->Set3DAttributes(pos);
+		}
 	}
 }
 
 
 void PurahEngine::AudioSource::PlayAudio(std::wstring name)
 {
-	soundMap[name]->PlayAudio();
+	if (soundMap[name] != nullptr)
+	{
+		soundMap[name]->PlayAudio();
+	}
 }
 
 
