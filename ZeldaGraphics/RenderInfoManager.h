@@ -12,16 +12,16 @@ public:
 	void ClearRenderInfo();
 
 	// RenderInfo를 정렬한다. (DrawID가 정해진다.)
-	void SortRenderInfo();
+	void SortRenderInfo(DirectX::XMMATRIX viewMatrix);
 
 	void RegisterRenderInfo(RenderType renderType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue);
 
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetDeferredRenderInfo() const;
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetForwardRenderInfo() const;
-	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetSpriteRenderInfo() const;
+	const std::multimap<float, RenderInfo*, std::greater<float>>& GetSpriteRenderInfo() const;
 	const std::unordered_map<InstancingKey, RenderInfo*>& GetLightRenderInfo() const;
 	const std::vector<RenderInfo*>& GetStringRenderInfo() const;
-	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetBillBoardRenderInfo() const;
+	const std::multimap<float, RenderInfo*, std::greater<float>>& GetBillBoardRenderInfo() const;
 	const RenderInfo* GetCubeMapRenderInfo();
 	const std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>>& GetImageRenderInfo();
 
@@ -39,10 +39,10 @@ private:
 	// Sorted RenderInfo
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> deferredRenderInfo;			// ID 1
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> forwardRenderInfo;			// ID 2
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> spriteRenderInfo;			// ID 3
+	std::multimap<float, RenderInfo*, std::greater<float>> spriteRenderInfo;				// ID 3
 	std::unordered_map<InstancingKey, RenderInfo*> lightRenderInfo;							// ID 4
 	std::vector<RenderInfo*> stringRenderInfo;												// ID 5
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> billBoardRenderInfo;		// ID 6
+	std::multimap<float, RenderInfo*, std::greater<float>> billBoardRenderInfo;				// ID 6
 	RenderInfo* cubeMapRenderInfo;															// ID 7
 	std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>> imageRenderInfo;	// ID 8
 	

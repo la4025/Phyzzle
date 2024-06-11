@@ -81,6 +81,7 @@
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="GamePad.h" />
     <ClInclude Include="MomentumManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PointLight.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="GamePad.cpp" />
     <ClCompile Include="MomentumManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PointLight.cpp" />
