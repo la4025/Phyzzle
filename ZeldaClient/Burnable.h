@@ -7,7 +7,7 @@ namespace Phyzzle
 	class Burnable final : public PurahEngine::Component
 	{
 	public:
-		void Awake() override;
+		void OnEnable() override;
 		void Update() override;
 
 		// 트리거가 충돌했을 때 호출
@@ -18,7 +18,7 @@ namespace Phyzzle
 	private:
 		float burnTime; // 불타는데 걸리는 시간
 		PurahEngine::GameObject* burnableObject; // 타는 오브젝트
-		PurahEngine::GameObject* effectObject; // 이펙트를 끄고 켜는데 사용할 오브젝트
+		PurahEngine::ParticleSystem* effect; // 이펙트를 끄고 켜는데 사용할 오브젝트
 		float destoryDelay; // 오브젝트 제거 지연시간
 
 	private:

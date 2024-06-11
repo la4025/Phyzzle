@@ -2,15 +2,20 @@
 
 namespace Phyzzle
 {
-	void Burnable::Awake()
+	void Burnable::OnEnable()
 	{
 		burnTimeElapsed = 0.0f;
 		waitDestroy = false;
 		destroyElapsed = 0.0f;
 
-		if (effectObject != nullptr)
+		if (burnableObject != nullptr)
 		{
-			effectObject->SetEnable(false);
+			burnableObject->SetEnable(true);
+		}
+
+		if (effect != nullptr)
+		{
+			effect->Reset();
 		}
 	}
 
@@ -30,7 +35,7 @@ namespace Phyzzle
 		if (fireList.size() > 0ull && burnTimeElapsed >= burnTime)
 		{
 			burnableObject->SetEnable(false);
-			effectObject->GetComponent<PurahEngine::ParticleSystem>()->StopGenerate();
+			effect->StopGenerate();
 			waitDestroy = true;
 		}
 
@@ -40,7 +45,7 @@ namespace Phyzzle
 
 			if (destoryDelay <= destroyElapsed)
 			{
-				gameObject->Destroy();
+				gameObject->SetEnable(false);
 			}
 		}
 	}
@@ -52,16 +57,15 @@ namespace Phyzzle
 			fireList.push_back(other);
 		}
 
-		if (effectObject != nullptr)
+		if (effect != nullptr)
 		{
 			if (fireList.size() > 0u)
 			{
-				effectObject->SetEnable(true);
-				effectObject->GetComponent<PurahEngine::ParticleSystem>()->Reset();
+				effect->Play();
 			}
 			else
 			{
-				effectObject->SetEnable(false);
+				effect->StopGenerate();
 			}
 		}
 	}
@@ -77,16 +81,11 @@ namespace Phyzzle
 			}
 		}
 
-		if (effectObject != nullptr)
+		if (effect != nullptr)
 		{
-			if (fireList.size() > 0u)
+			if (fireList.size() == 0u)
 			{
-				effectObject->SetEnable(true);
-				effectObject->GetComponent<PurahEngine::ParticleSystem>()->Reset();
-			}
-			else
-			{
-				effectObject->SetEnable(false);
+				effect->StopGenerate();
 			}
 		}
 	}
@@ -109,6 +108,6 @@ namespace Phyzzle
 	void Burnable::PostDeserialize(const json& jsonData)
 	{
 		POSTDESERIALIZE_PTR(burnableObject);
-		POSTDESERIALIZE_PTR(effectObject);
+		POSTDESERIALIZE_PTR(effect);
 	}
 }

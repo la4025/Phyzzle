@@ -15,6 +15,14 @@ namespace PurahEngine
 		Reset();
 	}
 
+	void ParticleSystem::Start()
+	{
+		if (playWithStart)
+		{
+			isStopped = false;
+		}
+	}
+
 	void ParticleSystem::Update()
 	{ 
 		assert(moveDirection != Eigen::Vector3f::Zero());
@@ -132,10 +140,16 @@ namespace PurahEngine
 		}
 	}
 
-	void ParticleSystem::Reset()
+	void ParticleSystem::Play()
 	{
 		generationElapsed = 0.0f;
 		isStopped = false;
+	}
+
+	void ParticleSystem::Reset()
+	{
+		generationElapsed = 0.0f;
+		isStopped = true;
 
 		elements.clear();
 	}
@@ -250,6 +264,8 @@ namespace PurahEngine
 		PREDESERIALIZE_VECTOR2F(textureScale);
 		PREDESERIALIZE_VALUE(useAlphaTexture);
 		PREDESERIALIZE_VECTOR4F(alphaTextureColor);
+
+		PREDESERIALIZE_VALUE(playWithStart);
 
 		PREDESERIALIZE_VALUE(generatorRadius);
 		PREDESERIALIZE_VALUE(generationCycle);

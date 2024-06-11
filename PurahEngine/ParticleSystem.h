@@ -25,11 +25,14 @@ namespace PurahEngine
 
 	public:
 		void Awake() override;
+		void Start() override;
+
 		void Update() override;
 
 		// Renderer을(를) 통해 상속됨
 		void Render(IZeldaRenderer* renderer) override;
 
+		void Play();
 		void Reset();
 		void StopGenerate();
 
@@ -40,6 +43,8 @@ namespace PurahEngine
 		Eigen::Vector2f textureScale;
 		bool useAlphaTexture;
 		Eigen::Vector4f alphaTextureColor;
+
+		bool playWithStart;
 
 		float generatorRadius;			// 생성 범위(반지름)
 		float generationCycle;			// 생성 주기

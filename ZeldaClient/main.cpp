@@ -23,6 +23,7 @@
 #include "SceneLoadSupport.h"
 
 #include "Burnable.h"
+#include "ObjectGenerator.h"
 
 /// 각자 만드는 것들
 #include "PzObject.h"
@@ -79,6 +80,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::SceneLoadSupport>("SceneLoadSupport");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Burnable>("Burnable");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectGenerator>("ObjectGenerator");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);
