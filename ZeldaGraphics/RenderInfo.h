@@ -75,6 +75,7 @@ struct InstancingValue
 	float blendAnimationTime2;
 	float ratio;
 	float ccwRadianAngle;
+	bool useAlphaTexture;
 
 	InstancingValue() :
 		worldMatrix(DirectX::XMMatrixIdentity()),
@@ -91,7 +92,8 @@ struct InstancingValue
 		blendAnimationTime1(0.0f),
 		blendAnimationTime2(0.0f),
 		ratio(0.0f),
-		ccwRadianAngle(0.0f)
+		ccwRadianAngle(0.0f),
+		useAlphaTexture(false)
 	{}
 };
 

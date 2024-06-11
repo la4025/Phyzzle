@@ -124,6 +124,9 @@
     <Filter Include="Component\2. Physics\CharacterController">
       <UniqueIdentifier>{d5564171-4f26-4196-87fa-d5bea053c564}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\3. Renderer\Particle">
+      <UniqueIdentifier>{43ea8006-b9c9-49e3-b090-c341f6482b1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -300,6 +303,9 @@
     </ClCompile>
     <ClCompile Include="CharacterController.cpp">
       <Filter>Component\2. Physics\CharacterController</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Component\3. Renderer\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -519,6 +525,9 @@
     </ClInclude>
     <ClInclude Include="CharacterController.h">
       <Filter>Component\2. Physics\CharacterController</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Component\3. Renderer\Particle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

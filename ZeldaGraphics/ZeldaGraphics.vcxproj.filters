@@ -65,9 +65,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header\IZeldaRenderer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="IDrawable.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -136,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="header\Color.h">
       <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IZeldaRenderer.h">
+      <Filter>Core\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +301,9 @@
       <Filter>Shader\Sprite</Filter>
     </FxCompile>
     <FxCompile Include="ImagePS.hlsl">
+      <Filter>Shader\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="AlphaSpritePS.hlsl">
       <Filter>Shader\Sprite</Filter>
     </FxCompile>
   </ItemGroup>
