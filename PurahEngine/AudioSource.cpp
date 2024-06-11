@@ -15,6 +15,12 @@ PurahEngine::AudioSource::~AudioSource()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	soundManager.ReleaseSound(this);
+
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	{
+		delete iter->second;
+	}
+	soundMap.clear();
 }
 
 void PurahEngine::AudioSource::Awake()
@@ -31,8 +37,13 @@ void PurahEngine::AudioSource::Initialize()
 
 void PurahEngine::AudioSource::OnDataLoadComplete()
 {
-	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.LoadSound(soundName, soundTransform, this, SoundType::EFFECT);
+	// 파일 이름을 map에 넣고, value로 audioclip을 생성
+	for (auto sound : soundFile)
+	{
+		std::wstring name = std::wstring(sound.name.begin(), sound.name.end());
+		soundMap[name] = new AudioClip(name, sound.soundType, sound.minDistance, sound.maxDistance);
+		soundMap[name]->CreateSound();
+	}
 }
 
 void PurahEngine::AudioSource::Update()
@@ -40,12 +51,25 @@ void PurahEngine::AudioSource::Update()
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
 	Eigen::Vector3f soundPosition = soundTransform->GetWorldPosition();
 	FMOD_VECTOR pos = { soundPosition.x(), soundPosition.y(), soundPosition.z() };
+
+	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
+	{
+		if (iter->second != nullptr)
+		{
+			iter->second->Set3DAttributes(pos);
+		}
+	}
 }
 
-std::wstring PurahEngine::AudioSource::GetSoundName()
+
+void PurahEngine::AudioSource::PlayAudio(std::wstring name)
 {
-	return soundName;
+	if (soundMap[name] != nullptr)
+	{
+		soundMap[name]->PlayAudio();
+	}
 }
+
 
 void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 {
@@ -55,7 +79,16 @@ void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 void PurahEngine::AudioSource::PreDeserialize(const json& jsonData)
 {
 	PREDESERIALIZE_BASE();
-	PREDESERIALIZE_WSTRING(soundName);
+
+	for (int i = 0; i < jsonData["soundFile"].size(); i++)
+	{
+		Sound sound;
+		sound.name = jsonData["soundFile"][i]["fileName"];
+		sound.soundType = jsonData["soundFile"][i]["soundType"];
+		sound.minDistance = jsonData["soundFile"][i]["minDistance"];
+		sound.maxDistance = jsonData["soundFile"][i]["maxDistance"];
+		soundFile.push_back(sound);
+	}
 }
 
 void PurahEngine::AudioSource::PostSerialize(json& jsonData) const

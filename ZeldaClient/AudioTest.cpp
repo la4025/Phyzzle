@@ -13,8 +13,7 @@ PurahEngine::AudioTest::~AudioTest()
 
 void PurahEngine::AudioTest::Awake()
 {
-	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	//soundManager.PlayBGM(audioSource->GetSoundName(), audioSource);
+	GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"BGMTest002.mp3");
 }
 
 void PurahEngine::AudioTest::OnDataLoadComplete()
@@ -28,8 +27,7 @@ void PurahEngine::AudioTest::Update()
 
 	if (inputManager.IsKeyPressed(eKey::eKEY_M))
 	{
-		auto& soundManager = PurahEngine::SoundManager::GetInstance();
-		soundManager.PlayEffect(audioSource->GetSoundName(), audioSource);
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"EffectTest003.mp3");
 	}
 }
 
