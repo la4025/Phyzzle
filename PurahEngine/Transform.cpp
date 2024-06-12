@@ -113,7 +113,7 @@ PurahEngine::Transform* PurahEngine::Transform::GetParent()
 	return parentTransform;
 }
 
-std::vector<PurahEngine::Transform*> PurahEngine::Transform::GetChildren() const
+std::vector<PurahEngine::Transform*> PurahEngine::Transform::GetChildren()
 {
 	return children;
 }
@@ -218,6 +218,12 @@ void PurahEngine::Transform::SetWorldMatrix(Eigen::Matrix4f targetMatrix)
 	scaling[0] = transformation.linear().col(0).norm(); // x 축의 크기
 	scaling[1] = transformation.linear().col(1).norm(); // y 축의 크기
 	scaling[2] = transformation.linear().col(2).norm(); // z 축의 크기
+}
+
+void PurahEngine::Transform::DeleteChildTrans(std::vector<PurahEngine::Transform*>::iterator childIter)
+{
+	delete *childIter;
+	children.erase(childIter);
 }
 
 Eigen::Vector3f PurahEngine::Transform::GetFront() const

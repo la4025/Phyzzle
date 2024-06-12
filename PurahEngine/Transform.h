@@ -8,6 +8,7 @@
 namespace PurahEngine
 {
 	class RigidBody;
+	class GameObject;
 
 	class PURAHENGINE_API Transform : public Component
 	{
@@ -43,7 +44,7 @@ namespace PurahEngine
 
 		Transform* GetParent();
 
-		std::vector<PurahEngine::Transform*> GetChildren() const;
+		std::vector<PurahEngine::Transform*> GetChildren();
 
 		/// set
 		// Local
@@ -62,6 +63,8 @@ namespace PurahEngine
 		void SetParent(PurahEngine::Transform* parentObject);
 
 		void SetWorldMatrix(Eigen::Matrix4f matrix);
+
+		void DeleteChildTrans(std::vector<PurahEngine::Transform*>::iterator childIter);
 
 	public:
 
@@ -97,5 +100,6 @@ namespace PurahEngine
 		std::vector<Transform*> children;
 
 		friend class RigidBody;
+		friend class GameObject;
 	};
 }
