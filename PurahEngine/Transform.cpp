@@ -206,23 +206,37 @@ void PurahEngine::Transform::SetParent(PurahEngine::Transform* parentObject)
 
 void PurahEngine::Transform::SetWorldMatrix(Eigen::Matrix4f targetMatrix)
 {
-	Eigen::Affine3f transformation = Eigen::Affine3f::Identity();
-	transformation.translation() << 1.0f, 2.0f, 3.0f; // 이동
-	transformation.rotate(Eigen::AngleAxisf(45.0f * M_PI / 180.0f, Eigen::Vector3f::UnitY())); // 회전
-	transformation.scale(2.0f); // 크기 조절
+	Eigen::Affine3f affine(targetMatrix);
 
-	// 아핀 변환 행렬 decompose
-	Eigen::Vector3f translation = transformation.translation();
-	Eigen::Quaternionf rotation_quaternion(transformation.linear()); // 회전 매트릭스를 Quaternionf로 변환
-	Eigen::Vector3f scaling;
-	scaling[0] = transformation.linear().col(0).norm(); // x 축의 크기
-	scaling[1] = transformation.linear().col(1).norm(); // y 축의 크기
-	scaling[2] = transformation.linear().col(2).norm(); // z 축의 크기
+	// 위치 추출
+	position = affine.translation();
+
+	// 스케일 추출
+	Eigen::Matrix3f rotationScaleMatrix = affine.linear();
+	scale.x() = rotationScaleMatrix.col(0).norm();
+	scale.y() = rotationScaleMatrix.col(1).norm();
+	scale.z() = rotationScaleMatrix.col(2).norm();
+
+	// 로테이션 추출
+	Eigen::Matrix3f rotationMatrix;
+	if (scale.x() != 0)
+	{
+		rotationMatrix.col(0) = rotationScaleMatrix.col(0) / scale.x();
+	}
+	if (scale.y() != 0)
+	{
+		rotationMatrix.col(1) = rotationScaleMatrix.col(1) / scale.y();
+	}
+	if (scale.z() != 0)
+	{
+		rotationMatrix.col(2) = rotationScaleMatrix.col(2) / scale.z();
+	}
+	rotation = Eigen::Quaternionf(rotationMatrix);
 }
 
 void PurahEngine::Transform::DeleteChildTrans(std::vector<PurahEngine::Transform*>::iterator childIter)
 {
-	delete *childIter;
+	delete* childIter;
 	children.erase(childIter);
 }
 
