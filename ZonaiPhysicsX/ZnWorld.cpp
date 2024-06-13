@@ -203,7 +203,7 @@ namespace ZonaiPhysics
 	bool ZnWorld::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		const physx::PxVec3 from(EigenToPhysx(_desc.position));
-		const physx::PxVec3 to(EigenToPhysx(_desc.direction));
+		const physx::PxVec3 to(EigenToPhysx(_desc.direction.normalized()));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxRaycastBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
@@ -244,7 +244,7 @@ namespace ZonaiPhysics
 	bool ZnWorld::GeometrySweep(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		const physx::PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
-		const physx::PxVec3 dir(EigenToPhysx(_desc.direction));
+		const physx::PxVec3 dir(EigenToPhysx(_desc.direction.normalized()));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxSweepBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;

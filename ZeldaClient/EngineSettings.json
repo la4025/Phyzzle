@@ -9,7 +9,8 @@
     "Phyzzle Player",
     "Attachable",
     "Rewindable",
-    "Trigger Object"
+    "Trigger Object",
+    "Fire"
   ],
   "layer": [
     "Default",
