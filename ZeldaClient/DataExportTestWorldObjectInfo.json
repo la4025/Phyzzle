@@ -1371,7 +1371,7 @@
             "z": 0.0
           },
           "radius": 0.5,
-          "physicsMaterial": ""
+          "physicsMaterial": "Object"
         }
       ]
     },
@@ -1425,7 +1425,7 @@
             "y": 2.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         },
         {
           "__Base__instanceID": 25492,
@@ -1457,7 +1457,7 @@
             "y": 2.0,
             "z": 1.0
           },
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         }
       ]
     },
@@ -1635,8 +1635,8 @@
           "__ID__cameraCore": 25274,
           "__ID__animator": 25272,
           "__ID__crossHead": 25270,
-          "cameraCollisionLayers": 15062,
-          "attachRaycastLayers": -1
+          "cameraCollisionLayers": 10199,
+          "attachRaycastLayers": -6969
         }
       ]
     },
@@ -1701,11 +1701,6 @@
         "__ID__children": []
       },
       "components": [
-        {
-          "__Base__instanceID": -1298,
-          "__Base__Component": "AudioListener",
-          "__ID__listenerTransform": 25274
-        },
         {
           "__Base__instanceID": -1300,
           "__Base__Component": "Camera",
@@ -2788,7 +2783,7 @@
             "z": 1.0
           },
           "modelName": "Primitive/Cylinder.fbx",
-          "physicsMaterial": "Material is null"
+          "physicsMaterial": "Object"
         },
         {
           "__Base__instanceID": 25540,

@@ -126,6 +126,11 @@ namespace Phyzzle
 		player->CameraAround();
 	}
 
+	void AttachSelectState::CameraPositionUpdate()
+	{
+
+	}
+
 	void AttachSelectState::StateCancel() const
 	{
 		EnableOutline(false);

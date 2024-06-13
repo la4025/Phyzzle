@@ -41,6 +41,9 @@ namespace Phyzzle
 
 	private:
 		void Jump() const;
+		void CameraUpdate();
+		void CameraAround();
+		void CameraPositionFromAngle();
 		void Move() const;
 		void Around() const;
 		void LookToWorldDirection(const Eigen::Vector3f& _to) const;

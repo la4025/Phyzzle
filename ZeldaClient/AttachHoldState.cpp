@@ -306,7 +306,7 @@ namespace Phyzzle
 	// Ãë¼Ò
 	void AttachHoldState::Click_Y()
 	{
-		// TryDettach();
+		TryDettach();
 	}
 
 	void AttachHoldState::Up_Y()
@@ -760,7 +760,7 @@ namespace Phyzzle
 		bodyPos.y() = 0.f;
 		auto direction = bodyPos - playerPos;
 
-		player->CameraLookAt(direction.normalized());
+		player->CameraLookTo(direction.normalized());
 
 		// auto half = (bodyPos - playerPos) / 2.f;
 		// auto focus = playerPos + half;

@@ -380,12 +380,10 @@ namespace Phyzzle
 	{
 		auto currP = data.cameraCore->GetLocalPosition();
 
-		auto modelPos = data.cameraArm->GetWorldPosition();
-		auto dir = data.cameraCore->GetFront();
-		ZonaiPhysics::ZnQueryInfo info;
+		float distance = 0.f;
 
 		// 각도에 따라 카메라 위치를 움직임.
-		if (data.xAngle > 0.f)
+		if (data.xAngle >= 0.f)
 		{
 			const float ease = data.xAngle / data.limitHighAngle;
 			auto EasingHigh = [](float x) -> float
@@ -393,7 +391,7 @@ namespace Phyzzle
 					return 1.0f - (1.0f - x) * (1.0f - x);
 				};
 
-			currP.z() = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
+			distance = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
 		}
 		else if (data.xAngle < 0.f)
 		{
@@ -403,21 +401,28 @@ namespace Phyzzle
 					return 1.0f - std::pow(1.0f - x, 5.0f);
 				};
 
-			currP.z() = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
+			distance = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
 		}
 
+		auto modelPos = data.cameraArm->GetWorldPosition();
+		auto dir = data.cameraCore->GetFront() * -1.f;
 		unsigned int layers = data.cameraCollisionLayers;
+		ZonaiPhysics::ZnQueryInfo info;
 
 		bool hit = PurahEngine::Physics::Spherecast(
 			0.3f,
 			modelPos, Eigen::Quaternionf::Identity(),
-			dir * -1.f,
-			currP.z() * -1.f,
+			dir,
+			std::fabs(distance),
 			layers, info);
 
 		if (hit)
 		{
-			currP.z() = info.distance * -1.f;
+			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
+		}
+		else
+		{
+			currP = Eigen::Vector3f::UnitZ() * distance;
 		}
 
 		data.cameraCore->SetLocalPosition(currP);
@@ -482,8 +487,6 @@ namespace Phyzzle
 			// 카메라의 right 기준으로 카메라를 회전
 			data.cameraArm->Rotate(cameraRight, deltaAngle);
 		}
-
-		CameraCoreUpdate();
 	}
 
 	/**
