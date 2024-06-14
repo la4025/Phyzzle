@@ -99,6 +99,12 @@
     <ClCompile Include="TriggerDevice.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="Burnable.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectGenerator.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -230,6 +236,12 @@
     <ClInclude Include="TriggerDevice.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
+    <ClInclude Include="Burnable.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectGenerator.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -300,6 +312,9 @@
     </Filter>
     <Filter Include="KH\DontUse">
       <UniqueIdentifier>{c4dd7df6-5422-4dd4-a7b5-cbbe304f3e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{3b98224b-9672-4ea3-8d29-9e698c6c293d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

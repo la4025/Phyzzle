@@ -106,12 +106,14 @@ void PurahEngine::SceneManager::DeleteGameObject(GameObject* gameObject)
 	{
 		delete* objectIter;
 		objectList.erase(objectIter);
+		return;
 	}
 
 	for (int i = 0; i < objectList.size(); i++)
 	{
 		objectList[i]->DeleteChild(gameObject);
 	}
+
 }
 
 void PurahEngine::SceneManager::InitializationEvent()
@@ -236,7 +238,7 @@ void PurahEngine::SceneManager::LoadScene()
 	}
 	objectList.clear();
 	sceneData = fManager.LoadData(sceneBuffer);
-	
+
 	ErrorType originError = GameLoop::errorType;
 	GameLoop::errorType = ErrorType::Failed_Deserialize;
 	Deserialize(sceneData);

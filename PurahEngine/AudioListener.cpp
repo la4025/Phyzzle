@@ -13,7 +13,6 @@ PurahEngine::AudioListener::~AudioListener()
 {
 	listenerTransform = nullptr;
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.SetListenerTransform(listenerTransform);
 }
 
 void PurahEngine::AudioListener::Initialize()
@@ -24,7 +23,17 @@ void PurahEngine::AudioListener::Initialize()
 void PurahEngine::AudioListener::Update()
 {
 	auto& soundManager = PurahEngine::SoundManager::GetInstance();
-	soundManager.SetListenerTransform(listenerTransform);
+
+	Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
+	FMOD_VECTOR listenerPos(pos.x(), pos.y(), pos.z());
+
+	Eigen::Vector3f forward = listenerTransform->GetFront();
+	FMOD_VECTOR listenerForward(forward.x(), forward.y(), forward.z());
+
+	Eigen::Vector3f up = listenerTransform->GetUp();
+	FMOD_VECTOR listenerUp(up.x(), up.y(), up.z());
+
+	soundManager.Set3DListenerAttributes(listenerPos, listenerForward, listenerUp);
 }
 
 void PurahEngine::AudioListener::PreSerialize(json& jsonData) const

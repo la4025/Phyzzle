@@ -50,6 +50,7 @@
 #include "ModelRenderer.h"
 #include "MeshRenderer.h"
 #include "Animator.h"
+#include "ParticleSystem.h"
 
 // UI
 #include "UI.h"

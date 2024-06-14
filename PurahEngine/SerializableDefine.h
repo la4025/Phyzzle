@@ -27,6 +27,11 @@
 	value = Eigen::Vector3f(jsonData[#value]["x"], jsonData[#value]["y"], jsonData[#value]["z"]); \
 }
 
+#define PREDESERIALIZE_VECTOR4F(value)\
+{\
+	value = Eigen::Vector4f(jsonData[#value]["x"], jsonData[#value]["y"], jsonData[#value]["z"], jsonData[#value]["w"]); \
+}
+
 #define PREDESERIALIZE_WSTRING(value)\
 {\
 	std::string text = jsonData[#value];\

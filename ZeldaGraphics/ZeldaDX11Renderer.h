@@ -128,7 +128,7 @@ public:
 	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer) override;
 	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) override;
 
-	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize) override;
+	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color) override;
 
 	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) override;
 
@@ -243,6 +243,7 @@ private:
 	ZeldaShader* shadowMapShader = nullptr;
 	ZeldaShader* blendingAnimationShadowMapShader = nullptr;
 	ZeldaShader* spriteShader = nullptr;
+	ZeldaShader* alphaSpriteShader = nullptr;
 	ZeldaShader* fastOutLineShader = nullptr;
 	ZeldaShader* outLineShader = nullptr;
 	ZeldaShader* outLineObjectShader = nullptr;

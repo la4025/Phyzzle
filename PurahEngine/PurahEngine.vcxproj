@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="AudioClip.h" />
     <ClInclude Include="AudioListener.h" />
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BoxCollider.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="GamePad.h" />
     <ClInclude Include="MomentumManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PointLight.h" />
@@ -111,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="AudioClip.cpp" />
     <ClCompile Include="AudioListener.cpp" />
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
@@ -145,6 +148,7 @@
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="GamePad.cpp" />
     <ClCompile Include="MomentumManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PointLight.cpp" />

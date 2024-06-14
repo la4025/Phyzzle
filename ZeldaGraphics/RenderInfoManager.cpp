@@ -5,7 +5,7 @@ void RenderInfoManager::ClearRenderInfo()
 	renderInfoList.clear();
 }
 
-void RenderInfoManager::SortRenderInfo()
+void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 {
 	// 정렬된 RenderInfo를 저장하는 컨테이너들 초기화
 	deferredRenderInfo.clear();
@@ -64,7 +64,9 @@ void RenderInfoManager::SortRenderInfo()
 			}
 			case RenderType::Sprite:
 			{
-				SortRenderInfo(&renderInfo, spriteRenderInfo);
+				DirectX::XMMATRIX wv = renderInfo.instancingValue.worldMatrix * viewMatrix;
+				float depth = wv.r[3].m128_f32[2];
+				spriteRenderInfo.insert({ depth, &renderInfo });
 				break;
 			}
 			case RenderType::String:
@@ -84,7 +86,9 @@ void RenderInfoManager::SortRenderInfo()
 			}
 			case RenderType::BillBoard:
 			{
-				SortRenderInfo(&renderInfo, billBoardRenderInfo);
+				DirectX::XMMATRIX wv = renderInfo.instancingValue.worldMatrix * viewMatrix;
+				float depth = wv.r[3].m128_f32[2];
+				billBoardRenderInfo.insert({ depth, &renderInfo });
 				break;
 			}
 			case RenderType::Image:
@@ -100,6 +104,7 @@ void RenderInfoManager::SortRenderInfo()
 		}
 	}
 
+	// sprite와 billboard는 depth값으로 한번 더 정렬한다.
 
 	// ID를 부여한다.
 	int drawIDCounter = 1;
@@ -127,11 +132,8 @@ void RenderInfoManager::SortRenderInfo()
 	// 3
 	for (auto& [key, value] : spriteRenderInfo)
 	{
-		for (auto& renderInfo : value)
-		{
-			renderInfo->drawID = drawIDCounter;
-			drawIDCounter += 1;
-		}
+		value->drawID = drawIDCounter;
+		drawIDCounter += 1;
 	}
 
 	// 4
@@ -151,11 +153,8 @@ void RenderInfoManager::SortRenderInfo()
 	// 6
 	for (auto& [key, value] : billBoardRenderInfo)
 	{
-		for (auto& renderInfo : value)
-		{
-			renderInfo->drawID = drawIDCounter;
-			drawIDCounter += 1;
-		}
+		value->drawID = drawIDCounter;
+		drawIDCounter += 1;
 	}
 
 	// 7
@@ -194,7 +193,7 @@ const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoMan
 	return forwardRenderInfo;
 }
 
-const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetSpriteRenderInfo() const
+const std::multimap<float, RenderInfo*, std::greater<float>>& RenderInfoManager::GetSpriteRenderInfo() const
 {
 	return spriteRenderInfo;
 }
@@ -209,7 +208,7 @@ const std::vector<RenderInfo*>& RenderInfoManager::GetStringRenderInfo() const
 	return stringRenderInfo;
 }
 
-const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetBillBoardRenderInfo() const
+const std::multimap<float, RenderInfo*, std::greater<float>>& RenderInfoManager::GetBillBoardRenderInfo() const
 {
 	return billBoardRenderInfo;
 }

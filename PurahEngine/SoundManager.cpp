@@ -17,12 +17,9 @@ void PurahEngine::SoundManager::Initialize()
 
 	// Initialize FMOD.
 	result = system->init(100, FMOD_INIT_NORMAL, nullptr);
-
 	assert(result == FMOD_OK);
 
 	result = system->set3DSettings(1.0, 1.0, 1.0);
-
-	system->createChannelGroup("effectChannelGroup", &effectChannelGroup);
 }
 
 void PurahEngine::SoundManager::Finalize()
@@ -30,168 +27,105 @@ void PurahEngine::SoundManager::Finalize()
 	system->release();
 }
 
-void PurahEngine::SoundManager::LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type)
+void PurahEngine::SoundManager::CreateSound(SoundType soundType, std::wstring name, FMOD::Sound** sound)
 {
-	switch (type)
+	switch (soundType)
 	{
-	case SoundType::BGM:
-	{
-		LoadBGMSound(soundName, audioSource);
-		break;
-	}
-	case SoundType::EFFECT:
-	{
-		LoadEffectSound(soundName, transform, audioSource);
-		break;
-	}
+		case SoundType::BGM:
+		{
+			CreateBGMSound(name, sound);
+			break;
+		}
+		case SoundType::EFFECT:
+		{
+			CreateSfxSound(name, sound);
+			break;
+		}
 	}
 }
 
 void PurahEngine::SoundManager::ReleaseSound(AudioSource* audioSource)
 {
-	soundMap.erase(audioSource);
+
 }
 
-void PurahEngine::SoundManager::LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource)
+void PurahEngine::SoundManager::CreateBGMSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
-
-	PurahEngine::PurahSound newSound;
-	std::wstring filePath = L"../Sound/BGM/Test/" + soundName;
+	std::wstring filePath = L"../Sound/BGM/Test/" + name;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 	std::string str = converter.to_bytes(filePath);
 
-	result = system->createSound(str.c_str(), FMOD_LOOP_NORMAL, 0, &(newSound.sound));
+	result = system->createSound(str.c_str(), FMOD_LOOP_NORMAL, 0, sound);
 	assert(result == FMOD_OK);
-
-	newSound.soundName = soundName;
-	newSound.isPlaying = false;
-	newSound.channel = bgmChannel;
-	newSound.type = SoundType::BGM;
-
-	soundMap[audioSource] = newSound;
 }
 
-void PurahEngine::SoundManager::LoadEffectSound(const std::wstring& soundName, Transform* transform, AudioSource* audioSource)
+void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
-
-	PurahEngine::PurahSound newSound;
-	std::wstring filePath = L"../Sound/Effect/Test/" + soundName;
+	std::wstring filePath = L"../Sound/SFX/Test/" + name;
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 	std::string str = converter.to_bytes(filePath);
 
-	result = system->createSound(str.c_str(), FMOD_3D_LINEARSQUAREROLLOFF, 0, &(newSound.sound));
+	result = system->createSound(str.c_str(), FMOD_3D_LINEARSQUAREROLLOFF, 0, sound);
 	assert(result == FMOD_OK);
-
-	newSound.soundName = soundName;
-	newSound.transform = transform;
-	newSound.isPlaying = false;
-	newSound.channel = 0;
-	newSound.type = SoundType::EFFECT;
-	newSound.lastPos = { 0.0f, 0.0f, 0.0f };
-
-	newSound.channel->setChannelGroup(effectChannelGroup);
-	newSound.sound->set3DMinMaxDistance(1.0f, 500.0f);
-
-	soundMap[audioSource] = newSound;
 }
 
-void PurahEngine::SoundManager::PlayBGM(const std::wstring& soundName, AudioSource* audioSource)
+void PurahEngine::SoundManager::PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel)
 {
-	auto purahSound = soundMap.at(audioSource);
-	if (purahSound.soundName == soundName)
+	switch (soundType)
 	{
-		bool isBGMPlaying = true;
-		purahSound.channel->isPlaying(&isBGMPlaying);
-
-		if (isBGMPlaying)
+		case SoundType::BGM:
 		{
-			purahSound.channel->stop();
+			PlayBGM(sound, channel);
+			break;
 		}
-
-		system->playSound(purahSound.sound, 0, false, &purahSound.channel);
+		case SoundType::EFFECT:
+		{
+			PlaySfx(sound, channel);
+			break;
+		}
 	}
 }
 
-void PurahEngine::SoundManager::PlayEffect(const std::wstring& soundName, AudioSource* audioSource)
+void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel)
 {
-	auto& purahSound = soundMap.at(audioSource);
+	bool isBGMPlaying = true;
+	(*channel)->isPlaying(&isBGMPlaying);
 
-	if (purahSound.soundName == soundName)
+	if (isBGMPlaying)
 	{
-		bool isPlaying = true;
-		purahSound.channel->isPlaying(&isPlaying);
-		if (!isPlaying)
-		{
-			system->playSound(purahSound.sound, 0, false, &purahSound.channel);
-		}
-
-		position.x = purahSound.transform->GetWorldPosition().x();
-		position.y = purahSound.transform->GetWorldPosition().y();
-		position.z = purahSound.transform->GetWorldPosition().z();
-
-		auto r = purahSound.channel->set3DAttributes(&position, 0);
-		purahSound.channel->setPaused(false);
-		purahSound.isPlaying = purahSound.channel->getCurrentSound(&purahSound.sound);
+		(*channel)->stop();
 	}
+
+	system->playSound(sound, 0, false, channel);
+}
+
+void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel)
+{
+	bool isPlaying = true;
+	(*channel)->isPlaying(&isPlaying);
+	if (!isPlaying)
+	{
+		system->playSound(sound, 0, false, channel);
+	}
+
+	(*channel)->setPaused(false);
+	isPlaying = (*channel)->getCurrentSound(&sound);
 }
 
 void PurahEngine::SoundManager::Update()
 {
-	FMOD_VECTOR lastPos = { 0.0f, 0.0f, 0.0f };
-	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-
-
-	if (listenerTransform != nullptr)
-	{
-		Eigen::Vector3f pos = listenerTransform->GetWorldPosition();
-		listenerPosition.x = pos.x();
-		listenerPosition.y = pos.y();
-		listenerPosition.z = pos.z();
-
-		Eigen::Vector3f forward = listenerTransform->GetFront();
-		listenerForward.x = forward.x();
-		listenerForward.y = forward.y();
-		listenerForward.z = forward.z();
-
-		Eigen::Vector3f up = listenerTransform->GetUp();
-		listenerUp.x = up.x();
-		listenerUp.y = up.y();
-		listenerUp.z = up.z();
-	}
-
-	SetObject3DAttributes();
-	system->set3DListenerAttributes(0, &listenerPosition, 0, &listenerForward, &listenerUp);
-
 	system->update();
-	lastPos = listenerPosition;
 }
 
-void PurahEngine::SoundManager::SetListenerTransform(PurahEngine::Transform* transform)
+void PurahEngine::SoundManager::Set3DListenerAttributes(FMOD_VECTOR pos, FMOD_VECTOR forward, FMOD_VECTOR up)
 {
-	listenerTransform = transform;
-}
-
-void PurahEngine::SoundManager::SetObject3DAttributes()
-{
-	for (auto iter = soundMap.begin(); iter != soundMap.end(); iter++)
-	{
-		auto purahSound = soundMap.at(iter->first);
-
-		Eigen::Vector3f pos = purahSound.transform->GetWorldPosition();
-		position.x = pos.x();
-		position.y = pos.y();
-		position.z = pos.z();
-
-		auto r = purahSound.channel->set3DAttributes(&position, 0);
-
-		purahSound.lastPos = position;
-	}
+	system->set3DListenerAttributes(0, &pos, 0, &forward, &up);
 }
 
 FMOD::System* PurahEngine::SoundManager::GetSystem() const
@@ -200,14 +134,14 @@ FMOD::System* PurahEngine::SoundManager::GetSystem() const
 }
 
 PurahEngine::SoundManager::SoundManager()
-	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr), listenerTransform(nullptr)
+	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr)
 {
 
 }
 
 PurahEngine::SoundManager::~SoundManager()
 {
-	
+
 }
 
 PurahEngine::SoundManager& PurahEngine::SoundManager::GetInstance()

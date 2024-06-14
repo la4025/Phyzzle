@@ -323,15 +323,16 @@ void PurahEngine::GameObject::LateUpdateEvent(std::queue<std::pair<Component*, s
 
 void PurahEngine::GameObject::DeleteChild(GameObject* child)
 {
-	for (int i = 0; i < trans->GetChildren().size(); i++)
+	for (int i = 0; i < trans->children.size(); i++)
 	{
-		if (trans->GetChildren()[i]->GetGameObject() == child)
+		if (trans->children[i]->GetGameObject() == child)
 		{
-			delete trans->GetChildren()[i]->GetGameObject();
-			trans->GetChildren().erase(trans->GetChildren().begin() + i);
+			delete trans->children[i]->GetGameObject();
+			trans->children.erase(trans->children.begin() + i);
+			break;
 		}
 
-		trans->GetChildren()[i]->GetGameObject()->DeleteChild(child);
+		trans->children[i]->GetGameObject()->DeleteChild(child);
 	}
 }
 
@@ -344,10 +345,7 @@ void PurahEngine::GameObject::Destroy()
 {
 	SetEnable(false);
 	isDestroy = true;
-	if (state != ObjectState::ENABLE)
-	{
-		state = ObjectState::DESTROY;
-	}
+	state = ObjectState::DESTROY;
 
 	for (int i = 0; i < trans->GetChildren().size(); i++)
 	{
@@ -436,7 +434,7 @@ void PurahEngine::GameObject::DestroyEvent(std::queue<GameObject*>& destroyQueue
 	{
 		if ((*iter)->GetState() == Component::ComponentState::DESTROY)
 		{
-			delete *iter;
+			delete* iter;
 			iter = componentList.erase(iter);
 		}
 		else
@@ -487,6 +485,7 @@ void PurahEngine::GameObject::StateChangeEvent(bool parentEnable)
 
 			for (int i = 0; i < trans->GetChildren().size(); i++)
 			{
+				trans->children[i]->GetGameObject()->Destroy();
 				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent(false);
 			}
 

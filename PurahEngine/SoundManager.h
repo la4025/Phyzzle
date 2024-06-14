@@ -1,8 +1,6 @@
 #pragma once
 #include "PurahEngineAPI.h"
 
-#include "PurahSound.h"
-
 #include <fmod.h>
 #include <fmod.hpp>
 #include <fmod_errors.h>
@@ -14,29 +12,35 @@ namespace PurahEngine
 	class Transform;
 	class AudioSource;
 
+	enum class SoundType
+	{
+		BGM,
+		EFFECT
+	};
+
 	class PURAHENGINE_API SoundManager
 	{
 	public:
 		void Initialize();
 		void Finalize();
 
-		void LoadSound(const std::wstring& soundName, PurahEngine::Transform* transform, AudioSource* audioSource, SoundType type);
+		void CreateSound(SoundType soundType, std::wstring name, FMOD::Sound** sound);
 		
 		void ReleaseSound(AudioSource* audioSource);
 
-		void LoadBGMSound(const std::wstring& soundName, AudioSource* audioSource);
+		void CreateBGMSound(std::wstring name, FMOD::Sound** sound);
 
-		void LoadEffectSound(const std::wstring& soundName, Transform* transform, AudioSource* audioSource);
+		void CreateSfxSound(std::wstring name, FMOD::Sound** sound);
 
-		void PlayBGM(const std::wstring& soundName, AudioSource* audioSource);
+		void PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel);
 
-		void PlayEffect(const std::wstring& soundName, AudioSource* audioSource);
+		void PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel);
+
+		void PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void Update();
 
-		void SetListenerTransform(PurahEngine::Transform* transform);
-
-		void SetObject3DAttributes();
+		void Set3DListenerAttributes(FMOD_VECTOR pos, FMOD_VECTOR forward, FMOD_VECTOR up);
 
 		FMOD::System* GetSystem() const;
 
@@ -45,16 +49,6 @@ namespace PurahEngine
 		FMOD::Channel* bgmChannel;
 		FMOD::Channel* effectChannel;
 		FMOD::ChannelGroup* effectChannelGroup;
-
-		PurahEngine::Transform* listenerTransform;
-
-		std::unordered_map<PurahEngine::AudioSource*, PurahSound> soundMap;
-
-		FMOD_VECTOR position = { 0.0f, 0.0f, 0.0f };
-		FMOD_VECTOR listenerPosition = { 0.0f, 0.0f, 0.0f };
-		FMOD_VECTOR listenerForward = { 0.0f, 0.0f, 0.0f };
-		FMOD_VECTOR listenerUp = { 0.0f, 0.0f, 0.0f };
-
 
 	private:
 		SoundManager();

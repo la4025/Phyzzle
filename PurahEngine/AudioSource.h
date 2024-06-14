@@ -4,6 +4,7 @@
 
 #include "Transform.h"
 #include "SoundManager.h"
+#include "AudioClip.h"
 
 namespace PurahEngine
 {
@@ -14,6 +15,15 @@ namespace PurahEngine
 	class PURAHENGINE_API AudioSource : public Component
 	{
 	public:
+		struct Sound
+		{
+			std::string name;
+			SoundType soundType;
+			float minDistance;
+			float maxDistance;
+		};
+
+	public:
 		AudioSource();
 		~AudioSource();
 
@@ -22,7 +32,9 @@ namespace PurahEngine
 		void Initialize();
 		void OnDataLoadComplete();
 		void Update();
-		std::wstring GetSoundName();
+
+
+		void PlayAudio(std::wstring name);
 
 	public:
 		void PreSerialize(json& jsonData) const override;
@@ -32,7 +44,11 @@ namespace PurahEngine
 
 	private:
 		Transform* soundTransform;
-		std::wstring soundName;
+		std::vector<Sound> soundFile;
+		std::map<std::wstring, AudioClip*> soundMap;
+
 	};
 }
 
+// AudioSource는 AudioClip을 관리만 해야한다. 여기서 구조체에 음원을 등록하게되면
+// 여러개의 음원을 관리하는 AudioSource가 일처리를 제대로 못할 것 같다.

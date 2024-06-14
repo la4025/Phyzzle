@@ -91,7 +91,7 @@ public:
 	/// <param name="texture">: 사용할 이미지 </param>
 	/// <param name="ccwRadianAngle">: 빌보드의 반시계 방향 회전 값(Radian) </param>
 	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
-	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize) abstract;
+	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color) abstract;
 
 	/// <summary>
 	/// Sprite를 그린다.

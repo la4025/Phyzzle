@@ -90,7 +90,7 @@ struct Coroutine : public CoroutineBase<T>
 
         template<std::convertible_to<T> From>
         auto yield_value(From&& from) noexcept {
-            value_ = std::forward<From>(from);
+            this->value_ = std::forward<From>(from);
             return std::suspend_always{};
         }
 
@@ -103,7 +103,7 @@ struct Coroutine : public CoroutineBase<T>
         template<std::convertible_to<T> From>
         auto yield_value(From&& from) noexcept
     	{
-            value_ = std::forward<From>(from);
+            this->value_ = std::forward<From>(from);
             return std::suspend_always{};
         }
     };
@@ -114,9 +114,9 @@ struct CoroutineVoid : public CoroutineBase<void>
 {
     using CoroutineBase<void>::CoroutineBase;
 
-    struct promise_type : public CoroutineBase<void>::promise_type
+    struct promise_type : public CoroutineBase::promise_type_base
 	{
-        using CoroutineBase<void>::promise_type::yield_value;
+        using CoroutineBase<void>::promise_type_base::value_;
         void return_void() {}
     };
 };
