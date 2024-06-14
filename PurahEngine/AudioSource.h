@@ -34,7 +34,9 @@ namespace PurahEngine
 		void Update();
 
 
-		void PlayAudio(std::wstring name);
+		void PlayAudio(std::wstring name); // 재생할 파일 이름
+		void PlayAudio(int i); // 재생할 파일 순서
+		void PlayAudio(); // 기본적으로 첫번째 파일을 재생
 
 	public:
 		void PreSerialize(json& jsonData) const override;

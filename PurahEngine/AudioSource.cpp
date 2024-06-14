@@ -71,6 +71,24 @@ void PurahEngine::AudioSource::PlayAudio(std::wstring name)
 }
 
 
+void PurahEngine::AudioSource::PlayAudio(int i)
+{
+	std::wstring file = std::wstring().assign(soundFile[i].name.begin(), soundFile[i].name.end());
+	if (soundMap[file] != nullptr)
+	{
+		soundMap[file]->PlayAudio();
+	}
+}
+
+void PurahEngine::AudioSource::PlayAudio()
+{
+	std::wstring file = std::wstring().assign(soundFile[0].name.begin(), soundFile[0].name.end());
+	if (soundMap[file] != nullptr)
+	{
+		soundMap[file]->PlayAudio();
+	}
+}
+
 void PurahEngine::AudioSource::PreSerialize(json& jsonData) const
 {
 
