@@ -1,6 +1,5 @@
 #pragma once
 #include "IState.h"
-#include "Coroutine.h"
 
 namespace Phyzzle
 {

@@ -294,8 +294,8 @@ namespace Phyzzle
 	// √Îº“
 	void AttachHoldState::Click_X()
 	{
-		// Put();
-		// StateCancel();
+		Put();
+		StateCancel();
 		// rotate.emplace_back(targetRotation);
 	}
 

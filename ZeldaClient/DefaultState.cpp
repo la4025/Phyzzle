@@ -1,5 +1,6 @@
 #include <Eigen/Dense>
 #include <cmath>
+#include <iostream>
 
 #include "Transform.h"
 #include "TimeController.h"
@@ -16,7 +17,7 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
-		
+
 	}
 
 	void DefaultState::StateExit()
@@ -26,6 +27,20 @@ namespace Phyzzle
 	void DefaultState::StateStay()
 	{
 		CameraUpdate();
+
+		static Coroutine ta = CameraTemp();
+		// static Coroutine taint = CameraTempint();
+
+		if (!ta.done())
+		{
+			ta();
+		}
+
+		// std::optional value = taint.get_value();
+		// if (value.has_value())
+		// {
+		// 
+		// }
 	}
 
 	void DefaultState::Stick_L()
@@ -77,6 +92,28 @@ namespace Phyzzle
 
 	}
 
+	Coroutine<void> DefaultState::CameraTemp()
+	{
+		//int i = 0;
+		//while (true)
+		//{
+		//	std::cout << "Coroutine" << i++ << std::endl;
+		//	co_await WaitForSeconds(2000);
+		//}
+
+		co_return;
+	}
+
+	Coroutine<int> DefaultState::CameraTempint()
+	{
+		int i = 0;
+		while (true)
+		{
+			std::cout << "Coroutine" << i++ << std::endl;
+			co_await nullptr;
+		}
+	}
+
 	void DefaultState::Click_A()
 	{
 		Jump();
@@ -84,7 +121,10 @@ namespace Phyzzle
 
 	void DefaultState::Click_LB()
 	{
-		player->ChangeState(player->data.state);
+		if (!player->data.jumping)
+		{
+			player->ChangeState(player->data.state);
+		}
 	}
 
 	void DefaultState::Click_RB()

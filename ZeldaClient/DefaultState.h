@@ -1,5 +1,6 @@
 #pragma once
 #include "IState.h"
+#include "Coroutine.h"
 
 namespace Phyzzle
 {
@@ -38,6 +39,9 @@ namespace Phyzzle
 
 		void Pressing_LB() override;
 		void Pressing_RB() override;
+
+		Coroutine<void> CameraTemp();
+		Coroutine<int> CameraTempint();
 
 	private:
 		void Jump() const;

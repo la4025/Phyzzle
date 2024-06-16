@@ -218,13 +218,13 @@ void PurahEngine::GameLoop::run()
 	SceneManager::GetInstance().DecommissionEvent();
 
 
-	if (TimeController::GetInstance().GetDeltaTime() != 0.f)
-	{
-		static int currFPS = 0;
-		currFPS = (int) (1.f / TimeController::GetInstance().GetDeltaTime());
+	//if (TimeController::GetInstance().GetDeltaTime() != 0.f)
+	//{
+	//	static int currFPS = 0;
+	//	currFPS = (int) (1.f / TimeController::GetInstance().GetDeltaTime());
 
-		std::cout << currFPS << '\n';
-	}
+	//	std::cout << currFPS << '\n';
+	//}
 
 }
 
