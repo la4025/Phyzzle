@@ -485,7 +485,6 @@ void PurahEngine::GameObject::StateChangeEvent(bool parentEnable)
 
 			for (int i = 0; i < trans->GetChildren().size(); i++)
 			{
-				trans->children[i]->GetGameObject()->Destroy();
 				trans->GetChildren()[i]->GetGameObject()->StateChangeEvent(false);
 			}
 

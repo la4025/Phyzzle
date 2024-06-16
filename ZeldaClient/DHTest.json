@@ -1,12 +1,12 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": 28954,
+      "__Base__instanceID": 27078,
       "name": "Main Camera",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28960,
+        "__Base__instanceID": 27084,
         "position": {
           "x": 0.0,
           "y": 2.77,
@@ -28,7 +28,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28962,
+          "__Base__instanceID": 27086,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
@@ -36,23 +36,23 @@
           "fieldOfView": 1.04719758
         },
         {
-          "__Base__instanceID": 28964,
+          "__Base__instanceID": 27088,
           "__Base__Component": "AudioListener",
-          "__ID__listenerTransform": 28960
+          "__ID__listenerTransform": 27084
         },
         {
-          "__Base__instanceID": 28966,
+          "__Base__instanceID": 27090,
           "__Base__Component": "CameraMovement"
         }
       ]
     },
     {
-      "__Base__instanceID": 28892,
+      "__Base__instanceID": 27016,
       "name": "Directional Light",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28896,
+        "__Base__instanceID": 27020,
         "position": {
           "x": 0.0,
           "y": 3.0,
@@ -74,7 +74,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28898,
+          "__Base__instanceID": 27022,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -102,12 +102,12 @@
       ]
     },
     {
-      "__Base__instanceID": 28936,
+      "__Base__instanceID": 27060,
       "name": "Cube",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28942,
+        "__Base__instanceID": 27066,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -129,9 +129,9 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28946,
+          "__Base__instanceID": 27070,
           "__Base__Component": "AudioSource",
-          "__ID__soundTransform": 28942,
+          "__ID__soundTransform": 27066,
           "soundFile": [
             {
               "fileName": "EffectTest003.mp3",
@@ -154,11 +154,11 @@
           ]
         },
         {
-          "__Base__instanceID": 28948,
+          "__Base__instanceID": 27072,
           "__Base__Component": "Test2"
         },
         {
-          "__Base__instanceID": 28950,
+          "__Base__instanceID": 27074,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -176,19 +176,19 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": 28952,
+          "__Base__instanceID": 27076,
           "__Base__Component": "AudioTest",
-          "__ID__audioSource": 28946
+          "__ID__audioSource": 27070
         }
       ]
     },
     {
-      "__Base__instanceID": 28924,
+      "__Base__instanceID": 27048,
       "name": "Cube (1)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28932,
+        "__Base__instanceID": 27056,
         "position": {
           "x": 2.12,
           "y": 0.5,
@@ -210,7 +210,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28934,
+          "__Base__instanceID": 27058,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -230,12 +230,12 @@
       ]
     },
     {
-      "__Base__instanceID": 28900,
+      "__Base__instanceID": 27024,
       "name": "Cube (3)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28908,
+        "__Base__instanceID": 27032,
         "position": {
           "x": 4.21,
           "y": 0.51,
@@ -257,7 +257,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28910,
+          "__Base__instanceID": 27034,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -277,12 +277,12 @@
       ]
     },
     {
-      "__Base__instanceID": 28912,
+      "__Base__instanceID": 27036,
       "name": "Cube (2)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28920,
+        "__Base__instanceID": 27044,
         "position": {
           "x": -0.583195448,
           "y": -1.29,
@@ -304,7 +304,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28922,
+          "__Base__instanceID": 27046,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -324,12 +324,12 @@
       ]
     },
     {
-      "__Base__instanceID": 28876,
+      "__Base__instanceID": 27000,
       "name": "Sphere",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 28878,
+        "__Base__instanceID": 27002,
         "position": {
           "x": -1.03,
           "y": 1.91,
@@ -351,7 +351,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 28886,
+          "__Base__instanceID": 27010,
           "__Base__Component": "ModelRenderer",
           "modelName": "Primitive/Sphere.fbx",
           "shadow": false,
@@ -364,9 +364,9 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": 28890,
+          "__Base__instanceID": 27014,
           "__Base__Component": "AudioSource",
-          "__ID__soundTransform": 28878,
+          "__ID__soundTransform": 27002,
           "soundFile": [
             {
               "fileName": "BGMTest002.mp3",
@@ -377,9 +377,9 @@
           ]
         },
         {
-          "__Base__instanceID": 28888,
+          "__Base__instanceID": 27012,
           "__Base__Component": "AudioTest",
-          "__ID__audioSource": 28890
+          "__ID__audioSource": 27014
         }
       ]
     }

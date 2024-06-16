@@ -220,6 +220,12 @@ void PurahEngine::SceneManager::LoadScene()
 		return;
 	}
 
+	if (sceneBuffer == L"EXIT")
+	{
+		::PostQuitMessage(0);
+		return;
+	}
+
 	auto& fManager = PurahEngine::FileManager::GetInstance();
 	fManager.clear();
 	DataManager::GetInstance().ClearDontDestroy();
