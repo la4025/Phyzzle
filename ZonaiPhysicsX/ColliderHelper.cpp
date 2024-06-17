@@ -55,9 +55,9 @@ namespace ZonaiPhysics
 		assert(ZnLayer::MIN_LAYER <= _layer && _layer <= ZnLayer::MAX_LAYER);
 
 		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		_pxShape->setSimulationFilterData({ _layer, 0, 0, 0 });
+		_pxShape->setSimulationFilterData({ _layer, _layer, _layer, _layer });
 		physx::PxU32 layerData = 1 << _layer;
-		_pxShape->setQueryFilterData({ 0, layerData, 0, 0 });
+		_pxShape->setQueryFilterData({ layerData, layerData, layerData, layerData });
 	}
 
 	Eigen::Vector3f ColliderHelper::GetLocalPosition(void* _shape)

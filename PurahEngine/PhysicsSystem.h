@@ -18,7 +18,7 @@
 #define NULL_POINTER_REFERENCE(pointer, header, error_path)\
 if(pointer == nullptr)					\
 	PHYSCIS_CAUTUON(header, error_path)	\
-	assert(pointer != nullptr);			\
+// 	assert(pointer != nullptr);			\
 
 
 namespace ZonaiPhysics

@@ -60,7 +60,10 @@ namespace ZonaiPhysics
 		static bool					Capsulecast(float _radius, float _height,	const ZnQueryDesc& _desc, ZnQueryInfo& _out);
 
 		static bool					GeometryOverLap(const physx::PxGeometry& _geom,	const ZnQueryDesc& _desc, ZnQueryInfo& _out);
-
+		static bool					BoxOverLap(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		static bool					SphereOverLap(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		static bool					CapsuleOverLap(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out);
+		
 	public:
 		static void					CreateCharactor();
 

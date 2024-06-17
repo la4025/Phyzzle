@@ -62,10 +62,13 @@ namespace ZonaiPhysics
 		const void* constantBlock, physx::PxU32 constantBlockSize)
 	{
 		const bool maskTest0 = ZnLayer::CanCollide(filterData0.word0, filterData1.word0);
-		// const bool maskTest0 = (filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1);
 
-		// Let triggers through
-		// 트리거를 통과시킵니다.
+		if (!maskTest0)
+		{
+			return physx::PxFilterFlag::eKILL;
+		}
+
+		// 충돌 한 것 중에 하나라도 트리거가 있으면
 		if (physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1))
 		{
 			if (maskTest0)
@@ -94,15 +97,15 @@ namespace ZonaiPhysics
 
 			//pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
-			//return physx::PxFilterFlag::eSUPPRESS;
+			return physx::PxFilterFlag::eSUPPRESS;
 
-			return physx::PxFilterFlag::eKILL;
+			// return physx::PxFilterFlag::eKILL;
 		}
 
 		// Trigger the contact callback for pairs (A,B) where the filtermask of A contains the ID of B and vice versa
 		// A의 필터마스크가 B의 ID를 포함하고 B의 필터마스크가 A의 ID를 포함하는 쌍 (A, B)에 대한 contact 콜백을 트리거합니다.
-		if (maskTest0)
-		{
+		//if (maskTest0)
+		//{
 			pairFlags |= physx::PxPairFlag::eSOLVE_CONTACT;
 
 			pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
@@ -117,9 +120,9 @@ namespace ZonaiPhysics
 			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
 			return physx::PxFilterFlag::eDEFAULT;
-		}
+		//}
 
 		// Ignore pair (no collisions nor events)
-		return physx::PxFilterFlag::eKILL;
+		// return physx::PxFilterFlag::eKILL;
 	}
 }

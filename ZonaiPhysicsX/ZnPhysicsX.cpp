@@ -96,6 +96,12 @@ namespace ZonaiPhysics
 	{
 		auto model = ResourceManager::LoadConvex(_path);
 		
+		if (model == nullptr)
+		{
+			ZONAI_CAUTUON(Create Zonai Convex Failed, Zonai Physics);
+			return ZnConvexID::None;
+		}
+
 		auto pxMesh = ZnFactoryX::CookConvexMesh(model);
 		ResourceManager::UnloadModel(model);
 
@@ -105,6 +111,12 @@ namespace ZonaiPhysics
 	ZnMeshID ZnPhysicsX::TriangleMeshLoadFromPath(const std::wstring& _path)
 	{
 		auto model = ResourceManager::LoadMesh(_path);
+
+		if (model == nullptr)
+		{
+			ZONAI_CAUTUON(Create Zonai TriangleMesh Failed, Zonai Physics);
+			return ZnMeshID::None;
+		}
 
 		auto pxMesh = ZnFactoryX::CookTriagleMesh(model);
 		ResourceManager::UnloadModel(model);
@@ -469,7 +481,7 @@ namespace ZonaiPhysics
 		const auto rawShape = ResourceManager::GetPxConvexShape(_id);
 
 		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
-		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
+		const auto collider = ZnFactoryX::CreateZnCollider<ConvexCollider>(znBody, shape);
 		
 		if (collider)
 		{

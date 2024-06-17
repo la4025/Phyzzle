@@ -73,8 +73,8 @@ namespace Phyzzle
 			const float limitHighAngle = 80.f;	// ÇÏÀÌ ¾Þ±Û
 			const float limitLowAngle = -70.f;	// ·Î¿ì ¾Þ±Û
 
-			int cameraCollisionLayers = 0;
-			int attachRaycastLayers = 0;
+			unsigned int cameraCollisionLayers = 0;
+			unsigned int attachRaycastLayers = 0;
 			bool cameraUpdate = true;			// 
 			float lerpFactor = 0.2f;			// 
 			float acclerpFactor = 0.f;			//

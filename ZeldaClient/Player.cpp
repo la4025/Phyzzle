@@ -491,6 +491,7 @@ namespace Phyzzle
 
 	/**
 	 * 플레이어의 카메라가 바라볼 방향을 설정
+	 * 
 	 * @param _direction 
 	 */
 	void Player::CameraLookTo(const Eigen::Vector3f& _direction)
@@ -507,9 +508,23 @@ namespace Phyzzle
 	 */
 	void Player::CameraLookAt(const Eigen::Vector3f& _position)
 	{
-		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), _position);
+		using namespace Eigen;
 
-		data.cameraArm->SetWorldRotation(targetRotation);
+		Vector3f pos = data.cameraCore->GetWorldPosition();
+		Vector3f direction = _position - pos;
+		direction.normalize();
+
+		Eigen::Vector3f up(0.0f, 1.0f, 0.0f);
+		Eigen::Vector3f right = up.cross(direction).normalized();
+
+		Eigen::Vector3f newUp = direction.cross(right).normalized();
+
+		Eigen::Matrix3f rotation;
+		rotation.col(0) = right;
+		rotation.col(1) = newUp;
+		rotation.col(2) = direction;
+
+		data.cameraCore->SetWorldRotation(Eigen::Quaternionf(rotation));
 	}
 
 	bool Player::RaycastFromCamera(
@@ -580,7 +595,7 @@ namespace Phyzzle
 		PREDESERIALIZE_VALUE(jumpPower);
 		data.jumpPower = jumpPower;
 
-		auto cameraCollisionLayers = data.cameraCollisionLayers;
+		int cameraCollisionLayers = data.cameraCollisionLayers;
 		PREDESERIALIZE_VALUE(cameraCollisionLayers);
 		data.cameraCollisionLayers = cameraCollisionLayers;
 

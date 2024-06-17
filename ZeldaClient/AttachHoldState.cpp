@@ -183,10 +183,15 @@ namespace Phyzzle
 	void AttachHoldState::StateEnter()
 	{
 		{
+			using namespace Eigen;
+
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
 			auto p = player->data.cameraCore->GetLocalPosition();
-			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			p.x() = 0.5f;
+			p.y() = 0.5f;
 
 			player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalRotation(Quaternionf::Identity());
 		}
 
 		TrySelect();
@@ -195,13 +200,16 @@ namespace Phyzzle
 	void AttachHoldState::StateExit()
 	{
 		{
-			if (!selectBody)
-			{
-				auto p = player->data.cameraCore->GetLocalPosition();
-				p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			using namespace Eigen;
 
-				player->data.cameraCore->SetLocalPosition(p);
-			}
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
+			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
+
+			auto rot = player->data.modelCore->GetLocalRotation();
+			player->data.cameraArm->SetLocalRotation(rot);
+
+			player->data.xAngle = 0.f;
 		}
 
 		EnableOutline(false);
@@ -754,18 +762,41 @@ namespace Phyzzle
 
 	void AttachHoldState::CameraUpdate() const
 	{
-		auto playerPos = player->data.modelCore->GetWorldPosition();
-		playerPos.y() = 0.f;
-		auto bodyPos = selectBody->GetPosition();
-		bodyPos.y() = 0.f;
-		auto direction = bodyPos - playerPos;
+		using namespace Eigen;
 
-		player->CameraLookTo(direction.normalized());
+		float offset = 5.f;
+		Vector3f bodyPos = selectBody->GetPosition();
+		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		Vector3f cameraArmPos = player->data.cameraArm->GetWorldPosition();
 
-		// auto half = (bodyPos - playerPos) / 2.f;
-		// auto focus = playerPos + half;
-		// 
-		// player->CameraLookAt(focus);
+		// 카메라 암이 오브젝트를 향하도록 함
+		Vector3f armDirection = bodyPos - playerPos;
+		armDirection.y() = 0.f;
+		armDirection.normalize();
+		player->CameraLookTo(armDirection);
+
+		/// 임시
+		// 카메라가 오브젝트 높이를 따라가도록 함
+		float gap = bodyPos.y() - playerPos.y();
+		if (gap < 9.f)
+		{
+			gap = 9.f;
+		}
+		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
+		cameraCorePos.y() = bodyPos.y();
+		player->data.cameraCore->SetWorldPosition(cameraCorePos);
+
+
+		// 플레이어와 오브젝트 사이를 바라보게 함
+		Vector3f playerToBody = bodyPos - playerPos;
+		Vector3f direction = playerToBody.normalized();
+
+		bodyPos = bodyPos + direction * 5.f;
+		playerPos = playerPos - direction * 5.f;
+
+		Vector3f to = (bodyPos - playerPos) / 2.f;
+		Vector3f focus = playerPos + to;
+		player->CameraLookAt(focus);
 	}
 
 	void AttachHoldState::CameraReset() const

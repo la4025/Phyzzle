@@ -54,7 +54,7 @@ namespace Phyzzle
 
 	void DefaultState::Stick_R()
 	{
-		Around();
+		// Around();
 	}
 
 	void DefaultState::Click_DLeft()
@@ -139,7 +139,7 @@ namespace Phyzzle
 
 	void DefaultState::CameraUpdate()
 	{
-		player->CameraAround();
+		CameraAround();
 		CameraPositionFromAngle();
 	}
 
@@ -214,8 +214,9 @@ namespace Phyzzle
 			distance = player->data.coreDefaultPosition.z() + player->differenceLow.z() * EasingLow(ease);
 		}
 
-		auto modelPos = player->data.cameraArm->GetWorldPosition();
-		auto dir = player->data.cameraCore->GetFront() * -1.f;
+		
+		Eigen::Vector3f modelPos = player->data.cameraArm->GetWorldPosition();
+		Eigen::Vector3f dir = player->data.cameraCore->GetFront() * -1.f;
 		unsigned int layers = player->data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
