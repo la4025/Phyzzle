@@ -31,18 +31,22 @@ void PurahEngine::Test2::Update()
 	if (inputManager.IsKeyPressed(eKey::eKEY_I))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetFront() * 0.1f));
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"footstep.mp3");
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_J))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() - (trans->GetRight() * 0.1f));
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"footstep.mp3");
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_K))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() - (trans->GetFront() * 0.1f));
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"footstep.mp3");
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_L))
 	{
 		trans->SetLocalPosition(trans->GetLocalPosition() + (trans->GetRight() * 0.1f));
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(L"footstep.mp3");
 	}
 	if (inputManager.IsKeyPressed(eKey::eKEY_U))
 	{

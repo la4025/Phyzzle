@@ -5,6 +5,7 @@
 #include "UI.h"
 #include "UnifiedInputManager.h"
 #include "SceneManager.h"
+#include "AudioSource.h"
 
 namespace PurahEngine
 {
@@ -47,6 +48,7 @@ namespace PurahEngine
 			if (targetImage != nullptr && selectedImage != L"")
 			{
 				targetImage->SetTexture(selectedImage);
+				GetGameObject()->GetComponent<AudioSource>()->PlayAudio();
 			}
 		}
 	}
@@ -70,6 +72,7 @@ namespace PurahEngine
 
 	void Button::ButtonEvent()
 	{
+		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(1);
 		for (auto& [targetGameObject, state] : objectOnOffEventList)
 		{
 			targetGameObject->SetEnable(state);

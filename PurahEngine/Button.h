@@ -8,6 +8,7 @@ namespace PurahEngine
 {
 	class Image;
 	class UI;
+	class AudioSource;
 
 	class PURAHENGINE_API Button : public Component
 	{
@@ -39,6 +40,8 @@ namespace PurahEngine
 
 		std::vector<std::pair<GameObject*, bool>> objectOnOffEventList;
 		std::wstring loadSceneEventBuffer;
+
+		AudioSource* audioSource;
 
 	private:
 		// Component을(를) 통해 상속됨
