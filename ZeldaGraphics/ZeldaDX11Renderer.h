@@ -128,6 +128,8 @@ public:
 	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer) override;
 	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) override;
 
+	virtual void DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix, const std::vector<Eigen::Matrix4f>& particleMatrix, unsigned int layer, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, const std::vector<Color>& colors) override;
+
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color) override;
 
 	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) override;
@@ -168,6 +170,7 @@ private:
 	void DrawSpriteRenderInfo();
 	void DrawImage();
 	void DrawBillBoardRenderInfo();
+	void DrawBillBoardParticleRenderInfo();
 
 	void DrawDeferredRenderInfo();
 	void DrawForwardRenderInfo();
@@ -219,6 +222,7 @@ private:
 	ID3D11BlendState* alphaBlendState = nullptr;
 	ID3D11BlendState* spriteBlendState = nullptr;
 
+	ID3D11DepthStencilState* particleDepthStencilState = nullptr;
 	ID3D11DepthStencilState* cubeMapDepthStencilState = nullptr;
 
 	D3D11_VIEWPORT defaultViewPort;
@@ -261,6 +265,9 @@ private:
 	HWND hWnd;
 	unsigned int screenWidth;
 	unsigned int screenHeight;
+
+private:
+	unsigned int particleCount;
 
 private:
 	// ID Map

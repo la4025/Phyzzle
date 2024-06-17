@@ -33,6 +33,7 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 	ComponentFactory::GetInstance().RegisterComponent<PointLight>("PointLight");
 	ComponentFactory::GetInstance().RegisterComponent<ModelRenderer>("ModelRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<MeshRenderer>("MeshRenderer");
+	ComponentFactory::GetInstance().RegisterComponent<SpriteRenderer>("SpriteRenderer");
 	ComponentFactory::GetInstance().RegisterComponent<Animator>("Animator");
 	ComponentFactory::GetInstance().RegisterComponent<ParticleSystem>("ParticleSystem");
 	ComponentFactory::GetInstance().RegisterComponent<AudioSource>("AudioSource");

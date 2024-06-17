@@ -1,12 +1,12 @@
 {
   "gameObjects": [
     {
-      "__Base__instanceID": 25234,
+      "__Base__instanceID": 25238,
       "name": "Directional Light",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25238,
+        "__Base__instanceID": 25242,
         "position": {
           "x": 0.0,
           "y": 5.0,
@@ -28,7 +28,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 25240,
+          "__Base__instanceID": 25244,
           "__Base__Component": "DirectionalLight",
           "ambient": {
             "x": 0.2,
@@ -56,12 +56,12 @@
       ]
     },
     {
-      "__Base__instanceID": 25332,
+      "__Base__instanceID": 25452,
       "name": "Point Light",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25338,
+        "__Base__instanceID": 25458,
         "position": {
           "x": -5.0,
           "y": 3.0,
@@ -83,7 +83,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 25334,
+          "__Base__instanceID": 25454,
           "__Base__Component": "PointLight",
           "ambient": {
             "x": 0.2,
@@ -111,12 +111,12 @@
       ]
     },
     {
-      "__Base__instanceID": 25274,
+      "__Base__instanceID": 25350,
       "name": "Ground",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25282,
+        "__Base__instanceID": 25358,
         "position": {
           "x": 0.0,
           "y": -0.5,
@@ -138,7 +138,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": 25276,
+          "__Base__instanceID": 25352,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -156,7 +156,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": 25286,
+          "__Base__instanceID": 25362,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -176,7 +176,7 @@
           "physicsMaterial": "Ground"
         },
         {
-          "__Base__instanceID": 25290,
+          "__Base__instanceID": 25366,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -190,12 +190,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1362,
+      "__Base__instanceID": -1394,
       "name": "Launcher",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1364,
+        "__Base__instanceID": -1396,
         "position": {
           "x": 5.0,
           "y": 0.5,
@@ -214,12 +214,12 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1378
+          -1410
         ]
       },
       "components": [
         {
-          "__Base__instanceID": -1366,
+          "__Base__instanceID": -1398,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -231,7 +231,7 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1370,
+          "__Base__instanceID": -1402,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -251,9 +251,9 @@
           "physicsMaterial": "Ground"
         },
         {
-          "__Base__instanceID": -1374,
+          "__Base__instanceID": -1406,
           "__Base__Component": "SlideJoint",
-          "__ID__body": -1366,
+          "__ID__body": -1398,
           "LocalAnchor": {
             "x": 0.0,
             "y": 0.0,
@@ -265,7 +265,7 @@
             "y": 0.0,
             "z": 0.707106769
           },
-          "__ID__connectedBody": -1390,
+          "__ID__connectedBody": -1422,
           "connectedLocalAnchor": {
             "x": 0.0,
             "y": 0.199999988,
@@ -294,12 +294,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1376,
+      "__Base__instanceID": -1408,
       "name": "Launcher Platform",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1378,
+        "__Base__instanceID": -1410,
         "position": {
           "x": 0.0,
           "y": -0.2,
@@ -317,13 +317,13 @@
           "z": 5.0
         },
         "__ID__parentTransform": [
-          -1364
+          -1396
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1386,
+          "__Base__instanceID": -1418,
           "__Base__Component": "LauncherPlatform",
           "moveDirection": {
             "x": 0.0,
@@ -336,7 +336,7 @@
           "waitTime": 2.0
         },
         {
-          "__Base__instanceID": -1390,
+          "__Base__instanceID": -1422,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": false,
@@ -348,7 +348,7 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1392,
+          "__Base__instanceID": -1424,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -366,7 +366,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1394,
+          "__Base__instanceID": -1426,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -388,12 +388,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1514,
+      "__Base__instanceID": -1466,
       "name": "Button",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1516,
+        "__Base__instanceID": -1468,
         "position": {
           "x": -2.0,
           "y": -0.1,
@@ -412,35 +412,35 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1522,
-          -1542
+          -1474,
+          -1494
         ]
       },
       "components": [
         {
-          "__Base__instanceID": -1518,
+          "__Base__instanceID": -1470,
           "__Base__Component": "ButtonDevice",
           "buttonType": 1,
           "timerType": 0,
           "time": 3.0,
-          "__ID__pushableObject": -1540,
+          "__ID__pushableObject": -1492,
           "releasedSpeed": 1.0,
           "activationDepth": 0.07,
           "deactivationDepth": 0.04,
           "executeDelay": 0.3,
           "__ID__targetDeviceList": [
-            25342
+            25462
           ]
         }
       ]
     },
     {
-      "__Base__instanceID": -1520,
+      "__Base__instanceID": -1472,
       "name": "ButtonFrame",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1522,
+        "__Base__instanceID": -1474,
         "position": {
           "x": 0.0,
           "y": 0.05,
@@ -458,13 +458,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1516
+          -1468
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1532,
+          "__Base__instanceID": -1484,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -482,7 +482,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1534,
+          "__Base__instanceID": -1486,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -494,7 +494,7 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1536,
+          "__Base__instanceID": -1488,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -514,9 +514,9 @@
           "physicsMaterial": "Device"
         },
         {
-          "__Base__instanceID": -1538,
+          "__Base__instanceID": -1490,
           "__Base__Component": "SlideJoint",
-          "__ID__body": -1534,
+          "__ID__body": -1486,
           "LocalAnchor": {
             "x": 0.0,
             "y": 0.0,
@@ -528,7 +528,7 @@
             "y": 0.0,
             "z": -0.70710665
           },
-          "__ID__connectedBody": -1554,
+          "__ID__connectedBody": -1506,
           "connectedLocalAnchor": {
             "x": 0.0,
             "y": -0.200000018,
@@ -557,12 +557,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1540,
+      "__Base__instanceID": -1492,
       "name": "Pushable",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1542,
+        "__Base__instanceID": -1494,
         "position": {
           "x": 0.0,
           "y": 0.15,
@@ -580,13 +580,13 @@
           "z": 0.8
         },
         "__ID__parentTransform": [
-          -1516
+          -1468
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1550,
+          "__Base__instanceID": -1502,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -604,7 +604,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1552,
+          "__Base__instanceID": -1504,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -624,7 +624,7 @@
           "physicsMaterial": "Device"
         },
         {
-          "__Base__instanceID": -1554,
+          "__Base__instanceID": -1506,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": false,
@@ -638,12 +638,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1436,
+      "__Base__instanceID": -1278,
       "name": "Door",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1438,
+        "__Base__instanceID": -1280,
         "position": {
           "x": -5.0,
           "y": 0.0,
@@ -662,29 +662,29 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1442,
-          -1460,
-          -1478,
-          -1496
+          -1284,
+          -1302,
+          -1320,
+          -1338
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 25316,
+          "__Base__instanceID": 25404,
           "__Base__Component": "Door",
           "__ID__targetDeviceList": [
-            -1510
+            -1352
           ]
         }
       ]
     },
     {
-      "__Base__instanceID": -1440,
+      "__Base__instanceID": -1282,
       "name": "DoorFrame Left",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1442,
+        "__Base__instanceID": -1284,
         "position": {
           "x": -1.0,
           "y": 1.0,
@@ -702,13 +702,13 @@
           "z": 0.2
         },
         "__ID__parentTransform": [
-          -1438
+          -1280
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1450,
+          "__Base__instanceID": -1292,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -726,7 +726,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1452,
+          "__Base__instanceID": -1294,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -746,7 +746,7 @@
           "physicsMaterial": ""
         },
         {
-          "__Base__instanceID": -1454,
+          "__Base__instanceID": -1296,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -760,12 +760,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1458,
+      "__Base__instanceID": -1300,
       "name": "DoorFrame Right",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1460,
+        "__Base__instanceID": -1302,
         "position": {
           "x": 1.0,
           "y": 1.0,
@@ -783,13 +783,13 @@
           "z": 0.2
         },
         "__ID__parentTransform": [
-          -1438
+          -1280
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1468,
+          "__Base__instanceID": -1310,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -807,7 +807,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1470,
+          "__Base__instanceID": -1312,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -827,7 +827,7 @@
           "physicsMaterial": ""
         },
         {
-          "__Base__instanceID": -1472,
+          "__Base__instanceID": -1314,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -841,12 +841,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1476,
+      "__Base__instanceID": -1318,
       "name": "DoorFrame Up",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1478,
+        "__Base__instanceID": -1320,
         "position": {
           "x": 0.0,
           "y": 2.1,
@@ -864,13 +864,13 @@
           "z": 0.2
         },
         "__ID__parentTransform": [
-          -1438
+          -1280
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1486,
+          "__Base__instanceID": -1328,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -888,7 +888,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1488,
+          "__Base__instanceID": -1330,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -908,7 +908,7 @@
           "physicsMaterial": ""
         },
         {
-          "__Base__instanceID": -1490,
+          "__Base__instanceID": -1332,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -922,12 +922,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1494,
+      "__Base__instanceID": -1336,
       "name": "Door Parts",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1496,
+        "__Base__instanceID": -1338,
         "position": {
           "x": 0.0,
           "y": 1.0,
@@ -945,13 +945,13 @@
           "z": 0.1
         },
         "__ID__parentTransform": [
-          -1438
+          -1280
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1504,
+          "__Base__instanceID": -1346,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -971,7 +971,7 @@
           "physicsMaterial": "123123123123123131231231"
         },
         {
-          "__Base__instanceID": -1506,
+          "__Base__instanceID": -1348,
           "__Base__Component": "RigidBody",
           "isKinematic": true,
           "useGravity": false,
@@ -983,7 +983,7 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1510,
+          "__Base__instanceID": -1352,
           "__Base__Component": "DoorParts",
           "movePos": {
             "x": -2.0,
@@ -993,7 +993,7 @@
           "speed": 1.0
         },
         {
-          "__Base__instanceID": -1512,
+          "__Base__instanceID": -1354,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1013,7 +1013,7 @@
       ]
     },
     {
-      "__Base__instanceID": 25296,
+      "__Base__instanceID": 25372,
       "name": "Wood Cube",
       "active": true,
       "tag": [
@@ -1021,7 +1021,7 @@
         "Rewindable"
       ],
       "transform": {
-        "__Base__instanceID": 25298,
+        "__Base__instanceID": 25374,
         "position": {
           "x": 13.0,
           "y": 3.0,
@@ -1040,20 +1040,20 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          25272
+          25330
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 25300,
+          "__Base__instanceID": 25376,
           "__Base__Component": "Burnable",
           "burnTime": 3.0,
-          "__ID__burnableObject": 25260,
-          "__ID__effect": 25314,
+          "__ID__burnableObject": 25318,
+          "__ID__effect": 25390,
           "destoryDelay": 5.0
         },
         {
-          "__Base__instanceID": 25310,
+          "__Base__instanceID": 25386,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -1073,7 +1073,7 @@
           "physicsMaterial": "Object"
         },
         {
-          "__Base__instanceID": 25306,
+          "__Base__instanceID": 25382,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -1085,12 +1085,12 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": 25302,
+          "__Base__instanceID": 25378,
           "__Base__Component": "PzObject",
           "connectedObject": []
         },
         {
-          "__Base__instanceID": 25314,
+          "__Base__instanceID": 25390,
           "__Base__Component": "ParticleSystem",
           "generatorType": 1,
           "elementType": 0,
@@ -1137,12 +1137,12 @@
       ]
     },
     {
-      "__Base__instanceID": 25260,
+      "__Base__instanceID": 25318,
       "name": "Wood Cube",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25272,
+        "__Base__instanceID": 25330,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -1155,18 +1155,18 @@
           "w": 1.0
         },
         "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
         },
         "__ID__parentTransform": [
-          25298
+          25374
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 25264,
+          "__Base__instanceID": 25322,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1186,14 +1186,14 @@
       ]
     },
     {
-      "__Base__instanceID": -1324,
+      "__Base__instanceID": -1356,
       "name": "Iron Cube (0)",
       "active": true,
       "tag": [
         "Conductor Object"
       ],
       "transform": {
-        "__Base__instanceID": -1326,
+        "__Base__instanceID": -1358,
         "position": {
           "x": -4.0,
           "y": 3.0,
@@ -1215,7 +1215,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": -1334,
+          "__Base__instanceID": -1366,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1233,7 +1233,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1338,
+          "__Base__instanceID": -1370,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -1253,7 +1253,7 @@
           "physicsMaterial": "Object"
         },
         {
-          "__Base__instanceID": -1340,
+          "__Base__instanceID": -1372,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -1265,21 +1265,21 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1344,
+          "__Base__instanceID": -1376,
           "__Base__Component": "PzObject",
           "connectedObject": []
         }
       ]
     },
     {
-      "__Base__instanceID": -1302,
+      "__Base__instanceID": -1428,
       "name": "Iron Cube (1)",
       "active": true,
       "tag": [
         "Conductor Object"
       ],
       "transform": {
-        "__Base__instanceID": -1304,
+        "__Base__instanceID": -1430,
         "position": {
           "x": -2.0,
           "y": 3.0,
@@ -1301,7 +1301,7 @@
       },
       "components": [
         {
-          "__Base__instanceID": -1312,
+          "__Base__instanceID": -1438,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1319,7 +1319,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1316,
+          "__Base__instanceID": -1442,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -1339,7 +1339,7 @@
           "physicsMaterial": "Object"
         },
         {
-          "__Base__instanceID": -1318,
+          "__Base__instanceID": -1444,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -1351,19 +1351,19 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1322,
+          "__Base__instanceID": -1448,
           "__Base__Component": "PzObject",
           "connectedObject": []
         }
       ]
     },
     {
-      "__Base__instanceID": -1396,
+      "__Base__instanceID": -1662,
       "name": "Disconnected Wire",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1398,
+        "__Base__instanceID": -1664,
         "position": {
           "x": -2.0,
           "y": 0.0,
@@ -1382,20 +1382,20 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1402,
-          -1414,
-          -1426
+          -1668,
+          -1680,
+          -1692
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1400,
+      "__Base__instanceID": -1666,
       "name": "WireMesh (0)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1402,
+        "__Base__instanceID": -1668,
         "position": {
           "x": 0.0,
           "y": 0.05,
@@ -1413,13 +1413,13 @@
           "z": 0.8
         },
         "__ID__parentTransform": [
-          -1398
+          -1664
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1410,
+          "__Base__instanceID": -1676,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1439,12 +1439,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1412,
+      "__Base__instanceID": -1678,
       "name": "WireMesh (1)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1414,
+        "__Base__instanceID": -1680,
         "position": {
           "x": 0.0,
           "y": 0.05,
@@ -1462,13 +1462,13 @@
           "z": 0.8
         },
         "__ID__parentTransform": [
-          -1398
+          -1664
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1422,
+          "__Base__instanceID": -1688,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1488,12 +1488,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1424,
+      "__Base__instanceID": -1690,
       "name": "Trigger",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1426,
+        "__Base__instanceID": -1692,
         "position": {
           "x": 0.0,
           "y": 0.1,
@@ -1511,13 +1511,13 @@
           "z": 0.2
         },
         "__ID__parentTransform": [
-          -1398
+          -1664
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1434,
+          "__Base__instanceID": -1700,
           "__Base__Component": "BoxCollider",
           "cType": 0,
           "disableQuery": false,
@@ -1537,21 +1537,21 @@
           "physicsMaterial": ""
         },
         {
-          "__Base__instanceID": 25228,
+          "__Base__instanceID": 25224,
           "__Base__Component": "DisconnectedWire",
           "__ID__targetDeviceList": [
-            25294
+            25370
           ]
         }
       ]
     },
     {
-      "__Base__instanceID": -1558,
+      "__Base__instanceID": -1450,
       "name": "Wire (0)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1560,
+        "__Base__instanceID": -1452,
         "position": {
           "x": -2.0,
           "y": 0.0,
@@ -1570,26 +1570,26 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1564
+          -1456
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 25342,
+          "__Base__instanceID": 25462,
           "__Base__Component": "ElectricWire",
           "__ID__targetDeviceList": [
-            25228
+            25224
           ]
         }
       ]
     },
     {
-      "__Base__instanceID": -1562,
+      "__Base__instanceID": -1454,
       "name": "WireMesh",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1564,
+        "__Base__instanceID": -1456,
         "position": {
           "x": 0.0,
           "y": 0.05,
@@ -1607,13 +1607,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1560
+          -1452
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1572,
+          "__Base__instanceID": -1464,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1633,12 +1633,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1346,
+      "__Base__instanceID": -1378,
       "name": "Wire (1)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1348,
+        "__Base__instanceID": -1380,
         "position": {
           "x": -2.0,
           "y": 0.0,
@@ -1657,26 +1657,26 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1352
+          -1384
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 25294,
+          "__Base__instanceID": 25370,
           "__Base__Component": "ElectricWire",
           "__ID__targetDeviceList": [
-            25316
+            25404
           ]
         }
       ]
     },
     {
-      "__Base__instanceID": -1350,
+      "__Base__instanceID": -1382,
       "name": "WireMesh",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1352,
+        "__Base__instanceID": -1384,
         "position": {
           "x": 0.0,
           "y": 0.05,
@@ -1694,13 +1694,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1348
+          -1380
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1360,
+          "__Base__instanceID": -1392,
           "__Base__Component": "MeshRenderer",
           "meshType": 1,
           "wireFrame": false,
@@ -1720,18 +1720,18 @@
       ]
     },
     {
-      "__Base__instanceID": -1574,
+      "__Base__instanceID": -1510,
       "name": "Player",
       "active": true,
       "tag": [
         "Phyzzle Player"
       ],
       "transform": {
-        "__Base__instanceID": -1576,
+        "__Base__instanceID": -1512,
         "position": {
-          "x": 15.0,
+          "x": 16.0,
           "y": 0.0,
-          "z": -10.0
+          "z": -0.5
         },
         "rotation": {
           "x": 0.0,
@@ -1746,15 +1746,15 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -1592,
-          -1608,
-          -1714,
-          -1720
+          -1528,
+          -1544,
+          -1650,
+          -1656
         ]
       },
       "components": [
         {
-          "__Base__instanceID": -1578,
+          "__Base__instanceID": -1514,
           "__Base__Component": "RigidBody",
           "isKinematic": false,
           "useGravity": true,
@@ -1766,7 +1766,7 @@
           "angularDamping": 0.05
         },
         {
-          "__Base__instanceID": -1582,
+          "__Base__instanceID": -1518,
           "__Base__Component": "CapsuleCollider",
           "cType": 1,
           "disableQuery": false,
@@ -1783,29 +1783,29 @@
           "physicsMaterial": "PlayerBody"
         },
         {
-          "__Base__instanceID": -1588,
+          "__Base__instanceID": -1524,
           "__Base__Component": "Player",
           "moveSpeed": 10.0,
           "holdSpeed": 5.0,
           "sensitivity": 90.0,
           "jumpPower": 30.0,
-          "__ID__playerRigidbody": -1578,
-          "__ID__modelCore": -1616,
-          "__ID__cameraArm": -1592,
-          "__ID__cameraCore": -1596,
-          "__ID__animator": -1620,
-          "__ID__crossHead": -1718,
+          "__ID__playerRigidbody": -1514,
+          "__ID__modelCore": -1552,
+          "__ID__cameraArm": -1528,
+          "__ID__cameraCore": -1532,
+          "__ID__animator": -1556,
+          "__ID__crossHead": -1654,
           "cameraCullingCollisionLayers": -1
         }
       ]
     },
     {
-      "__Base__instanceID": -1590,
+      "__Base__instanceID": -1526,
       "name": "CameraArm",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1592,
+        "__Base__instanceID": -1528,
         "position": {
           "x": 0.0,
           "y": 2.0,
@@ -1823,21 +1823,21 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1576
+          -1512
         ],
         "__ID__children": [
-          -1596
+          -1532
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1594,
+      "__Base__instanceID": -1530,
       "name": "Camera",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1596,
+        "__Base__instanceID": -1532,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -1855,18 +1855,18 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1592
+          -1528
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1602,
+          "__Base__instanceID": -1538,
           "__Base__Component": "AudioListener",
-          "__ID__listenerTransform": -1596
+          "__ID__listenerTransform": -1532
         },
         {
-          "__Base__instanceID": -1604,
+          "__Base__instanceID": -1540,
           "__Base__Component": "Camera",
           "mainCamera": true,
           "cameraNear": 0.3,
@@ -1876,12 +1876,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1606,
+      "__Base__instanceID": -1542,
       "name": "Body",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1608,
+        "__Base__instanceID": -1544,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -1899,22 +1899,22 @@
           "z": 0.005
         },
         "__ID__parentTransform": [
-          -1576
+          -1512
         ],
         "__ID__children": [
-          -1616,
-          -1624
+          -1552,
+          -1560
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1614,
+      "__Base__instanceID": -1550,
       "name": "Model",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1616,
+        "__Base__instanceID": -1552,
         "position": {
           "x": 0.0,
           "y": 10.0,
@@ -1932,13 +1932,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1608
+          -1544
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1618,
+          "__Base__instanceID": -1554,
           "__Base__Component": "ModelRenderer",
           "modelName": "Player/Player.fbx",
           "shadow": true,
@@ -1951,7 +1951,7 @@
           "outLineA": 1.0
         },
         {
-          "__Base__instanceID": -1620,
+          "__Base__instanceID": -1556,
           "__Base__Component": "Animator",
           "playWithStart": true,
           "playWithStartAnimationName": "Armature|Armature|Armature|idle",
@@ -2014,12 +2014,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1622,
+      "__Base__instanceID": -1558,
       "name": "Koo",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1624,
+        "__Base__instanceID": -1560,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -2037,22 +2037,22 @@
           "z": 120.0
         },
         "__ID__parentTransform": [
-          -1608
+          -1544
         ],
         "__ID__children": [
-          -1628,
-          -1708
+          -1564,
+          -1644
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1626,
+      "__Base__instanceID": -1562,
       "name": "Armature",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1628,
+        "__Base__instanceID": -1564,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -2070,21 +2070,21 @@
           "z": 100.0
         },
         "__ID__parentTransform": [
-          -1624
+          -1560
         ],
         "__ID__children": [
-          -1632
+          -1568
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1630,
+      "__Base__instanceID": -1566,
       "name": "body_upper",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1632,
+        "__Base__instanceID": -1568,
         "position": {
           "x": -9.936873E-07,
           "y": 0.00104895444,
@@ -2102,27 +2102,27 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1628
+          -1564
         ],
         "__ID__children": [
-          -1636,
-          -1644,
-          -1652,
-          -1664,
-          -1676,
-          -1684,
-          -1696
+          -1572,
+          -1580,
+          -1588,
+          -1600,
+          -1612,
+          -1620,
+          -1632
         ]
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1634,
+      "__Base__instanceID": -1570,
       "name": "apron.L",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1636,
+        "__Base__instanceID": -1572,
         "position": {
           "x": -0.00191481214,
           "y": 0.0004884366,
@@ -2140,6 +2140,506 @@
           "z": 1.00000012
         },
         "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1576
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1574,
+      "name": "apron.L_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1576,
+        "position": {
+          "x": 0.0,
+          "y": 0.004835865,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1572
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1578,
+      "name": "apron.R",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1580,
+        "position": {
+          "x": 0.00191640086,
+          "y": 0.001046052,
+          "z": 0.00399985071
+        },
+        "rotation": {
+          "x": -0.0578763224,
+          "y": 0.44586584,
+          "z": 0.8668755,
+          "w": -0.215362266
+        },
+        "scale": {
+          "x": 1.00000024,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1584
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1582,
+      "name": "apron.R_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1584,
+        "position": {
+          "x": 0.0,
+          "y": 0.00483586546,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1580
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1586,
+      "name": "arm_upper.L",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1588,
+        "position": {
+          "x": -0.003721435,
+          "y": 0.00504826,
+          "z": -0.000127954627
+        },
+        "rotation": {
+          "x": -0.0339982547,
+          "y": 0.13081257,
+          "z": 0.84529686,
+          "w": 0.5169192
+        },
+        "scale": {
+          "x": 1.00000012,
+          "y": 0.99999994,
+          "z": 0.999999762
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1592
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1590,
+      "name": "arm_lower.L",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1592,
+        "position": {
+          "x": 1.9324943E-10,
+          "y": 0.00451608,
+          "z": -3.5157427E-10
+        },
+        "rotation": {
+          "x": -0.003236711,
+          "y": 0.208326221,
+          "z": 0.000434103626,
+          "w": 0.978054
+        },
+        "scale": {
+          "x": 0.999999642,
+          "y": 1.00000024,
+          "z": 0.9999999
+        },
+        "__ID__parentTransform": [
+          -1588
+        ],
+        "__ID__children": [
+          -1596
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1594,
+      "name": "arm_lower.L_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1596,
+        "position": {
+          "x": 0.0,
+          "y": 0.00451608,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1592
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1598,
+      "name": "arm_upper.R",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1600,
+        "position": {
+          "x": 0.00372022274,
+          "y": 0.00501932437,
+          "z": -0.000596007449
+        },
+        "rotation": {
+          "x": -0.528901637,
+          "y": -0.339896441,
+          "z": -0.481401026,
+          "w": 0.6107263
+        },
+        "scale": {
+          "x": 1.00000012,
+          "y": 1.00000012,
+          "z": 0.99999994
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1604
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1602,
+      "name": "arm_lower.R",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1604,
+        "position": {
+          "x": 4.47034826E-10,
+          "y": 0.0045160763,
+          "z": 2.66336425E-10
+        },
+        "rotation": {
+          "x": 0.00293511618,
+          "y": -4.79989467E-05,
+          "z": 0.0007080482,
+          "w": 0.99999547
+        },
+        "scale": {
+          "x": 0.99999994,
+          "y": 1.00000036,
+          "z": 0.9999999
+        },
+        "__ID__parentTransform": [
+          -1600
+        ],
+        "__ID__children": [
+          -1608
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1606,
+      "name": "arm_lower.R_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1608,
+        "position": {
+          "x": 0.0,
+          "y": 0.00451607676,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1604
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1610,
+      "name": "head",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1612,
+        "position": {
+          "x": 0.0,
+          "y": 0.00627080724,
+          "z": 3.329478E-10
+        },
+        "rotation": {
+          "x": -0.0565807745,
+          "y": -0.05808366,
+          "z": -0.0172771383,
+          "w": 0.9965573
+        },
+        "scale": {
+          "x": 0.9999998,
+          "y": 1.00000012,
+          "z": 0.9999998
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1616
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1614,
+      "name": "head_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1616,
+        "position": {
+          "x": 0.0,
+          "y": 0.00483586546,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1612
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1618,
+      "name": "leg_upper.L",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1620,
+        "position": {
+          "x": -0.00254641729,
+          "y": -0.00132568576,
+          "z": 0.000367457978
+        },
+        "rotation": {
+          "x": -0.282347381,
+          "y": 0.306379229,
+          "z": 0.895362556,
+          "w": 0.157281831
+        },
+        "scale": {
+          "x": 0.999999464,
+          "y": 1.0,
+          "z": 1.00000012
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1624
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1622,
+      "name": "leg_lower.L",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1624,
+        "position": {
+          "x": -3.16649679E-10,
+          "y": 0.0054463,
+          "z": -2.98023217E-10
+        },
+        "rotation": {
+          "x": -0.304083318,
+          "y": -0.106533587,
+          "z": 0.132052854,
+          "w": 0.9374145
+        },
+        "scale": {
+          "x": 0.9999999,
+          "y": 0.9999998,
+          "z": 0.9999996
+        },
+        "__ID__parentTransform": [
+          -1620
+        ],
+        "__ID__children": [
+          -1628
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1626,
+      "name": "leg_lower.L_end",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1628,
+        "position": {
+          "x": 0.0,
+          "y": 0.005446301,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1624
+        ],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1630,
+      "name": "leg_upper.R",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1632,
+        "position": {
+          "x": 0.00254925224,
+          "y": -0.00132407155,
+          "z": 0.0003674035
+        },
+        "rotation": {
+          "x": 0.0437471978,
+          "y": -0.0724826,
+          "z": 0.989582956,
+          "w": -0.116439134
+        },
+        "scale": {
+          "x": 1.00000143,
+          "y": 0.9999998,
+          "z": 1.00000072
+        },
+        "__ID__parentTransform": [
+          -1568
+        ],
+        "__ID__children": [
+          -1636
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -1634,
+      "name": "leg_lower.R",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -1636,
+        "position": {
+          "x": -4.656613E-10,
+          "y": 0.005446299,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": -0.002490731,
+          "y": 0.2605401,
+          "z": 0.000922956329,
+          "w": 0.9654594
+        },
+        "scale": {
+          "x": 1.00000024,
+          "y": 1.00000119,
+          "z": 0.9999987
+        },
+        "__ID__parentTransform": [
           -1632
         ],
         "__ID__children": [
@@ -2150,14 +2650,14 @@
     },
     {
       "__Base__instanceID": -1638,
-      "name": "apron.L_end",
+      "name": "leg_lower.R_end",
       "active": true,
       "tag": [],
       "transform": {
         "__Base__instanceID": -1640,
         "position": {
           "x": 0.0,
-          "y": 0.004835865,
+          "y": 0.00544630038,
           "z": 0.0
         },
         "rotation": {
@@ -2180,511 +2680,11 @@
     },
     {
       "__Base__instanceID": -1642,
-      "name": "apron.R",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1644,
-        "position": {
-          "x": 0.00191640086,
-          "y": 0.001046052,
-          "z": 0.00399985071
-        },
-        "rotation": {
-          "x": -0.0578763224,
-          "y": 0.44586584,
-          "z": 0.8668755,
-          "w": -0.215362266
-        },
-        "scale": {
-          "x": 1.00000024,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1648
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1646,
-      "name": "apron.R_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1648,
-        "position": {
-          "x": 0.0,
-          "y": 0.00483586546,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1644
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1650,
-      "name": "arm_upper.L",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1652,
-        "position": {
-          "x": -0.003721435,
-          "y": 0.00504826,
-          "z": -0.000127954627
-        },
-        "rotation": {
-          "x": -0.0339982547,
-          "y": 0.13081257,
-          "z": 0.84529686,
-          "w": 0.5169192
-        },
-        "scale": {
-          "x": 1.00000012,
-          "y": 0.99999994,
-          "z": 0.999999762
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1656
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1654,
-      "name": "arm_lower.L",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1656,
-        "position": {
-          "x": 1.9324943E-10,
-          "y": 0.00451608,
-          "z": -3.5157427E-10
-        },
-        "rotation": {
-          "x": -0.003236711,
-          "y": 0.208326221,
-          "z": 0.000434103626,
-          "w": 0.978054
-        },
-        "scale": {
-          "x": 0.999999642,
-          "y": 1.00000024,
-          "z": 0.9999999
-        },
-        "__ID__parentTransform": [
-          -1652
-        ],
-        "__ID__children": [
-          -1660
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1658,
-      "name": "arm_lower.L_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1660,
-        "position": {
-          "x": 0.0,
-          "y": 0.00451608,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1656
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1662,
-      "name": "arm_upper.R",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1664,
-        "position": {
-          "x": 0.00372022274,
-          "y": 0.00501932437,
-          "z": -0.000596007449
-        },
-        "rotation": {
-          "x": -0.528901637,
-          "y": -0.339896441,
-          "z": -0.481401026,
-          "w": 0.6107263
-        },
-        "scale": {
-          "x": 1.00000012,
-          "y": 1.00000012,
-          "z": 0.99999994
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1668
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1666,
-      "name": "arm_lower.R",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1668,
-        "position": {
-          "x": 4.47034826E-10,
-          "y": 0.0045160763,
-          "z": 2.66336425E-10
-        },
-        "rotation": {
-          "x": 0.00293511618,
-          "y": -4.79989467E-05,
-          "z": 0.0007080482,
-          "w": 0.99999547
-        },
-        "scale": {
-          "x": 0.99999994,
-          "y": 1.00000036,
-          "z": 0.9999999
-        },
-        "__ID__parentTransform": [
-          -1664
-        ],
-        "__ID__children": [
-          -1672
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1670,
-      "name": "arm_lower.R_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1672,
-        "position": {
-          "x": 0.0,
-          "y": 0.00451607676,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1668
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1674,
-      "name": "head",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1676,
-        "position": {
-          "x": 0.0,
-          "y": 0.00627080724,
-          "z": 3.329478E-10
-        },
-        "rotation": {
-          "x": -0.0565807745,
-          "y": -0.05808366,
-          "z": -0.0172771383,
-          "w": 0.9965573
-        },
-        "scale": {
-          "x": 0.9999998,
-          "y": 1.00000012,
-          "z": 0.9999998
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1680
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1678,
-      "name": "head_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1680,
-        "position": {
-          "x": 0.0,
-          "y": 0.00483586546,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1676
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1682,
-      "name": "leg_upper.L",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1684,
-        "position": {
-          "x": -0.00254641729,
-          "y": -0.00132568576,
-          "z": 0.000367457978
-        },
-        "rotation": {
-          "x": -0.282347381,
-          "y": 0.306379229,
-          "z": 0.895362556,
-          "w": 0.157281831
-        },
-        "scale": {
-          "x": 0.999999464,
-          "y": 1.0,
-          "z": 1.00000012
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1688
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1686,
-      "name": "leg_lower.L",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1688,
-        "position": {
-          "x": -3.16649679E-10,
-          "y": 0.0054463,
-          "z": -2.98023217E-10
-        },
-        "rotation": {
-          "x": -0.304083318,
-          "y": -0.106533587,
-          "z": 0.132052854,
-          "w": 0.9374145
-        },
-        "scale": {
-          "x": 0.9999999,
-          "y": 0.9999998,
-          "z": 0.9999996
-        },
-        "__ID__parentTransform": [
-          -1684
-        ],
-        "__ID__children": [
-          -1692
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1690,
-      "name": "leg_lower.L_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1692,
-        "position": {
-          "x": 0.0,
-          "y": 0.005446301,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1688
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1694,
-      "name": "leg_upper.R",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1696,
-        "position": {
-          "x": 0.00254925224,
-          "y": -0.00132407155,
-          "z": 0.0003674035
-        },
-        "rotation": {
-          "x": 0.0437471978,
-          "y": -0.0724826,
-          "z": 0.989582956,
-          "w": -0.116439134
-        },
-        "scale": {
-          "x": 1.00000143,
-          "y": 0.9999998,
-          "z": 1.00000072
-        },
-        "__ID__parentTransform": [
-          -1632
-        ],
-        "__ID__children": [
-          -1700
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1698,
-      "name": "leg_lower.R",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1700,
-        "position": {
-          "x": -4.656613E-10,
-          "y": 0.005446299,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": -0.002490731,
-          "y": 0.2605401,
-          "z": 0.000922956329,
-          "w": 0.9654594
-        },
-        "scale": {
-          "x": 1.00000024,
-          "y": 1.00000119,
-          "z": 0.9999987
-        },
-        "__ID__parentTransform": [
-          -1696
-        ],
-        "__ID__children": [
-          -1704
-        ]
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1702,
-      "name": "leg_lower.R_end",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -1704,
-        "position": {
-          "x": 0.0,
-          "y": 0.00544630038,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          -1700
-        ],
-        "__ID__children": []
-      },
-      "components": []
-    },
-    {
-      "__Base__instanceID": -1706,
       "name": "mainchar",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1708,
+        "__Base__instanceID": -1644,
         "position": {
           "x": 8.534589E-09,
           "y": 1.99910577E-08,
@@ -2702,19 +2702,19 @@
           "z": 99.9999847
         },
         "__ID__parentTransform": [
-          -1624
+          -1560
         ],
         "__ID__children": []
       },
       "components": []
     },
     {
-      "__Base__instanceID": -1712,
+      "__Base__instanceID": -1648,
       "name": "ColliderDebug",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1714,
+        "__Base__instanceID": -1650,
         "position": {
           "x": 0.0,
           "y": 1.0,
@@ -2732,13 +2732,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1576
+          -1512
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1716,
+          "__Base__instanceID": -1652,
           "__Base__Component": "ModelRenderer",
           "modelName": "Primitive/Capsule.fbx",
           "shadow": false,
@@ -2753,12 +2753,12 @@
       ]
     },
     {
-      "__Base__instanceID": -1718,
+      "__Base__instanceID": -1654,
       "name": "CrossHead",
       "active": false,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -1720,
+        "__Base__instanceID": -1656,
         "position": {
           "x": 0.0,
           "y": 1.05,
@@ -2776,13 +2776,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          -1576
+          -1512
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -1722,
+          "__Base__instanceID": -1658,
           "__Base__Component": "UI",
           "position": {
             "x": 320.0,
@@ -2794,7 +2794,7 @@
           }
         },
         {
-          "__Base__instanceID": -1724,
+          "__Base__instanceID": -1660,
           "__Base__Component": "Image",
           "textureName": "Resources/crossHead.png",
           "layer": 0
@@ -2802,14 +2802,303 @@
       ]
     },
     {
-      "__Base__instanceID": 25322,
+      "__Base__instanceID": 25232,
+      "name": "Generator",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25234,
+        "position": {
+          "x": 13.0,
+          "y": 5.0,
+          "z": -0.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.5,
+          "y": 1.5,
+          "z": 1.5
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          25428,
+          25514,
+          25290,
+          25410,
+          25340
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25236,
+          "__Base__Component": "ObjectGenerator",
+          "generatorType": 0,
+          "generateDelay": 1.0,
+          "__ID__targetObjects": [
+            25372
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25420,
+      "name": "Cube",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25428,
+        "position": {
+          "x": -0.45,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 0.1,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25234
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25430,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0510412939,
+          "g": 0.3490566,
+          "b": 0.124494962,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25512,
+      "name": "Cube (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25514,
+        "position": {
+          "x": 0.45,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 0.1,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25234
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25522,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0510412939,
+          "g": 0.3490566,
+          "b": 0.124494962,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25288,
+      "name": "Cube (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25290,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -0.45
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.1
+        },
+        "__ID__parentTransform": [
+          25234
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25298,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0510412939,
+          "g": 0.3490566,
+          "b": 0.124494962,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25408,
+      "name": "Cube (3)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25410,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.45
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.1
+        },
+        "__ID__parentTransform": [
+          25234
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25418,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0510412939,
+          "g": 0.3490566,
+          "b": 0.124494962,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25338,
+      "name": "Cube (4)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25340,
+        "position": {
+          "x": 0.0,
+          "y": 0.45,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 0.1,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25234
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25348,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0510412939,
+          "g": 0.3490566,
+          "b": 0.124494962,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25434,
       "name": "Fire",
       "active": true,
       "tag": [
         "Fire"
       ],
       "transform": {
-        "__Base__instanceID": 25324,
+        "__Base__instanceID": 25436,
         "position": {
           "x": 13.0,
           "y": 0.5,
@@ -2828,14 +3117,14 @@
         },
         "__ID__parentTransform": [],
         "__ID__children": [
+          25302,
           25256,
-          25252,
-          25246
+          25250
         ]
       },
       "components": [
         {
-          "__Base__instanceID": 25330,
+          "__Base__instanceID": 25442,
           "__Base__Component": "BoxCollider",
           "cType": 1,
           "disableQuery": false,
@@ -2853,16 +3142,42 @@
             "z": 1.0
           },
           "physicsMaterial": "IsTrigger"
+        },
+        {
+          "__Base__instanceID": 25444,
+          "__Base__Component": "PointLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "shadowColor": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "range": 10.0,
+          "angle": 0.0
         }
       ]
     },
     {
-      "__Base__instanceID": 25254,
+      "__Base__instanceID": 25300,
       "name": "FireEffect (0)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25256,
+        "__Base__instanceID": 25302,
         "position": {
           "x": 0.0,
           "y": 0.0,
@@ -2880,13 +3195,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          25324
+          25436
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 25258,
+          "__Base__instanceID": 25304,
           "__Base__Component": "ParticleSystem",
           "generatorType": 1,
           "elementType": 0,
@@ -2933,12 +3248,12 @@
       ]
     },
     {
-      "__Base__instanceID": 25248,
+      "__Base__instanceID": 25252,
       "name": "FireEffect (1)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25252,
+        "__Base__instanceID": 25256,
         "position": {
           "x": 0.0,
           "y": 0.1,
@@ -2956,13 +3271,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          25324
+          25436
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 25250,
+          "__Base__instanceID": 25254,
           "__Base__Component": "ParticleSystem",
           "generatorType": 1,
           "elementType": 0,
@@ -3009,12 +3324,12 @@
       ]
     },
     {
-      "__Base__instanceID": 25242,
+      "__Base__instanceID": 25246,
       "name": "FireEffect (2)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": 25246,
+        "__Base__instanceID": 25250,
         "position": {
           "x": 0.0,
           "y": 0.3,
@@ -3032,13 +3347,13 @@
           "z": 1.0
         },
         "__ID__parentTransform": [
-          25324
+          25436
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": 25244,
+          "__Base__instanceID": 25248,
           "__Base__Component": "ParticleSystem",
           "generatorType": 1,
           "elementType": 0,
@@ -3085,16 +3400,18 @@
       ]
     },
     {
-      "__Base__instanceID": 25230,
-      "name": "Generator",
+      "__Base__instanceID": 25264,
+      "name": "Fire (1)",
       "active": true,
-      "tag": [],
+      "tag": [
+        "Fire"
+      ],
       "transform": {
-        "__Base__instanceID": 25232,
+        "__Base__instanceID": 25272,
         "position": {
-          "x": 13.0,
-          "y": 5.0,
-          "z": -0.5
+          "x": 15.0,
+          "y": 0.5,
+          "z": 0.0
         },
         "rotation": {
           "x": 0.0,
@@ -3103,40 +3420,75 @@
           "w": 1.0
         },
         "scale": {
-          "x": 1.5,
-          "y": 1.5,
-          "z": 1.5
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
         },
         "__ID__parentTransform": [],
         "__ID__children": [
-          -4306,
-          -5960,
-          -6042,
-          -6136,
-          -8410
+          25314,
+          25508,
+          25284
         ]
       },
       "components": [
         {
-          "__Base__instanceID": -2080,
-          "__Base__Component": "ObjectGenerator",
-          "generatorType": 0,
-          "generateDelay": 1.0,
-          "__ID__targetObjects": [
-            25296
-          ]
+          "__Base__instanceID": 25268,
+          "__Base__Component": "BoxCollider",
+          "cType": 1,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        },
+        {
+          "__Base__instanceID": 25274,
+          "__Base__Component": "PointLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "shadowColor": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "range": 1.0,
+          "angle": 0.0
         }
       ]
     },
     {
-      "__Base__instanceID": -4304,
-      "name": "Cube",
+      "__Base__instanceID": 25312,
+      "name": "FireEffect (0)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -4306,
+        "__Base__instanceID": 25314,
         "position": {
-          "x": -0.45,
+          "x": 0.0,
           "y": 0.0,
           "z": 0.0
         },
@@ -3147,229 +3499,1173 @@
           "w": 1.0
         },
         "scale": {
-          "x": 0.1,
+          "x": 1.0,
           "y": 1.0,
           "z": 1.0
         },
         "__ID__parentTransform": [
-          25232
+          25272
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -11234,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.0510412939,
-          "g": 0.3490566,
-          "b": 0.124494962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
+          "__Base__instanceID": 25316,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.990566,
+            "y": 0.9372549,
+            "z": 0.014017418,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.1,
+          "generationCycle": 0.03,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.8,
+          "randomLifeTimeMax": 0.2,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
         }
       ]
     },
     {
-      "__Base__instanceID": -5952,
-      "name": "Cube (1)",
+      "__Base__instanceID": 25506,
+      "name": "FireEffect (1)",
       "active": true,
       "tag": [],
       "transform": {
-        "__Base__instanceID": -5960,
-        "position": {
-          "x": 0.45,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 0.1,
-          "y": 1.0,
-          "z": 1.0
-        },
-        "__ID__parentTransform": [
-          25232
-        ],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": -11794,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.0510412939,
-          "g": 0.3490566,
-          "b": 0.124494962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": -6040,
-      "name": "Cube (2)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -6042,
+        "__Base__instanceID": 25508,
         "position": {
           "x": 0.0,
-          "y": 0.0,
-          "z": -0.45
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 0.1
-        },
-        "__ID__parentTransform": [
-          25232
-        ],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": -11790,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.0510412939,
-          "g": 0.3490566,
-          "b": 0.124494962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": -6128,
-      "name": "Cube (3)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -6136,
-        "position": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.45
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 0.1
-        },
-        "__ID__parentTransform": [
-          25232
-        ],
-        "__ID__children": []
-      },
-      "components": [
-        {
-          "__Base__instanceID": -11786,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.0510412939,
-          "g": 0.3490566,
-          "b": 0.124494962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
-        }
-      ]
-    },
-    {
-      "__Base__instanceID": -8408,
-      "name": "Cube (4)",
-      "active": true,
-      "tag": [],
-      "transform": {
-        "__Base__instanceID": -8410,
-        "position": {
-          "x": 0.0,
-          "y": 0.45,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0,
-          "w": 1.0
-        },
-        "scale": {
-          "x": 1.0,
           "y": 0.1,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
           "z": 1.0
         },
         "__ID__parentTransform": [
-          25232
+          25272
         ],
         "__ID__children": []
       },
       "components": [
         {
-          "__Base__instanceID": -11782,
-          "__Base__Component": "MeshRenderer",
-          "meshType": 1,
-          "wireFrame": false,
-          "shadow": true,
-          "fastOutLine": false,
-          "outLine": false,
-          "textureName": "",
-          "r": 0.0510412939,
-          "g": 0.3490566,
-          "b": 0.124494962,
-          "a": 0.0,
-          "outLineR": 1.0,
-          "outLineG": 0.921568632,
-          "outLineB": 0.0156862754,
-          "outLineA": 1.0
+          "__Base__instanceID": 25510,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.3,
+          "generationCycle": 0.003,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.4,
+          "randomLifeTimeMax": 0.3,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25282,
+      "name": "FireEffect (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25284,
+        "position": {
+          "x": 0.0,
+          "y": 0.3,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25272
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25286,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.5,
+          "generationCycle": 0.01,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.2,
+          "randomLifeTimeMax": 0.4,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25476,
+      "name": "Fire (2)",
+      "active": true,
+      "tag": [
+        "Fire"
+      ],
+      "transform": {
+        "__Base__instanceID": 25484,
+        "position": {
+          "x": 17.0,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          25278,
+          25334,
+          25394
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25480,
+          "__Base__Component": "BoxCollider",
+          "cType": 1,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        },
+        {
+          "__Base__instanceID": 25486,
+          "__Base__Component": "PointLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "shadowColor": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "range": 1.0,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25276,
+      "name": "FireEffect (0)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25278,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25484
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25280,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.990566,
+            "y": 0.9372549,
+            "z": 0.014017418,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.1,
+          "generationCycle": 0.03,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.8,
+          "randomLifeTimeMax": 0.2,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25332,
+      "name": "FireEffect (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25334,
+        "position": {
+          "x": 0.0,
+          "y": 0.1,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25484
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25336,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.3,
+          "generationCycle": 0.003,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.4,
+          "randomLifeTimeMax": 0.3,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25392,
+      "name": "FireEffect (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25394,
+        "position": {
+          "x": 0.0,
+          "y": 0.3,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25484
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25396,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.5,
+          "generationCycle": 0.01,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.2,
+          "randomLifeTimeMax": 0.4,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25464,
+      "name": "Fire (3)",
+      "active": true,
+      "tag": [
+        "Fire"
+      ],
+      "transform": {
+        "__Base__instanceID": 25472,
+        "position": {
+          "x": 19.0,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          25260,
+          25228,
+          25490
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25468,
+          "__Base__Component": "BoxCollider",
+          "cType": 1,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        },
+        {
+          "__Base__instanceID": 25474,
+          "__Base__Component": "PointLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "shadowColor": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "range": 1.0,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25258,
+      "name": "FireEffect (0)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25260,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25472
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25262,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.990566,
+            "y": 0.9372549,
+            "z": 0.014017418,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.1,
+          "generationCycle": 0.03,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.8,
+          "randomLifeTimeMax": 0.2,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25226,
+      "name": "FireEffect (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25228,
+        "position": {
+          "x": 0.0,
+          "y": 0.1,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25472
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25230,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.3,
+          "generationCycle": 0.003,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.4,
+          "randomLifeTimeMax": 0.3,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25488,
+      "name": "FireEffect (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25490,
+        "position": {
+          "x": 0.0,
+          "y": 0.3,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25472
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25492,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.5,
+          "generationCycle": 0.01,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.2,
+          "randomLifeTimeMax": 0.4,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25494,
+      "name": "Fire (4)",
+      "active": true,
+      "tag": [
+        "Fire"
+      ],
+      "transform": {
+        "__Base__instanceID": 25502,
+        "position": {
+          "x": 21.0,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          25400,
+          25448,
+          25308
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25498,
+          "__Base__Component": "BoxCollider",
+          "cType": 1,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        },
+        {
+          "__Base__instanceID": 25504,
+          "__Base__Component": "PointLight",
+          "ambient": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "diffuse": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "specular": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "shadowColor": {
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+          },
+          "range": 1.0,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25398,
+      "name": "FireEffect (0)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25400,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25502
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25402,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.990566,
+            "y": 0.9372549,
+            "z": 0.014017418,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.1,
+          "generationCycle": 0.03,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.8,
+          "randomLifeTimeMax": 0.2,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25446,
+      "name": "FireEffect (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25448,
+        "position": {
+          "x": 0.0,
+          "y": 0.1,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25502
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25450,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.3,
+          "generationCycle": 0.003,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.4,
+          "randomLifeTimeMax": 0.3,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25306,
+      "name": "FireEffect (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25308,
+        "position": {
+          "x": 0.0,
+          "y": 0.3,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          25502
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25310,
+          "__Base__Component": "ParticleSystem",
+          "generatorType": 1,
+          "elementType": 0,
+          "textureName": "Particle\\\\fx_Fire1.png",
+          "textureScale": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "useAlphaTexture": true,
+          "alphaTextureColor": {
+            "x": 0.992156863,
+            "y": 0.9372549,
+            "z": 0.0156862754,
+            "w": 1.0
+          },
+          "playWithStart": true,
+          "generatorRadius": 0.5,
+          "generationCycle": 0.01,
+          "moveDirection": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "spread": 0.0,
+          "vibrationSpeed": 5.0,
+          "vibrationRange": 0.1,
+          "moveSpeed": 5.0,
+          "lifeTime": 0.2,
+          "randomLifeTimeMax": 0.4,
+          "useChangeColor": true,
+          "changedColorInMove": {
+            "x": 0.0,
+            "y": -0.18,
+            "z": 0.0,
+            "w": -0.1
+          },
+          "changedColorInOther": {
+            "x": 0.0,
+            "y": -0.02,
+            "z": 0.0,
+            "w": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -2180,
+      "name": "Quad",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -2182,
+        "position": {
+          "x": -2.2,
+          "y": 4.29,
+          "z": -4.82
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -5190,
+          "__Base__Component": "SpriteRenderer",
+          "textureName": "Resources\\\\UI\\\\test.png"
         }
       ]
     }

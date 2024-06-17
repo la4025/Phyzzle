@@ -4,6 +4,7 @@ struct PixelInputType
 {
     float4 pos : SV_Position;
     float2 uv : TEXCOORD;
+    uint instance : InstanceID;
 };
 
 float4 main(PixelInputType input) : SV_TARGET

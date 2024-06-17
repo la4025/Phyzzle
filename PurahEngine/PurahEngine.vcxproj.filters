@@ -307,6 +307,10 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Component\3. Renderer\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="AudioClip.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Component\3. Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -528,6 +532,10 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Component\3. Renderer\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioClip.h" />
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Component\3. Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

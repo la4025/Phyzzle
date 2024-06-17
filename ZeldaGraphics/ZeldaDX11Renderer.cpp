@@ -609,6 +609,17 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		// 깊이 스텐실 스테이트 생성
 		D3D11_DEPTH_STENCIL_DESC cubeMapDepthStencilDesc = {};
 		cubeMapDepthStencilDesc.DepthEnable = TRUE; // 깊이 테스트를 활성화합니다.
+		cubeMapDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // 깊이 버퍼에 쓰기를 끕니다.
+		cubeMapDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL; // 깊이 테스트 함수를 설정합니다. 여기서는 깊이가 작은 값일 때만 통과하도록 설정했습니다.
+		cubeMapDepthStencilDesc.StencilEnable = FALSE; // 스텐실 테스트를 비활성화합니다.
+
+		mDevice->CreateDepthStencilState(&cubeMapDepthStencilDesc, &particleDepthStencilState);
+	}
+
+	{
+		// 깊이 스텐실 스테이트 생성
+		D3D11_DEPTH_STENCIL_DESC cubeMapDepthStencilDesc = {};
+		cubeMapDepthStencilDesc.DepthEnable = TRUE; // 깊이 테스트를 활성화합니다.
 		cubeMapDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // 깊이 버퍼에 쓰기를 허용합니다.
 		cubeMapDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL; // 깊이 테스트 함수를 설정합니다. 여기서는 깊이가 작은 값일 때만 통과하도록 설정했습니다.
 		cubeMapDepthStencilDesc.StencilEnable = FALSE; // 스텐실 테스트를 비활성화합니다.
@@ -708,6 +719,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		spriteBlendState->Release();
 		spriteBlendState = nullptr;
+	}
+	if (particleDepthStencilState)
+	{
+		particleDepthStencilState->Release();
+		particleDepthStencilState = nullptr;
 	}
 	if (cubeMapDepthStencilState)
 	{
@@ -1140,6 +1156,8 @@ void ZeldaDX11Renderer::BeginDraw(float deltaTime)
 	UpdateMode();
 
 	RenderInfoManager::GetInstance().ClearRenderInfo();
+
+	particleCount = 0u;
 }
 
 void ZeldaDX11Renderer::EndDraw()
@@ -1180,6 +1198,7 @@ void ZeldaDX11Renderer::EndDraw()
 	DrawCubeMapRenderInfo();
 
 	DrawBillBoardRenderInfo();
+	DrawBillBoardParticleRenderInfo();
 
 	DrawSpriteRenderInfo();
 	DrawImage();
@@ -1374,6 +1393,70 @@ void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, const Eigen::
 
 	// Register
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
+}
+
+void ZeldaDX11Renderer::DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix, const std::vector<Eigen::Matrix4f>& particleMatrix, unsigned int layer, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, const std::vector<Color>& colors)
+{
+	MeshID meshID = ResourceManager::GetInstance().GetSquareID();
+	ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(texture);
+
+	// Render Type
+	RenderType renderType = RenderType::BillBoardParticle;
+
+	// Render Option
+	RenderOption renderOption = RenderInfoOption::None;
+
+	// Instancing Key
+	InstancingKey instancingKey;
+	instancingKey.meshID = meshID;
+	instancingKey.textureID = texture;
+
+	// Instancing Value
+	InstancingValue instancingValue;
+	instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
+	instancingValue.layer = layer;
+	instancingValue.ccwRadianAngle = ccwRadianAngle;
+	instancingValue.useAlphaTexture = useAlphaTexture;
+	instancingValue.particleID = particleCount;
+
+	assert(particleMatrix.size() == colors.size());
+
+	for (int i = 0; i < particleMatrix.size(); i++)
+	{
+		instancingValue.color = colors[i];
+
+		if (keepOriginSize)
+		{
+			DirectX::XMMATRIX sizeMatrix = DirectX::XMMatrixScaling(static_cast<float>(textureInstance->GetWidth()) / Texture::UnitSize, static_cast<float>(textureInstance->GetHeight()) / Texture::UnitSize, 1.0f);
+			DirectX::XMMATRIX matrixSRT = sizeMatrix * MathConverter::EigenMatrixToXMMatrix(particleMatrix[i]);
+
+			DirectX::XMVECTOR s;
+			DirectX::XMVECTOR r;
+			DirectX::XMVECTOR t;
+			DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
+
+			// 크기를 조정하고 회전하지 않은 상태의 행렬로 가공하여 저장한다.
+			instancingValue.particleMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		}
+		else
+		{
+			DirectX::XMMATRIX matrixSRT = MathConverter::EigenMatrixToXMMatrix(particleMatrix[i]);
+
+			DirectX::XMVECTOR s;
+			DirectX::XMVECTOR r;
+			DirectX::XMVECTOR t;
+			DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
+
+			// 회전하지 않은 상태의 행렬로 가공하여 저장한다.
+			instancingValue.particleMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		}
+
+
+		// Register
+		RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
+	}
+
+	particleCount += 1u;
 }
 
 void ZeldaDX11Renderer::DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color)
@@ -1811,6 +1894,101 @@ void ZeldaDX11Renderer::DrawBillBoardRenderInfo()
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 
+void ZeldaDX11Renderer::DrawBillBoardParticleRenderInfo()
+{
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->RSSetState(defaultRasterState);
+	float alphaBlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	mDeviceContext->OMSetBlendState(spriteBlendState, alphaBlendFactor, 0xFFFFFFFF);
+	mDeviceContext->OMSetDepthStencilState(particleDepthStencilState, 1);
+
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
+	const auto& renderInfo = RenderInfoManager::GetInstance().GetBillBoardParticleRenderInfo();
+
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.view = XMMatrixTranspose(currentcamera->GetViewMatrix());
+	matrixBuffer.projection = XMMatrixTranspose(currentcamera->GetProjMatrix());
+	matrixBuffer.cameraFar = currentcamera->GetFar();
+	matrixVsConstBuffer->SetData(matrixBuffer);
+
+	DirectX::XMVECTOR cameraS;
+	DirectX::XMVECTOR cameraR;
+	DirectX::XMVECTOR cameraT;
+	DirectX::XMMatrixDecompose(&cameraS, &cameraR, &cameraT, currentcamera->GetTransformMatrix());
+
+	InstancingMatrixBufferType* instancingMatrix = new InstancingMatrixBufferType();
+	InstancingDataBufferType* instancingData = new InstancingDataBufferType();
+
+	int instanceCount = 0;
+	for (auto iter = renderInfo.begin(); iter != renderInfo.end(); iter++)
+	{
+		auto& key = iter->first;
+		auto& value = iter->second;
+
+		unsigned int particleID = key.second.second.second;
+
+		ZeldaMesh* meshInstance = ResourceManager::GetInstance().GetMesh(value->instancingKey.meshID);
+		meshInstance->RenderInstanced(mDeviceContext);
+
+		ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(value->instancingKey.textureID);
+		textureInstance->SetDiffuseMapShaderResource(mDeviceContext);
+
+		DirectX::XMVECTOR worldS;
+		DirectX::XMVECTOR worldR;
+		DirectX::XMVECTOR worldT;
+		DirectX::XMMatrixDecompose(&worldS, &worldR, &worldT, value->instancingValue.particleMatrix);
+		DirectX::XMMATRIX worldMS = XMMatrixScalingFromVector(worldS);
+		DirectX::XMMATRIX worldMR = XMMatrixRotationQuaternion(worldR);
+		DirectX::XMMATRIX worldMT = XMMatrixTranslationFromVector(worldT);
+
+		// 2D회전을 한 후, 카메라가 바라보는 방향과 같은 방향으로 회전한 상태로 가공하여 저장한다.
+		instancingMatrix->instancingWorldMatrix[instanceCount % INSTANCING_MAX] = XMMatrixTranspose(worldMS * XMMatrixRotationZ(value->instancingValue.ccwRadianAngle) * XMMatrixRotationQuaternion(cameraR) * worldMT);
+		instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = value->instancingValue.color.r;
+		instancingData->instancingValue0[instanceCount % INSTANCING_MAX].y = value->instancingValue.color.g;
+		instancingData->instancingValue0[instanceCount % INSTANCING_MAX].z = value->instancingValue.color.b;
+		instancingData->instancingValue0[instanceCount % INSTANCING_MAX].w = value->instancingValue.color.a;
+
+		if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (std::next(iter) == renderInfo.end()) || (std::next(iter)->first.second.second.second != particleID))
+		{
+			MaterialBufferType materialBufferType;
+			materialBufferType.baseColor = DirectX::XMFLOAT4{ value->instancingValue.color.r, value->instancingValue.color.g, value->instancingValue.color.b, value->instancingValue.color.a };
+			materialBufferType.useSRGB = textureInstance->UseSRGB();
+			materialConstBuffer->SetData(materialBufferType);
+
+			instancingDataConstBuffer->SetData(*instancingData);
+
+			instancingMatrixVsConstBuffer->SetData(*instancingMatrix);
+			ConstantBufferManager::GetInstance().SetBuffer();
+
+			if (value->instancingValue.useAlphaTexture)
+			{
+				alphaSpriteShader->RenderInstanced(mDeviceContext, meshInstance->GetIndexCount(), (instanceCount % INSTANCING_MAX) + 1, 0);
+			}
+			else
+			{
+				spriteShader->RenderInstanced(mDeviceContext, meshInstance->GetIndexCount(), (instanceCount % INSTANCING_MAX) + 1, 0);
+			}
+
+			instanceCount = 0;
+		}
+		else
+		{
+			instanceCount += 1;
+		}
+	}
+
+	delete instancingMatrix;
+	delete instancingData;
+
+	mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	// Sprite Batch에서 사용하는 0번 슬롯의 리소스를 해제한다.
+	mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
+	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+	mDeviceContext->RSSetState(defaultRasterState);
+}
+
 void ZeldaDX11Renderer::DrawDeferredRenderInfo()
 {
 	auto& renderInfo = RenderInfoManager::GetInstance().GetDeferredRenderInfo();
@@ -1910,7 +2088,7 @@ void ZeldaDX11Renderer::DrawFastOutLine()
 		for (int i = 0; i < iter->second.size(); i++)
 		{
 			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.r;
-			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].x = iter->second[i]->instancingValue.outLineColor.g;
+			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].y = iter->second[i]->instancingValue.outLineColor.g;
 			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].z = iter->second[i]->instancingValue.outLineColor.b;
 			instancingData->instancingValue0[instanceCount % INSTANCING_MAX].w = iter->second[i]->instancingValue.outLineColor.a;
 

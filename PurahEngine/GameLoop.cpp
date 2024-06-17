@@ -217,15 +217,25 @@ void PurahEngine::GameLoop::run()
 	GraphicsManager::GetInstance().Render(deltaTime);
 	SceneManager::GetInstance().DecommissionEvent();
 
+	static int currFPS = 0;
 
 	if (TimeController::GetInstance().GetDeltaTime() != 0.f)
 	{
-		static int currFPS = 0;
 		currFPS = (int) (1.f / TimeController::GetInstance().GetDeltaTime());
-
-		std::cout << currFPS << '\n';
+		//std::cout << currFPS << '\n';
 	}
 
+	static bool showFPS = false;
+
+	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_CONTROL) && InputManager::Getinstance().IsKeyDown(eKey::eKEY_1))
+	{
+		showFPS = !showFPS;
+	}
+
+	if (showFPS)
+	{
+		GraphicsManager::GetInstance().DrawString(std::to_wstring(currFPS), 0, 0, 100, 100, 30, 1, 1, 1, 1);
+	}
 }
 
 LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
