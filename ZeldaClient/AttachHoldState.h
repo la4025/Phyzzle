@@ -123,7 +123,6 @@ namespace Phyzzle
 		void VariableReset();									// 변수 초기화
 #pragma endregion Content
 
-#if _DEBUG
 	private:
 		enum RotateInfo : int
 		{
@@ -144,6 +143,7 @@ namespace Phyzzle
 		using RotateData = std::pair<Eigen::Quaternionf, Rotate>;
 		std::vector<RotateData> axisies;
 		Rotate info;
+#if _DEBUG
 		void SearchDebugDraw();
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();

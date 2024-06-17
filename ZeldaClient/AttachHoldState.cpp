@@ -242,7 +242,9 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 
+#if _DEBUG
 		SearchDebugDraw();
+#endif _DEBUG
 	}
 #pragma endregion StateEvent
 
