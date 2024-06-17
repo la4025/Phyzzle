@@ -48,7 +48,9 @@ namespace PurahEngine
 		FMOD::System* system;
 		FMOD::Channel* bgmChannel;
 		FMOD::Channel* effectChannel;
-		FMOD::ChannelGroup* effectChannelGroup;
+		FMOD::ChannelGroup* bgmChannelGroup;
+		FMOD::ChannelGroup* sfxChannelGroup;
+		FMOD::ChannelGroup* masterChannelGroup;
 
 	private:
 		SoundManager();

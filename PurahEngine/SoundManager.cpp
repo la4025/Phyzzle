@@ -19,6 +19,20 @@ void PurahEngine::SoundManager::Initialize()
 	result = system->init(100, FMOD_INIT_NORMAL, nullptr);
 	assert(result == FMOD_OK);
 
+	// Get Master Channel Group & Create BGM, SFX Channel Group
+	result = system->getMasterChannelGroup(&masterChannelGroup);
+	assert(result == FMOD_OK);
+	result = system->createChannelGroup("BGMGroup", &bgmChannelGroup);
+	assert(result == FMOD_OK);
+	result = system->createChannelGroup("SFXGroup", &sfxChannelGroup);
+	assert(result == FMOD_OK);
+
+	// add BGM, SFX Channel Group to Master Channel Group
+	result = masterChannelGroup->addGroup(bgmChannelGroup);
+	assert(result == FMOD_OK);
+	result = masterChannelGroup->addGroup(sfxChannelGroup);
+	assert(result == FMOD_OK);
+
 	result = system->set3DSettings(1.0, 1.0, 1.0);
 }
 
@@ -94,6 +108,7 @@ void PurahEngine::SoundManager::PlayAudio(SoundType soundType, FMOD::Sound* soun
 
 void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel)
 {
+	FMOD_RESULT result;
 	bool isBGMPlaying = true;
 	(*channel)->isPlaying(&isBGMPlaying);
 
@@ -103,15 +118,20 @@ void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** chan
 	}
 
 	system->playSound(sound, 0, false, channel);
+	result = (*channel)->setChannelGroup(bgmChannelGroup);
+	assert(result == FMOD_OK);
 }
 
 void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel)
 {
+	FMOD_RESULT result;
 	bool isPlaying = true;
 	(*channel)->isPlaying(&isPlaying);
 	if (!isPlaying)
 	{
 		system->playSound(sound, 0, false, channel);
+		result = (*channel)->setChannelGroup(sfxChannelGroup);
+		assert(result == FMOD_OK);
 	}
 
 	(*channel)->setPaused(false);
@@ -134,7 +154,7 @@ FMOD::System* PurahEngine::SoundManager::GetSystem() const
 }
 
 PurahEngine::SoundManager::SoundManager()
-	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), effectChannelGroup(nullptr)
+	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), sfxChannelGroup(nullptr), bgmChannelGroup(nullptr), masterChannelGroup(nullptr)
 {
 
 }
