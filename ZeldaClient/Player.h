@@ -73,6 +73,8 @@ namespace Phyzzle
 			const float limitHighAngle = 80.f;	// ÇÏÀÌ ¾Þ±Û
 			const float limitLowAngle = -70.f;	// ·Î¿ì ¾Þ±Û
 
+			unsigned int cameraCollisionLayers = 0;
+			unsigned int attachRaycastLayers = 0;
 			bool cameraUpdate = true;			// 
 			float lerpFactor = 0.2f;			// 
 			float acclerpFactor = 0.f;			//
@@ -175,11 +177,6 @@ namespace Phyzzle
 		void CameraAround();
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
-
-		bool RaycastFromCamera(
-			float _distance, 
-			PurahEngine::RigidBody** _outBody
-		);
 
 		bool RaycastFromCamera(
 			float _distance, 

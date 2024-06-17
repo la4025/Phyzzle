@@ -1,6 +1,5 @@
 #pragma once
 #include "IState.h"
-#include "Coroutine.h"
 
 namespace Phyzzle
 {
@@ -44,6 +43,7 @@ namespace Phyzzle
 	private:
 		void PlayerMove(float _speed) const;
 		void CameraAround() const;
+		void CameraPositionUpdate();
 		void StateCancel() const;
 
 		void Jump() const;

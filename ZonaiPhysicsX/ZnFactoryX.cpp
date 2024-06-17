@@ -325,8 +325,10 @@ namespace ZonaiPhysics
 			return NULL;
 		}
 
+		// auto mesh = PxCreateTriangleMesh(params, meshDesc);
+
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-		 physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
+		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);
 
 		return triangleMesh;
 	}
@@ -353,7 +355,8 @@ namespace ZonaiPhysics
 		convexDesc.points.data = &vertices.front();
 		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
-		const physx::PxCookingParams params(pxFactory->getTolerancesScale());
+		physx::PxCookingParams params(pxFactory->getTolerancesScale());
+		params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
 
 		// 정점 메모리 버퍼
 		physx::PxDefaultMemoryOutputStream buf;

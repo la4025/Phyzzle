@@ -131,9 +131,8 @@ class QuaternionBase : public RotationBase<Derived, 3>
     * \sa normalize(), MatrixBase::normalized() */
   EIGEN_DEVICE_FUNC inline Quaternion<Scalar> normalized() const { return Quaternion<Scalar>(coeffs().normalized()); }
 
-    /** \returns the dot product of \c *this and \a other
-    * Geometrically speaking, the dot product of two unit quaternions
-    * corresponds to the cosine of half the angle between the two rotations.
+  /** \returns \c *this와 \a other의 내적
+    * 기하학적으로, 두 단위 쿼터니언의 내적은 두 회전 사이의 각도의 절반에 대한 코사인에 해당합니다.
     * \sa angularDistance()
     */
   template<class OtherDerived> EIGEN_DEVICE_FUNC inline Scalar dot(const QuaternionBase<OtherDerived>& other) const { return coeffs().dot(other.coeffs()); }
@@ -690,15 +689,13 @@ EIGEN_DEVICE_FUNC Quaternion<Scalar,Options> Quaternion<Scalar,Options>::UnitRan
 }
 
 
-/** Returns a quaternion representing a rotation between
-  * the two arbitrary vectors \a a and \a b. In other words, the built
-  * rotation represent a rotation sending the line of direction \a a
-  * to the line of direction \a b, both lines passing through the origin.
+/** 임의의 두 벡터 \a a 와 \a b 사이의 회전을 나타내는 쿼터니언을 반환합니다.
+  * 즉, 생성된 회전은 원점을 지나는 \a a 방향의 선을 \a b 방향의 선으로 보내는 회전을 나타냅니다.
   *
-  * \returns resulting quaternion
+  * \returns 결과 쿼터니언
   *
-  * Note that the two input vectors do \b not have to be normalized, and
-  * do not need to have the same norm.
+  * 입력으로 주어진 두 벡터는 \b 반드시 정규화될 필요가 없으며,
+  * 동일한 크기를 가질 필요도 없습니다.
   */
 template<typename Scalar, int Options>
 template<typename Derived1, typename Derived2>

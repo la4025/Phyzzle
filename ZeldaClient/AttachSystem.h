@@ -33,12 +33,12 @@ namespace Phyzzle
 
 	private:
 		// ID 积己 昏力
-		IslandID CreateIslandID();
-		void RemoveIslandID(IslandID _id);
+		IslandID					CreateIslandID();
+		void						RemoveIslandID(IslandID _id);
 
 		// 级 积己 昏力
-		IslandID CreateIsland(const std::vector<PzObject*>& _arr);
-		void RemoveIsland(IslandID _id);
+		IslandID					CreateIsland(const std::vector<PzObject*>& _arr);
+		void						RemoveIsland(IslandID _id);
 
 	public:
 		void						Clear();

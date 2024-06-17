@@ -203,7 +203,7 @@ namespace ZonaiPhysics
 	bool ZnWorld::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		const physx::PxVec3 from(EigenToPhysx(_desc.position));
-		const physx::PxVec3 to(EigenToPhysx(_desc.direction));
+		const physx::PxVec3 to(EigenToPhysx(_desc.direction.normalized()));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxRaycastBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
@@ -244,7 +244,7 @@ namespace ZonaiPhysics
 	bool ZnWorld::GeometrySweep(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		const physx::PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
-		const physx::PxVec3 dir(EigenToPhysx(_desc.direction));
+		const physx::PxVec3 dir(EigenToPhysx(_desc.direction.normalized()));
 		const physx::PxReal distance(_desc.distance);
 		physx::PxSweepBuffer result;
 		const physx::PxHitFlags flag = physx::PxHitFlag::eDEFAULT;
@@ -254,7 +254,7 @@ namespace ZonaiPhysics
 		filter.flags |= physx::PxQueryFlag::eDYNAMIC;
 		filter.flags |= physx::PxQueryFlag::eSTATIC;
 		filter.data.setToDefault();
-		filter.data.word0 = static_cast<physx::PxU32>(_desc.queryLayer);
+		filter.data.word1 = static_cast<physx::PxU32>(_desc.queryLayer);
 
 		physx::PxQueryFilterCallback* callback = &queryFilter;
 		const physx::PxQueryCache* cache = nullptr;
@@ -281,7 +281,6 @@ namespace ZonaiPhysics
 		return false;
 	}
 
-	/// 구현 필요
 	bool ZnWorld::Boxcast(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		physx::PxBoxGeometry geom(_extend.x(), _extend.y(), _extend.z());
@@ -305,7 +304,68 @@ namespace ZonaiPhysics
 
 	bool ZnWorld::GeometryOverLap(const physx::PxGeometry& _geom, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		return true;
+		using namespace physx;
+
+		const PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
+		PxOverlapBuffer buffer;
+
+		PxQueryFilterData filter = PxQueryFilterData();
+		filter.flags |= PxQueryFlag::ePREFILTER;
+		filter.flags |= PxQueryFlag::eDYNAMIC;
+		// filter.flags |= PxQueryFlag::eSTATIC;
+		filter.data.setToDefault();
+		filter.data.word1 = static_cast<physx::PxU32>(_desc.queryLayer);
+
+		PxQueryFilterCallback* callback = &queryFilter;
+		const PxQueryCache* cache = nullptr;
+		const PxGeometryQueryFlags flag = physx::PxGeometryQueryFlag::eDEFAULT;
+
+		if (bool block = currScene->overlap(
+			_geom,
+			transform,
+			buffer, filter,
+			callback, cache, flag))
+		{
+			PxU32 touches = buffer.getNbTouches();
+
+			_out.actors.clear();
+			_out.shapes.clear();
+			_out.actors.resize(touches);
+			_out.shapes.resize(touches);
+
+			for (PxU32 i = 0; i < buffer.getNbTouches(); i++)
+			{
+				const auto& hit = buffer.getTouches()[i];
+
+				_out.actors[i] = hit.actor ? static_cast<RigidBody*>(hit.actor->userData)->GetUserData() : nullptr;
+				_out.shapes[i] = hit.shape ? static_cast<Collider*>(hit.shape->userData)->GetUserData() : nullptr;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ZnWorld::BoxOverLap(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		physx::PxBoxGeometry geom(_extend.x(), _extend.y(), _extend.z());
+
+		return GeometryOverLap(geom, _desc, _out);
+	}
+
+	bool ZnWorld::SphereOverLap(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		physx::PxSphereGeometry geom(_radius);
+
+		return GeometryOverLap(geom, _desc, _out);
+	}
+
+	bool ZnWorld::CapsuleOverLap(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
+	{
+		physx::PxCapsuleGeometry geom(_radius, _height);
+
+		return GeometryOverLap(geom, _desc, _out);
 	}
 
 	void ZnWorld::CreateCharactor()
@@ -322,8 +382,13 @@ namespace ZonaiPhysics
 
 	void ZnWorld::AddBody(RigidBody* _znBody, void* _userData, void* _userScene)
 	{
-		assert(currScene != nullptr);
-		assert(_znBody != nullptr);
+		if (currScene == nullptr || _znBody == nullptr)
+		{
+			ZONAI_CAUTUON(Add Rigidbody Failed,  Zonai Physics ZnWolrd)
+
+			assert(currScene != nullptr);
+			assert(_znBody != nullptr);
+		}
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_znBody->pxBody);
 

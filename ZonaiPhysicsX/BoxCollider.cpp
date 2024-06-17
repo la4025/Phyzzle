@@ -18,7 +18,7 @@ namespace ZonaiPhysics
 		const physx::PxGeometry& geom = pxShape->getGeometry();
 		physx::PxTransform pose = _znBody->pxBody->getGlobalPose();
 		physx::PxBounds3 aabb;
-		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.1f);
+		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.3f);
 	}
 
 	BoxCollider::~BoxCollider()

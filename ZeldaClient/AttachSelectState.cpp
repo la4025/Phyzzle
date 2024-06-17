@@ -12,10 +12,15 @@ namespace Phyzzle
 	void AttachSelectState::StateEnter()
 	{
 		{
+			using namespace Eigen;
+
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
 			auto p = player->data.cameraCore->GetLocalPosition();
-			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			p.x() = 0.5f;
+			p.y() = 0.5f;
 
 			player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalRotation(Quaternionf::Identity());
 		}
 
 		CrossHeadRender(true);
@@ -27,10 +32,10 @@ namespace Phyzzle
 		// 플레이어 카메라 컴포넌트를 만든다면
 		// 이부분은 수정이 반드시 필요함
 		{
-			auto p = player->data.cameraCore->GetLocalPosition();
-			p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			using namespace Eigen;
 
-			player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
 		}
 
 		CrossHeadRender(false);
@@ -94,7 +99,6 @@ namespace Phyzzle
 	void AttachSelectState::Click_X()
 	{
 		StateCancel();
-
 	}
 
 	// 취소
@@ -111,8 +115,8 @@ namespace Phyzzle
 
 	void AttachSelectState::Pressing_RB()
 	{
-	}
 
+	}
 #pragma endregion Input
 
 #pragma region Content
@@ -124,6 +128,11 @@ namespace Phyzzle
 	void AttachSelectState::CameraAround() const
 	{
 		player->CameraAround();
+	}
+
+	void AttachSelectState::CameraPositionUpdate()
+	{
+
 	}
 
 	void AttachSelectState::StateCancel() const
@@ -152,16 +161,10 @@ namespace Phyzzle
 		const float distance = 40.f;
 		const bool hit = player->RaycastFromCamera(distance, &result, &attachable, nullptr);
 
-		if (!hit)
+		if (!hit || !attachable || !result)
 			return false;
 
 		if (result->IsKinematic())
-			return false;
-
-		if (result->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
-			return false;
-
-		if (!attachable)
 			return false;
 
 		return true;

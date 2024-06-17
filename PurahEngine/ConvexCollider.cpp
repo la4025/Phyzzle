@@ -10,7 +10,10 @@ namespace PurahEngine
 	{
 		auto& physicsSystem = PhysicsSystem::GetInstance();
 
-		physicsSystem.FreeObject(znCollider, this->GetGameObject());
+		if (znCollider)
+		{
+			physicsSystem.FreeObject(znCollider, this->GetGameObject());
+		}
 	}
 
 	void ConvexCollider::PostInitialize()

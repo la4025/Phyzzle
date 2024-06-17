@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Burnable.h" />
+    <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />

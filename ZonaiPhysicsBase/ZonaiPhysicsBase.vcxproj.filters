@@ -82,6 +82,9 @@
     <ClInclude Include="ZnCharaterController.h">
       <Filter>00. Base\controller</Filter>
     </ClInclude>
+    <ClInclude Include="ZnBound3.h">
+      <Filter>01. Struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00. Base">

@@ -86,7 +86,7 @@ namespace Phyzzle
 
 	public:
 		void Update(
-			Eigen::Quaternionf x,
+			Eigen::Quaternionf& x,
 			Eigen::Vector3f& v,
 			const Eigen::Quaternionf& x_goal,
 			const float halflife,

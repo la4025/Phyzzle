@@ -5,6 +5,175 @@
 
 namespace Phyzzle
 {
+	AttachHoldState::AttachHoldState(Player* _player)
+		: IState(_player), selectBody(), attachble()
+	{
+		using namespace Eigen;
+
+		std::vector<Quaternionf> axis;
+		{
+			Quaternionf classic = Quaternionf::Identity();
+
+			// 전후좌우
+			for (size_t x = 0; x < 360; x+= 90)
+			{
+				float angleY = (static_cast<float>(x) / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
+
+				Quaternionf temp = axisY * classic;
+				axis.emplace_back(temp);
+			}
+
+			// 상
+			{
+				float angleX = (-90.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
+
+				Quaternionf temp = axisX * classic;
+				axis.emplace_back(temp);
+			}
+
+			// 하
+			{
+				float angle_X = (90.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axis_X = Quaternionf(AngleAxisf(angle_X, Vector3f::UnitX()));
+
+				Quaternionf temp = axis_X * classic;
+				axis.emplace_back(temp);
+			}
+		}
+
+		// none
+		std::vector<Quaternionf> none;
+		{
+			for (size_t i = 0; i < axis.size(); i++)
+			{
+				Quaternionf newAxis = axis[i];
+				for (size_t z = 0; z < 360; z += 90)
+				{
+					float angleZ = (static_cast<float>(z) / 180.f) * std::numbers::pi_v<float>;
+					Quaternionf axisZ = Quaternionf(AngleAxisf(angleZ, Vector3f::UnitZ()));
+
+					Quaternionf temp = axisZ * newAxis;
+					none.emplace_back(temp);
+					axisies.emplace_back(temp, None);
+				}
+			}
+		}
+
+		// X
+		std::vector<Quaternionf> rotateX;
+		{
+			for (size_t i = 0; i < none.size(); i++)
+			{
+				Quaternionf newAxis = none[i];
+
+				float angleX = (45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
+
+				Quaternionf temp = axisX * newAxis;
+				rotateX.emplace_back(temp);
+				axisies.emplace_back(temp, RotateX);
+			}
+		}
+
+		// Y
+		std::vector<Quaternionf> rotateY;
+		{
+			for (size_t i = 0; i < none.size(); i++)
+			{
+				Quaternionf newAxis = none[i];
+
+				float angleY = (45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
+
+				Quaternionf temp = axisY * newAxis;
+				rotateY.emplace_back(temp);
+				axisies.emplace_back(temp, RotateY);
+			}
+		}
+
+		// XY
+		// std::vector<Quaternionf> rotateXY;
+		{
+			for (size_t i = 0; i < rotateX.size(); i++)
+			{
+				Quaternionf newAxis = rotateX[i];
+
+				float angleY = (45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
+
+				Quaternionf temp = axisY * newAxis;
+				// rotateXY.emplace_back(temp);
+				axisies.emplace_back(temp, RotateXY);
+			}
+		}
+
+		// X_Y
+		// std::vector<Quaternionf> rotateX_Y;
+		{
+			for (size_t i = 0; i < rotateX.size(); i++)
+			{
+				Quaternionf newAxis = rotateX[i];
+
+				float angle_Y = (-45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axis_Y = Quaternionf(AngleAxisf(angle_Y, Vector3f::UnitY()));
+
+				Quaternionf temp = axis_Y * newAxis;
+				// rotateX_Y.emplace_back(temp);
+				axisies.emplace_back(temp, RotateX_Y);
+			}
+		}
+
+		// YX
+		// std::vector<Quaternionf> rotateYX;
+		{
+			for (size_t i = 0; i < rotateY.size(); i++)
+			{
+				Quaternionf newAxis = rotateY[i];
+
+				float angleX = (45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
+
+				Quaternionf temp = axisX * newAxis;
+				// rotateYX.emplace_back(temp);
+				axisies.emplace_back(temp, RotateYX);
+			}
+		}
+
+		// Y_X
+		// std::vector<Quaternionf> rotateY_X;
+		{
+			for (size_t i = 0; i < rotateY.size(); i++)
+			{
+				Quaternionf newAxis = rotateY[i];
+
+				float angle_X = (-45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axis_X = Quaternionf(AngleAxisf(angle_X, Vector3f::UnitX()));
+
+				Quaternionf temp = axis_X * newAxis;
+				// rotateY_X.emplace_back(temp);
+				axisies.emplace_back(temp, RotateY_X);
+			}
+		}
+
+		// Z
+		// std::vector<Quaternionf> rotateZ;
+		{
+			for (size_t i = 0; i < none.size(); i++)
+			{
+				Quaternionf newAxis = none[i];
+
+				float angleZ = (45.f / 180.f) * std::numbers::pi_v<float>;
+				Quaternionf axisZ = Quaternionf(AngleAxisf(angleZ, Vector3f::UnitZ()));
+
+				Quaternionf temp = axisZ * newAxis;
+				// rotateZ.emplace_back(temp);
+				axisies.emplace_back(temp, RotateZ);
+			}
+		}
+	}
+
 	AttachHoldState::~AttachHoldState()
 	{
 		AttachSystem::Instance()->Clear();
@@ -14,10 +183,15 @@ namespace Phyzzle
 	void AttachHoldState::StateEnter()
 	{
 		{
+			using namespace Eigen;
+
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
 			auto p = player->data.cameraCore->GetLocalPosition();
-			p += Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			p.x() = 0.5f;
+			p.y() = 0.5f;
 
 			player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalRotation(Quaternionf::Identity());
 		}
 
 		TrySelect();
@@ -26,10 +200,16 @@ namespace Phyzzle
 	void AttachHoldState::StateExit()
 	{
 		{
-			auto p = player->data.cameraCore->GetLocalPosition();
-			p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+			using namespace Eigen;
 
-			player->data.cameraCore->SetLocalPosition(p);
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
+			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
+
+			auto rot = player->data.modelCore->GetLocalRotation();
+			player->data.cameraArm->SetLocalRotation(rot);
+
+			player->data.xAngle = 0.f;
 		}
 
 		EnableOutline(false);
@@ -43,6 +223,26 @@ namespace Phyzzle
 		ResetObjectVelocity();
 
 		CameraUpdate();
+
+		auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
+		auto degree = Eigen::Vector3f(
+			euler.x() * 180.f / std::numbers::pi_v<float>,
+			euler.y() * 180.f / std::numbers::pi_v<float>,
+			euler.z() * 180.f / std::numbers::pi_v<float>
+			);
+		degree.x() = std::floor(degree.x() * 10.f) / 10.f;
+		degree.y() = std::floor(degree.y() * 10.f) / 10.f;
+		degree.z() = std::floor(degree.z() * 10.f) / 10.f;
+		PurahEngine::GraphicsManager::GetInstance().DrawString(
+			L"오브젝트 각도 : \n" +
+			std::to_wstring(degree.x()) + L" \n" +
+			std::to_wstring(degree.y()) + L" \n" +
+			std::to_wstring(degree.z()) + L" \n",
+			1400, 100,
+			200, 600, 15,
+			255, 255, 255, 255);
+
+		SearchDebugDraw();
 	}
 #pragma endregion StateEvent
 
@@ -104,12 +304,21 @@ namespace Phyzzle
 	{
 		Put();
 		StateCancel();
+		// rotate.emplace_back(targetRotation);
+	}
+
+	void AttachHoldState::Up_X()
+	{
 	}
 
 	// 취소
 	void AttachHoldState::Click_Y()
 	{
 		TryDettach();
+	}
+
+	void AttachHoldState::Up_Y()
+	{
 	}
 
 	// 취소
@@ -132,8 +341,75 @@ namespace Phyzzle
 		else if (justRotate)
 		{
 			// 오브젝트에 각속도를 줘서 회전시킴
-			// 플레이어 기준으로 Y 축 기준으로 +회전 시킴
-			SpringXRotate(rotateAngle);
+			// 플레이어 기준으로 X 축 기준으로 +회전 시킴
+
+			switch(info.info)
+			{
+			case None:
+				SpringXRotate(rotateAngle);
+				info.info = RotateX;
+				break;
+
+			case RotateX:
+				SpringXRotate(rotateAngle);
+				info.info = None;
+				break;
+
+			case RotateY:
+				SpringXRotate(rotateAngle);
+				info.info = RotateYX;
+				break;
+
+			case RotateX_Y:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 왼쪽에 있을 때
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(-rotateAngle);	// 우
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(rotateAngle);		// 좌
+				info.info = RotateXY;
+				break;
+
+			case RotateXY:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 오른쪽에 있을 때
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(rotateAngle);		// 좌
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(-rotateAngle);	// 우
+				info.info = RotateX_Y;
+				break;
+
+			case RotateY_X:
+				SpringXRotate(rotateAngle);
+				info.info = RotateY;
+				break;
+
+			case RotateYX:
+				SpringXRotate(rotateAngle);
+				info.info = RotateZ;
+				break;
+
+			case RotateZ:
+				SpringXRotate(rotateAngle);
+				info.info = RotateY_X;
+				break;
+
+			default: ;
+				assert(0);
+			}
 		}
 	}
 
@@ -150,8 +426,75 @@ namespace Phyzzle
 		else if (justRotate)
 		{
 			// 오브젝트에 각속도를 줘서 회전시킴
-			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
-			SpringXRotate(-rotateAngle);
+			// 플레이어 기준으로 X 축 기준으로 -회전 시킴
+
+			switch (info.info)
+			{
+			case None:
+				SpringXRotate(-rotateAngle);
+				info.info = RotateX;
+				break;
+
+			case RotateX:
+				SpringXRotate(-rotateAngle);
+				info.info = None;
+				break;
+
+			case RotateY:
+				SpringXRotate(-rotateAngle);
+				info.info = RotateY_X;
+				break;
+
+			case RotateX_Y:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 왼쪽에 있을 때
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(-rotateAngle);	// 우
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(rotateAngle);		// 좌
+				info.info = RotateXY;
+				break;
+
+			case RotateXY:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 오른쪽에 있을 때
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(rotateAngle);		// 좌
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(-rotateAngle);	// 우
+				info.info = RotateX_Y;
+				break;
+
+			case RotateY_X:
+				SpringXRotate(-rotateAngle);
+				info.info = RotateZ;
+				break;
+
+			case RotateYX:
+				SpringXRotate(-rotateAngle);
+				info.info = RotateY;
+				break;
+
+			case RotateZ:
+				SpringXRotate(-rotateAngle);
+				info.info = RotateYX;
+				break;
+
+			default:;
+				assert(0);
+			}
 		}
 	}
 
@@ -163,7 +506,76 @@ namespace Phyzzle
 		{
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
-			SpringYRotate(rotateAngle);
+
+			switch (info.info)
+			{
+			case None:
+				SpringYRotate(rotateAngle);
+				info.info = RotateY;
+				break;
+
+			case RotateX:
+				SpringYRotate(rotateAngle);
+				info.info = RotateXY;
+				break;
+
+			case RotateY:
+				SpringYRotate(rotateAngle);
+				info.info = None;
+				break;
+
+			case RotateX_Y:
+				SpringYRotate(rotateAngle);
+				info.info = RotateX;
+				break;
+
+			case RotateXY:
+				SpringYRotate(rotateAngle);
+				info.info = RotateZ;
+				break;
+
+			case RotateY_X:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 위에 있을 때
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(-rotateAngle);	// 하
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(rotateAngle);		// 상
+
+				info.info = RotateYX;
+				break;
+
+			case RotateYX:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 아래에 있을 때
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(rotateAngle);		// 상
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(rotateAngle);		// 좌
+
+				SpringXRotate(-rotateAngle);	// 하
+
+				info.info = RotateY_X;
+				break;
+
+			case RotateZ:
+				SpringYRotate(rotateAngle);
+				info.info = RotateX_Y;
+				break;
+
+			default:;
+				assert(0);
+			}
 		}
 	}
 
@@ -176,7 +588,74 @@ namespace Phyzzle
 			// 오브젝트에 각속도를 줘서 회전시킴
 			// 플레이어 기준으로 Y 축 기준으로 -회전 시킴
 
-			SpringYRotate(-rotateAngle);
+			switch (info.info)
+			{
+			case None:
+				SpringYRotate(-rotateAngle);
+				info.info = RotateY;
+				break;
+
+			case RotateX:
+				SpringYRotate(-rotateAngle);
+				info.info = RotateX_Y;
+				break;
+
+			case RotateY:
+				SpringYRotate(-rotateAngle);
+				info.info = None;
+				break;
+
+			case RotateX_Y:
+				SpringYRotate(-rotateAngle);
+				info.info = RotateZ;
+				break;
+
+			case RotateXY:
+				SpringYRotate(-rotateAngle);
+				info.info = RotateX;
+				break;
+
+			case RotateY_X:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 위에 있을 때
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(-rotateAngle);	// 하
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(rotateAngle);		// 상
+
+				info.info = RotateYX;
+				break;
+
+			case RotateYX:
+				// 문제의 그 각도인데
+				// 메인 면이 되는 게 아래에 있을 때
+				SpringXRotate(-rotateAngle);	// 하
+
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(rotateAngle);		// 상
+				SpringXRotate(rotateAngle);		// 상
+
+				SpringYRotate(-rotateAngle);	// 우
+
+				SpringXRotate(-rotateAngle);	// 하
+				info.info = RotateY_X;
+				break;
+
+			case RotateZ:
+				SpringYRotate(-rotateAngle);
+				info.info = RotateXY;
+				break;
+
+			default:;
+				assert(0);
+			}
 		}
 	}
 
@@ -283,11 +762,41 @@ namespace Phyzzle
 
 	void AttachHoldState::CameraUpdate() const
 	{
-		auto playerPos = player->data.modelCore->GetWorldPosition();
-		auto bodyPos = selectBody->GetPosition();
-		auto focus = (bodyPos - playerPos) / 2.f;
+		using namespace Eigen;
 
-		player->CameraLookTo(playerPos + focus);
+		float offset = 5.f;
+		Vector3f bodyPos = selectBody->GetPosition();
+		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		Vector3f cameraArmPos = player->data.cameraArm->GetWorldPosition();
+
+		// 카메라 암이 오브젝트를 향하도록 함
+		Vector3f armDirection = bodyPos - playerPos;
+		armDirection.y() = 0.f;
+		armDirection.normalize();
+		player->CameraLookTo(armDirection);
+
+		/// 임시
+		// 카메라가 오브젝트 높이를 따라가도록 함
+		float gap = bodyPos.y() - playerPos.y();
+		if (gap < 9.f)
+		{
+			gap = 9.f;
+		}
+		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
+		cameraCorePos.y() = bodyPos.y();
+		player->data.cameraCore->SetWorldPosition(cameraCorePos);
+
+
+		// 플레이어와 오브젝트 사이를 바라보게 함
+		Vector3f playerToBody = bodyPos - playerPos;
+		Vector3f direction = playerToBody.normalized();
+
+		bodyPos = bodyPos + direction * 5.f;
+		playerPos = playerPos - direction * 5.f;
+
+		Vector3f to = (bodyPos - playerPos) / 2.f;
+		Vector3f focus = playerPos + to;
+		player->CameraLookAt(focus);
 	}
 
 	void AttachHoldState::CameraReset() const
@@ -399,13 +908,17 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 
+		using namespace Eigen;
+		// Vector3f r = selectBody->GetAngularVelocity();
+
 		quatSpring.Update(
 			currRot,
 			springR,
-			targetR,
+			targetR.normalized(),
 			zeta0,
 			timeStep);
 
+		// selectBody->SetAngularVelocity(r);
 		selectBody->SetRotation(currRot);
 	}
 
@@ -506,6 +1019,73 @@ namespace Phyzzle
 		AttachSystem::Instance()->EnableOutline(attachble, _value, PurahColor::BlueViolet, PurahColor::BlueViolet);
 	}
 
+	void AttachHoldState::Snap()
+	{
+		using namespace Eigen;
+
+		const Quaternionf objectRotation = selectBody->GetRotation();
+		const Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
+
+		const Vector3f objectPosition = selectBody->GetPosition();
+		const Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
+
+		Vector3f playerToObject = objectPosition - playerPosition;
+		playerToObject.y() = 0.f;
+		playerToObject.normalize();
+
+		// 오브젝트-플레이어 방향과 유사한 축을 찾음
+		Quaternionf test = playerRotation.inverse() * objectRotation;
+		Quaternionf front = FindAxis(test);
+		targetRotation = front;
+
+		targetRotation.normalize();
+	}
+
+	Eigen::Quaternionf AttachHoldState::FindAxis(const Eigen::Quaternionf& _direction)
+	{
+		using namespace Eigen;
+
+		Quaternionf result;
+		int size = axisies.size();
+
+		float max = 0.f;
+		for (int i = 0; i < size; i++)
+		{
+			float cosTheta = 0.f;
+			const auto& [axis, data] = axisies[i];
+			Quaternionf dir = axis.normalized();
+			Quaternionf minus = Quaternionf(-dir.w(), -dir.x(), -dir.y(), -dir.z());
+
+			cosTheta = _direction.dot(dir);									// 축마다 각도를 계산함
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+
+			if (max <= cosTheta)								// 가장 가까운 축을 찾음
+			{
+				if (result != dir)
+				{
+					result = dir;
+					info = data;
+					max = cosTheta;
+				}
+			}
+
+			cosTheta = _direction.dot(minus);									// 축마다 각도를 계산함
+			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+
+			if (max <= cosTheta)								// 가장 가까운 축을 찾음
+			{
+				if (result != dir)
+				{
+					result = dir;
+					info = data;
+					max = cosTheta;
+				}
+			}
+		}
+
+ 		return result;
+	}
+
 	void AttachHoldState::VariableSet()
 	{
 		using namespace Eigen;
@@ -525,9 +1105,19 @@ namespace Phyzzle
 		LookToWorldDirection(lookTo);
 		targetPosition.z() = lookTo.norm();
 
-		const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
-		const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
-		targetRotation = playerRotation.inverse() * objectRotation;
+		info.info = None;
+
+		Snap();
+
+		auto p = player->data.cameraCore->GetLocalPosition();
+		p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
+		player->data.xAngle = 0.f;
+
+		player->data.cameraCore->SetLocalPosition(p);
+
+		//const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
+		//const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
+		//targetRotation = playerRotation.inverse() * objectRotation;
 	}
 
 	void AttachHoldState::VariableReset()
@@ -580,6 +1170,17 @@ namespace Phyzzle
 			1200, 300,
 			200, 600, 15,
 			255, 255, 255, 255);
+
+		if (selectBody)
+		{
+			ZonaiPhysics::ZnQueryInfo info;
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(), player->data.modelCore->GetWorldRotation() * Eigen::Vector3f::UnitY(), 5.f, 0, info);
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitY(), 5.f, 0, info);
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  Eigen::Vector3f::UnitX(), 5.f, 0, info);
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitX(), 5.f, 0, info);
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  Eigen::Vector3f::UnitZ(), 5.f, 0, info);
+			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitZ(), 5.f, 0, info);
+		}
 	}
 #endif _DEBUG
 }

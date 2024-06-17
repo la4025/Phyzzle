@@ -21,45 +21,45 @@ namespace ZonaiPhysics
 	class Collider : public ZnCollider
 	{
 	public:
-							Collider() = delete;
-							Collider(physx::PxShape*, RigidBody*);
-							//Collider(physx::PxPhysics*&, RigidBody*);
-							~Collider() override;
+									Collider() = delete;
+									Collider(physx::PxShape*, RigidBody*);
+									//Collider(physx::PxPhysics*&, RigidBody*);
+									~Collider() override;
 
 	public:
-		void				DisableQuery(bool) final;
-		void				DisableSimulation(bool) final;
-		void				SetTrigger(bool) final;
-		
-		void				SetLayerData(const uint32_t&) final;
+		void						DisableQuery(bool) final;
+		void						DisableSimulation(bool) final;
+		void						SetTrigger(bool) final;
+
+		void						SetLayerData(const uint32_t&) final;
 
 		/**
 		위치
 		*/
-		Eigen::Vector3f		GetPosition() const final;
-		void				SetPosition(const Eigen::Vector3f& _position) final;
-		virtual  Eigen::Vector3f	GetLocalPosition() const final;
-		virtual	 void		SetLocalPosition(const Eigen::Vector3f& _position) final;
+		Eigen::Vector3f				GetPosition() const final;
+		void						SetPosition(const Eigen::Vector3f& _position) final;
+		Eigen::Vector3f				GetLocalPosition() const final;
+		void						SetLocalPosition(const Eigen::Vector3f& _position) final;
 
 		/**
 		회전
 		*/
-		Eigen::Quaternionf	GetQuaternion() const final;
-		void				SetQuaternion(const Eigen::Quaternionf& _quaternion) final;
-		virtual Eigen::Quaternionf	GetLocalQuaternion() const final;
-		virtual void		SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) final;
+		Eigen::Quaternionf			GetQuaternion() const final;
+		void						SetQuaternion(const Eigen::Quaternionf& _quaternion) final;
+		Eigen::Quaternionf			GetLocalQuaternion() const final;
+		void						SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) final;
 
 		/**
 		유저 데이터
 		*/
-		void*				GetUserData() const final;
-		void				SetUserData(void* _userData) final;
+		void*						GetUserData() const final;
+		void						SetUserData(void* _userData) final;
 
-		Eigen::Vector2f		GetAABB();
+		ZnBound3					GetBoundingBox() override;
 
 	public:
 
-		void				UpdateInertiaTensor() const;
+		void						UpdateInertiaTensor() const;
 
 	protected:
 		friend class ZnPhysicsX;
