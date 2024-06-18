@@ -1,5 +1,6 @@
 #include <Eigen/Dense>
 #include <cmath>
+#include <iostream>
 
 #include "Transform.h"
 #include "TimeController.h"
@@ -16,7 +17,7 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
-		
+
 	}
 
 	void DefaultState::StateExit()
@@ -25,7 +26,21 @@ namespace Phyzzle
 
 	void DefaultState::StateStay()
 	{
+		CameraUpdate();
 
+		static Coroutine ta = CameraTemp();
+		// static Coroutine taint = CameraTempint();
+
+		if (!ta.done())
+		{
+			ta();
+		}
+
+		// std::optional value = taint.get_value();
+		// if (value.has_value())
+		// {
+		// 
+		// }
 	}
 
 	void DefaultState::Stick_L()
@@ -39,7 +54,7 @@ namespace Phyzzle
 
 	void DefaultState::Stick_R()
 	{
-		Around();
+		// Around();
 	}
 
 	void DefaultState::Click_DLeft()
@@ -77,6 +92,28 @@ namespace Phyzzle
 
 	}
 
+	Coroutine<void> DefaultState::CameraTemp()
+	{
+		//int i = 0;
+		//while (true)
+		//{
+		//	std::cout << "Coroutine" << i++ << std::endl;
+		//	co_await WaitForSeconds(2000);
+		//}
+
+		co_return;
+	}
+
+	Coroutine<int> DefaultState::CameraTempint()
+	{
+		int i = 0;
+		while (true)
+		{
+			std::cout << "Coroutine" << i++ << std::endl;
+			co_await nullptr;
+		}
+	}
+
 	void DefaultState::Click_A()
 	{
 		Jump();
@@ -84,7 +121,10 @@ namespace Phyzzle
 
 	void DefaultState::Click_LB()
 	{
-		player->ChangeState(player->data.state);
+		if (!player->data.jumping)
+		{
+			player->ChangeState(player->data.state);
+		}
 	}
 
 	void DefaultState::Click_RB()
@@ -95,6 +135,108 @@ namespace Phyzzle
 	void DefaultState::Jump() const
 	{
 		player->Jump();
+	}
+
+	void DefaultState::CameraUpdate()
+	{
+		CameraAround();
+		CameraPositionFromAngle();
+	}
+
+	void DefaultState::CameraAround()
+	{
+		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
+
+		const float deltaTime = time.GetDeltaTime();
+
+		// 스틱 기울기에 따라 회전 각도를 계산
+		const float yawAngle = player->currInput.Rstick.X * player->data.sensitivity * deltaTime * player->currInput.Rstick.Size;
+		{
+			// 월드 up 기준으로 카메라를 회전
+			player->data.cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
+		}
+
+		// 스틱 기울기에 따라 회전 각도를 계산
+		const float pitchAngle = -player->currInput.Rstick.Y * player->data.sensitivity * deltaTime * player->currInput.Rstick.Size;
+		{
+			float deltaAngle = 0.f;
+
+			player->data.xAngle += pitchAngle;
+
+			if (player->data.xAngle > player->data.limitHighAngle)
+			{
+				deltaAngle = 0.f;
+				player->data.xAngle = player->data.limitHighAngle;
+			}
+			else if (player->data.xAngle < player->data.limitLowAngle)
+			{
+				deltaAngle = 0.f;
+				player->data.xAngle = player->data.limitLowAngle;
+			}
+			else
+			{
+				deltaAngle = pitchAngle;
+			}
+
+			// 카메라 Right 벡터를 기준으로 회전하기 위해서 카메라의 월드 right를 구함.
+			const Eigen::Vector3f cameraRight = player->data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();
+
+			// 카메라의 right 기준으로 카메라를 회전
+			player->data.cameraArm->Rotate(cameraRight, deltaAngle);
+		}
+	}
+
+	void DefaultState::CameraPositionFromAngle()
+	{
+		auto currP = player->data.cameraCore->GetLocalPosition();
+
+		float distance = 0.f;
+
+		// 각도에 따라 카메라 위치를 움직임.
+		if (player->data.xAngle >= 0.f)
+		{
+			const float ease = player->data.xAngle / player->data.limitHighAngle;
+			auto EasingHigh = [](float x) -> float
+				{
+					return 1.0f - (1.0f - x) * (1.0f - x);
+				};
+
+			distance = player->data.coreDefaultPosition.z() + player->differenceHigh.z() * EasingHigh(ease);
+		}
+		else if (player->data.xAngle < 0.f)
+		{
+			const float ease = player->data.xAngle / player->data.limitLowAngle;
+			auto EasingLow = [](float x) -> float
+				{
+					return 1.0f - std::pow(1.0f - x, 5.0f);
+				};
+
+			distance = player->data.coreDefaultPosition.z() + player->differenceLow.z() * EasingLow(ease);
+		}
+
+		
+		Eigen::Vector3f modelPos = player->data.cameraArm->GetWorldPosition();
+		Eigen::Vector3f dir = player->data.cameraCore->GetFront() * -1.f;
+		unsigned int layers = player->data.cameraCollisionLayers;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Spherecast(
+			0.3f,
+			modelPos, Eigen::Quaternionf::Identity(),
+			dir,
+			std::fabs(distance),
+			layers, info);
+
+		if (hit)
+		{
+			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
+		}
+		else
+		{
+			currP = Eigen::Vector3f::UnitZ() * distance;
+		}
+
+		player->data.cameraCore->SetLocalPosition(currP);
 	}
 
 	void DefaultState::Move() const

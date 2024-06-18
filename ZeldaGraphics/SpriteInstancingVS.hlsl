@@ -15,6 +15,7 @@ struct VertexOut
 {
     float4 pos : SV_Position;
     float2 uv : TEXCOORD;
+    uint instance : InstanceID;
 };
 
 VertexOut main(VertexIn input)
@@ -31,6 +32,8 @@ VertexOut main(VertexIn input)
     output.pos = mul(output.pos, projectionMatrix);
     
     output.uv = input.tex;
+    
+    output.instance = input.instance;
     
     return output;
 }

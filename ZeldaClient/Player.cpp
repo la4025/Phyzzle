@@ -225,11 +225,15 @@ namespace Phyzzle
 				stateSystem[currState]->Click_X();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_X))
 				stateSystem[currState]->Pressing_X();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_X))
+				stateSystem[currState]->Up_X();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_Y))
 				stateSystem[currState]->Click_Y();
 			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_Y))
 				stateSystem[currState]->Pressing_Y();
+			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_Y))
+				stateSystem[currState]->Up_Y();
 
 			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_UP))
 				stateSystem[currState]->Click_DUp();
@@ -327,11 +331,11 @@ namespace Phyzzle
 			{
 				if (currentbool)
 				{
-					data.animator->Play(L"Armature|Armature|Armature|idle");
+					data.animator->Play(data.idleAnimation);
 				}
 				else
 				{
-					data.animator->Play(L"Armature|Armature|Armature|running");
+					data.animator->Play(data.runningAnimation);
 				}
 				return;
 			}
@@ -341,7 +345,7 @@ namespace Phyzzle
 				return;
 			}
 
-			data.animator->SetPlaySpeed(L"Armature|Armature|Armature|running", currInput.Lstick.Size);
+			data.animator->SetPlaySpeed(data.runningAnimation, currInput.Lstick.Size);
 		}
 	}
 
@@ -376,12 +380,10 @@ namespace Phyzzle
 	{
 		auto currP = data.cameraCore->GetLocalPosition();
 
-		auto modelPos = data.cameraArm->GetWorldPosition();
-		auto dir = data.cameraCore->GetFront();
-		ZonaiPhysics::ZnQueryInfo info;
+		float distance = 0.f;
 
 		// 각도에 따라 카메라 위치를 움직임.
-		if (data.xAngle > 0.f)
+		if (data.xAngle >= 0.f)
 		{
 			const float ease = data.xAngle / data.limitHighAngle;
 			auto EasingHigh = [](float x) -> float
@@ -389,7 +391,7 @@ namespace Phyzzle
 					return 1.0f - (1.0f - x) * (1.0f - x);
 				};
 
-			currP.z() = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
+			distance = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
 		}
 		else if (data.xAngle < 0.f)
 		{
@@ -399,22 +401,29 @@ namespace Phyzzle
 					return 1.0f - std::pow(1.0f - x, 5.0f);
 				};
 
-			currP.z() = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
+			distance = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
 		}
 
-		unsigned int layers = ~(1 << PurahEngine::Physics::GetLayerID(L"Player"));
+		auto modelPos = data.cameraArm->GetWorldPosition();
+		auto dir = data.cameraCore->GetFront() * -1.f;
+		unsigned int layers = data.cameraCollisionLayers;
+		ZonaiPhysics::ZnQueryInfo info;
 
-		//bool hit = PurahEngine::Physics::Spherecast(
-		//	0.3f,
-		//	modelPos, Eigen::Quaternionf::Identity(),
-		//	dir * -1.f,
-		//	currP.z() * -1.f,
-		//	layers, info);
+		bool hit = PurahEngine::Physics::Spherecast(
+			0.3f,
+			modelPos, Eigen::Quaternionf::Identity(),
+			dir,
+			std::fabs(distance),
+			layers, info);
 
-		//if (hit)
-		//{
-		//	currP.z() = info.distance * -1.f;
-		//}
+		if (hit)
+		{
+			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
+		}
+		else
+		{
+			currP = Eigen::Vector3f::UnitZ() * distance;
+		}
 
 		data.cameraCore->SetLocalPosition(currP);
 	}
@@ -478,52 +487,44 @@ namespace Phyzzle
 			// 카메라의 right 기준으로 카메라를 회전
 			data.cameraArm->Rotate(cameraRight, deltaAngle);
 		}
-
-		CameraCoreUpdate();
 	}
 
+	/**
+	 * 플레이어의 카메라가 바라볼 방향을 설정
+	 * 
+	 * @param _direction 
+	 */
 	void Player::CameraLookTo(const Eigen::Vector3f& _direction)
 	{
+		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), _direction);
 
+		data.cameraArm->SetWorldRotation(targetRotation);
 	}
 
+	/**
+	 * 플레이어의 카메라가 바라볼 곳을 설정
+	 *
+	 * @param _position
+	 */
 	void Player::CameraLookAt(const Eigen::Vector3f& _position)
 	{
+		using namespace Eigen;
 
-	}
+		Vector3f pos = data.cameraCore->GetWorldPosition();
+		Vector3f direction = _position - pos;
+		direction.normalize();
 
-	bool Player::RaycastFromCamera(float _distance,
-		PurahEngine::RigidBody** _outBody)
-	{
-		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
-		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnQueryInfo info;
+		Eigen::Vector3f up(0.0f, 1.0f, 0.0f);
+		Eigen::Vector3f right = up.cross(direction).normalized();
 
-		int culling = (1 << PurahEngine::Physics::GetLayerID(L"Player")) | (1 << PurahEngine::Physics::GetLayerID(L"PrisonBars"));
-	 	int layers = ~culling;
+		Eigen::Vector3f newUp = direction.cross(right).normalized();
 
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
+		Eigen::Matrix3f rotation;
+		rotation.col(0) = right;
+		rotation.col(1) = newUp;
+		rotation.col(2) = direction;
 
-		if (block)
-		{
-			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
-
-			if (!shape)
-				return false;
-
-			PurahEngine::RigidBody* body = shape->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
-
-			if (!body)
-				return false;
-
-			if (_outBody)
-				*_outBody = body;
-
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
-		}
-
-		return block;
+		data.cameraCore->SetWorldRotation(Eigen::Quaternionf(rotation));
 	}
 
 	bool Player::RaycastFromCamera(
@@ -534,13 +535,11 @@ namespace Phyzzle
 	)
 	{
 		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
-		const Eigen::Vector3f to = data.cameraCore->GetWorldRotation().toRotationMatrix() * Eigen::Vector3f{ 0.f, 0.f, 1.f };
+		Eigen::Matrix3f rotate = data.cameraCore->GetWorldRotation().toRotationMatrix();
+		Eigen::Vector3f to = rotate * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		ZonaiPhysics::ZnQueryInfo info;
 
-		unsigned int playerLayer = 1ul << PurahEngine::Physics::GetLayerID(L"Player");
-		unsigned int tempLayer = 1ul << PurahEngine::Physics::GetLayerID(L"PrisonBars");
-		unsigned int culling = (playerLayer | tempLayer);
-		unsigned int layers = ~culling;
+		unsigned int layers = data.attachRaycastLayers;
 
 		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
 
@@ -595,6 +594,22 @@ namespace Phyzzle
 		auto jumpPower = data.jumpPower;
 		PREDESERIALIZE_VALUE(jumpPower);
 		data.jumpPower = jumpPower;
+
+		int cameraCollisionLayers = data.cameraCollisionLayers;
+		PREDESERIALIZE_VALUE(cameraCollisionLayers);
+		data.cameraCollisionLayers = cameraCollisionLayers;
+
+		auto attachRaycastLayers = data.attachRaycastLayers;
+		PREDESERIALIZE_VALUE(attachRaycastLayers);
+		data.attachRaycastLayers = attachRaycastLayers;
+
+		auto idleAnimation = data.idleAnimation;
+		PREDESERIALIZE_WSTRING(idleAnimation);
+		data.idleAnimation = idleAnimation;
+
+		auto runningAnimation = data.runningAnimation;
+		PREDESERIALIZE_WSTRING(runningAnimation);
+		data.runningAnimation = runningAnimation;
 	}
 
 	void Player::PostSerialize(json& jsonData) const
@@ -626,9 +641,6 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(crossHead);
 		data.crossHead = crossHead;
 
-		//auto holder = data.holder;
-		//POSTDESERIALIZE_PTR(holder);
-		//data.holder = holder;
 	}
 #pragma endregion 직렬화
 }

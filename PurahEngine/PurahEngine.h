@@ -49,6 +49,7 @@
 #include "PointLight.h"
 #include "ModelRenderer.h"
 #include "MeshRenderer.h"
+#include "SpriteRenderer.h"
 #include "Animator.h"
 #include "ParticleSystem.h"
 

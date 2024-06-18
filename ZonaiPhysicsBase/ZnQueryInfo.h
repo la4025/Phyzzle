@@ -11,5 +11,8 @@ namespace ZonaiPhysics
 		Eigen::Vector3f position = Eigen::Vector3f::Zero();	// 충돌 위치
 		float distance = FLT_MIN;							// 충돌 거리
 		Eigen::Vector3f normal = Eigen::Vector3f::Zero();
+
+		std::vector<void*> actors;
+		std::vector<void*> shapes;
 	};
 }

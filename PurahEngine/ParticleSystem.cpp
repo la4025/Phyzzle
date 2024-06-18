@@ -24,7 +24,7 @@ namespace PurahEngine
 	}
 
 	void ParticleSystem::Update()
-	{ 
+	{
 		assert(moveDirection != Eigen::Vector3f::Zero());
 
 		float deltaTime = TimeController::GetInstance().GetDeltaTime();
@@ -89,6 +89,8 @@ namespace PurahEngine
 
 	void ParticleSystem::Render(IZeldaRenderer* renderer)
 	{
+		Eigen::Matrix4f worldMatrix = GetGameObject()->GetTransform()->GetWorldMatrix();
+
 		// 게임오브젝트가 활성화 되어 있는 경우에만 작동한다.
 		if (GetGameObject()->IsRootEnable())
 		{
@@ -100,7 +102,7 @@ namespace PurahEngine
 
 			for (auto& element : elements)
 			{
-				Eigen::Matrix4f elementMatrix = element.translation * GetGameObject()->GetTransform()->GetWorldMatrix() * element.scaling;
+				Eigen::Matrix4f elementMatrix = element.translation * worldMatrix * element.scaling;
 				
 				::Color color;
 				color.r = alphaTextureColor.x();

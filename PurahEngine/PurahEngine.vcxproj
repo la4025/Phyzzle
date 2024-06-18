@@ -100,6 +100,7 @@
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="BallJoint.h" />
     <ClInclude Include="SpringJoint.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Tag.h" />
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="Timer.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="BallJoint.cpp" />
     <ClCompile Include="SpringJoint.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Tag.cpp" />
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="Timer.cpp" />

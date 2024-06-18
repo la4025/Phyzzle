@@ -62,23 +62,23 @@ class PxGeometryQuery
 public:
 
 	/**
-	\brief Raycast test against a geometry object.
+	\brief 기하 객체에 대한 레이캐스트 테스트.
 
-	All geometry types are supported except PxParticleSystemGeometry, PxTetrahedronMeshGeometry and PxHairSystemGeometry.
+	모든 기하 타입이 지원되지만, PxParticleSystemGeometry, PxTetrahedronMeshGeometry 및 PxHairSystemGeometry는 제외됩니다.
 
-	\param[in] origin			The origin of the ray to test the geometry object against
-	\param[in] unitDir			Normalized direction of the ray to test the geometry object against
-	\param[in] geom				The geometry object to test the ray against
-	\param[in] pose				Pose of the geometry object
-	\param[in] maxDist			Maximum ray length, has to be in the [0, inf) range
-	\param[in] hitFlags			Specification of the kind of information to retrieve on hit. Combination of #PxHitFlag flags
-	\param[in] maxHits			max number of returned hits = size of 'rayHits' buffer
-	\param[out] rayHits			Raycast hits information
-	\param[in] stride			Stride value (in number of bytes) for rayHits array. Typically sizeof(PxGeomRaycastHit) for packed arrays.
-	\param[in] queryFlags		Optional flags controlling the query.
-	\param[in] threadContext	Optional user-defined per-thread context.
+	\param[in] origin            테스트할 레이의 시작점
+	\param[in] unitDir           테스트할 레이의 정규화된 방향
+	\param[in] geom              레이를 테스트할 기하 객체
+	\param[in] pose              기하 객체의 포즈
+	\param[in] maxDist           레이의 최대 길이, [0, 무한) 범위 내에 있어야 함
+	\param[in] hitFlags          충돌 시 가져올 정보의 종류를 지정. #PxHitFlag 플래그의 조합
+	\param[in] maxHits           반환되는 최대 충돌 수 = 'rayHits' 버퍼의 크기
+	\param[out] rayHits          레이캐스트 충돌 정보
+	\param[in] stride            rayHits 배열의 스트라이드 값 (바이트 단위). 일반적으로 패킹된 배열의 경우 sizeof(PxGeomRaycastHit).
+	\param[in] queryFlags        쿼리를 제어하는 선택적 플래그
+	\param[in] threadContext     선택적 사용자 정의 스레드별 컨텍스트
 
-	\return Number of hits between the ray and the geometry object
+	\return 레이와 기하 객체 사이의 충돌 수
 
 	@see PxGeomRaycastHit PxGeometry PxTransform
 	*/
@@ -89,22 +89,22 @@ public:
 												PxRaycastThreadContext* threadContext = NULL);
 
 	/**
-	\brief Overlap test for two geometry objects.
+	\brief 두 기하 객체에 대한 겹침 테스트.
 
-	All combinations are supported except:
+	다음 조합은 지원되지 않습니다:
 	\li PxPlaneGeometry vs. {PxPlaneGeometry, PxTriangleMeshGeometry, PxHeightFieldGeometry}
 	\li PxTriangleMeshGeometry vs. PxHeightFieldGeometry
 	\li PxHeightFieldGeometry vs. PxHeightFieldGeometry
-	\li Anything involving PxParticleSystemGeometry, PxTetrahedronMeshGeometry or PxHairSystemGeometry.
+	\li PxParticleSystemGeometry, PxTetrahedronMeshGeometry 또는 PxHairSystemGeometry가 포함된 모든 조합
 
-	\param[in] geom0			The first geometry object
-	\param[in] pose0			Pose of the first geometry object
-	\param[in] geom1			The second geometry object
-	\param[in] pose1			Pose of the second geometry object
-	\param[in] queryFlags		Optional flags controlling the query.
-	\param[in] threadContext	Optional user-defined per-thread context.
+	\param[in] geom0            첫 번째 기하 객체
+	\param[in] pose0            첫 번째 기하 객체의 포즈
+	\param[in] geom1            두 번째 기하 객체
+	\param[in] pose1            두 번째 기하 객체의 포즈
+	\param[in] queryFlags       쿼리를 제어하는 선택적 플래그
+	\param[in] threadContext    선택적 사용자 정의 스레드별 컨텍스트
 
-	\return True if the two geometry objects overlap
+	\return 두 기하 객체가 겹치는 경우 true를 반환합니다.
 
 	@see PxGeometry PxTransform
 	*/
@@ -146,34 +146,33 @@ public:
 											PxSweepThreadContext* threadContext = NULL);
 
 	/**
-	\brief Compute minimum translational distance (MTD) between two geometry objects.
+	\brief 두 기하 객체 간의 최소 평행 이동 거리(MTD)를 계산합니다.
 
-	All combinations of geom objects are supported except:
-	- plane/plane
-	- plane/mesh
-	- plane/heightfield
-	- mesh/mesh
-	- mesh/heightfield
-	- heightfield/heightfield
-	- anything involving PxParticleSystemGeometry, PxTetrahedronMeshGeometry or PxHairSystemGeometry
+	다음 기하 객체 조합은 지원되지 않습니다:
+	- plane/plane (평면/평면)
+	- plane/mesh (평면/메쉬)
+	- plane/heightfield (평면/높이 필드)
+	- mesh/mesh (메쉬/메쉬)
+	- mesh/heightfield (메쉬/높이 필드)
+	- heightfield/heightfield (높이 필드/높이 필드)
+	- PxParticleSystemGeometry, PxTetrahedronMeshGeometry 또는 PxHairSystemGeometry가 포함된 모든 조합
 
-	The function returns a unit vector ('direction') and a penetration depth ('depth').
+	이 함수는 단위 벡터('direction')와 관통 깊이('depth')를 반환합니다.
 
-	The depenetration vector D = direction * depth should be applied to the first object, to
-	get out of the second object.
+	첫 번째 객체를 두 번째 객체에서 벗어나게 하기 위해, 평행 이동 벡터 D = direction * depth를 첫 번째 객체에 적용해야 합니다.
 
-	Returned depth should always be positive or null.
+	반환된 깊이는 항상 양수 또는 0이어야 합니다.
 
-	If objects do not overlap, the function can not compute the MTD and returns false.
+	객체들이 겹치지 않는 경우, 이 함수는 MTD를 계산할 수 없으며 false를 반환합니다.
 
-	\param[out] direction	Computed MTD unit direction
-	\param[out] depth		Penetration depth. Always positive or null.
-	\param[in] geom0		The first geometry object
-	\param[in] pose0		Pose of the first geometry object
-	\param[in] geom1		The second geometry object
-	\param[in] pose1		Pose of the second geometry object
-	\param[in] queryFlags	Optional flags controlling the query.
-	\return True if the MTD has successfully been computed, i.e. if objects do overlap.
+	\param[out] direction    계산된 MTD 단위 방향
+	\param[out] depth        관통 깊이. 항상 양수 또는 0.
+	\param[in] geom0         첫 번째 기하 객체
+	\param[in] pose0         첫 번째 기하 객체의 포즈
+	\param[in] geom1         두 번째 기하 객체
+	\param[in] pose1         두 번째 기하 객체의 포즈
+	\param[in] queryFlags    쿼리를 제어하는 선택적 플래그.
+	\return 객체들이 겹치는 경우, 즉 MTD가 성공적으로 계산된 경우 true를 반환합니다.
 
 	@see PxGeometry PxTransform
 	*/
@@ -183,19 +182,19 @@ public:
 														PxGeometryQueryFlags queryFlags = PxGeometryQueryFlag::eDEFAULT);
 
 	/**
-	\brief Computes distance between a point and a geometry object.
+	\brief 점과 기하 객체 간의 거리를 계산합니다.
 
-	Currently supported geometry objects: box, sphere, capsule, convex, mesh.
+	현재 지원되는 기하 객체: 상자, 구, 캡슐, 볼록 다각형, 메쉬.
 
-	\note For meshes, only the BVH34 midphase data-structure is supported.
+	\note 메쉬의 경우, BVH34 중간 단계 데이터 구조만 지원됩니다.
 
-	\param[in] point			The point P
-	\param[in] geom				The geometry object
-	\param[in] pose				Pose of the geometry object
-	\param[out] closestPoint	Optionally returned closest point to P on the geom object. Only valid when returned distance is strictly positive.
-	\param[out] closestIndex	Optionally returned closest (triangle) index. Only valid for triangle meshes.
-	\param[in] queryFlags		Optional flags controlling the query.
-	\return Square distance between the point and the geom object, or 0.0 if the point is inside the object, or -1.0 if an error occured (geometry type is not supported, or invalid pose)
+	\param[in] point            점 P
+	\param[in] geom             기하 객체
+	\param[in] pose             기하 객체의 포즈
+	\param[out] closestPoint    기하 객체에서 점 P에 가장 가까운 점을 선택적으로 반환합니다. 반환된 거리가 엄격히 양수인 경우에만 유효합니다.
+	\param[out] closestIndex    선택적으로 가장 가까운 (삼각형) 인덱스를 반환합니다. 삼각형 메쉬에만 유효합니다.
+	\param[in] queryFlags       쿼리를 제어하는 선택적 플래그.
+	\return 점과 기하 객체 간의 제곱 거리, 점이 객체 내부에 있는 경우 0.0, 오류가 발생한 경우 (지원되지 않는 기하 타입 또는 잘못된 포즈) -1.0을 반환합니다.
 
 	@see PxGeometry PxTransform
 	*/
@@ -220,18 +219,18 @@ public:
 	PX_PHYSX_COMMON_API static void	computeGeomBounds(PxBounds3& bounds, const PxGeometry& geom, const PxTransform& pose, float offset=0.0f, float inflation=1.0f, PxGeometryQueryFlags queryFlags = PxGeometryQueryFlag::eDEFAULT);
 
 	/**
-	\brief Generate collision contacts between a convex geometry and a single triangle
+	\brief 볼록 기하 객체와 단일 삼각형 간의 충돌 접촉을 생성합니다.
 
-	\param[in] geom					The geometry object. Can be a capsule, a box or a convex mesh
-	\param[in] pose					Pose of the geometry object
-	\param[in] triangleVertices		Triangle vertices in local space
-	\param[in] triangleIndex		Triangle index
-	\param[in] contactDistance		The distance at which contacts begin to be generated between the pairs
-	\param[in] meshContactMargin	The mesh contact margin.
-	\param[in] toleranceLength		The toleranceLength. Used for scaling distance-based thresholds internally to produce appropriate results given simulations in different units
-	\param[out] contactBuffer		A buffer to write contacts to.
+	\param[in] geom                 기하 객체. 캡슐, 상자 또는 볼록 메쉬일 수 있습니다.
+	\param[in] pose                 기하 객체의 포즈
+	\param[in] triangleVertices     삼각형의 로컬 공간 내 정점들
+	\param[in] triangleIndex        삼각형 인덱스
+	\param[in] contactDistance      쌍 간의 접촉이 생성되기 시작하는 거리
+	\param[in] meshContactMargin    메쉬 접촉 마진
+	\param[in] toleranceLength      toleranceLength. 거리 기반 임계값을 내부적으로 스케일링하여 다양한 단위의 시뮬레이션에 적합한 결과를 생성하는 데 사용됩니다.
+	\param[out] contactBuffer       접촉 정보를 기록할 버퍼
 
-	\return True if there was collision
+	\return 충돌이 있었는지 여부를 반환합니다.
 	*/
 	PX_PHYSX_COMMON_API static bool generateTriangleContacts(const PxGeometry& geom, const PxTransform& pose, const PxVec3 triangleVertices[3], PxU32 triangleIndex, PxReal contactDistance, PxReal meshContactMargin, PxReal toleranceLength, PxContactBuffer& contactBuffer);
 

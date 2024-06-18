@@ -56,7 +56,7 @@ namespace ZonaiPhysics
 
 	bool ZnLayer::IsCollide(uint32_t _layerData, uint32_t _layerID0)
 	{
-		assert(_layerData != 0);
+		// assert(_layerData != 0);
 		assert(_layerID0 != 0);
 
 		return _layerData & _layerID0;

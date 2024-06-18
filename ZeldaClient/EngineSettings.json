@@ -3,7 +3,7 @@
   "shadowAreaOffset": 32.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": -9.81,
+  "gravity": -29.43,
   "tag": [
     "Conductor Object",
     "Phyzzle Player",
@@ -90,7 +90,7 @@
       true,
       true,
       false,
-      false,
+      true,
       false
     ],
     [
@@ -225,7 +225,7 @@
       false,
       false,
       false,
-      false,
+      true,
       false,
       false,
       true,
@@ -279,9 +279,9 @@
     },
     {
       "name": "Wall",
-      "staticFriction": 0.0,
-      "dynamicFriction": 0.0,
-      "restitution": 1.0,
+      "staticFriction": 0.1,
+      "dynamicFriction": 0.1,
+      "restitution": 0.2,
       "eFriction": 0,
       "eRestitution": 0
     },

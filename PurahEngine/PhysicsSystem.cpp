@@ -464,6 +464,7 @@ namespace PurahEngine
 		if (meshid == nullptr)
 		{
 			meshid = physics->TriangleMeshLoadFromPath(_path);
+			NULL_POINTER_REFERENCE(meshid, PhysicsSystem, MeshCollider Load Error)
 		}
 
 		return physics->CreateMeshCollider(_gameObject, meshid, _rot, _scale, materialID);

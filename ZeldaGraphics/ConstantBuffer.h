@@ -57,6 +57,10 @@ protected:
 		{
 			isChanged = false;
 		}
+		else
+		{
+			return;
+		}
 
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 

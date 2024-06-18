@@ -16,6 +16,7 @@ void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 	billBoardRenderInfo.clear();
 	cubeMapRenderInfo = nullptr;
 	imageRenderInfo.clear();
+	billBoardParticleRenderInfo.clear();
 
 	shadowRenderInfo.clear();
 	fastOutLineRenderInfo.clear();
@@ -96,6 +97,16 @@ void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 				imageRenderInfo.insert({ renderInfo.instancingValue.layer, &renderInfo });
 				break;
 			}
+			case RenderType::BillBoardParticle:
+			{
+				DirectX::XMMATRIX wv = renderInfo.instancingValue.worldMatrix * viewMatrix;
+				float depth = wv.r[3].m128_f32[2];
+
+				DirectX::XMMATRIX pv = renderInfo.instancingValue.particleMatrix * viewMatrix;
+				float pdepth = pv.r[3].m128_f32[2];
+				billBoardParticleRenderInfo.insert({ std::make_pair(depth, std::make_pair(renderInfo.instancingValue.layer, std::make_pair(pdepth, renderInfo.instancingValue.particleID))), &renderInfo });
+				break;
+			}
 			default:
 			{
 				assert(0);
@@ -170,6 +181,13 @@ void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 		value->drawID = drawIDCounter;
 		drawIDCounter += 1;
 	}
+
+	// 9
+	for (auto& [key, value] : billBoardParticleRenderInfo)
+	{
+		value->drawID = drawIDCounter;
+		drawIDCounter += 1;
+	}
 }
 
 void RenderInfoManager::RegisterRenderInfo(RenderType renderType, RenderOption renderOption, InstancingKey instancingKey, InstancingValue instancingValue)
@@ -221,6 +239,11 @@ const RenderInfo* RenderInfoManager::GetCubeMapRenderInfo()
 const std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>>& RenderInfoManager::GetImageRenderInfo()
 {
 	return imageRenderInfo;
+}
+
+const std::multimap<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>, RenderInfo*, std::greater<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>>>& RenderInfoManager::GetBillBoardParticleRenderInfo() const
+{
+	return billBoardParticleRenderInfo;
 }
 
 const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetShadowRenderInfo() const

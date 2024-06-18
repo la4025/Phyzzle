@@ -85,12 +85,27 @@ public:
 	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) abstract;
 
 	/// <summary>
+	/// 빌보드를 사용한 파티클을 그린다.
+	/// </summary>
+	/// <param name="worldMatrix">: 파티클의 전체 위치로 사용할 행렬(뎁스값 계산에 사용한다.) </param>
+	/// <param name="particleMatrix">: 파티클의 행렬 </param>
+	/// <param name="layer">: 동일한 깊이인 파티클 사이의 우선순위(layer가 높을 수록 뒤에 그려진다.) </param>
+	/// <param name="texture">: 사용할 이미지 </param>
+	/// <param name="ccwRadianAngle">: 빌보드의 반시계 방향 회전 값(Radian) </param>
+	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
+	/// <param name="useAlphaTexture">: 흑백 텍스쳐를 알파값으로 사용하도록 설정한다. </param>
+	/// <param name="color">: AlphaTexture옵션을 사용할 때 사용할 색 </param>
+	virtual void DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix, const std::vector<Eigen::Matrix4f>& particleMatrix, unsigned int layer, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, const std::vector<Color>& colors) abstract;
+
+	/// <summary>
 	/// 빌보드를 그린다.
 	/// </summary>
 	/// <param name="worldMatrix">: 중심 위치 </param>
 	/// <param name="texture">: 사용할 이미지 </param>
 	/// <param name="ccwRadianAngle">: 빌보드의 반시계 방향 회전 값(Radian) </param>
 	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
+	/// <param name="useAlphaTexture">: 흑백 텍스쳐를 알파값으로 사용하도록 설정한다. </param>
+	/// <param name="color">: AlphaTexture옵션을 사용할 때 사용할 색 </param>
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color) abstract;
 
 	/// <summary>

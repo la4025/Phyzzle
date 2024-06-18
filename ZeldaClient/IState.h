@@ -49,9 +49,11 @@ namespace Phyzzle
 
 		virtual void Click_X() {}
 		virtual void Pressing_X() {}
+		virtual void Up_X() {}
 
 		virtual void Click_Y() {}
 		virtual void Pressing_Y() {}
+		virtual void Up_Y() {}
 
 		virtual void Click_LB() {}
 		virtual void Pressing_LB() {}

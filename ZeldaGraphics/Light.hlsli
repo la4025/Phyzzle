@@ -126,13 +126,17 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, float2 uv, ou
     }
     else if (lights[lightIndex].type == LIGHT_TYPE_POINT)
     {
+        float ambientRatio = 0.0f;
         float diffuseRatio = 0.0f;
+        float specularRatio = 0.0f;
         float distanceRatio = 1.0f;
         
         float3 lightPos = mul(float4(lights[lightIndex].position.xyz, 1.0f), viewMatrix).xyz;
         float3 lightVec = normalize(viewPos - lightPos);
         
+        ambientRatio = (dot(-lightVec, normal) < 0.0f) ? (0.0f) : (1.0f);
         diffuseRatio = saturate(dot(-lightVec, normal));
+        specularRatio = (dot(-lightVec, normal) < 0.0f) ? (0.0f) : (1.0f);
 
         float d = distance(viewPos, lightPos);
         if (lights[lightIndex].range == 0.0f)
@@ -147,9 +151,9 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, float2 uv, ou
         float3 reflectDir = normalize(lightVec + 2 * (saturate(dot(-lightVec, normal)) * normal));
         float specFactor = pow(max(dot(-viewDirection, reflectDir), 0.f), 16.f);
         
-        ambient = lights[lightIndex].color.ambient * distanceRatio;
+        ambient = lights[lightIndex].color.ambient * ambientRatio * distanceRatio;
         diffuse = lights[lightIndex].color.diffuse * diffuseRatio * distanceRatio;
-        specular = specFactor * lights[lightIndex].color.specular * distanceRatio;
+        specular = specFactor * lights[lightIndex].color.specular * specularRatio * distanceRatio;
     }
     else if (lights[lightIndex].type == LIGHT_TYPE_SPOT)
     {

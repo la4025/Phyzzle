@@ -1,4 +1,6 @@
 #pragma once
+#include <unordered_set>
+
 #include "IState.h"
 #include "Spring.h"
 
@@ -10,9 +12,7 @@ namespace Phyzzle
 	{
 	public:
 		AttachHoldState() = delete;
-		explicit AttachHoldState(Player* _player)
-			: IState(_player), selectBody(), attachble()
-		{}
+		explicit AttachHoldState(Player* _player);
 		~AttachHoldState() override;
 
 #pragma region StateEvent
@@ -32,7 +32,9 @@ namespace Phyzzle
 		void Click_A() override;
 		void Click_B() override;
 		void Click_X() override;
+		void Up_X() override;
 		void Click_Y() override;
+		void Up_Y() override;
 
 		void Click_DUp() override;
 		void Click_DDown() override;
@@ -80,8 +82,6 @@ namespace Phyzzle
 		PzObject* attachble;
 
 	private:
-		void SetSelectObject();
-
 		void PlayerMove(float _speed) const;					// 이동
 		void CameraUpdate() const;								// 카메라 회전
 		void CameraReset() const;								// 카메라 회전
@@ -116,17 +116,42 @@ namespace Phyzzle
 
 		void EnableOutline(bool ) const;
 
+		void Snap();
+		Eigen::Quaternionf FindAxis(const Eigen::Quaternionf& _direction);
+
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화
 #pragma endregion Content
 
-#if _DEBUG
 	private:
+		enum RotateInfo : int
+		{
+			None		= 0,
+			RotateX		= 1,
+			RotateY		= 2,
+			RotateX_Y	= 3,
+			RotateXY	= 4,
+			RotateY_X	= 5,
+			RotateYX	= 6,
+			RotateZ		= 7,
+		};
+		struct Rotate
+		{
+			RotateInfo info;
+		};
+
+		using RotateData = std::pair<Eigen::Quaternionf, Rotate>;
+		std::vector<RotateData> axisies;
+		Rotate info;
+#if _DEBUG
 		void SearchDebugDraw();
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
+		std::vector<Eigen::Quaternionf> rotate;
 #endif _DEBUG
 	};
 }
+
+

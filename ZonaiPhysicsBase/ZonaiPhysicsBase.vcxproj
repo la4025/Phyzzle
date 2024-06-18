@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="FreezeFlag.h" />
     <ClInclude Include="MaterialEnum.h" />
+    <ClInclude Include="ZnBound3.h" />
     <ClInclude Include="ZnBoxController.h" />
     <ClInclude Include="ZnCapsuleController.h" />
     <ClInclude Include="ZnCharaterController.h" />

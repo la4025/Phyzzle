@@ -18,7 +18,8 @@ enum class RenderType
 	Light,
 	CubeMap,
 	BillBoard,
-	Image
+	Image,
+	BillBoardParticle
 };
 
 using RenderOption = unsigned int;
@@ -61,6 +62,7 @@ struct InstancingKey
 struct InstancingValue
 {
 	DirectX::XMMATRIX worldMatrix;
+	DirectX::XMMATRIX particleMatrix;
 	DirectX::XMFLOAT2 position;
 	DirectX::XMFLOAT2 size;
 	float animationTime;
@@ -76,9 +78,11 @@ struct InstancingValue
 	float ratio;
 	float ccwRadianAngle;
 	bool useAlphaTexture;
+	unsigned int particleID;
 
 	InstancingValue() :
 		worldMatrix(DirectX::XMMatrixIdentity()),
+		particleMatrix(DirectX::XMMatrixIdentity()),
 		position({ 0.0f, 0.0f }),
 		size({ 0.0f, 0.0f }),
 		animationTime(0.0f),
@@ -93,7 +97,8 @@ struct InstancingValue
 		blendAnimationTime2(0.0f),
 		ratio(0.0f),
 		ccwRadianAngle(0.0f),
-		useAlphaTexture(false)
+		useAlphaTexture(false),
+		particleID(0u)
 	{}
 };
 
