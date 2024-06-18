@@ -331,11 +331,11 @@ namespace Phyzzle
 			{
 				if (currentbool)
 				{
-					data.animator->Play(L"Armature|Armature|Armature|idle");
+					data.animator->Play(data.idleAnimation);
 				}
 				else
 				{
-					data.animator->Play(L"Armature|Armature|Armature|running");
+					data.animator->Play(data.runningAnimation);
 				}
 				return;
 			}
@@ -345,7 +345,7 @@ namespace Phyzzle
 				return;
 			}
 
-			data.animator->SetPlaySpeed(L"Armature|Armature|Armature|running", currInput.Lstick.Size);
+			data.animator->SetPlaySpeed(data.runningAnimation, currInput.Lstick.Size);
 		}
 	}
 
@@ -602,6 +602,14 @@ namespace Phyzzle
 		auto attachRaycastLayers = data.attachRaycastLayers;
 		PREDESERIALIZE_VALUE(attachRaycastLayers);
 		data.attachRaycastLayers = attachRaycastLayers;
+
+		auto idleAnimation = data.idleAnimation;
+		PREDESERIALIZE_WSTRING(idleAnimation);
+		data.idleAnimation = idleAnimation;
+
+		auto runningAnimation = data.runningAnimation;
+		PREDESERIALIZE_WSTRING(runningAnimation);
+		data.runningAnimation = runningAnimation;
 	}
 
 	void Player::PostSerialize(json& jsonData) const

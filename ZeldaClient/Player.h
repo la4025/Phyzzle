@@ -80,6 +80,9 @@ namespace Phyzzle
 			float acclerpFactor = 0.f;			//
 
 			State state = ATTACH_SELECT;
+
+			std::wstring idleAnimation;
+			std::wstring runningAnimation;
 		};
 
 		struct StickData

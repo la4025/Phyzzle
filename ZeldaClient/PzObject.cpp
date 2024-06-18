@@ -100,6 +100,9 @@ namespace Phyzzle
 		{
 			attachable = obj->GetComponent<PzObject>();
 
+			if (!attachable)
+				return;
+
 			const bool otherIDNull = attachable->islandID == nullptr;
 			const bool myIDNull = islandID == nullptr;
 			const bool sameNull = otherIDNull && myIDNull;
