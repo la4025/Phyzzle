@@ -11,9 +11,36 @@ namespace Phyzzle
 	class AttachHoldState final : public IState
 	{
 	public:
+		enum RotateInfo;
+
 		AttachHoldState() = delete;
 		explicit AttachHoldState(Player* _player);
 		~AttachHoldState() override;
+
+		void InitializeAxis(
+			std::vector<Eigen::Quaternionf>& axis, 
+			float increment
+		);
+
+		void InitializeAxisHelper(
+			std::vector<Eigen::Quaternionf>& axis, 
+			float angle, 
+			const Eigen::Vector3f& vector
+		);
+		
+		void InitializeRotations(
+			const std::vector<Eigen::Quaternionf>& input, 
+			std::vector<Eigen::Quaternionf>& output, 
+			float angle, const Eigen::Vector3f& axis, 
+			RotateInfo type
+		);
+
+		void InitializeRotations(
+			const std::vector<Eigen::Quaternionf>& input,
+			float angle, 
+			const Eigen::Vector3f& axis,
+			RotateInfo type
+		);
 
 #pragma region StateEvent
 	private:
@@ -32,9 +59,7 @@ namespace Phyzzle
 		void Click_A() override;
 		void Click_B() override;
 		void Click_X() override;
-		void Up_X() override;
 		void Click_Y() override;
-		void Up_Y() override;
 
 		void Click_DUp() override;
 		void Click_DDown() override;
@@ -114,13 +139,15 @@ namespace Phyzzle
 
 		void Put() const;
 
-		void EnableOutline(bool ) const;
+		void EnableOutline(bool) const;
 
 		void Snap();
 		Eigen::Quaternionf FindAxis(const Eigen::Quaternionf& _direction);
 
 		void VariableSet();										// 변수 저장
 		void VariableReset();									// 변수 초기화
+
+		bool TryTranslate(float _distance);
 #pragma endregion Content
 
 	private:

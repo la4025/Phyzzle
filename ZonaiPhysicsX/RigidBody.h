@@ -8,6 +8,7 @@
 
 #include "ForceType.h"
 #include "ZnRigidBody.h"
+#include <ZnBound3.h>
 
 namespace physx
 {
@@ -83,6 +84,8 @@ namespace ZonaiPhysics
 	
 		void				AddTorque(const Eigen::Vector3f&, ForceType) override;
 		void				ClearTorque() override;
+
+		ZnBound3			GetBoundingBox();
 
 	public:
 		physx::PxRigidDynamic* pxBody;

@@ -16,6 +16,7 @@ namespace physx
 
 namespace ZonaiPhysics
 {
+	struct ZnTransform;
 	class RigidBody;
 
 	class Collider : public ZnCollider
@@ -55,7 +56,7 @@ namespace ZonaiPhysics
 		void*						GetUserData() const final;
 		void						SetUserData(void* _userData) final;
 
-		ZnBound3					GetBoundingBox() override;
+		ZnBound3					GetBoundingBox(const ZnTransform& _trans) override;
 
 	public:
 

@@ -210,4 +210,10 @@ namespace ZonaiPhysics
 	{
 		RigidBodyHelper::ClearTorque(pxBody);
 	}
+
+	ZnBound3 RigidBody::GetBoundingBox()
+	{
+		return RigidBodyHelper::GetBoundingBox(pxBody);
+	}
+
 } // namespace ZonaiPhysics

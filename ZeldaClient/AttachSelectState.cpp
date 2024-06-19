@@ -20,7 +20,6 @@ namespace Phyzzle
 			p.y() = 0.5f;
 
 			player->data.cameraCore->SetLocalPosition(p);
-			player->data.cameraCore->SetLocalRotation(Quaternionf::Identity());
 		}
 
 		CrossHeadRender(true);
@@ -29,15 +28,6 @@ namespace Phyzzle
 	// 상태 나가기
 	void AttachSelectState::StateExit()
 	{
-		// 플레이어 카메라 컴포넌트를 만든다면
-		// 이부분은 수정이 반드시 필요함
-		{
-			using namespace Eigen;
-
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
-		}
-
 		CrossHeadRender(false);
 	}
 

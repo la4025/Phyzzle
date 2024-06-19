@@ -9,6 +9,8 @@
 
 namespace ZonaiPhysics
 {
+	struct ZnBound3;
+
 	class RigidBodyHelper
 	{
 	public:
@@ -82,6 +84,8 @@ namespace ZonaiPhysics
 
 		static void				AddTorque(void*, const Eigen::Vector3f&, ForceType);
 		static void				ClearTorque(void*);
+
+		static ZnBound3			GetBoundingBox(void* _pxBody);
 	};
 }
 
