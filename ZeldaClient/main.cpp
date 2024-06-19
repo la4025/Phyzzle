@@ -24,6 +24,8 @@
 
 #include "Burnable.h"
 #include "ObjectGenerator.h"
+#include "RespawnTrigger.h"
+#include "RespawnSystem.h"
 
 /// 각자 만드는 것들
 #include "PzObject.h"
@@ -81,6 +83,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Burnable>("Burnable");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectGenerator>("ObjectGenerator");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnTrigger>("RespawnTrigger");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnSystem>("RespawnSystem");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);

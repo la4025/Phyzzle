@@ -1535,25 +1535,12 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID
 		DirectX::XMMATRIX sizeMatrix = DirectX::XMMatrixScaling(static_cast<float>(textureInstance->GetWidth()) / Texture::UnitSize, static_cast<float>(textureInstance->GetHeight()) / Texture::UnitSize, 1.0f);
 		DirectX::XMMATRIX matrixSRT = sizeMatrix * MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 
-		DirectX::XMVECTOR s;
-		DirectX::XMVECTOR r;
-		DirectX::XMVECTOR t;
-		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
-
-		// 크기를 조정하고 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		// 크기를 조정하여 저장한다.
+		instancingValue.worldMatrix = matrixSRT;
 	}
 	else
 	{
-		DirectX::XMMATRIX matrixSRT = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
-
-		DirectX::XMVECTOR s;
-		DirectX::XMVECTOR r;
-		DirectX::XMVECTOR t;
-		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
-
-		// 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		instancingValue.worldMatrix = MathConverter::EigenMatrixToXMMatrix(worldMatrix);
 	}
 
 	// Register

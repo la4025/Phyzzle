@@ -105,6 +105,15 @@
     <ClCompile Include="ObjectGenerator.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="RespawnSystem.cpp">
+      <Filter>System\RespawnSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RespawnTrigger.cpp">
+      <Filter>System\RespawnSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerCallBack.cpp">
+      <Filter>System\RespawnSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -245,6 +254,15 @@
     <ClInclude Include="CoroutineSystem.h">
       <Filter>KH\DontUse</Filter>
     </ClInclude>
+    <ClInclude Include="RespawnSystem.h">
+      <Filter>System\RespawnSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RespawnTrigger.h">
+      <Filter>System\RespawnSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerCallBack.h">
+      <Filter>System\RespawnSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -318,6 +336,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{3b98224b-9672-4ea3-8d29-9e698c6c293d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\RespawnSystem">
+      <UniqueIdentifier>{15b5728b-e79d-4e17-8d72-53db11e254da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
