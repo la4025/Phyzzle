@@ -75,7 +75,15 @@ namespace PurahEngine
 			float moveSpeed;
 			float lifeTime;
 		};
-		std::list<Element> elements;
+
+	private:
+		std::vector<std::unique_ptr<Element>> pool;
+
+		std::unique_ptr<ParticleSystem::Element> Acquire();
+		void Release(std::unique_ptr<Element> obj);
+
+	private:
+		std::list<std::unique_ptr<Element>> elements;
 
 		bool isStopped;
 		float generationElapsed;

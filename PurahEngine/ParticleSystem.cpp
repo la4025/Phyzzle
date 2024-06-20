@@ -32,8 +32,8 @@ namespace PurahEngine
 		// 이동 & vibration & lifeTime 감소
 		for (auto& element : elements)
 		{
-			element.lifeTime -= deltaTime;
-			Eigen::Vector3f moveDelta = deltaTime * element.moveSpeed * element.moveDirection;
+			element->lifeTime -= deltaTime;
+			Eigen::Vector3f moveDelta = deltaTime * element->moveSpeed * element->moveDirection;
 			Eigen::Matrix4f moveMatrix;
 			moveMatrix <<
 				1, 0, 0, moveDelta.x(),
@@ -49,27 +49,28 @@ namespace PurahEngine
 				vibrationDistribution(genRandom)
 			};
 
-			element.vibration = element.vibration + vibrationDelta;
-			if (std::abs(element.vibration.x()) < -vibrationRange) element.vibration.x() = -vibrationRange;
-			if (vibrationRange < std::abs(element.vibration.x())) element.vibration.x() = vibrationRange;
+			element->vibration = element->vibration + vibrationDelta;
+			if (std::abs(element->vibration.x()) < -vibrationRange) element->vibration.x() = -vibrationRange;
+			if (vibrationRange < std::abs(element->vibration.x())) element->vibration.x() = vibrationRange;
 
-			if (std::abs(element.vibration.y()) < -vibrationRange) element.vibration.y() = -vibrationRange;
-			if (vibrationRange < std::abs(element.vibration.y())) element.vibration.y() = vibrationRange;
+			if (std::abs(element->vibration.y()) < -vibrationRange) element->vibration.y() = -vibrationRange;
+			if (vibrationRange < std::abs(element->vibration.y())) element->vibration.y() = vibrationRange;
 
-			if (std::abs(element.vibration.z()) < -vibrationRange) element.vibration.z() = -vibrationRange;
-			if (vibrationRange < std::abs(element.vibration.z())) element.vibration.z() = vibrationRange;
+			if (std::abs(element->vibration.z()) < -vibrationRange) element->vibration.z() = -vibrationRange;
+			if (vibrationRange < std::abs(element->vibration.z())) element->vibration.z() = vibrationRange;
 
 			// vibration에서 moveDirection방향의 성분 제거
-			element.vibration = -(element.vibration.dot(moveDirection) * moveDirection) + element.vibration;
+			element->vibration = -(element->vibration.dot(moveDirection) * moveDirection) + element->vibration;
 
-			element.translation = moveMatrix * element.translation;
+			element->translation = moveMatrix * element->translation;
 		}
 
 		// lifeTime이 0보다 작거나 같아진 element 제거
 		for (auto iter = elements.begin(); iter != elements.end();)
 		{
-			if (iter->lifeTime <= 0.0f)
+			if ((*iter)->lifeTime <= 0.0f)
 			{
+				Release(std::move(*iter));
 				iter = elements.erase(iter);
 			}
 			else
@@ -102,7 +103,7 @@ namespace PurahEngine
 
 			for (auto& element : elements)
 			{
-				Eigen::Matrix4f elementMatrix = element.translation * worldMatrix * element.scaling;
+				Eigen::Matrix4f elementMatrix = element->translation * worldMatrix * element->scaling;
 				
 				::Color color;
 				color.r = alphaTextureColor.x();
@@ -112,8 +113,8 @@ namespace PurahEngine
 
 				if (useChangeColor)
 				{
-					Eigen::Vector3f pos = { element.translation(0, 3), element.translation(1, 3), element.translation(2, 3) };
-					Eigen::Vector3f dir = element.moveDirection.normalized();
+					Eigen::Vector3f pos = { element->translation(0, 3), element->translation(1, 3), element->translation(2, 3) };
+					Eigen::Vector3f dir = element->moveDirection.normalized();
 
 					float dirPos = dir.dot(pos);
 					Eigen::Vector3f verPos = pos - (dir * dirPos);
@@ -132,9 +133,9 @@ namespace PurahEngine
 				
 				Eigen::Matrix4f vibrationMatrix;
 				vibrationMatrix <<
-					1, 0, 0, element.vibration.x(),
-					0, 1, 0, element.vibration.y(),
-					0, 0, 1, element.vibration.z(),
+					1, 0, 0, element->vibration.x(),
+					0, 1, 0, element->vibration.y(),
+					0, 0, 1, element->vibration.z(),
 					0, 0, 0, 1;
 
 				renderer->DrawBillBoard(vibrationMatrix * elementMatrix, textureID, 0.0f, true, useAlphaTexture, color);
@@ -168,13 +169,13 @@ namespace PurahEngine
 			return;
 		}
 
-		Element element;
+		std::unique_ptr<Element> element = Acquire();
 
 		switch (generatorType)
 		{
 			case PurahEngine::ParticleSystem::GeneratorType::Point:
 			{
-				element.translation = Eigen::Matrix4f::Identity();
+				element->translation = Eigen::Matrix4f::Identity();
 				break;
 			}
 			case PurahEngine::ParticleSystem::GeneratorType::Circle:
@@ -186,7 +187,7 @@ namespace PurahEngine
 					y = 0.0f;
 					z = positionDistribution(genRandom);
 				} while (x * x + y * y + z * z <= generatorRadius * generatorRadius);
-				element.translation <<
+				element->translation <<
 					1, 0, 0, x,
 					0, 1, 0, y,
 					0, 0, 1, z,
@@ -202,7 +203,7 @@ namespace PurahEngine
 					y = positionDistribution(genRandom);
 					z = positionDistribution(genRandom);
 				} while (x * x + y * y + z * z <= generatorRadius * generatorRadius);
-				element.translation <<
+				element->translation <<
 					1, 0, 0, x,
 					0, 1, 0, y,
 					0, 0, 1, z,
@@ -220,7 +221,7 @@ namespace PurahEngine
 		{
 			case PurahEngine::ParticleSystem::ElementType::Move:
 			{
-				element.moveDirection = moveDirection;
+				element->moveDirection = moveDirection;
 				break;
 			}
 			case PurahEngine::ParticleSystem::ElementType::Spread:
@@ -240,16 +241,35 @@ namespace PurahEngine
 			}
 		}
 
-		element.scaling <<
+		element->scaling <<
 			textureScale.x(), 0, 0, 0,
 			0, textureScale.y(), 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1;
-		element.vibration = Eigen::Vector3f::Zero();
-		element.moveSpeed = moveSpeed;
-		element.lifeTime = lifeTime + lifeTimeDistribution(genRandom);
+		element->vibration = Eigen::Vector3f::Zero();
+		element->moveSpeed = moveSpeed;
+		element->lifeTime = lifeTime + lifeTimeDistribution(genRandom);
 
-		elements.push_back(element);
+		elements.push_back(std::move(element));
+	}
+
+	std::unique_ptr<ParticleSystem::Element> ParticleSystem::Acquire()
+	{
+		if (pool.empty())
+		{
+			return std::make_unique<Element>();
+		}
+		else
+		{
+			std::unique_ptr<Element> obj = std::move(pool.back());
+			pool.pop_back();
+			return obj;
+		}
+	}
+
+	void ParticleSystem::Release(std::unique_ptr<Element> obj)
+	{
+		pool.push_back(std::move(obj));
 	}
 
 	void ParticleSystem::PreSerialize(json& jsonData) const
