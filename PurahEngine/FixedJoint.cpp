@@ -18,6 +18,8 @@ namespace PurahEngine
 
 	void FixedJoint::PostInitialize()
 	{
+		using namespace ZonaiPhysics;
+
 		const auto& instance = PhysicsSystem::GetInstance();
 
 		assert(body != nullptr);
@@ -30,8 +32,8 @@ namespace PurahEngine
 		}
 
 		joint = instance.CreateFixedJoint(
-			body->body, { LocalAnchor, LocalAnchorRotation },
-			connect, { connectedLocalAnchor, connectedLocalAnchorRotation }
+			body->body, ZnTransform(LocalAnchor, LocalAnchorRotation),
+			connect, ZnTransform(connectedLocalAnchor, connectedLocalAnchorRotation)
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);

@@ -171,6 +171,12 @@
     <ClInclude Include="CapsuleController.h">
       <Filter>Object\CharactorController</Filter>
     </ClInclude>
+    <ClInclude Include="eCallback.h">
+      <Filter>0. Core\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="EventCallbackBuffer.h">
+      <Filter>0. Core\Callback</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="0. Core">

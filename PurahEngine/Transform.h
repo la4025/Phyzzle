@@ -17,7 +17,7 @@ namespace PurahEngine
 		virtual ~Transform();
 
 		// 회전 함수
-		void Rotate(Eigen::Vector3f axis, float angle);
+		void Rotate(const Eigen::Vector3f& axis, float angle);
 
 		/// get
 		// Local
@@ -49,20 +49,20 @@ namespace PurahEngine
 		/// set
 		// Local
 		// 포지션 세팅
-		void SetLocalPosition(Eigen::Vector3f setPosition);
+		void SetLocalPosition(const Eigen::Vector3f& setPosition);
 		// 로테이션 세팅
-		void SetLocalRotation(Eigen::Quaternionf setRotation);
+		void SetLocalRotation(const Eigen::Quaternionf& setRotation);
 		// 스케일 세팅
-		void SetLocalScale(Eigen::Vector3f setScale);
+		void SetLocalScale(const Eigen::Vector3f& setScale);
 
 		// World
-		void SetWorldPosition(Eigen::Vector3f setPosition);
+		void SetWorldPosition(const Eigen::Vector3f& setPosition);
 
-		void SetWorldRotation(Eigen::Quaternionf setRotation);
+		void SetWorldRotation(const Eigen::Quaternionf& setRotation);
 		
 		void SetParent(PurahEngine::Transform* parentObject);
 
-		void SetWorldMatrix(Eigen::Matrix4f matrix);
+		void SetWorldMatrix(const Eigen::Matrix4f& matrix);
 
 		void DeleteChildTrans(std::vector<PurahEngine::Transform*>::iterator childIter);
 

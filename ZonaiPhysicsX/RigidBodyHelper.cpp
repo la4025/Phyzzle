@@ -1,11 +1,9 @@
 #include <PxRigidDynamic.h>
 #include <extensions/PxRigidBodyExt.h>
 
-#include "ZnBound3.h"
 #include "ZnUtil.h"
-#include "RigidBody.h"
-#include "Collider.h"
 
+#include "RigidBody.h"
 #include "RigidBodyHelper.h"
 
 namespace ZonaiPhysics
@@ -357,27 +355,5 @@ namespace ZonaiPhysics
 		assert(_pxBody != nullptr);
 
 		static_cast<physx::PxRigidDynamic*>(_pxBody)->clearTorque();
-	}
-
-	ZnBound3 RigidBodyHelper::GetBoundingBox(void* _pxBody)
-	{
-		using namespace physx;
-
-		ZnBound3 result;
-		PxRigidDynamic* pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
-		std::vector<physx::PxShape*> shapes(pxBody->getNbShapes());
-		pxBody->getShapes(&shapes.front(), shapes.size());
-
-		for (size_t i = 0; i < shapes.size(); i++)
-		{
-			Collider* collider = static_cast<Collider*>(shapes[i]->userData);
-			// ZnBound3 bound = collider->GetBoundingBox();
-
-			// if (result.minimum > bound.minimum)
-			{
-			}
-		}
-
-		return result;
 	}
 }

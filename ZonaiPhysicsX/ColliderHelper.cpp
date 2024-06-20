@@ -3,9 +3,9 @@
 #include "ZnLayer.h"
 #include "ZnUtil.h"
 #include "ZnBound3.h"
+#include "ZnTransform.h"
 
 #include "ColliderHelper.h"
-#include <ZnTransform.h>
 
 namespace ZonaiPhysics
 {
@@ -134,12 +134,12 @@ namespace ZonaiPhysics
 		_pxShape->getActor()->setGlobalPose(t);
 	}
 
-	ZonaiPhysics::ZnBound3 ColliderHelper::GetBoundingBox(void* _shape, const ZnTransform& _trans)
+	ZonaiPhysics::ZnBound3 ColliderHelper::GetBoundingBox(void* _shape, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
 	{
 		const auto pxShape = static_cast<physx::PxShape*>(_shape);
 
 		const physx::PxGeometry& geom = pxShape->getGeometry();
-		physx::PxTransform pose(EigenToPhysx(_trans.position), EigenToPhysx(_trans.quaternion));
+		physx::PxTransform pose(EigenToPhysx(_pos), EigenToPhysx(_rot));
 		physx::PxBounds3 aabb;
 		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.1f);
 

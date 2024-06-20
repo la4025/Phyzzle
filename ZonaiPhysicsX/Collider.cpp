@@ -3,7 +3,7 @@
 #include "ZnLayer.h"
 
 #include "ZnUtil.h"
-#include "ZnTransform.h"
+#include "ZnBound3.h"
 #include "ColliderHelper.h"
 #include "RigidBodyHelper.h"
 
@@ -131,9 +131,9 @@ namespace ZonaiPhysics
 		userData = _userData;
 	}
 
-	ZnBound3 Collider::GetBoundingBox(const ZnTransform& _trans)
+	ZnBound3 Collider::GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
 	{
-		return ColliderHelper::GetBoundingBox(pxShape, _trans);
+		return ColliderHelper::GetBoundingBox(pxShape, _pos, _rot);
 	}
 
 	void Collider::UpdateInertiaTensor() const

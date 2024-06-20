@@ -14,12 +14,67 @@
 namespace ZonaiPhysics
 {
 	ZnSimulationCallback* EventCallback::callback = nullptr;
+	std::vector<std::pair<CollisionEventBuffer, eCallback>> EventCallback::collisionBuffer{};
+	std::vector<std::pair<TriggerEventBuffer, eCallback>> EventCallback::triggerBuffer{};
 
 	void EventCallback::setInstance(ZnSimulationCallback* _instance)
 	{
 		assert(_instance);
 
 		callback = _instance;
+	}
+
+	void EventCallback::SimulationEventCallback()
+	{
+		// collision event
+		for (auto& [buffer, event] : collisionBuffer)
+		{
+			auto& thisCollider = buffer.col0;
+			auto& otherCollider = buffer.col1;
+			auto& thisCollision = buffer.collisionData;
+			auto otherCollision = buffer.collisionData.Swap();
+
+			switch (event)
+			{
+			case eCallback::eCollisionEnter:
+				callback->OnCollisionEnter(thisCollider, otherCollider, thisCollision, otherCollision);
+				break;
+			case eCallback::eCollisionStay:
+				callback->OnCollisionStay(thisCollider, otherCollider, thisCollision, otherCollision);
+				break;
+			case eCallback::eCollisionExit:
+				callback->OnCollisionExit(thisCollider, otherCollider, thisCollision, otherCollision);
+				break;
+			default:
+				break;
+			}
+
+			thisCollision.Release();
+			otherCollision.Release();
+		}
+
+		collisionBuffer.clear();
+
+		// trigger event
+		for (auto& [buffer, event] : triggerBuffer)
+		{
+			auto& thisCollider = buffer.col0;
+			auto& otherCollider = buffer.col1;
+
+			switch (event)
+			{
+			case eCallback::eTriggerEnter:
+				callback->OnTriggerEnter(thisCollider, otherCollider);
+				break;
+			case eCallback::eTriggerExit:
+				callback->OnTriggerExit(thisCollider, otherCollider);
+				break;
+			default:
+				break;
+			}
+		}
+
+		triggerBuffer.clear();
 	}
 
 	void EventCallback::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
@@ -63,12 +118,12 @@ namespace ZonaiPhysics
 		physx::PxU32 nbPairs)
 	{
 		using namespace physx;
+		using namespace Eigen;
 
 		if (pairHeader.flags & (PxContactPairHeaderFlag::eREMOVED_ACTOR_0 | PxContactPairHeaderFlag::eREMOVED_ACTOR_1))
 			return;
 
 		ZnCollision collision;
-		ZnCollision otherCollision;
 		PxContactPairExtraDataIterator pairData(pairHeader.extraDataStream, pairHeader.extraDataStreamSize);
 
 		for (physx::PxU32 i = 0; i < nbPairs; i++)
@@ -84,32 +139,21 @@ namespace ZonaiPhysics
 			uint32_t contacts = 0;
 			Eigen::Vector3f totalImpulse{ 0.f, 0.f, 0.f };
 
-			const ZnCollider* thisCollider = GetCollider(cp.shapes[0]);
-			const ZnCollider* otherCollider = GetCollider(cp.shapes[1]);
+			ZnCollider* const thisCollider = GetCollider(cp.shapes[0]);
+			ZnCollider* const otherCollider = GetCollider(cp.shapes[1]);
 
 			if (thisCollider == nullptr || otherCollider == nullptr)
 				continue;
-				
-			assert(thisCollider != nullptr && otherCollider != nullptr);
 
 			while (itr.hasNextPatch())
 			{
 				itr.nextPatch();
-
 				collision.contactCount = itr.getTotalContactCount();
-
-				///
-				otherCollision.contactCount = collision.contactCount;
-				///
 
 				if (!collision.contactCount)
 					continue;
 
-				collision.contacts = new ZnContact[collision.contactCount];
-
-				///
-				otherCollision.contacts = new ZnContact[collision.contactCount];
-				///
+				collision.contacts = std::make_unique<ZnContact[]>(collision.contactCount);
 
 				while (itr.hasNextContact())
 				{
@@ -130,70 +174,36 @@ namespace ZonaiPhysics
 					contact.point = point;
 					contact.separation = separation;
 
-					///
-					otherCollision.contacts[contacts].normal = normal * -1.f;
-					otherCollision.contacts[contacts].point = point;
-					otherCollision.contacts[contacts].separation = separation;
-					///
-
 					contacts++;
 				}
 			}
 
-//			if (pairData.preSolverVelocity && pairData.nextItemSet())
-//			{
-//				assert(pairData.contactPairIndex == i);
-//
-//				collision.thisPreLinearVelocity = PhysxToEigen(pairData.preSolverVelocity->linearVelocity[0]);
-//				collision.otherPreLinearVelocity = PhysxToEigen(pairData.preSolverVelocity->linearVelocity[1]);
-//
-//				collision.thisPreAngularVelocity = PhysxToEigen(pairData.preSolverVelocity->angularVelocity[0]);
-//				collision.otherPreAngularVelocity = PhysxToEigen(pairData.preSolverVelocity->angularVelocity[1]);
-//			}
-
 			if (hasPostVelocities && pairData.nextItemSet())
 			{
-				// assert(pairData.contactPairIndex == i);
-
 				if (pairData.postSolverVelocity)
 				{
 					collision.thisPostLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[0]);
-					collision.otherPostLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[1]);
-
 					collision.thisPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[0]);
+					collision.otherPostLinearVelocity = PhysxToEigen(pairData.postSolverVelocity->linearVelocity[1]);
 					collision.otherPostAngularVelocity = PhysxToEigen(pairData.postSolverVelocity->angularVelocity[1]);
-
-					///
-					otherCollision.thisPostLinearVelocity = collision.thisPostLinearVelocity;
-					otherCollision.otherPostLinearVelocity = collision.otherPostLinearVelocity;
-					otherCollision.thisPostAngularVelocity = collision.thisPostAngularVelocity;
-					otherCollision.otherPostAngularVelocity = collision.otherPostAngularVelocity;
-					///
 				}
 			}
 
 			collision.impulses = totalImpulse;
-			otherCollision.impulses = totalImpulse * -1.f;
+
+			CollisionEventBuffer buffer(thisCollider, otherCollider, collision);
 
 			if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-				callback->OnCollisionEnter(thisCollider, otherCollider, collision, otherCollision);
+				collisionBuffer.emplace_back( buffer, eCallback::eCollisionEnter);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
-				callback->OnCollisionStay(thisCollider, otherCollider, collision, otherCollision);
+				collisionBuffer.emplace_back( buffer, eCallback::eCollisionStay);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-				callback->OnCollisionExit(thisCollider, otherCollider, collision, otherCollision);
+				collisionBuffer.emplace_back( buffer, eCallback::eCollisionExit);
+
 			else
 				assert(false);
-
-			if (collision.contacts)
-			{
-				delete[] collision.contacts;
-				delete[] otherCollision.contacts;
-
-				collision.contacts = nullptr;
-				otherCollision.contacts = nullptr;
-			}
 		}
 	}
 
@@ -208,19 +218,16 @@ namespace ZonaiPhysics
 			if (tp.flags & (PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER | PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
 				continue;
 
-			const auto trigger = GetCollider(tp.triggerShape);
-			const auto other = GetCollider(tp.otherShape);
+			ZnCollider* const trigger = GetCollider(tp.triggerShape);
+			ZnCollider* const other = GetCollider(tp.otherShape);
 
-			assert(trigger != nullptr && other != nullptr);
+			TriggerEventBuffer buffer(trigger, other);
 
 			if (tp.status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-				callback->OnTriggerEnter(trigger, other);
+				triggerBuffer.emplace_back(buffer, eCallback::eTriggerEnter);
 
 			else if (tp.status & PxPairFlag::eNOTIFY_TOUCH_LOST)
-				callback->OnTriggerExit(trigger, other);
-
-			else
-				assert(false);
+				triggerBuffer.emplace_back(buffer, eCallback::eTriggerExit);
 		}
 	}
 

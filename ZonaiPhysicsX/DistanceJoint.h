@@ -16,7 +16,7 @@ namespace physx
 
 namespace ZonaiPhysics
 {
-	class ZnTransform;
+	struct ZnTransform;
 	class ZnRigidBody;
 	class RigidBody;
 
@@ -25,10 +25,6 @@ namespace ZonaiPhysics
 	public:
 		DistanceJoint() = delete;
 		DistanceJoint(physx::PxDistanceJoint*, RigidBody*, RigidBody*);
-		//DistanceJoint(
-		//	physx::PxPhysics*& _factory,
-		//	RigidBody* _object0, const ZnTransform& _transform0,
-		//	RigidBody* _object1, const ZnTransform& _transform1);
 		~DistanceJoint() override;
 
 	public:

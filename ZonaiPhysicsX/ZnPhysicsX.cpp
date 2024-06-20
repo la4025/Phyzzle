@@ -55,6 +55,8 @@ namespace ZonaiPhysics
 	void ZnPhysicsX::Simulation(float _dt)
 	{
 		ZnWorld::Run(_dt);
+		// 콜벡 호출하는 위치
+		EventCallback::SimulationEventCallback();
 	}
 
 	void ZnPhysicsX::Finalize()

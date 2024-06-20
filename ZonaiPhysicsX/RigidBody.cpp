@@ -5,9 +5,9 @@
 #pragma warning (pop)
 
 #include "ZnUtil.h"
+
 #include "RigidBodyHelper.h"
 #include "RigidBody.h"
-
 
 namespace ZonaiPhysics
 {
@@ -210,10 +210,4 @@ namespace ZonaiPhysics
 	{
 		RigidBodyHelper::ClearTorque(pxBody);
 	}
-
-	ZnBound3 RigidBody::GetBoundingBox()
-	{
-		return RigidBodyHelper::GetBoundingBox(pxBody);
-	}
-
 } // namespace ZonaiPhysics

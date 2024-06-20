@@ -4,9 +4,11 @@
 
 namespace ZonaiPhysics
 {
-	class ZnTransform
+	struct ZnTransform
 	{
-	public:
+		Eigen::Vector3f position;
+		Eigen::Quaternionf quaternion;
+
 		ZnTransform() :
 			quaternion(Eigen::Quaternionf::Identity()), position(Eigen::Vector3f::Zero())
 		{}
@@ -15,7 +17,7 @@ namespace ZonaiPhysics
 			quaternion(Eigen::Quaternionf::Identity()), position(_vec)
 		{}
 
-		ZnTransform(Eigen::Vector3f&& _vec) :
+		ZnTransform(Eigen::Vector3f&& _vec) noexcept :
 			quaternion(Eigen::Quaternionf::Identity()), position(std::move(_vec))
 		{}
 
@@ -23,7 +25,7 @@ namespace ZonaiPhysics
 			quaternion(_qat), position(Eigen::Vector3f::Zero())
 		{}
 
-		ZnTransform(Eigen::Quaternionf&& _qat) :
+		ZnTransform(Eigen::Quaternionf&& _qat) noexcept :
 			quaternion(std::move(_qat)), position(Eigen::Vector3f::Zero())
 		{}
 
@@ -31,7 +33,7 @@ namespace ZonaiPhysics
 			quaternion(_qat), position(_vec)
 		{}
 
-		ZnTransform(Eigen::Vector3f&& _vec, Eigen::Quaternionf&& _qat) :
+		ZnTransform(Eigen::Vector3f&& _vec, Eigen::Quaternionf&& _qat) noexcept :
 			quaternion(std::move(_qat)), position(std::move(_vec))
 		{}
 
@@ -44,11 +46,6 @@ namespace ZonaiPhysics
 		{}
 
 		constexpr ZnTransform& operator=(const ZnTransform& _tran) = default;
-
-		constexpr ZnTransform& operator=(ZnTransform && _tran) = default;
-
-	public:
-		Eigen::Quaternionf quaternion;
-		Eigen::Vector3f position;
+		constexpr ZnTransform& operator=(ZnTransform&& _tran) = default;
 	};
 }

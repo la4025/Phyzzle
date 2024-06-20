@@ -1,17 +1,23 @@
 #pragma once
 #include <PxSimulationEventCallback.h>
+#include "EventCallbackBuffer.h"
+#include "eCallback.h"
 
 namespace ZonaiPhysics
 {
+	struct ZnCollision;
 	class ZnCollider;
 	class ZnSimulationCallback;
 
 	class EventCallback : public physx::PxSimulationEventCallback
 	{
 		static ZnSimulationCallback* callback;
+		static std::vector<std::pair<CollisionEventBuffer, eCallback>> collisionBuffer;
+		static std::vector<std::pair<TriggerEventBuffer, eCallback>> triggerBuffer;
 
 	public:
 		void setInstance(ZnSimulationCallback*);
+		static void SimulationEventCallback();
 
 	public:
 		void onConstraintBreak(

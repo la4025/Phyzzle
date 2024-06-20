@@ -680,7 +680,7 @@ namespace Phyzzle
 			gap = 9.f;
 		}
 		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
-		cameraCorePos.y() = bodyPos.y();
+		cameraCorePos.y() = bodyPos.y() + 5.f;
 		player->data.cameraCore->SetWorldPosition(cameraCorePos);
 
 
@@ -1036,6 +1036,8 @@ namespace Phyzzle
 
 	bool AttachHoldState::TryTranslate(float _distance)
 	{
+
+		return true;
 	}
 
 #pragma endregion Content

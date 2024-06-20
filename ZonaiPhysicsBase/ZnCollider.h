@@ -36,6 +36,6 @@ namespace ZonaiPhysics
 		virtual Eigen::Quaternionf	GetLocalQuaternion() const = 0;
 		virtual void				SetLocalQuaternion(const Eigen::Quaternionf&) = 0;
 
-		virtual ZnBound3			GetBoundingBox(const ZnTransform& _trans) = 0;
+		virtual ZnBound3			GetBoundingBox(const Eigen::Vector3f&, const Eigen::Quaternionf&) = 0;
 	};
 }
