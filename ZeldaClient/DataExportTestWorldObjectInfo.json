@@ -4671,6 +4671,787 @@
           "textureName": "Resources\\\\UI\\\\test.png"
         }
       ]
+    },
+    {
+      "__Base__instanceID": 25698,
+      "name": "Cube",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25706,
+        "position": {
+          "x": -2.2,
+          "y": 4.29,
+          "z": -4.82
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.382683426,
+          "z": 0.0,
+          "w": 0.923879564
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25708,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": true,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25358,
+      "name": "DeathBox(Death Trigger)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25366,
+        "position": {
+          "x": -10.0,
+          "y": 1.5,
+          "z": -18.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25368,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25370,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 1.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25372,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25392,
+      "name": "SaveBox(Level Trigger)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25404,
+        "position": {
+          "x": -10.0,
+          "y": 1.5,
+          "z": -30.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25396,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25394,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": true,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25406,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25538,
+      "name": "RespawnPoint",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25540,
+        "position": {
+          "x": -10.0,
+          "y": 5.0,
+          "z": -25.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 25648,
+      "name": "DeathBox(Death Trigger) (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25660,
+        "position": {
+          "x": -5.0,
+          "y": 1.5,
+          "z": -18.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25652,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25650,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 1.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25662,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25252,
+      "name": "SaveBox(Level Trigger) (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25264,
+        "position": {
+          "x": -5.0,
+          "y": 1.5,
+          "z": -30.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25256,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25254,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": true,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25266,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25676,
+      "name": "RespawnPoint (1)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25678,
+        "position": {
+          "x": -5.0,
+          "y": 5.0,
+          "z": -25.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 25632,
+      "name": "DeathBox(Death Trigger) (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25644,
+        "position": {
+          "x": 0.0,
+          "y": 1.5,
+          "z": -18.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25636,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25634,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 1.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25646,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25440,
+      "name": "SaveBox(Level Trigger) (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25452,
+        "position": {
+          "x": 0.0,
+          "y": 1.5,
+          "z": -30.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25444,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25442,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": true,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25454,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25248,
+      "name": "RespawnPoint (2)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25250,
+        "position": {
+          "x": 0.0,
+          "y": 5.0,
+          "z": -25.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 25586,
+      "name": "DeathBox(Death Trigger) (3)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25598,
+        "position": {
+          "x": 5.0,
+          "y": 1.5,
+          "z": -18.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25590,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25588,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": false,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 1.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25600,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25268,
+      "name": "SaveBox(Level Trigger) (3)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25280,
+        "position": {
+          "x": 5.0,
+          "y": 1.5,
+          "z": -30.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 3.0,
+          "y": 3.0,
+          "z": 3.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25272,
+          "__Base__Component": "RespawnTrigger"
+        },
+        {
+          "__Base__instanceID": 25270,
+          "__Base__Component": "MeshRenderer",
+          "meshType": 1,
+          "wireFrame": true,
+          "shadow": true,
+          "fastOutLine": false,
+          "outLine": false,
+          "textureName": "",
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "outLineR": 1.0,
+          "outLineG": 0.921568632,
+          "outLineB": 0.0156862754,
+          "outLineA": 1.0
+        },
+        {
+          "__Base__instanceID": 25282,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 14,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 25534,
+      "name": "RespawnPoint (3)",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25536,
+        "position": {
+          "x": 5.0,
+          "y": 5.0,
+          "z": -25.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 25512,
+      "name": "RespawnSystem",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 25516,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 25514,
+          "__Base__Component": "RespawnSystem",
+          "mode": 2,
+          "targetTag": "Phyzzle Player",
+          "__ID__targetObject": 25520,
+          "__ID__respawnPoints": [
+            25540,
+            25678,
+            25250,
+            25536
+          ],
+          "__ID__levelTriggers": [
+            25396,
+            25256,
+            25444,
+            25272
+          ],
+          "__ID__deathTriggers": [
+            25368,
+            25652,
+            25636,
+            25590
+          ]
+        }
+      ]
     }
   ]
 }

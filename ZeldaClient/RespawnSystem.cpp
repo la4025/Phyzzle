@@ -33,22 +33,22 @@ namespace Phyzzle
 			{
 				Eigen::Vector3f targetPos = targetObject->GetTransform()->GetWorldPosition();
 
-				float maxDist = - 1.0f;
-				int maxIdx = -1;
+				float minDist = - 1.0f;
+				int minIdx = -1;
 
 				for (int i = 0; i < respawnPoints.size(); i++)
 				{
 					Eigen::Vector3f respawnPoint = respawnPoints[i]->GetWorldPosition();
-					float dist = (targetPos - respawnPoint).size();
+					float dist = (targetPos - respawnPoint).norm();
 
-					if (maxDist < dist)
+					if (minIdx == -1 || dist < minDist)
 					{
-						maxDist = dist;
-						maxIdx = i;
+						minDist = dist;
+						minIdx = i;
 					}
 				}
 
-				targetObject->GetTransform()->SetWorldPosition(respawnPoints[maxIdx]->GetWorldPosition());
+				targetObject->GetTransform()->SetWorldPosition(respawnPoints[minIdx]->GetWorldPosition());
 
 				break;
 			}
@@ -87,6 +87,7 @@ namespace Phyzzle
 	void RespawnSystem::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(mode);
 		PREDESERIALIZE_WSTRING(targetTag);
 	}
 

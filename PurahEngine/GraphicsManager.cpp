@@ -50,7 +50,7 @@ void PurahEngine::GraphicsManager::Initialize(HWND hWnd)
 
 	graphicsModule->SetExtraInitOption(setting.GetShadowAreaRange(), setting.GetShadowAreaOffset(), setting.GetShadowMapSize());
 
-	graphicsModule->Initialize(1920, 1080, true, hWnd, false);
+	graphicsModule->Initialize(1920, 1080, false, hWnd, false);
 	resourceManager = new GraphicsResourceManager(graphicsModule);
 
 	// 모델링 파일 미리 로드
