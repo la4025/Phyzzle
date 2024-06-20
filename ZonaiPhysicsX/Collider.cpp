@@ -1,8 +1,9 @@
-#include "RigidBody.h"
 #include "PxPhysicsAPI.h"
+#include "RigidBody.h"
 #include "ZnLayer.h"
 
 #include "ZnUtil.h"
+#include "ZnBound3.h"
 #include "ColliderHelper.h"
 #include "RigidBodyHelper.h"
 
@@ -130,14 +131,9 @@ namespace ZonaiPhysics
 		userData = _userData;
 	}
 
-	ZnBound3 Collider::GetBoundingBox()
+	ZnBound3 Collider::GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
 	{
-		const physx::PxGeometry& geom = pxShape->getGeometry();
-		physx::PxTransform pose = znBody->pxBody->getGlobalPose();
-		physx::PxBounds3 aabb;
-		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.1f);
-
-		return ZnBound3(PhysxToEigen(aabb.minimum), PhysxToEigen(aabb.maximum));
+		return ColliderHelper::GetBoundingBox(pxShape, _pos, _rot);
 	}
 
 	void Collider::UpdateInertiaTensor() const

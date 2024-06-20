@@ -7,6 +7,8 @@
 #include <thread>
 #include "TimeController.h"
 
+#define CO_WAIT co_await std::suspend_always{}
+
 class EventLoop 
 {
 public:
@@ -135,15 +137,6 @@ public:
         void unhandled_exception() 
 		{ 
 			exception_ = std::current_exception();
-		}
-
-		std::suspend_always await_transform(std::nullptr_t)
-		{
-			return {};
-		}
-		WaitForSeconds await_transform(WaitForSeconds _ws)
-		{
-			return _ws;
 		}
     };
 

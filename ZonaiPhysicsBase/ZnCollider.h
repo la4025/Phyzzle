@@ -5,6 +5,9 @@
 
 namespace ZonaiPhysics
 {
+	struct ZnBound3;
+	struct ZnTransform;
+
 	class ZnCollider : public ZnObject
 	{
 	public:
@@ -33,6 +36,6 @@ namespace ZonaiPhysics
 		virtual Eigen::Quaternionf	GetLocalQuaternion() const = 0;
 		virtual void				SetLocalQuaternion(const Eigen::Quaternionf&) = 0;
 
-		virtual ZnBound3			GetBoundingBox() = 0;
+		virtual ZnBound3			GetBoundingBox(const Eigen::Vector3f&, const Eigen::Quaternionf&) = 0;
 	};
 }

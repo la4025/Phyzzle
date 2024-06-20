@@ -2,8 +2,8 @@
 #include <extensions/PxRigidBodyExt.h>
 
 #include "ZnUtil.h"
-#include "RigidBody.h"
 
+#include "RigidBody.h"
 #include "RigidBodyHelper.h"
 
 namespace ZonaiPhysics

@@ -7,6 +7,9 @@
 
 namespace ZonaiPhysics
 {
+	struct ZnBound3;
+	struct ZnTransform;
+
 	class ColliderHelper
 	{
 	public:
@@ -28,5 +31,7 @@ namespace ZonaiPhysics
 
 		static Eigen::Quaternionf	GetGlobalQuaternion(void* _shape);
 		static void					SetGlobalQuaternion(void* _shape, const Eigen::Quaternionf& _quat);
+
+		static ZnBound3				GetBoundingBox(void* _shape, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
 	};
 }

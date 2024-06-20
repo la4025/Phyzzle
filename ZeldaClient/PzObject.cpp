@@ -101,7 +101,10 @@ namespace Phyzzle
 			attachable = obj->GetComponent<PzObject>();
 
 			if (!attachable)
+			{
+				PHYSCIS_CAUTUON(Error: The subject does not possess a PzObject, Client.PzObject)
 				return;
+			}
 
 			const bool otherIDNull = attachable->islandID == nullptr;
 			const bool myIDNull = islandID == nullptr;

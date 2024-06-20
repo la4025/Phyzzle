@@ -42,8 +42,8 @@ namespace PurahEngine
 		// SetAngularVelocity(10.f);
 		this->SetLinearDamping(linearDamping);
 		this->SetAngularDamping(angularDamping);
-		this->SetMaxAngularVelocity(2.f);
-		this->SetMaxLinearVelocity(20.f);
+		// this->SetMaxLinearVelocity(20.f);
+		// this->SetMaxAngularVelocity(2.f);
 		if (!isKinematic)
 		{
 			this->WakeUp();

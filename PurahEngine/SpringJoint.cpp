@@ -19,11 +19,13 @@ namespace PurahEngine
 
 	void SpringJoint::PostInitialize()
 	{
+		using namespace ZonaiPhysics;
+
 		const auto& instance = PhysicsSystem::GetInstance();
 
 		assert(body != nullptr);
 
-		ZonaiPhysics::ZnRigidBody* connect = nullptr;
+		ZnRigidBody* connect = nullptr;
 
 		if (connectedBody)
 		{
@@ -31,8 +33,8 @@ namespace PurahEngine
 		}
 
 		joint = instance.CreateDistanceJoint(
-			body->body, { LocalAnchor },
-			connect, { connectedLocalAnchor }
+			body->body, ZnTransform(LocalAnchor),
+			connect, ZnTransform(connectedLocalAnchor)
 		);
 
 		PhysicsSystem::GetInstance().joints.push_back(this);

@@ -11,37 +11,7 @@ namespace Phyzzle
 		using namespace Eigen;
 
 		std::vector<Quaternionf> axis;
-		{
-			Quaternionf classic = Quaternionf::Identity();
-
-			// 전후좌우
-			for (size_t x = 0; x < 360; x+= 90)
-			{
-				float angleY = (static_cast<float>(x) / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
-
-				Quaternionf temp = axisY * classic;
-				axis.emplace_back(temp);
-			}
-
-			// 상
-			{
-				float angleX = (-90.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
-
-				Quaternionf temp = axisX * classic;
-				axis.emplace_back(temp);
-			}
-
-			// 하
-			{
-				float angle_X = (90.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axis_X = Quaternionf(AngleAxisf(angle_X, Vector3f::UnitX()));
-
-				Quaternionf temp = axis_X * classic;
-				axis.emplace_back(temp);
-			}
-		}
+		InitializeAxis(axis, 90);
 
 		// none
 		std::vector<Quaternionf> none;
@@ -63,115 +33,16 @@ namespace Phyzzle
 
 		// X
 		std::vector<Quaternionf> rotateX;
-		{
-			for (size_t i = 0; i < none.size(); i++)
-			{
-				Quaternionf newAxis = none[i];
-
-				float angleX = (45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
-
-				Quaternionf temp = axisX * newAxis;
-				rotateX.emplace_back(temp);
-				axisies.emplace_back(temp, RotateX);
-			}
-		}
+		InitializeRotations(none, rotateX, 45, Vector3f::UnitX(), RotateX);
 
 		// Y
 		std::vector<Quaternionf> rotateY;
-		{
-			for (size_t i = 0; i < none.size(); i++)
-			{
-				Quaternionf newAxis = none[i];
-
-				float angleY = (45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
-
-				Quaternionf temp = axisY * newAxis;
-				rotateY.emplace_back(temp);
-				axisies.emplace_back(temp, RotateY);
-			}
-		}
-
-		// XY
-		// std::vector<Quaternionf> rotateXY;
-		{
-			for (size_t i = 0; i < rotateX.size(); i++)
-			{
-				Quaternionf newAxis = rotateX[i];
-
-				float angleY = (45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
-
-				Quaternionf temp = axisY * newAxis;
-				// rotateXY.emplace_back(temp);
-				axisies.emplace_back(temp, RotateXY);
-			}
-		}
-
-		// X_Y
-		// std::vector<Quaternionf> rotateX_Y;
-		{
-			for (size_t i = 0; i < rotateX.size(); i++)
-			{
-				Quaternionf newAxis = rotateX[i];
-
-				float angle_Y = (-45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axis_Y = Quaternionf(AngleAxisf(angle_Y, Vector3f::UnitY()));
-
-				Quaternionf temp = axis_Y * newAxis;
-				// rotateX_Y.emplace_back(temp);
-				axisies.emplace_back(temp, RotateX_Y);
-			}
-		}
-
-		// YX
-		// std::vector<Quaternionf> rotateYX;
-		{
-			for (size_t i = 0; i < rotateY.size(); i++)
-			{
-				Quaternionf newAxis = rotateY[i];
-
-				float angleX = (45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisX = Quaternionf(AngleAxisf(angleX, Vector3f::UnitX()));
-
-				Quaternionf temp = axisX * newAxis;
-				// rotateYX.emplace_back(temp);
-				axisies.emplace_back(temp, RotateYX);
-			}
-		}
-
-		// Y_X
-		// std::vector<Quaternionf> rotateY_X;
-		{
-			for (size_t i = 0; i < rotateY.size(); i++)
-			{
-				Quaternionf newAxis = rotateY[i];
-
-				float angle_X = (-45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axis_X = Quaternionf(AngleAxisf(angle_X, Vector3f::UnitX()));
-
-				Quaternionf temp = axis_X * newAxis;
-				// rotateY_X.emplace_back(temp);
-				axisies.emplace_back(temp, RotateY_X);
-			}
-		}
-
-		// Z
-		// std::vector<Quaternionf> rotateZ;
-		{
-			for (size_t i = 0; i < none.size(); i++)
-			{
-				Quaternionf newAxis = none[i];
-
-				float angleZ = (45.f / 180.f) * std::numbers::pi_v<float>;
-				Quaternionf axisZ = Quaternionf(AngleAxisf(angleZ, Vector3f::UnitZ()));
-
-				Quaternionf temp = axisZ * newAxis;
-				// rotateZ.emplace_back(temp);
-				axisies.emplace_back(temp, RotateZ);
-			}
-		}
+		InitializeRotations(none, rotateY, 45, Vector3f::UnitY(), RotateY);
+		InitializeRotations(rotateX, 45, Vector3f::UnitY(), RotateXY);
+		InitializeRotations(rotateX, -45, Vector3f::UnitY(), RotateX_Y);
+		InitializeRotations(rotateY, 45, Vector3f::UnitX(), RotateYX);
+		InitializeRotations(rotateY, -45, Vector3f::UnitX(), RotateY_X);
+		InitializeRotations(none, 45, Vector3f::UnitZ(), RotateZ);
 	}
 
 	AttachHoldState::~AttachHoldState()
@@ -179,39 +50,72 @@ namespace Phyzzle
 		AttachSystem::Instance()->Clear();
 	}
 
+	void AttachHoldState::InitializeAxis(std::vector<Eigen::Quaternionf>& axis, float increment) 
+	{
+		using namespace Eigen;
+		Quaternionf classic = Quaternionf::Identity();
+
+		for (size_t x = 0; x < 360; x += increment)
+		{
+			float angleY = (static_cast<float>(x) / 180.f) * std::numbers::pi_v<float>;
+			Quaternionf axisY = Quaternionf(AngleAxisf(angleY, Vector3f::UnitY()));
+			Quaternionf temp = axisY * classic;
+			axis.emplace_back(temp);
+		}
+
+		InitializeAxisHelper(axis, -90.f, Vector3f::UnitX());
+		InitializeAxisHelper(axis, 90.f, Vector3f::UnitX());
+	}
+
+	void AttachHoldState::InitializeAxisHelper(std::vector<Eigen::Quaternionf>& axis, float angle, const Eigen::Vector3f& vector) 
+	{
+		using namespace Eigen;
+		Quaternionf classic = Quaternionf::Identity();
+
+		float angleRad = (angle / 180.f) * std::numbers::pi_v<float>;
+		Quaternionf axisAngle = Quaternionf(AngleAxisf(angleRad, vector));
+		Quaternionf temp = axisAngle * classic;
+		axis.emplace_back(temp);
+	}
+
+	void AttachHoldState::InitializeRotations(
+		const std::vector<Eigen::Quaternionf>& input, 
+		std::vector<Eigen::Quaternionf>& output, float angle, 
+		const Eigen::Vector3f& axis, RotateInfo type)
+	{
+		for (const auto& quat : input)
+		{
+			float angleRad = (angle / 180.f) * std::numbers::pi_v<float>;
+			Eigen::Quaternionf axisQuat = Eigen::Quaternionf(Eigen::AngleAxisf(angleRad, axis));
+
+			Eigen::Quaternionf temp = axisQuat * quat;
+			output.emplace_back(temp);
+			axisies.emplace_back(temp, type);
+		}
+	}
+
+	void AttachHoldState::InitializeRotations(
+		const std::vector<Eigen::Quaternionf>& input, 
+		float angle, const Eigen::Vector3f& axis, RotateInfo type)
+	{
+		for (const auto& quat : input)
+		{
+			float angleRad = (angle / 180.f) * std::numbers::pi_v<float>;
+			Eigen::Quaternionf axisQuat = Eigen::Quaternionf(Eigen::AngleAxisf(angleRad, axis));
+
+			Eigen::Quaternionf temp = axisQuat * quat;
+			axisies.emplace_back(temp, type);
+		}
+	}
+
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
 	{
-		{
-			using namespace Eigen;
-
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-			auto p = player->data.cameraCore->GetLocalPosition();
-			p.x() = 0.5f;
-			p.y() = 0.5f;
-
-			player->data.cameraCore->SetLocalPosition(p);
-			player->data.cameraCore->SetLocalRotation(Quaternionf::Identity());
-		}
-
 		TrySelect();
 	}
 
 	void AttachHoldState::StateExit()
 	{
-		{
-			using namespace Eigen;
-
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
-			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
-
-			auto rot = player->data.modelCore->GetLocalRotation();
-			player->data.cameraArm->SetLocalRotation(rot);
-
-			player->data.xAngle = 0.f;
-		}
-
 		EnableOutline(false);
 		VariableReset();
 	}
@@ -306,21 +210,12 @@ namespace Phyzzle
 	{
 		Put();
 		StateCancel();
-		// rotate.emplace_back(targetRotation);
-	}
-
-	void AttachHoldState::Up_X()
-	{
 	}
 
 	// 취소
 	void AttachHoldState::Click_Y()
 	{
 		TryDettach();
-	}
-
-	void AttachHoldState::Up_Y()
-	{
 	}
 
 	// 취소
@@ -785,7 +680,7 @@ namespace Phyzzle
 			gap = 9.f;
 		}
 		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
-		cameraCorePos.y() = bodyPos.y();
+		cameraCorePos.y() = bodyPos.y() + 5.f;
 		player->data.cameraCore->SetWorldPosition(cameraCorePos);
 
 
@@ -848,9 +743,6 @@ namespace Phyzzle
 
 	void AttachHoldState::ApplyObjectVelocity() const
 	{
-		// selectBody->AddForce(targetVelocity + springL, ZonaiPhysics::Velocity_Change);
-		// selectBody->AddTorque(targetAngularVelocity + springR, ZonaiPhysics::Velocity_Change);
-		
 		selectBody->SetLinearVelocity(targetVelocity + springL);
 		selectBody->SetAngularVelocity(targetAngularVelocity + springR);
 	}
@@ -1141,6 +1033,13 @@ namespace Phyzzle
 		selectBody = nullptr;
 		attachble = nullptr;
 	}
+
+	bool AttachHoldState::TryTranslate(float _distance)
+	{
+
+		return true;
+	}
+
 #pragma endregion Content
 
 #if _DEBUG
@@ -1172,17 +1071,6 @@ namespace Phyzzle
 			1200, 300,
 			200, 600, 15,
 			255, 255, 255, 255);
-
-		if (selectBody)
-		{
-			ZonaiPhysics::ZnQueryInfo info;
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(), player->data.modelCore->GetWorldRotation() * Eigen::Vector3f::UnitY(), 5.f, 0, info);
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitY(), 5.f, 0, info);
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  Eigen::Vector3f::UnitX(), 5.f, 0, info);
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitX(), 5.f, 0, info);
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  Eigen::Vector3f::UnitZ(), 5.f, 0, info);
-			PurahEngine::Physics::Raycast(selectBody->GetPosition(),player->data.modelCore->GetWorldRotation() *  -Eigen::Vector3f::UnitZ(), 5.f, 0, info);
-		}
 	}
 #endif _DEBUG
 }

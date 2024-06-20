@@ -19,7 +19,7 @@ PurahEngine::Transform::~Transform()
 
 }
 
-void PurahEngine::Transform::Rotate(Eigen::Vector3f axis, float angle)
+void PurahEngine::Transform::Rotate(const Eigen::Vector3f& axis, float angle)
 {
 	// axis는 UnitX(), UnitY(), UnitZ()로 할것
 	rotation = Eigen::AngleAxisf(angle * (M_PI / 180.f), axis) * rotation;
@@ -118,7 +118,7 @@ std::vector<PurahEngine::Transform*> PurahEngine::Transform::GetChildren()
 	return children;
 }
 
-void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
+void PurahEngine::Transform::SetLocalPosition(const Eigen::Vector3f& setPosition)
 {
 	position = setPosition;
 
@@ -128,17 +128,17 @@ void PurahEngine::Transform::SetLocalPosition(Eigen::Vector3f setPosition)
 	}
 }
 
-void PurahEngine::Transform::SetLocalRotation(Eigen::Quaternionf setRotation)
+void PurahEngine::Transform::SetLocalRotation(const Eigen::Quaternionf& setRotation)
 {
 	rotation = setRotation;
 }
 
-void PurahEngine::Transform::SetLocalScale(Eigen::Vector3f setScale)
+void PurahEngine::Transform::SetLocalScale(const Eigen::Vector3f& setScale)
 {
 	scale = setScale;
 }
 
-void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
+void PurahEngine::Transform::SetWorldPosition(const Eigen::Vector3f& setPosition)
 {
 	/// 이론 : WorldMatrix 에서 Position 부분만 교체한다.
 	// Eigen::Matrix4f worldMatrix = GetWorldMatrix();
@@ -161,11 +161,11 @@ void PurahEngine::Transform::SetWorldPosition(Eigen::Vector3f setPosition)
 
 	if (rigidbody != nullptr)
 	{
-		rigidbody->SetPosition(GetWorldPosition());
+		rigidbody->SetPosition(setPosition);
 	}
 }
 
-void PurahEngine::Transform::SetWorldRotation(Eigen::Quaternionf setRotation)
+void PurahEngine::Transform::SetWorldRotation(const Eigen::Quaternionf& setRotation)
 {
 
 	if (parentTransform != nullptr)
@@ -179,7 +179,7 @@ void PurahEngine::Transform::SetWorldRotation(Eigen::Quaternionf setRotation)
 
 	if (rigidbody != nullptr)
 	{
-		rigidbody->SetRotation(GetWorldRotation());
+		rigidbody->SetRotation(setRotation);
 	}
 }
 
@@ -204,7 +204,7 @@ void PurahEngine::Transform::SetParent(PurahEngine::Transform* parentObject)
 	}
 }
 
-void PurahEngine::Transform::SetWorldMatrix(Eigen::Matrix4f targetMatrix)
+void PurahEngine::Transform::SetWorldMatrix(const Eigen::Matrix4f& targetMatrix)
 {
 	Eigen::Affine3f affine(targetMatrix);
 

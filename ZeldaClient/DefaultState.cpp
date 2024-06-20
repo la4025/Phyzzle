@@ -17,7 +17,16 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
+		// 상태가 시작되면 암은 캐릭터가
+		using namespace Eigen;
+		player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+		player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
+		player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
 
+		auto rot = player->data.modelCore->GetLocalRotation();
+		player->data.cameraArm->SetLocalRotation(rot);
+
+		player->data.xAngle = 0.f;
 	}
 
 	void DefaultState::StateExit()
@@ -29,18 +38,11 @@ namespace Phyzzle
 		CameraUpdate();
 
 		static Coroutine ta = CameraTemp();
-		// static Coroutine taint = CameraTempint();
 
 		if (!ta.done())
 		{
 			ta();
 		}
-
-		// std::optional value = taint.get_value();
-		// if (value.has_value())
-		// {
-		// 
-		// }
 	}
 
 	void DefaultState::Stick_L()
@@ -94,12 +96,12 @@ namespace Phyzzle
 
 	Coroutine<void> DefaultState::CameraTemp()
 	{
-		//int i = 0;
-		//while (true)
-		//{
-		//	std::cout << "Coroutine" << i++ << std::endl;
-		//	co_await WaitForSeconds(2000);
-		//}
+		int i = 0;
+		while (i < 100)
+		{
+			std::cout << "Coroutine " << i++ << std::endl;
+			CO_WAIT;
+		}
 
 		co_return;
 	}
@@ -110,7 +112,7 @@ namespace Phyzzle
 		while (true)
 		{
 			std::cout << "Coroutine" << i++ << std::endl;
-			co_await nullptr;
+			// co_await nullptr;
 		}
 	}
 

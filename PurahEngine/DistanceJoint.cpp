@@ -18,6 +18,8 @@ namespace PurahEngine
 
 	void DistanceJoint::PostInitialize()
 	{
+		using namespace ZonaiPhysics;
+
 		const auto& instance = PhysicsSystem::GetInstance();
 
 		assert(body != nullptr);
@@ -30,8 +32,8 @@ namespace PurahEngine
         }
 
         joint = instance.CreateDistanceJoint(
-            body->body, { LocalAnchor },
-            connect, { connectedLocalAnchor }
+			body->body, ZnTransform(LocalAnchor, LocalAnchorRotation),
+			connect, ZnTransform(connectedLocalAnchor, connectedLocalAnchorRotation)
         );
 
         PhysicsSystem::GetInstance().joints.push_back(this);
