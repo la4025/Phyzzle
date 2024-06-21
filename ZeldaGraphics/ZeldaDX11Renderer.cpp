@@ -1436,7 +1436,7 @@ void ZeldaDX11Renderer::DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix
 			DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
 
 			// 크기를 조정하고 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-			instancingValue.particleMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+			instancingValue.particleMatrix = DirectX::XMMatrixScalingFromVector(s) * DirectX::XMMatrixTranslationFromVector(t);
 		}
 		else
 		{
@@ -1448,7 +1448,7 @@ void ZeldaDX11Renderer::DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix
 			DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
 
 			// 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-			instancingValue.particleMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+			instancingValue.particleMatrix = DirectX::XMMatrixScalingFromVector(s) * DirectX::XMMatrixTranslationFromVector(t);
 		}
 
 
@@ -1492,7 +1492,7 @@ void ZeldaDX11Renderer::DrawBillBoard(const Eigen::Matrix4f& worldMatrix, Textur
 		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
 
 		// 크기를 조정하고 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		instancingValue.worldMatrix = DirectX::XMMatrixScalingFromVector(s) * DirectX::XMMatrixTranslationFromVector(t);
 	}
 	else
 	{
@@ -1504,7 +1504,7 @@ void ZeldaDX11Renderer::DrawBillBoard(const Eigen::Matrix4f& worldMatrix, Textur
 		DirectX::XMMatrixDecompose(&s, &r, &t, matrixSRT);
 
 		// 회전하지 않은 상태의 행렬로 가공하여 저장한다.
-		instancingValue.worldMatrix = matrixSRT * DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationQuaternion(r));
+		instancingValue.worldMatrix = DirectX::XMMatrixScalingFromVector(s) * DirectX::XMMatrixTranslationFromVector(t);
 	}
 
 	// Register

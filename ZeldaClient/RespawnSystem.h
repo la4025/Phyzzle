@@ -24,8 +24,8 @@ namespace Phyzzle
 
 	private:
 		Mode mode;
-		std::wstring targetTag;
 		PurahEngine::GameObject* targetObject;
+		bool keepRotation;
 		std::vector<PurahEngine::Transform*> respawnPoints;
 		std::vector<RespawnTrigger*> levelTriggers;
 		std::vector<RespawnTrigger*> deathTriggers;

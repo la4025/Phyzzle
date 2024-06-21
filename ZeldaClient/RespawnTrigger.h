@@ -18,7 +18,7 @@ namespace Phyzzle
 		void RegisterTargetSystem(RespawnSystem* target);
 		void SetMode(Mode mode);
 		void SetLevel(int level);
-		void SetTargetTag(const std::wstring& tag);
+		void SetTarget(PurahEngine::GameObject* target);
 
 		void OnTriggerEnter(const PurahEngine::Collider* other) override;
 
@@ -26,7 +26,7 @@ namespace Phyzzle
 		RespawnSystem* targetSystem = nullptr;
 		Mode mode;
 		int level;
-		std::wstring targetTag;
+		PurahEngine::GameObject* targetObject = nullptr;
 
 	private:
 		void PreSerialize(json& jsonData) const override;

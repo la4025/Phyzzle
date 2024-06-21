@@ -99,7 +99,7 @@ namespace PurahEngine
 		 }
 		 else
 		 {
-		body->SetQuaternion(_rot);
+			body->SetQuaternion(_rot);
 		 }
 	}
 

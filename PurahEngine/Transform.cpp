@@ -232,6 +232,12 @@ void PurahEngine::Transform::SetWorldMatrix(const Eigen::Matrix4f& targetMatrix)
 		rotationMatrix.col(2) = rotationScaleMatrix.col(2) / scale.z();
 	}
 	rotation = Eigen::Quaternionf(rotationMatrix);
+
+	if (rigidbody != nullptr)
+	{
+		rigidbody->SetPosition(GetWorldPosition());
+		rigidbody->SetRotation(GetWorldRotation());
+	}
 }
 
 void PurahEngine::Transform::DeleteChildTrans(std::vector<PurahEngine::Transform*>::iterator childIter)

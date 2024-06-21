@@ -3,7 +3,7 @@
   "shadowAreaOffset": 32.0,
   "shadowMapSize": 16384,
   "shadowMapDepthBias": 0.1,
-  "gravity": -29.43,
+  "gravity": -9.81,
   "tag": [
     "Conductor Object",
     "Phyzzle Player",
@@ -93,7 +93,7 @@
       true,
       true,
       true,
-      false,
+      true,
       true,
       false,
       true
@@ -212,7 +212,7 @@
       true,
       true,
       true,
-      false,
+      true,
       false,
       false,
       false
@@ -221,14 +221,14 @@
       false,
       false,
       false,
+      true,
       false,
       false,
       false,
       false,
       false,
       false,
-      false,
-      false,
+      true,
       false,
       true,
       false,
@@ -289,8 +289,8 @@
   "preLoadModels": [],
   "scenes": [
     "DataExportTestWorldObjectInfo.json",
-    "MainMenu.pzscene",
-    "Game.pzscene"
+    "Stage_1.pzscene",
+    "Stage_2.pzscene"
   ],
   "physicsMaterials": [
     {

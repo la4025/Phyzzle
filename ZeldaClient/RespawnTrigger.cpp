@@ -19,14 +19,19 @@ namespace Phyzzle
 		this->level = level;
 	}
 
-	void RespawnTrigger::SetTargetTag(const std::wstring& tag)
+	void RespawnTrigger::SetTarget(PurahEngine::GameObject* target)
 	{
-		targetTag = tag;
+		targetObject = target;
 	}
 
 	void RespawnTrigger::OnTriggerEnter(const PurahEngine::Collider* other)
 	{
-		if (other->GetGameObject()->tag.IsContain(targetTag))
+		if (targetSystem == nullptr)
+		{
+			return;
+		}
+
+		if (other->GetGameObject() == targetObject)
 		{
 			switch (mode)
 			{

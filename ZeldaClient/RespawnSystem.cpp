@@ -14,14 +14,14 @@ namespace Phyzzle
 			levelTriggers[i]->RegisterTargetSystem(this);
 			levelTriggers[i]->SetMode(RespawnTrigger::Mode::levelTrigger);
 			levelTriggers[i]->SetLevel(i);
-			levelTriggers[i]->SetTargetTag(targetTag);
+			levelTriggers[i]->SetTarget(targetObject);
 		}
 
 		for (int i = 0; i < deathTriggers.size(); i++)
 		{
 			deathTriggers[i]->RegisterTargetSystem(this);
 			deathTriggers[i]->SetMode(RespawnTrigger::Mode::deathTrigger);
-			deathTriggers[i]->SetTargetTag(targetTag);
+			deathTriggers[i]->SetTarget(targetObject);
 		}
 	}
 
@@ -48,18 +48,39 @@ namespace Phyzzle
 					}
 				}
 
-				targetObject->GetTransform()->SetWorldPosition(respawnPoints[minIdx]->GetWorldPosition());
+				if (keepRotation)
+				{
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[minIdx]->GetWorldPosition());
+				}
+				else
+				{
+					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[minIdx]->GetWorldMatrix());
+				}
 
 				break;
 			}
 			case Mode::MaxLevel:
 			{
-				targetObject->GetTransform()->SetWorldPosition(respawnPoints[maxLevel]->GetWorldPosition());
+				if (keepRotation)
+				{
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[maxLevel]->GetWorldPosition());
+				}
+				else
+				{
+					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[maxLevel]->GetWorldMatrix());
+				}
 				break;
 			}
 			case Mode::LastLevel:
 			{
-				targetObject->GetTransform()->SetWorldPosition(respawnPoints[lastLevel]->GetWorldPosition());
+				if (keepRotation)
+				{
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[lastLevel]->GetWorldPosition());
+				}
+				else
+				{
+					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[lastLevel]->GetWorldMatrix());
+				}
 				break;
 			}
 			default:
@@ -88,7 +109,7 @@ namespace Phyzzle
 	{
 		PREDESERIALIZE_BASE();
 		PREDESERIALIZE_VALUE(mode);
-		PREDESERIALIZE_WSTRING(targetTag);
+		PREDESERIALIZE_VALUE(keepRotation);
 	}
 
 	void RespawnSystem::PostSerialize(json& jsonData) const
