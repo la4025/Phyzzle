@@ -815,8 +815,6 @@ namespace Phyzzle
 		// selectBody->SetAngularVelocity(r);
 		selectBody->SetRotation(currRot);
 
-
-		playerPos
 	}
 
 	void AttachHoldState::SpringYTranslate(float _distance)
