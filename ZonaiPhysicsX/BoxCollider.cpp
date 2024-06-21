@@ -14,15 +14,8 @@ namespace ZonaiPhysics
 {
 	BoxCollider::BoxCollider(physx::PxShape* _pxShape, RigidBody* _znBody):
 		Collider(_pxShape, _znBody)
-	{
-		const physx::PxGeometry& geom = pxShape->getGeometry();
-		physx::PxTransform pose = _znBody->pxBody->getGlobalPose();
-		physx::PxBounds3 aabb;
-		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.3f);
-	}
+	{}
 
 	BoxCollider::~BoxCollider()
-	{
-
-	}
+	{}
 }
