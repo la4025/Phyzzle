@@ -743,8 +743,8 @@ namespace Phyzzle
 
 	void AttachHoldState::ApplyObjectVelocity() const
 	{
-		selectBody->SetLinearVelocity(targetVelocity + springL);
-		selectBody->SetAngularVelocity(targetAngularVelocity + springR);
+		selectBody->AddForce(targetVelocity + springL, ZonaiPhysics::Force);
+		selectBody->AddTorque(targetAngularVelocity + springR, ZonaiPhysics::Force);
 	}
 
 	void AttachHoldState::ResetObjectVelocity()
@@ -814,6 +814,9 @@ namespace Phyzzle
 
 		// selectBody->SetAngularVelocity(r);
 		selectBody->SetRotation(currRot);
+
+
+		playerPos
 	}
 
 	void AttachHoldState::SpringYTranslate(float _distance)
@@ -823,6 +826,8 @@ namespace Phyzzle
 
 	void AttachHoldState::SpringZTranslate(float _distance)
 	{
+
+
 		targetPosition.z() += _distance;
 	}
 

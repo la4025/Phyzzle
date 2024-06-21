@@ -100,49 +100,71 @@ namespace ZonaiPhysics
 
 	Eigen::Vector3f ColliderHelper::GetGlobalPosition(void* _shape)
 	{
+		using namespace physx;
+
 		assert(_shape != nullptr);
 
-		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		return PhysxToEigen(_pxShape->getActor()->getGlobalPose().p);
+		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+		const auto pxBody = pxShape->getActor();
+		PxVec3 parentPos = pxBody->getGlobalPose().p;
+		PxQuat parentRot = pxBody->getGlobalPose().q;
+		PxVec3 localPos = pxShape->getLocalPose().p;
+
+		return PhysxToEigen(parentPos + parentRot.rotate(localPos));
 	}
 
 	void ColliderHelper::SetGlobalPosition(void* _shape, const Eigen::Vector3f& _pos)
 	{
 		assert(_shape != nullptr);
 
-		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		physx::PxTransform t = _pxShape->getActor()->getGlobalPose();
-		t.p = EigenToPhysx(_pos);
-		_pxShape->getActor()->setGlobalPose(t);
+		//const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+		//physx::PxTransform t = _pxShape->getActor()->getGlobalPose();
+		//t.p = EigenToPhysx(_pos);
+		//_pxShape->getActor()->setGlobalPose(t);
 	}
 
 	Eigen::Quaternionf ColliderHelper::GetGlobalQuaternion(void* _shape)
 	{
+		using namespace physx;
+
 		assert(_shape != nullptr);
 
-		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		return PhysxToEigen(_pxShape->getActor()->getGlobalPose().q);
+		const auto pxShape = static_cast<physx::PxShape*>(_shape);
+		const auto pxBody = pxShape->getActor();
+		PxQuat parentRot = pxBody->getGlobalPose().q;
+		PxQuat localRot = pxShape->getLocalPose().q;
+
+		return PhysxToEigen(parentRot * localRot);
 	}
 
 	void ColliderHelper::SetGlobalQuaternion(void* _shape, const Eigen::Quaternionf& _quat)
 	{
 		assert(_shape != nullptr);
 
-		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
-		physx::PxTransform t = _pxShape->getActor()->getGlobalPose();
-		t.q = EigenToPhysx(_quat);
-		_pxShape->getActor()->setGlobalPose(t);
+		//const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+		//physx::PxTransform t = _pxShape->getActor()->getGlobalPose();
+		//t.q = EigenToPhysx(_quat);
+		//_pxShape->getActor()->setGlobalPose(t);
 	}
 
 	ZonaiPhysics::ZnBound3 ColliderHelper::GetBoundingBox(void* _shape, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
 	{
+		// 입력된 void* 포인터를 physx::PxShape*로 변환합니다.
 		const auto pxShape = static_cast<physx::PxShape*>(_shape);
 
+		// PxShape에서 형상을 가져옵니다.
 		const physx::PxGeometry& geom = pxShape->getGeometry();
+
+		// Eigen 형식의 위치와 회전을 PhysX 형식으로 변환합니다.
 		physx::PxTransform pose(EigenToPhysx(_pos), EigenToPhysx(_rot));
+
+		// 경계 상자를 저장할 객체를 생성합니다.
 		physx::PxBounds3 aabb;
+
+		// 주어진 형상과 변환(위치 및 회전)에 대해 경계 상자를 계산합니다.
 		physx::PxGeometryQuery::computeGeomBounds(aabb, geom, pose, 0.1f);
 
+		// PhysX 형식의 경계 상자를 Eigen 형식으로 변환하여 반환합니다.
 		return ZnBound3(PhysxToEigen(aabb.minimum), PhysxToEigen(aabb.maximum));
 	}
 }

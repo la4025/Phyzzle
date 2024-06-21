@@ -84,6 +84,8 @@ namespace ZonaiPhysics
 		void				AddTorque(const Eigen::Vector3f&, ForceType) override;
 		void				ClearTorque() override;
 
+		ZnBound3			GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot) override;
+
 	public:
 		physx::PxRigidDynamic* pxBody;
 	};

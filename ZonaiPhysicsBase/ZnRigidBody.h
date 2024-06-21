@@ -7,6 +7,8 @@ namespace ZonaiPhysics
 {
 	using namespace Eigen;
 
+	struct ZnBound3;
+
 	class ZnRigidBody : public ZnObject
 	{
 
@@ -110,5 +112,8 @@ namespace ZonaiPhysics
 		*/
 		virtual void			AddTorque(const Eigen::Vector3f& _torque, ForceType _type = ForceType::Force) = 0;
 		virtual void			ClearTorque() = 0;
+
+		// 주어진 축에
+		virtual ZnBound3		GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot) = 0;
 	};
 }

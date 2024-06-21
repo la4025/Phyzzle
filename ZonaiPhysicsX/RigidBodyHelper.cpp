@@ -1,7 +1,9 @@
-#include <PxRigidDynamic.h>
+#include <PxPhysicsAPI.h>
 #include <extensions/PxRigidBodyExt.h>
 
 #include "ZnUtil.h"
+#include "ZnBound3.h"
+#include "Collider.h"
 
 #include "RigidBody.h"
 #include "RigidBodyHelper.h"
@@ -310,7 +312,6 @@ namespace ZonaiPhysics
 		pxBody->setGlobalPose(t, false);
 	}
 
-
 	void RigidBodyHelper::SetForceAndTorque(void* _pxBody, const Eigen::Vector3f& _force,
 		const Eigen::Vector3f& _torque, ForceType _type)
 	{
@@ -355,5 +356,46 @@ namespace ZonaiPhysics
 		assert(_pxBody != nullptr);
 
 		static_cast<physx::PxRigidDynamic*>(_pxBody)->clearTorque();
+	}
+
+	ZnBound3 RigidBodyHelper::GetBoundingBox(void* _pxBody, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
+	{
+		using namespace physx;
+		using namespace Eigen;
+
+		PxTransform baseTransform(EigenToPhysx(_pos), EigenToPhysx(_rot));
+
+		PxRigidDynamic* const pxRigidBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
+		const PxTransform bodyGlobalPose = pxRigidBody->getGlobalPose();
+
+		PxU32 shapeCount = pxRigidBody->getNbShapes();
+		std::vector<PxShape*> shapes(shapeCount);
+		pxRigidBody->getShapes(shapes.data(), shapeCount);
+
+		Vector3f globalMinBounds(FLT_MAX, FLT_MAX, FLT_MAX);
+		Vector3f globalMaxBounds(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+		for (PxU32 i = 0; i < shapeCount; ++i)
+		{
+			PxShape* const shape = shapes[i];
+
+			const PxTransform localShapePose = shape->getLocalPose();
+
+			const PxTransform shapeGlobalPose = bodyGlobalPose * localShapePose;
+
+			const PxTransform finalShapePose = baseTransform * shapeGlobalPose;
+
+			Vector3f shapeWorldPos = PhysxToEigen(finalShapePose.p);
+			Quaternionf shapeWorldRot = PhysxToEigen(finalShapePose.q);
+
+			Collider* collider = static_cast<Collider*>(shape->userData);
+			ZnBound3 shapeBound = collider->GetBoundingBox(shapeWorldPos, shapeWorldRot);
+
+			globalMinBounds = globalMinBounds.cwiseMin(shapeBound.minimum);
+			globalMaxBounds = globalMaxBounds.cwiseMax(shapeBound.maximum);
+		}
+
+		// 최종 경계 상자 반환
+		return ZnBound3(globalMinBounds, globalMaxBounds);
 	}
 }
