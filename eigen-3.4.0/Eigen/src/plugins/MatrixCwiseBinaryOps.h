@@ -72,6 +72,14 @@ cwiseNotEqual(const EIGEN_CURRENT_STORAGE_BASE_CLASS<OtherDerived> &other) const
   *
   * \sa class CwiseBinaryOp, max()
   */
+
+/** \returns \a this와 \a other의 요소별 최소값을 나타내는 표현식을 반환합니다.
+  *
+  * 예제: \include MatrixBase_cwiseMin.cpp
+  * 출력: \verbinclude MatrixBase_cwiseMin.out
+  *
+  * \sa class CwiseBinaryOp, max()
+  */
 template<typename OtherDerived>
 EIGEN_DEVICE_FUNC
 EIGEN_STRONG_INLINE const CwiseBinaryOp<internal::scalar_min_op<Scalar,Scalar>, const Derived, const OtherDerived>
