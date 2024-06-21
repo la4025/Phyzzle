@@ -2,6 +2,7 @@
 
 #include <numbers>
 
+#include "ZnBound3.h"
 #include "PzObject.h"
 #include "RigidBody.h"
 
@@ -405,5 +406,37 @@ namespace Phyzzle
 
 		_outP = localT.translation();
 		_outQ = localT.rotation();
+	}
+
+	ZonaiPhysics::ZnBound3 AttachSystem::CalculateBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat)
+	{
+		using namespace Eigen;
+
+		Transform<float, 3, Eigen::Affine> transform{ _mat };
+		Vector3f pos{ transform.translation() };
+		Quaternionf rot{ transform.rotation() };
+		
+		const IslandID id = _base->GetIslandID();
+		AttachIsland island;
+		if (!HasAttachIsland(id, island))
+			island.emplace_back(_base);
+
+		Vector3f globalMinBounds(FLT_MAX, FLT_MAX, FLT_MAX);
+		Vector3f globalMaxBounds(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+		for (auto& obj : island)
+		{
+			PurahEngine::RigidBody* const body = obj->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+
+			if (body)
+			{
+				ZonaiPhysics::ZnBound3 bound = body->GetBoundingBox(pos, rot);
+
+				globalMinBounds = globalMinBounds.cwiseMin(bound.minimum);
+				globalMaxBounds = globalMaxBounds.cwiseMax(bound.maximum);
+			}
+		}
+
+		return ZonaiPhysics::ZnBound3(globalMinBounds, globalMaxBounds);
 	}
 }

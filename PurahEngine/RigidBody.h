@@ -117,6 +117,8 @@ namespace PurahEngine
 		void		UseGravity(bool);
 		bool		HasGravity() const;
 
+		ZonaiPhysics::ZnBound3 GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
+
 	public:
 		void SimulateResult();
 

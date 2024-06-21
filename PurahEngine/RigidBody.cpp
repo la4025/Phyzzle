@@ -385,6 +385,11 @@ namespace PurahEngine
 		return  body->HasGravity();
 	}
 
+	ZonaiPhysics::ZnBound3 RigidBody::GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
+	{
+		return body->GetBoundingBox(_pos, _rot);
+	}
+
 	void RigidBody::SimulateResult()
 	{
 		auto pos = body->GetPosition();

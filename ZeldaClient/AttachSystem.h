@@ -13,6 +13,11 @@ namespace Phyzzle
 	class PzObject;
 }
 
+namespace ZonaiPhysics
+{
+	struct ZnBound3;
+}
+
 namespace PurahEngine
 {
 	class FixedJoint;
@@ -70,6 +75,8 @@ namespace Phyzzle
 										Eigen::Vector3f& _outP, 
 										Eigen::Quaternionf& _outQ
 									);
+
+		ZonaiPhysics::ZnBound3		CalculateBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat);
 	};
 }
 
