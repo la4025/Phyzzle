@@ -15,18 +15,12 @@ namespace Phyzzle
 			deathTrigger
 		};
 
-		void RegisterTargetSystem(RespawnSystem* target);
-		void SetMode(Mode mode);
-		void SetLevel(int level);
-		void SetTarget(PurahEngine::GameObject* target);
+		void RegisterTargetSystem(RespawnSystem* targetSystem, Mode mode, int level, PurahEngine::GameObject* targetObejct);
 
 		void OnTriggerEnter(const PurahEngine::Collider* other) override;
 
 	private:
-		RespawnSystem* targetSystem = nullptr;
-		Mode mode;
-		int level;
-		PurahEngine::GameObject* targetObject = nullptr;
+		std::vector<std::tuple<RespawnSystem*, Mode, int, PurahEngine::GameObject*>> targetSystems;
 
 	private:
 		void PreSerialize(json& jsonData) const override;

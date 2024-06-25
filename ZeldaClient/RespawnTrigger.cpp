@@ -4,53 +4,41 @@
 
 namespace Phyzzle
 {
-	void RespawnTrigger::RegisterTargetSystem(RespawnSystem* target)
+	void RespawnTrigger::RegisterTargetSystem(RespawnSystem* targetSystem, Mode mode, int level, PurahEngine::GameObject* targetObejct)
 	{
-		targetSystem = target;
-	}
-
-	void RespawnTrigger::SetMode(Mode mode)
-	{
-		this->mode = mode;
-	}
-
-	void RespawnTrigger::SetLevel(int level)
-	{
-		this->level = level;
-	}
-
-	void RespawnTrigger::SetTarget(PurahEngine::GameObject* target)
-	{
-		targetObject = target;
+		targetSystems.push_back({ targetSystem, mode, level, targetObejct });
 	}
 
 	void RespawnTrigger::OnTriggerEnter(const PurahEngine::Collider* other)
 	{
-		if (targetSystem == nullptr)
+		for (auto& [targetSystem, mode, level, targetObject] : targetSystems)
 		{
-			return;
-		}
-
-		if (other->GetGameObject() == targetObject)
-		{
-			switch (mode)
+			if (targetSystem == nullptr || targetObject == nullptr)
 			{
-				case Mode::levelTrigger:
-				{
-					targetSystem->OnLevel(level);
+				continue;
+			}
 
-					break;
-				}
-				case Mode::deathTrigger:
+			if (other->GetGameObject() == targetObject)
+			{
+				switch (mode)
 				{
-					targetSystem->OnDeath();
+					case Mode::levelTrigger:
+					{
+						targetSystem->OnLevel(level);
 
-					break;
-				}
-				default:
-				{
-					assert(0);
-					break;
+						break;
+					}
+					case Mode::deathTrigger:
+					{
+						targetSystem->OnDeath();
+
+						break;
+					}
+					default:
+					{
+						assert(0);
+						break;
+					}
 				}
 			}
 		}

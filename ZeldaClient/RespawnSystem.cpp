@@ -11,17 +11,12 @@ namespace Phyzzle
 
 		for (int i = 0; i < levelTriggers.size(); i++)
 		{
-			levelTriggers[i]->RegisterTargetSystem(this);
-			levelTriggers[i]->SetMode(RespawnTrigger::Mode::levelTrigger);
-			levelTriggers[i]->SetLevel(i);
-			levelTriggers[i]->SetTarget(targetObject);
+			levelTriggers[i]->RegisterTargetSystem(this, RespawnTrigger::Mode::levelTrigger, i, targetObject);
 		}
 
 		for (int i = 0; i < deathTriggers.size(); i++)
 		{
-			deathTriggers[i]->RegisterTargetSystem(this);
-			deathTriggers[i]->SetMode(RespawnTrigger::Mode::deathTrigger);
-			deathTriggers[i]->SetTarget(targetObject);
+			deathTriggers[i]->RegisterTargetSystem(this, RespawnTrigger::Mode::deathTrigger, 0, targetObject);
 		}
 	}
 
