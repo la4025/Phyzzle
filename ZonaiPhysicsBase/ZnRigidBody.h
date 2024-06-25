@@ -39,6 +39,8 @@ namespace ZonaiPhysics
 		virtual void			SetKinematic(bool) = 0;
 		virtual bool			IsKinematic() const = 0;
 
+		virtual void			Disable(bool) const = 0;
+
 		/**
 		강체의 움직임을 제한하는 플래그
 		*/

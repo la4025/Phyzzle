@@ -412,9 +412,10 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
+		// 메트릭스에서 포지션이랑 로테이션을 구함
 		Transform<float, 3, Eigen::Affine> transform{ _mat };
-		Vector3f pos{ transform.translation() };
-		Quaternionf rot{ transform.rotation() };
+		const Vector3f pos{ transform.translation() };
+		const Quaternionf rot{ transform.rotation() };
 		
 		const IslandID id = _base->GetIslandID();
 		AttachIsland island;

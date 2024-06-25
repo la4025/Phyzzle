@@ -104,7 +104,7 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !_value);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, _value);
 	}
 
 	uint8_t RigidBodyHelper::GetDynamicLockFlags(void* _pxBody)

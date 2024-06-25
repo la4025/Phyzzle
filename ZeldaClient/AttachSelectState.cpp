@@ -14,10 +14,9 @@ namespace Phyzzle
 		{
 			using namespace Eigen;
 
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-			auto p = player->data.cameraCore->GetLocalPosition();
-			p.x() = 0.5f;
-			p.y() = 0.5f;
+			auto p = player->data.coreDefaultPosition;
+			p.x() += 0.5f;
+			p.y() += 0.5f;
 
 			player->data.cameraCore->SetLocalPosition(p);
 		}
@@ -28,6 +27,10 @@ namespace Phyzzle
 	// 상태 나가기
 	void AttachSelectState::StateExit()
 	{
+		{
+			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+		}
+
 		CrossHeadRender(false);
 	}
 
@@ -117,7 +120,7 @@ namespace Phyzzle
 
 	void AttachSelectState::CameraAround() const
 	{
-		player->CameraAround();
+		player->RotateCamera();
 	}
 
 	void AttachSelectState::CameraPositionUpdate()

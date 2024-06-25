@@ -76,6 +76,12 @@ namespace Phyzzle
 										Eigen::Quaternionf& _outQ
 									);
 
+		/// <summary>
+		/// 섬의 바운딩 박스를 구하는 함수
+		/// </summary>
+		/// <param name="_base">attachable pointer</param>
+		/// <param name="_mat">world matrix</param>
+		/// <returns></returns>
 		ZonaiPhysics::ZnBound3		CalculateBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat);
 	};
 }

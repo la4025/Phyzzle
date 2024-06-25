@@ -23,6 +23,9 @@ namespace PurahEngine
 		void		PostInitialize() override;
 		void		Awake() override;
 
+		void		OnEnable() override;
+		void		OnDisable() override;
+
 	public:
 		void		SetPosition(const Eigen::Vector3f& _pos) noexcept;
 		Eigen::Vector3f GetPosition() noexcept;
@@ -44,7 +47,7 @@ namespace PurahEngine
 		/**
 		강체의 움직임을 제한하는 플래그
 		*/
-		uint8_t GetDynamicLockFlags() const noexcept;
+		uint8_t		GetDynamicLockFlags() const noexcept;
 		void		SetDynamicLockFlag(ZonaiPhysics::FreezeFlag flag, bool) noexcept;
 		void		SetDynamicLockFlags(uint8_t flags) noexcept;
 
@@ -117,7 +120,18 @@ namespace PurahEngine
 		void		UseGravity(bool);
 		bool		HasGravity() const;
 
-		ZonaiPhysics::ZnBound3 GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
+		/**
+		오브젝트의 바운딩 박스를 계산함
+
+		매개변수를 입력하지 않으면
+		오브젝트의 위치와 회전을 기반으로 바운딩 박스를 계산해줌
+
+		매개 변수는 계산될 기저를 결정하는 위치와 회전
+		*/
+		ZonaiPhysics::ZnBound3 GetBoundingBox(
+			const Eigen::Vector3f& _pos = Eigen::Vector3f::Zero(), 
+			const Eigen::Quaternionf& _rot = Eigen::Quaternionf::Identity()
+		);
 
 	public:
 		void SimulateResult();

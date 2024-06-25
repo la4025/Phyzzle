@@ -29,6 +29,7 @@ namespace ZonaiPhysics
 									~Collider() override;
 
 	public:
+		void						Disable(bool) final;
 		void						DisableQuery(bool) final;
 		void						DisableSimulation(bool) final;
 		void						SetTrigger(bool) final;

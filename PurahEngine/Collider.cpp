@@ -72,6 +72,22 @@ namespace PurahEngine
         }
 	}
 
+	void Collider::OnEnable()
+	{
+		if (!awake)
+		{
+            znCollider->Disable(false);
+		}
+	}
+
+	void Collider::OnDisable()
+	{
+		if (!awake)
+		{
+			znCollider->Disable(true);
+		}
+	}
+
 	void Collider::SetUserData()
 	{
         znCollider->SetUserData(this);
@@ -92,11 +108,11 @@ namespace PurahEngine
 			Eigen::Vector4f positionOffset4D(_pos.x(), _pos.y(), _pos.z(), 1.0f);
 			Eigen::Vector4f shapePos4D = world * positionOffset4D;
 
-			Eigen::Matrix4f realWorld = Eigen::Matrix4f::Identity();
 			Eigen::Vector3f pos = transform->GetWorldPosition();
 			Eigen::Quaternionf rot = transform->GetWorldRotation();
-			realWorld.block<3, 3>(0, 0) = rot.toRotationMatrix();
-			realWorld.block<3, 1>(0, 3) = pos;
+            Eigen::Affine3f realWorld = Eigen::Affine3f::Identity();
+            realWorld.translate(pos);
+            realWorld.rotate(rot);
 			Eigen::Vector4f result = realWorld.inverse() * shapePos4D;
             Eigen::Vector3f realOffset(result.x(), result.y(), result.z());
 

@@ -191,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationTestController.h" />
+    <ClInclude Include="Bezier.h" />
     <ClInclude Include="Burnable.h" />
     <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="ObjectGenerator.h" />

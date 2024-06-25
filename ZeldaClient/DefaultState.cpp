@@ -17,16 +17,6 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
-		// 상태가 시작되면 암은 캐릭터가
-		using namespace Eigen;
-		player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-		player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
-		player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
-
-		auto rot = player->data.modelCore->GetLocalRotation();
-		player->data.cameraArm->SetLocalRotation(rot);
-
-		player->data.xAngle = 0.f;
 	}
 
 	void DefaultState::StateExit()
@@ -217,14 +207,14 @@ namespace Phyzzle
 		}
 
 		
-		Eigen::Vector3f modelPos = player->data.cameraArm->GetWorldPosition();
+		Eigen::Vector3f sweepPos = player->data.cameraArm->GetWorldPosition();
 		Eigen::Vector3f dir = player->data.cameraCore->GetFront() * -1.f;
 		unsigned int layers = player->data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
 		bool hit = PurahEngine::Physics::Spherecast(
-			0.3f,
-			modelPos, Eigen::Quaternionf::Identity(),
+			0.5f,
+			sweepPos, Eigen::Quaternionf::Identity(),
 			dir,
 			std::fabs(distance),
 			layers, info);
@@ -232,10 +222,14 @@ namespace Phyzzle
 		if (hit)
 		{
 			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
+
+			player->data.cameraSweep->SetWorldPosition(sweepPos + dir * info.distance);
 		}
 		else
 		{
 			currP = Eigen::Vector3f::UnitZ() * distance;
+
+			player->data.cameraSweep->SetWorldPosition(sweepPos + dir * -distance);
 		}
 
 		player->data.cameraCore->SetLocalPosition(currP);
@@ -248,7 +242,7 @@ namespace Phyzzle
 
 	void DefaultState::Around() const
 	{
-		player->CameraAround();
+		player->RotateCamera();
 	}
 
 	void DefaultState::LookToWorldDirection(const Eigen::Vector3f& _to) const

@@ -34,7 +34,7 @@ namespace ZonaiPhysics
 		void				SetKinematic(bool) override;
 		bool				IsKinematic() const override;
 
-		void				Disable(bool) const;
+		void				Disable(bool) const override;
 
 		uint8_t				GetDynamicLockFlags() const override;
 		void				SetDynamicLockFlag(FreezeFlag flag, bool) override;
