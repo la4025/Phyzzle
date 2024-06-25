@@ -104,7 +104,7 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !_value);
+		static_cast<physx::PxRigidDynamic*>(_pxBody)->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, _value);
 	}
 
 	uint8_t RigidBodyHelper::GetDynamicLockFlags(void* _pxBody)
@@ -380,9 +380,7 @@ namespace ZonaiPhysics
 			PxShape* const shape = shapes[i];
 
 			const PxTransform localShapePose = shape->getLocalPose();
-
 			const PxTransform shapeGlobalPose = bodyGlobalPose * localShapePose;
-
 			const PxTransform finalShapePose = baseTransform * shapeGlobalPose;
 
 			Vector3f shapeWorldPos = PhysxToEigen(finalShapePose.p);

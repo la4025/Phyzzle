@@ -108,7 +108,12 @@ namespace Phyzzle
 
 	private:
 		void PlayerMove(float _speed) const;					// 이동
-		void CameraUpdate() const;								// 카메라 회전
+		void UpdateCamera();									// 카메라 업데이트
+		void UpdateCameraPosition() const;						// 카메라 위치 업데이트
+		void UpdateCameraFocus() const;							// 카메라 회전 업데이트
+
+		// void CameraUpdate() const;								// 카메라 회전
+
 		void CameraReset() const;								// 카메라 회전
 		void StateCancel() const;										// Default 모드로 돌아감
 
@@ -120,19 +125,21 @@ namespace Phyzzle
 		void ApplyObjectVelocity() const;						// 입력을 오브젝트에 적용시킴
 		void ResetObjectVelocity();								// 입력을 초기화 시킴
 
-		void SpringCalculate();
+		void CalculateSpringForces();
+		void CalculateSpringPosition();
+		void CalculateSpringRotation();
 
-		void SpringYTranslate(float _distance);									// 스프링 이동
-		void SpringZTranslate(float _distance);									// 스프링 이동
+		void TranslateSpringAlongY(float _distance);									// 스프링 이동
+		void TranslateSpringAlongZ(float _distance);									// 스프링 이동
 
-		void ObjectTranslate(const Eigen::Vector3f& _direction, float power);	// 오브젝트 이동
-		void ObjectXTranslate(float _distance);									// 오브젝트 이동
-		void ObjectYTranslate(float _distance);									// 오브젝트 이동
-		void ObjectZTranslate(float _distance);									// 오브젝트 이동
+		void TranslateObject(const Eigen::Vector3f& _direction, float power);			// 오브젝트 이동
+		void TranslateObjectAlongX(float _distance);									// 오브젝트 이동
+		void TranslateObjectAlongY(float _distance);									// 오브젝트 이동
+		void TranslateObjectAlongZ(float _distance);									// 오브젝트 이동
 
-		void SpringRotate(const Eigen::Vector3f& _axis, float _angle);			// 스프링 이동
-		void SpringXRotate(float _angle);										// 스프링 회전
-		void SpringYRotate(float _angle);										// 스프링 회전
+		void RotateWithSpring(const Eigen::Vector3f& _axis, float _angle);				// 스프링 이동
+		void RotateSpringAlongX(float _angle);											// 스프링 회전
+		void RotateSpringAlongY(float _angle);											// 스프링 회전
 
 		bool TryAttach() const;									// 부착
 		bool TryDettach() const;									// 부착

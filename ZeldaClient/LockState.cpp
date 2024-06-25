@@ -40,7 +40,7 @@ namespace Phyzzle
 
 	void LockState::CameraAround()
 	{
-		player->CameraAround();
+		player->RotateCamera();
 	}
 
 	bool LockState::Aim()

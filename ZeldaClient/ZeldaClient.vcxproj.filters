@@ -263,6 +263,9 @@
     <ClInclude Include="TriggerCallBack.h">
       <Filter>System\RespawnSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Bezier.h">
+      <Filter>KH\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">

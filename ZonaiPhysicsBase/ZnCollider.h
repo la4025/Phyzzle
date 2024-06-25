@@ -15,6 +15,8 @@ namespace ZonaiPhysics
 		virtual						~ZnCollider() = default;
 
 	public:
+		virtual void				Disable(bool) = 0;
+
 		// 쿼리에서 제외
 		virtual void				DisableQuery(bool) = 0;
 

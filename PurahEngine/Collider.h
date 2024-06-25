@@ -28,6 +28,10 @@ namespace PurahEngine
 
     public:
         void PostInitialize() override;
+
+        void OnEnable() override;
+        void OnDisable() override;
+
         void SetUserData();
 
     public:

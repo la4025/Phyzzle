@@ -48,8 +48,8 @@ namespace PurahEngine
 		{
 			this->WakeUp();
 		}
-		// AddForce(force);
-		// AddTorque(torque);
+		AddForce(force);
+		AddTorque(torque);
 	}
 
 	void RigidBody::Awake()
@@ -61,6 +61,22 @@ namespace PurahEngine
 		else
 		{
 			this->SetMass(mass);
+		}
+	}
+
+	void RigidBody::OnEnable()
+	{
+		if (!awake)
+		{
+			body->Disable(false);
+		}
+	}
+
+	void RigidBody::OnDisable()
+	{
+		if (!awake)
+		{
+			body->Disable(true);
 		}
 	}
 
@@ -95,7 +111,7 @@ namespace PurahEngine
 		 if (awake)
 		 {
 		 	auto trans = GetGameObject()->GetTransform();
-		 	trans->SetWorldRotation(_rot);
+			trans->SetWorldRotation(_rot);
 		 }
 		 else
 		 {
@@ -112,7 +128,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		return body->GetQuaternion();
+			return body->GetQuaternion();
 		}
 	}
 
@@ -143,33 +159,33 @@ namespace PurahEngine
 
 	void RigidBody::SetDynamicLockFlag(ZonaiPhysics::FreezeFlag flag, bool value) noexcept
 	{
-		 if (awake)
-		 {
-		 	value ? freeze |= flag : freeze &= flag;
-		 }
-		 else
-		 {
-		body->SetDynamicLockFlag(flag, value);
-		 }
+		if (awake)
+		{
+			value ? freeze |= flag : freeze &= flag;
+		}
+		else
+		{
+			body->SetDynamicLockFlag(flag, value);
+		}
 	}
 
 	void RigidBody::SetDynamicLockFlags(uint8_t flags) noexcept
 	{
-		 if (awake)
-		 {
-		 	freeze = flags;
-		 }
-		 else
-		 {
-		body->SetDynamicLockFlags(flags);
-		 }
+		if (awake)
+		{
+			freeze = flags;
+		}
+		else
+		{
+			body->SetDynamicLockFlags(flags);
+		}
 	}
 
 	float RigidBody::GetMass() const noexcept
 	{
 		if (awake)
 		{
-		return mass;
+			return mass;
 		}
 		else
 		{
@@ -203,14 +219,14 @@ namespace PurahEngine
 
 	float RigidBody::GetLinearDamping() const noexcept
 	{
-		 if (awake)
-		 {
-		 	return linearDamping;
-		 }
-		 else
-		 {
-		return body->GetLinearDamping();
-		 }
+		if (awake)
+		{
+			return linearDamping;
+		}
+		else
+		{
+			return body->GetLinearDamping();
+		}
 	}
 
 	void RigidBody::SetLinearDamping(float _damping) noexcept
@@ -233,7 +249,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		return body->GetAngularDamping();
+			return body->GetAngularDamping();
 		}
 	}
 
@@ -245,7 +261,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		body->SetAngularDamping(_damping);
+			body->SetAngularDamping(_damping);
 		}
 	}
 
@@ -257,7 +273,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		return body->GetLinearVelocity();
+			return body->GetLinearVelocity();
 		}
 	}
 
@@ -269,7 +285,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		body->SetLinearVelocity(_velocity);
+			body->SetLinearVelocity(_velocity);
 		}
 	}
 
@@ -281,20 +297,20 @@ namespace PurahEngine
 		}
 		else
 		{
-		return body->GetAngularVelocity();
+			return body->GetAngularVelocity();
 		}
 	}
 
 	void RigidBody::SetAngularVelocity(const Eigen::Vector3f& _velocity) noexcept
 	{
-		 if (awake)
-		 {
-		 	angularVelocity = _velocity;
-		 }
-		 else
-		 {
-		body->SetAngularVelocity(_velocity);
-		 }
+		if (awake)
+		{
+			angularVelocity = _velocity;
+		}
+		else
+		{
+			body->SetAngularVelocity(_velocity);
+		}
 	}
 
 // 	float RigidBody::GetMaxLinearVelocity() const noexcept
@@ -336,14 +352,14 @@ namespace PurahEngine
 
 	void RigidBody::AddTorque(const Eigen::Vector3f& _torque, ZonaiPhysics::ForceType _type) noexcept
 	{
-		 if (awake)
-		 {
-		 	torque = _torque;
-		 }
-		 else
-		 {
-		body->AddTorque(_torque, _type);
-		 }
+		if (awake)
+		{
+			torque = _torque;
+		}
+		else
+		{
+			body->AddTorque(_torque, _type);
+		}
 	}
 
 	void RigidBody::ClearTorque() noexcept
@@ -359,7 +375,7 @@ namespace PurahEngine
 		}
 		else
 		{
-		body->SetKinematic(value);
+			body->SetKinematic(value);
 		}
 	}
 
@@ -376,13 +392,18 @@ namespace PurahEngine
 		}
 		else
 		{
-		body->UseGravity(_value);
+			body->UseGravity(_value);
 		}
 	}
 
 	bool RigidBody::HasGravity() const
 	{
 		return  body->HasGravity();
+	}
+
+	ZonaiPhysics::ZnBound3 RigidBody::GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
+	{
+		return body->GetBoundingBox(_pos, _rot);
 	}
 
 	void RigidBody::SimulateResult()

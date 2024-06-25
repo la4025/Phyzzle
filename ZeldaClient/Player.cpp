@@ -25,10 +25,13 @@ namespace Phyzzle
 		}
 	}
 
-	void Player::Start()
+	void Player::InitializeGamePad()
 	{
 		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
+	}
 
+	void Player::InitializeDefaultPositions()
+	{
 		data.armDefaultPosition = data.cameraArm->GetLocalPosition();
 		data.armDefaultRotation = data.cameraArm->GetLocalRotation();
 
@@ -39,28 +42,29 @@ namespace Phyzzle
 		lowPosition = Eigen::Vector3f(0.f, 0.f, -2.f);
 		differenceHigh = highPosition - data.coreDefaultPosition;
 		differenceLow = lowPosition - data.coreDefaultPosition;
+	}
 
-		lerp = 
-			[this](const Eigen::Vector3f start, const Eigen::Vector3f end, float _t) -> Eigen::Vector3f
+	void Player::InitializeLerpFunctions()
+	{
+		lerp = [this](const Eigen::Vector3f start, const Eigen::Vector3f end, float _t) -> Eigen::Vector3f
 			{
 				if (start == end)
 					return start;
-
 				return start + _t * (end - start);
 			};
 
-		slerp =
-			[this](const Eigen::Quaternionf start, const Eigen::Quaternionf end, float _t) -> Eigen::Quaternionf
+		slerp = [this](const Eigen::Quaternionf start, const Eigen::Quaternionf end, float _t) -> Eigen::Quaternionf
 			{
 				if (start == end)
 					return start;
-
-				return 	start.slerp(_t, end);
+				return start.slerp(_t, end);
 			};
+	}
 
+	void Player::InitializeStateSystem()
+	{
 		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
 		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
-
 		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
 		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
 		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
@@ -70,22 +74,20 @@ namespace Phyzzle
 		stateChange.insert(LOCK_SELECT);
 	}
 
+	void Player::Start()
+	{
+		InitializeGamePad();
+		InitializeDefaultPositions();
+		InitializeStateSystem();
+		InitializeLerpFunctions();
+	}
+
 	void Player::Update()
 	{
 		prevState = currState;
-
-		GamePadInput();
+		HandleGamePadInput();
 		DebugDraw();
-
-		if (prevState != currState)
-		{
-			stateSystem[prevState]->StateExit();
-			stateSystem[currState]->StateEnter();
-		}
-		else
-		{
-			stateSystem[currState]->StateStay();
-		}
+		UpdateState();
 	}
 
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
@@ -95,174 +97,111 @@ namespace Phyzzle
 
 	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		if (!data.jumping)
-			return;
-
 		JumpCheck(zn_collision, collider);
 	}
 
 	void Player::DebugDraw()
 	{
-		std::wstring str{};
-		{
-			if (data.state == ATTACH_HOLD)
-			{
-				str = L"ATTACH_HOLD";
-			}
-			else if (data.state == ATTACH_SELECT)
-			{
-				str = L"ATTACH_SELECT";
-			}
-			else if (data.state == REWIND_SELECT)
-			{
-				str = L"REWIND_SELECT";
-			}
-			else if (data.state == LOCK_SELECT)
-			{
-				str = L"LOCK_SELECT";
-			}
-			else
-			{
-				str = L"ERROR";
-			}
-		}
+		DrawStateInfo();
+		DrawJumpInfo();
+	}
 
-		std::wstring str0{};
-		{
-			if (currState == ATTACH_HOLD)
-			{
-				str0 = L"ATTACH_HOLD";
-			}
-			else if (currState == ATTACH_SELECT)
-			{
-				str0 = L"ATTACH_SELECT";
-			}
-			else if (currState == REWIND_SELECT)
-			{
-				str0 = L"REWIND_SELECT";
-			}
-			else if (currState == LOCK_SELECT)
-			{
-				str0 = L"LOCK_SELECT";
-			}
-			else
-			{
-				str0 = L"DEFAULT";
-			}
-		}
+	void Player::DrawStateInfo() const
+	{
+		std::wstring str = GetStateString(data.state);
+		std::wstring str0 = GetStateString(currState);
 
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"SELETE STATE : " + str, 
-			100, 100, 
-			300, 100, 15,
-			255, 255, 255, 255);
+		PurahEngine::GraphicsManager::GetInstance().DrawString(L"SELETE STATE : " + str, 100, 100, 300, 100, 15, 255, 255, 255, 255);
+		PurahEngine::GraphicsManager::GetInstance().DrawString(L"PLAYER STATE : " + str0, 100, 200, 400, 100, 15, 255, 255, 255, 255);
+	}
 
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"PLAYER STATE : " + str0,
-			100, 200, 
-			400, 100, 15,
-			255, 255, 255, 255);
-
-		if (data.jumping == false)
+	std::wstring Player::GetStateString(State state) const
+	{
+		switch (state)
 		{
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				L"can Jump",
-				500, 200,
-				400, 200, 15,
-				255, 255, 255, 255);
-		}
-		else
-		{
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				L"Jumping",
-				500, 200,
-				400, 200, 15,
-				255, 255, 255, 255);
+		case ATTACH_HOLD: return L"ATTACH_HOLD";
+		case ATTACH_SELECT: return L"ATTACH_SELECT";
+		case REWIND_SELECT: return L"REWIND_SELECT";
+		case LOCK_SELECT: return L"LOCK_SELECT";
+		default: return L"DEFAULT";
 		}
 	}
 
-	void Player::GamePadInput()
+	void Player::DrawJumpInfo() const
+	{
+		std::wstring jumpStatus = data.jumping ? L"Jumping" : L"can Jump";
+		PurahEngine::GraphicsManager::GetInstance().DrawString(jumpStatus, 500, 200, 400, 200, 15, 255, 255, 255, 255);
+	}
+
+	void Player::HandleGamePadInput()
 	{
 		if (gamePad->IsConnected())
 		{
-			currInput.Lstick.Size = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, currInput.Lstick.X, currInput.Lstick.Y);
-			currInput.Rstick.Size = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, currInput.Rstick.X, currInput.Rstick.Y);
+			HandleStickInput();
+			HandleTriggerInput();
+			HandleButtonInput();
+		}
+	}
 
-			stateSystem[currState]->Stick_L();
-			stateSystem[currState]->Stick_R();
+	void Player::HandleStickInput()
+	{
+		currInput.Lstick.Size = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_L, currInput.Lstick.X, currInput.Lstick.Y);
+		currInput.Rstick.Size = gamePad->GetStickRatio(PurahEngine::ePadStick::ePAD_STICK_R, currInput.Rstick.X, currInput.Rstick.Y);
 
-			currInput.LTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
-			currInput.RTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
+		stateSystem[currState]->Stick_L();
+		stateSystem[currState]->Stick_R();
+	}
 
-			stateSystem[currState]->Trigger_L();
-			stateSystem[currState]->Trigger_R();
+	void Player::HandleTriggerInput()
+	{
+		currInput.LTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_L);
+		currInput.RTrigger = gamePad->GetTriggerRatio(PurahEngine::ePadTrigger::ePAD_TRIGGER_R);
 
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_L))
-				stateSystem[currState]->Click_LB();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_L))
-				stateSystem[currState]->Pressing_LB();
-			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_L))
-				stateSystem[currState]->Up_LB();
+		stateSystem[currState]->Trigger_L();
+		stateSystem[currState]->Trigger_R();
+	}
 
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_SHOULDER_R))
-				stateSystem[currState]->Click_RB();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_SHOULDER_R))
-				stateSystem[currState]->Pressing_RB();
-			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_SHOULDER_R))
-				stateSystem[currState]->Up_RB();
+	void Player::HandleButtonInput()
+	{
+		HandleButton(PurahEngine::ePad::ePAD_SHOULDER_L, &IState::Click_LB, &IState::Pressing_LB, &IState::Up_LB);
+		HandleButton(PurahEngine::ePad::ePAD_SHOULDER_R, &IState::Click_RB, &IState::Pressing_RB, &IState::Up_RB);
+		HandleButton(PurahEngine::ePad::ePAD_A, &IState::Click_A, &IState::Pressing_A, nullptr);
+		HandleButton(PurahEngine::ePad::ePAD_B, &IState::Click_B, &IState::Pressing_B, nullptr);
+		HandleButton(PurahEngine::ePad::ePAD_X, &IState::Click_X, &IState::Pressing_X, &IState::Up_X);
+		HandleButton(PurahEngine::ePad::ePAD_Y, &IState::Click_Y, &IState::Pressing_Y, &IState::Up_Y);
+		HandleButton(PurahEngine::ePad::ePAD_UP, &IState::Click_DUp, &IState::Pressing_DUp, nullptr);
+		HandleButton(PurahEngine::ePad::ePAD_DOWN, &IState::Click_DDown, &IState::Pressing_DDown, nullptr);
+		HandleButton(PurahEngine::ePad::ePAD_LEFT, &IState::Click_DLeft, &IState::Pressing_DLeft, nullptr);
+		HandleButton(PurahEngine::ePad::ePAD_RIGHT, &IState::Click_DRight, &IState::Pressing_DRight, nullptr);
+	}
 
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_A))
-				stateSystem[currState]->Click_A();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_A))
-				stateSystem[currState]->Pressing_A();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_B))
-				stateSystem[currState]->Click_B();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_B))
-				stateSystem[currState]->Pressing_B();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_X))
-				stateSystem[currState]->Click_X();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_X))
-				stateSystem[currState]->Pressing_X();
-			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_X))
-				stateSystem[currState]->Up_X();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_Y))
-				stateSystem[currState]->Click_Y();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_Y))
-				stateSystem[currState]->Pressing_Y();
-			else if (gamePad->IsKeyUp(PurahEngine::ePad::ePAD_Y))
-				stateSystem[currState]->Up_Y();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_UP))
-				stateSystem[currState]->Click_DUp();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_UP))
-				stateSystem[currState]->Pressing_DUp();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_DOWN))
-				stateSystem[currState]->Click_DDown();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_DOWN))
-				stateSystem[currState]->Pressing_DDown();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_LEFT))
-				stateSystem[currState]->Click_DLeft();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_LEFT))
-				stateSystem[currState]->Pressing_DLeft();
-
-			if (gamePad->IsKeyDown(PurahEngine::ePad::ePAD_RIGHT))
-				stateSystem[currState]->Click_DRight();
-			else if (gamePad->IsKeyPressed(PurahEngine::ePad::ePAD_RIGHT))
-				stateSystem[currState]->Pressing_DRight();
-
+	void Player::HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)())
+	{
+		if (gamePad->IsKeyDown(button))
+		{
+			(stateSystem[currState]->*clickFunc)();
+		}
+		else if (gamePad->IsKeyPressed(button))
+		{
+			if (pressingFunc)
+			{
+				(stateSystem[currState]->*pressingFunc)();
+			}
+		}
+		else if (gamePad->IsKeyUp(button))
+		{
+			if (upFunc)
+			{
+				(stateSystem[currState]->*upFunc)();
+			}
 		}
 	}
 
 	void Player::Jump()
 	{
-		if (data.jumping == false)
+		if (!data.jumping)
 		{
-			Eigen::Vector3f power = Eigen::Vector3f::UnitY()* data.jumpPower;
+			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
 			data.jumping = true;
 		}
@@ -272,29 +211,47 @@ namespace Phyzzle
 	{
 		for (size_t i = 0; i < zn_collision.contactCount; i++)
 		{
-			const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-			Eigen::Vector3f velo = zn_collision.thisPostLinearVelocity;
+			Eigen::Vector3f velo = data.playerRigidbody->GetLinearVelocity();
 			velo.x() = 0.f;
 			velo.z() = 0.f;
-			velo.normalize();
+			if (velo.squaredNorm() > 0.f)
+			{
+				velo.normalize();
+			}
 			auto normal = zn_collision.contacts[i].normal;
-			normal.normalize();
 
-			const float cosTheta0 = velo.dot(normal);
-			float theta = std::acosf(cosTheta0);
-			bool diffDir = theta > (std::numbers::pi_v<float> / 2.f) && theta < (std::numbers::pi_v<float> * 1.5f);
+			// 플레이어 속도랑 충돌 노말 방향이랑 다른 방향인지 체크
+			if (!IsOppositeDirection(velo, normal))
+			{
+				return;
+			}
 
-			float cosTheta = up.dot(normal);
-			cosTheta = std::clamp(cosTheta, -1.f, 1.f);
-			float slope = std::acosf(cosTheta);
-			bool isGround = slope <= (std::numbers::pi_v<float> / 5.f);
-
-			if (isGround && diffDir)
+			// up 벡터랑 노말과 각도가 
+			if (IsGrounded(normal))
 			{
 				data.jumping = false;
 				return;
 			}
 		}
+	}
+
+	bool Player::IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const
+	{
+		const float cosTheta0 = velo.dot(normal);
+
+		return cosTheta0 < 0;
+	}
+
+	bool Player::IsGrounded(const Eigen::Vector3f& normal) const
+	{
+		// up 벡터랑 노말과 각도가 혀용 범위 내인가?
+		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
+		float cosTheta = up.dot(normal);
+		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+		float slope = std::acosf(cosTheta);
+		const float slopeAngleLimit = (data.slopeLimit * std::numbers::phi_v<float>) / 180.f;
+
+		return slope <= slopeAngleLimit;
 	}
 
 	void Player::PlayerMove(float _moveSpeed)
@@ -304,9 +261,8 @@ namespace Phyzzle
 		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
 		const Eigen::Vector3f right = data.cameraArm->GetRight();
 
-		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
-
 		// 속도 벡터를 계산
+		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 		const Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
 
 		Eigen::Vector3f velocity = data.playerRigidbody->GetLinearVelocity();
@@ -376,45 +332,24 @@ namespace Phyzzle
 		data.modelCore->SetLocalRotation(targetRotation);
 	}
 
-	void Player::CameraCoreUpdate()
+	void Player::UpdateCamera()
+	{
+		UpdateCameraCore();
+	}
+
+	void Player::UpdateCameraCore()
 	{
 		auto currP = data.cameraCore->GetLocalPosition();
 
 		float distance = 0.f;
-
-		// 각도에 따라 카메라 위치를 움직임.
-		if (data.xAngle >= 0.f)
-		{
-			const float ease = data.xAngle / data.limitHighAngle;
-			auto EasingHigh = [](float x) -> float
-				{
-					return 1.0f - (1.0f - x) * (1.0f - x);
-				};
-
-			distance = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
-		}
-		else if (data.xAngle < 0.f)
-		{
-			const float ease = data.xAngle / data.limitLowAngle;
-			auto EasingLow = [](float x) -> float
-				{
-					return 1.0f - std::pow(1.0f - x, 5.0f);
-				};
-
-			distance = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
-		}
+		CalculateCameraDistance(distance);
 
 		auto modelPos = data.cameraArm->GetWorldPosition();
 		auto dir = data.cameraCore->GetFront() * -1.f;
 		unsigned int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
-		bool hit = PurahEngine::Physics::Spherecast(
-			0.3f,
-			modelPos, Eigen::Quaternionf::Identity(),
-			dir,
-			std::fabs(distance),
-			layers, info);
+		bool hit = PurahEngine::Physics::Spherecast(0.3f, modelPos, Eigen::Quaternionf::Identity(), dir, std::fabs(distance), layers, info);
 
 		if (hit)
 		{
@@ -428,65 +363,85 @@ namespace Phyzzle
 		data.cameraCore->SetLocalPosition(currP);
 	}
 
-	void Player::CameraArmReset()
+	void Player::CalculateCameraDistance(float& distance)
+	{
+		if (data.xAngle >= 0.f)
+		{
+			const float ease = data.xAngle / data.limitHighAngle;
+			auto EasingHigh = [](float x) -> float
+				{
+					return 1.0f - (1.0f - x) * (1.0f - x);
+				};
+			distance = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
+		}
+		else if (data.xAngle < 0.f)
+		{
+			const float ease = data.xAngle / data.limitLowAngle;
+			auto EasingLow = [](float x) -> float
+				{
+					return 1.0f - std::pow(1.0f - x, 5.0f);
+				};
+			distance = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
+		}
+	}
+
+	void Player::ResetCamera()
+	{
+		ResetCameraArm();
+		ResetCameraCore();
+	}
+
+	void Player::ResetCameraArm()
 	{
 		data.cameraArm->SetLocalPosition(Eigen::Vector3f::Zero());
 		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
 	}
 
-	void Player::CameraCoreReset()
+	void Player::ResetCameraCore()
 	{
 		data.cameraCore->SetLocalPosition(Eigen::Vector3f(0.f, 0.f, -9.f));
 		data.cameraCore->SetLocalRotation(Eigen::Quaternionf::Identity());
 	}
 
-	void Player::CameraReset()
-	{
-		CameraArmReset();
-		CameraCoreReset();
-	}
-
-	void Player::CameraAround()
+	void Player::RotateCamera()
 	{
 		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
-
 		const float deltaTime = time.GetDeltaTime();
 
-		// 스틱 기울기에 따라 회전 각도를 계산
 		const float yawAngle = currInput.Rstick.X * data.sensitivity * deltaTime * currInput.Rstick.Size;
-		{
-			// 월드 up 기준으로 카메라를 회전
-			data.cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
-		}
+		RotateCameraYaw(yawAngle);
 
-		// 스틱 기울기에 따라 회전 각도를 계산
 		const float pitchAngle = -currInput.Rstick.Y * data.sensitivity * deltaTime * currInput.Rstick.Size;
+		RotateCameraPitch(pitchAngle);
+	}
+
+	void Player::RotateCameraYaw(float yawAngle)
+	{
+		data.cameraArm->Rotate(Eigen::Vector3f(0.f, 1.f, 0.f), yawAngle);
+	}
+
+	void Player::RotateCameraPitch(float pitchAngle)
+	{
+		float deltaAngle = 0.f;
+		data.xAngle += pitchAngle;
+
+		if (data.xAngle > data.limitHighAngle)
 		{
-			float deltaAngle = 0.f;
-
-			data.xAngle += pitchAngle;
-
-			if (data.xAngle > data.limitHighAngle)
-			{
-				deltaAngle = 0.f;
-				data.xAngle = data.limitHighAngle;
-			}
-			else if (data.xAngle < data.limitLowAngle)
-			{
-				deltaAngle = 0.f;
-				data.xAngle = data.limitLowAngle;
-			}
-			else
-			{
-				deltaAngle = pitchAngle;
-			}
-
-			// 카메라 Right 벡터를 기준으로 회전하기 위해서 카메라의 월드 right를 구함.
-			const Eigen::Vector3f cameraRight = data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();
-
-			// 카메라의 right 기준으로 카메라를 회전
-			data.cameraArm->Rotate(cameraRight, deltaAngle);
+			deltaAngle = 0.f;
+			data.xAngle = data.limitHighAngle;
 		}
+		else if (data.xAngle < data.limitLowAngle)
+		{
+			deltaAngle = 0.f;
+			data.xAngle = data.limitLowAngle;
+		}
+		else
+		{
+			deltaAngle = pitchAngle;
+		}
+
+		const Eigen::Vector3f cameraRight = data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();
+		data.cameraArm->Rotate(cameraRight, deltaAngle);
 	}
 
 	/**
@@ -570,6 +525,19 @@ namespace Phyzzle
 		return block;
 	}
 
+	void Player::UpdateState()
+	{
+		if (prevState != currState)
+		{
+			stateSystem[prevState]->StateExit();
+			stateSystem[currState]->StateEnter();
+		}
+		else
+		{
+			stateSystem[currState]->StateStay();
+		}
+	}
+
 	void Player::ChangeState(State _state)
 	{
 		currState = _state;
@@ -641,6 +609,10 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(crossHead);
 		data.crossHead = crossHead;
 
+		auto cameraSweep = data.cameraSweep;
+		POSTDESERIALIZE_PTR(cameraSweep);
+		data.cameraSweep = cameraSweep;
 	}
+
 #pragma endregion 직렬화
 }

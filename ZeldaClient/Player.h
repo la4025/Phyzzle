@@ -51,10 +51,10 @@ namespace Phyzzle
 		{
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
-
 			float sensitivity = 90.f;			// 카메라 회전 속도
 			float jumpPower = 10.f;				// 점프 힘
 			bool jumping = false;
+			float slopeLimit = 36.f;			// 경사 각도
 
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
@@ -62,6 +62,7 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
 			PurahEngine::GameObject* crossHead;
+			PurahEngine::Transform* cameraSweep;
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
@@ -75,14 +76,14 @@ namespace Phyzzle
 
 			unsigned int cameraCollisionLayers = 0;
 			unsigned int attachRaycastLayers = 0;
-			bool cameraUpdate = true;			// 
-			float lerpFactor = 0.2f;			// 
-			float acclerpFactor = 0.f;			//
 
 			State state = ATTACH_SELECT;
 
 			std::wstring idleAnimation;
 			std::wstring runningAnimation;
+			std::wstring jumpAnimation;
+			std::wstring jumpingAnimation;
+			std::wstring landingAnimation;
 		};
 
 		struct StickData
@@ -155,6 +156,11 @@ namespace Phyzzle
 
 	public:
 #pragma region Event
+		void InitializeGamePad();
+		void InitializeDefaultPositions();
+		void InitializeStateSystem();
+		void InitializeLerpFunctions();
+
 		void Start() override;
 		void Update() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
@@ -162,24 +168,42 @@ namespace Phyzzle
 #pragma endregion Event
 
 		void DebugDraw();
+		void DrawStateInfo() const;
+		std::wstring GetStateString(State state) const;
+		void DrawJumpInfo() const;
 
 	private:
-		void GamePadInput();
+		void UpdateState();
+		void ChangeState(State);
+
+		void HandleGamePadInput();
+		void HandleStickInput();
+		void HandleTriggerInput();
+		void HandleButtonInput();
+		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
 
 		void Jump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
+		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
+		bool IsGrounded(const Eigen::Vector3f& normal) const;
 
 		void PlayerMove(float _moveSpeed);
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
-		void CameraCoreUpdate();
-		void CameraArmReset();
-		void CameraCoreReset();
-		void CameraReset();
-		void CameraAround();
+#pragma region camera
+		void UpdateCamera();
+		void UpdateCameraCore();
+		void CalculateCameraDistance(float& distance);
+		void ResetCamera();
+		void ResetCameraArm();
+		void ResetCameraCore();
+		void RotateCamera();
+		void RotateCameraYaw(float yawAngle);
+		void RotateCameraPitch(float pitchAngle);
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
+#pragma endregion camera
 
 		bool RaycastFromCamera(
 			float _distance, 
@@ -195,9 +219,6 @@ namespace Phyzzle
 		void PostSerialize(json& jsonData) const override;
 		void PostDeserialize(const json& jsonData) override;
 #pragma endregion 직렬화
-
-	private:
-		void ChangeState(State);
 
 	private:
 		friend class IState;
