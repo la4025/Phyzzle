@@ -90,6 +90,11 @@ namespace Phyzzle
 		UpdateState();
 	}
 
+	void Player::LateUpdate()
+	{
+
+	}
+
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
 		JumpCheck(zn_collision, collider);
@@ -335,54 +340,47 @@ namespace Phyzzle
 	void Player::UpdateCamera()
 	{
 		UpdateCameraCore();
+		RotateCamera();
 	}
 
 	void Player::UpdateCameraCore()
 	{
-		auto currP = data.cameraCore->GetLocalPosition();
+		using namespace Eigen;
 
-		float distance = 0.f;
-		CalculateCameraDistance(distance);
+		float distance = CalculateCameraDistance();
+		Vector3f newCameraPosition = CalculateCameraPosition(distance);
+		data.cameraCore->SetLocalPosition(newCameraPosition);
+	}
 
-		auto modelPos = data.cameraArm->GetWorldPosition();
-		auto dir = data.cameraCore->GetFront() * -1.f;
+	float Player::CalculateCameraDistance()
+	{
+		using namespace Eigen;
+
+		const float ease = data.xAngle >= 0.f ? data.xAngle / data.limitHighAngle : data.xAngle / data.limitLowAngle;
+		auto easingFunc = data.xAngle >= 0.f ?
+			[](float x) { return 1.0f - (1.0f - x) * (1.0f - x); } :
+			[](float x) { return 1.0f - std::pow(1.0f - x, 5.0f); };
+
+		const Vector3f& diff = data.xAngle >= 0.f ? differenceHigh : differenceLow;
+		return data.coreDefaultPosition.z() + diff.z() * easingFunc(ease);
+	}
+
+	Eigen::Vector3f Player::CalculateCameraPosition(float distance)
+	{
+		using namespace Eigen;
+
+		Vector3f modelPos = data.cameraArm->GetWorldPosition();
+		Vector3f dir = data.cameraCore->GetFront() * -1.f;
 		unsigned int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
-		bool hit = PurahEngine::Physics::Spherecast(0.3f, modelPos, Eigen::Quaternionf::Identity(), dir, std::fabs(distance), layers, info);
+		bool hit = PurahEngine::Physics::Spherecast(0.3f, modelPos, Quaternionf::Identity(), dir, std::fabs(distance), layers, info);
 
-		if (hit)
-		{
-			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
-		}
-		else
-		{
-			currP = Eigen::Vector3f::UnitZ() * distance;
-		}
+		float z = hit ? -info.distance : distance;
+		Vector3f newCameraPosition = data.cameraCore->GetLocalPosition();
+		newCameraPosition.z() = z;
 
-		data.cameraCore->SetLocalPosition(currP);
-	}
-
-	void Player::CalculateCameraDistance(float& distance)
-	{
-		if (data.xAngle >= 0.f)
-		{
-			const float ease = data.xAngle / data.limitHighAngle;
-			auto EasingHigh = [](float x) -> float
-				{
-					return 1.0f - (1.0f - x) * (1.0f - x);
-				};
-			distance = data.coreDefaultPosition.z() + differenceHigh.z() * EasingHigh(ease);
-		}
-		else if (data.xAngle < 0.f)
-		{
-			const float ease = data.xAngle / data.limitLowAngle;
-			auto EasingLow = [](float x) -> float
-				{
-					return 1.0f - std::pow(1.0f - x, 5.0f);
-				};
-			distance = data.coreDefaultPosition.z() + differenceLow.z() * EasingLow(ease);
-		}
+		return newCameraPosition;
 	}
 
 	void Player::ResetCamera()

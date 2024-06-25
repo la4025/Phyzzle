@@ -23,6 +23,9 @@
 // Physics
 #include "EasingFunc.h"
 
+#include "ZnBound3.h"
+#include "ZnTransform.h"
+#include "ZnCollision.h"
 #include "ZnQueryInfo.h"
 #include "ZnQueryDesc.h"
 

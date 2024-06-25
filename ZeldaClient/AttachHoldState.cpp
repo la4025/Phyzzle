@@ -249,7 +249,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateObjectAlongZ(2.f);
+			TranslateSpringAlongZ(2.f);
 		}
 		else if (justRotate)
 		{
@@ -334,7 +334,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateObjectAlongZ(-2.f);
+			TranslateSpringAlongZ(-2.f);
 		}
 		else if (justRotate)
 		{
@@ -585,7 +585,7 @@ namespace Phyzzle
 			// 플레이어 - 오브젝트 방향으로 주고 받음.
 			const float velocity = pushingVelocity * player->currInput.LTrigger * dt;
 
-			TranslateObjectAlongZ(velocity);
+			TranslateSpringAlongZ(velocity);
 		}
 		else if (rotateAdjustment)
 		{
@@ -608,7 +608,7 @@ namespace Phyzzle
 		{
 			const float velocity = pushingVelocity * player->currInput.LTrigger * dt;
 
-			TranslateObjectAlongZ(-velocity);
+			TranslateSpringAlongZ(-velocity);
 		}
 		// 회전
 		else if (rotateAdjustment)
@@ -774,9 +774,10 @@ namespace Phyzzle
 
 	void AttachHoldState::TrySelect()
 	{
-		const bool hit = player->RaycastFromCamera(selectRange, &selectBody, &attachble, nullptr);
+		attachble = player->data.holdObject;
+		selectBody = player->data.holdObjectBody;
 
-		if (!hit || !attachble || !selectBody)
+		if (!attachble || !selectBody)
 		{
 			player->ChangeState(Player::ATTACH_SELECT);
 		}

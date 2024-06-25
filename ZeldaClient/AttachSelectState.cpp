@@ -31,6 +31,10 @@ namespace Phyzzle
 			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
 		}
 
+		select = false;
+		selectObject = nullptr;
+		seleteBody = nullptr;
+
 		CrossHeadRender(false);
 	}
 
@@ -38,8 +42,8 @@ namespace Phyzzle
 	void AttachSelectState::StateStay()
 	{
 		EnableOutline(false);
-		result = nullptr;
-		attachable = nullptr;
+		seleteBody = nullptr;
+		selectObject = nullptr;
 
 		select = Search();
 
@@ -47,10 +51,11 @@ namespace Phyzzle
 		{
 			EnableOutline(true);
 		}
-
-#if _DEBUG
-		SearchDebugDraw(select);
-#endif _DEBUG
+		
+		if (player->data.debugMode)
+		{
+			SearchDebugDraw(select);
+		}
 	}
 #pragma endregion StateEvent
 
@@ -84,6 +89,8 @@ namespace Phyzzle
 		if (select)
 		{ 
 			// »óÅÂ ¹Ù²Þ
+			player->data.holdObject = selectObject;
+			player->data.holdObjectBody = seleteBody;
 			player->ChangeState(Player::ATTACH_HOLD);
 		}
 	}
@@ -120,12 +127,7 @@ namespace Phyzzle
 
 	void AttachSelectState::CameraAround() const
 	{
-		player->RotateCamera();
-	}
-
-	void AttachSelectState::CameraPositionUpdate()
-	{
-
+		player->UpdateCamera();
 	}
 
 	void AttachSelectState::StateCancel() const
@@ -152,12 +154,12 @@ namespace Phyzzle
 	bool AttachSelectState::Search()
 	{
 		const float distance = 40.f;
-		const bool hit = player->RaycastFromCamera(distance, &result, &attachable, nullptr);
+		const bool hit = player->RaycastFromCamera(distance, &seleteBody, &selectObject, nullptr);
 
-		if (!hit || !attachable || !result)
+		if (!hit || !selectObject || !seleteBody)
 			return false;
 
-		if (result->IsKinematic())
+		if (seleteBody->IsKinematic())
 			return false;
 
 		return true;
@@ -165,14 +167,13 @@ namespace Phyzzle
 
 	void AttachSelectState::EnableOutline(bool _value) const
 	{
-		if (!result || !attachable)
+		if (!seleteBody || !selectObject)
 			return;
 
-		AttachSystem::Instance()->EnableOutline(attachable, _value);
+		AttachSystem::Instance()->EnableOutline(selectObject, _value);
 	}
 #pragma endregion Content
 
-#if _DEBUG
 	void AttachSelectState::SearchDebugDraw(bool _value)
 	{
 		if (_value)
@@ -192,7 +193,6 @@ namespace Phyzzle
 				255, 255, 255, 255);
 		}
 	}
-#endif _DEBUG
 
 	void AttachSelectState::CrossHeadRender(bool _value)
 	{

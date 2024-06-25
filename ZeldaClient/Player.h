@@ -3,16 +3,6 @@
 
 #include "PurahEngine.h"
 
-namespace Phyzzle
-{
-	class Rewindable;
-}
-
-namespace Phyzzle
-{
-	class PzObject;
-}
-
 namespace ZonaiPhysics
 {
 	struct ZnQueryInfo;
@@ -21,6 +11,8 @@ namespace ZonaiPhysics
 
 namespace Phyzzle
 {
+	class Rewindable;
+	class PzObject;
 	class Holder;
 	class IState;
 
@@ -32,7 +24,14 @@ namespace Phyzzle
 		{
 			IDLE,
 			WALK,
-			ABILITY,
+			JUMP,
+			JUMPING,
+			LANDING,
+			ABILITY_IDLE,
+			ABILITY_FRONT,
+			ABILITY_BACK,
+			ABILITY_RIGHT,
+			ABILITY_LEFT,
 		};
 
 		enum State
@@ -49,12 +48,16 @@ namespace Phyzzle
 #pragma region Struct
 		struct PlayerData
 		{
+			bool debugMode = false;
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
 			float jumpPower = 10.f;				// 점프 힘
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
+
+			float cameraLerpTime = 0.5f;			// 보간 시간
+			float cameraLerpTime0 = 1.0f;			// 경사 각도
 
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
@@ -84,6 +87,19 @@ namespace Phyzzle
 			std::wstring jumpAnimation;
 			std::wstring jumpingAnimation;
 			std::wstring landingAnimation;
+
+
+			PzObject* holdObject;
+			PurahEngine::RigidBody* holdObjectBody;
+		};
+
+		struct CameraData
+		{
+			Eigen::Vector3f		coreDefaultPosition;
+			Eigen::Quaternionf	coreDefaultRotation;
+
+			Eigen::Vector3f		armDefaultPosition;
+			Eigen::Quaternionf	armDefaultRotation;
 		};
 
 		struct StickData
@@ -155,14 +171,15 @@ namespace Phyzzle
 #pragma endregion Struct
 
 	public:
-#pragma region Event
 		void InitializeGamePad();
 		void InitializeDefaultPositions();
 		void InitializeStateSystem();
 		void InitializeLerpFunctions();
 
+#pragma region Event
 		void Start() override;
 		void Update() override;
+		void LateUpdate() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 #pragma endregion Event
@@ -194,7 +211,8 @@ namespace Phyzzle
 #pragma region camera
 		void UpdateCamera();
 		void UpdateCameraCore();
-		void CalculateCameraDistance(float& distance);
+		float CalculateCameraDistance();
+		Eigen::Vector3f CalculateCameraPosition(float distance);
 		void ResetCamera();
 		void ResetCameraArm();
 		void ResetCameraCore();

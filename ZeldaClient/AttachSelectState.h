@@ -37,13 +37,12 @@ namespace Phyzzle
 #pragma region Content
 	private:
 		bool select = false;
-		PurahEngine::RigidBody* result = nullptr;
-		PzObject* attachable = nullptr;
+		PurahEngine::RigidBody* seleteBody = nullptr;
+		PzObject* selectObject = nullptr;
 
 	private:
 		void PlayerMove(float _speed) const;
 		void CameraAround() const;
-		void CameraPositionUpdate();
 		void StateCancel() const;
 
 		void Jump() const;
@@ -55,10 +54,8 @@ namespace Phyzzle
 		void EnableOutline(bool) const;
 #pragma endregion Content
 		
-#if _DEBUG
 	private:
 		void SearchDebugDraw(bool _value);
-#endif _DEBUG
 		void CrossHeadRender(bool _value);
 	};
 }

@@ -17,6 +17,8 @@ namespace Phyzzle
 
 	void DefaultState::StateEnter()
 	{
+		player->data.holdObject = nullptr;
+		player->data.holdObjectBody = nullptr;
 	}
 
 	void DefaultState::StateExit()
@@ -131,8 +133,7 @@ namespace Phyzzle
 
 	void DefaultState::CameraUpdate()
 	{
-		CameraAround();
-		CameraPositionFromAngle();
+		player->UpdateCamera();
 	}
 
 	void DefaultState::CameraAround()
