@@ -396,8 +396,8 @@
       "transform": {
         "__Base__instanceID": 25498,
         "position": {
-          "x": 1.48,
-          "y": 12.1600018,
+          "x": 1.78,
+          "y": 7.47,
           "z": 17.94
         },
         "rotation": {
@@ -412,7 +412,9 @@
           "z": 2.0
         },
         "__ID__parentTransform": [],
-        "__ID__children": []
+        "__ID__children": [
+          25376
+        ]
       },
       "components": [
         {
@@ -473,9 +475,9 @@
           },
           "__ID__connectedBody": 25368,
           "connectedLocalAnchor": {
-            "x": 1.38027275,
-            "y": -1.34350252,
-            "z": -1.40000057
+            "x": 1.38027263,
+            "y": -1.34350276,
+            "z": -1.40000021
           },
           "connectedLocalAnchorRotation": {
             "w": -0.2705982,
@@ -500,9 +502,9 @@
       "transform": {
         "__Base__instanceID": 25376,
         "position": {
-          "x": 2.88,
-          "y": 10.234,
-          "z": 17.914
+          "x": 0.700000048,
+          "y": -0.9630008,
+          "z": -0.0130004883
         },
         "rotation": {
           "x": 0.653281569,
@@ -511,11 +513,13 @@
           "w": 0.270598233
         },
         "scale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5
         },
-        "__ID__parentTransform": [],
+        "__ID__parentTransform": [
+          25498
+        ],
         "__ID__children": []
       },
       "components": [
@@ -780,9 +784,9 @@
           "w": 0.923879564
         },
         "scale": {
-          "x": 2.0,
+          "x": 7.0,
           "y": 2.0,
-          "z": 2.0
+          "z": 4.0
         },
         "__ID__parentTransform": [],
         "__ID__children": []
@@ -843,27 +847,27 @@
           "__Base__Component": "DistanceJoint",
           "__ID__body": 25562,
           "LocalAnchor": {
-            "x": 0.9999995,
-            "y": 4.11587564E-08,
+            "x": 3.49999952,
+            "y": 1.04379012E-07,
             "z": 0.0
           },
           "LocalAnchorRotation": {
             "w": 1.0,
             "x": 0.0,
             "y": 0.0,
-            "z": -1.05367155E-08
+            "z": -9.031472E-09
           },
           "__ID__connectedBody": 25368,
           "connectedLocalAnchor": {
-            "x": 3.20664978,
-            "y": -1.727389,
-            "z": 0.5171058
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "connectedLocalAnchorRotation": {
-            "w": -1.791241E-07,
-            "x": 0.5000001,
-            "y": 0.49999994,
-            "z": 0.707106769
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "useMinDistance": true,
           "minDistance": 0.0,
@@ -879,27 +883,27 @@
           "__Base__Component": "SpringJoint",
           "__ID__body": 25562,
           "LocalAnchor": {
-            "x": -1.00000012,
-            "y": -2.11722323E-07,
+            "x": -3.50000072,
+            "y": 3.99406986E-07,
             "z": 0.0
           },
           "LocalAnchorRotation": {
             "w": 1.0,
             "x": 0.0,
             "y": 0.0,
-            "z": -1.05367155E-08
+            "z": -9.031472E-09
           },
           "__ID__connectedBody": 25276,
           "connectedLocalAnchor": {
-            "x": 5.542631,
-            "y": 2.3789854,
-            "z": 3.195357
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "connectedLocalAnchorRotation": {
-            "w": 0.370901734,
-            "x": 0.6772012,
-            "y": 0.625430048,
-            "z": 0.112550788
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "useSpring": true,
           "spring": 100.0,
@@ -907,7 +911,7 @@
           "useMinDistance": true,
           "minDistance": 4.0,
           "useMaxDistance": true,
-          "maxDistance": 6.0,
+          "maxDistance": 6.6,
           "Tolerance": 0.025,
           "breakForce": 3.40282347E+38,
           "breakTorque": 3.40282347E+38,
@@ -2692,7 +2696,7 @@
     {
       "__Base__instanceID": -1430,
       "name": "CameraCollider",
-      "active": true,
+      "active": false,
       "tag": [],
       "transform": {
         "__Base__instanceID": -1432,

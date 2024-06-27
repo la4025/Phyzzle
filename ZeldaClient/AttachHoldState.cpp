@@ -670,7 +670,7 @@ namespace Phyzzle
 #pragma region Content
 	void AttachHoldState::PlayerMove(float _speed) const
 	{
-		player->PlayerMove(_speed);
+		player->TryPlayerMove(_speed);
 	}
 
 	/*
@@ -769,7 +769,7 @@ namespace Phyzzle
 
 	void AttachHoldState::StateCancel() const
 	{
-		player->ChangeState(Player::State::DEFAULT);
+		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
 
 	void AttachHoldState::TrySelect()
@@ -779,12 +779,12 @@ namespace Phyzzle
 
 		if (!attachble || !selectBody)
 		{
-			player->ChangeState(Player::ATTACH_SELECT);
+			player->ChangeAbilityState(Player::ATTACH_SELECT);
 		}
 		else
 		{
 			if (selectBody->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
-				player->ChangeState(Player::ATTACH_SELECT);
+				player->ChangeAbilityState(Player::ATTACH_SELECT);
 			else
 				VariableSet();
 		}
