@@ -15,7 +15,8 @@ namespace PurahEngine
 	enum class SoundType
 	{
 		BGM,
-		EFFECT
+		EFFECT,
+		UI
 	};
 
 	class PURAHENGINE_API SoundManager
@@ -32,11 +33,15 @@ namespace PurahEngine
 
 		void CreateSfxSound(std::wstring name, FMOD::Sound** sound);
 
+		void CreateUISound(std::wstring name, FMOD::Sound** sound);
+
 		void PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void PlayBGM(FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel);
+
+		void PlayUI(FMOD::Sound* sound, FMOD::Channel** channel);
 
 		void Update();
 
@@ -48,7 +53,9 @@ namespace PurahEngine
 		FMOD::System* system;
 		FMOD::Channel* bgmChannel;
 		FMOD::Channel* effectChannel;
-		FMOD::ChannelGroup* effectChannelGroup;
+		FMOD::ChannelGroup* bgmChannelGroup;
+		FMOD::ChannelGroup* sfxChannelGroup;
+		FMOD::ChannelGroup* masterChannelGroup;
 
 	private:
 		SoundManager();

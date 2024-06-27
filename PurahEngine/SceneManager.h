@@ -36,6 +36,7 @@ namespace PurahEngine
 		void SetMainCamera(Camera * camera);
 
 		void SetName(std::wstring name);
+		std::wstring GetName();
 
 		void Update();
 

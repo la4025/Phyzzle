@@ -14,7 +14,7 @@ PurahEngine::Test2::~Test2()
 
 void PurahEngine::Test2::Awake()
 {
-	
+
 }
 
 void PurahEngine::Test2::Start()
@@ -61,9 +61,23 @@ void PurahEngine::Test2::Update()
 		GetGameObject()->EraseDontDestroy();
 		GetGameObject()->DeleteComponent(this);
 	}
+	if (inputManager.IsKeyPressed(eKey::eKEY_ESCAPE))
+	{
+		isPaused = !isPaused;
+		if (isPaused)
+		{
+			TimeController::GetInstance().SetTimeScale(0.0f);
+		}
+		else
+		{
+			TimeController::GetInstance().SetTimeScale(1.0f);
+		}
+	}
+
 
 	std::wcout << GetGameObject()->GetName() << std::endl;
 	std::cout << trans->GetLocalPosition() << std::endl << std::endl;
+	std::cout << TimeController::GetInstance().GetDeltaTime() << std::endl << std::endl;
 }
 
 void PurahEngine::Test2::FixedUpdate()

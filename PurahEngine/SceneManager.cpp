@@ -42,6 +42,11 @@ void PurahEngine::SceneManager::SetName(std::wstring name)
 	sceneName = name;
 }
 
+std::wstring PurahEngine::SceneManager::GetName()
+{
+	return sceneName;
+}
+
 void PurahEngine::SceneManager::Update()
 {
 	PurahEngine::TimeController::GetInstance().Update("Simulate");
@@ -91,6 +96,11 @@ void PurahEngine::SceneManager::Update()
 void PurahEngine::SceneManager::LoadScene(const std::wstring fileName)
 {
 	sceneBuffer = fileName;
+
+ 	if (fileName == L"this")
+	{
+		sceneBuffer = sceneName;
+	}
 }
 
 void PurahEngine::SceneManager::LoadScene(int sceneNumber)
@@ -255,6 +265,7 @@ void PurahEngine::SceneManager::LoadScene()
 	LoadDontDestroyObject();
 
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
+	sceneName = sceneBuffer;
 	sceneBuffer = L"";
 }
 
