@@ -55,6 +55,11 @@ void PurahEngine::SoundManager::CreateSound(SoundType soundType, std::wstring na
 			CreateSfxSound(name, sound);
 			break;
 		}
+		case SoundType::UI:
+		{
+			CreateUISound(name, sound);
+			break;
+		}
 	}
 }
 
@@ -89,6 +94,19 @@ void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** 
 	assert(result == FMOD_OK);
 }
 
+void PurahEngine::SoundManager::CreateUISound(std::wstring name, FMOD::Sound** sound)
+{
+	FMOD_RESULT result;
+	std::wstring filePath = L"../Sound/UI/" + name;
+
+	// wstring을 string으로 변환하는 방법
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+	std::string str = converter.to_bytes(filePath);
+
+	result = system->createSound(str.c_str(), FMOD_2D, 0, sound);
+	assert(result == FMOD_OK);
+}
+
 void PurahEngine::SoundManager::PlayAudio(SoundType soundType, FMOD::Sound* sound, FMOD::Channel** channel)
 {
 	switch (soundType)
@@ -101,6 +119,11 @@ void PurahEngine::SoundManager::PlayAudio(SoundType soundType, FMOD::Sound* soun
 		case SoundType::EFFECT:
 		{
 			PlaySfx(sound, channel);
+			break;
+		}
+		case SoundType::UI:
+		{
+			PlayUI(sound, channel);
 			break;
 		}
 	}
@@ -123,6 +146,22 @@ void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** chan
 }
 
 void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel)
+{
+	FMOD_RESULT result;
+	bool isPlaying = true;
+	(*channel)->isPlaying(&isPlaying);
+	if (!isPlaying)
+	{
+		system->playSound(sound, 0, false, channel);
+		result = (*channel)->setChannelGroup(sfxChannelGroup);
+		assert(result == FMOD_OK);
+	}
+
+	(*channel)->setPaused(false);
+	isPlaying = (*channel)->getCurrentSound(&sound);
+}
+
+void PurahEngine::SoundManager::PlayUI(FMOD::Sound* sound, FMOD::Channel** channel)
 {
 	FMOD_RESULT result;
 	bool isPlaying = true;

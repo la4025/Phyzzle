@@ -311,6 +311,9 @@
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Component\3. Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="PauseGame.cpp">
+      <Filter>Component\5. UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -536,6 +539,9 @@
     <ClInclude Include="AudioClip.h" />
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Component\3. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseGame.h">
+      <Filter>Component\5. UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
