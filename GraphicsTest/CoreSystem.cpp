@@ -88,6 +88,7 @@ void CoreSystem::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gamename, unsigned
 #endif
 
 	renderer->Initialize(1920, 1080, true, hWnd, false);
+	renderer->SetExtraOption(1.0f, 0.0001f);
 }
 
 void CoreSystem::Finalize()
@@ -261,10 +262,10 @@ void CoreSystem::run()
 	static std::vector<float> animationPlayTimeList;
 	static std::vector<float> animationPlayTimeList2;
 
-	static float pointLightRange_Max = 200.0f;
+	static float pointLightRange_Max = 300.0f;
 	static float pointLightRange_Min = 10.0f;
 	static float pointLightRange_Speed = 50.0f;
-	static float pointLightRange = 10.0f;
+	static float pointLightRange = 30;
 	static Eigen::Vector3f pointLightPos = { 0.0f, 50.0f, 0.0f };
 
 	const static float cameraFarInit = 10000.0f;
@@ -292,9 +293,11 @@ void CoreSystem::run()
 
 		fireTextureID = renderer->CreateTexture(L"Particle\\fx_Fire1.png");
 
-		dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		//dirLightID = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
+		dirLightID = renderer->CreateDirectionalLight({ 0.1f, 0.1f, 0.1f }, { 0.1f, 0.1f, 0.1f }, { 0.1f, 0.1f, 0.1f }, { 0.1f, 0.1f, 0.1f }, Eigen::Vector3f{ -1.0f, -1.0f, 1.0f }.normalized());
 		dirLightID2 = renderer->CreateDirectionalLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, Eigen::Vector3f{ 1.0f, -1.0f, 1.0f }.normalized());
 		pointLightID = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, pointLightPos, pointLightRange);
+		pointLightID2 = renderer->CreatePointLight({ 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, { -65.0f, 50.0f, -65.0f }, 200.0f);
 
 		mainCameraID = renderer->CreateCamera();
 
@@ -359,6 +362,9 @@ void CoreSystem::run()
 		{
 			pointLightRange = pointLightRange_Max;
 		}
+
+		//pointLightPos += (Eigen::Vector3f{ -30, 0, 0 } *deltaTime);
+
 		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, {}, pointLightPos, pointLightRange, 0.0f);
 	}
 	if (GetAsyncKeyState('P'))
@@ -368,6 +374,9 @@ void CoreSystem::run()
 		{
 			pointLightRange = pointLightRange_Min;
 		}
+
+		//pointLightPos += (Eigen::Vector3f{ 30, 0, 0 } *deltaTime);
+
 		renderer->UpdateLight(pointLightID, { 0.2f, 0.2f, 0.2f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f }, { 0.2f, 0.2f, 0.2f }, {}, pointLightPos, pointLightRange, 0.0f);
 	}
 
@@ -531,7 +540,8 @@ void CoreSystem::run()
 
 	renderer->DrawLight(dirLightID);
 	//renderer->DrawLight(dirLightID2);
-	//renderer->DrawLight(pointLightID);
+	renderer->DrawLight(pointLightID);
+	//renderer->DrawLight(pointLightID2);
 
 	renderer->DrawImage({ scdX, 0 }, msTextureID, 0u);
 	renderer->DrawImage({ 1920 - scdX - 280, 800 }, msTextureID, 0u);
@@ -695,62 +705,62 @@ void CoreSystem::run()
 	renderer->DrawCube(w, TextureID::ID_NULL, false, true, false, false, { 0.0f, 0.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f });
 
 
-	Eigen::Matrix4f billboardTestMatrix = Eigen::Matrix4f::Identity();
-	billboardTestMatrix(0, 0) = 1.0f;
-	billboardTestMatrix(1, 1) = 1.0f;
-	billboardTestMatrix(2, 2) = 1.0f;
-	billboardTestMatrix(1, 3) = -30.0f;
-	//renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
-	//renderer->DrawSprite(billboardTestMatrix, scdTextureID, false);
+	//Eigen::Matrix4f billboardTestMatrix = Eigen::Matrix4f::Identity();
+	//billboardTestMatrix(0, 0) = 1.0f;
+	//billboardTestMatrix(1, 1) = 1.0f;
+	//billboardTestMatrix(2, 2) = 1.0f;
+	//billboardTestMatrix(1, 3) = -30.0f;
+	////renderer->DrawBillBoard(billboardTestMatrix, scdTextureID, 3.14f, false);
+	////renderer->DrawSprite(billboardTestMatrix, scdTextureID, false);
 
-	float startPosY = -30.0f;
-	float genYerror = 20.0f;
+	//float startPosY = -30.0f;
+	//float genYerror = 20.0f;
 
-	float genPosXYError = 10.0f;
+	//float genPosXYError = 10.0f;
 
-	float yspeed = 50.0f;
+	//float yspeed = 50.0f;
 
-	// 랜덤 엔진을 초기화합니다.
-	static std::random_device rd;  // 시드 생성을 위한 random_device
-	static std::mt19937 gen(rd()); // Mersenne Twister 엔진을 시드로 초기화
+	//// 랜덤 엔진을 초기화합니다.
+	//static std::random_device rd;  // 시드 생성을 위한 random_device
+	//static std::mt19937 gen(rd()); // Mersenne Twister 엔진을 시드로 초기화
 
-	// -1에서 1 사이의 실수 값을 생성하기 위한 분포를 정의합니다.
-	static std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+	//// -1에서 1 사이의 실수 값을 생성하기 위한 분포를 정의합니다.
+	//static std::uniform_real_distribution<float> dis(0.0f, 1.0f);
 
-	static std::vector<std::vector<float>> randomPos(50, { 0.0, 0.0f, 0.0f });
+	//static std::vector<std::vector<float>> randomPos(50, { 0.0, 0.0f, 0.0f });
 
-	for (int i = 0; i < randomPos.size(); i++)
-	{
-		if (randomPos[i][1] >= 0.0f)
-		{
-			randomPos[i][1] = startPosY + genYerror * dis(gen) - (genYerror / 2.0f);
+	//for (int i = 0; i < randomPos.size(); i++)
+	//{
+	//	if (randomPos[i][1] >= 0.0f)
+	//	{
+	//		randomPos[i][1] = startPosY + genYerror * dis(gen) - (genYerror / 2.0f);
 
-			randomPos[i][0] = genPosXYError * dis(gen) - (genPosXYError / 2.0f);
-			randomPos[i][2] = genPosXYError * dis(gen) - (genPosXYError / 2.0f);
-		}
-	}
+	//		randomPos[i][0] = genPosXYError * dis(gen) - (genPosXYError / 2.0f);
+	//		randomPos[i][2] = genPosXYError * dis(gen) - (genPosXYError / 2.0f);
+	//	}
+	//}
 
-	for (int i = 0; i < randomPos.size(); i++)
-	{
-		randomPos[i][1] += deltaTime * yspeed;
-	}
+	//for (int i = 0; i < randomPos.size(); i++)
+	//{
+	//	randomPos[i][1] += deltaTime * yspeed;
+	//}
 
-	for (int i = 0; i < randomPos.size(); i++)
-	{
-		billboardTestMatrix(0, 3) = randomPos[i][0];
-		billboardTestMatrix(1, 3) = randomPos[i][1];
-		billboardTestMatrix(2, 3) = randomPos[i][2];
-		renderer->DrawBillBoard(billboardTestMatrix, fireTextureID, 0.0f, true, true, { 1.0f, 0.0f, 0.0f, 1.0f });
-	}
+	//for (int i = 0; i < randomPos.size(); i++)
+	//{
+	//	billboardTestMatrix(0, 3) = randomPos[i][0];
+	//	billboardTestMatrix(1, 3) = randomPos[i][1];
+	//	billboardTestMatrix(2, 3) = randomPos[i][2];
+	//	renderer->DrawBillBoard(billboardTestMatrix, fireTextureID, 0.0f, true, true, { 1.0f, 0.0f, 0.0f, 1.0f });
+	//}
 
-	renderer->DrawBillBoard(billboardTestMatrix, fireTextureID, 0.0f, true, true, { 1.0f, 0.0f, 0.0f, 1.0f });
+	//renderer->DrawBillBoard(billboardTestMatrix, fireTextureID, 0.0f, true, true, { 1.0f, 0.0f, 0.0f, 1.0f });
 
-	renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+	//renderer->DrawCube(billboardTestMatrix, scdTextureID, true, false, false, false, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
-	renderer->DrawImage({ 0.0f, 0.0f }, scdTextureID, 1u);
-	renderer->DrawImage({ 50.0f, 50.0f }, scdTextureID, 2u);
-	renderer->DrawImage({ 100.0f, 100.0f }, scdTextureID, 4u);
-	renderer->DrawImage({ 0.0f, 160.0f }, msTextureID, 8u);
+	//renderer->DrawImage({ 0.0f, 0.0f }, scdTextureID, 1u);
+	//renderer->DrawImage({ 50.0f, 50.0f }, scdTextureID, 2u);
+	//renderer->DrawImage({ 100.0f, 100.0f }, scdTextureID, 4u);
+	//renderer->DrawImage({ 0.0f, 160.0f }, msTextureID, 8u);
 
 	renderer->EndDraw();
 }

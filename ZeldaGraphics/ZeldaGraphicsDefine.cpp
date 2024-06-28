@@ -38,4 +38,5 @@ namespace ShadowMap
 	float Offset = 0.0f;
 	unsigned int Size = 16384u;
 	float DepthBias = 0.1f;
+	float PointLightDepthBias = 0.000001f;
 }

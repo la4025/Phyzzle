@@ -39,7 +39,7 @@ VertexOut main(VertexIn input)
         mul(input.boneIndices[3] != 0xffffffffu, mul(mul(input.position, finalMatrix[3]), input.weight[3])) +
         mul(input.boneIndices[0] == 0xffffffffu, input.position);
     
-    output.pos = mul(mul(mul(output.pos, worldMatrix), lightViewMatrix), lightProjectionMatrix);
+    output.pos = mul(mul(mul(output.pos, worldMatrix), lightViewMatrix[0]), lightProjectionMatrix);
     output.clipPos = output.pos;
     
     return output;

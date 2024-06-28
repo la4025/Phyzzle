@@ -14,11 +14,11 @@
 
 #define F_EPSILON 0.0001f
 
-Texture2D DiffuseMap : register(t0);
-Texture2D NormalMap : register(t1);
-Texture2D ARMMap : register(t2);
-Texture2D HeightMap : register(t3);
-Texture2D EmissionMap : register(t4);
+Texture2D DiffuseMap : register(t0);    // 포인트 라이트에서 shadowShaderResource[1]으로 사용
+Texture2D NormalMap : register(t1);     // 포인트 라이트에서 shadowShaderResource[2]으로 사용
+Texture2D ARMMap : register(t2);        // 포인트 라이트에서 shadowShaderResource[3]으로 사용
+Texture2D HeightMap : register(t3);     // 포인트 라이트에서 shadowShaderResource[4]으로 사용
+Texture2D EmissionMap : register(t4);   // 포인트 라이트에서 shadowShaderResource[5]으로 사용
 Texture2D Temp0Map : register(t5);
 Texture2D Temp1Map : register(t6);
 Texture2D Temp2Map : register(t7);
@@ -126,11 +126,12 @@ cbuffer BlendingAnimationBufferType : register(b8)
 
 cbuffer LightMatrixBufferType : register(b9)
 {
-    matrix lightViewMatrix;
+    matrix lightViewMatrix[6];
     matrix lightProjectionMatrix;
     float shadowMapSize;
     float shadowMapDepthBias;
-    float2 b9padding;
+    float pointLightDepthBias;
+    float b9padding;
 }
 
 cbuffer ObjectIDBufferType : register(b10)
