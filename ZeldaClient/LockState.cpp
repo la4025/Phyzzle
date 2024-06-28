@@ -40,7 +40,7 @@ namespace Phyzzle
 
 	void LockState::CameraAround()
 	{
-		player->RotateCamera();
+		player->RotateCameraArm();
 	}
 
 	bool LockState::Aim()
@@ -67,6 +67,6 @@ namespace Phyzzle
 
 	void LockState::Cancel() const
 	{
-		player->ChangeState(Player::State::DEFAULT);
+		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
 }

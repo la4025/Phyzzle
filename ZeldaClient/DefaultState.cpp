@@ -117,7 +117,7 @@ namespace Phyzzle
 	{
 		if (!player->data.jumping)
 		{
-			player->ChangeState(player->data.state);
+			player->ChangeAbilityState(player->data.state);
 		}
 	}
 
@@ -128,12 +128,15 @@ namespace Phyzzle
 
 	void DefaultState::Jump() const
 	{
-		player->Jump();
+		if (player->TryJump())
+		{
+			player->ChangePlayerState(Player::JUMP);
+		}
 	}
 
 	void DefaultState::CameraUpdate()
 	{
-		player->UpdateCamera();
+		player->UpdateDefaultCamera();
 	}
 
 	void DefaultState::CameraAround()
@@ -238,12 +241,19 @@ namespace Phyzzle
 
 	void DefaultState::Move() const
 	{
-		player->PlayerMove(player->data.moveSpeed);
+		if (player->TryPlayerMove(player->data.moveSpeed))
+		{
+			player->ChangePlayerState(Player::WALK);
+		}
+		else
+		{
+			player->ChangePlayerState(Player::IDLE);
+		}
 	}
 
 	void DefaultState::Around() const
 	{
-		player->RotateCamera();
+		player->RotateCameraArm();
 	}
 
 	void DefaultState::LookToWorldDirection(const Eigen::Vector3f& _to) const
@@ -259,25 +269,25 @@ namespace Phyzzle
 	// 현재 능력을 변경함
 	void DefaultState::ChangeState(bool _value) const
 	{
-		Player::State newState = Player::State::DEFAULT;
+		Player::AbilityState newState = Player::AbilityState::DEFAULT;
 
 		const int size = player->stateChange.size() + 1;
 
 		if (_value)
 		{
 			newState =
-				static_cast<Player::State>(
+				static_cast<Player::AbilityState>(
 					(player->data.state + 1)
 					);
 
 			newState = 
-				static_cast<Player::State>(
+				static_cast<Player::AbilityState>(
 					max(newState % size, 1)
 					);
 
-			if (newState == Player::State::DEFAULT)
+			if (newState == Player::AbilityState::DEFAULT)
 			{
-				newState = static_cast<Player::State>(
+				newState = static_cast<Player::AbilityState>(
 					newState + 1
 					);
 			}
@@ -286,13 +296,13 @@ namespace Phyzzle
 		{
 
 			newState =
-				static_cast<Player::State>(
+				static_cast<Player::AbilityState>(
 					player->data.state - 1
 					);
 
-			if (newState == Player::State::DEFAULT)
+			if (newState == Player::AbilityState::DEFAULT)
 			{
-				newState = static_cast<Player::State>(
+				newState = static_cast<Player::AbilityState>(
 					size - 1
 					);
 			}

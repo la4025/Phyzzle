@@ -702,7 +702,9 @@ void PurahEngine::GameObject::PreDeserialize(const json& jsonData)
 	//SetDontDestroy(checkDontDestroy);
 	for (int i = 0; i < jsonData["components"].size(); i++)
 	{
+		std::string tmp = jsonData["components"][i]["__Base__Component"];
 		Component* component = AddComponentToString(jsonData["components"][i]["__Base__Component"]);
+		auto tmp2 = jsonData["components"][i];
 		component->PreDeserialize(jsonData["components"][i]);
 	}
 

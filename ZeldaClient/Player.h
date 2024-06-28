@@ -20,7 +20,7 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
-		enum AnimationState
+		enum PlayerState
 		{
 			IDLE,
 			WALK,
@@ -34,7 +34,7 @@ namespace Phyzzle
 			ABILITY_LEFT,
 		};
 
-		enum State
+		enum AbilityState
 		{
 			ATTACH_HOLD		= -1,	// 물건을 든 상태
 
@@ -49,6 +49,7 @@ namespace Phyzzle
 		struct PlayerData
 		{
 			bool debugMode = false;
+
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
@@ -56,6 +57,7 @@ namespace Phyzzle
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
 
+			bool isTransitioning = false;
 			float cameraLerpTime = 0.5f;			// 보간 시간
 			float cameraLerpTime0 = 1.0f;			// 경사 각도
 
@@ -70,8 +72,20 @@ namespace Phyzzle
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
 
+			Eigen::Vector3f		coreSelectPosition;
+
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
+
+			Eigen::Vector3f coreCurrentPosition;
+			Eigen::Quaternionf	coreCurrentRotation;
+			Eigen::Vector3f coreTargetPosition;
+			Eigen::Quaternionf	coreTargetRotation;
+			Eigen::Vector3f coreTargetWorldPosition;
+			Eigen::Quaternionf	coreTargetWorldRotation;
+
+			Eigen::Vector3f armTargetPosition;
+			Eigen::Quaternionf	armTargetRotation;
 
 			float xAngle = 0.f;					// 현재 앵글
 			const float limitHighAngle = 80.f;	// 하이 앵글
@@ -80,7 +94,7 @@ namespace Phyzzle
 			unsigned int cameraCollisionLayers = 0;
 			unsigned int attachRaycastLayers = 0;
 
-			State state = ATTACH_SELECT;
+			AbilityState state = ATTACH_SELECT;
 
 			std::wstring idleAnimation;
 			std::wstring runningAnimation;
@@ -88,18 +102,14 @@ namespace Phyzzle
 			std::wstring jumpingAnimation;
 			std::wstring landingAnimation;
 
+			std::wstring holdIdleAnimation;
+			std::wstring holdFrontAnimation;
+			std::wstring holdBackAnimation;
+			std::wstring holdRightAnimation;
+			std::wstring holdLeftAnimation;
 
 			PzObject* holdObject;
 			PurahEngine::RigidBody* holdObjectBody;
-		};
-
-		struct CameraData
-		{
-			Eigen::Vector3f		coreDefaultPosition;
-			Eigen::Quaternionf	coreDefaultRotation;
-
-			Eigen::Vector3f		armDefaultPosition;
-			Eigen::Quaternionf	armDefaultRotation;
 		};
 
 		struct StickData
@@ -173,6 +183,7 @@ namespace Phyzzle
 	public:
 		void InitializeGamePad();
 		void InitializeDefaultPositions();
+		void InitializeAbilitySystem();
 		void InitializeStateSystem();
 		void InitializeLerpFunctions();
 
@@ -186,12 +197,14 @@ namespace Phyzzle
 
 		void DebugDraw();
 		void DrawStateInfo() const;
-		std::wstring GetStateString(State state) const;
+		std::wstring GetStateString(AbilityState state) const;
 		void DrawJumpInfo() const;
 
 	private:
-		void UpdateState();
-		void ChangeState(State);
+		void UpdateAbilityState();
+		void UpdatePlayerState();
+		void ChangeAbilityState(AbilityState);
+		void ChangePlayerState(PlayerState);
 
 		void HandleGamePadInput();
 		void HandleStickInput();
@@ -199,26 +212,92 @@ namespace Phyzzle
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
 
-		void Jump();
+		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
 		bool IsGrounded(const Eigen::Vector3f& normal) const;
 
-		void PlayerMove(float _moveSpeed);
+		bool TryPlayerMove(float _moveSpeed);
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
 #pragma region camera
-		void UpdateCamera();
-		void UpdateCameraCore();
-		float CalculateCameraDistance();
-		Eigen::Vector3f CalculateCameraPosition(float distance);
-		void ResetCamera();
-		void ResetCameraArm();
-		void ResetCameraCore();
-		void RotateCamera();
-		void RotateCameraYaw(float yawAngle);
-		void RotateCameraPitch(float pitchAngle);
+		void UpdateDefaultCamera();					// 카메라 업데이트
+		void UpdateSelectCamera();					// 카메라 업데이트
+		void UpdateHoldCamera();					// 카메라 업데이트
+
+		void UpdateDefaultCameraCore();							// 카메라 코어 업데이트
+
+		/// <summary>
+		/// Camera Core 위치 계산
+		/// 
+		/// 카메라 위치는 Arm의 각도에 의해 계산됨
+		/// </summary>
+		/// <returns>카메라 코어 로컬 좌표</returns>
+		Eigen::Vector3f CalculateDefaultCameraCorePosition();	// 카메라 위치 업데이트
+		// bool ResolveCameraCollision(const Eigen::Vector3f& pos, Eigen::Vector3f& _outPosition);
+
+		/// <summary>
+		/// 카메라가 지형 지물에 충돌 되는지 체크하고 위치를 변경함
+		/// </summary>
+		/// <param name="pos">카메라 코어 로컬 좌표</param>
+		/// <returns>지형 지물에 부딪치면 true</returns>
+		bool ResolveCameraCollision(Eigen::Vector3f& _outPosition);
+
+		void UpdateCameraLerp();
+		
+		void CharacterDisable();
+
+		/// <summary>
+		/// 카메라 코어의 목표 로컬 좌표를 설정함
+		/// 
+		/// 현재 좌표를 저장하고 목표 좌표로 보간함
+		/// </summary>
+		/// <param name="_worldPosision">코어의 로컬 좌표</param>
+		void SetCameraCoreLocalTargetPosition(const Eigen::Vector3f& _localPosision);
+		
+		/// <summary>
+		/// 카메라 코어의 목표 월드 좌표를 설정함
+		/// 
+		/// 현재 좌표를 저장하고 목표 좌표로 보간함
+		/// </summary>
+		/// <param name="_worldPosision">코어의 월드 좌표</param>
+		void SetCameraCoreWorldTargetPosition(const Eigen::Vector3f& _worldPosision);
+
+		/// <summary>
+		/// 카메라 코어가 XY, XZ평면의 어디를 보고 있는지 계산
+		/// </summary>
+		/// <param name="cameraPos">카메라 코어의 로컬 좌표</param>
+		/// <param name="direction">카메라 코어의 로컬 방향 벡터</param>
+		/// <returns>카메라 코어의 로컬 XY, XZ 평면의 한 점</returns>
+		Eigen::Vector3f CalculateCameraFocusPosition(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction);
+		
+		/// <summary>
+		/// 카메라 코어가 보고 있는 로컬 XY 평면의 좌표를 계산하는 함수
+		/// </summary>
+		/// <param name="cameraPos">카메라 코어 로컬 좌표</param>
+		/// <param name="direction">카메라 코어 로컬 방향 벡터</param>
+		/// <param name="out">계산된 로컬 XY 평면의 좌표</param>
+		/// <returns>XY 평면과 평행하면 false</returns>
+		bool IntersectXYPlane(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction, Eigen::Vector3f& out);
+		
+		/// <summary>
+		/// 카메라 코어가 보고 있는 로컬 XZ 평면의 좌표를 계산하는 함수
+		/// </summary>
+		/// <param name="cameraPos">카메라 코어 로컬 좌표</param>
+		/// <param name="direction">카메라 코어 로컬 방향 벡터</param>
+		/// <param name="out">계산된 로컬 XZ 평면의 좌표</param>
+		/// <returns>평면과 평행하면 false</returns>
+		bool IntersectXZPlane(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction, Eigen::Vector3f& out);
+
+		void ResetCamera();							// 카메라 위치 초기화
+		void ResetCameraArm();						// 카메라 암 위치 초기화
+		void ResetCameraCore();						// 카메라 코어 위치 초기화
+		
+		void RotateCameraArm();							// 카메라 암 회전
+		void RotateCameraArmYaw(float yawAngle);		// 카메라 암 yaw 회전
+		void RotateCameraArmPitch(float pitchAngle);	// 카메라 암 pitch 회전
+
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
 #pragma endregion camera
@@ -246,11 +325,16 @@ namespace Phyzzle
 		friend class RewindState;
 		friend class LockState;
 
-		std::unordered_map<State, IState*> stateSystem;
-		std::set<State> stateChange;
+		std::unordered_map<AbilityState, IState*> stateSystem;
+		std::set<AbilityState> stateChange;
+		std::unordered_map<PlayerState, std::function<void()>> animationState;
+		std::unordered_map<PlayerState, std::function<void()>> animationSpeedController;
 		
-		State prevState = DEFAULT;
-		State currState = DEFAULT;
+		AbilityState prevState = DEFAULT;
+		AbilityState currState = DEFAULT;
+
+		PlayerState prevPlayerState = IDLE;
+		PlayerState currPlayerState = IDLE;
 
 		PurahEngine::GamePad* gamePad;
 		PlayerInput currInput;

@@ -48,7 +48,10 @@ namespace PurahEngine
 			if (targetImage != nullptr && selectedImage != L"")
 			{
 				targetImage->SetTexture(selectedImage);
-				GetGameObject()->GetComponent<AudioSource>()->PlayAudio();
+				if (GetGameObject()->GetComponent<AudioSource>() != nullptr)
+				{
+					GetGameObject()->GetComponent<AudioSource>()->PlayAudio();
+				}
 			}
 		}
 	}
@@ -72,7 +75,10 @@ namespace PurahEngine
 
 	void Button::ButtonEvent()
 	{
-		GetGameObject()->GetComponent<AudioSource>()->PlayAudio(1);
+		if (GetGameObject()->GetComponent<AudioSource>() != nullptr)
+		{
+			GetGameObject()->GetComponent<AudioSource>()->PlayAudio(1);
+		}
 		for (auto& [targetGameObject, state] : objectOnOffEventList)
 		{
 			targetGameObject->SetEnable(state);

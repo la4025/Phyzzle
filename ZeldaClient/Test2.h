@@ -22,6 +22,7 @@ namespace PurahEngine
 
 	private:
 		AudioSource* audioSource;
+		bool isPaused = false;
 	};
 }
 
