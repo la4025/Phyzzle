@@ -25,10 +25,6 @@ namespace ZonaiPhysics
 	public:
 		HingeJoint() = delete;
 		HingeJoint(physx::PxRevoluteJoint*, RigidBody*, RigidBody*);
-		//HingeJoint(
-		//	physx::PxPhysics*& _factory,
-		//	RigidBody* _object0, const ZnTransform& _transform0,
-		//	RigidBody* _object1, const ZnTransform& _transform1);
 		~HingeJoint() override;
 
 	public:

@@ -127,6 +127,9 @@
     <Filter Include="Component\3. Renderer\Particle">
       <UniqueIdentifier>{43ea8006-b9c9-49e3-b090-c341f6482b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\2. Physics\Joint\Custom">
+      <UniqueIdentifier>{3cb20e6e-0fce-4d24-9a80-1702303f5405}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -313,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="PauseGame.cpp">
       <Filter>Component\5. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomSpringJoint.cpp">
+      <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,6 +548,9 @@
     </ClInclude>
     <ClInclude Include="PauseGame.h">
       <Filter>Component\5. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomSpringJoint.h">
+      <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

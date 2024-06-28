@@ -42,6 +42,7 @@ namespace PurahEngine
 		pJoint->BreakCallback();
 
 		// ÄÄÆ÷³ÍÆ® ÆÄ±« ÇØ¾ßÇÔ.
+		pJoint->GetGameObject()->DeleteComponent(pJoint);
 	}
 
 	void EventCallbackSystem::OnTriggerEnter(const ZonaiPhysics::ZnCollider* _c0, const ZonaiPhysics::ZnCollider* _c1)
