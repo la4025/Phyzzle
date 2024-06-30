@@ -54,6 +54,7 @@ namespace ZonaiPhysics
 	class DistanceJoint;
 	class SphericalJoint;
 	class HingeJoint;
+	class SpringFlexJoint;
 
 	class ZnTransform;
 }
@@ -125,6 +126,7 @@ namespace ZonaiPhysics
 		static DistanceJoint*			CreateDistanceJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
 		static SphericalJoint*			CreateSphericalJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
 		static HingeJoint*				CreateHingeJoint(RigidBody* _userData0, const ZnTransform& tm0, RigidBody* _userData1, const ZnTransform& tm1);
+		static SpringFlexJoint*			CreateSpringFlexJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1);
 
 	private:
 		static ZonaiPhysics::EventCallback eventCallback;

@@ -12,7 +12,7 @@ namespace ZonaiPhysics
 
 		MaterialDesc(
 			float _sF, float _dF, float _r,
-			eCombineMode _eF, eCombineMode _eR) :
+			eCombineMode _eF = eAVERAGE, eCombineMode _eR = eAVERAGE) :
 			staticFriction(_sF), dynamicFriction(_dF), restitution(_r),
 			eFriction(_eF), eRestitution(_eR) {}
 

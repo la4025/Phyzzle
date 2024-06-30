@@ -1,64 +1,31 @@
 #pragma once
+#include "TemplateJoint.h"
+#include "ZnSpringFlexJoint.h"
+#include "D1SpringFlexJoint.h"
 
+#pragma warning(push)
+#pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
+#include <Eigen/Dense>
+#pragma warning (pop)
 
 namespace ZonaiPhysics
 {
-	class SpringFlexJoint : public physx::PxConstraintConnector
+	class SpringFlexJoint : public TemplateJoint<ZnSpringFlexJoint, D1SpringFlexJoint>
 	{
 	public:
+		SpringFlexJoint() = delete;
+		SpringFlexJoint(D1SpringFlexJoint*, RigidBody*, RigidBody*);
+		~SpringFlexJoint();
 
-		static const physx::PxU32 TYPE_ID = physx::PxConcreteType::eFIRST_USER_EXTENSION;
+		void SetSpringStiffness(float stiffness) override;
+		float GetSpringStiffness() const override;
 
-		SpringFlexJoint(physx::PxPhysics& physics,
-			physx::PxRigidBody& body0, const physx::PxTransform& localFrame0,
-			physx::PxRigidBody& body1, const physx::PxTransform& localFrame1);
+		void SetSpringDamping(float damping) override;
+		float GetSpringDamping() const override;
 
-		void release();
-
-		// Attribute accessor and mutators
-		void setSpringStiffness(physx::PxReal stiffness);
-		physx::PxReal getSpringStiffness() const;
-
-		void setSpringDamping(physx::PxReal damping);
-		physx::PxReal getSpringDamping() const;
-
-		void setLinearLimit(physx::PxReal limit);
-		physx::PxReal getLinearLimit() const;
-
-		// PxConstraintConnector boilerplate
-		void* prepareData();
-		void onConstraintRelease();
-		void onComShift(physx::PxU32 actor);
-		void onOriginShift(const physx::PxVec3& shift);
-		void* getExternalReference(physx::PxU32& typeID);
-
-		bool updatePvdProperties(physx::pvdsdk::PvdDataStream&,
-			const physx::PxConstraint*,
-			physx::PxPvdUpdateType::Enum) const {
-			return true;
-		}
-		void updateOmniPvdProperties() const { }
-		physx::PxBase* getSerializable() { return NULL; }
-
-		virtual physx::PxConstraintSolverPrep getPrep() const;
-		virtual const void* getConstantBlock() const { return &mData; }
-
-		struct CustomSpringJointData
-		{
-			physx::PxTransform c2b[2];
-			physx::PxReal stiffness;
-			physx::PxReal damping;
-			physx::PxReal linearLimit;
-		};
-
-		physx::PxRigidBody* mBody[2];
-		physx::PxTransform mLocalPose[2];
-
-		physx::PxConstraint* mConstraint;
-		CustomSpringJointData mData;
-
-		~SpringFlexJoint() {}
+		void SetLinearLimit(float limit) override;
+		float GetLinearLimit() const override;
 	};
 }
 

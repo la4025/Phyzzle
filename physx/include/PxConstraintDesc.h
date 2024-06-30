@@ -62,14 +62,15 @@ struct Px1DConstraintFlag
 
 	enum Type
 	{
-		eSPRING					= 1<<0,	//!< whether the constraint is a spring. Mutually exclusive with eRESTITUTION. If set, eKEEPBIAS is ignored.
-		eACCELERATION_SPRING	= 1<<1,	//!< whether the constraint is a force or acceleration spring. Only valid if eSPRING is set.
-		eRESTITUTION			= 1<<2,	//!< whether the restitution model should be applied to generate the target velocity. Mutually exclusive with eSPRING. If restitution causes a bounces, eKEEPBIAS is ignored
-		eKEEPBIAS				= 1<<3,	//!< whether to keep the error term when solving for velocity. Ignored if restitution generates bounce, or eSPRING is set.
-		eOUTPUT_FORCE			= 1<<4,	//!< whether to accumulate the force value from this constraint in the force total that is reported for the constraint and tested for breakage
-		eHAS_DRIVE_LIMIT		= 1<<5,	//!< whether the constraint has a drive force limit (which will be scaled by dt unless PxConstraintFlag::eLIMITS_ARE_FORCES is set)
-		eANGULAR_CONSTRAINT		= 1<<6,	//!< whether this is an angular or linear constraint
-		eDEPRECATED_DRIVE_ROW	= 1<<7	//!< whether the constraint's geometric error should drive the target velocity
+		eSPRING = 1 << 0,					//!< 제약 조건이 스프링인지 여부. eRESTITUTION과 상호 배타적입니다. 설정된 경우, eKEEPBIAS는 무시됩니다.
+		eACCELERATION_SPRING = 1 << 1,		//!< 제약 조건이 힘 또는 가속도 스프링인지 여부. eSPRING이 설정된 경우에만 유효합니다.
+		eRESTITUTION = 1 << 2,				//!< 타겟 속도를 생성하기 위해 복원 모델이 적용되는지 여부. eSPRING과 상호 배타적입니다. 복원이 반동을 발생시키는 경우, eKEEPBIAS는 무시됩니다.
+		eKEEPBIAS = 1 << 3,					//!< 속도를 해결할 때 오류 항을 유지할지 여부. 복원이 반동을 발생시키거나, eSPRING이 설정된 경우 무시됩니다.
+		eOUTPUT_FORCE = 1 << 4,				//!< 이 제약 조건에서 총력으로 보고되고 파손 여부를 테스트하기 위해 힘 값을 누적할지 여부
+		eHAS_DRIVE_LIMIT = 1 << 5,			//!< 제약 조건이 구동력 한계를 가지는지 여부 (dt에 의해 스케일링됨, PxConstraintFlag::eLIMITS_ARE_FORCES가 설정되지 않은 경우)
+		eANGULAR_CONSTRAINT = 1 << 6,		//!< 이것이 각도 제약인지 선형 제약인지 여부
+		eDEPRECATED_DRIVE_ROW = 1 << 7		//!< 제약 조건의 기하학적 오류가 타겟 속도를 구동해야 하는지 여부
+
 	};
 };
 

@@ -558,6 +558,18 @@ namespace ZonaiPhysics
 		return joint;
 	}
 
+	ZnSpringFlexJoint* ZnPhysicsX::CreateSpringFlexJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
+																		ZnRigidBody* _object1, const ZnTransform& _transform1)
+	{
+		const auto ob0 = dynamic_cast<RigidBody*>(_object0);
+		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
+
+		const auto joint = ZnFactoryX::CreateSpringFlexJoint(ob0, _transform0, ob1, _transform1);
+
+		ZnWorld::AddJoint(joint);
+		return joint;
+	}
+
 	bool ZnPhysicsX::Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
 		return ZnWorld::Raycast(_desc, _out);

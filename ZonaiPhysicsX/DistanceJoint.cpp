@@ -12,9 +12,7 @@ namespace ZonaiPhysics
 	{
 		assert(_pxJoint != nullptr);
 		joint = _pxJoint;
-
-		const auto constrain = joint->getConstraint();
-		constrain->userData = this;
+		joint->userData = this;
 
 		rigidbody0 = _znBody0;
 		rigidbody1 = _znBody1;

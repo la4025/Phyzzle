@@ -317,7 +317,7 @@
     <ClCompile Include="PauseGame.cpp">
       <Filter>Component\5. UI</Filter>
     </ClCompile>
-    <ClCompile Include="CustomSpringJoint.cpp">
+    <ClCompile Include="SpringFlexJoint.cpp">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClCompile>
   </ItemGroup>
@@ -549,7 +549,7 @@
     <ClInclude Include="PauseGame.h">
       <Filter>Component\5. UI</Filter>
     </ClInclude>
-    <ClInclude Include="CustomSpringJoint.h">
+    <ClInclude Include="SpringFlexJoint.h">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClInclude>
   </ItemGroup>
