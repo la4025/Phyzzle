@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="Burnable.cpp" />
+    <ClCompile Include="CameraEventDevice.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Bezier.h" />
     <ClInclude Include="Burnable.h" />
+    <ClInclude Include="CameraEventDevice.h" />
     <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PzObject.h" />

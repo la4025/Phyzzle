@@ -130,6 +130,9 @@
     <Filter Include="Component\2. Physics\Joint\Custom">
       <UniqueIdentifier>{3cb20e6e-0fce-4d24-9a80-1702303f5405}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{063921fe-6665-4fe8-99b9-c8d90b973072}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp">
@@ -319,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="CustomSpringJoint.cpp">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="PurahMath.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,6 +557,9 @@
     </ClInclude>
     <ClInclude Include="CustomSpringJoint.h">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="PurahMath.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -114,6 +114,9 @@
     <ClCompile Include="TriggerCallBack.cpp">
       <Filter>System\RespawnSystem</Filter>
     </ClCompile>
+    <ClCompile Include="CameraEventDevice.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="Bezier.h">
       <Filter>KH\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraEventDevice.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
