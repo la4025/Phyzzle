@@ -742,20 +742,31 @@ namespace Phyzzle
 		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
 		cameraCorePos.y() = bodyPos.y() + 5.f;
 		player->data.cameraCore->SetWorldPosition(cameraCorePos);
+
+		// 오브젝트의 y 위치에 따라서 카메라 동작이 조금 다르게 될 것.
+		// y가 플레이어보다 낮으면 카메라가 위에서 플레이어를 향해서 내려다보는 형태
+		// y가 플레이어보다 높으면 카메라는 오브젝트와 동일한 높이에서 시작해서
+		// 카메라에 오브젝트와 플레이어가 모두 들어갈 수 있도록 위치를 조정한다.
+
 	}
 
 	void AttachHoldState::UpdateCameraFocus() const
 	{
 		using namespace Eigen;
 
-		Vector3f bodyPos = selectBody->GetPosition();
-		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		Affine3f playerT = Affine3f::Identity();
+		playerT.rotate(player->data.modelCore->GetWorldRotation());
+		playerT.translation() = player->data.playerRigidbody->GetPosition();
+		Vector3f playerPos = playerT.translation();
+
+		Affine3f targetT = playerT;
+		targetT.translate(targetPosition);
+
+		Vector3f bodyPos = targetT.translation();
+		// Vector3f bodyPos = selectBody->GetPosition();
 
 		Vector3f playerToBody = bodyPos - playerPos;
 		Vector3f direction = playerToBody.normalized();
-
-		bodyPos = bodyPos + direction * 5.f;
-		playerPos = playerPos - direction * 5.f;
 
 		Vector3f to = (bodyPos - playerPos) / 2.f;
 		Vector3f focus = playerPos + to;

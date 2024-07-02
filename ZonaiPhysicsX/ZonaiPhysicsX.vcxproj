@@ -26,6 +26,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderHelper.h" />
     <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="D1SpringFlexJoint.h" />
     <ClInclude Include="D6Spring.h" />
     <ClInclude Include="SpringFlexJoint.h" />
     <ClInclude Include="eCallback.h" />
@@ -63,6 +64,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderHelper.cpp" />
     <ClCompile Include="ConvexCollider.cpp" />
+    <ClCompile Include="D1SpringFlexJoint.cpp" />
     <ClCompile Include="D6Spring.cpp" />
     <ClCompile Include="SpringFlexJoint.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />

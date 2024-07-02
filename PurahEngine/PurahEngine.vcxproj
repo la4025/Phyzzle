@@ -51,7 +51,7 @@
     <ClInclude Include="Componentmanager.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="CustomCollider.h" />
-    <ClInclude Include="CustomSpringJoint.h" />
+    <ClInclude Include="SpringFlexJoint.h" />
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -130,7 +130,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
     <ClCompile Include="CustomCollider.cpp" />
-    <ClCompile Include="CustomSpringJoint.cpp" />
+    <ClCompile Include="SpringFlexJoint.cpp" />
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />

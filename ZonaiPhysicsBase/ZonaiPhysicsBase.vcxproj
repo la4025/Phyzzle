@@ -46,6 +46,7 @@
     <ClInclude Include="ZnQueryInfo.h" />
     <ClInclude Include="ZnRigidBody.h" />
     <ClInclude Include="ZnSimulationCallback.h" />
+    <ClInclude Include="ZnSpringFlexJoint.h" />
     <ClInclude Include="ZnTransform.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

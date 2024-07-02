@@ -86,6 +86,9 @@
     <ClCompile Include="D6Spring.cpp">
       <Filter>Object\Joint\D6</Filter>
     </ClCompile>
+    <ClCompile Include="D1SpringFlexJoint.cpp">
+      <Filter>Object\Joint\Custom\D1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h" />
@@ -189,6 +192,9 @@
     <ClInclude Include="D6Spring.h">
       <Filter>Object\Joint\D6</Filter>
     </ClInclude>
+    <ClInclude Include="D1SpringFlexJoint.h">
+      <Filter>Object\Joint\Custom\D1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="0. Core">
@@ -229,6 +235,9 @@
     </Filter>
     <Filter Include="Object\Joint\D6">
       <UniqueIdentifier>{4873bd12-9c75-4098-a747-592c8d348a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Joint\Custom\D1">
+      <UniqueIdentifier>{15dc5a1c-2259-4185-b984-d813bfc70d89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

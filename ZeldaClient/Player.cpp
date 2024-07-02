@@ -480,23 +480,26 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		Vector3f position = CalculateDefaultCameraCorePosition();		// 각도에 따른 위치 변화
-		if (ResolveCameraCollision(position))							// 지형 지물에 의한 위치 변화
+		Vector3f localPosition = Vector3f::Zero();
+		Vector3f worldPosition = Vector3f::Zero();
+		// 각도에 따라 위치를 우선 제한함
+		CalculateDefaultCameraCorePosition(localPosition, worldPosition);
+		
+		// 오브젝트에 충돌하면 처리함
+		if (ResolveCameraCollision(localPosition, worldPosition))
 		{
-			// data.cameraCore->SetWorldPosition(position);
-			SetCameraCoreWorldTargetPosition(position);
+			SetCameraCoreWorldTargetPosition(worldPosition);
 		}
 		else
 		{
-			// data.cameraCore->SetWorldPosition(position);
-			SetCameraCoreLocalTargetPosition(position);
+			SetCameraCoreLocalTargetPosition(localPosition);
 		}
 		
 		UpdateCameraLerp();
 		CharacterDisable();
 	}
 
-	Eigen::Vector3f Player::CalculateDefaultCameraCorePosition()
+	void Player::CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut)
 	{
 		using namespace Eigen;
 
@@ -507,52 +510,77 @@ namespace Phyzzle
 
 		const Vector3f& diff = data.xAngle >= 0.f ? differenceHigh : differenceLow;
 
-		// Vector3f pos = data.cameraCore->GetLocalPosition();
 		Vector3f pos = data.coreTargetPosition;
 		pos.z() = data.coreDefaultPosition.z() + diff.z() * easingFunc(ease);
-		// data.cameraCore->SetLocalPosition(pos);
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
 		world.translate(pos);
-		data.coreTargetWorldPosition = world.translation();
 
-		return pos;
+		localOut = pos;
+		worldOut = world.translation();
 	}
 
-	bool Player::ResolveCameraCollision(Eigen::Vector3f& _outPosition)
+	bool Player::ResolveCameraCollision(Eigen::Vector3f& localIn, Eigen::Vector3f& worldIn)
 	{
 		using namespace Eigen;
 
-		// const Vector3f corePos = data.cameraCore->GetLocalPosition();
-		// const Vector3f coreWorldPos = data.cameraCore->GetWorldPosition();
-		// const Vector3f corePos = pos;
-		const Vector3f corePos = _outPosition;
-		const Vector3f coreWorldPos = data.coreTargetWorldPosition;
+		static float prevDistance = FLT_MAX;
 
-		const Vector3f coreDir = data.cameraCore->GetLocalRotation() * Vector3f::UnitZ();
-		const Vector3f localStart = CalculateCameraFocusPosition(corePos, coreDir);
+		float radius = data.cameraCollisionRadius;
+		const Vector3f coreLocalPos = localIn;
+		const Vector3f coreWorldPos = worldIn;
+
+		const Vector3f coreLocalDir = data.cameraCore->GetLocalRotation() * Vector3f::UnitZ();
+		const Vector3f localStart = CalculateCameraFocusPosition(coreLocalPos, coreLocalDir);
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
 		world.translate(localStart);
 		const Vector3f worldStart = world.translation();
 
-		const Vector3f worldDir = (coreWorldPos - worldStart).normalized();
-		const float dis = (coreWorldPos - worldStart).norm();
+		Vector3f worldDir = coreWorldPos - worldStart;
+		const float dis = worldDir.norm();
+		worldDir.normalize();
 
 		unsigned int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
+		ZonaiPhysics::ZnQueryInfo info2;
 
-		bool hit = PurahEngine::Physics::Spherecast(0.6f, worldStart, Quaternionf::Identity(), worldDir, dis, layers, info);
+		bool hit = PurahEngine::Physics::Spherecast(radius, worldStart, Quaternionf::Identity(), worldDir, dis, layers, info);
+		bool hit2 = PurahEngine::Physics::Spherecast(radius + 0.2f, worldStart, Quaternionf::Identity(), worldDir, dis, layers, info2);
 
-		float z = hit ? info.distance : dis;
-		// Vector3f newCameraPosition = worldStart + worldDir * z;
-		// data.cameraCore->SetWorldPosition(newCameraPosition);
-
-		if (hit)
+		if (!hit)
 		{
-			// data.coreTargetPosition = worldStart + worldDir * z;
-			_outPosition = worldStart + worldDir * z;
+			return hit;
 		}
+
+		Vector3f position = worldStart + worldDir * info.distance;
+		Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
+		Vector3f localPos = worldT.inverse() * position;
+
+		// position = worldStart + worldDir * info.distance;
+		// worldT = data.cameraArm->GetWorldMatrix();
+		// localPos = worldT.inverse() * position;
+
+		if (info.distance < prevDistance)
+		{
+			data.cameraCore->SetLocalPosition(localPos);
+		}
+
+		//else if (hit2)
+		//{
+		//	position = worldStart + worldDir * info2.distance;
+		//	worldT = data.cameraArm->GetWorldMatrix();
+		//	localPos = worldT.inverse() * position;
+		//	
+		//	prevDistance = info2.distance;
+		//}
+
+		data.coreTargetPosition = localPos;
+
+		localIn = localPos;
+		worldIn = position;
+
+		prevDistance = info.distance;
 
 		return hit;
 	}
@@ -592,7 +620,7 @@ namespace Phyzzle
 
 	void Player::SetCameraCoreLocalTargetPosition(const Eigen::Vector3f& _localPosision)
 	{
-		data.coreCurrentPosition = data.cameraCore->GetLocalPosition();
+		// data.coreCurrentPosition = data.cameraCore->GetLocalPosition();
 		data.coreTargetPosition = _localPosision;
 	}
 
@@ -600,10 +628,11 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		data.coreCurrentPosition = data.cameraCore->GetLocalPosition();
-
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
-		data.coreTargetPosition = world.inverse() * _worldPosision;
+		Vector3f localPos = world.inverse() * _worldPosision;
+		
+		// data.coreCurrentPosition = data.cameraCore->GetLocalPosition();
+		data.coreTargetPosition = localPos;
 	}
 
 	Eigen::Vector3f Player::CalculateCameraFocusPosition(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction)
@@ -832,9 +861,17 @@ namespace Phyzzle
 		PREDESERIALIZE_VALUE(cameraCollisionLayers);
 		data.cameraCollisionLayers = cameraCollisionLayers;
 
+		float cameraCollisionRadius = data.cameraCollisionRadius;
+		PREDESERIALIZE_VALUE(cameraCollisionRadius);
+		data.cameraCollisionRadius = cameraCollisionRadius;
+
 		auto attachRaycastLayers = data.attachRaycastLayers;
 		PREDESERIALIZE_VALUE(attachRaycastLayers);
 		data.attachRaycastLayers = attachRaycastLayers;
+
+		float attachRaycastDistance = data.attachRaycastDistance;
+		PREDESERIALIZE_VALUE(attachRaycastDistance);
+		data.attachRaycastDistance = attachRaycastDistance;
 
 		auto idleAnimation = data.idleAnimation;
 		PREDESERIALIZE_WSTRING(idleAnimation);
