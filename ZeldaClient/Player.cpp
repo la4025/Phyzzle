@@ -416,6 +416,7 @@ namespace Phyzzle
 		velocity.z() = movement.z();
 
 		// 속력을 적용시킴
+		// data.playerRigidbody->AddForce(velocity, ZonaiPhysics::Velocity_Change);
 		data.playerRigidbody->SetLinearVelocity(velocity);
 
 		return currInput.Lstick.Size >= 1e-6;

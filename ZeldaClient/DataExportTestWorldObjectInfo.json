@@ -2450,6 +2450,10 @@
         {
           "__Base__instanceID": 25440,
           "__Base__Component": "CameraMovement"
+        },
+        {
+          "__Base__instanceID": -4632,
+          "__Base__Component": "DebugCameraSetting"
         }
       ]
     },
@@ -2538,7 +2542,7 @@
           "__ID__crossHead": -1656,
           "__ID__cameraSweep": 0,
           "cameraCollisionLayers": -90176,
-          "cameraCollisionRadius": 0.3,
+          "cameraCollisionRadius": 0.2,
           "attachRaycastLayers": 5312,
           "attachRaycastDistance": 40.0,
           "idleAnimation": "Idle|Idle",
@@ -2627,6 +2631,10 @@
           "cameraNear": 0.3,
           "cameraFar": 1000.0,
           "fieldOfView": 0.7853982
+        },
+        {
+          "__Base__instanceID": -4788,
+          "__Base__Component": "DebugCameraSetting"
         }
       ]
     },
