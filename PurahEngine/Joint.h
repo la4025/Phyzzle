@@ -4,6 +4,8 @@
 
 namespace PurahEngine
 {
+	class RigidBody;
+
 	class Joint : public Component
 	{
 	public:

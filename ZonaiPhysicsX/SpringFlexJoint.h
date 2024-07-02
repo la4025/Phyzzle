@@ -1,7 +1,7 @@
 #pragma once
-#include "TemplateJoint.h"
-#include "ZnSpringFlexJoint.h"
 #include "D1SpringFlexJoint.h"
+#include "ZnSpringFlexJoint.h"
+#include "TemplateJoint.h"
 
 #pragma warning(push)
 #pragma warning(disable: 33010 26495 4819)

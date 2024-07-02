@@ -9,7 +9,6 @@ namespace ZonaiPhysics
 		ZnSpringFlexJoint() = default;
 		~ZnSpringFlexJoint() override = default;
 
-
 	public:
 		virtual void SetSpringStiffness(float stiffness) = 0;
 		virtual float GetSpringStiffness() const = 0;

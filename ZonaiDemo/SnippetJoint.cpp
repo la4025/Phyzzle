@@ -111,7 +111,6 @@ public:
 
 int snippetMain(int, const char* const*)
 {
-
 	DummyScene* dscene = new DummyScene;
 	DummyRigidBody* drigid = new DummyRigidBody;
 	DummyRigidBody* drigid2 = new DummyRigidBody;
@@ -163,33 +162,30 @@ int snippetMain(int, const char* const*)
 	const auto collider = physicsEngine->CreateBoxCollider(drigid, { 2.f, 0.5f, 6.f }, material0, dscene);
 	collider->SetLayerData(1);
 	const auto rigid = physicsEngine->CreateRigidBody(drigid);
-	rigid->SetMaxLinearVelocity(10.f);
 	rigid->SetPosition({0.f, 3.f, 0.f});
-	// rigid->UseGravity(true);
 	rigid->UseGravity(false);
+	rigid->SetKinematic(false);
 
 	const auto collider2 = physicsEngine->CreateSphereCollider(drigid2, 2.f, material1, dscene);
 	collider2->SetLayerData(1);
 	const auto rigid2 = physicsEngine->CreateRigidBody(drigid2);
-	rigid2->SetMaxLinearVelocity(10.f);
 	rigid2->SetPosition({ 0.f, 15.f, 0.f });
 	rigid2->UseGravity(false);
+	rigid2->SetKinematic(true);
 
 	Eigen::Vector3f axis(1.0f, 1.0f, 1.0f);
 	axis.normalize(); // Normalize the axis
 	const float angle = physx::PxPi / 4.f; // Angle in radians
-	Eigen::Quaternionf q(Eigen::AngleAxisf(angle, axis));
 
-	const auto joint = physicsEngine->CreateFixedJoint(
+	const auto joint = physicsEngine->CreateSpringFlexJoint(
 		rigid2, { {0.f, -0.f, 0.f} },
-		rigid, { {0.f, 0.5f, 0.f}, q } );
-	// joint->LimitEnable(true);
-	// joint->SetLimitCone(physx::PxPi / 4.f, physx::PxPi / 8.f);
+		rigid, { {0.f, 0.0f, 0.f} });
 
 	auto groundCollider = physicsEngine->CreateBoxCollider(drigid3, { 1000, 1, 1000 }, material2, dscene);
-	const auto ground = physicsEngine->CreateRigidBody(drigid3);
-	ground->SetPosition({ 0, 0, 0 });
-	ground->SetKinematic(true);
+	groundCollider->SetLayerData(1);
+	//const auto ground = physicsEngine->CreateRigidBody(drigid3);
+	//ground->SetPosition({ 0, 0, 0 });
+	//ground->SetKinematic(true);
 
 	Timer timer;
 
@@ -197,25 +193,49 @@ int snippetMain(int, const char* const*)
 	{
 		float dt = timer.GetDelta();
 
+		Eigen::Quaternionf q(Eigen::AngleAxisf(angle * dt, axis));
+		Eigen::Quaternionf minusQ(Eigen::AngleAxisf(-angle * dt, axis));
+
+		rigid->WakeUp();
+		rigid2->WakeUp();
+
 		physicsEngine->Simulation(1.f/5000.f);
 
-		if(GetAsyncKeyState(VK_RIGHT))
-		{
-			rigid->AddForce({ 10.f, 0.f, 0.f });
-		}
-		if (GetAsyncKeyState(VK_UP))
-		{
-			rigid->AddForce({ 0.f, 0.f, 10.f });
-		}
-		if (GetAsyncKeyState(VK_LEFT))
-		{
-			rigid->AddForce({ -10.f, 0.f, 0.f });
-		}
-		if (GetAsyncKeyState(VK_DOWN))
-		{
-			rigid->AddForce({ 0.f, 0.f, -10.f });
-		}
-	}
+		auto pos = rigid2->GetPosition();
+		Eigen::Vector3f movement = Eigen::Vector3f::Zero();
+		Eigen::Quaternionf rota = Eigen::Quaternionf::Identity();
+		float speed = 5.f;
 
+		Eigen::Quaternionf rot = rigid2->GetQuaternion();
+
+		if (GetAsyncKeyState('L'))
+		{
+			movement += Eigen::Vector3f::UnitX() * dt * speed;
+		}
+		if (GetAsyncKeyState('I'))
+		{
+			movement += Eigen::Vector3f::UnitY() * dt * speed;
+		}		
+		if (GetAsyncKeyState('J'))
+		{
+			movement += Eigen::Vector3f::UnitX() * -dt * speed;
+		}
+		if (GetAsyncKeyState('K'))
+		{
+			movement += Eigen::Vector3f::UnitY() * -dt * speed;
+		}
+		if (GetAsyncKeyState('U'))
+		{
+			rota = q;
+		}
+		if (GetAsyncKeyState('O'))
+		{
+			rota = minusQ;
+		}
+
+		rigid2->SetPosition(pos + movement);
+		rigid2->SetQuaternion(rota * rot);
+	}
+	
 	return 0;
 }

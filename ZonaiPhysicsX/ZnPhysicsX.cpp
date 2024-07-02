@@ -9,6 +9,7 @@
 #include "HingeJoint.h"
 #include "PrismaticJoint.h"
 #include "SphericalJoint.h"
+#include "SpringFlexJoint.h"
 
 #include "ZnQueryInfo.h"
 #include "FilterCallback.h"
@@ -559,7 +560,7 @@ namespace ZonaiPhysics
 	}
 
 	ZnSpringFlexJoint* ZnPhysicsX::CreateSpringFlexJoint(ZnRigidBody* _object0, const ZnTransform& _transform0,
-																		ZnRigidBody* _object1, const ZnTransform& _transform1)
+														ZnRigidBody* _object1, const ZnTransform& _transform1)
 	{
 		const auto ob0 = dynamic_cast<RigidBody*>(_object0);
 		const auto ob1 = dynamic_cast<RigidBody*>(_object1);
