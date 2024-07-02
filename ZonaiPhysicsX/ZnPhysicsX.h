@@ -154,6 +154,9 @@ namespace ZonaiPhysics
 		ZnPrismaticJoint* CreatePrismaticJoint(
 			ZnRigidBody*, const ZnTransform&, 
 			ZnRigidBody*, const ZnTransform&) override;
+		ZnSpringFlexJoint* CreateSpringFlexJoint(
+			ZnRigidBody*, const ZnTransform&,
+			ZnRigidBody*, const ZnTransform&) override;
 
 	public:
 		bool				Raycast(

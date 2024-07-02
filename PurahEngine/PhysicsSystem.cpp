@@ -141,15 +141,17 @@ namespace PurahEngine
 
 	void PhysicsSystem::Simulation(float _dt) const
 	{
-		static float acc = 0.f;
+		//static float acc = 0.f;
 
-		acc += _dt;
+		//acc += _dt;
 
-		if (acc >= 1.f / 60.f)
-		{
-			acc -= 1.f / 60.f;
-			physics->Simulation(1.f / 60.f);
-		}
+		//if (acc >= 1.f / 60.f)
+		//{
+		//	acc -= 1.f / 60.f;
+		//	physics->Simulation(1.f / 60.f);
+		//}
+		
+		physics->Simulation(_dt);
 	}
 
 	void PhysicsSystem::SimulateResult() const

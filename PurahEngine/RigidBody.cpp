@@ -56,10 +56,18 @@ namespace PurahEngine
 	{
 		if (useAutoMass)
 		{
+			if (std::isnan(density))
+			{
+				mass = 1.f;
+			}
 			this->SetDensity(density);
 		}
 		else
 		{
+			if (std::isnan(mass))
+			{
+				mass = 1.f;
+			}
 			this->SetMass(mass);
 		}
 	}

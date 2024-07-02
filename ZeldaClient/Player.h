@@ -92,7 +92,9 @@ namespace Phyzzle
 			const float limitLowAngle = -70.f;	// 로우 앵글
 
 			unsigned int cameraCollisionLayers = 0;
+			float cameraCollisionRadius = 5.f;
 			unsigned int attachRaycastLayers = 0;
+			float attachRaycastDistance = 40.f;
 
 			AbilityState state = ATTACH_SELECT;
 
@@ -234,15 +236,14 @@ namespace Phyzzle
 		/// 카메라 위치는 Arm의 각도에 의해 계산됨
 		/// </summary>
 		/// <returns>카메라 코어 로컬 좌표</returns>
-		Eigen::Vector3f CalculateDefaultCameraCorePosition();	// 카메라 위치 업데이트
-		// bool ResolveCameraCollision(const Eigen::Vector3f& pos, Eigen::Vector3f& _outPosition);
+		void CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut);	// 카메라 위치 업데이트
 
 		/// <summary>
 		/// 카메라가 지형 지물에 충돌 되는지 체크하고 위치를 변경함
 		/// </summary>
 		/// <param name="pos">카메라 코어 로컬 좌표</param>
 		/// <returns>지형 지물에 부딪치면 true</returns>
-		bool ResolveCameraCollision(Eigen::Vector3f& _outPosition);
+		bool ResolveCameraCollision(Eigen::Vector3f& localIn, Eigen::Vector3f& worldIn);
 
 		void UpdateCameraLerp();
 		

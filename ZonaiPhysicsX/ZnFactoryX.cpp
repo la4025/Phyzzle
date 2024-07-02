@@ -8,6 +8,7 @@
 #include "DistanceJoint.h"
 #include "SphericalJoint.h"
 #include "HingeJoint.h"
+#include "SpringFlexJoint.h"
 
 #include "ZnUtil.h"
 
@@ -498,5 +499,30 @@ namespace ZonaiPhysics
 
 		const auto znHingeJoint = new HingeJoint(joint, _znBody0, _znBody1);
 		return znHingeJoint;
+	}
+
+	SpringFlexJoint* ZnFactoryX::CreateSpringFlexJoint(RigidBody* _znBody0, const ZnTransform& tm0, RigidBody* _znBody1, const ZnTransform& tm1)
+	{
+		assert(_znBody0 != nullptr);
+
+		const auto pxbody0 = static_cast<physx::PxRigidDynamic*>(_znBody0->pxBody);
+		const physx::PxTransform t0(EigenToPhysx(tm0.position), EigenToPhysx(tm0.quaternion));
+
+		physx::PxRigidDynamic* pxbody1 = nullptr;
+		if (_znBody1)
+		{
+			pxbody1 = static_cast<physx::PxRigidDynamic*>(_znBody1->pxBody);
+		}
+		const physx::PxTransform t1(EigenToPhysx(tm1.position), EigenToPhysx(tm1.quaternion));
+
+		const auto joint = new D1SpringFlexJoint(*pxFactory, *pxbody0, t0, *pxbody1, t1);
+		assert(joint != nullptr);
+
+#ifdef _DEBUG
+		joint->setConstraintFlag(physx::PxConstraintFlag::eVISUALIZATION, true);
+#endif
+
+		const auto znSpringFlex = new SpringFlexJoint(joint, _znBody0, _znBody1);
+		return znSpringFlex;
 	}
 }

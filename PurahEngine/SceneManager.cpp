@@ -267,6 +267,7 @@ void PurahEngine::SceneManager::LoadScene()
 	// 필요하다면 여기서 sceneName 변경하는 코드 추가
 	sceneName = sceneBuffer;
 	sceneBuffer = L"";
+
 }
 
 void PurahEngine::SceneManager::LoadSceneCompleteEvent()
