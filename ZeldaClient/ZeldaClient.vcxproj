@@ -180,6 +180,7 @@
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
     <ClCompile Include="SceneLoadSupport.cpp" />
+    <ClCompile Include="ShockDetector.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />
+    <ClInclude Include="ShockDetector.h" />
     <ClInclude Include="Snapshot.h" />
     <ClInclude Include="Spring.h" />
     <ClInclude Include="TemplateFlag.h" />
