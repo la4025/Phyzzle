@@ -56,6 +56,9 @@
 #include "Animator.h"
 #include "ParticleSystem.h"
 
+// UTILITY
+#include "PurahMath.h"
+
 // UI
 #include "UI.h"
 #include "Image.h"

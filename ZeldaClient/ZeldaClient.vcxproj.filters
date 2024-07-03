@@ -114,6 +114,12 @@
     <ClCompile Include="TriggerCallBack.cpp">
       <Filter>System\RespawnSystem</Filter>
     </ClCompile>
+    <ClCompile Include="CameraEventDevice.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
+    <ClCompile Include="ShockDetector.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
     <ClCompile Include="DebugCameraSetting.cpp">
       <Filter>KH\ETC</Filter>
     </ClCompile>
@@ -268,6 +274,12 @@
     </ClInclude>
     <ClInclude Include="Bezier.h">
       <Filter>KH\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraEventDevice.h">
+      <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="ShockDetector.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
     <ClInclude Include="DebugCameraSetting.h">
       <Filter>KH\ETC</Filter>

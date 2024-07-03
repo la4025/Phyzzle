@@ -27,6 +27,7 @@ namespace ShadowMap
 	extern float Offset; // 텍스쳐화 되는 오브젝트의 범위를 카메라 방향으로 Offset 크기만큼 당긴다.
 	extern unsigned int Size; // 빛의 방향에서 본 오브젝트들을 텍스쳐화 할 때, 텍스쳐의 크기(너비와 높이가 같음)
 	extern float DepthBias;
+	extern float PointLightDepthBias;
 }
 
 namespace Texture
@@ -265,11 +266,12 @@ static_assert(sizeof(BlendingAnimationBufferType) % 16 == 0, "Constant Buffer si
 
 struct LightMatrixBufferType
 {
-	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX view[6];
 	DirectX::XMMATRIX projection;
 	float shadowMapSize;
 	float shadowMapDepthBias;
-	float padding[2];
+	float pointLightDepthBias;
+	float padding;
 
 	constexpr static unsigned int registerNumB = 9;
 };

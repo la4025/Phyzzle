@@ -110,7 +110,7 @@ public:
 	virtual void Resize(unsigned int screenWidth, unsigned int screenHeight) override;
 
 	virtual void SetExtraInitOption(float shadowAreaRange, float shadowAreaOffset, unsigned int shadowMapSize) override;
-	virtual void SetExtraOption(float shadowMapDepthBias) override;
+	virtual void SetExtraOption(float shadowMapDepthBias, float pointLightDepthBias) override;
 
 	virtual void SetDebugMode(DebugMode mode) override;
 	virtual void SetRendererMode(RendererMode mode) override;
@@ -181,9 +181,9 @@ private:
 	void DrawModelRenderInfo(const std::vector<RenderInfo*>& renderInfo, ZeldaShader* shader);
 	void DrawBlendingAnimationRenderInfo(RenderInfo* renderInfo, ZeldaShader* shader);
 
-	void DrawMeshDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light);
-	void DrawModelDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light);
-	void DrawBlendingAnimationDirectionalShadow(RenderInfo* renderInfo, ZeldaLight* light);
+	void DrawMeshShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix);
+	void DrawModelShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix);
+	void DrawBlendingAnimationShadow(RenderInfo* renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix);
 
 	void DrawImageRenderInfo(RenderInfo* renderInfo);
 
@@ -232,8 +232,8 @@ private:
 	ID3D11ShaderResourceView* deferredShaderResources[Deferred::BufferCount];
 
 	// Shadow Mapping
-	ID3D11DepthStencilView* directionalShadowDepthStencilView = nullptr;
-	ID3D11ShaderResourceView* directionalShadowShaderResource = nullptr;
+	ID3D11DepthStencilView* shadowDepthStencilView[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	ID3D11ShaderResourceView* shadowShaderResource[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 	ZeldaShader* deferredBlendingObjectShader = nullptr;
 	ZeldaShader* deferredObjectShader = nullptr;

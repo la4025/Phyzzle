@@ -123,7 +123,7 @@ void PurahEngine::GraphicsManager::Render(float deltaTime)
 
 	EngineSetting& setting = EngineSetting::GetInstance();
 
-	graphicsModule->SetExtraOption(setting.GetShadowMapDepthBias());
+	graphicsModule->SetExtraOption(setting.GetShadowMapDepthBias(), setting.GetPointLightDepthBias());
 
 	graphicsModule->BeginDraw(deltaTime);
 

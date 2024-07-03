@@ -306,6 +306,9 @@
     <FxCompile Include="AlphaSpritePS.hlsl">
       <Filter>Shader\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="DeferredShadowPointLightPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Buffers.hlsli">

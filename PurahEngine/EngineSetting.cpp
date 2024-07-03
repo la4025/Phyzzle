@@ -103,6 +103,11 @@ float PurahEngine::EngineSetting::GetShadowMapDepthBias()
 	return shadowMapDepthBias;
 }
 
+float PurahEngine::EngineSetting::GetPointLightDepthBias()
+{
+	return pointLightDepthBias;
+}
+
 float PurahEngine::EngineSetting::GetGravity()
 {
 	return gravity;
@@ -228,6 +233,7 @@ void PurahEngine::EngineSetting::PreDeserialize(const json& jsonData)
 	shadowAreaOffset = jsonData["shadowAreaOffset"];
 	shadowMapSize = jsonData["shadowMapSize"];
 	shadowMapDepthBias = jsonData["shadowMapDepthBias"];
+	pointLightDepthBias = jsonData["pointLightDepthBias"];
 	gravity = jsonData["gravity"];
 }
 
