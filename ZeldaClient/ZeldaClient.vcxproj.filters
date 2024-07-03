@@ -120,6 +120,9 @@
     <ClCompile Include="ShockDetector.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="DebugCameraSetting.cpp">
+      <Filter>KH\ETC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="ShockDetector.h">
       <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCameraSetting.h">
+      <Filter>KH\ETC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

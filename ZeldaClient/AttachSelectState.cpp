@@ -124,7 +124,14 @@ namespace Phyzzle
 #pragma region Content
 	void AttachSelectState::PlayerMove(float _speed) const
 	{
-		player->TryPlayerMove(_speed);
+		if (player->TryPlayerMove(_speed))
+		{
+			player->ChangePlayerState(Player::WALK);
+		}
+		else
+		{
+			player->ChangePlayerState(Player::IDLE);
+		}
 	}
 
 	void AttachSelectState::CameraAround() const
