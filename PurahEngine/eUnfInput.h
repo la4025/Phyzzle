@@ -10,5 +10,6 @@ namespace PurahEngine
 		UI_Down,
 		UI_Left,
 		UI_Right,
+		UI_MENU
 	};
 }

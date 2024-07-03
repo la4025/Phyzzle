@@ -18,7 +18,7 @@ void PurahEngine::PauseGame::Update()
 	for (auto& [targetGameObject, state] : onOffEventList)
 	{
 		bool targetState = targetGameObject->GetEnable();
-		if (UnifiedInputManager::Getinstance().GetKeyDown(eUnfInput::UI_Cancel))
+		if (UnifiedInputManager::Getinstance().GetKeyDown(eUnfInput::UI_MENU))
 		{
 			targetGameObject->SetEnable(!targetState);
 		}
@@ -31,7 +31,6 @@ void PurahEngine::PauseGame::Update()
 		{
 			isPause = false;
 		}
-
 	}
 }
 
@@ -44,7 +43,6 @@ void PurahEngine::PauseGame::LateUpdate()
 	else
 	{
 		TimeController::GetInstance().SetTimeScale(1.0f);
-
 	}
 }
 

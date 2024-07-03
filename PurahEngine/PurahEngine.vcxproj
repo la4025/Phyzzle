@@ -112,6 +112,8 @@
     <ClInclude Include="UI.h" />
     <ClInclude Include="UnifiedInputManager.h" />
     <ClInclude Include="PurahColor.h" />
+    <ClInclude Include="VolumeScale.h" />
+    <ClInclude Include="VolumeSetting.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
@@ -177,6 +179,8 @@
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UnifiedInputManager.cpp" />
     <ClCompile Include="ConvexCollider.cpp" />
+    <ClCompile Include="VolumeScale.cpp" />
+    <ClCompile Include="VolumeSetting.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
