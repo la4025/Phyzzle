@@ -33,7 +33,14 @@ void Phyzzle::DebugCameraSetting::Update()
 		return;
 	}
 
-	check = true;
+	bool downShift = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_SHIFT);
+	bool downF1 = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_F1);
+	bool downF2 = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_F2);
+
+	if ((downShift && downF1) || (downShift && downF2))
+	{
+		check = true;
+	}
 }
 
 void Phyzzle::DebugCameraSetting::LateUpdate()

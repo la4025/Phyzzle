@@ -85,7 +85,7 @@ namespace Phyzzle
 					{
 						originMainCamera->SetMainCamera();
 						running = false;
-						//player->SetStopUpdate(false);
+						player->SetStopUpdate(false);
 						eventLevel += 1;
 
 						if (powerCounter < 1)
@@ -141,7 +141,7 @@ namespace Phyzzle
 		if ((worksOnlyOnce && workOnce) == false)
 		{
 			running = true;
-			//player->SetStopUpdate(true);
+			player->SetStopUpdate(true);
 			eventElapsed = 0.0f;
 			eventLevel = 0;
 			workOnce = true;
