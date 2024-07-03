@@ -130,13 +130,13 @@ namespace Phyzzle
 
 	void CameraEventDevice::Run()
 	{
+		if (running)
+		{
+			return;
+		}
+
 		if ((worksOnlyOnce && workOnce) == false)
 		{
-			if (running)
-			{
-				return;
-			}
-
 			running = true;
 			eventElapsed = 0.0f;
 			eventLevel = 0;
