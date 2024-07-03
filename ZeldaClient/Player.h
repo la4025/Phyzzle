@@ -49,6 +49,7 @@ namespace Phyzzle
 		struct PlayerData
 		{
 			bool debugMode = false;
+			bool stopUpdate = false;
 
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
@@ -197,6 +198,9 @@ namespace Phyzzle
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 #pragma endregion Event
 
+		void SetStopUpdate(bool _value);
+
+	private:
 		void DebugDraw();
 		void DrawStateInfo() const;
 		std::wstring GetStateString(AbilityState state) const;
@@ -301,6 +305,7 @@ namespace Phyzzle
 
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
+
 #pragma endregion camera
 
 		bool RaycastFromCamera(

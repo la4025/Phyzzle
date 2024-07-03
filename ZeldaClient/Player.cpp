@@ -188,6 +188,11 @@ namespace Phyzzle
 
 	void Player::Update()
 	{
+		if (data.stopUpdate)
+		{
+			return;
+		}
+
 		prevState = currState;
 		prevPlayerState = currPlayerState;
 		HandleGamePadInput();
@@ -210,6 +215,12 @@ namespace Phyzzle
 	{
 		JumpCheck(zn_collision, collider);
 	}
+
+	void Player::SetStopUpdate(bool _value)
+	{
+		data.stopUpdate = _value;
+	}
+
 #pragma endregion Event
 	void Player::DebugDraw()
 	{
