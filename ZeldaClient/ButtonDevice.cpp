@@ -1,5 +1,6 @@
 #include "ButtonDevice.h"
 
+#include "ElectricalDevice.h"
 #include "Door.h"
 
 namespace Phyzzle
@@ -84,7 +85,7 @@ namespace Phyzzle
 
 	void ButtonDevice::FixedUpdate()
 	{
-		pushableRigidbody->AddForce({ 0.0f, releasedSpeed, 0.0f }, ZonaiPhysics::Impulse);
+		pushableRigidbody->AddForce({ 0.0f, releasedSpeed, 0.0f }, ZonaiPhysics::Velocity_Change);
 	}
 
 	void ButtonDevice::TargetPowerOn()

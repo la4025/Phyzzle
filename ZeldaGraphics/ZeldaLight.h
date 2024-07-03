@@ -24,6 +24,8 @@ public:
 	DirectX::XMMATRIX GetViewMatrix(ZeldaCamera* maincamera);
 	DirectX::XMMATRIX GetOrthoMatrix();
 
+	void CreatePointLightViewAndProjMatrices(DirectX::XMMATRIX viewMatrices[6], DirectX::XMMATRIX& projMatrix);
+
 	// Directional Light
 	void SetDirection(float x, float y, float z);
 

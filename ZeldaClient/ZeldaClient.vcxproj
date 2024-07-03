@@ -147,6 +147,8 @@
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
     <ClCompile Include="Burnable.cpp" />
+    <ClCompile Include="CameraEventDevice.cpp" />
+    <ClCompile Include="DebugCameraSetting.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -179,6 +181,7 @@
     <ClCompile Include="RewindState.cpp" />
     <ClCompile Include="RewindSystem.cpp" />
     <ClCompile Include="SceneLoadSupport.cpp" />
+    <ClCompile Include="ShockDetector.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Test2.cpp" />
     <ClCompile Include="Test3.cpp" />
@@ -193,7 +196,9 @@
     <ClInclude Include="AnimationTestController.h" />
     <ClInclude Include="Bezier.h" />
     <ClInclude Include="Burnable.h" />
+    <ClInclude Include="CameraEventDevice.h" />
     <ClInclude Include="CoroutineSystem.h" />
+    <ClInclude Include="DebugCameraSetting.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
@@ -226,6 +231,7 @@
     <ClInclude Include="Rewindable.h" />
     <ClInclude Include="RewindSystem.h" />
     <ClInclude Include="SceneLoadSupport.h" />
+    <ClInclude Include="ShockDetector.h" />
     <ClInclude Include="Snapshot.h" />
     <ClInclude Include="Spring.h" />
     <ClInclude Include="TemplateFlag.h" />

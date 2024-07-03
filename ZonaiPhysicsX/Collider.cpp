@@ -1,4 +1,8 @@
+#pragma warning(push)
+#pragma warning(disable: 33010 26495 4819)
 #include "PxPhysicsAPI.h"
+#pragma warning (pop)
+
 #include "RigidBody.h"
 #include "ZnLayer.h"
 

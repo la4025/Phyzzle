@@ -53,8 +53,12 @@
 #include "ModelRenderer.h"
 #include "MeshRenderer.h"
 #include "SpriteRenderer.h"
+#include "CubeMapRenderer.h"
 #include "Animator.h"
 #include "ParticleSystem.h"
+
+// UTILITY
+#include "PurahMath.h"
 
 // UI
 #include "UI.h"

@@ -21,6 +21,8 @@ PS_OUT main(PixelIn input)
     float2 uv = float2(input.pos.x / screenSize.x, input.pos.y / screenSize.y);
     
     float3 viewPos = Temp0Map.Sample(Sampler, uv).xyz;
+    input.uv = uv;
+    float3 viewPos2 = Temp0Map.Sample(Sampler, input.uv).xyz;
     
     // 카메라보다 뒤에 있는 오브젝트 거르기
     if (viewPos.z <= 0.f)
@@ -41,7 +43,7 @@ PS_OUT main(PixelIn input)
     
     LightColor color;
     
-    CalculateLight(lightIndex, viewNormal, viewPos, input.uv, color.diffuse, color.ambient, color.specular);
+    CalculateShadowPointLight(lightIndex, viewNormal, viewPos, input.uv, color.diffuse, color.ambient, color.specular, viewPos2, input.pos);
     
     output.diffuse = float4((color.diffuse + color.ambient).xyz, 1.0f);
     output.specular = float4(color.specular.xyz, 1.0f);

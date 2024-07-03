@@ -52,7 +52,7 @@ public:
 	/// 추가 옵션을 설정한다. BeginDraw 이전에 호출되어야 정상적으로 작동한다.
 	/// </summary>
 	/// <param name="[shadowMapDepthBias] :"> shadowMap의 DepthBias를 설정한다. (DepthBias는 ShadowMap과 ViewSpace의 좌표계 차이로 인한 텍스쳐의 계단현상을 완화시켜주며 빛과 그림자가 그려지는 오브젝트의 각도에 따라 변경이 필요할 수 있다.) </param>
-	virtual void SetExtraOption(float shadowMapDepthBias) abstract;
+	virtual void SetExtraOption(float shadowMapDepthBias, float pointLightDepthBias) abstract;
 
 
 	// 디버그 모드를 선택한다.

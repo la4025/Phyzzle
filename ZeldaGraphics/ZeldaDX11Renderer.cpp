@@ -476,10 +476,13 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	shadowTextureDesc.CPUAccessFlags = 0;
 	shadowTextureDesc.MiscFlags = 0;
 
-	ID3D11Texture2D* shadowTexture = nullptr;
+	ID3D11Texture2D* shadowTexture[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
-	result = mDevice->CreateTexture2D(&shadowTextureDesc, NULL, &shadowTexture);
-	if (FAILED(result)) return false;
+	for (int i = 0; i < 6; i++)
+	{
+		result = mDevice->CreateTexture2D(&shadowTextureDesc, NULL, &shadowTexture[i]);
+		if (FAILED(result)) return false;
+	}
 
 	// Depth Stencil View 생성
 	D3D11_DEPTH_STENCIL_VIEW_DESC shadowDepthStencilViewDesc;
@@ -488,8 +491,11 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	shadowDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	shadowDepthStencilViewDesc.Texture2D.MipSlice = 0;
 
-	result = mDevice->CreateDepthStencilView(shadowTexture, &shadowDepthStencilViewDesc, &directionalShadowDepthStencilView);
-	if (FAILED(result)) return false;
+	for (int i = 0; i < 6; i++)
+	{
+		result = mDevice->CreateDepthStencilView(shadowTexture[i], &shadowDepthStencilViewDesc, &shadowDepthStencilView[i]);
+		if (FAILED(result)) return false;
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shadowShaderResourceViewDesc;
 	shadowShaderResourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -497,14 +503,21 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	shadowShaderResourceViewDesc.Texture2D.MipLevels = shadowTextureDesc.MipLevels;
 	shadowShaderResourceViewDesc.Texture2D.MostDetailedMip = 0u;
 
-	result = mDevice->CreateShaderResourceView(shadowTexture, &shadowShaderResourceViewDesc, &directionalShadowShaderResource);
-	if (FAILED(result)) return false;
-
-	if (shadowTexture)
+	for (int i = 0; i < 6; i++)
 	{
-		shadowTexture->Release();
-		shadowTexture = nullptr;
+		result = mDevice->CreateShaderResourceView(shadowTexture[i], &shadowShaderResourceViewDesc, &shadowShaderResource[i]);
+		if (FAILED(result)) return false;
 	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (shadowTexture[i])
+		{
+			shadowTexture[i]->Release();
+			shadowTexture[i] = nullptr;
+		}
+	}
+
 
 #pragma endregion Shadow Mapping
 
@@ -950,15 +963,21 @@ void ZeldaDX11Renderer::Finalize()
 		spriteRasterState->Release();
 		spriteRasterState = nullptr;
 	}
-	if (directionalShadowDepthStencilView)
+	for (int i = 0; i < 6; i++)
 	{
-		directionalShadowDepthStencilView->Release();
-		directionalShadowDepthStencilView = nullptr;
+		if (shadowDepthStencilView[i])
+		{
+			shadowDepthStencilView[i]->Release();
+			shadowDepthStencilView[i] = nullptr;
+		}
 	}
-	if (directionalShadowShaderResource)
+	for (int i = 0; i < 6; i++)
 	{
-		directionalShadowShaderResource->Release();
-		directionalShadowShaderResource = nullptr;
+		if (shadowShaderResource[i])
+		{
+			shadowShaderResource[i]->Release();
+			shadowShaderResource[i] = nullptr;
+		}
 	}
 	if (idMapRenderTarget)
 	{
@@ -1130,9 +1149,10 @@ void ZeldaDX11Renderer::SetExtraInitOption(float shadowAreaRange, float shadowAr
 	ShadowMap::Size = shadowMapSize;
 }
 
-void ZeldaDX11Renderer::SetExtraOption(float shadowMapDepthBias)
+void ZeldaDX11Renderer::SetExtraOption(float shadowMapDepthBias, float pointLightDepthBias)
 {
 	ShadowMap::DepthBias = shadowMapDepthBias;
+	ShadowMap::PointLightDepthBias = pointLightDepthBias;
 }
 
 void ZeldaDX11Renderer::SetDebugMode(DebugMode mode)
@@ -1745,7 +1765,7 @@ void ZeldaDX11Renderer::DrawDebugInfo()
 		// 임시 디버깅, 이 코드를 없앨 때 위의 DebugInfoCount에 +1을 한 것도 지울 것
 		{
 			int i = Deferred::BufferCount;
-			spriteBatch->Draw(directionalShadowShaderResource, RECT{ ((1920l - fullsize) / 2) + (i) * (wsize + space), 100, ((1920l - fullsize) / 2) + (i) * (wsize + space) + wsize, 100 + wsize });
+			spriteBatch->Draw(shadowShaderResource[0], RECT{((1920l - fullsize) / 2) + (i) * (wsize + space), 100, ((1920l - fullsize) / 2) + (i) * (wsize + space) + wsize, 100 + wsize});
 		}
 	}
 #pragma endregion
@@ -2377,7 +2397,7 @@ void ZeldaDX11Renderer::DrawBlendingAnimationRenderInfo(RenderInfo* renderInfo, 
 		shader);
 }
 
-void ZeldaDX11Renderer::DrawMeshDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light)
+void ZeldaDX11Renderer::DrawMeshShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix)
 {
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
@@ -2386,10 +2406,11 @@ void ZeldaDX11Renderer::DrawMeshDirectionalShadow(const std::vector<RenderInfo*>
 
 	// Constant Buffer
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.view[0] = XMMatrixTranspose(lightViewMatrix);
+	lightMatrixBuffer.projection = XMMatrixTranspose(lightProjMatrix);
 	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixBuffer.pointLightDepthBias = ShadowMap::PointLightDepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	bool instancing = (renderInfo.size() > 1u);
@@ -2432,17 +2453,18 @@ void ZeldaDX11Renderer::DrawMeshDirectionalShadow(const std::vector<RenderInfo*>
 	}
 }
 
-void ZeldaDX11Renderer::DrawModelDirectionalShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light)
+void ZeldaDX11Renderer::DrawModelShadow(const std::vector<RenderInfo*>& renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix)
 {
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo[0]->instancingKey.modelID);
 
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.view[0] = XMMatrixTranspose(lightViewMatrix);
+	lightMatrixBuffer.projection = XMMatrixTranspose(lightProjMatrix);
 	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixBuffer.pointLightDepthBias = ShadowMap::PointLightDepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	bool instancing = (renderInfo.size() > 1u);
@@ -2472,17 +2494,18 @@ void ZeldaDX11Renderer::DrawModelDirectionalShadow(const std::vector<RenderInfo*
 	}
 }
 
-void ZeldaDX11Renderer::DrawBlendingAnimationDirectionalShadow(RenderInfo* renderInfo, ZeldaLight* light)
+void ZeldaDX11Renderer::DrawBlendingAnimationShadow(RenderInfo* renderInfo, ZeldaLight* light, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjMatrix)
 {
 	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(renderInfo->instancingKey.modelID);
 
 	LightMatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
-	lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+	lightMatrixBuffer.view[0] = XMMatrixTranspose(lightViewMatrix);
+	lightMatrixBuffer.projection = XMMatrixTranspose(lightProjMatrix);
 	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
 	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixBuffer.pointLightDepthBias = ShadowMap::PointLightDepthBias;
 	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	modelInstance->RenderBlendingAnimation(
@@ -2537,67 +2560,155 @@ void ZeldaDX11Renderer::DrawImageRenderInfo(RenderInfo* renderInfo)
 
 void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 {
-	// Rasterizer State 설정 - (지금은 셰이더에서 bias처리를 하기 때문에 defaultRasterState를 사용한다)
-	mDeviceContext->RSSetState(defaultRasterState);
-	// Shadow DepthStencilView 비우기
-	mDeviceContext->ClearDepthStencilView(directionalShadowDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	// RenderTarget을 비우고 DepthStencilView를 설정
-	mDeviceContext->OMSetRenderTargets(0, nullptr, directionalShadowDepthStencilView);
-	// ViewPort 설정
-	D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(ShadowMap::Size), static_cast<float>(ShadowMap::Size), 0.0f, 1.0f };
-	mDeviceContext->RSSetViewports(1, &viewport);
+	LightType lightType = light->GetLightType();
 
-	if (light->GetLightType() == LightType::Directional)
+	switch (lightType)
 	{
-		const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
-
-		for (auto& [key, value] : shadowRenderInfo)
+		case LightType::Directional:
 		{
-			assert(value.size() != 0);
+			// Rasterizer State 설정 - (지금은 셰이더에서 bias처리를 하기 때문에 defaultRasterState를 사용한다)
+			mDeviceContext->RSSetState(defaultRasterState);
+			// Shadow DepthStencilView 비우기
+			mDeviceContext->ClearDepthStencilView(shadowDepthStencilView[0], D3D11_CLEAR_DEPTH, 1.0f, 0);
+			// RenderTarget을 비우고 DepthStencilView를 설정
+			mDeviceContext->OMSetRenderTargets(0, nullptr, shadowDepthStencilView[0]);
+			// ViewPort 설정
+			D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(ShadowMap::Size), static_cast<float>(ShadowMap::Size), 0.0f, 1.0f };
+			mDeviceContext->RSSetViewports(1, &viewport);
 
-			RenderType renderType = value[0]->renderType;
+			const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
 
-			switch (renderType)
+			ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+			DirectX::XMMATRIX lightViewMatrix = light->GetViewMatrix(currentcamera);
+			DirectX::XMMATRIX lightProjMatrix = light->GetOrthoMatrix();
+
+			for (auto& [key, value] : shadowRenderInfo)
 			{
-				case RenderType::Deferred_Mesh:
+				assert(value.size() != 0);
+
+				RenderType renderType = value[0]->renderType;
+
+				switch (renderType)
 				{
-					DrawMeshDirectionalShadow(value, light);
-					break;
-				}
-				case RenderType::Deferred_Model:
-				{
-					DrawModelDirectionalShadow(value, light);
-					break;
-				}
-				case RenderType::Deferred_BlendingAnimation:
-				{
-					for (int i = 0; i < value.size(); i++)
+					case RenderType::Deferred_Mesh:
 					{
-						DrawBlendingAnimationDirectionalShadow(value[i], light);
+						DrawMeshShadow(value, light, lightViewMatrix, lightProjMatrix);
+						break;
 					}
-					break;
-				}
-				default:
-				{
-					assert(0);
-					break;
+					case RenderType::Deferred_Model:
+					{
+						DrawModelShadow(value, light, lightViewMatrix, lightProjMatrix);
+						break;
+					}
+					case RenderType::Deferred_BlendingAnimation:
+					{
+						for (int i = 0; i < value.size(); i++)
+						{
+							DrawBlendingAnimationShadow(value[i], light, lightViewMatrix, lightProjMatrix);
+						}
+						break;
+					}
+					default:
+					{
+						assert(0);
+						break;
+					}
 				}
 			}
+
+			// 종료 후 ViewPort를 되돌려 놓는다.
+			mDeviceContext->RSSetViewports(1, &defaultViewPort);
+			// Rasterizer State를 되돌려 놓음
+			mDeviceContext->RSSetState(defaultRasterState);
+
+			break;
+		}
+		case LightType::Point:
+		{
+			DirectX::XMMATRIX lightViewMatrix[6];
+			DirectX::XMMATRIX lightProjMatrix;
+
+			light->CreatePointLightViewAndProjMatrices(lightViewMatrix, lightProjMatrix);
+
+			// 6방향의 텍스쳐를 만들어야 한다.
+			for (int dirNum = 0; dirNum < 6; dirNum++)
+			{
+				// Rasterizer State 설정 - (지금은 셰이더에서 bias처리를 하기 때문에 defaultRasterState를 사용한다)
+				mDeviceContext->RSSetState(defaultRasterState);
+				// Shadow DepthStencilView 비우기
+				mDeviceContext->ClearDepthStencilView(shadowDepthStencilView[dirNum], D3D11_CLEAR_DEPTH, 1.0f, 0);
+				// RenderTarget을 비우고 DepthStencilView를 설정
+				mDeviceContext->OMSetRenderTargets(0, nullptr, shadowDepthStencilView[dirNum]);
+				// ViewPort 설정
+				D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(ShadowMap::Size), static_cast<float>(ShadowMap::Size), 0.0f, 1.0f };
+				mDeviceContext->RSSetViewports(1, &viewport);
+
+				const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
+
+				for (auto& [key, value] : shadowRenderInfo)
+				{
+					assert(value.size() != 0);
+
+					RenderType renderType = value[0]->renderType;
+
+					switch (renderType)
+					{
+						case RenderType::Deferred_Mesh:
+						{
+							DrawMeshShadow(value, light, lightViewMatrix[dirNum], lightProjMatrix);
+							break;
+						}
+						case RenderType::Deferred_Model:
+						{
+							DrawModelShadow(value, light, lightViewMatrix[dirNum], lightProjMatrix);
+							break;
+						}
+						case RenderType::Deferred_BlendingAnimation:
+						{
+							for (int i = 0; i < value.size(); i++)
+							{
+								DrawBlendingAnimationShadow(value[i], light, lightViewMatrix[dirNum], lightProjMatrix);
+							}
+							break;
+						}
+						default:
+						{
+							assert(0);
+							break;
+						}
+					}
+				}
+
+				// 종료 후 ViewPort를 되돌려 놓는다.
+				mDeviceContext->RSSetViewports(1, &defaultViewPort);
+				// Rasterizer State를 되돌려 놓음
+				mDeviceContext->RSSetState(defaultRasterState);
+			}
+
+			break;
+		}
+		case LightType::Spot:
+		{
+			assert(0);
+			break;
+		}
+		default:
+		{
+			assert(0);
+			break;
 		}
 	}
-
-	// 종료 후 ViewPort를 되돌려 놓는다.
-	mDeviceContext->RSSetViewports(1, &defaultViewPort);
-	// Rasterizer State를 되돌려 놓음
-	mDeviceContext->RSSetState(defaultRasterState);
 }
 
 void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightIndex)
 {
+	ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
+
 	// 다음 그리기에 영향을 주지 않기 위해 뎁스스텐실을 비워놓음
 	mDeviceContext->OMSetRenderTargets(Deferred::Light::Count, deferredRenderTargets + Deferred::Light::Begin, nullptr);
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin, 2, deferredShaderResources + Deferred::Object::Begin);
-	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 2u, 1, &directionalShadowShaderResource);
+	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin + 2u, 1, &shadowShaderResource[0]);
+	mDeviceContext->PSSetShaderResources(0u, 5, &shadowShaderResource[1]);
 	float alphaBlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	mDeviceContext->OMSetBlendState(alphaBlendState, alphaBlendFactor, 0xFFFFFFFF);
 
@@ -2605,12 +2716,17 @@ void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightI
 
 	ZeldaCamera* mainCamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 
-	MatrixBufferType lightMatrixBuffer;
-	lightMatrixBuffer.view = XMMatrixTranspose(mainCamera->GetViewMatrix());
-	lightMatrixBuffer.projection = XMMatrixTranspose(mainCamera->GetProjMatrix());
-	lightMatrixBuffer.cameraFar = mainCamera->GetFar();
+	MatrixBufferType matrixBuffer;
+	matrixBuffer.view = XMMatrixTranspose(mainCamera->GetViewMatrix());
+	matrixBuffer.projection = XMMatrixTranspose(mainCamera->GetProjMatrix());
+	matrixBuffer.cameraFar = mainCamera->GetFar();
 
-	matrixPsConstBuffer->SetData(lightMatrixBuffer);
+	matrixPsConstBuffer->SetData(matrixBuffer);
+
+	LightMatrixBufferType lightMatrixBuffer;
+	lightMatrixBuffer.shadowMapSize = static_cast<float>(ShadowMap::Size);
+	lightMatrixBuffer.shadowMapDepthBias = ShadowMap::DepthBias;
+	lightMatrixBuffer.pointLightDepthBias = ShadowMap::PointLightDepthBias;
 
 	LightType lightType = light->GetLightType();
 	ZeldaMesh* lightMesh = nullptr;
@@ -2619,12 +2735,28 @@ void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightI
 	if (lightType == LightType::Directional)
 	{
 		mDeviceContext->RSSetState(defaultRasterState);
+
+		lightMatrixBuffer.view[0] = XMMatrixTranspose(light->GetViewMatrix(currentcamera));
+		lightMatrixBuffer.projection = XMMatrixTranspose(light->GetOrthoMatrix());
+
 		lightMesh = squareMesh;
 		lightShader = deferredDirectionalLightShader;
 	}
 	else if (lightType == LightType::Point)
 	{
 		mDeviceContext->RSSetState(pointLightRasterState);
+
+		DirectX::XMMATRIX view[6];
+		DirectX::XMMATRIX proj;
+		light->CreatePointLightViewAndProjMatrices(view, proj);
+		lightMatrixBuffer.view[0] = XMMatrixTranspose(view[0]);
+		lightMatrixBuffer.view[1] = XMMatrixTranspose(view[1]);
+		lightMatrixBuffer.view[2] = XMMatrixTranspose(view[2]);
+		lightMatrixBuffer.view[3] = XMMatrixTranspose(view[3]);
+		lightMatrixBuffer.view[4] = XMMatrixTranspose(view[4]);
+		lightMatrixBuffer.view[5] = XMMatrixTranspose(view[5]);
+		lightMatrixBuffer.projection = XMMatrixTranspose(proj);
+
 		lightMesh = ResourceManager::GetInstance().GetSphereMesh();
 		lightShader = deferredPointLightShader;
 	}
@@ -2644,12 +2776,14 @@ void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightI
 
 	lightMesh->Render(mDeviceContext);
 
-	lightMatrixBuffer.world = XMMatrixTranspose(light->GetWorldMatrix());
-	matrixVsConstBuffer->SetData(lightMatrixBuffer);
+	matrixBuffer.world = XMMatrixTranspose(light->GetWorldMatrix());
+	matrixVsConstBuffer->SetData(matrixBuffer);
 
 	LightIndexBufferType lightIndexData;
 	lightIndexData.lightIndex = lightIndex;
 	lightIndexConstBuffer->SetData(lightIndexData);
+
+	lightMatrixConstBuffer->SetData(lightMatrixBuffer);
 
 	ConstantBufferManager::GetInstance().SetBuffer();
 
@@ -2657,8 +2791,9 @@ void ZeldaDX11Renderer::DrawDeferredLight(ZeldaLight* light, unsigned int lightI
 
 
 	mDeviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-	ID3D11ShaderResourceView* nullSRV[3] = { nullptr, nullptr, nullptr };
+	ID3D11ShaderResourceView* nullSRV[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
 	mDeviceContext->PSSetShaderResources(Deferred::SlotBegin, 3, nullSRV);
+	mDeviceContext->PSSetShaderResources(0u, 5, nullSRV);
 	mDeviceContext->RSSetState(defaultRasterState);
 }
 

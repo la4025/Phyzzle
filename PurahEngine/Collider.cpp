@@ -181,6 +181,7 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(isTrigger);
 		PREDESERIALIZE_VALUE(layer);
 		PREDESERIALIZE_VECTOR3F(positionOffset);
+		PREDESERIALIZE_QUATERNIONF(rotationOffset);
 		PREDESERIALIZE_WSTRING(physicsMaterial);
     }
 }

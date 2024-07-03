@@ -50,7 +50,9 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Componentmanager.h" />
     <ClInclude Include="ConvexCollider.h" />
+    <ClInclude Include="CubeMapRenderer.h" />
     <ClInclude Include="CustomCollider.h" />
+    <ClInclude Include="SpringFlexJoint.h" />
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="PreTimerHandler.h" />
     <ClInclude Include="PurahEngine.h" />
     <ClInclude Include="PurahEngineAPI.h" />
+    <ClInclude Include="PurahMath.h" />
     <ClInclude Include="PurahSound.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RigidBody.h" />
@@ -129,7 +132,9 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
+    <ClCompile Include="CubeMapRenderer.cpp" />
     <ClCompile Include="CustomCollider.cpp" />
+    <ClCompile Include="SpringFlexJoint.cpp" />
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DistanceJoint.cpp" />
@@ -159,6 +164,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PreTimerHandler.cpp" />
     <ClCompile Include="PurahEngine.cpp" />
+    <ClCompile Include="PurahMath.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SceneManager.cpp" />

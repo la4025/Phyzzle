@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ElectricalDevice.h"
+#include "PurahEngine.h"
 
 namespace Phyzzle
 {
+	class ElectricalDevice;
+
 	class ButtonDevice : public PurahEngine::Component
 	{
 	private:

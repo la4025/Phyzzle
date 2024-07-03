@@ -30,6 +30,7 @@ namespace PurahEngine
 		float GetShadowAreaOffset();
 		int GetShadowMapSize();
 		float GetShadowMapDepthBias();
+		float GetPointLightDepthBias();
 		float GetGravity();
 
 		std::wstring GetScene(int sceneNumber);
@@ -64,6 +65,7 @@ namespace PurahEngine
 		std::vector<std::vector<bool>> collisionSetting;
 
 		float shadowMapDepthBias;
+		float pointLightDepthBias;
 		float gravity;
 
 	public:

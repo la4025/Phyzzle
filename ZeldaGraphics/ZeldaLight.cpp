@@ -153,6 +153,43 @@ DirectX::XMMATRIX ZeldaLight::GetOrthoMatrix()
 	return DirectX::XMMatrixOrthographicLH(2.0f * ShadowMap::Range, 2.0f * ShadowMap::Range, 0.0f, 2.0f * ShadowMap::Range);
 }
 
+void ZeldaLight::CreatePointLightViewAndProjMatrices(DirectX::XMMATRIX viewMatrices[6], DirectX::XMMATRIX& projMatrix)
+{
+	const float nearPlane = 0.0001f;
+	const float farPlane = range;
+
+	// 라이트의 위치
+	XMVECTOR lightPosition = XMVectorSet(position.x, position.y, position.z, 1.0f);
+
+	// 각 방향의 up 벡터와 lookAt 벡터
+	XMVECTOR upVectors[6] = {
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),  // Right (positive X)
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),  // Left (negative X)
+		XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f), // Up (positive Y)
+		XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),  // Down (negative Y)
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),  // Forward (positive Z)
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)   // Backward (negative Z)
+	};
+
+	XMVECTOR lookAtVectors[6] = {
+		XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f),  // Right (positive X)
+		XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f), // Left (negative X)
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),  // Up (positive Y)
+		XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f), // Down (negative Y)
+		XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),  // Forward (positive Z)
+		XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f)  // Backward (negative Z)
+	};
+
+	// 6개의 뷰 행렬 생성
+	for (int i = 0; i < 6; ++i)
+	{
+		viewMatrices[i] = XMMatrixLookToLH(lightPosition, lookAtVectors[i], upVectors[i]);
+	}
+
+	// 투영 행렬 생성 (90도 시야각, 1:1 종횡비, nearPlane, farPlane)
+	projMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV2, 1.0f, nearPlane, farPlane);
+}
+
 void ZeldaLight::SetDirection(float x, float y, float z)
 {
 	assert(type == LightType::Directional);

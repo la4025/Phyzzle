@@ -21,11 +21,15 @@
 #include "DoorParts.h"
 #include "ElectricWire.h"
 #include "SceneLoadSupport.h"
+#include "CameraEventDevice.h"
+#include "ShockDetector.h"
 
 #include "Burnable.h"
 #include "ObjectGenerator.h"
 #include "RespawnTrigger.h"
 #include "RespawnSystem.h"
+
+#include "DebugCameraSetting.h"
 
 /// 각자 만드는 것들
 #include "PzObject.h"
@@ -80,11 +84,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DoorParts>("DoorParts");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ElectricWire>("ElectricWire");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::SceneLoadSupport>("SceneLoadSupport");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::CameraEventDevice>("CameraEventDevice");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ShockDetector>("ShockDetector");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Burnable>("Burnable");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectGenerator>("ObjectGenerator");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnTrigger>("RespawnTrigger");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnSystem>("RespawnSystem");
+
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DebugCameraSetting>("DebugCameraSetting");
 
 	//PurahEngine::Initialize(hInstance, gameName.c_str(), 1920, 1080); 역할
 	CreateInitialize(hInstance, gameName.c_str(), 1920, 1080);

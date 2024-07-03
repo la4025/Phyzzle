@@ -84,6 +84,7 @@ private:
 	LightID dirLightID;
 	LightID dirLightID2;
 	LightID pointLightID;
+	LightID pointLightID2;
 
 
 	//singleton

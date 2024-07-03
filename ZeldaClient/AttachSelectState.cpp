@@ -18,7 +18,8 @@ namespace Phyzzle
 			p.x() += 0.5f;
 			p.y() += 0.5f;
 
-			player->data.cameraCore->SetLocalPosition(p);
+			// player->data.cameraCore->SetLocalPosition(p);
+			player->SetCameraCoreLocalTargetPosition(p);
 		}
 
 		CrossHeadRender(true);
@@ -28,7 +29,8 @@ namespace Phyzzle
 	void AttachSelectState::StateExit()
 	{
 		{
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+			// player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
+			player->SetCameraCoreLocalTargetPosition(player->data.coreDefaultPosition);
 		}
 
 		select = false;
@@ -91,7 +93,7 @@ namespace Phyzzle
 			// »óÅÂ ¹Ù²Þ
 			player->data.holdObject = selectObject;
 			player->data.holdObjectBody = seleteBody;
-			player->ChangeState(Player::ATTACH_HOLD);
+			player->ChangeAbilityState(Player::ATTACH_HOLD);
 		}
 	}
 
@@ -122,23 +124,33 @@ namespace Phyzzle
 #pragma region Content
 	void AttachSelectState::PlayerMove(float _speed) const
 	{
-		player->PlayerMove(_speed);
+		if (player->TryPlayerMove(_speed))
+		{
+			player->ChangePlayerState(Player::WALK);
+		}
+		else
+		{
+			player->ChangePlayerState(Player::IDLE);
+		}
 	}
 
 	void AttachSelectState::CameraAround() const
 	{
-		player->UpdateCamera();
+		player->UpdateDefaultCamera();
 	}
 
 	void AttachSelectState::StateCancel() const
 	{
 		EnableOutline(false);
-		player->ChangeState(Player::State::DEFAULT);
+		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
 
 	void AttachSelectState::Jump() const
 	{
-		player->Jump();
+		if (player->TryJump())
+		{
+			player->ChangePlayerState(Player::JUMP);
+		}
 	}
 
 	void AttachSelectState::LookToWorldDirection(const Eigen::Vector3f& _to)

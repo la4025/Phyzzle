@@ -49,8 +49,8 @@ namespace ZonaiPhysics
 		*/
 		Eigen::Quaternionf			GetQuaternion() const final;
 		void						SetQuaternion(const Eigen::Quaternionf& _quaternion) final;
-		Eigen::Quaternionf			GetLocalQuaternion() const final;
-		void						SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) final;
+		Eigen::Quaternionf			GetLocalQuaternion() const override;
+		void						SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) override;
 
 		/**
 		유저 데이터

@@ -16,6 +16,7 @@ namespace ZonaiPhysics
 	class ZnHingeJoint;
 	class ZnDistanceJoint;
 	class ZnSphericalJoint;
+	class ZnSpringFlexJoint;
 	class ZnFixedJoint;
 }
 
@@ -139,6 +140,10 @@ namespace ZonaiPhysics
 		virtual ZnHingeJoint*		CreateHingeJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) = 0;
 		// 특정 축에 이동만 허용하는 조인트 (회전 X)
 		virtual ZnPrismaticJoint*	CreatePrismaticJoint(ZnRigidBody*, const ZnTransform&, ZnRigidBody*, const ZnTransform&) = 0;
+
+		virtual ZnSpringFlexJoint* CreateSpringFlexJoint(
+			ZnRigidBody*, const ZnTransform&,
+			ZnRigidBody*, const ZnTransform&) = 0;
 
 	public:
 		virtual bool				Raycast(const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
