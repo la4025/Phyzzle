@@ -188,14 +188,15 @@ namespace Phyzzle
 
 	void Player::Update()
 	{
-		if (data.stopUpdate)
-		{
-			return;
-		}
 
 		prevState = currState;
 		prevPlayerState = currPlayerState;
-		HandleGamePadInput();
+		
+		if (data.stopUpdate)
+		{
+			HandleGamePadInput();
+		}
+		
 		DebugDraw();
 		UpdateAbilityState();
 		UpdatePlayerState();
