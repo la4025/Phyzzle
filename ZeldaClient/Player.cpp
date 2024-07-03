@@ -192,7 +192,7 @@ namespace Phyzzle
 		prevState = currState;
 		prevPlayerState = currPlayerState;
 		
-		if (data.stopUpdate)
+		if (!data.stopUpdate)
 		{
 			HandleGamePadInput();
 		}

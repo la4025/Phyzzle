@@ -326,6 +326,9 @@
     <ClCompile Include="PurahMath.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMapRenderer.cpp">
+      <Filter>Component\3. Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -560,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="PurahMath.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMapRenderer.h">
+      <Filter>Component\3. Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -50,6 +50,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Componentmanager.h" />
     <ClInclude Include="ConvexCollider.h" />
+    <ClInclude Include="CubeMapRenderer.h" />
     <ClInclude Include="CustomCollider.h" />
     <ClInclude Include="SpringFlexJoint.h" />
     <ClInclude Include="DataManager.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Componentmanager.cpp" />
+    <ClCompile Include="CubeMapRenderer.cpp" />
     <ClCompile Include="CustomCollider.cpp" />
     <ClCompile Include="SpringFlexJoint.cpp" />
     <ClCompile Include="DataManager.cpp" />
