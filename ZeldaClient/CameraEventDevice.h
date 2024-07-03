@@ -6,6 +6,8 @@
 
 namespace Phyzzle
 {
+	class Player;
+
 	class CameraEventDevice final : public ElectricalDevice
 	{
 	public:
@@ -32,7 +34,7 @@ namespace Phyzzle
 		std::vector<PurahEngine::Transform*> cameraPath;
 		std::vector<ElectricalDevice*> targetDeviceList;
 
-		// 캐릭터 조작을 막기 위한 방법 추가 예정
+		Player* player = nullptr;
 
 	private:
 		bool running;		// 카메라 이벤트 진행중

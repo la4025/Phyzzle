@@ -1,5 +1,7 @@
 #include "CameraEventDevice.h"
 
+#include "Player.h"
+
 namespace Phyzzle
 {
 	void CameraEventDevice::Awake()
@@ -83,6 +85,7 @@ namespace Phyzzle
 					{
 						originMainCamera->SetMainCamera();
 						running = false;
+						//player->SetStopUpdate(false);
 						eventLevel += 1;
 
 						if (powerCounter < 1)
@@ -138,6 +141,7 @@ namespace Phyzzle
 		if ((worksOnlyOnce && workOnce) == false)
 		{
 			running = true;
+			//player->SetStopUpdate(true);
 			eventElapsed = 0.0f;
 			eventLevel = 0;
 			workOnce = true;
@@ -183,5 +187,6 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(targetCamera);
 		POSTDESERIALIZE_VECTOR_PTR(cameraPath);
 		POSTDESERIALIZE_VECTOR_PTR(targetDeviceList);
+		POSTDESERIALIZE_PTR(player);
 	}
 }
