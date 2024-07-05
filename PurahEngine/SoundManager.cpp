@@ -217,8 +217,10 @@ void PurahEngine::SoundManager::Update()
 	bgmChannelGroup->setVolume(bgmVolume);
 	sfxChannelGroup->setVolume(sfxVolume);
 
+#ifdef _DEBUG
 	std::cout << "bgm : " << bgmVolume << std::endl;
 	std::cout << "sfx : " << sfxVolume << std::endl;
+#endif
 }
 
 void PurahEngine::SoundManager::Set3DListenerAttributes(FMOD_VECTOR pos, FMOD_VECTOR forward, FMOD_VECTOR up)
