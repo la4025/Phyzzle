@@ -80,6 +80,6 @@ namespace ZonaiPhysics
 			physx::PxControllerFilters()
 		);
 
-
+		return true;
 	}
 }

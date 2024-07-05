@@ -24,6 +24,7 @@ namespace Phyzzle
 		{
 			IDLE,
 			WALK,
+			RUN,
 			JUMP,
 			JUMPING,
 			LANDING,
@@ -51,24 +52,36 @@ namespace Phyzzle
 			bool debugMode = false;
 			bool stopUpdate = false;
 
+#pragma region Player Variable
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
 			float jumpPower = 10.f;				// 점프 힘
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
+#pragma endregion Player Variable
 
-			bool isTransitioning = false;
 			float cameraLerpTime = 0.5f;			// 보간 시간
 			float cameraLerpTime0 = 1.0f;			// 경사 각도
 
+#pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
 			PurahEngine::Transform* modelCore;
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
 			PurahEngine::GameObject* crossHead;
-			PurahEngine::Transform* cameraSweep;
+			PurahEngine::Transform* groundChechRaycast;
+#pragma endregion Player Component
+
+#pragma region Camera
+			PurahEngine::Transform* attachLowCamera0;
+			PurahEngine::Transform* attachLowCamera1;
+			PurahEngine::Transform* attachDefaultCamera0;
+			PurahEngine::Transform* attachDefaultCamera1;
+			PurahEngine::Transform* attachHighCamera0;
+			PurahEngine::Transform* attachHighCamera1;
+#pragma endregion Camera
 
 			Eigen::Vector3f		coreDefaultPosition;
 			Eigen::Quaternionf	coreDefaultRotation;
@@ -100,6 +113,7 @@ namespace Phyzzle
 			AbilityState state = ATTACH_SELECT;
 
 			std::wstring idleAnimation;
+			std::wstring walkingAnimation;
 			std::wstring runningAnimation;
 			std::wstring jumpAnimation;
 			std::wstring jumpingAnimation;
@@ -229,10 +243,10 @@ namespace Phyzzle
 
 #pragma region camera
 		void UpdateDefaultCamera();					// 카메라 업데이트
-		void UpdateSelectCamera();					// 카메라 업데이트
 		void UpdateHoldCamera();					// 카메라 업데이트
 
 		void UpdateDefaultCameraCore();							// 카메라 코어 업데이트
+		void UpdateHoldCameraCore();							// 카메라 코어 업데이트
 
 		/// <summary>
 		/// Camera Core 위치 계산
@@ -249,6 +263,8 @@ namespace Phyzzle
 		/// <returns>지형 지물에 부딪치면 true</returns>
 		bool ResolveCameraCollision(Eigen::Vector3f& localIn, Eigen::Vector3f& worldIn);
 
+		void UpdateCameraPositionLerp();
+		void UpdateCameraRotationLerp();
 		void UpdateCameraLerp();
 		
 		void CharacterDisable();
@@ -260,6 +276,7 @@ namespace Phyzzle
 		/// </summary>
 		/// <param name="_worldPosision">코어의 로컬 좌표</param>
 		void SetCameraCoreLocalTargetPosition(const Eigen::Vector3f& _localPosision);
+		void SetCameraCoreLocalTargetRotation(const Eigen::Quaternionf& _localRotation);
 		
 		/// <summary>
 		/// 카메라 코어의 목표 월드 좌표를 설정함
@@ -268,6 +285,7 @@ namespace Phyzzle
 		/// </summary>
 		/// <param name="_worldPosision">코어의 월드 좌표</param>
 		void SetCameraCoreWorldTargetPosition(const Eigen::Vector3f& _worldPosision);
+		void SetCameraCoreWorldTargetRotation(const Eigen::Quaternionf& _worldRotation);
 
 		/// <summary>
 		/// 카메라 코어가 XY, XZ평면의 어디를 보고 있는지 계산
