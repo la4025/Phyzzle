@@ -85,6 +85,19 @@ namespace PurahEngine
 			keyMap[unfInput] = keyvec;
 			keyResultMap[unfInput] = KeyResult::Unknown;
 		}
+
+		{
+			eUnfInput unfInput = eUnfInput::UI_MENU;
+			std::vector<ePad> padvec;
+			std::vector<eKey> keyvec;
+
+			padvec.push_back(ePad::ePAD_START);
+			keyvec.push_back(eKey::eKEY_ESCAPE);
+
+			padMap[unfInput] = padvec;
+			keyMap[unfInput] = keyvec;
+			keyResultMap[unfInput] = KeyResult::Unknown;
+		}
 	}
 
 	void UnifiedInputManager::Update()

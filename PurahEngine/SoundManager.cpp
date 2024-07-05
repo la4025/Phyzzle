@@ -6,6 +6,11 @@
 #include <locale>
 #include <codecvt>
 
+#ifdef _DEBUG
+#include <iostream>
+#endif
+
+
 void PurahEngine::SoundManager::Initialize()
 {
 	FMOD_RESULT result;
@@ -26,6 +31,9 @@ void PurahEngine::SoundManager::Initialize()
 	assert(result == FMOD_OK);
 	result = system->createChannelGroup("SFXGroup", &sfxChannelGroup);
 	assert(result == FMOD_OK);
+
+	//bgmChannelGroup->setVolume(1.0f);
+	//sfxChannelGroup->setVolume(1.0f);
 
 	// add BGM, SFX Channel Group to Master Channel Group
 	result = masterChannelGroup->addGroup(bgmChannelGroup);
@@ -140,9 +148,9 @@ void PurahEngine::SoundManager::PlayBGM(FMOD::Sound* sound, FMOD::Channel** chan
 		(*channel)->stop();
 	}
 
-	system->playSound(sound, 0, false, channel);
-	result = (*channel)->setChannelGroup(bgmChannelGroup);
+	result = system->playSound(sound, bgmChannelGroup, false, channel);
 	assert(result == FMOD_OK);
+	bgmChannel = (*channel);
 }
 
 void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** channel)
@@ -152,8 +160,7 @@ void PurahEngine::SoundManager::PlaySfx(FMOD::Sound* sound, FMOD::Channel** chan
 	(*channel)->isPlaying(&isPlaying);
 	if (!isPlaying)
 	{
-		system->playSound(sound, 0, false, channel);
-		result = (*channel)->setChannelGroup(sfxChannelGroup);
+		result = system->playSound(sound, sfxChannelGroup, false, channel);
 		assert(result == FMOD_OK);
 	}
 
@@ -168,8 +175,7 @@ void PurahEngine::SoundManager::PlayUI(FMOD::Sound* sound, FMOD::Channel** chann
 	(*channel)->isPlaying(&isPlaying);
 	if (!isPlaying)
 	{
-		system->playSound(sound, 0, false, channel);
-		result = (*channel)->setChannelGroup(sfxChannelGroup);
+		result = system->playSound(sound, sfxChannelGroup, false, channel);
 		assert(result == FMOD_OK);
 	}
 
@@ -177,9 +183,42 @@ void PurahEngine::SoundManager::PlayUI(FMOD::Sound* sound, FMOD::Channel** chann
 	isPlaying = (*channel)->getCurrentSound(&sound);
 }
 
+void PurahEngine::SoundManager::SetBGMVolume(float volume)
+{
+	bgmVolume = std::clamp(volume, 0.00f, 1.00f);
+	bgmChannelGroup->setVolume(bgmVolume);
+}
+
+void PurahEngine::SoundManager::SetSFXVolume(float volume)
+{
+	sfxVolume = std::clamp(volume, 0.0f, 1.0f);
+	sfxChannelGroup->setVolume(sfxVolume);
+}
+
+float PurahEngine::SoundManager::GetBGMVolume()
+{
+	bgmChannelGroup->getVolume(&bgmVolume);
+	bgmVolume = std::round(bgmVolume * 10) / 10.0f;
+	//return (bgmVolume * 10);
+	return bgmVolume;
+}
+
+float PurahEngine::SoundManager::GetSFXVolume()
+{
+	sfxChannelGroup->getVolume(&sfxVolume);
+	sfxVolume = std::round(sfxVolume * 10) / 10.0f;
+	//return (sfxVolume * 10);
+	return sfxVolume;
+}
+
 void PurahEngine::SoundManager::Update()
 {
 	system->update();
+	bgmChannelGroup->setVolume(bgmVolume);
+	sfxChannelGroup->setVolume(sfxVolume);
+
+	std::cout << "bgm : " << bgmVolume << std::endl;
+	std::cout << "sfx : " << sfxVolume << std::endl;
 }
 
 void PurahEngine::SoundManager::Set3DListenerAttributes(FMOD_VECTOR pos, FMOD_VECTOR forward, FMOD_VECTOR up)
@@ -193,7 +232,7 @@ FMOD::System* PurahEngine::SoundManager::GetSystem() const
 }
 
 PurahEngine::SoundManager::SoundManager()
-	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), sfxChannelGroup(nullptr), bgmChannelGroup(nullptr), masterChannelGroup(nullptr)
+	: system(nullptr), bgmChannel(nullptr), effectChannel(nullptr), sfxChannelGroup(nullptr), bgmChannelGroup(nullptr), masterChannelGroup(nullptr), bgmVolume(1.0f), sfxVolume(1.0f)
 {
 
 }

@@ -43,6 +43,14 @@ namespace PurahEngine
 
 		void PlayUI(FMOD::Sound* sound, FMOD::Channel** channel);
 
+		void SetBGMVolume(float volume);
+
+		void SetSFXVolume(float volume);
+
+		float GetBGMVolume();
+
+		float GetSFXVolume();
+
 		void Update();
 
 		void Set3DListenerAttributes(FMOD_VECTOR pos, FMOD_VECTOR forward, FMOD_VECTOR up);
@@ -56,6 +64,8 @@ namespace PurahEngine
 		FMOD::ChannelGroup* bgmChannelGroup;
 		FMOD::ChannelGroup* sfxChannelGroup;
 		FMOD::ChannelGroup* masterChannelGroup;
+		float bgmVolume;
+		float sfxVolume;
 
 	private:
 		SoundManager();
