@@ -227,13 +227,13 @@ namespace Phyzzle
 		{
 			currP = Eigen::Vector3f::UnitZ() * info.distance * -1.f;
 
-			player->data.cameraSweep->SetWorldPosition(sweepPos + dir * info.distance);
+			// player->data.cameraSweep->SetWorldPosition(sweepPos + dir * info.distance);
 		}
 		else
 		{
 			currP = Eigen::Vector3f::UnitZ() * distance;
 
-			player->data.cameraSweep->SetWorldPosition(sweepPos + dir * -distance);
+			// player->data.cameraSweep->SetWorldPosition(sweepPos + dir * -distance);
 		}
 
 		player->data.cameraCore->SetLocalPosition(currP);
@@ -243,7 +243,14 @@ namespace Phyzzle
 	{
 		if (player->TryPlayerMove(player->data.moveSpeed))
 		{
-			player->ChangePlayerState(Player::WALK);
+			if (player->currInput.Lstick.Size > 0.75f)
+			{
+				player->ChangePlayerState(Player::RUN);
+			}
+			else
+			{
+				player->ChangePlayerState(Player::WALK);
+			}
 		}
 		else
 		{

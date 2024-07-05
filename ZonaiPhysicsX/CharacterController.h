@@ -12,7 +12,7 @@ namespace ZonaiPhysics
 	class CharacterController
 	{
 	public:
-		CharacterController();
+		CharacterController(physx::PxController* _controller);
 
 	public:
 		/// <summary>
@@ -39,7 +39,7 @@ namespace ZonaiPhysics
 		/// <summary>
 		/// Function
 		/// </summary>
-		void Move(Eigen::Vector3f _vec, float _dis, float _dt);
+		bool Move(Eigen::Vector3f _vec, float _dis, float _dt);
 
 	public:
 		physx::PxController* controller;
