@@ -66,7 +66,10 @@ struct LightInfo
     unsigned int type;
     float range;
     float angle;
-    float padding;
+    float atten0;
+    float atten1;
+    float atten2;
+    float2 padding;
 };
 
 cbuffer LightInfoBufferType : register(b2)

@@ -185,7 +185,10 @@ struct LightInfo
 	LightType type;
 	float range;
 	float angle;
-	float padding;
+	float atten0;
+	float atten1;
+	float atten2;
+	float padding[2];
 };
 
 struct LightInfoBufferType

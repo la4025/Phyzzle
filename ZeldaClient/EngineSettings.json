@@ -3,7 +3,7 @@
   "shadowAreaOffset": 32.0,
   "shadowMapSize": 4096,
   "shadowMapDepthBias": 0.1,
-  "pointLightDepthBias": 1E-07,
+  "pointLightDepthBias": 2E-07,
   "gravity": -22.0,
   "tag": [
     "Conductor Object",

@@ -34,6 +34,8 @@ public:
 	// Point Light
 	void SetRange(float range);
 	void SetPosition(float x, float y, float z);
+	// 1 / ( att0i + att1i * d + att2i * d²)
+	void SetAttenuation(float atten0, float atten1, float atten2);
 
 	float GetRange();
 	DirectX::XMFLOAT3 GetPosition();
@@ -59,5 +61,15 @@ private:
 	LightType type;
 	float range;
 	float angle;
+
+	// Attenuation 이란...
+	// https://learn.microsoft.com/en-us/windows/win32/direct3d9/attenuation-and-spotlight-factor
+
+	// Unity에서는 1 / (25 * (d / r)^2 + 1) 과 유사한 공식을 사용한다고 한다.
+	// https://geom.io/bakery/wiki/index.php?title=Point_Light_Attenuation
+
+	float atten0;	// 0 ~ INF
+	float atten1;	// 0 ~ INF
+	float atten2;	// 0 ~ INF
 };
 

@@ -13,7 +13,10 @@ ZeldaLight::ZeldaLight(LightType type) :
 	direction({ 0.0f, 0.0f, 1.0f, 0.0f }),
 	type(type),
 	range(10.0f),
-	angle(3.141592f * 0.1666f)
+	angle(3.141592f * 0.1666f),
+	atten0(1.0f),
+	atten1(0.0f),
+	atten2(1.0f)
 {
 
 }
@@ -214,6 +217,13 @@ void ZeldaLight::SetPosition(float x, float y, float z)
 	this->position = XMFLOAT4(x, y, z, 0.0f);
 }
 
+void ZeldaLight::SetAttenuation(float atten0, float atten1, float atten2)
+{
+	this->atten0 = atten0;
+	this->atten1 = atten1;
+	this->atten2 = atten2;
+}
+
 float ZeldaLight::GetRange()
 {
 	assert(type == LightType::Point || type == LightType::Spot);
@@ -255,6 +265,9 @@ LightInfo ZeldaLight::GetLightInfo()
 	lightInfo.type = type;
 	lightInfo.range = range;
 	lightInfo.angle = angle;
+	lightInfo.atten0 = atten0;
+	lightInfo.atten1 = atten1;
+	lightInfo.atten2 = atten2;
 
 	return lightInfo;
 }

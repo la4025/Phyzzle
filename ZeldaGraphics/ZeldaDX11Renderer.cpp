@@ -645,6 +645,7 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		D3D11_BLEND_DESC blendDesc;
 		ZeroMemory(&blendDesc, sizeof(blendDesc));
 		blendDesc.AlphaToCoverageEnable = FALSE;
+		blendDesc.IndependentBlendEnable = FALSE;
 		blendDesc.RenderTarget[0].BlendEnable = TRUE;
 		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
@@ -2878,7 +2879,7 @@ LightID ZeldaDX11Renderer::CreateDirectionalLight(const Eigen::Vector3f& ambient
 	return lightID;
 }
 
-LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range)
+LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range, float atten0, float atten1, float atten2)
 {
 	LightID lightID = ResourceManager::GetInstance().CreatePointLight();
 
@@ -2891,6 +2892,8 @@ LightID ZeldaDX11Renderer::CreatePointLight(const Eigen::Vector3f& ambient, cons
 
 	light->SetPosition(position.x(), position.y(), position.z());
 	light->SetRange(range);
+
+	light->SetAttenuation(atten0, atten1, atten2);
 
 	return lightID;
 }
@@ -2919,7 +2922,7 @@ void ZeldaDX11Renderer::ReleaseLight(LightID lightID)
 	ResourceManager::GetInstance().ReleaseLight(lightID);
 }
 
-void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle)
+void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction, const Eigen::Vector3f& position, float range, float angle, float atten0, float atten1, float atten2)
 {
 	ZeldaLight* light = ResourceManager::GetInstance().GetLight(lightID);
 	light->SetAmbient(ambient.x(), ambient.y(), ambient.z());
@@ -2939,6 +2942,7 @@ void ZeldaDX11Renderer::UpdateLight(LightID lightID, const Eigen::Vector3f& ambi
 		{
 			light->SetPosition(position.x(), position.y(), position.z());
 			light->SetRange(range);
+			light->SetAttenuation(atten0, atten1, atten2);
 		}
 		break;
 

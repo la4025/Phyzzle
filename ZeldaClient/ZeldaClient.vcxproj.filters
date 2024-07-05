@@ -27,9 +27,6 @@
     <ClCompile Include="AttachSystem.cpp">
       <Filter>KH\System</Filter>
     </ClCompile>
-    <ClCompile Include="LauncherPlatform.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
     <ClCompile Include="ElectricWire.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
@@ -123,6 +120,9 @@
     <ClCompile Include="DebugCameraSetting.cpp">
       <Filter>KH\ETC</Filter>
     </ClCompile>
+    <ClCompile Include="LauncherPlatform.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -154,9 +154,6 @@
     <ClInclude Include="AudioTest.h" />
     <ClInclude Include="AttachSystem.h">
       <Filter>KH\System</Filter>
-    </ClInclude>
-    <ClInclude Include="LauncherPlatform.h">
-      <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="IElectricalDevice.h">
       <Filter>Device\Electrical Device</Filter>
@@ -283,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="DebugCameraSetting.h">
       <Filter>KH\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherPlatform.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

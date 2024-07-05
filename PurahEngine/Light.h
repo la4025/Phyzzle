@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "IRenderer.h"
 #include <Eigen/Dense>
+#include <random>
 
 namespace PurahEngine
 {
@@ -13,6 +14,10 @@ namespace PurahEngine
 	protected:
 		Light();
 		virtual ~Light();
+
+	public:
+		void Awake() override;
+		void Update() override;
 
 	public:
 		void SetLightAmbient(const Eigen::Vector3f&);
@@ -43,7 +48,43 @@ namespace PurahEngine
 		Eigen::Vector3f shadowColor;
 		float range;
 		float angle;
+		float atten0;
+		float atten1;
+		float atten2;
+
+		float atten0VibrationSpeed;
+		float atten0VibrationRange;
+
+		float atten1VibrationSpeed;
+		float atten1VibrationRange;
+
+		float atten2VibrationSpeed;
+		float atten2VibrationRange;
+
+		float positionVibrationSpeed;
+		float positionVibrationRange;
 
 		LightID lightID;
+
+	protected:
+		// 진동을 위한 추가 변수
+		float currentAtten0;
+		float currentAtten1;
+		float currentAtten2;
+
+		float targetAtten0;
+		float targetAtten1;
+		float targetAtten2;
+
+		Eigen::Vector3f currentPosition;
+		Eigen::Vector3f targetPosition;
+		Eigen::Vector3f vibrationDirection;
+
+		std::random_device randomDevice;
+		std::mt19937 genRandom;
+		std::uniform_real_distribution<float> atten0Distribution;
+		std::uniform_real_distribution<float> atten1Distribution;
+		std::uniform_real_distribution<float> atten2Distribution;
+		std::uniform_real_distribution<float> positionDistribution;
 	};
 }

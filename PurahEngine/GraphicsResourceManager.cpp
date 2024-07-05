@@ -67,9 +67,9 @@ namespace PurahEngine
 		return lightID;
 	}
 
-	LightID GraphicsResourceManager::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range)
+	LightID GraphicsResourceManager::CreatePointLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& position, float range, float atten0, float atten1, float atten2)
 	{
-		LightID lightID = graphicsModule->CreatePointLight(ambient, diffuse, specular, shadowColor, position, range);
+		LightID lightID = graphicsModule->CreatePointLight(ambient, diffuse, specular, shadowColor, position, range, atten0, atten1, atten2);
 		lightSet.insert(lightID);
 
 		return lightID;

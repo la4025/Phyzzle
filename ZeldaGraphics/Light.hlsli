@@ -220,13 +220,14 @@ void CalculateShadowPointLight(int lightIndex, float3 normal, float3 viewPos, fl
     specularRatio = (dot(-lightVec, normal) < 0.0f) ? (0.0f) : (1.0f);
 
     float d = distance(viewPos, lightPos);
+    
     if (lights[lightIndex].range == 0.0f)
     {
         distanceRatio = 0.0f;
     }
     else
     {
-        distanceRatio = saturate(1.0f - pow(d / lights[lightIndex].range, 2.0f));
+        distanceRatio = saturate(1.0f / (lights[lightIndex].atten0 + lights[lightIndex].atten1 * d + lights[lightIndex].atten2 * d * d));
     }
 
     float3 reflectDir = normalize(lightVec + 2 * (saturate(dot(-lightVec, normal)) * normal));
@@ -236,10 +237,10 @@ void CalculateShadowPointLight(int lightIndex, float3 normal, float3 viewPos, fl
     diffuse = lights[lightIndex].color.diffuse * diffuseRatio * distanceRatio;
     specular = specFactor * lights[lightIndex].color.specular * specularRatio * distanceRatio;
         
-        // Shadow
+    // Shadow
     if (length(diffuse.xyz) > 0.00001)
     {
-            // filterSize x filterSize 크기의 필터 사용
+        // filterSize x filterSize 크기의 필터 사용
         const int filterSize = 5;
         
         const float deltaX = 1.0f / screenSize.x;
