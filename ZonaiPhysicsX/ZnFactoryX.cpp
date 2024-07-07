@@ -212,7 +212,8 @@ namespace ZonaiPhysics
 		physx::PxControllerManager* _manager, 
 		const Eigen::Vector3f& _extend, 
 		const ZnControllerDecs& _desc,
-		float _density, physx::PxMaterial* _material)
+		float _density, 
+		physx::PxMaterial* _material)
 	{
 		using namespace physx;
 

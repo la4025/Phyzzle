@@ -24,7 +24,7 @@ namespace ZonaiPhysics
 		void SetStepOffset(const float _offset);
 		void SetContactOffset(const float _offset);
 		void SetUpDirection(const Eigen::Vector3f& _direction);
-		void SetSlope(const float _slope);
+		void SetSlopeLimit(const float _slope);
 
 		/// <summary>
 		/// Getter
@@ -34,14 +34,22 @@ namespace ZonaiPhysics
 		float GetStepOffset();
 		float GetContactOffset();
 		Eigen::Vector3f GetUpDirection();
-		float GetSlope();
+		float GetSlopeLimit();
 
 		/// <summary>
 		/// Function
 		/// </summary>
-		bool Move(Eigen::Vector3f _vec, float _dis, float _dt);
+		void Move(Eigen::Vector3f _vec);
+		void Jump(float _velocity);
+		void ApplyImpulse(const Eigen::Vector3f& _impulse);
+		void Apply(float _dt);
+		bool IsInAir() const;
 
 	public:
 		physx::PxController* controller;
+		bool isJumping;
+		float jumpVelocity;
+		Eigen::Vector3f pendingMovement;
+		physx::PxControllerCollisionFlags collisionFlags;
 	};
 }

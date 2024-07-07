@@ -151,6 +151,7 @@
     <ClCompile Include="Burnable.cpp" />
     <ClCompile Include="CameraEventDevice.cpp" />
     <ClCompile Include="DebugCameraSetting.cpp" />
+    <ClCompile Include="JumpCheck.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="CameraEventDevice.h" />
     <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="DebugCameraSetting.h" />
+    <ClInclude Include="JumpCheck.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />

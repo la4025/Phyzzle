@@ -363,16 +363,46 @@ namespace Phyzzle
 		}
 	}
 
-	bool Player::TryJump()
+	bool Player::GroundCheck(Eigen::Vector3f* _outNormal)
 	{
-		if (data.jumping)
+		using namespace Eigen;
+
+		Vector3f start = data.playerRigidbody->GetPosition() - Vector3f::UnitY() * 0.025f;
+		Vector3f to = -Vector3f::UnitY();
+		float dis = 0.05f;
+		int layers = data.cameraCollisionLayers;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Raycast(start, to, dis, layers, info);
+
+		if (_outNormal)
 		{
-			return false;
+			*_outNormal = info.normal;
 		}
 
-		Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
-		data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
-		data.jumping = true;
+		return hit;
+	}
+
+	bool Player::SideCheck()
+	{
+		return true;
+	}
+
+	bool Player::TryJump()
+	{
+		using namespace Eigen;
+
+		//if (data.jumping)
+		//{
+		//	return false;
+		//}
+
+		if (GroundCheck())
+		{
+			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
+			data.jumping = true;
+		}
 
 		return true;
 	}
@@ -424,6 +454,11 @@ namespace Phyzzle
 		return slope <= slopeAngleLimit;
 	}
 
+	bool Player::CanMove(Eigen::Vector3f _direction, float _moveScalar)
+	{
+		return true;
+	}
+
 	bool Player::TryPlayerMove(float _moveSpeed)
 	{
 		// 카메라의 전방 벡터를 계산
@@ -433,18 +468,23 @@ namespace Phyzzle
 
 		// 속도 벡터를 계산
 		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
-		const Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
+		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
 		Eigen::Vector3f velocity = data.playerRigidbody->GetLinearVelocity();
+		// velocity.y() = 0.f;
+		// const float scalar = velocity.norm();
+
+		// float diffSpeed = moveSpeed - scalar;
 
 		// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
 		/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
-		velocity.x() = movement.x();
-		velocity.z() = movement.z();
+		velocity.x() = movementDirection.x() * moveSpeed;
+		velocity.z() = movementDirection.z() * moveSpeed;
 
 		// 속력을 적용시킴
-		// data.playerRigidbody->AddForce(velocity, ZonaiPhysics::Velocity_Change);
 		data.playerRigidbody->SetLinearVelocity(velocity);
+		// Eigen::Vector3f addVelo = diffSpeed * movementDirection * data.playerRigidbody->GetMass();
+		// data.playerRigidbody->AddForce(addVelo, ZonaiPhysics::Force);
 
 		return currInput.Lstick.Size >= 1e-6;
 	}
@@ -790,22 +830,18 @@ namespace Phyzzle
 
 	void Player::RotateCameraArmPitch(float pitchAngle)
 	{
-		float deltaAngle = 0.f;
+		float deltaAngle = pitchAngle;
 		data.xAngle += pitchAngle;
 
 		if (data.xAngle > data.limitHighAngle)
 		{
-			deltaAngle = 0.f;
+			deltaAngle -= (data.xAngle - data.limitHighAngle);
 			data.xAngle = data.limitHighAngle;
 		}
 		else if (data.xAngle < data.limitLowAngle)
 		{
-			deltaAngle = 0.f;
+			deltaAngle -= (data.xAngle - data.limitLowAngle);
 			data.xAngle = data.limitLowAngle;
-		}
-		else
-		{
-			deltaAngle = pitchAngle;
 		}
 
 		const Eigen::Vector3f cameraRight = data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();

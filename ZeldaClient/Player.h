@@ -91,12 +91,8 @@ namespace Phyzzle
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
 
-			Eigen::Vector3f coreCurrentPosition;
-			Eigen::Quaternionf	coreCurrentRotation;
 			Eigen::Vector3f coreTargetPosition;
 			Eigen::Quaternionf	coreTargetRotation;
-			Eigen::Vector3f coreTargetWorldPosition;
-			Eigen::Quaternionf	coreTargetWorldRotation;
 
 			Eigen::Vector3f armTargetPosition;
 			Eigen::Quaternionf	armTargetRotation;
@@ -232,11 +228,14 @@ namespace Phyzzle
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
 
+		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
+		bool SideCheck();
 		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
 		bool IsGrounded(const Eigen::Vector3f& normal) const;
 
+		bool CanMove(Eigen::Vector3f _direction, float _moveScalar);
 		bool TryPlayerMove(float _moveSpeed);
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;

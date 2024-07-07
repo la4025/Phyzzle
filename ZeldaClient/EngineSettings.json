@@ -225,7 +225,7 @@
       true,
       true,
       true,
-      true,
+      false,
       false,
       false,
       false
@@ -259,7 +259,7 @@
       true,
       true,
       false,
-      true,
+      false,
       true,
       false,
       false,
@@ -330,8 +330,8 @@
   "physicsMaterials": [
     {
       "name": "PlayerBody",
-      "staticFriction": 0.5,
-      "dynamicFriction": 0.5,
+      "staticFriction": 0.0,
+      "dynamicFriction": 0.0,
       "restitution": 0.1,
       "eFriction": 0,
       "eRestitution": 1
@@ -341,7 +341,7 @@
       "staticFriction": 1.0,
       "dynamicFriction": 1.0,
       "restitution": 0.05,
-      "eFriction": 0,
+      "eFriction": 3,
       "eRestitution": 0
     },
     {
@@ -349,7 +349,7 @@
       "staticFriction": 1.0,
       "dynamicFriction": 1.0,
       "restitution": 0.05,
-      "eFriction": 0,
+      "eFriction": 3,
       "eRestitution": 0
     },
     {
@@ -373,7 +373,7 @@
       "staticFriction": 0.0,
       "dynamicFriction": 0.0,
       "restitution": 1.0,
-      "eFriction": 0,
+      "eFriction": 1,
       "eRestitution": 0
     },
     {

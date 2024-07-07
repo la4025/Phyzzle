@@ -710,47 +710,6 @@ namespace Phyzzle
 		}
 	}
 
-	/*
-	void AttachHoldState::CameraUpdate() const
-	{
-		using namespace Eigen;
-
-		float offset = 5.f;
-		Vector3f bodyPos = selectBody->GetPosition();
-		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
-		Vector3f cameraArmPos = player->data.cameraArm->GetWorldPosition();
-
-		// 카메라 암이 오브젝트를 향하도록 함
-		Vector3f armDirection = bodyPos - playerPos;
-		armDirection.y() = 0.f;
-		armDirection.normalize();
-		player->CameraLookTo(armDirection);
-
-		/// 임시
-		// 카메라가 오브젝트 높이를 따라가도록 함
-		float gap = bodyPos.y() - playerPos.y();
-		if (gap < 9.f)
-		{
-			gap = 9.f;
-		}
-		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
-		cameraCorePos.y() = bodyPos.y() + 5.f;
-		player->data.cameraCore->SetWorldPosition(cameraCorePos);
-
-
-		// 플레이어와 오브젝트 사이를 바라보게 함
-		Vector3f playerToBody = bodyPos - playerPos;
-		Vector3f direction = playerToBody.normalized();
-
-		bodyPos = bodyPos + direction * 5.f;
-		playerPos = playerPos - direction * 5.f;
-
-		Vector3f to = (bodyPos - playerPos) / 2.f;
-		Vector3f focus = playerPos + to;
-		player->CameraLookAt(focus);
-	}
-	*/
-
 	void AttachHoldState::UpdateCamera()
 	{
 		using namespace Eigen;
