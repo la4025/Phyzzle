@@ -79,7 +79,12 @@ void PurahEngine::SoundManager::ReleaseSound(AudioSource* audioSource)
 void PurahEngine::SoundManager::CreateBGMSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
+
+#ifdef _DEBUG
 	std::wstring filePath = L"../Sound/BGM/Test/" + name;
+#else
+	std::wstring filePath = L"Sound/BGM/" + name;
+#endif
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -92,7 +97,12 @@ void PurahEngine::SoundManager::CreateBGMSound(std::wstring name, FMOD::Sound** 
 void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
+
+#ifdef _DEBUG
 	std::wstring filePath = L"../Sound/SFX/Test/" + name;
+#else
+	std::wstring filePath = L"Sound/SFX/" + name;
+#endif
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -105,7 +115,12 @@ void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** 
 void PurahEngine::SoundManager::CreateUISound(std::wstring name, FMOD::Sound** sound)
 {
 	FMOD_RESULT result;
+
+#ifdef _DEBUG
 	std::wstring filePath = L"../Sound/UI/" + name;
+#else
+	std::wstring filePath = L"Sound/UI/" + name;
+#endif
 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
