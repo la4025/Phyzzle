@@ -202,7 +202,6 @@ namespace Phyzzle
 
 	void Player::Update()
 	{
-
 		prevState = currState;
 		prevPlayerState = currPlayerState;
 		
@@ -211,7 +210,11 @@ namespace Phyzzle
 			HandleGamePadInput();
 		}
 		
-		DebugDraw();
+		if (data.debugMode)
+		{
+			DebugDraw();
+		}
+
 		UpdateAbilityState();
 		UpdatePlayerState();
 	}
@@ -307,6 +310,15 @@ namespace Phyzzle
 			HandleTriggerInput();
 			HandleButtonInput();
 		}
+
+		bool keyCtrl = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL);
+		bool keyD = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_D);
+		bool keyShift = PurahEngine::InputManager::Getinstance().IsKeyReleased(PurahEngine::eKey::eKEY_SHIFT);
+
+		if (keyCtrl && keyD && keyShift)
+		{
+			data.debugMode = data.debugMode ? false : true;
+		}
 	}
 
 	void Player::HandleStickInput()
@@ -391,11 +403,6 @@ namespace Phyzzle
 	bool Player::TryJump()
 	{
 		using namespace Eigen;
-
-		//if (data.jumping)
-		//{
-		//	return false;
-		//}
 
 		if (GroundCheck())
 		{

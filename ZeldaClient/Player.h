@@ -57,12 +57,14 @@ namespace Phyzzle
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
 			float jumpPower = 10.f;				// 점프 힘
+			bool isGrounded = false;
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
+			float stepOffset = 0.1f;			// 이동 시 허용 단차
 #pragma endregion Player Variable
 
 			float cameraLerpTime = 0.5f;			// 보간 시간
-			float cameraLerpTime0 = 1.0f;			// 경사 각도
+			float cameraLerpTime0 = 1.0f;
 
 #pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
@@ -72,6 +74,12 @@ namespace Phyzzle
 			PurahEngine::Animator* animator;
 			PurahEngine::GameObject* crossHead;
 			PurahEngine::Transform* groundChechRaycast;
+
+			// UI
+			PurahEngine::GameObject* rotationArrow;
+			PurahEngine::GameObject* attachSelectUI;
+			PurahEngine::GameObject* attachHoldUI;
+			PurahEngine::GameObject* attachHoldCollisionUI;
 #pragma endregion Player Component
 
 #pragma region Camera
@@ -230,6 +238,9 @@ namespace Phyzzle
 
 		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
 		bool SideCheck();
+
+		bool SweepTest(const Eigen::Vector3f& _start, const Eigen::Vector3f& _vec, int collisionLayers);
+
 		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;

@@ -154,25 +154,28 @@ namespace Phyzzle
 		// 카메라 업데이트
 		UpdateCamera();
 
-		auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
-		auto degree = Eigen::Vector3f(
-			euler.x() * 180.f / std::numbers::pi_v<float>,
-			euler.y() * 180.f / std::numbers::pi_v<float>,
-			euler.z() * 180.f / std::numbers::pi_v<float>
+		if (player->data.debugMode)
+		{
+			auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
+			auto degree = Eigen::Vector3f(
+				euler.x() * 180.f / std::numbers::pi_v<float>,
+				euler.y() * 180.f / std::numbers::pi_v<float>,
+				euler.z() * 180.f / std::numbers::pi_v<float>
 			);
-		degree.x() = std::floor(degree.x() * 10.f) / 10.f;
-		degree.y() = std::floor(degree.y() * 10.f) / 10.f;
-		degree.z() = std::floor(degree.z() * 10.f) / 10.f;
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"오브젝트 각도 : \n" +
-			std::to_wstring(degree.x()) + L" \n" +
-			std::to_wstring(degree.y()) + L" \n" +
-			std::to_wstring(degree.z()) + L" \n",
-			1400, 100,
-			200, 600, 15,
-			255, 255, 255, 255);
+			degree.x() = std::floor(degree.x() * 10.f) / 10.f;
+			degree.y() = std::floor(degree.y() * 10.f) / 10.f;
+			degree.z() = std::floor(degree.z() * 10.f) / 10.f;
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"오브젝트 각도 : \n" +
+				std::to_wstring(degree.x()) + L" \n" +
+				std::to_wstring(degree.y()) + L" \n" +
+				std::to_wstring(degree.z()) + L" \n",
+				1400, 100,
+				200, 600, 15,
+				255, 255, 255, 255);
 
-		SearchDebugDraw();
+			SearchDebugDraw();
+		}
 	}
 #pragma endregion StateEvent
 
