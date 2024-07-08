@@ -402,7 +402,7 @@ xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\PurahEngine\CompiledShader\"</Co
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;PURAHENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_RELEASE;NDEBUG;PURAHENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -422,7 +422,9 @@ xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\PurahEngine\CompiledShader\"</Co
       <AdditionalLibraryDirectories>$(SolutionDir)fmod\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"</Command>
+      <Command>xcopy /R /Y "$(TargetPath)" "$(SolutionDir)$(IntDir)$(ProjectName).*"
+xcopy /E /I /Y "$(SolutionDir)Sound" "$(SolutionDir)$(IntDir)Sound"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='YH_RELEASE|x64'">
