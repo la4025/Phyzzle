@@ -341,7 +341,7 @@
       "staticFriction": 1.0,
       "dynamicFriction": 1.0,
       "restitution": 0.05,
-      "eFriction": 0,
+      "eFriction": 3,
       "eRestitution": 0
     },
     {
@@ -349,7 +349,7 @@
       "staticFriction": 1.0,
       "dynamicFriction": 1.0,
       "restitution": 0.05,
-      "eFriction": 0,
+      "eFriction": 3,
       "eRestitution": 0
     },
     {
@@ -373,7 +373,7 @@
       "staticFriction": 0.0,
       "dynamicFriction": 0.0,
       "restitution": 1.0,
-      "eFriction": 0,
+      "eFriction": 1,
       "eRestitution": 0
     },
     {
