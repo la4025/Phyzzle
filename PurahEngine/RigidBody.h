@@ -21,6 +21,7 @@ namespace PurahEngine
 	public:
 		void		Initialize() override;
 		void		PostInitialize() override;
+		
 		void		Awake() override;
 
 		void		OnEnable() override;

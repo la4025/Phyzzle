@@ -109,15 +109,15 @@ namespace Phyzzle
 	private:
 		void PlayerMove(float _speed) const;					// 이동
 		void UpdateCamera();									// 카메라 업데이트
-		void UpdateCameraPosition() const;						// 카메라 위치 업데이트
-		void UpdateCameraFocus() const;							// 카메라 회전 업데이트
+		void UpdateCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const;						// 카메라 위치 업데이트
+		void UpdateCameraRotation() const;							// 카메라 회전 업데이트
 
 		// void CameraUpdate() const;								// 카메라 회전
 
 		void CameraReset() const;								// 카메라 회전
 		void StateCancel() const;										// Default 모드로 돌아감
 
-		void TrySelect();										// 선택
+		bool TrySelect();										// 선택
 
 		void LookToWorldDirection(const Eigen::Vector3f& _to);	// 플레이어가 to 방향으로 회전
 		void LookToLocalDirection(const Eigen::Vector3f& _to);	// 플레이어가 to 방향으로 회전
@@ -177,14 +177,14 @@ namespace Phyzzle
 		using RotateData = std::pair<Eigen::Quaternionf, Rotate>;
 		std::vector<RotateData> axisies;
 		Rotate info;
-#if _DEBUG
+
+	private:
 		void SearchDebugDraw();
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
 		std::vector<Eigen::Quaternionf> rotate;
-#endif _DEBUG
 	};
 }
 

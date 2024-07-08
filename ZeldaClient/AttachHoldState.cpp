@@ -111,25 +111,29 @@ namespace Phyzzle
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
 	{
+		using namespace Eigen;
+
+		if (TrySelect())
 		{
+			Vector3f corePos = player->data.cameraCore->GetWorldPosition();
+			Quaternionf coreRot = player->data.cameraCore->GetWorldRotation();
 
+			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
+			auto rot = player->data.modelCore->GetLocalRotation();
+			player->data.cameraArm->SetLocalRotation(rot);
+			player->data.xAngle = 0.f;
+
+			player->data.cameraCore->SetWorldRotation(coreRot);
+			player->data.cameraCore->SetWorldPosition(corePos);
 		}
-
-		TrySelect();
 	}
 
 	void AttachHoldState::StateExit()
 	{
 		{
 			using namespace Eigen;
-			player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
-			player->data.cameraCore->SetLocalRotation(player->data.coreDefaultRotation);
-			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
-
-			auto rot = player->data.modelCore->GetLocalRotation();
-			player->data.cameraArm->SetLocalRotation(rot);
-
-			player->data.xAngle = 0.f;
+			player->SetCameraCoreLocalTargetPosition(player->data.coreDefaultPosition);
+			player->SetCameraCoreLocalTargetRotation(player->data.coreDefaultRotation);
 		}
 
 		EnableOutline(false);
@@ -138,10 +142,16 @@ namespace Phyzzle
 
 	void AttachHoldState::StateStay()
 	{
+		// 스프링 힘을 계산
 		CalculateSpringForces();
+
+		// 오브젝트에 속력을 적용
 		ApplyObjectVelocity();
+
+		// 속력 리셋
 		ResetObjectVelocity();
 
+		// 카메라 업데이트
 		UpdateCamera();
 
 		auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
@@ -162,9 +172,7 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 
-#if _DEBUG
 		SearchDebugDraw();
-#endif _DEBUG
 	}
 #pragma endregion StateEvent
 
@@ -172,7 +180,7 @@ namespace Phyzzle
 	// 플레이어 이동
 	void AttachHoldState::Stick_L()
 	{
-		PlayerMove(player->data.moveSpeed * 0.7f);
+		PlayerMove(player->data.holdSpeed);
 
 		// 오브젝트 방향으로 캐릭터를 회전 시킴
 		Eigen::Vector3f direction = selectBody->GetPosition() - player->GetGameObject()->GetTransform()->GetWorldPosition();
@@ -670,7 +678,36 @@ namespace Phyzzle
 #pragma region Content
 	void AttachHoldState::PlayerMove(float _speed) const
 	{
-		player->TryPlayerMove(_speed);
+		if (player->TryPlayerMove(_speed))
+		{
+			float x = player->currInput.Lstick.X;
+			float y = player->currInput.Lstick.Y;
+
+			bool front = y > 0.f;
+			bool right = x > 0.f;
+			bool xBigger = std::fabs(x) > std::fabs(y);
+
+			if (front && !xBigger)
+			{
+				player->ChangePlayerState(Player::PlayerState::ABILITY_FRONT);
+			}
+			else if (!front && !xBigger)
+			{
+				player->ChangePlayerState(Player::PlayerState::ABILITY_BACK);
+			}
+			else if (right && xBigger)
+			{
+				player->ChangePlayerState(Player::PlayerState::ABILITY_RIGHT);
+			}
+			else if (!right && xBigger)
+			{
+				player->ChangePlayerState(Player::PlayerState::ABILITY_LEFT);
+			}
+		}
+		else
+		{
+			player->ChangePlayerState(Player::PlayerState::ABILITY_IDLE);
+		}
 	}
 
 	/*
@@ -716,61 +753,137 @@ namespace Phyzzle
 
 	void AttachHoldState::UpdateCamera()
 	{
-		UpdateCameraPosition();
-		UpdateCameraFocus();
-	}
-
-	void AttachHoldState::UpdateCameraPosition() const
-	{
 		using namespace Eigen;
 
-		float offset = 5.f;
-		Vector3f bodyPos = selectBody->GetPosition();
-		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
-		Vector3f cameraArmPos = player->data.cameraArm->GetWorldPosition();
+		Vector3f localPosition = Vector3f::Zero();
+		Vector3f worldPosition = Vector3f::Zero();
 
-		Vector3f armDirection = bodyPos - playerPos;
-		armDirection.y() = 0.f;
-		armDirection.normalize();
-		player->CameraLookTo(armDirection);
+		UpdateCameraPosition(localPosition, worldPosition);
+		UpdateCameraRotation();
 
-		float gap = bodyPos.y() - playerPos.y();
-		if (gap < 9.f)
+		if (player->ResolveCameraCollision(localPosition, worldPosition))
 		{
-			gap = 9.f;
+			player->SetCameraCoreWorldTargetPosition(worldPosition);
 		}
-		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
-		cameraCorePos.y() = bodyPos.y() + 5.f;
-		player->data.cameraCore->SetWorldPosition(cameraCorePos);
-
-		// 오브젝트의 y 위치에 따라서 카메라 동작이 조금 다르게 될 것.
-		// y가 플레이어보다 낮으면 카메라가 위에서 플레이어를 향해서 내려다보는 형태
-		// y가 플레이어보다 높으면 카메라는 오브젝트와 동일한 높이에서 시작해서
-		// 카메라에 오브젝트와 플레이어가 모두 들어갈 수 있도록 위치를 조정한다.
-
+		else
+		{
+			player->SetCameraCoreLocalTargetPosition(localPosition);
+		}
 	}
 
-	void AttachHoldState::UpdateCameraFocus() const
+	void AttachHoldState::UpdateCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const
 	{
 		using namespace Eigen;
 
-		Affine3f playerT = Affine3f::Identity();
-		playerT.rotate(player->data.modelCore->GetWorldRotation());
-		playerT.translation() = player->data.playerRigidbody->GetPosition();
-		Vector3f playerPos = playerT.translation();
+		float offset = 1.f;
 
-		Affine3f targetT = playerT;
-		targetT.translate(targetPosition);
+		constexpr float highMax = 10.f;
+		constexpr float lowMax = -7.f;
 
-		Vector3f bodyPos = targetT.translation();
-		// Vector3f bodyPos = selectBody->GetPosition();
+		constexpr float farMin = 5.f;
+		constexpr float farMax = 20.f;
 
-		Vector3f playerToBody = bodyPos - playerPos;
-		Vector3f direction = playerToBody.normalized();
+		Vector3f lowCamPos[2] = 
+		{
+			player->data.attachLowCamera0->GetLocalPosition(),
+			player->data.attachLowCamera1->GetLocalPosition()
+		};
 
-		Vector3f to = (bodyPos - playerPos) / 2.f;
-		Vector3f focus = playerPos + to;
-		player->CameraLookAt(focus);
+		Vector3f defaultCamPos[2] =
+		{
+			player->data.attachDefaultCamera0->GetLocalPosition(),
+			player->data.attachDefaultCamera1->GetLocalPosition()
+		};
+
+		Vector3f highCamPos[2] =
+		{
+			player->data.attachHighCamera0->GetLocalPosition(),
+			player->data.attachHighCamera1->GetLocalPosition()
+		};
+
+		Vector3f objPos = selectBody->GetPosition();
+		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+
+		Vector3f direction = objPos - playerPos;
+		const float dy = direction.y();
+		direction.y() = 0.f;
+		const float dz = targetPosition.z();
+
+		Vector3f* activeCamPos = (dy > 0.f) ? highCamPos : lowCamPos;
+		float totalY = (dy > 0.f) ? highMax : lowMax;
+
+		float ratioY = std::clamp(std::fabs(dy) / std::fabs(totalY), 0.f, 1.f);
+		float totalZ = farMax - farMin;
+		float ratioZ = std::clamp(dz / totalZ, 0.f, 1.f);
+
+		auto& math = PurahEngine::PurahMath::GetInstance();
+
+		Vector3f interpolatedAF = player->lerp(activeCamPos[0], activeCamPos[1], ratioZ);
+		Vector3f interpolatedDC = player->lerp(defaultCamPos[0], defaultCamPos[1], ratioZ);
+		Vector3f finalInterpolatedCamera = player->lerp(interpolatedDC, interpolatedAF, ratioY);
+
+		Affine3f world{ player->data.cameraArm->GetWorldMatrix() };
+		world.translate(finalInterpolatedCamera);
+
+		_local = finalInterpolatedCamera;
+		_world = world.translation();
+	}
+
+	void AttachHoldState::UpdateCameraRotation() const
+	{
+		using namespace Eigen;
+
+		Quaternionf modelRot = player->data.modelCore->GetLocalRotation();
+		player->data.cameraArm->SetLocalRotation(modelRot);
+
+		float offset = 1.f;
+
+		constexpr float highMax = 10.f;
+		constexpr float lowMax = -7.f;
+
+		constexpr float farMin = 10.f;
+		constexpr float farMax = 20.f;
+
+		Quaternionf lowCamRot[2] =
+		{
+			player->data.attachLowCamera0->GetLocalRotation(),
+			player->data.attachLowCamera1->GetLocalRotation()
+		};
+
+		Quaternionf defaultCamRot[2] =
+		{
+			player->data.attachDefaultCamera0->GetLocalRotation(),
+			player->data.attachDefaultCamera1->GetLocalRotation()
+		};
+
+		Quaternionf highCamRot[2] =
+		{
+			player->data.attachHighCamera0->GetLocalRotation(),
+			player->data.attachHighCamera1->GetLocalRotation()
+		};
+
+		Vector3f objPos = selectBody->GetPosition();
+		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+
+		Vector3f direction = objPos - playerPos;
+		const float dy = direction.y();
+		direction.y() = 0.f;
+		const float dz = targetPosition.z();
+
+		Quaternionf* activeCamRot = (dy > 0.f) ? highCamRot : lowCamRot;
+		float totalY = (dy > 0.f) ? highMax : lowMax;
+
+		float ratioY = std::clamp(std::fabs(dy) / std::fabs(totalY), 0.f, 1.f);
+		float totalZ = farMax - farMin;
+		float ratioZ = std::clamp(dz / totalZ, 0.f, 1.f);
+
+		auto& math = PurahEngine::PurahMath::GetInstance();
+
+		Quaternionf interpolatedAF = activeCamRot[0].slerp(ratioZ, activeCamRot[1]);
+		Quaternionf interpolatedDC = defaultCamRot[0].slerp(ratioZ, defaultCamRot[1]);
+		Quaternionf finalInterpolatedCamera = interpolatedDC.slerp(ratioY, interpolatedAF);
+
+		player->SetCameraCoreLocalTargetRotation(finalInterpolatedCamera);
 	}
 
 	void AttachHoldState::CameraReset() const
@@ -783,7 +896,7 @@ namespace Phyzzle
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
 
-	void AttachHoldState::TrySelect()
+	bool AttachHoldState::TrySelect()
 	{
 		attachble = player->data.holdObject;
 		selectBody = player->data.holdObjectBody;
@@ -791,13 +904,20 @@ namespace Phyzzle
 		if (!attachble || !selectBody)
 		{
 			player->ChangeAbilityState(Player::ATTACH_SELECT);
+			return false;;
 		}
 		else
 		{
 			if (selectBody->GetGameObject()->tag.IsContain(L"Phyzzle Player"))
+			{
 				player->ChangeAbilityState(Player::ATTACH_SELECT);
+				return false;;
+			}
 			else
+			{
 				VariableSet();
+				return true;
+			}
 		}
 	}
 
@@ -996,7 +1116,6 @@ namespace Phyzzle
 		selectBody->SetRotation(currRot);
 	}
 
-
 	void AttachHoldState::TranslateSpringAlongY(float _distance)
 	{
 		targetPosition.y() += _distance;
@@ -1180,16 +1299,6 @@ namespace Phyzzle
 		info.info = None;
 
 		Snap();
-
-		auto p = player->data.cameraCore->GetLocalPosition();
-		p -= Eigen::Vector3f{ 0.5f ,0.5f, 0.f };
-		player->data.xAngle = 0.f;
-
-		player->data.cameraCore->SetLocalPosition(p);
-
-		//const Eigen::Quaternionf objectRotation = selectBody->GetRotation();
-		//const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
-		//targetRotation = playerRotation.inverse() * objectRotation;
 	}
 
 	void AttachHoldState::VariableReset()
@@ -1220,7 +1329,6 @@ namespace Phyzzle
 
 #pragma endregion Content
 
-#if _DEBUG
 	void AttachHoldState::SearchDebugDraw()
 	{
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
@@ -1250,5 +1358,4 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 	}
-#endif _DEBUG
 }

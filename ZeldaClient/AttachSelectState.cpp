@@ -58,6 +58,8 @@ namespace Phyzzle
 		{
 			SearchDebugDraw(select);
 		}
+
+		CameraUpdate();
 	}
 #pragma endregion StateEvent
 
@@ -75,7 +77,7 @@ namespace Phyzzle
 	// 카메라 회전
 	void AttachSelectState::Stick_R()
 	{
-		CameraAround();
+		// CameraUpdate();
 	}
 
 	// 취소
@@ -134,7 +136,7 @@ namespace Phyzzle
 		}
 	}
 
-	void AttachSelectState::CameraAround() const
+	void AttachSelectState::CameraUpdate() const
 	{
 		player->UpdateDefaultCamera();
 	}
