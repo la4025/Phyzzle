@@ -123,6 +123,9 @@
     <ClCompile Include="LauncherPlatform.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="PauseGame.cpp">
+      <Filter>DH\Pause</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -284,6 +287,9 @@
     <ClInclude Include="LauncherPlatform.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
+    <ClInclude Include="PauseGame.h">
+      <Filter>DH\Pause</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="KH">
@@ -360,6 +366,9 @@
     </Filter>
     <Filter Include="System\RespawnSystem">
       <UniqueIdentifier>{15b5728b-e79d-4e17-8d72-53db11e254da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DH\Pause">
+      <UniqueIdentifier>{ecb40c42-4a2d-485c-93ec-363cd98270e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

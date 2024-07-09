@@ -65,7 +65,6 @@
 #include "Image.h"
 #include "Button.h"
 #include "ButtonGroup.h"
-#include "PauseGame.h"
 #include "VolumeSetting.h"
 #include "VolumeScale.h"
 
