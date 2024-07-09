@@ -32,6 +32,13 @@ namespace PurahEngine
 			ZonaiPhysics::ZnQueryInfo& _info
 			);
 
+		static bool Boxcast(const Eigen::Vector3f& _extend,
+			const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _dir, float _distance,
+			unsigned int _layers,
+			ZonaiPhysics::ZnQueryInfo& _info
+		);
+
 		static bool Spherecast(float radius,
 			const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _dir, float _distance,
@@ -50,6 +57,13 @@ namespace PurahEngine
 			const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _dir, float _distance,
 			const std::vector<int>& _layers,
+			ZonaiPhysics::ZnQueryInfo& _info
+		);
+
+		static bool Capsulecast(float height, float radius,
+			const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot,
+			const Eigen::Vector3f& _dir, float _distance,
+			unsigned int _layers,
 			ZonaiPhysics::ZnQueryInfo& _info
 		);
 

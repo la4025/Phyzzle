@@ -207,13 +207,22 @@ namespace Phyzzle
 		};
 #pragma endregion Struct
 
-	public:
+#pragma region Initialize
 		void InitializeGamePad();
 		void InitializeDefaultPositions();
+		void InitializeLerpFunctions();
 		void InitializeAbilitySystem();
 		void InitializeStateSystem();
-		void InitializeLerpFunctions();
+#pragma endregion Initialize
 
+#pragma region Debug
+		void DebugDraw();
+		void DrawStateInfo() const;
+		std::wstring GetStateString(AbilityState state) const;
+		void DrawJumpInfo() const;
+#pragma endregion Debug
+
+	public:
 #pragma region Event
 		void Start() override;
 		void Update() override;
@@ -225,7 +234,17 @@ namespace Phyzzle
 		void SetStopUpdate(bool _value);
 
 	private:
-		void AddAnimationState(std::map<PlayerState, std::function<void()>>& stateMap,
+#pragma region Update
+		void UpdateAbilityState();
+		void PostUpdateAbilityState();
+		void UpdatePlayerAnimationState();
+#pragma endregion Update
+
+		void ChangeAbilityState(AbilityState);
+		void ChangePlayerAnimationState(PlayerState);
+
+		void AddAnimationState(
+			std::map<PlayerState, std::function<void()>>& stateMap,
 			PlayerState type, const std::wstring& animation,
 			PurahEngine::Animator* animator);
 		void AddAnimationSpeedController(
@@ -233,24 +252,15 @@ namespace Phyzzle
 			PlayerState type, const std::wstring& animation,
 			PurahEngine::Animator* animator);
 
-		void DebugDraw();
-		void DrawStateInfo() const;
-		std::wstring GetStateString(AbilityState state) const;
-		void DrawJumpInfo() const;
-
-	private:
-		void UpdateAbilityState();
-		void PostUpdateAbilityState();
-		void UpdatePlayerAnimationState();
-		void ChangeAbilityState(AbilityState);
-		void ChangePlayerAnimationState(PlayerState);
-
+#pragma region Input
 		void HandleGamePadInput();
 		void HandleStickInput();
 		void HandleTriggerInput();
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
+#pragma endregion Input
 
+#pragma region Player
 		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
 		bool SideCheck();
 
@@ -263,10 +273,12 @@ namespace Phyzzle
 
 		bool CanMove(Eigen::Vector3f _direction, float _moveScalar);
 		bool TryPlayerMove(float _moveSpeed);
+#pragma endregion Player
+
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
-#pragma region camera
+#pragma region Camera
 		void UpdateDefaultCamera();					// 카메라 업데이트
 		void UpdateSelectCamera();					// 카메라 업데이트
 
@@ -354,15 +366,10 @@ namespace Phyzzle
 
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
-
-#pragma endregion camera
+#pragma endregion Camera
 
 		bool RaycastFromCamera(
-			float _distance, 
-			PurahEngine::RigidBody** _outBody, 
-			PzObject** _outAttachable, 
-			Rewindable** _outRewindable
-		);
+			float _distance, PurahEngine::RigidBody** _outBody, PzObject** _outAttachable, Rewindable** _outRewindable);
 
 	public:
 #pragma region 직렬화

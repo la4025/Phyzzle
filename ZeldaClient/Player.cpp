@@ -25,6 +25,7 @@ namespace Phyzzle
 		}
 	}
 
+#pragma region Initialize
 	void Player::InitializeGamePad()
 	{
 		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
@@ -116,6 +117,42 @@ namespace Phyzzle
 			}
 		}
 	}
+#pragma endregion Initialize
+
+#pragma region Debug
+	void Player::DebugDraw()
+	{
+		DrawStateInfo();
+		DrawJumpInfo();
+	}
+
+	void Player::DrawStateInfo() const
+	{
+		std::wstring str = GetStateString(data.state);
+		std::wstring str0 = GetStateString(currState);
+
+		PurahEngine::GraphicsManager::GetInstance().DrawString(L"SELETE STATE : " + str, 100, 100, 300, 100, 15, 255, 255, 255, 255);
+		PurahEngine::GraphicsManager::GetInstance().DrawString(L"PLAYER STATE : " + str0, 100, 200, 400, 100, 15, 255, 255, 255, 255);
+	}
+
+	std::wstring Player::GetStateString(AbilityState state) const
+	{
+		switch (state)
+		{
+		case ATTACH_HOLD: return L"ATTACH_HOLD";
+		case ATTACH_SELECT: return L"ATTACH_SELECT";
+		case REWIND_SELECT: return L"REWIND_SELECT";
+		case LOCK_SELECT: return L"LOCK_SELECT";
+		default: return L"DEFAULT";
+		}
+	}
+
+	void Player::DrawJumpInfo() const
+	{
+		std::wstring jumpStatus = data.jumping ? L"Jumping" : L"can Jump";
+		PurahEngine::GraphicsManager::GetInstance().DrawString(jumpStatus, 500, 200, 400, 200, 15, 255, 255, 255, 255);
+	}
+#pragma endregion Debug
 
 #pragma region Event
 	void Player::Start()
@@ -175,23 +212,9 @@ namespace Phyzzle
 
 		data.stopUpdate = _value;
 	}
-
 #pragma endregion Event
-	void Player::DebugDraw()
-	{
-		DrawStateInfo();
-		DrawJumpInfo();
-	}
 
-	void Player::DrawStateInfo() const
-	{
-		std::wstring str = GetStateString(data.state);
-		std::wstring str0 = GetStateString(currState);
-
-		PurahEngine::GraphicsManager::GetInstance().DrawString(L"SELETE STATE : " + str, 100, 100, 300, 100, 15, 255, 255, 255, 255);
-		PurahEngine::GraphicsManager::GetInstance().DrawString(L"PLAYER STATE : " + str0, 100, 200, 400, 100, 15, 255, 255, 255, 255);
-	}
-
+#pragma region Update
 	void Player::UpdateAbilityState()
 	{
 		if (prevState != currState)
@@ -233,6 +256,17 @@ namespace Phyzzle
 				animationSpeedController[currPlayerState](animData.animationSpeed);
 		}
 	}
+#pragma endregion Update
+
+	void Player::ChangeAbilityState(AbilityState _state)
+	{
+		currState = _state;
+	}
+
+	void Player::ChangePlayerAnimationState(PlayerState _state)
+	{
+		currPlayerState = _state;
+	}
 
 	// 공통된 애니메이션 상태 추가 함수
 	void Player::AddAnimationState(
@@ -258,25 +292,7 @@ namespace Phyzzle
 			};
 	}
 
-
-	std::wstring Player::GetStateString(AbilityState state) const
-	{
-		switch (state)
-		{
-		case ATTACH_HOLD: return L"ATTACH_HOLD";
-		case ATTACH_SELECT: return L"ATTACH_SELECT";
-		case REWIND_SELECT: return L"REWIND_SELECT";
-		case LOCK_SELECT: return L"LOCK_SELECT";
-		default: return L"DEFAULT";
-		}
-	}
-
-	void Player::DrawJumpInfo() const
-	{
-		std::wstring jumpStatus = data.jumping ? L"Jumping" : L"can Jump";
-		PurahEngine::GraphicsManager::GetInstance().DrawString(jumpStatus, 500, 200, 400, 200, 15, 255, 255, 255, 255);
-	}
-
+#pragma region Input
 	void Player::HandleGamePadInput()
 	{
 		if (gamePad->IsConnected())
@@ -349,7 +365,9 @@ namespace Phyzzle
 			}
 		}
 	}
+#pragma endregion Input
 
+#pragma region Player
 	bool Player::GroundCheck(Eigen::Vector3f* _outNormal)
 	{
 		using namespace Eigen;
@@ -373,6 +391,27 @@ namespace Phyzzle
 	bool Player::SideCheck()
 	{
 		return true;
+	}
+
+	bool Player::SweepTest(const Eigen::Vector3f& _start, const Eigen::Vector3f& _vec, int collisionLayers)
+	{
+		using namespace Eigen;
+
+		// 플레이어 발 위치
+		Vector3f footPosition;
+
+		const float radius = 0.5f;
+		const float height = 1.f;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		PurahEngine::Physics::Capsulecast(
+			radius, height, 
+			_start, Quaternionf::Identity(), 
+			_vec.normalized(), _vec.norm(), 
+			collisionLayers, info);
+
+		// 
+		info.position;
 	}
 
 	bool Player::TryJump()
@@ -489,6 +528,7 @@ namespace Phyzzle
 		lastMove = currInput.Lstick.Size >= 1e-6;
 		return currInput.Lstick.Size >= 1e-6;
 	}
+#pragma endregion Player
 
 	/// \brief 모델을 월드 방향 벡터를 향해 회전
 	void Player::LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const
@@ -517,7 +557,7 @@ namespace Phyzzle
 		data.modelCore->SetLocalRotation(targetRotation);
 	}
 
-#pragma region camera
+#pragma region Camera
 	void Player::UpdateDefaultCamera()
 	{
 		RotateCameraArm();
@@ -955,7 +995,7 @@ namespace Phyzzle
 
 		data.cameraCore->SetWorldRotation(Eigen::Quaternionf(rotation));
 	}
-#pragma endregion camera
+#pragma endregion Camera
 
 	bool Player::RaycastFromCamera(
 		float _distance, 
@@ -998,17 +1038,6 @@ namespace Phyzzle
 		}
 
 		return block;
-	}
-
-
-	void Player::ChangeAbilityState(AbilityState _state)
-	{
-		currState = _state;
-	}
-
-	void Player::ChangePlayerAnimationState(PlayerState _state)
-	{
-		currPlayerState = _state;
 	}
 
 #pragma region 직렬화
