@@ -1,19 +1,12 @@
 #pragma once
 
-#include "PurahEngineAPI.h"
-
 #include "Component.h"
 
 namespace Phyzzle
 {
 	class Player;
-}
 
-namespace PurahEngine
-{
-
-
-	class PURAHENGINE_API PauseGame : public Component
+	class PauseGame : public PurahEngine::Component
 	{
 
 	public:
@@ -27,7 +20,7 @@ namespace PurahEngine
 
 		Phyzzle::Player* player = nullptr;
 
-		std::vector<std::pair<GameObject*, bool>> onOffEventList;
+		std::vector<std::pair<PurahEngine::GameObject*, bool>> onOffEventList;
 
 	private:
 		// Component을(를) 통해 상속됨
