@@ -2,6 +2,7 @@
 #include "TimeController.h"
 #include "GameObject.h"
 #include "UnifiedInputManager.h"
+#include "Player.h"
 
 void PurahEngine::PauseGame::Awake()
 {
@@ -39,10 +40,12 @@ void PurahEngine::PauseGame::LateUpdate()
 	if (isPause)
 	{
 		TimeController::GetInstance().SetTimeScale(0.0f);
+		player->SetStopUpdate(true);
 	}
 	else
 	{
 		TimeController::GetInstance().SetTimeScale(1.0f);
+		player->SetStopUpdate(false);
 	}
 }
 
@@ -71,4 +74,5 @@ void PurahEngine::PauseGame::PostDeserialize(const json& jsonData)
 
 		onOffEventList.push_back({ targetObject, state });
 	}
+	POSTDESERIALIZE_PTR(player);
 }

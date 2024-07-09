@@ -4,6 +4,11 @@
 
 #include "Component.h"
 
+namespace Phyzzle
+{
+	class Player;
+}
+
 namespace PurahEngine
 {
 
@@ -19,6 +24,8 @@ namespace PurahEngine
 
 	private:
 		bool isPause;
+
+		Phyzzle::Player* player = nullptr;
 
 		std::vector<std::pair<GameObject*, bool>> onOffEventList;
 

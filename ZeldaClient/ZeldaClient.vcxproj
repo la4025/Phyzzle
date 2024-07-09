@@ -152,6 +152,7 @@
     <ClCompile Include="CameraEventDevice.cpp" />
     <ClCompile Include="DebugCameraSetting.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
+    <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="DebugCameraSetting.h" />
     <ClInclude Include="ObjectGenerator.h" />
+    <ClInclude Include="PauseGame.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />

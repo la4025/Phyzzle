@@ -129,7 +129,7 @@
     </Filter>
     <Filter Include="Component\4. Sound\AudioClip">
       <UniqueIdentifier>{d1969cd7-3444-4afa-b322-198c0704b6e0}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Component\2. Physics\Joint\Custom">
       <UniqueIdentifier>{3cb20e6e-0fce-4d24-9a80-1702303f5405}</UniqueIdentifier>
     </Filter>
@@ -319,9 +319,6 @@
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Component\3. Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="PauseGame.cpp">
-      <Filter>Component\5. UI</Filter>
-    </ClCompile>
     <ClCompile Include="AudioClip.cpp">
       <Filter>Component\4. Sound\AudioClip</Filter>
     </ClCompile>
@@ -330,7 +327,7 @@
     </ClCompile>
     <ClCompile Include="VolumeScale.cpp">
       <Filter>Component\4. Sound</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="SpringFlexJoint.cpp">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClCompile>
@@ -565,9 +562,6 @@
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Component\3. Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="PauseGame.h">
-      <Filter>Component\5. UI</Filter>
-    </ClInclude>
     <ClInclude Include="AudioClip.h">
       <Filter>Component\4. Sound\AudioClip</Filter>
     </ClInclude>
@@ -576,7 +570,7 @@
     </ClInclude>
     <ClInclude Include="VolumeScale.h">
       <Filter>Component\4. Sound</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="SpringFlexJoint.h">
       <Filter>Component\2. Physics\Joint\Custom</Filter>
     </ClInclude>
