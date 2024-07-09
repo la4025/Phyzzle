@@ -14,9 +14,15 @@ namespace Phyzzle
 
 #pragma region StateEvent
 	private:
+		// IState을(를) 통해 상속됨
 		void StateEnter() override;
-		void StateExit() override;
+
 		void StateStay() override;
+		void PostStateStay() override;
+		
+		void StateExit() override;
+		
+		void StateCancel() override;
 #pragma endregion StateEvent
 
 #pragma region Input
@@ -30,8 +36,6 @@ namespace Phyzzle
 		void Click_Y() override;
 
 		void Click_LB() override;
-
-		void Pressing_RB() override;
 #pragma endregion Input
 
 #pragma region Content
@@ -43,7 +47,7 @@ namespace Phyzzle
 	private:
 		void PlayerMove(float _speed) const;
 		void CameraUpdate() const;
-		void StateCancel() const;
+		void Cancel() const;
 
 		void Jump() const;
 

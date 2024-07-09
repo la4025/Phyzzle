@@ -193,7 +193,8 @@ void PurahEngine::GameLoop::run()
 	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
 	PhysicsSystem::GetInstance().PreStep();
-	PhysicsSystem::GetInstance().Simulation(deltaTime);
+	// PhysicsSystem::GetInstance().Simulation(deltaTime);
+	PhysicsSystem::GetInstance().Simulation(0.001f);
 	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();

@@ -18,9 +18,14 @@ namespace Phyzzle
 		Player* player;
 
 	public:
-		virtual void StateStay() = 0;
 		virtual void StateEnter() = 0;
+
+		virtual void StateStay() = 0;
+		virtual void PostStateStay() = 0;
+		
 		virtual void StateExit() = 0;
+		
+		virtual void StateCancel() = 0;
 
 	public:
 		virtual void Stick_L() {}
@@ -62,6 +67,5 @@ namespace Phyzzle
 		virtual void Click_RB() {}
 		virtual void Pressing_RB() {}
 		virtual void Up_RB() {}
-
 	};
 }

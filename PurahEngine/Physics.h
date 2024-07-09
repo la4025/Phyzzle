@@ -54,5 +54,9 @@ namespace PurahEngine
 		);
 
 		static int GetLayerID(const std::wstring& _name);
+
+		static Eigen::Vector3f GetGravity();
+
+		static void SetGravity(const Eigen::Vector3f& _gravity);
 	};
 }

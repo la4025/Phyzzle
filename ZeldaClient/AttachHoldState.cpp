@@ -119,8 +119,11 @@ namespace Phyzzle
 			Quaternionf coreRot = player->data.cameraCore->GetWorldRotation();
 
 			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
+			player->data.armTargetPosition = player->data.armDefaultPosition;
+			
 			auto rot = player->data.modelCore->GetLocalRotation();
 			player->data.cameraArm->SetLocalRotation(rot);
+			player->data.armTargetRotation = rot;
 			player->data.xAngle = 0.f;
 
 			player->data.cameraCore->SetWorldRotation(coreRot);
@@ -151,9 +154,6 @@ namespace Phyzzle
 		// 속력 리셋
 		ResetObjectVelocity();
 
-		// 카메라 업데이트
-		UpdateCamera();
-
 		if (player->data.debugMode)
 		{
 			auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
@@ -176,6 +176,18 @@ namespace Phyzzle
 
 			SearchDebugDraw();
 		}
+	}
+
+	void AttachHoldState::PostStateStay()
+	{
+		// 카메라 업데이트
+		UpdateCamera();
+	}
+
+	void AttachHoldState::StateCancel()
+	{
+		Put();
+		Cancel();
 	}
 #pragma endregion StateEvent
 
@@ -217,7 +229,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_A()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 부착
@@ -228,7 +240,7 @@ namespace Phyzzle
 		if (TryAttach())
 		{
 			Put();
-			StateCancel();
+			Cancel();
 		}
 	}
 
@@ -236,7 +248,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_X()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 취소
@@ -249,7 +261,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_LB()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 오브젝트 이동 및 회전
@@ -692,24 +704,24 @@ namespace Phyzzle
 
 			if (front && !xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_FRONT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_FRONT);
 			}
 			else if (!front && !xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_BACK);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_BACK);
 			}
 			else if (right && xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_RIGHT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_RIGHT);
 			}
 			else if (!right && xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_LEFT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_LEFT);
 			}
 		}
 		else
 		{
-			player->ChangePlayerState(Player::PlayerState::ABILITY_IDLE);
+			player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_IDLE);
 		}
 	}
 
@@ -720,8 +732,8 @@ namespace Phyzzle
 		Vector3f localPosition = Vector3f::Zero();
 		Vector3f worldPosition = Vector3f::Zero();
 
-		UpdateCameraPosition(localPosition, worldPosition);
-		UpdateCameraRotation();
+		UpdateHoldingCameraPosition(localPosition, worldPosition);
+		UpdateHoldingCameraRotation();
 
 		if (player->ResolveCameraCollision(localPosition, worldPosition))
 		{
@@ -733,7 +745,7 @@ namespace Phyzzle
 		}
 	}
 
-	void AttachHoldState::UpdateCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const
+	void AttachHoldState::UpdateHoldingCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const
 	{
 		using namespace Eigen;
 
@@ -791,7 +803,7 @@ namespace Phyzzle
 		_world = world.translation();
 	}
 
-	void AttachHoldState::UpdateCameraRotation() const
+	void AttachHoldState::UpdateHoldingCameraRotation() const
 	{
 		using namespace Eigen;
 
@@ -853,7 +865,7 @@ namespace Phyzzle
 		player->ResetCameraCore();
 	}
 
-	void AttachHoldState::StateCancel() const
+	void AttachHoldState::Cancel() const
 	{
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}

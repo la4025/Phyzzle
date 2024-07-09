@@ -33,6 +33,7 @@ namespace Phyzzle
 			ABILITY_BACK,
 			ABILITY_RIGHT,
 			ABILITY_LEFT,
+			EVENT,
 		};
 
 		enum AbilityState
@@ -47,6 +48,24 @@ namespace Phyzzle
 
 	private:
 #pragma region Struct
+		struct AnimationData
+		{
+			std::wstring idleAnimation;
+			std::wstring walkingAnimation;
+			std::wstring runningAnimation;
+			std::wstring jumpAnimation;
+			std::wstring jumpingAnimation;
+			std::wstring landingAnimation;
+
+			std::wstring holdIdleAnimation;
+			std::wstring holdFrontAnimation;
+			std::wstring holdBackAnimation;
+			std::wstring holdRightAnimation;
+			std::wstring holdLeftAnimation;
+
+			float animationSpeed;
+		};
+
 		struct PlayerData
 		{
 			bool debugMode = false;
@@ -115,19 +134,6 @@ namespace Phyzzle
 			float attachRaycastDistance = 40.f;
 
 			AbilityState state = ATTACH_SELECT;
-
-			std::wstring idleAnimation;
-			std::wstring walkingAnimation;
-			std::wstring runningAnimation;
-			std::wstring jumpAnimation;
-			std::wstring jumpingAnimation;
-			std::wstring landingAnimation;
-
-			std::wstring holdIdleAnimation;
-			std::wstring holdFrontAnimation;
-			std::wstring holdBackAnimation;
-			std::wstring holdRightAnimation;
-			std::wstring holdLeftAnimation;
 
 			PzObject* holdObject;
 			PurahEngine::RigidBody* holdObjectBody;
@@ -219,6 +225,14 @@ namespace Phyzzle
 		void SetStopUpdate(bool _value);
 
 	private:
+		void AddAnimationState(std::map<PlayerState, std::function<void()>>& stateMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
+		void AddAnimationSpeedController(
+			std::map<PlayerState, std::function<void(float)>>& speedMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
+
 		void DebugDraw();
 		void DrawStateInfo() const;
 		std::wstring GetStateString(AbilityState state) const;
@@ -226,9 +240,10 @@ namespace Phyzzle
 
 	private:
 		void UpdateAbilityState();
-		void UpdatePlayerState();
+		void PostUpdateAbilityState();
+		void UpdatePlayerAnimationState();
 		void ChangeAbilityState(AbilityState);
-		void ChangePlayerState(PlayerState);
+		void ChangePlayerAnimationState(PlayerState);
 
 		void HandleGamePadInput();
 		void HandleStickInput();
@@ -253,10 +268,10 @@ namespace Phyzzle
 
 #pragma region camera
 		void UpdateDefaultCamera();					// 카메라 업데이트
-		void UpdateHoldCamera();					// 카메라 업데이트
+		void UpdateSelectCamera();					// 카메라 업데이트
 
 		void UpdateDefaultCameraCore();							// 카메라 코어 업데이트
-		void UpdateHoldCameraCore();							// 카메라 코어 업데이트
+		void UpdateSelectCameraCore();							// 카메라 코어 업데이트
 
 		/// <summary>
 		/// Camera Core 위치 계산
@@ -264,7 +279,7 @@ namespace Phyzzle
 		/// 카메라 위치는 Arm의 각도에 의해 계산됨
 		/// </summary>
 		/// <returns>카메라 코어 로컬 좌표</returns>
-		void CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut);	// 카메라 위치 업데이트
+		void CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut, bool _isSelect);	// 카메라 위치 업데이트
 
 		/// <summary>
 		/// 카메라가 지형 지물에 충돌 되는지 체크하고 위치를 변경함
@@ -323,10 +338,16 @@ namespace Phyzzle
 		/// <returns>평면과 평행하면 false</returns>
 		bool IntersectXZPlane(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction, Eigen::Vector3f& out);
 
+		/// <summary>
+		/// 카메라 암과 카메라 코어의 트랜스폼을 초기화 함
+		/// </summary>
+		void ResetCameraArmAndCameraCore();
+		void ResetCameraCoreTarget();
 		void ResetCamera();							// 카메라 위치 초기화
 		void ResetCameraArm();						// 카메라 암 위치 초기화
 		void ResetCameraCore();						// 카메라 코어 위치 초기화
 		
+		void SetCameraArmFoward(const Eigen::Vector3f& _direction);
 		void RotateCameraArm();							// 카메라 암 회전
 		void RotateCameraArmYaw(float yawAngle);		// 카메라 암 yaw 회전
 		void RotateCameraArmPitch(float pitchAngle);	// 카메라 암 pitch 회전
@@ -361,8 +382,9 @@ namespace Phyzzle
 
 		std::unordered_map<AbilityState, IState*> stateSystem;
 		std::set<AbilityState> stateChange;
-		std::unordered_map<PlayerState, std::function<void()>> animationState;
-		std::unordered_map<PlayerState, std::function<void()>> animationSpeedController;
+		std::map<PlayerState, std::wstring> animationString;
+		std::map<PlayerState, std::function<void()>> animationState;
+		std::map<PlayerState, std::function<void(float)>> animationSpeedController;
 		
 		AbilityState prevState = DEFAULT;
 		AbilityState currState = DEFAULT;
@@ -375,6 +397,7 @@ namespace Phyzzle
 		PlayerInput prevInput;
 
 		PlayerData data;
+		AnimationData animData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
 

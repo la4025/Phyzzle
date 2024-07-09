@@ -16,9 +16,12 @@ namespace Phyzzle
 		~DefaultState() override;
 
 	private:
+		// IState을(를) 통해 상속됨
 		void StateEnter() override;
 		void StateExit() override;
 		void StateStay() override;
+		void PostStateStay() override;
+		void StateCancel() override;
 
 	private:
 		void Stick_L() override;
@@ -27,27 +30,13 @@ namespace Phyzzle
 		void Click_DLeft() override;
 		void Click_DRight() override;
 
-		void Pressing_DLeft() override;
-		void Pressing_DRight() override;
-
 		void Click_A() override;
 
-		void Pressing_A() override;
-
 		void Click_LB() override;
-		void Click_RB() override;
-
-		void Pressing_LB() override;
-		void Pressing_RB() override;
-
-		Coroutine<void> CameraTemp();
-		Coroutine<int> CameraTempint();
 
 	private:
 		void Jump() const;
 		void CameraUpdate();
-		void CameraAround();
-		void CameraPositionFromAngle();
 		void Move() const;
 		void Around() const;
 		void LookToWorldDirection(const Eigen::Vector3f& _to) const;

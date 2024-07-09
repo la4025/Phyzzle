@@ -18,6 +18,11 @@ namespace Phyzzle
 
 	}
 
+	void LockState::PostStateStay()
+	{
+
+	}
+
 	void LockState::Stick_L()
 	{
 
@@ -68,5 +73,8 @@ namespace Phyzzle
 	void LockState::Cancel() const
 	{
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
+	}
+	void LockState::StateCancel()
+	{
 	}
 }

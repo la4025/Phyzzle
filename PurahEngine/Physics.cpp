@@ -108,4 +108,14 @@ namespace PurahEngine
 	{
 		return EngineSetting::GetInstance().LayertoLayerID(_name);
 	}
+
+	Eigen::Vector3f Physics::GetGravity()
+	{
+		return PhysicsSystem::GetInstance().GetGravity();
+	}
+
+	void Physics::SetGravity(const Eigen::Vector3f& _gravity)
+	{
+		PhysicsSystem::GetInstance().SetGravity(_gravity);
+	}
 }
