@@ -8,6 +8,12 @@ using namespace PurahEngine;
 
 namespace Phyzzle
 {
+
+	PauseGame::~PauseGame()
+	{
+		TimeController::GetInstance().SetTimeScale(1.0f);
+	}
+
 	void PauseGame::Awake()
 	{
 		isPause = false;
@@ -47,7 +53,7 @@ namespace Phyzzle
 
 			if (!previousIsPause) // 이전 상태가 false일 때만 호출
 			{
-				//player->SetStopUpdate(true);
+				player->SetStopUpdate(true);
 			}
 		}
 		else

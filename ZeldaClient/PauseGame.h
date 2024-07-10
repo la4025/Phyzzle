@@ -8,6 +8,8 @@ namespace Phyzzle
 
 	class PauseGame : public PurahEngine::Component
 	{
+	public:
+		~PauseGame();
 
 	public:
 		void Awake() override;
