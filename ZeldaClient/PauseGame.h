@@ -17,7 +17,7 @@ namespace Phyzzle
 
 	private:
 		bool isPause;
-
+		bool previousIsPause = false;
 		Phyzzle::Player* player = nullptr;
 
 		std::vector<std::pair<PurahEngine::GameObject*, bool>> onOffEventList;

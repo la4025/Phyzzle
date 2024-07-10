@@ -44,13 +44,23 @@ namespace Phyzzle
 		if (isPause)
 		{
 			TimeController::GetInstance().SetTimeScale(0.0f);
-			player->SetStopUpdate(true);
+
+			if (!previousIsPause) // 이전 상태가 false일 때만 호출
+			{
+				//player->SetStopUpdate(true);
+			}
 		}
 		else
 		{
 			TimeController::GetInstance().SetTimeScale(1.0f);
-			player->SetStopUpdate(false);
+
+			if (previousIsPause) // 이전 상태가 true일 때만 호출
+			{
+				player->SetStopUpdate(false);
+			}
 		}
+
+		previousIsPause = isPause; // 현재 상태를 저장
 	}
 
 	void PauseGame::PreSerialize(json& jsonData) const
