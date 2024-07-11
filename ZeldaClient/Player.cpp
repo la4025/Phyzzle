@@ -198,6 +198,8 @@ namespace Phyzzle
 		InitializeAbilitySystem();
 		InitializeStateSystem();
 		InitializeLerpFunctions();
+
+		stopCount = 0;
 	}
 
 	void Player::Update()
@@ -234,7 +236,24 @@ namespace Phyzzle
 
 	void Player::SetStopUpdate(bool _value)
 	{
-		data.stopUpdate = _value;
+		if (_value)
+		{
+			stopCount += 1;
+
+			if (stopCount == 1)
+			{
+				data.stopUpdate = _value;
+			}
+		}
+		else
+		{
+			stopCount -= 1;
+
+			if (stopCount == 0)
+			{
+				data.stopUpdate = _value;
+			}
+		}
 	}
 
 #pragma endregion Event

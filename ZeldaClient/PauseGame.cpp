@@ -49,19 +49,17 @@ namespace Phyzzle
 	{
 		if (isPause)
 		{
-			TimeController::GetInstance().SetTimeScale(0.0f);
-
 			if (!previousIsPause) // 이전 상태가 false일 때만 호출
 			{
+				TimeController::GetInstance().PauseAll();
 				player->SetStopUpdate(true);
 			}
 		}
 		else
 		{
-			TimeController::GetInstance().SetTimeScale(1.0f);
-
 			if (previousIsPause) // 이전 상태가 true일 때만 호출
 			{
+				TimeController::GetInstance().ResumeAll();
 				player->SetStopUpdate(false);
 			}
 		}

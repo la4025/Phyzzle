@@ -10,11 +10,12 @@ namespace Phyzzle
 		powerCounter = 0;
 		originMainCamera = nullptr;
 		workOnce = false;
+		pauseLevel = 0;
 	}
 
 	void CameraEventDevice::Update()
 	{
-		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime(pauseLevel);
 		eventElapsed += deltaTime;
 
 		bool loop = true;
@@ -73,6 +74,9 @@ namespace Phyzzle
 
 						eventElapsed -= powerDelay;
 						eventLevel += 1;
+						PurahEngine::TimeController::GetInstance().ResumeAll();
+						pauseLevel = 0;
+						player->SetStopUpdate(false);
 					}
 					else
 					{
@@ -85,7 +89,6 @@ namespace Phyzzle
 					{
 						originMainCamera->SetMainCamera();
 						running = false;
-						player->SetStopUpdate(false);
 						eventLevel += 1;
 
 						if (powerCounter < 1)
@@ -141,6 +144,7 @@ namespace Phyzzle
 		if ((worksOnlyOnce && workOnce) == false)
 		{
 			running = true;
+			pauseLevel = PurahEngine::TimeController::GetInstance().PauseAll();
 			player->SetStopUpdate(true);
 			eventElapsed = 0.0f;
 			eventLevel = 0;

@@ -369,6 +369,9 @@ namespace Phyzzle
 		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
 
 	private:
+		int stopCount;
+
+	private:
 		/// 사라질 변수들
 		Eigen::Vector3f		highPosition;
 		Eigen::Vector3f		lowPosition;
