@@ -109,7 +109,7 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, float2 uv, ou
         if (length(diffuse.xyz) > 0.00001)
         {
             // filterSize x filterSize 크기의 필터 사용
-            const int filterSize = 5;
+            const int filterSize = 1;
         
             const float deltaX = 1.0f / screenSize.x;
             const float deltaY = 1.0f / screenSize.y;
@@ -241,7 +241,7 @@ void CalculateShadowPointLight(int lightIndex, float3 normal, float3 viewPos, fl
     if (length(diffuse.xyz) > 0.00001)
     {
         // filterSize x filterSize 크기의 필터 사용
-        const int filterSize = 5;
+        const int filterSize = 1;
         
         const float deltaX = 1.0f / screenSize.x;
         const float deltaY = 1.0f / screenSize.y;

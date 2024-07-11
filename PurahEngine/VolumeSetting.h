@@ -6,12 +6,7 @@
 namespace PurahEngine
 {
 	class Button;
-
-	enum class VolumeType
-	{
-		UP,
-		DOWN
-	};
+	class AudioSource;
 
 	class PURAHENGINE_API VolumeSetting : public Component
 	{
@@ -23,7 +18,6 @@ namespace PurahEngine
 
 	private:
 		SoundType soundType;
-		VolumeType volumeType;
 		Button* button;
 	public:
 		virtual void PreSerialize(json& jsonData) const override;

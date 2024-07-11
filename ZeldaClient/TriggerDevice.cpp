@@ -10,7 +10,7 @@ namespace Phyzzle
 
 	void TriggerDevice::OnTriggerEnter(const PurahEngine::Collider* other)
 	{
-		auto& othertag = other->GetGameObject()->tag;
+		PurahEngine::Tag& othertag = other->GetGameObject()->tag;
 		
 		// containTag가 없다면 리턴
 		if (containTags.size() == 0)

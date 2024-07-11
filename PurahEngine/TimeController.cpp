@@ -2,22 +2,38 @@
 
 const float PurahEngine::TimeController::TIMESCALE_DEFAULT = 1.0f;
 const int PurahEngine::TimeController::FPS_DEFAULT = 60;
+const float PurahEngine::TimeController::MAX_DELTA = 0.04f;
 
 
 
 float PurahEngine::TimeController::GetDeltaTime(std::string timeName)
+{
+	return GetDeltaTime(timeName, 0);
+}
+
+float PurahEngine::TimeController::GetDeltaTime(std::string timeName, int pauseLevel)
 {
 	if (isRunning == false)
 	{
 		return 0.0f;
 	}
 
-	return deltaTime[timeName];
+	if (pauseLevel < pauseCount)
+	{
+		return 0.0f;
+	}
+
+	return std::min(deltaTime[timeName], MAX_DELTA);
 }
 
-void PurahEngine::TimeController::GetEventDeltaTime(std::string timeName)
+float PurahEngine::TimeController::GetEventDeltaTime(std::string timeName)
 {
+	if (isRunning == false)
+	{
+		return 0.0f;
+	}
 
+	return std::min(eventDeltaTime[timeName], MAX_DELTA);
 }
 
 float PurahEngine::TimeController::GetFPS()
@@ -37,7 +53,24 @@ float PurahEngine::TimeController::GetTimeScale()
 
 float PurahEngine::TimeController::GetDeltaTime()
 {
-	return GetDeltaTime(timeName);
+	return GetDeltaTime(timeName, 0);
+}
+
+float PurahEngine::TimeController::GetDeltaTime(int pauseLevel)
+{
+	return GetDeltaTime(timeName, pauseLevel);
+}
+
+int PurahEngine::TimeController::PauseAll()
+{
+	pauseCount += 1;
+
+	return pauseCount;
+}
+
+void PurahEngine::TimeController::ResumeAll()
+{
+	pauseCount -= 1;
 }
 
 void PurahEngine::TimeController::Initialize(std::string timename)
@@ -46,6 +79,7 @@ void PurahEngine::TimeController::Initialize(std::string timename)
 	framePerSecond = FPS_DEFAULT;
 	timeName = timename;
 	isRunning = true;
+	pauseCount = 0;
 }
 
 void PurahEngine::TimeController::Update(std::string timeName)
@@ -86,7 +120,7 @@ void PurahEngine::TimeController::UpdateIgnoreDelta(std::string timeName)
 	timeTable[timeName] = currentTime;
 }
 
-void PurahEngine::TimeController::PauseAll()
+void PurahEngine::TimeController::LockAll()
 {
 	if (isRunning == false)
 	{
@@ -95,10 +129,10 @@ void PurahEngine::TimeController::PauseAll()
 
 	isRunning = false;
 
-	pauseTime = std::chrono::system_clock::now();
+	lockTime = std::chrono::system_clock::now();
 }
 
-void PurahEngine::TimeController::ResumeAll()
+void PurahEngine::TimeController::UnlockAll()
 {
 	if (isRunning == true)
 	{
@@ -108,7 +142,7 @@ void PurahEngine::TimeController::ResumeAll()
 	isRunning = true;
 
 	std::chrono::system_clock::time_point resumeTime = std::chrono::system_clock::now();
-	std::chrono::system_clock::duration pauseDuration = resumeTime - pauseTime;
+	std::chrono::system_clock::duration pauseDuration = resumeTime - lockTime;
 
 	for (auto iter = timeTable.begin(); iter != timeTable.end(); iter++)
 	{

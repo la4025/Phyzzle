@@ -14,14 +14,24 @@ namespace PurahEngine
 	public:
 		static const float TIMESCALE_DEFAULT;
 		static const int FPS_DEFAULT;
+		static const float MAX_DELTA;
 
 		float GetDeltaTime(std::string timeName);
-		void GetEventDeltaTime(std::string timeName);
+		float GetDeltaTime(std::string timeName, int pauseLevel);
+		float GetEventDeltaTime(std::string timeName);
 		float GetFPS();
 		void SetTimeScale(float timescale);
 		float GetTimeScale();
 
 		float GetDeltaTime();
+		float GetDeltaTime(int pauseLevel);
+
+		/// <summary>
+		/// 게임을 일시정지합니다.
+		/// </summary>
+		/// <returns> Pause Level </returns>
+		int PauseAll();
+		void ResumeAll();
 
 	private:
 		void Initialize(std::string timename);
@@ -29,8 +39,8 @@ namespace PurahEngine
 		void Update(std::string timeName);
 		void UpdateIgnoreDelta(std::string timeName);
 
-		void PauseAll();
-		void ResumeAll();
+		void LockAll();
+		void UnlockAll();
 
 		void MoveWindow();
 
@@ -42,10 +52,14 @@ namespace PurahEngine
 		float timeScale;
 		int framePerSecond; 
 		bool isRunning;
-		std::chrono::system_clock::time_point pauseTime;
+		std::chrono::system_clock::time_point lockTime;
 
 		std::string timeName;
 		std::string physicName;
+
+	private:
+		int pauseCount;
+
 	public:
 		static TimeController& GetInstance();
 

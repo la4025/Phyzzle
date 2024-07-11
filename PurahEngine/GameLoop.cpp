@@ -262,13 +262,13 @@ LRESULT CALLBACK PurahEngine::GameLoop::WndProc(HWND hWnd, UINT message, WPARAM 
 
 		case WM_ENTERSIZEMOVE:
 		{
-			TimeController::GetInstance().PauseAll();
+			TimeController::GetInstance().LockAll();
 			break;
 		}
 
 		case WM_EXITSIZEMOVE:
 		{
-			TimeController::GetInstance().ResumeAll();
+			TimeController::GetInstance().UnlockAll();
 			break;
 		}
 

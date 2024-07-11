@@ -412,6 +412,9 @@ namespace Phyzzle
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 
 	private:
+		int stopCount;
+
+	private:
 		/// 사라질 변수들
 		Eigen::Vector3f		highPosition;
 		Eigen::Vector3f		lowPosition;

@@ -46,7 +46,6 @@ void PurahEngine::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameName, unsigne
 		ComponentFactory::GetInstance().RegisterComponent<Image>("Image");
 		ComponentFactory::GetInstance().RegisterComponent<Button>("Button");
 		ComponentFactory::GetInstance().RegisterComponent<ButtonGroup>("ButtonGroup");
-		ComponentFactory::GetInstance().RegisterComponent<PauseGame>("PauseGame");
 		ComponentFactory::GetInstance().RegisterComponent<VolumeSetting>("VolumeSetting");
 		ComponentFactory::GetInstance().RegisterComponent<VolumeScale>("VolumeScale");
 	}

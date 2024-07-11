@@ -145,6 +145,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(OutDir)DLL\PurahEngine.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /R /Y "$(TargetDir)*.cso" "$(SolutionDir)\ZeldaClient\CompiledShader\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationTestController.cpp" />
@@ -153,6 +156,7 @@
     <ClCompile Include="DebugCameraSetting.cpp" />
     <ClCompile Include="JumpCheck.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
+    <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
@@ -204,6 +208,7 @@
     <ClInclude Include="DebugCameraSetting.h" />
     <ClInclude Include="JumpCheck.h" />
     <ClInclude Include="ObjectGenerator.h" />
+    <ClInclude Include="PauseGame.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />

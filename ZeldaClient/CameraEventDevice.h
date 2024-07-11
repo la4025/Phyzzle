@@ -45,6 +45,8 @@ namespace Phyzzle
 		int eventLevel;			// 진행중인 이벤트의 cameraPath에서의 번호
 		bool workOnce;
 
+		int pauseLevel;
+
 	private:
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
