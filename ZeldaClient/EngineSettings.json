@@ -331,17 +331,17 @@
     {
       "name": "PlayerBody",
       "staticFriction": 0.0,
-      "dynamicFriction": 0.0,
+      "dynamicFriction": 0.05,
       "restitution": 0.1,
-      "eFriction": 0,
+      "eFriction": 1,
       "eRestitution": 1
     },
     {
       "name": "Ground",
-      "staticFriction": 1.0,
-      "dynamicFriction": 1.0,
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
       "restitution": 0.05,
-      "eFriction": 3,
+      "eFriction": 0,
       "eRestitution": 0
     },
     {

@@ -137,7 +137,21 @@ namespace Phyzzle
 #pragma region Debug
 	void Player::DebugDraw()
 	{
+		using namespace Eigen;
+
 		DrawStateInfo();
+
+		Vector3f currvelo = data.playerRigidbody->GetLinearVelocity();
+		float spd = currvelo.norm();
+		
+		PurahEngine::GraphicsManager::GetInstance().DrawString(
+			L"Player Current Speed : " + std::to_wstring(spd),
+			400, 100, 
+			100, 100, 
+			15, 
+			255, 255, 255, 255
+		);
+
 		DrawJumpInfo();
 	}
 
@@ -164,7 +178,7 @@ namespace Phyzzle
 
 	void Player::DrawJumpInfo() const
 	{
-		std::wstring jumpStatus = data.jumping ? L"Jumping" : L"can Jump";
+		std::wstring jumpStatus = data.isGrounded ? L"Jumping" : L"can Jump";
 		PurahEngine::GraphicsManager::GetInstance().DrawString(jumpStatus, 500, 200, 400, 200, 15, 255, 255, 255, 255);
 	}
 #pragma endregion Debug
@@ -186,7 +200,13 @@ namespace Phyzzle
 
 		prevState = currState;
 		prevPlayerState = currPlayerState;
-		
+		data.isGrounded = GroundCheck();
+
+		if (!data.isGrounded)
+		{
+			stateSystem[currState]->StateCancel();
+		}
+
 		if (!data.stopUpdate)
 		{
 			HandleInput();
@@ -218,12 +238,10 @@ namespace Phyzzle
 
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		JumpCheck(zn_collision, collider);
 	}
 
 	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
 	{
-		JumpCheck(zn_collision, collider);
 	}
 #pragma endregion Event
 
@@ -262,6 +280,7 @@ namespace Phyzzle
 			stateSystem[currState]->PostStateStay();
 		}
 	}
+
 
 	void Player::UpdatePlayerAnimationState()
 	{
@@ -447,29 +466,36 @@ namespace Phyzzle
 #pragma endregion Input
 
 #pragma region Player
-	bool Player::GroundCheck(Eigen::Vector3f* _outNormal)
+	bool Player::SlopeCheck(const Eigen::Vector3f& normal) const
+	{
+		// up 벡터랑 노말과 각도가 혀용 범위 내인가?
+		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
+		float cosTheta = up.dot(normal);
+		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+		float slope = std::acosf(cosTheta);
+
+		return slope <= data.slopeLimit;
+	}
+
+	bool Player::GroundCheck()
 	{
 		using namespace Eigen;
 
 		Vector3f start = data.playerRigidbody->GetPosition() - Vector3f::UnitY() * 0.025f;
 		Vector3f to = -Vector3f::UnitY();
-		float dis = 0.05f;
+		float dis = 0.1f;
 		int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
 		bool hit = PurahEngine::Physics::Raycast(start, to, dis, layers, info);
 
-		if (_outNormal)
+		if (hit)
 		{
-			*_outNormal = info.normal;
+			data.lastGroundNormal = info.normal;
+			return SlopeCheck(info.normal);
 		}
 
 		return hit;
-	}
-
-	bool Player::SideCheck()
-	{
-		return true;
 	}
 
 	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
@@ -478,8 +504,7 @@ namespace Phyzzle
 
 		// 플레이어 발 위치
 		Vector3f footPosition = GetGameObject()->GetTransform()->GetWorldPosition();
-		
-		Vector3f position = footPosition + Vector3f::UnitY();	// 스윕 시작
+		Vector3f startPosition = footPosition + Vector3f::UnitY();	// 스윕 시작
 		Vector3f direction = _movement.normalized();			// 스윕 방향
 		float distance = _movement.norm();						// 스윕 거리
 
@@ -490,7 +515,7 @@ namespace Phyzzle
 
 		bool hit = PurahEngine::Physics::Capsulecast(
 			radius, height, 
-			position, Quaternionf::Identity(),
+			startPosition, Quaternionf::Identity(),
 			direction, distance,
 			collisionLayers, info);
 
@@ -509,11 +534,10 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (GroundCheck())
+		if (data.isGrounded)
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
-			data.jumping = true;
 		}
 
 		return true;
@@ -539,7 +563,7 @@ namespace Phyzzle
 			}
 
 			// up 벡터랑 노말과 각도가 
-			if (IsGrounded(normal))
+			if (SlopeCheck(normal))
 			{
 				data.jumping = false;
 				return;
@@ -554,69 +578,61 @@ namespace Phyzzle
 		return cosTheta0 < 0;
 	}
 
-	bool Player::IsGrounded(const Eigen::Vector3f& normal) const
+	bool Player::CanMove(const Eigen::Vector3f& direction, float distance, float stepOffset)
 	{
-		// up 벡터랑 노말과 각도가 혀용 범위 내인가?
-		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		float cosTheta = up.dot(normal);
-		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
-		float slope = std::acosf(cosTheta);
-		const float slopeAngleLimit = (data.slopeLimit * std::numbers::phi_v<float>) / 180.f;
+		using namespace Eigen;
 
-		return slope <= slopeAngleLimit;
-	}
-
-	bool Player::CanMove(Eigen::Vector3f _direction, float _moveScalar)
-	{
-		return true;
+		// 이동 경로에 장애물이 있는지 확인하기 위해 SweepTest를 수행합니다.
+		Vector3f movement = direction * distance;
+		return !SweepTest(movement, 0.01f, stepOffset, data.cameraCollisionLayers);
 	}
 
 	bool Player::TryPlayerMove(float _moveSpeed)
 	{
 		using namespace Eigen;
 
-		static bool lastMove = false;
-
 		// 카메라의 전방 벡터를 계산
-		const Eigen::Vector3f cameraFront = data.cameraArm->GetFront();
-		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
-		const Eigen::Vector3f right = data.cameraArm->GetRight();
+		const Vector3f cameraFront = data.cameraArm->GetFront();
+		const Vector3f forward = Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
+		const Vector3f right = Vector3f::UnitY().cross(forward);
 
-		// 속도 벡터를 계산
-		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
+		// 이동 방향 벡터를 계산
+		const Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
-		Eigen::Vector3f velocity = data.playerRigidbody->GetLinearVelocity();
-		
-		//if (velocity.y() <= 0.f)
+		// 속도 벡터를 계산
+		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
+		Vector3f targetVelocity = moveSpeed * movementDirection;
+		Vector3f additionalVelocity = targetVelocity - currentVelocity;
+		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
+
+		//// 속도를 제한?
+		// Vector3f direction = additionalVelocity.normalized();
+		// float magnitude = additionalVelocity.norm();
+		// magnitude = std::clamp(magnitude, 0.f, moveSpeed);
+		// additionalVelocity = direction * magnitude;
+
+		// 속도를 적용시킴
+		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+
+		Vector3f gravity;
+		if (currentVelocity.y() > 0.f)
+			gravity = PurahEngine::Physics::GetGravity();
+		else if (currentVelocity.y() < 0.f)
+			gravity = PurahEngine::Physics::GetGravity() * 1.5f;
+		else
+			gravity = Vector3f::Zero();
+
+		data.playerRigidbody->AddForce(gravity, ZonaiPhysics::Velocity_Change);
+
+		// 경사면에서 미끄러짐 처리
+		//if (data.isGrounded) 
 		//{
-		//	Vector3f gravity = PurahEngine::Physics::GetGravity();
-		//	data.playerRigidbody->AddForce(gravity, ZonaiPhysics::Accelration);
+		//	additionalVelocity.x() += (1.f - additionalVelocity.y()) * data.lastGroundNormal.x() * (1.f - data.slideFriction);
+		//	additionalVelocity.z() +w= (1.f - additionalVelocity.y()) * data.lastGroundNormal.z() * (1.f - data.slideFriction);
+		//	data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
 		//}
 
-		if (lastMove && currInput.Lstick.Size < 1e-6)
-		{
-			velocity.x() = 0.f;
-			velocity.z() = 0.f;
-		}
-		else if (currInput.Lstick.Size >= 1e-6)
-		{
-			// const float scalar = velocity.norm();
-			// float diffSpeed = moveSpeed - scalar;
-
-			// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
-			/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
-			velocity.x() = movementDirection.x() * moveSpeed;
-			velocity.z() = movementDirection.z() * moveSpeed;
-
-			// 속력을 적용시킴
-			// Eigen::Vector3f addVelo = diffSpeed * movementDirection * data.playerRigidbody->GetMass();
-			// data.playerRigidbody->AddForce(addVelo, ZonaiPhysics::Force);
-		}
-
-		data.playerRigidbody->SetLinearVelocity(velocity);
-
-		lastMove = currInput.Lstick.Size >= 1e-6;
 		return currInput.Lstick.Size >= 1e-6;
 	}
 #pragma endregion Player

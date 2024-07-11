@@ -43,7 +43,10 @@ namespace Phyzzle
 
 		auto direction = player->data.playerRigidbody->GetLinearVelocity();
 		direction.y() = 0.f;
-		LookToWorldDirection(direction);
+		if (direction.norm() >= 1e-4)
+		{
+			LookToWorldDirection(direction);
+		}
 	}
 
 	void DefaultState::Stick_R()
@@ -68,7 +71,7 @@ namespace Phyzzle
 
 	void DefaultState::Click_LB()
 	{
-		if (!player->data.jumping)
+		if (player->data.isGrounded)
 		{
 			player->ChangeAbilityState(player->data.state);
 		}

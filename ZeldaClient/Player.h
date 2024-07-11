@@ -86,10 +86,13 @@ namespace Phyzzle
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
 			float stepOffset = 0.1f;			// 이동 시 허용 단차
+			float slideFriction = 0.3f;
 #pragma endregion Player Variable
 
 			float cameraLerpTime = 0.5f;			// 보간 시간
 			float cameraLerpTime0 = 1.0f;
+
+			Eigen::Vector3f lastGroundNormal;
 
 #pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
@@ -276,18 +279,16 @@ namespace Phyzzle
 #pragma endregion Input
 
 #pragma region Player
-		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
-		bool SideCheck();
-
+		bool SlopeCheck(const Eigen::Vector3f& normal) const;
+		bool GroundCheck();
 		bool SweepTest(
 			const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers);
 
 		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
-		bool IsGrounded(const Eigen::Vector3f& normal) const;
 
-		bool CanMove(Eigen::Vector3f _direction, float _moveScalar);
+		bool CanMove(const Eigen::Vector3f& direction, float distance, float stepOffset);
 		bool TryPlayerMove(float _moveSpeed);
 #pragma endregion Player
 
