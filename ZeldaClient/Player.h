@@ -256,11 +256,20 @@ namespace Phyzzle
 
 
 #pragma region Input
+		void HandleInput();
+		void HandleDebugToggle();
+
 		void HandleGamePadInput();
 		void HandleStickInput();
 		void HandleTriggerInput();
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
+		
+		void HandleKeyboardInput();
+		void HandleMovementInput();
+		void HandleCameraRotationInput();
+		void HandleActionInput();
+		void HandleAbilityInput();
 #pragma endregion Input
 
 #pragma region Player

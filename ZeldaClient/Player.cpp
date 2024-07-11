@@ -187,7 +187,7 @@ namespace Phyzzle
 		
 		if (!data.stopUpdate)
 		{
-			HandleGamePadInput();
+			HandleInput();
 			UpdateAbilityState();
 
 			animData.animationSpeed = currInput.Lstick.Size;
@@ -287,6 +287,32 @@ namespace Phyzzle
 	}
 
 #pragma region Input
+	void Player::HandleInput()
+	{
+		if (gamePad->IsConnected())
+		{
+			HandleGamePadInput();
+		}
+		else
+		{
+			HandleKeyboardInput();
+		}
+
+		HandleDebugToggle();
+	}
+
+	void Player::HandleDebugToggle()
+	{
+		bool keyCtrl = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL);
+		bool keyD = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_D);
+		bool keyShift = PurahEngine::InputManager::Getinstance().IsKeyReleased(PurahEngine::eKey::eKEY_SHIFT);
+
+		if (keyCtrl && keyD && keyShift)
+		{
+			data.debugMode = !data.debugMode;
+		}
+	}
+
 	void Player::HandleGamePadInput()
 	{
 		if (gamePad->IsConnected())
@@ -294,15 +320,6 @@ namespace Phyzzle
 			HandleStickInput();
 			HandleTriggerInput();
 			HandleButtonInput();
-		}
-
-		bool keyCtrl = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL);
-		bool keyD = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_D);
-		bool keyShift = PurahEngine::InputManager::Getinstance().IsKeyReleased(PurahEngine::eKey::eKEY_SHIFT);
-
-		if (keyCtrl && keyD && keyShift)
-		{
-			data.debugMode = data.debugMode ? false : true;
 		}
 	}
 
@@ -358,6 +375,72 @@ namespace Phyzzle
 				(stateSystem[currState]->*upFunc)();
 			}
 		}
+	}
+
+	void Player::HandleKeyboardInput()
+	{
+		HandleMovementInput();
+		stateSystem[currState]->Stick_L();
+		stateSystem[currState]->Stick_R();
+
+		HandleCameraRotationInput();
+		HandleActionInput();
+		HandleAbilityInput();
+
+	}
+
+	void Player::HandleMovementInput()
+	{
+		bool moveForward = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_W);
+		bool moveBackward = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_S);
+		bool moveLeft = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_A);
+		bool moveRight = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_D);
+
+		currInput.Lstick.Y = moveForward ? 1.0f : (moveBackward ? -1.0f : 0.0f);
+		currInput.Lstick.X = moveLeft ? -1.0f : (moveRight ? 1.0f : 0.0f);
+
+		float magnitude = std::sqrt(currInput.Lstick.X * currInput.Lstick.X + currInput.Lstick.Y * currInput.Lstick.Y);
+		currInput.Lstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+	}
+
+	void Player::HandleCameraRotationInput()
+	{
+		bool rotateUp = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_UP);
+		bool rotateDown = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_DOWN);
+		bool rotateLeft = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_LEFT);
+		bool rotateRight = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_RIGHT);
+
+		currInput.Rstick.Y = rotateUp ? 1.0f : (rotateDown ? -1.0f : 0.0f);
+		currInput.Rstick.X = rotateLeft ? -1.0f : (rotateRight ? 1.0f : 0.0f);
+
+		float magnitude = std::sqrt(currInput.Rstick.X * currInput.Rstick.X + currInput.Rstick.Y * currInput.Rstick.Y);
+		currInput.Rstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+	}
+
+	void Player::HandleActionInput()
+	{
+		bool jump = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_SPACE);
+		if (jump)
+			stateSystem[currState]->Click_A();
+
+		bool select = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_F);
+		if (select)
+			stateSystem[currState]->Click_B();
+
+		bool attach = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z);
+		if (attach)
+			stateSystem[currState]->Click_X();
+	}
+
+	void Player::HandleAbilityInput()
+	{
+		bool abillity = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Q);
+		if (abillity)
+			stateSystem[currState]->Click_LB();
+
+		bool rotate = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_E);
+		if (rotate)
+			stateSystem[currState]->Click_RB();
 	}
 #pragma endregion Input
 
@@ -713,8 +796,8 @@ namespace Phyzzle
 		Vector3f pos = Vector3f::Zero();
 		if (dis > 1e-6)
 		{
-			// float inv = dt / data.cameraLerpTime;
-			float inv = 0.001f / data.cameraLerpTime;
+			float inv = dt / data.cameraLerpTime;
+			// float inv = 0.001f / data.cameraLerpTime;
 			inv = std::clamp(inv, 0.f, 1.f);
 			pos = lerp(currPos, target, inv);
 		}
@@ -744,8 +827,8 @@ namespace Phyzzle
 			curr = currRotM;
 		}
 
-		// float inv = dt / data.cameraLerpTime;
-		float inv = 0.001f / data.cameraLerpTime;
+		float inv = dt / data.cameraLerpTime;
+		// float inv = 0.001f / data.cameraLerpTime;
 		inv = std::clamp(inv, 0.f, 1.f);
 		Quaternionf newRot = curr.slerp(inv, target);
 

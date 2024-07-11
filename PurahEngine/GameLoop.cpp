@@ -90,6 +90,9 @@ void PurahEngine::GameLoop::Initialize(_In_ HINSTANCE hInstance, LPCWSTR gameNam
 		eKey::eKEY_A,
 		eKey::eKEY_S,
 		eKey::eKEY_D,
+		eKey::eKEY_F,
+		eKey::eKEY_Z,
+
 		eKey::eKEY_O,
 		eKey::eKEY_P,
 		eKey::eKEY_Q,
@@ -193,8 +196,8 @@ void PurahEngine::GameLoop::run()
 	const float deltaTime = TimeController::GetInstance().GetDeltaTime(timeInit);
 
 	PhysicsSystem::GetInstance().PreStep();
-	// PhysicsSystem::GetInstance().Simulation(deltaTime);
-	PhysicsSystem::GetInstance().Simulation(0.001f);
+	PhysicsSystem::GetInstance().Simulation(deltaTime);
+	// PhysicsSystem::GetInstance().Simulation(0.001f);
 	PhysicsSystem::GetInstance().SimulateResult();
 
 	InputManager::Getinstance().Update();
