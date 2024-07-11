@@ -20,6 +20,8 @@ namespace Phyzzle
 	{
 	public:
 		~Player() override;
+
+#pragma region Enum
 		enum PlayerState
 		{
 			IDLE,
@@ -45,6 +47,7 @@ namespace Phyzzle
 			REWIND_SELECT	= 2,	// 물건을 되돌리려는 상태
 			LOCK_SELECT		= 3
 		};
+#pragma endregion Enum
 
 	private:
 #pragma region Struct
@@ -419,6 +422,10 @@ namespace Phyzzle
 		PlayerData data;
 		AnimationData animData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
+
+		Eigen::Vector4f color0;
+		Eigen::Vector4f color1;
+		Eigen::Vector4f color2;
 
 	private:
 		int stopCount;

@@ -119,8 +119,6 @@ namespace Phyzzle
 		void UpdateHoldingCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const;						// 카메라 위치 업데이트
 		void UpdateHoldingCameraRotation() const;							// 카메라 회전 업데이트
 
-		// void CameraUpdate() const;								// 카메라 회전
-
 		void CameraReset() const;								// 카메라 회전
 		void Cancel() const;										// Default 모드로 돌아감
 

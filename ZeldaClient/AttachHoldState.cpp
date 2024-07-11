@@ -188,6 +188,7 @@ namespace Phyzzle
 
 	void AttachHoldState::StateCancel()
 	{
+		EnableOutline(false);
 		Put();
 		Cancel();
 	}
@@ -1183,7 +1184,14 @@ namespace Phyzzle
 		if (!selectBody || !attachble)
 			return;
 
-		AttachSystem::Instance()->EnableOutline(attachble, _value, PurahColor::BlueViolet, PurahColor::BlueViolet);
+		if (_value)
+		{
+			AttachSystem::Instance()->EnableOutline(attachble, &player->color0, &player->color1);
+		}
+		else
+		{
+			AttachSystem::Instance()->DisableOutline(attachble);
+		}
 	}
 
 	void AttachHoldState::Snap()
