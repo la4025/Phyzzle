@@ -6,9 +6,14 @@
 
 namespace ZonaiPhysics
 {
-	CharacterController::CharacterController(physx::PxController* _controller) : controller(_controller)
+	CharacterController::CharacterController(physx::PxController* _controller)
+		: controller(_controller), isJumping(false), jumpVelocity(0.0f), pendingMovement(Eigen::Vector3f::Zero())
 	{
+	}
 
+	void CharacterController::SetCollisonData()
+	{
+		controller->getActor();
 	}
 
 	void CharacterController::SetPosition(const Eigen::Vector3f& _position)
@@ -36,7 +41,7 @@ namespace ZonaiPhysics
 		controller->setUpDirection({ _direction.x(), _direction.y(), _direction.z() });
 	}
 
-	void CharacterController::SetSlope(const float _slope)
+	void CharacterController::SetSlopeLimit(const float _slope)
 	{
 		controller->setSlopeLimit(_slope);
 	}
@@ -66,20 +71,56 @@ namespace ZonaiPhysics
 		return PhysxToEigen(controller->getUpDirection());
 	}
 
-	float CharacterController::GetSlope()
+	float CharacterController::GetSlopeLimit()
 	{
 		return controller->getSlopeLimit();
 	}
 
-	bool CharacterController::Move(Eigen::Vector3f _vec, float _dis, float _dt)
+	void CharacterController::Move(Eigen::Vector3f _vec)
 	{
-		physx::PxControllerCollisionFlags flag = controller->move(
-			EigenToPhysx(_vec),
-			_dis,
-			_dt,
-			physx::PxControllerFilters()
-		);
+		pendingMovement += _vec;
+	}
 
-		return true;
+	void CharacterController::Jump(float _velocity)
+	{
+		if (!isJumping)
+		{
+			isJumping = true;
+			jumpVelocity = _velocity;
+		}
+	}
+
+	void CharacterController::ApplyImpulse(const Eigen::Vector3f& _impulse)
+	{
+		pendingMovement += _impulse;
+	}
+
+	void CharacterController::Apply(float _dt)
+	{
+		if (isJumping)
+		{
+			// 중력 적용
+			jumpVelocity -= 9.8f * _dt;
+			pendingMovement.y() += jumpVelocity * _dt;
+		}
+
+		// 이동 벡터 적용
+		physx::PxControllerFilters filters;
+		collisionFlags = controller->move(EigenToPhysx(pendingMovement), 0.001f, _dt, filters);
+
+		// 바닥에 닿았는지 확인
+		if (collisionFlags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			isJumping = false;
+			jumpVelocity = 0.0f;
+		}
+
+		// 대기 중인 이동 벡터 초기화
+		pendingMovement = Eigen::Vector3f::Zero();
+	}
+
+	bool CharacterController::IsInAir() const
+	{
+		return (collisionFlags & physx::PxControllerCollisionFlag::eCOLLISION_DOWN) == false;
 	}
 }

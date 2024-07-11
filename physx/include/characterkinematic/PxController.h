@@ -79,9 +79,9 @@ class PxObstacleContext;
 class PxObstacle;
 
 /**
-\brief specifies how a CCT interacts with non-walkable parts.
+\brief CCT가 비보행 부분과 상호작용하는 방식을 지정합니다.
 
-This is only used when slopeLimit is non zero. It is currently enabled for static actors only, and not supported for spheres or capsules.
+이것은 slopeLimit이 0이 아닐 때만 사용됩니다. 현재 정적 액터에만 사용 가능하며, 구형(sphere) 또는 캡슐형(capsule)에는 지원되지 않습니다.
 */
 struct PxControllerNonWalkableMode
 {
@@ -93,15 +93,15 @@ struct PxControllerNonWalkableMode
 };
 
 /**
-\brief specifies which sides a character is colliding with.
+\brief 캐릭터가 어느 쪽과 충돌하고 있는지 지정합니다.
 */
 struct PxControllerCollisionFlag
 {
 	enum Enum
 	{
-		eCOLLISION_SIDES	= (1<<0),	//!< Character is colliding to the sides.
-		eCOLLISION_UP		= (1<<1),	//!< Character has collision above.
-		eCOLLISION_DOWN		= (1<<2)	//!< Character has collision below.
+		eCOLLISION_SIDES = (1 << 0),	//!< 캐릭터가 옆면과 충돌하고 있습니다.
+		eCOLLISION_UP = (1 << 1),		//!< 캐릭터가 위쪽과 충돌하고 있습니다.
+		eCOLLISION_DOWN = (1 << 2)		//!< 캐릭터가 아래쪽과 충돌하고 있습니다.
 	};
 };
 
@@ -283,12 +283,12 @@ class PxControllerFilters
 								{}
 
 	// CCT-vs-shapes:
-	const PxFilterData*			mFilterData;			//!< Data for internal PxQueryFilterData structure. Passed to PxScene::overlap() call.
-														//!< This can be NULL, in which case a default PxFilterData is used.
-	PxQueryFilterCallback*		mFilterCallback;		//!< Custom filter logic (can be NULL). Passed to PxScene::overlap() call.
-	PxQueryFlags				mFilterFlags;			//!< Flags for internal PxQueryFilterData structure. Passed to PxScene::overlap() call.
+	const PxFilterData* mFilterData;					//!< 내부 PxQueryFilterData 구조체를 위한 데이터입니다. PxScene::overlap() 호출에 전달됩니다.
+														//!< 이 값이 NULL인 경우, 기본 PxFilterData가 사용됩니다.
+	PxQueryFilterCallback* mFilterCallback;				//!< 사용자 정의 필터 논리 (NULL일 수 있음). PxScene::overlap() 호출에 전달됩니다.
+	PxQueryFlags				mFilterFlags;			//!< 내부 PxQueryFilterData 구조체를 위한 플래그입니다. PxScene::overlap() 호출에 전달됩니다.
 	// CCT-vs-CCT:
-	PxControllerFilterCallback*	mCCTFilterCallback;		//!< CCT-vs-CCT filter callback. If NULL, all CCT-vs-CCT collisions are kept.
+	PxControllerFilterCallback* mCCTFilterCallback;		//!< CCT-vs-CCT 필터 콜백입니다. NULL인 경우, 모든 CCT-vs-CCT 충돌이 유지됩니다.
 };
 
 /**
@@ -722,11 +722,10 @@ public:
 	virtual		PxExtendedVec3			getFootPosition()		const	= 0;
 
 	/**
-	\brief Get the rigid body actor associated with this controller (see PhysX documentation). 
-	The behavior upon manually altering this actor is undefined, you should primarily 
-	use it for reading const properties.
+	\brief 이 컨트롤러와 연관된 강체 액터를 가져옵니다 (PhysX 문서를 참조하십시오).
+	이 액터를 수동으로 변경할 때의 동작은 정의되지 않으므로, 주로 읽기 전용 속성에 사용하는 것이 좋습니다.
 
-	\return the actor associated with the controller.
+	\return 컨트롤러와 연관된 액터를 반환합니다.
 	*/
 	virtual		PxRigidDynamic*			getActor()				const	= 0;
 
@@ -879,9 +878,9 @@ public:
 	virtual		void					getState(PxControllerState& state)	const		= 0;
 
 	/**
-	\brief Returns the controller's internal statistics.
+	\brief 컨트롤러의 내부 통계를 반환합니다.
 
-	\param[out] stats The controller's internal statistics
+	\param[out] stats 컨트롤러의 내부 통계
 
 	@see PxControllerStats
 	*/

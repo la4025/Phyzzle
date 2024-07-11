@@ -18,7 +18,6 @@ namespace Phyzzle
 			p.x() += 0.5f;
 			p.y() += 0.5f;
 
-			// player->data.cameraCore->SetLocalPosition(p);
 			player->SetCameraCoreLocalTargetPosition(p);
 		}
 
@@ -29,7 +28,6 @@ namespace Phyzzle
 	void AttachSelectState::StateExit()
 	{
 		{
-			// player->data.cameraCore->SetLocalPosition(player->data.coreDefaultPosition);
 			player->SetCameraCoreLocalTargetPosition(player->data.coreDefaultPosition);
 		}
 
@@ -58,9 +56,18 @@ namespace Phyzzle
 		{
 			SearchDebugDraw(select);
 		}
+	}
 
+	void AttachSelectState::PostStateStay()
+	{
 		CameraUpdate();
 	}
+
+	void AttachSelectState::StateCancel()
+	{
+		Cancel();
+	}
+
 #pragma endregion StateEvent
 
 #pragma region Input
@@ -77,13 +84,13 @@ namespace Phyzzle
 	// 카메라 회전
 	void AttachSelectState::Stick_R()
 	{
-		// CameraUpdate();
+
 	}
 
 	// 취소
 	void AttachSelectState::Click_A()
 	{
-		StateCancel();
+		Cancel();
 	}
 
 	// 선택
@@ -102,24 +109,19 @@ namespace Phyzzle
 	// 취소
 	void AttachSelectState::Click_X()
 	{
-		StateCancel();
+		Cancel();
 	}
 
 	// 취소
 	void AttachSelectState::Click_Y()
 	{
-		StateCancel();
+		Cancel();
 	}
 
 	// 취소
 	void AttachSelectState::Click_LB()
 	{
-		StateCancel();
-	}
-
-	void AttachSelectState::Pressing_RB()
-	{
-
+		Cancel();
 	}
 #pragma endregion Input
 
@@ -128,20 +130,20 @@ namespace Phyzzle
 	{
 		if (player->TryPlayerMove(_speed))
 		{
-			player->ChangePlayerState(Player::WALK);
+			player->ChangePlayerAnimationState(Player::WALK);
 		}
 		else
 		{
-			player->ChangePlayerState(Player::IDLE);
+			player->ChangePlayerAnimationState(Player::IDLE);
 		}
 	}
 
 	void AttachSelectState::CameraUpdate() const
 	{
-		player->UpdateDefaultCamera();
+		player->UpdateSelectCamera();
 	}
 
-	void AttachSelectState::StateCancel() const
+	void AttachSelectState::Cancel() const
 	{
 		EnableOutline(false);
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
@@ -151,7 +153,7 @@ namespace Phyzzle
 	{
 		if (player->TryJump())
 		{
-			player->ChangePlayerState(Player::JUMP);
+			player->ChangePlayerAnimationState(Player::JUMP);
 		}
 	}
 
@@ -186,8 +188,14 @@ namespace Phyzzle
 
 		AttachSystem::Instance()->EnableOutline(selectObject, _value);
 	}
+	
+	void AttachSelectState::CrossHeadRender(bool _value)
+	{
+		player->data.crossHead->SetEnable(_value);
+	}
 #pragma endregion Content
 
+#pragma region Debug
 	void AttachSelectState::SearchDebugDraw(bool _value)
 	{
 		if (_value)
@@ -207,9 +215,5 @@ namespace Phyzzle
 				255, 255, 255, 255);
 		}
 	}
-
-	void AttachSelectState::CrossHeadRender(bool _value)
-	{
-		player->data.crossHead->SetEnable(_value);
-	}
+#pragma endregion Debug
 }

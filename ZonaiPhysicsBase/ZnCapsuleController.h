@@ -17,7 +17,7 @@ namespace ZonaiPhysics
 		virtual void SetStepOffset(const float _offset) = 0;
 		virtual void SetContactOffset(const float _offset) = 0;
 		virtual void SetUpDirection(const Eigen::Vector3f& _direction) = 0;
-		virtual void SetSlope(const float _slope) = 0;
+		virtual void SetSlopeLimit(const float _slope) = 0;
 		virtual void SetHeight(const float _height)		= 0;
 		virtual void SetRadius(const float _radius)		= 0;
 

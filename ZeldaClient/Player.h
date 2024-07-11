@@ -33,6 +33,7 @@ namespace Phyzzle
 			ABILITY_BACK,
 			ABILITY_RIGHT,
 			ABILITY_LEFT,
+			EVENT,
 		};
 
 		enum AbilityState
@@ -47,22 +48,45 @@ namespace Phyzzle
 
 	private:
 #pragma region Struct
+		struct AnimationData
+		{
+			std::wstring idleAnimation;
+			std::wstring walkingAnimation;
+			std::wstring runningAnimation;
+			std::wstring jumpAnimation;
+			std::wstring jumpingAnimation;
+			std::wstring landingAnimation;
+
+			std::wstring holdIdleAnimation;
+			std::wstring holdFrontAnimation;
+			std::wstring holdBackAnimation;
+			std::wstring holdRightAnimation;
+			std::wstring holdLeftAnimation;
+
+			float animationSpeed;
+		};
+
 		struct PlayerData
 		{
 			bool debugMode = false;
 			bool stopUpdate = false;
 
 #pragma region Player Variable
+			float height = 1.f;
+			float radius = 0.5f;
+
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
 			float jumpPower = 10.f;				// 점프 힘
+			bool isGrounded = false;
 			bool jumping = false;
 			float slopeLimit = 36.f;			// 경사 각도
+			float stepOffset = 0.1f;			// 이동 시 허용 단차
 #pragma endregion Player Variable
 
 			float cameraLerpTime = 0.5f;			// 보간 시간
-			float cameraLerpTime0 = 1.0f;			// 경사 각도
+			float cameraLerpTime0 = 1.0f;
 
 #pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
@@ -72,6 +96,12 @@ namespace Phyzzle
 			PurahEngine::Animator* animator;
 			PurahEngine::GameObject* crossHead;
 			PurahEngine::Transform* groundChechRaycast;
+
+			// UI
+			PurahEngine::GameObject* rotationArrow;
+			PurahEngine::GameObject* attachSelectUI;
+			PurahEngine::GameObject* attachHoldUI;
+			PurahEngine::GameObject* attachHoldCollisionUI;
 #pragma endregion Player Component
 
 #pragma region Camera
@@ -91,12 +121,8 @@ namespace Phyzzle
 			Eigen::Vector3f		armDefaultPosition;
 			Eigen::Quaternionf	armDefaultRotation;
 
-			Eigen::Vector3f coreCurrentPosition;
-			Eigen::Quaternionf	coreCurrentRotation;
 			Eigen::Vector3f coreTargetPosition;
 			Eigen::Quaternionf	coreTargetRotation;
-			Eigen::Vector3f coreTargetWorldPosition;
-			Eigen::Quaternionf	coreTargetWorldRotation;
 
 			Eigen::Vector3f armTargetPosition;
 			Eigen::Quaternionf	armTargetRotation;
@@ -111,19 +137,6 @@ namespace Phyzzle
 			float attachRaycastDistance = 40.f;
 
 			AbilityState state = ATTACH_SELECT;
-
-			std::wstring idleAnimation;
-			std::wstring walkingAnimation;
-			std::wstring runningAnimation;
-			std::wstring jumpAnimation;
-			std::wstring jumpingAnimation;
-			std::wstring landingAnimation;
-
-			std::wstring holdIdleAnimation;
-			std::wstring holdFrontAnimation;
-			std::wstring holdBackAnimation;
-			std::wstring holdRightAnimation;
-			std::wstring holdLeftAnimation;
 
 			PzObject* holdObject;
 			PurahEngine::RigidBody* holdObjectBody;
@@ -197,13 +210,30 @@ namespace Phyzzle
 		};
 #pragma endregion Struct
 
-	public:
+#pragma region Initialize
 		void InitializeGamePad();
 		void InitializeDefaultPositions();
+		void InitializeLerpFunctions();
 		void InitializeAbilitySystem();
 		void InitializeStateSystem();
-		void InitializeLerpFunctions();
+		void AddAnimationState(
+			std::map<PlayerState, std::function<void()>>& stateMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
+		void AddAnimationSpeedController(
+			std::map<PlayerState, std::function<void(float)>>& speedMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
+#pragma endregion Initialize
 
+#pragma region Debug
+		void DebugDraw();
+		void DrawStateInfo() const;
+		std::wstring GetStateString(AbilityState state) const;
+		void DrawJumpInfo() const;
+#pragma endregion Debug
+
+	public:
 #pragma region Event
 		void Start() override;
 		void Update() override;
@@ -215,38 +245,58 @@ namespace Phyzzle
 		void SetStopUpdate(bool _value);
 
 	private:
-		void DebugDraw();
-		void DrawStateInfo() const;
-		std::wstring GetStateString(AbilityState state) const;
-		void DrawJumpInfo() const;
-
-	private:
+#pragma region Update
 		void UpdateAbilityState();
-		void UpdatePlayerState();
+		void PostUpdateAbilityState();
+		void UpdatePlayerAnimationState();
+#pragma endregion Update
+
 		void ChangeAbilityState(AbilityState);
-		void ChangePlayerState(PlayerState);
+		void ChangePlayerAnimationState(PlayerState);
+
+
+#pragma region Input
+		void HandleInput();
+		void HandleDebugToggle();
 
 		void HandleGamePadInput();
 		void HandleStickInput();
 		void HandleTriggerInput();
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
+		
+		void HandleKeyboardInput();
+		void HandleMovementInput();
+		void HandleCameraRotationInput();
+		void HandleActionInput();
+		void HandleAbilityInput();
+#pragma endregion Input
+
+#pragma region Player
+		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
+		bool SideCheck();
+
+		bool SweepTest(
+			const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers);
 
 		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
 		bool IsGrounded(const Eigen::Vector3f& normal) const;
 
+		bool CanMove(Eigen::Vector3f _direction, float _moveScalar);
 		bool TryPlayerMove(float _moveSpeed);
+#pragma endregion Player
+
 		void LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const;
 		void LookInLocalDirection(const Eigen::Vector3f& _localDirection) const;
 
-#pragma region camera
+#pragma region Camera
 		void UpdateDefaultCamera();					// 카메라 업데이트
-		void UpdateHoldCamera();					// 카메라 업데이트
+		void UpdateSelectCamera();					// 카메라 업데이트
 
 		void UpdateDefaultCameraCore();							// 카메라 코어 업데이트
-		void UpdateHoldCameraCore();							// 카메라 코어 업데이트
+		void UpdateSelectCameraCore();							// 카메라 코어 업데이트
 
 		/// <summary>
 		/// Camera Core 위치 계산
@@ -254,7 +304,7 @@ namespace Phyzzle
 		/// 카메라 위치는 Arm의 각도에 의해 계산됨
 		/// </summary>
 		/// <returns>카메라 코어 로컬 좌표</returns>
-		void CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut);	// 카메라 위치 업데이트
+		void CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut, bool _isSelect);	// 카메라 위치 업데이트
 
 		/// <summary>
 		/// 카메라가 지형 지물에 충돌 되는지 체크하고 위치를 변경함
@@ -313,25 +363,26 @@ namespace Phyzzle
 		/// <returns>평면과 평행하면 false</returns>
 		bool IntersectXZPlane(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction, Eigen::Vector3f& out);
 
+		/// <summary>
+		/// 카메라 암과 카메라 코어의 트랜스폼을 초기화 함
+		/// </summary>
+		void ResetCameraArmAndCameraCore();
+		void ResetCameraCoreTarget();
 		void ResetCamera();							// 카메라 위치 초기화
 		void ResetCameraArm();						// 카메라 암 위치 초기화
 		void ResetCameraCore();						// 카메라 코어 위치 초기화
 		
+		void SetCameraArmFoward(const Eigen::Vector3f& _direction);
 		void RotateCameraArm();							// 카메라 암 회전
 		void RotateCameraArmYaw(float yawAngle);		// 카메라 암 yaw 회전
 		void RotateCameraArmPitch(float pitchAngle);	// 카메라 암 pitch 회전
 
 		void CameraLookTo(const Eigen::Vector3f& _direction);
 		void CameraLookAt(const Eigen::Vector3f& _position);
-
-#pragma endregion camera
+#pragma endregion Camera
 
 		bool RaycastFromCamera(
-			float _distance, 
-			PurahEngine::RigidBody** _outBody, 
-			PzObject** _outAttachable, 
-			Rewindable** _outRewindable
-		);
+			float _distance, PurahEngine::RigidBody** _outBody, PzObject** _outAttachable, Rewindable** _outRewindable);
 
 	public:
 #pragma region 직렬화
@@ -351,8 +402,9 @@ namespace Phyzzle
 
 		std::unordered_map<AbilityState, IState*> stateSystem;
 		std::set<AbilityState> stateChange;
-		std::unordered_map<PlayerState, std::function<void()>> animationState;
-		std::unordered_map<PlayerState, std::function<void()>> animationSpeedController;
+		std::map<PlayerState, std::wstring> animationString;
+		std::map<PlayerState, std::function<void()>> animationState;
+		std::map<PlayerState, std::function<void(float)>> animationSpeedController;
 		
 		AbilityState prevState = DEFAULT;
 		AbilityState currState = DEFAULT;
@@ -365,8 +417,8 @@ namespace Phyzzle
 		PlayerInput prevInput;
 
 		PlayerData data;
+		AnimationData animData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
-		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
 
 	private:
 		int stopCount;

@@ -16,6 +16,7 @@ namespace Phyzzle
 		void StateEnter() override;
 		void StateExit() override;
 		void StateStay() override;
+		void PostStateStay() override;
 
 	private:
 		void Stick_L() override;
@@ -34,5 +35,8 @@ namespace Phyzzle
 		void Select();
 		void Cancel() const;
 #pragma endregion Content
+
+		// IState을(를) 통해 상속됨
+		void StateCancel() override;
 	};
 }

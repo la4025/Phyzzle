@@ -25,6 +25,7 @@ namespace Phyzzle
 		}
 	}
 
+#pragma region Initialize
 	void Player::InitializeGamePad()
 	{
 		gamePad = PurahEngine::GamePadManager::GetGamePad(0);
@@ -59,16 +60,6 @@ namespace Phyzzle
 
 				return start + _t * (end - start);
 			};
-
-		slerp = [this](const Eigen::Quaternionf start, const Eigen::Quaternionf end, float _t) -> Eigen::Quaternionf
-			{
-				if (start == end)
-					return start;
-
-				_t = std::clamp(_t, 0.f, 1.f);
-
-				return start.slerp(_t, end);
-			};
 	}
 
 	void Player::InitializeAbilitySystem()
@@ -86,177 +77,63 @@ namespace Phyzzle
 
 	void Player::InitializeStateSystem()
 	{
-		animationState.insert(std::make_pair(IDLE, 
-			[this]() 
-			{
-				data.animator->Play(data.idleAnimation);
-			}
-		));
-		animationState.insert(std::make_pair(WALK,
-			[this]()
-			{
-				data.animator->Play(data.walkingAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(WALK,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.walkingAnimation, currInput.Lstick.Size);
-			}
-		));
-		animationState.insert(std::make_pair(RUN,
-			[this]()
-			{
-				data.animator->Play(data.runningAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(RUN,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.runningAnimation, currInput.Lstick.Size);
-			}
-		));
-		animationState.insert(std::make_pair(JUMP,
-			[this]()
-			{
-				data.animator->Play(data.jumpAnimation);
-			}
-		));
-		animationState.insert(std::make_pair(JUMPING,
-			[this]()
-			{
-				data.animator->Play(data.jumpingAnimation);
-			}
-		));
-		animationState.insert(std::make_pair(LANDING,
-			[this]()
-			{
-				data.animator->Play(data.landingAnimation);
-			}
-		));
-		animationState.insert(std::make_pair(ABILITY_IDLE,
-			[this]()
-			{
-				data.animator->Play(data.holdIdleAnimation);
-			}
-		));
-		animationState.insert(std::make_pair(ABILITY_FRONT,
-			[this]()
-			{
-				data.animator->Play(data.holdFrontAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(ABILITY_FRONT,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.holdFrontAnimation, currInput.Lstick.Size);
-			}
-		));
-		animationState.insert(std::make_pair(ABILITY_BACK,
-			[this]()
-			{
-				data.animator->Play(data.holdBackAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(ABILITY_BACK,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.holdBackAnimation, currInput.Lstick.Size);
-			}
-		));
-		animationState.insert(std::make_pair(ABILITY_RIGHT,
-			[this]()
-			{
-				data.animator->Play(data.holdRightAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(ABILITY_RIGHT,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.holdRightAnimation, currInput.Lstick.Size);
-			}
-		));
-		animationState.insert(std::make_pair(ABILITY_LEFT,
-			[this]()
-			{
-				data.animator->Play(data.holdLeftAnimation);
-			}
-		));
-		animationSpeedController.insert(std::make_pair(ABILITY_LEFT,
-			[this]()
-			{
-				data.animator->SetPlaySpeed(data.holdLeftAnimation, currInput.Lstick.Size);
-			}
-		));
-	}
-
-#pragma region Event
-	void Player::Start()
-	{
-		InitializeGamePad();
-		InitializeDefaultPositions();
-		InitializeAbilitySystem();
-		InitializeStateSystem();
-		InitializeLerpFunctions();
-
-		stopCount = 0;
-	}
-
-	void Player::Update()
-	{
-
-		prevState = currState;
-		prevPlayerState = currPlayerState;
-		
-		if (!data.stopUpdate)
 		{
-			HandleGamePadInput();
+			// 애니메이션 문자열 맵 초기화
+			animationString = {
+				{IDLE, animData.idleAnimation},
+				{WALK, animData.walkingAnimation},
+				{RUN, animData.runningAnimation},
+				{JUMP, animData.jumpAnimation},
+				{JUMPING, animData.jumpingAnimation},
+				{LANDING, animData.landingAnimation},
+				{ABILITY_IDLE, animData.holdIdleAnimation},
+				{ABILITY_FRONT, animData.holdFrontAnimation},
+				{ABILITY_BACK, animData.holdBackAnimation},
+				{ABILITY_RIGHT, animData.holdRightAnimation},
+				{ABILITY_LEFT, animData.holdLeftAnimation}
+			};
 		}
-		
-		DebugDraw();
-		UpdateAbilityState();
-		UpdatePlayerState();
-	}
 
-	void Player::LateUpdate()
-	{
-		UpdateCameraLerp();
-		CharacterDisable();
-	}
-
-	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
-	{
-		JumpCheck(zn_collision, collider);
-	}
-
-	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
-	{
-		JumpCheck(zn_collision, collider);
-	}
-
-	void Player::SetStopUpdate(bool _value)
-	{
-		if (_value)
 		{
-			stopCount += 1;
-
-			if (stopCount == 1)
+			// 애니메이션 상태 및 속도 컨트롤러 맵 초기화
+			for (const auto& [type, animation] : animationString) 
 			{
-				data.stopUpdate = _value;
-			}
-		}
-		else
-		{
-			stopCount -= 1;
-
-			if (stopCount == 0)
-			{
-				data.stopUpdate = _value;
+				AddAnimationState(animationState, type, animation, data.animator);
+				
+				if (type == WALK || type == RUN || type >= ABILITY_FRONT) 
+				{
+					AddAnimationSpeedController(animationSpeedController, type, animation, data.animator);
+				}
 			}
 		}
 	}
 
-#pragma endregion Event
+	// 공통된 애니메이션 상태 추가 함수
+	void Player::AddAnimationState(
+		std::map<PlayerState, std::function<void()>>& stateMap, 
+		PlayerState type, const std::wstring& animation, 
+		PurahEngine::Animator* animator)
+	{
+		stateMap[type] = [animation, animator]() 
+			{
+				animator->Play(animation);
+			};
+	}
+
+	// 공통된 애니메이션 속도 컨트롤러 추가 함수
+	void Player::AddAnimationSpeedController(
+		std::map<PlayerState, std::function<void(float)>>& speedMap, 
+		PlayerState type, const std::wstring& animation, 
+		PurahEngine::Animator* animator)
+	{
+		speedMap[type] = [animation, animator](float speed) 
+			{
+				animator->SetPlaySpeed(animation, speed);
+			};
+	}
+#pragma endregion Initialize
+
+#pragma region Debug
 	void Player::DebugDraw()
 	{
 		DrawStateInfo();
@@ -270,34 +147,6 @@ namespace Phyzzle
 
 		PurahEngine::GraphicsManager::GetInstance().DrawString(L"SELETE STATE : " + str, 100, 100, 300, 100, 15, 255, 255, 255, 255);
 		PurahEngine::GraphicsManager::GetInstance().DrawString(L"PLAYER STATE : " + str0, 100, 200, 400, 100, 15, 255, 255, 255, 255);
-	}
-
-	void Player::UpdateAbilityState()
-	{
-		if (prevState != currState)
-		{
-			stateSystem[prevState]->StateExit();
-			stateSystem[currState]->StateEnter();
-		}
-		else
-		{
-			stateSystem[currState]->StateStay();
-		}
-	}
-
-	void Player::UpdatePlayerState()
-	{
-		if (prevPlayerState != currPlayerState)
-		{
-			animationState[currPlayerState]();
-		}
-		else
-		{
-			if (animationSpeedController.contains(currPlayerState))
-			{
-				animationSpeedController[currPlayerState]();
-			}
-		}
 	}
 
 	std::wstring Player::GetStateString(AbilityState state) const
@@ -316,6 +165,152 @@ namespace Phyzzle
 	{
 		std::wstring jumpStatus = data.jumping ? L"Jumping" : L"can Jump";
 		PurahEngine::GraphicsManager::GetInstance().DrawString(jumpStatus, 500, 200, 400, 200, 15, 255, 255, 255, 255);
+	}
+#pragma endregion Debug
+
+#pragma region Event
+	void Player::Start()
+	{
+		InitializeGamePad();
+		InitializeDefaultPositions();
+		InitializeAbilitySystem();
+		InitializeStateSystem();
+		InitializeLerpFunctions();
+	}
+
+	void Player::Update()
+	{
+		using namespace Eigen;
+
+		prevState = currState;
+		prevPlayerState = currPlayerState;
+		
+		if (!data.stopUpdate)
+		{
+			HandleInput();
+			UpdateAbilityState();
+
+			animData.animationSpeed = currInput.Lstick.Size;
+		}
+		else
+		{
+			animData.animationSpeed = 0.f;
+		}
+
+		Vector3f pos = GetGameObject()->GetTransform()->GetWorldPosition();
+	}
+
+	void Player::LateUpdate()
+	{
+		UpdatePlayerAnimationState();
+		PostUpdateAbilityState();
+
+		UpdateCameraLerp();
+		CharacterDisable();
+
+		if (data.debugMode)
+		{
+			DebugDraw();
+		}
+	}
+
+	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		JumpCheck(zn_collision, collider);
+	}
+
+	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		JumpCheck(zn_collision, collider);
+	}
+
+	void Player::SetStopUpdate(bool _value)
+	{
+		stateSystem[currState]->StateCancel();
+
+		data.stopUpdate = _value;
+	}
+#pragma endregion Event
+
+#pragma region Update
+	void Player::UpdateAbilityState()
+	{
+		if (prevState != currState)
+		{
+			if (stateSystem.contains(prevState))
+				stateSystem[prevState]->StateExit();
+
+			if (stateSystem.contains(currState))
+				stateSystem[currState]->StateEnter();
+		}
+		else
+		{
+			if (stateSystem.contains(currState))
+				stateSystem[currState]->StateStay();
+		}
+	}
+
+	void Player::PostUpdateAbilityState()
+	{
+		if (prevState != currState)
+			return;
+
+		if (stateSystem.contains(currState))
+		{
+			stateSystem[currState]->PostStateStay();
+		}
+	}
+
+	void Player::UpdatePlayerAnimationState()
+	{
+		if (prevPlayerState != currPlayerState)
+		{
+			if (animationState.contains(currPlayerState))
+				animationState[currPlayerState]();
+		}
+		else
+		{
+			if (animationSpeedController.contains(currPlayerState))
+				animationSpeedController[currPlayerState](animData.animationSpeed);
+		}
+	}
+#pragma endregion Update
+
+	void Player::ChangeAbilityState(AbilityState _state)
+	{
+		currState = _state;
+	}
+
+	void Player::ChangePlayerAnimationState(PlayerState _state)
+	{
+		currPlayerState = _state;
+	}
+
+#pragma region Input
+	void Player::HandleInput()
+	{
+		if (gamePad->IsConnected())
+		{
+			HandleGamePadInput();
+		}
+		else
+		{
+			HandleKeyboardInput();
+		}
+
+		HandleDebugToggle();
+	}
+
+	void Player::HandleDebugToggle()
+	{
+		bool keyCtrl = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL);
+		bool keyD = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_D);
+		bool keyShift = PurahEngine::InputManager::Getinstance().IsKeyReleased(PurahEngine::eKey::eKEY_SHIFT);
+
+		if (keyCtrl && keyD && keyShift)
+		{
+			data.debugMode = !data.debugMode;
+		}
 	}
 
 	void Player::HandleGamePadInput()
@@ -382,16 +377,136 @@ namespace Phyzzle
 		}
 	}
 
-	bool Player::TryJump()
+	void Player::HandleKeyboardInput()
 	{
-		if (data.jumping)
+		HandleMovementInput();
+		stateSystem[currState]->Stick_L();
+		stateSystem[currState]->Stick_R();
+
+		HandleCameraRotationInput();
+		HandleActionInput();
+		HandleAbilityInput();
+
+	}
+
+	void Player::HandleMovementInput()
+	{
+		bool moveForward = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_W);
+		bool moveBackward = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_S);
+		bool moveLeft = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_A);
+		bool moveRight = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_D);
+
+		currInput.Lstick.Y = moveForward ? 1.0f : (moveBackward ? -1.0f : 0.0f);
+		currInput.Lstick.X = moveLeft ? -1.0f : (moveRight ? 1.0f : 0.0f);
+
+		float magnitude = std::sqrt(currInput.Lstick.X * currInput.Lstick.X + currInput.Lstick.Y * currInput.Lstick.Y);
+		currInput.Lstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+	}
+
+	void Player::HandleCameraRotationInput()
+	{
+		bool rotateUp = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_UP);
+		bool rotateDown = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_DOWN);
+		bool rotateLeft = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_LEFT);
+		bool rotateRight = PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_RIGHT);
+
+		currInput.Rstick.Y = rotateUp ? 1.0f : (rotateDown ? -1.0f : 0.0f);
+		currInput.Rstick.X = rotateLeft ? -1.0f : (rotateRight ? 1.0f : 0.0f);
+
+		float magnitude = std::sqrt(currInput.Rstick.X * currInput.Rstick.X + currInput.Rstick.Y * currInput.Rstick.Y);
+		currInput.Rstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+	}
+
+	void Player::HandleActionInput()
+	{
+		bool jump = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_SPACE);
+		if (jump)
+			stateSystem[currState]->Click_A();
+
+		bool select = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_F);
+		if (select)
+			stateSystem[currState]->Click_B();
+
+		bool attach = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z);
+		if (attach)
+			stateSystem[currState]->Click_X();
+	}
+
+	void Player::HandleAbilityInput()
+	{
+		bool abillity = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Q);
+		if (abillity)
+			stateSystem[currState]->Click_LB();
+
+		bool rotate = PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_E);
+		if (rotate)
+			stateSystem[currState]->Click_RB();
+	}
+#pragma endregion Input
+
+#pragma region Player
+	bool Player::GroundCheck(Eigen::Vector3f* _outNormal)
+	{
+		using namespace Eigen;
+
+		Vector3f start = data.playerRigidbody->GetPosition() - Vector3f::UnitY() * 0.025f;
+		Vector3f to = -Vector3f::UnitY();
+		float dis = 0.05f;
+		int layers = data.cameraCollisionLayers;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Raycast(start, to, dis, layers, info);
+
+		if (_outNormal)
 		{
-			return false;
+			*_outNormal = info.normal;
 		}
 
-		Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
-		data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
-		data.jumping = true;
+		return hit;
+	}
+
+	bool Player::SideCheck()
+	{
+		return true;
+	}
+
+	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
+	{
+		using namespace Eigen;
+
+		// 플레이어 발 위치
+		Vector3f footPosition = GetGameObject()->GetTransform()->GetWorldPosition();
+		
+		Vector3f position = footPosition + Vector3f::UnitY();
+		Vector3f direction = _movement.normalized();
+		float distance = _movement.norm();
+
+		const float radius = 0.5f;
+		const float height = 1.f;
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Capsulecast(
+			radius, height, 
+			position, Quaternionf::Identity(),
+			direction, distance,
+			collisionLayers, info);
+
+		// 
+		info.position;
+
+		return true;
+	}
+
+	bool Player::TryJump()
+	{
+		using namespace Eigen;
+
+		if (GroundCheck())
+		{
+			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
+			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
+			data.jumping = true;
+		}
 
 		return true;
 	}
@@ -443,8 +558,17 @@ namespace Phyzzle
 		return slope <= slopeAngleLimit;
 	}
 
+	bool Player::CanMove(Eigen::Vector3f _direction, float _moveScalar)
+	{
+		return true;
+	}
+
 	bool Player::TryPlayerMove(float _moveSpeed)
 	{
+		using namespace Eigen;
+
+		static bool lastMove = false;
+
 		// 카메라의 전방 벡터를 계산
 		const Eigen::Vector3f cameraFront = data.cameraArm->GetFront();
 		const Eigen::Vector3f forward = Eigen::Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
@@ -452,21 +576,42 @@ namespace Phyzzle
 
 		// 속도 벡터를 계산
 		const Eigen::Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
-		const Eigen::Vector3f movement = movementDirection * _moveSpeed * currInput.Lstick.Size;
+		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
 		Eigen::Vector3f velocity = data.playerRigidbody->GetLinearVelocity();
+		
+		//if (velocity.y() <= 0.f)
+		//{
+		//	Vector3f gravity = PurahEngine::Physics::GetGravity();
+		//	data.playerRigidbody->AddForce(gravity, ZonaiPhysics::Accelration);
+		//}
 
-		// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
-		/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
-		velocity.x() = movement.x();
-		velocity.z() = movement.z();
+		if (lastMove && currInput.Lstick.Size < 1e-6)
+		{
+			velocity.x() = 0.f;
+			velocity.z() = 0.f;
+		}
+		else if (currInput.Lstick.Size >= 1e-6)
+		{
+			// const float scalar = velocity.norm();
+			// float diffSpeed = moveSpeed - scalar;
 
-		// 속력을 적용시킴
-		// data.playerRigidbody->AddForce(velocity, ZonaiPhysics::Velocity_Change);
+			// y축 운동을 방해하지 않는 걸로 중력은 적용되도록함.
+			/// 단, 이런 방식이면 키 입력이 없다면 누군가랑 부딪쳐도 가만히 있을 듯
+			velocity.x() = movementDirection.x() * moveSpeed;
+			velocity.z() = movementDirection.z() * moveSpeed;
+
+			// 속력을 적용시킴
+			// Eigen::Vector3f addVelo = diffSpeed * movementDirection * data.playerRigidbody->GetMass();
+			// data.playerRigidbody->AddForce(addVelo, ZonaiPhysics::Force);
+		}
+
 		data.playerRigidbody->SetLinearVelocity(velocity);
 
+		lastMove = currInput.Lstick.Size >= 1e-6;
 		return currInput.Lstick.Size >= 1e-6;
 	}
+#pragma endregion Player
 
 	/// \brief 모델을 월드 방향 벡터를 향해 회전
 	void Player::LookInWorldDirection(const Eigen::Vector3f& _worldDirection) const
@@ -495,16 +640,17 @@ namespace Phyzzle
 		data.modelCore->SetLocalRotation(targetRotation);
 	}
 
-#pragma region camera
+#pragma region Camera
 	void Player::UpdateDefaultCamera()
 	{
 		RotateCameraArm();
 		UpdateDefaultCameraCore();
 	}
 
-	void Player::UpdateHoldCamera()
+	void Player::UpdateSelectCamera()
 	{
-		UpdateHoldCameraCore();
+		RotateCameraArm();
+		UpdateSelectCameraCore();
 	}
 
 	// default 상태에서 camera core의 위치를 계산하는 함수 
@@ -515,7 +661,7 @@ namespace Phyzzle
 		Vector3f localPosition = Vector3f::Zero();
 		Vector3f worldPosition = Vector3f::Zero();
 		// 각도에 따라 위치를 우선 제한함
-		CalculateDefaultCameraCorePosition(localPosition, worldPosition);
+		CalculateDefaultCameraCorePosition(localPosition, worldPosition, false);
 		
 		// 오브젝트에 충돌하면 처리함
 		if (ResolveCameraCollision(localPosition, worldPosition))
@@ -528,14 +674,14 @@ namespace Phyzzle
 		}
 	}
 
-	void Player::UpdateHoldCameraCore()
+	void Player::UpdateSelectCameraCore()
 	{
 		using namespace Eigen;
 
 		Vector3f localPosition = Vector3f::Zero();
 		Vector3f worldPosition = Vector3f::Zero();
 		// 각도에 따라 위치를 우선 제한함
-		CalculateDefaultCameraCorePosition(localPosition, worldPosition);
+		CalculateDefaultCameraCorePosition(localPosition, worldPosition, true);
 
 		// 오브젝트에 충돌하면 처리함
 		if (ResolveCameraCollision(localPosition, worldPosition))
@@ -548,7 +694,7 @@ namespace Phyzzle
 		}
 	}
 
-	void Player::CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut)
+	void Player::CalculateDefaultCameraCorePosition(Eigen::Vector3f& localOut, Eigen::Vector3f& worldOut, bool _isSelect)
 	{
 		using namespace Eigen;
 
@@ -559,7 +705,9 @@ namespace Phyzzle
 
 		const Vector3f& diff = data.xAngle >= 0.f ? differenceHigh : differenceLow;
 
-		Vector3f pos = data.coreTargetPosition;
+		Vector3f offset = _isSelect ? Vector3f{ 0.5f, 0.5f, 0.f } : Vector3f::Zero();
+		Vector3f pos = data.coreDefaultPosition + offset;
+		// Vector3f pos = data.coreTargetPosition;
 		pos.z() = data.coreDefaultPosition.z() + diff.z() * easingFunc(ease);
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
@@ -574,16 +722,17 @@ namespace Phyzzle
 		using namespace Eigen;
 
 		static float prevDistance = FLT_MAX;
+		static bool prevHit = false;
 
 		float radius = data.cameraCollisionRadius;
 		const Vector3f coreLocalPos = localIn;
 		const Vector3f coreWorldPos = worldIn;
 
-		const Vector3f coreLocalDir = data.cameraCore->GetLocalRotation() * Vector3f::UnitZ();
-		const Vector3f localStart = CalculateCameraFocusPosition(coreLocalPos, coreLocalDir);
+		// const Vector3f coreLocalDir = data.cameraCore->GetLocalRotation() * Vector3f::UnitZ();
+		// const Vector3f localStart = CalculateCameraFocusPosition(coreLocalPos, coreLocalDir);
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
-		world.translate(localStart);
+		// world.translate(localStart);
 		const Vector3f worldStart = world.translation();
 
 		Vector3f worldDir = coreWorldPos - worldStart;
@@ -597,31 +746,39 @@ namespace Phyzzle
 
 		unsigned int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
-		ZonaiPhysics::ZnQueryInfo info2;
 
-		bool hit = PurahEngine::Physics::Spherecast(radius, worldStart, Quaternionf::Identity(), worldDir, dis, layers, info);
-		bool hit2 = PurahEngine::Physics::Spherecast(radius + 0.2f, worldStart, Quaternionf::Identity(), worldDir, dis, layers, info2);
+		bool hit = PurahEngine::Physics::Spherecast(
+			radius, 
+			worldStart, Quaternionf::Identity(), 
+			worldDir, dis, 
+			layers, 
+			info
+		);
 
-		if (!hit)
+		//if (!hit)
+		//{
+		//	return hit;
+		//}
+
+		if (hit)
 		{
-			return hit;
+			Vector3f position = worldStart + worldDir * info.distance;
+			Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
+			Vector3f localPos = worldT.inverse() * position;
+
+			if ((info.distance < prevDistance) && (!prevHit && hit))
+			{
+				data.cameraCore->SetLocalPosition(localPos);
+			}
+
+			data.coreTargetPosition = localPos;
+
+			localIn = localPos;
+			worldIn = position;
 		}
-
-		Vector3f position = worldStart + worldDir * info.distance;
-		Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
-		Vector3f localPos = worldT.inverse() * position;
-
-		if (info.distance < prevDistance)
-		{
-			data.cameraCore->SetLocalPosition(localPos);
-		}
-
-		data.coreTargetPosition = localPos;
-
-		localIn = localPos;
-		worldIn = position;
-
-		prevDistance = info.distance;
+	
+		prevDistance = hit ? info.distance : FLT_MAX;
+		prevHit = hit;
 
 		return hit;
 	}
@@ -631,12 +788,23 @@ namespace Phyzzle
 		using namespace Eigen;
 
 		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
-		Vector3f armPos = data.cameraArm->GetLocalPosition();
 		Vector3f currPos = data.cameraCore->GetLocalPosition();
 		Vector3f target = data.coreTargetPosition;
+		Vector3f diff = target - currPos;
+		float dis = diff.norm();
 
-		float inv = dt / data.cameraLerpTime;
-		Vector3f pos = lerp(currPos, target, inv);
+		Vector3f pos = Vector3f::Zero();
+		if (dis > 1e-6)
+		{
+			float inv = dt / data.cameraLerpTime;
+			// float inv = 0.001f / data.cameraLerpTime;
+			inv = std::clamp(inv, 0.f, 1.f);
+			pos = lerp(currPos, target, inv);
+		}
+		else
+		{
+			pos = target;
+		}
 
 		data.cameraCore->SetLocalPosition(pos);
 	}
@@ -647,12 +815,24 @@ namespace Phyzzle
 
 		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 		Quaternionf currRot = data.cameraCore->GetLocalRotation();
+		Quaternionf currRotM = Quaternionf(-currRot.w(), -currRot.x(), -currRot.y(), -currRot.z());
+		Quaternionf curr = currRot;
 		Quaternionf target = data.coreTargetRotation;
 
-		float inv = dt / data.cameraLerpTime;
-		Quaternionf pos = slerp(currRot, target, inv);
+		float costheta0 = currRot.dot(target);
+		float costheta1 = currRotM.dot(target);
 
-		data.cameraCore->SetLocalRotation(pos);
+		if (costheta0 < costheta1)
+		{
+			curr = currRotM;
+		}
+
+		float inv = dt / data.cameraLerpTime;
+		// float inv = 0.001f / data.cameraLerpTime;
+		inv = std::clamp(inv, 0.f, 1.f);
+		Quaternionf newRot = curr.slerp(inv, target);
+
+		data.cameraCore->SetLocalRotation(newRot);
 	}
 
 	void Player::UpdateCameraLerp()
@@ -772,6 +952,27 @@ namespace Phyzzle
 		return true;
 	}
 
+	void Player::ResetCameraArmAndCameraCore()
+	{
+		using namespace Eigen;
+
+		Vector3f corePos = data.cameraCore->GetWorldPosition();
+		Quaternionf coreRot = data.cameraCore->GetWorldRotation();
+
+		data.xAngle = 0.f;
+		data.cameraArm->SetLocalPosition(data.armDefaultPosition);
+		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
+
+		data.cameraCore->SetWorldRotation(coreRot);
+		data.cameraCore->SetWorldPosition(corePos);
+	}
+
+	void Player::ResetCameraCoreTarget()
+	{
+		SetCameraCoreLocalTargetPosition(data.coreDefaultPosition);
+		SetCameraCoreLocalTargetRotation(data.coreDefaultRotation);
+	}
+
 	void Player::ResetCamera()
 	{
 		ResetCameraArm();
@@ -780,14 +981,37 @@ namespace Phyzzle
 
 	void Player::ResetCameraArm()
 	{
-		data.cameraArm->SetLocalPosition(Eigen::Vector3f::Zero());
+		data.xAngle = 0.f;
+		data.cameraArm->SetLocalPosition(data.armDefaultPosition);
 		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
 	}
 
 	void Player::ResetCameraCore()
 	{
-		data.cameraCore->SetLocalPosition(Eigen::Vector3f(0.f, 0.f, -9.f));
-		data.cameraCore->SetLocalRotation(Eigen::Quaternionf::Identity());
+		data.cameraCore->SetLocalPosition(data.coreDefaultPosition);
+		data.cameraCore->SetLocalRotation(data.coreDefaultRotation);
+	}
+
+	void Player::SetCameraArmFoward(const Eigen::Vector3f& _direction)
+	{
+		using namespace Eigen;
+
+		Eigen::Vector3f up{ Vector3f::UnitY() };
+		Eigen::Vector3f right = up.cross(_direction).normalized();
+
+		Eigen::Vector3f newUp = _direction.cross(right).normalized();
+
+		Eigen::Matrix3f rotation;
+		rotation.col(0) = right;
+		rotation.col(1) = newUp;
+		rotation.col(2) = _direction;
+
+		data.cameraArm->SetWorldRotation(Eigen::Quaternionf(rotation));
+
+		float cosTheta = _direction.dot(up);
+		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
+		float theta = std::acosf(cosTheta);
+		data.xAngle = theta * (180.f / std::numbers::pi_v<float>);
 	}
 
 	void Player::RotateCameraArm()
@@ -809,22 +1033,18 @@ namespace Phyzzle
 
 	void Player::RotateCameraArmPitch(float pitchAngle)
 	{
-		float deltaAngle = 0.f;
+		float deltaAngle = pitchAngle;
 		data.xAngle += pitchAngle;
 
 		if (data.xAngle > data.limitHighAngle)
 		{
-			deltaAngle = 0.f;
+			deltaAngle -= (data.xAngle - data.limitHighAngle);
 			data.xAngle = data.limitHighAngle;
 		}
 		else if (data.xAngle < data.limitLowAngle)
 		{
-			deltaAngle = 0.f;
+			deltaAngle -= (data.xAngle - data.limitLowAngle);
 			data.xAngle = data.limitLowAngle;
-		}
-		else
-		{
-			deltaAngle = pitchAngle;
 		}
 
 		const Eigen::Vector3f cameraRight = data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();
@@ -858,7 +1078,7 @@ namespace Phyzzle
 
 		data.cameraCore->SetWorldRotation(Eigen::Quaternionf(rotation));
 	}
-#pragma endregion camera
+#pragma endregion Camera
 
 	bool Player::RaycastFromCamera(
 		float _distance, 
@@ -903,17 +1123,6 @@ namespace Phyzzle
 		return block;
 	}
 
-
-	void Player::ChangeAbilityState(AbilityState _state)
-	{
-		currState = _state;
-	}
-
-	void Player::ChangePlayerState(PlayerState _state)
-	{
-		currPlayerState = _state;
-	}
-
 #pragma region 직렬화
 	void Player::PreSerialize(json& jsonData) const
 	{}
@@ -955,49 +1164,49 @@ namespace Phyzzle
 		}
 
 		{
-			auto idleAnimation = data.idleAnimation;
+			auto idleAnimation = animData.idleAnimation;
 			PREDESERIALIZE_WSTRING(idleAnimation);
-			data.idleAnimation = idleAnimation;
+			animData.idleAnimation = idleAnimation;
 
-			auto walkingAnimation = data.walkingAnimation;
+			auto walkingAnimation = animData.walkingAnimation;
 			PREDESERIALIZE_WSTRING(walkingAnimation);
-			data.walkingAnimation = walkingAnimation;
+			animData.walkingAnimation = walkingAnimation;
 
-			auto runningAnimation = data.runningAnimation;
+			auto runningAnimation = animData.runningAnimation;
 			PREDESERIALIZE_WSTRING(runningAnimation);
-			data.runningAnimation = runningAnimation;
+			animData.runningAnimation = runningAnimation;
 
-			auto jumpAnimation = data.jumpAnimation;
+			auto jumpAnimation = animData.jumpAnimation;
 			PREDESERIALIZE_WSTRING(jumpAnimation);
-			data.jumpAnimation = jumpAnimation;
+			animData.jumpAnimation = jumpAnimation;
 
-			auto jumpingAnimation = data.jumpingAnimation;
+			auto jumpingAnimation = animData.jumpingAnimation;
 			PREDESERIALIZE_WSTRING(jumpingAnimation);
-			data.jumpingAnimation = jumpingAnimation;
+			animData.jumpingAnimation = jumpingAnimation;
 
-			auto landingAnimation = data.landingAnimation;
+			auto landingAnimation = animData.landingAnimation;
 			PREDESERIALIZE_WSTRING(landingAnimation);
-			data.landingAnimation = landingAnimation;
+			animData.landingAnimation = landingAnimation;
 
-			auto holdIdleAnimation = data.holdIdleAnimation;
+			auto holdIdleAnimation = animData.holdIdleAnimation;
 			PREDESERIALIZE_WSTRING(holdIdleAnimation);
-			data.holdIdleAnimation = holdIdleAnimation;
+			animData.holdIdleAnimation = holdIdleAnimation;
 
-			auto holdFrontAnimation = data.holdFrontAnimation;
+			auto holdFrontAnimation = animData.holdFrontAnimation;
 			PREDESERIALIZE_WSTRING(holdFrontAnimation);
-			data.holdFrontAnimation = holdFrontAnimation;
+			animData.holdFrontAnimation = holdFrontAnimation;
 
-			auto holdBackAnimation = data.holdBackAnimation;
+			auto holdBackAnimation = animData.holdBackAnimation;
 			PREDESERIALIZE_WSTRING(holdBackAnimation);
-			data.holdBackAnimation = holdBackAnimation;
+			animData.holdBackAnimation = holdBackAnimation;
 
-			auto holdRightAnimation = data.holdRightAnimation;
+			auto holdRightAnimation = animData.holdRightAnimation;
 			PREDESERIALIZE_WSTRING(holdRightAnimation);
-			data.holdRightAnimation = holdRightAnimation;
+			animData.holdRightAnimation = holdRightAnimation;
 
-			auto holdLeftAnimation = data.holdLeftAnimation;
+			auto holdLeftAnimation = animData.holdLeftAnimation;
 			PREDESERIALIZE_WSTRING(holdLeftAnimation);
-			data.holdLeftAnimation = holdLeftAnimation;
+			animData.holdLeftAnimation = holdLeftAnimation;
 		}
 	}
 

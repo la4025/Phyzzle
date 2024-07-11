@@ -123,6 +123,9 @@
     <ClCompile Include="LauncherPlatform.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="JumpCheck.cpp">
+      <Filter>KH\PLAYER\player</Filter>
+    </ClCompile>
     <ClCompile Include="PauseGame.cpp">
       <Filter>DH\Pause</Filter>
     </ClCompile>
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="LauncherPlatform.h">
       <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpCheck.h">
+      <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
     <ClInclude Include="PauseGame.h">
       <Filter>DH\Pause</Filter>

@@ -15,6 +15,11 @@ namespace Phyzzle
 	{
 	}
 
+	void RewindState::PostStateStay()
+	{
+
+	}
+
 	void RewindState::StateStay()
 	{
 
@@ -103,6 +108,9 @@ namespace Phyzzle
 	}
 
 	void RewindState::Select()
+	{
+	}
+	void RewindState::StateCancel()
 	{
 	}
 }

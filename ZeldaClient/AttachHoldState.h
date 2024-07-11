@@ -17,6 +17,7 @@ namespace Phyzzle
 		explicit AttachHoldState(Player* _player);
 		~AttachHoldState() override;
 
+#pragma region Initialize
 		void InitializeAxis(
 			std::vector<Eigen::Quaternionf>& axis, 
 			float increment
@@ -41,12 +42,18 @@ namespace Phyzzle
 			const Eigen::Vector3f& axis,
 			RotateInfo type
 		);
+#pragma endregion Initialize
 
 #pragma region StateEvent
 	private:
 		void StateEnter() override;
-		void StateExit() override;
+		
 		void StateStay() override;
+		void PostStateStay() override;
+		
+		void StateExit() override;
+		
+		void StateCancel() override;
 #pragma endregion StateEvent
 
 #pragma region Input
@@ -109,13 +116,13 @@ namespace Phyzzle
 	private:
 		void PlayerMove(float _speed) const;					// 이동
 		void UpdateCamera();									// 카메라 업데이트
-		void UpdateCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const;						// 카메라 위치 업데이트
-		void UpdateCameraRotation() const;							// 카메라 회전 업데이트
+		void UpdateHoldingCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const;						// 카메라 위치 업데이트
+		void UpdateHoldingCameraRotation() const;							// 카메라 회전 업데이트
 
 		// void CameraUpdate() const;								// 카메라 회전
 
 		void CameraReset() const;								// 카메라 회전
-		void StateCancel() const;										// Default 모드로 돌아감
+		void Cancel() const;										// Default 모드로 돌아감
 
 		bool TrySelect();										// 선택
 
@@ -175,16 +182,18 @@ namespace Phyzzle
 		};
 
 		using RotateData = std::pair<Eigen::Quaternionf, Rotate>;
+		std::vector<Eigen::Quaternionf> rotate;
 		std::vector<RotateData> axisies;
 		Rotate info;
 
 	private:
+#pragma region Debug
 		void SearchDebugDraw();
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
-		std::vector<Eigen::Quaternionf> rotate;
+#pragma endregion Debug
 	};
 }
 

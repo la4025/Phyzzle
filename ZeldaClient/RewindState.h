@@ -15,6 +15,7 @@ namespace Phyzzle
 	private:
 		void StateEnter() override;
 		void StateExit() override;
+		void PostStateStay() override;
 		void StateStay() override;
 
 	private:
@@ -37,5 +38,8 @@ namespace Phyzzle
 		void Aim();
 		void Cancel();
 		void Select();
+
+		// IState을(를) 통해 상속됨
+		void StateCancel() override;
 	};
 }

@@ -50,6 +50,7 @@ namespace Phyzzle
 		AttachSystem::Instance()->Clear();
 	}
 
+#pragma region Initialize
 	void AttachHoldState::InitializeAxis(std::vector<Eigen::Quaternionf>& axis, float increment) 
 	{
 		using namespace Eigen;
@@ -107,6 +108,7 @@ namespace Phyzzle
 			axisies.emplace_back(temp, type);
 		}
 	}
+#pragma endregion Initialize
 
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
@@ -119,8 +121,11 @@ namespace Phyzzle
 			Quaternionf coreRot = player->data.cameraCore->GetWorldRotation();
 
 			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
+			player->data.armTargetPosition = player->data.armDefaultPosition;
+			
 			auto rot = player->data.modelCore->GetLocalRotation();
 			player->data.cameraArm->SetLocalRotation(rot);
+			player->data.armTargetRotation = rot;
 			player->data.xAngle = 0.f;
 
 			player->data.cameraCore->SetWorldRotation(coreRot);
@@ -151,28 +156,40 @@ namespace Phyzzle
 		// 속력 리셋
 		ResetObjectVelocity();
 
+		if (player->data.debugMode)
+		{
+			auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
+			auto degree = Eigen::Vector3f(
+				euler.x() * 180.f / std::numbers::pi_v<float>,
+				euler.y() * 180.f / std::numbers::pi_v<float>,
+				euler.z() * 180.f / std::numbers::pi_v<float>
+			);
+			degree.x() = std::floor(degree.x() * 10.f) / 10.f;
+			degree.y() = std::floor(degree.y() * 10.f) / 10.f;
+			degree.z() = std::floor(degree.z() * 10.f) / 10.f;
+			PurahEngine::GraphicsManager::GetInstance().DrawString(
+				L"오브젝트 각도 : \n" +
+				std::to_wstring(degree.x()) + L" \n" +
+				std::to_wstring(degree.y()) + L" \n" +
+				std::to_wstring(degree.z()) + L" \n",
+				1400, 100,
+				200, 600, 15,
+				255, 255, 255, 255);
+
+			SearchDebugDraw();
+		}
+	}
+
+	void AttachHoldState::PostStateStay()
+	{
 		// 카메라 업데이트
 		UpdateCamera();
+	}
 
-		auto euler = targetRotation.toRotationMatrix().eulerAngles(0, 1, 2);
-		auto degree = Eigen::Vector3f(
-			euler.x() * 180.f / std::numbers::pi_v<float>,
-			euler.y() * 180.f / std::numbers::pi_v<float>,
-			euler.z() * 180.f / std::numbers::pi_v<float>
-			);
-		degree.x() = std::floor(degree.x() * 10.f) / 10.f;
-		degree.y() = std::floor(degree.y() * 10.f) / 10.f;
-		degree.z() = std::floor(degree.z() * 10.f) / 10.f;
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"오브젝트 각도 : \n" +
-			std::to_wstring(degree.x()) + L" \n" +
-			std::to_wstring(degree.y()) + L" \n" +
-			std::to_wstring(degree.z()) + L" \n",
-			1400, 100,
-			200, 600, 15,
-			255, 255, 255, 255);
-
-		SearchDebugDraw();
+	void AttachHoldState::StateCancel()
+	{
+		Put();
+		Cancel();
 	}
 #pragma endregion StateEvent
 
@@ -214,7 +231,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_A()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 부착
@@ -225,7 +242,7 @@ namespace Phyzzle
 		if (TryAttach())
 		{
 			Put();
-			StateCancel();
+			Cancel();
 		}
 	}
 
@@ -233,7 +250,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_X()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 취소
@@ -246,7 +263,7 @@ namespace Phyzzle
 	void AttachHoldState::Click_LB()
 	{
 		Put();
-		StateCancel();
+		Cancel();
 	}
 
 	// 오브젝트 이동 및 회전
@@ -689,67 +706,26 @@ namespace Phyzzle
 
 			if (front && !xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_FRONT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_FRONT);
 			}
 			else if (!front && !xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_BACK);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_BACK);
 			}
 			else if (right && xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_RIGHT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_RIGHT);
 			}
 			else if (!right && xBigger)
 			{
-				player->ChangePlayerState(Player::PlayerState::ABILITY_LEFT);
+				player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_LEFT);
 			}
 		}
 		else
 		{
-			player->ChangePlayerState(Player::PlayerState::ABILITY_IDLE);
+			player->ChangePlayerAnimationState(Player::PlayerState::ABILITY_IDLE);
 		}
 	}
-
-	/*
-	void AttachHoldState::CameraUpdate() const
-	{
-		using namespace Eigen;
-
-		float offset = 5.f;
-		Vector3f bodyPos = selectBody->GetPosition();
-		Vector3f playerPos = player->data.modelCore->GetWorldPosition();
-		Vector3f cameraArmPos = player->data.cameraArm->GetWorldPosition();
-
-		// 카메라 암이 오브젝트를 향하도록 함
-		Vector3f armDirection = bodyPos - playerPos;
-		armDirection.y() = 0.f;
-		armDirection.normalize();
-		player->CameraLookTo(armDirection);
-
-		/// 임시
-		// 카메라가 오브젝트 높이를 따라가도록 함
-		float gap = bodyPos.y() - playerPos.y();
-		if (gap < 9.f)
-		{
-			gap = 9.f;
-		}
-		Vector3f cameraCorePos = cameraArmPos + armDirection * -gap;
-		cameraCorePos.y() = bodyPos.y() + 5.f;
-		player->data.cameraCore->SetWorldPosition(cameraCorePos);
-
-
-		// 플레이어와 오브젝트 사이를 바라보게 함
-		Vector3f playerToBody = bodyPos - playerPos;
-		Vector3f direction = playerToBody.normalized();
-
-		bodyPos = bodyPos + direction * 5.f;
-		playerPos = playerPos - direction * 5.f;
-
-		Vector3f to = (bodyPos - playerPos) / 2.f;
-		Vector3f focus = playerPos + to;
-		player->CameraLookAt(focus);
-	}
-	*/
 
 	void AttachHoldState::UpdateCamera()
 	{
@@ -758,8 +734,8 @@ namespace Phyzzle
 		Vector3f localPosition = Vector3f::Zero();
 		Vector3f worldPosition = Vector3f::Zero();
 
-		UpdateCameraPosition(localPosition, worldPosition);
-		UpdateCameraRotation();
+		UpdateHoldingCameraPosition(localPosition, worldPosition);
+		UpdateHoldingCameraRotation();
 
 		if (player->ResolveCameraCollision(localPosition, worldPosition))
 		{
@@ -771,7 +747,7 @@ namespace Phyzzle
 		}
 	}
 
-	void AttachHoldState::UpdateCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const
+	void AttachHoldState::UpdateHoldingCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const
 	{
 		using namespace Eigen;
 
@@ -829,7 +805,7 @@ namespace Phyzzle
 		_world = world.translation();
 	}
 
-	void AttachHoldState::UpdateCameraRotation() const
+	void AttachHoldState::UpdateHoldingCameraRotation() const
 	{
 		using namespace Eigen;
 
@@ -891,7 +867,7 @@ namespace Phyzzle
 		player->ResetCameraCore();
 	}
 
-	void AttachHoldState::StateCancel() const
+	void AttachHoldState::Cancel() const
 	{
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
@@ -1326,9 +1302,9 @@ namespace Phyzzle
 
 		return true;
 	}
-
 #pragma endregion Content
 
+#pragma region Debug
 	void AttachHoldState::SearchDebugDraw()
 	{
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
@@ -1358,4 +1334,5 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 	}
+#pragma endregion Debug
 }

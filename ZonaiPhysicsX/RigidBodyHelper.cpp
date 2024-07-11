@@ -160,8 +160,8 @@ namespace ZonaiPhysics
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		pxBody->setMass(_mass);
-		const auto pos = pxBody->getCMassLocalPose();
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass, &pos.p);
+		// const auto pos = pxBody->getCMassLocalPose();
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass, nullptr);
 	}
 
 	void RigidBodyHelper::SetDensity(void* _pxBody, float _density)
