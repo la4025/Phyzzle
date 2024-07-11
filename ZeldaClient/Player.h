@@ -72,6 +72,9 @@ namespace Phyzzle
 			bool stopUpdate = false;
 
 #pragma region Player Variable
+			float height = 1.f;
+			float radius = 0.5f;
+
 			float moveSpeed = 10.f;				// 기본 속도
 			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
 			float sensitivity = 90.f;			// 카메라 회전 속도
@@ -213,6 +216,14 @@ namespace Phyzzle
 		void InitializeLerpFunctions();
 		void InitializeAbilitySystem();
 		void InitializeStateSystem();
+		void AddAnimationState(
+			std::map<PlayerState, std::function<void()>>& stateMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
+		void AddAnimationSpeedController(
+			std::map<PlayerState, std::function<void(float)>>& speedMap,
+			PlayerState type, const std::wstring& animation,
+			PurahEngine::Animator* animator);
 #pragma endregion Initialize
 
 #pragma region Debug
@@ -243,14 +254,6 @@ namespace Phyzzle
 		void ChangeAbilityState(AbilityState);
 		void ChangePlayerAnimationState(PlayerState);
 
-		void AddAnimationState(
-			std::map<PlayerState, std::function<void()>>& stateMap,
-			PlayerState type, const std::wstring& animation,
-			PurahEngine::Animator* animator);
-		void AddAnimationSpeedController(
-			std::map<PlayerState, std::function<void(float)>>& speedMap,
-			PlayerState type, const std::wstring& animation,
-			PurahEngine::Animator* animator);
 
 #pragma region Input
 		void HandleGamePadInput();
@@ -264,7 +267,8 @@ namespace Phyzzle
 		bool GroundCheck(Eigen::Vector3f* _outNormal = nullptr);
 		bool SideCheck();
 
-		bool SweepTest(const Eigen::Vector3f& _start, const Eigen::Vector3f& _vec, int collisionLayers);
+		bool SweepTest(
+			const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers);
 
 		bool TryJump();
 		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
@@ -406,7 +410,6 @@ namespace Phyzzle
 		PlayerData data;
 		AnimationData animData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
-		std::function<Eigen::Quaternionf(const Eigen::Quaternionf, const Eigen::Quaternionf, float)> slerp;
 
 	private:
 		/// 사라질 변수들

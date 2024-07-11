@@ -188,8 +188,14 @@ namespace Phyzzle
 
 		AttachSystem::Instance()->EnableOutline(selectObject, _value);
 	}
+	
+	void AttachSelectState::CrossHeadRender(bool _value)
+	{
+		player->data.crossHead->SetEnable(_value);
+	}
 #pragma endregion Content
 
+#pragma region Debug
 	void AttachSelectState::SearchDebugDraw(bool _value)
 	{
 		if (_value)
@@ -209,9 +215,5 @@ namespace Phyzzle
 				255, 255, 255, 255);
 		}
 	}
-
-	void AttachSelectState::CrossHeadRender(bool _value)
-	{
-		player->data.crossHead->SetEnable(_value);
-	}
+#pragma endregion Debug
 }

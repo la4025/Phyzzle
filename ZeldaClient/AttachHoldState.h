@@ -17,6 +17,7 @@ namespace Phyzzle
 		explicit AttachHoldState(Player* _player);
 		~AttachHoldState() override;
 
+#pragma region Initialize
 		void InitializeAxis(
 			std::vector<Eigen::Quaternionf>& axis, 
 			float increment
@@ -41,6 +42,7 @@ namespace Phyzzle
 			const Eigen::Vector3f& axis,
 			RotateInfo type
 		);
+#pragma endregion Initialize
 
 #pragma region StateEvent
 	private:
@@ -180,16 +182,18 @@ namespace Phyzzle
 		};
 
 		using RotateData = std::pair<Eigen::Quaternionf, Rotate>;
+		std::vector<Eigen::Quaternionf> rotate;
 		std::vector<RotateData> axisies;
 		Rotate info;
 
 	private:
+#pragma region Debug
 		void SearchDebugDraw();
 
 		Eigen::Vector3f debugVector0 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector1 = Eigen::Vector3f::Zero();
 		Eigen::Vector3f debugVector2 = Eigen::Vector3f::Zero();
-		std::vector<Eigen::Quaternionf> rotate;
+#pragma endregion Debug
 	};
 }
 

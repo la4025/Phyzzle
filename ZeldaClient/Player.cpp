@@ -60,16 +60,6 @@ namespace Phyzzle
 
 				return start + _t * (end - start);
 			};
-
-		slerp = [this](const Eigen::Quaternionf start, const Eigen::Quaternionf end, float _t) -> Eigen::Quaternionf
-			{
-				if (start == end)
-					return start;
-
-				_t = std::clamp(_t, 0.f, 1.f);
-
-				return start.slerp(_t, end);
-			};
 	}
 
 	void Player::InitializeAbilitySystem()
@@ -116,6 +106,30 @@ namespace Phyzzle
 				}
 			}
 		}
+	}
+
+	// 공통된 애니메이션 상태 추가 함수
+	void Player::AddAnimationState(
+		std::map<PlayerState, std::function<void()>>& stateMap, 
+		PlayerState type, const std::wstring& animation, 
+		PurahEngine::Animator* animator)
+	{
+		stateMap[type] = [animation, animator]() 
+			{
+				animator->Play(animation);
+			};
+	}
+
+	// 공통된 애니메이션 속도 컨트롤러 추가 함수
+	void Player::AddAnimationSpeedController(
+		std::map<PlayerState, std::function<void(float)>>& speedMap, 
+		PlayerState type, const std::wstring& animation, 
+		PurahEngine::Animator* animator)
+	{
+		speedMap[type] = [animation, animator](float speed) 
+			{
+				animator->SetPlaySpeed(animation, speed);
+			};
 	}
 #pragma endregion Initialize
 
@@ -166,6 +180,8 @@ namespace Phyzzle
 
 	void Player::Update()
 	{
+		using namespace Eigen;
+
 		prevState = currState;
 		prevPlayerState = currPlayerState;
 		
@@ -180,6 +196,8 @@ namespace Phyzzle
 		{
 			animData.animationSpeed = 0.f;
 		}
+
+		Vector3f pos = GetGameObject()->GetTransform()->GetWorldPosition();
 	}
 
 	void Player::LateUpdate()
@@ -266,30 +284,6 @@ namespace Phyzzle
 	void Player::ChangePlayerAnimationState(PlayerState _state)
 	{
 		currPlayerState = _state;
-	}
-
-	// 공통된 애니메이션 상태 추가 함수
-	void Player::AddAnimationState(
-		std::map<PlayerState, std::function<void()>>& stateMap, 
-		PlayerState type, const std::wstring& animation, 
-		PurahEngine::Animator* animator)
-	{
-		stateMap[type] = [animation, animator]() 
-			{
-				animator->Play(animation);
-			};
-	}
-
-	// 공통된 애니메이션 속도 컨트롤러 추가 함수
-	void Player::AddAnimationSpeedController(
-		std::map<PlayerState, std::function<void(float)>>& speedMap, 
-		PlayerState type, const std::wstring& animation, 
-		PurahEngine::Animator* animator)
-	{
-		speedMap[type] = [animation, animator](float speed) 
-			{
-				animator->SetPlaySpeed(animation, speed);
-			};
 	}
 
 #pragma region Input
@@ -393,25 +387,31 @@ namespace Phyzzle
 		return true;
 	}
 
-	bool Player::SweepTest(const Eigen::Vector3f& _start, const Eigen::Vector3f& _vec, int collisionLayers)
+	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
 	{
 		using namespace Eigen;
 
 		// 플레이어 발 위치
-		Vector3f footPosition;
+		Vector3f footPosition = GetGameObject()->GetTransform()->GetWorldPosition();
+		
+		Vector3f position = footPosition + Vector3f::UnitY();
+		Vector3f direction = _movement.normalized();
+		float distance = _movement.norm();
 
 		const float radius = 0.5f;
 		const float height = 1.f;
 		ZonaiPhysics::ZnQueryInfo info;
 
-		PurahEngine::Physics::Capsulecast(
+		bool hit = PurahEngine::Physics::Capsulecast(
 			radius, height, 
-			_start, Quaternionf::Identity(), 
-			_vec.normalized(), _vec.norm(), 
+			position, Quaternionf::Identity(),
+			direction, distance,
 			collisionLayers, info);
 
 		// 
 		info.position;
+
+		return true;
 	}
 
 	bool Player::TryJump()
@@ -747,9 +747,9 @@ namespace Phyzzle
 		// float inv = dt / data.cameraLerpTime;
 		float inv = 0.001f / data.cameraLerpTime;
 		inv = std::clamp(inv, 0.f, 1.f);
-		Quaternionf pos = slerp(curr, target, inv);
+		Quaternionf newRot = curr.slerp(inv, target);
 
-		data.cameraCore->SetLocalRotation(pos);
+		data.cameraCore->SetLocalRotation(newRot);
 	}
 
 	void Player::UpdateCameraLerp()

@@ -50,6 +50,7 @@ namespace Phyzzle
 		AttachSystem::Instance()->Clear();
 	}
 
+#pragma region Initialize
 	void AttachHoldState::InitializeAxis(std::vector<Eigen::Quaternionf>& axis, float increment) 
 	{
 		using namespace Eigen;
@@ -107,6 +108,7 @@ namespace Phyzzle
 			axisies.emplace_back(temp, type);
 		}
 	}
+#pragma endregion Initialize
 
 #pragma region StateEvent
 	void AttachHoldState::StateEnter()
@@ -1300,9 +1302,9 @@ namespace Phyzzle
 
 		return true;
 	}
-
 #pragma endregion Content
 
+#pragma region Debug
 	void AttachHoldState::SearchDebugDraw()
 	{
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
@@ -1332,4 +1334,5 @@ namespace Phyzzle
 			200, 600, 15,
 			255, 255, 255, 255);
 	}
+#pragma endregion Debug
 }

@@ -56,11 +56,13 @@ namespace Phyzzle
 
 		bool Search();
 		void EnableOutline(bool) const;
+		void CrossHeadRender(bool _value);
 #pragma endregion Content
 		
 	private:
+#pragma region Debug
 		void SearchDebugDraw(bool _value);
-		void CrossHeadRender(bool _value);
+#pragma endregion Debug
 	};
 }
 
