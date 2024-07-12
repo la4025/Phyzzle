@@ -118,21 +118,34 @@ namespace Phyzzle
 		}
 	}
 
-	void AttachSystem::ApplyOutlineSettings(PzObject* obj, const Eigen::Vector4f& color, bool value)
+	void AttachSystem::SetOutlineColor(Eigen::Vector4f* const _color0, Eigen::Vector4f* const _color1, Eigen::Vector4f* const _color2)
+	{
+		if (_color0)
+			color0 = *_color0;
+		if (_color1)
+			color1 = *_color1;
+		if (_color2)
+			color2 = *_color2;
+	}
+
+	void AttachSystem::ApplyOutlineSettings(PzObject* obj, bool value, Eigen::Vector4f* const color)
 	{
 		auto children = obj->GetGameObject()->GetTransform()->GetChildren();
 
 		auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
 		if (model)
 		{
-			model->SetOutLineColor(color);
+			if (color)
+				model->SetOutLineColor(*color);
+			
 			model->SetOutLine(value);
 		}
 
 		auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
 		if (mesh)
 		{
-			mesh->SetOutLineColor(color);
+			if (color)
+				mesh->SetOutLineColor(*color);
 			mesh->SetOutLine(value);
 		}
 
@@ -141,14 +154,16 @@ namespace Phyzzle
 			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
 			if (model)
 			{
-				model->SetOutLineColor(color);
+				if (color)
+					model->SetOutLineColor(*color);
 				model->SetOutLine(value);
 			}
 
 			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
 			if (mesh)
 			{
-				mesh->SetOutLineColor(color);
+				if (color)
+					mesh->SetOutLineColor(*color);
 				mesh->SetOutLine(value);
 			}
 		}
@@ -156,9 +171,30 @@ namespace Phyzzle
 
 	void AttachSystem::EnableOutline(
 		PzObject* _obj, 
-		bool _value, 
-		const Eigen::Vector4f& _targetColor, 
-		const Eigen::Vector4f& _subColor)
+		Eigen::Vector4f* const _targetColor,
+		Eigen::Vector4f* const _subColor)
+	{
+		const IslandID objID = _obj->GetIslandID();
+		AttachIsland island;
+
+		if (!HasAttachIsland(objID, island))
+			island.emplace_back(_obj);
+
+		if (_subColor)
+		{
+			for (auto& obj : island)
+			{
+				ApplyOutlineSettings(obj, true, _subColor);
+			}
+		}
+
+		if (_targetColor)
+		{
+			ApplyOutlineSettings(_obj, true, _targetColor);
+		}
+	}
+
+	void AttachSystem::DisableOutline(PzObject* _obj)
 	{
 		const IslandID objID = _obj->GetIslandID();
 		AttachIsland island;
@@ -168,10 +204,10 @@ namespace Phyzzle
 
 		for (auto& obj : island)
 		{
-			ApplyOutlineSettings(obj, _subColor, _value);
+			ApplyOutlineSettings(obj, false, nullptr);
 		}
 
-		ApplyOutlineSettings(_obj, _targetColor, _value);
+		ApplyOutlineSettings(_obj, false, nullptr);
 	}
 
 	// ¹°Ã¼ ºÎÂø
@@ -258,7 +294,7 @@ namespace Phyzzle
 
 			CreateIsland(island);
 
-			EnableOutline(island.front(), false);
+			DisableOutline(island.front());
 		}
 
 		return true;

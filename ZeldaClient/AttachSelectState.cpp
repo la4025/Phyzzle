@@ -186,7 +186,14 @@ namespace Phyzzle
 		if (!seleteBody || !selectObject)
 			return;
 
-		AttachSystem::Instance()->EnableOutline(selectObject, _value);
+		if (_value)
+		{
+			AttachSystem::Instance()->EnableOutline(selectObject, &player->color0, &player->color1);
+		}
+		else
+		{
+			AttachSystem::Instance()->DisableOutline(selectObject);
+		}
 	}
 	
 	void AttachSelectState::CrossHeadRender(bool _value)

@@ -9,6 +9,7 @@
 #include "LockState.h"
 #include "PzObject.h"
 #include "Rewindable.h"
+#include "AttachSystem.h"
 
 #include "Player.h"
 
@@ -176,6 +177,7 @@ namespace Phyzzle
 		InitializeAbilitySystem();
 		InitializeStateSystem();
 		InitializeLerpFunctions();
+		AttachSystem::Instance()->SetOutlineColor(&color0, &color1, &color2);
 	}
 
 	void Player::Update()
@@ -223,6 +225,7 @@ namespace Phyzzle
 	{
 		JumpCheck(zn_collision, collider);
 	}
+#pragma endregion Event
 
 	void Player::SetStopUpdate(bool _value)
 	{
@@ -230,7 +233,6 @@ namespace Phyzzle
 
 		data.stopUpdate = _value;
 	}
-#pragma endregion Event
 
 #pragma region Update
 	void Player::UpdateAbilityState()
@@ -477,13 +479,14 @@ namespace Phyzzle
 		// 플레이어 발 위치
 		Vector3f footPosition = GetGameObject()->GetTransform()->GetWorldPosition();
 		
-		Vector3f position = footPosition + Vector3f::UnitY();
-		Vector3f direction = _movement.normalized();
-		float distance = _movement.norm();
+		Vector3f position = footPosition + Vector3f::UnitY();	// 스윕 시작
+		Vector3f direction = _movement.normalized();			// 스윕 방향
+		float distance = _movement.norm();						// 스윕 거리
 
-		const float radius = 0.5f;
+		const float radius = 0.5f;				// 스윕 모양
 		const float height = 1.f;
-		ZonaiPhysics::ZnQueryInfo info;
+
+		ZonaiPhysics::ZnQueryInfo info;			// 반환 값
 
 		bool hit = PurahEngine::Physics::Capsulecast(
 			radius, height, 
@@ -491,8 +494,13 @@ namespace Phyzzle
 			direction, distance,
 			collisionLayers, info);
 
-		// 
-		info.position;
+		if (hit)
+		{
+			// 스윕이 충돌한 위치와 플레이어 위치랑 비교함
+			info.position;
+
+			// 
+		}
 
 		return true;
 	}
@@ -1143,6 +1151,20 @@ namespace Phyzzle
 			auto jumpPower = data.jumpPower;
 			PREDESERIALIZE_VALUE(jumpPower);
 			data.jumpPower = jumpPower;
+		}
+
+		{
+			Eigen::Vector4f outlineColor0;
+			PREDESERIALIZE_VECTOR4F(outlineColor0);
+			color0 = outlineColor0;
+
+			Eigen::Vector4f outlineColor1;
+			PREDESERIALIZE_VECTOR4F(outlineColor1);
+			color1 = outlineColor1;
+			
+			Eigen::Vector4f outlineColor2;
+			PREDESERIALIZE_VECTOR4F(outlineColor2);
+			color2 = outlineColor2;
 		}
 
 		{

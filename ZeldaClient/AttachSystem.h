@@ -36,6 +36,11 @@ namespace Phyzzle
 		std::unordered_map<IslandID, AttachIsland> attachIsland;
 		std::queue<IslandID> removedIndex;
 
+	public:
+		Eigen::Vector4f color0;
+		Eigen::Vector4f color1;
+		Eigen::Vector4f color2;
+
 	private:
 		// ID 생성 삭제
 		IslandID					CreateIslandID();
@@ -51,9 +56,10 @@ namespace Phyzzle
 		void						SelectBody(PzObject* _body);
 		void						DeselectBody(PzObject* _body);
 
-		void						ApplyOutlineSettings(PzObject* obj, const Eigen::Vector4f& color, bool value);
-		void						EnableOutline(PzObject*, bool, const Eigen::Vector4f& _targetColor = PurahColor::BlueViolet, const Eigen::Vector4f& _subColor = PurahColor::Yellow);
-
+		void						SetOutlineColor(Eigen::Vector4f* const _color0, Eigen::Vector4f* const _color1, Eigen::Vector4f* const _color2);
+		void						ApplyOutlineSettings(PzObject* obj, bool value, Eigen::Vector4f* const color);
+		void						EnableOutline(PzObject*, Eigen::Vector4f* const _targetColor, Eigen::Vector4f* const _subColor);
+		void						DisableOutline(PzObject*);
 
 		bool						TryAttach(PzObject* _base);
 		bool						Attach(PzObject* _base, PzObject* _other);

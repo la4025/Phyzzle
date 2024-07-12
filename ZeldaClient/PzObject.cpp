@@ -26,20 +26,16 @@ namespace Phyzzle
 
 			if (enter || stay)
 			{
-				AttachSystem::Instance()->EnableOutline(attachable, true, PurahColor::Yellow);
+				AttachSystem::Instance()->EnableOutline(attachable, &(AttachSystem::Instance()->color2), nullptr);
 			}
 			else if (exit)
 			{
-				AttachSystem::Instance()->EnableOutline(attachable, false);
+				AttachSystem::Instance()->DisableOutline(attachable);
 			}
 		}
 
 		preState = select;
 	}
-
-	//bool PzObject::isLocked()
-	//{
-	//}
 
 	IslandID PzObject::GetIslandID() const
 	{
@@ -162,7 +158,7 @@ namespace Phyzzle
 			{
 				if (select)
 				{
-					AttachSystem::Instance()->EnableOutline(attachable, false);
+					AttachSystem::Instance()->DisableOutline(attachable);
 				}
 
 				attachable = nullptr;
