@@ -68,12 +68,12 @@ namespace Phyzzle
 		stateSystem.insert(std::make_pair(ATTACH_HOLD, new AttachHoldState(this)));
 		stateSystem.insert(std::make_pair(DEFAULT, new DefaultState(this)));
 		stateSystem.insert(std::make_pair(ATTACH_SELECT, new AttachSelectState(this)));
-		stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
-		stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
+		// stateSystem.insert(std::make_pair(REWIND_SELECT, new RewindState(this)));
+		// stateSystem.insert(std::make_pair(LOCK_SELECT, new LockState(this)));
 
 		stateChange.insert(ATTACH_SELECT);
-		stateChange.insert(REWIND_SELECT);
-		stateChange.insert(LOCK_SELECT);
+		// stateChange.insert(REWIND_SELECT);
+		// stateChange.insert(LOCK_SELECT);
 	}
 
 	void Player::InitializeStateSystem()
@@ -192,6 +192,8 @@ namespace Phyzzle
 		InitializeStateSystem();
 		InitializeLerpFunctions();
 		AttachSystem::Instance()->SetOutlineColor(&color0, &color1, &color2);
+
+		stopCount = 0;
 	}
 
 	void Player::Update()
@@ -207,16 +209,16 @@ namespace Phyzzle
 			stateSystem[currState]->StateCancel();
 		}
 
-		if (!data.stopUpdate)
+		if (data.stopUpdate)
+		{
+			animData.animationSpeed = 0.f;
+		}
+		else
 		{
 			HandleInput();
 			UpdateAbilityState();
 
 			animData.animationSpeed = currInput.Lstick.Size;
-		}
-		else
-		{
-			animData.animationSpeed = 0.f;
 		}
 
 		Vector3f pos = GetGameObject()->GetTransform()->GetWorldPosition();
@@ -247,9 +249,28 @@ namespace Phyzzle
 
 	void Player::SetStopUpdate(bool _value)
 	{
-		stateSystem[currState]->StateCancel();
+		if (_value)
+		{
+			stopCount += 1;
 
-		data.stopUpdate = _value;
+			if (stopCount >= 1)
+			{
+				stateSystem[currState]->StateCancel();
+
+				data.stopUpdate = _value;
+			}
+		}
+		else
+		{
+			stopCount -= 1;
+
+			if (stopCount <= 0)
+			{
+				stateSystem[currState]->StateCancel();
+
+				data.stopUpdate = _value;
+			}
+		}
 	}
 
 #pragma region Update
@@ -492,9 +513,10 @@ namespace Phyzzle
 		if (hit)
 		{
 			data.lastGroundNormal = info.normal;
-			return SlopeCheck(info.normal);
+			hit = SlopeCheck(info.normal);
 		}
 
+		data.playerRigidbody->UseGravity(!hit);
 		return hit;
 	}
 
@@ -606,32 +628,8 @@ namespace Phyzzle
 		Vector3f additionalVelocity = targetVelocity - currentVelocity;
 		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
 
-		//// 속도를 제한?
-		// Vector3f direction = additionalVelocity.normalized();
-		// float magnitude = additionalVelocity.norm();
-		// magnitude = std::clamp(magnitude, 0.f, moveSpeed);
-		// additionalVelocity = direction * magnitude;
-
 		// 속도를 적용시킴
 		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
-
-		Vector3f gravity;
-		if (currentVelocity.y() > 0.f)
-			gravity = PurahEngine::Physics::GetGravity();
-		else if (currentVelocity.y() < 0.f)
-			gravity = PurahEngine::Physics::GetGravity() * 1.5f;
-		else
-			gravity = Vector3f::Zero();
-
-		data.playerRigidbody->AddForce(gravity, ZonaiPhysics::Velocity_Change);
-
-		// 경사면에서 미끄러짐 처리
-		//if (data.isGrounded) 
-		//{
-		//	additionalVelocity.x() += (1.f - additionalVelocity.y()) * data.lastGroundNormal.x() * (1.f - data.slideFriction);
-		//	additionalVelocity.z() +w= (1.f - additionalVelocity.y()) * data.lastGroundNormal.z() * (1.f - data.slideFriction);
-		//	data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
-		//}
 
 		return currInput.Lstick.Size >= 1e-6;
 	}
@@ -1279,9 +1277,9 @@ namespace Phyzzle
 			data.crossHead = crossHead;
 		}
 
-		auto groundChechRaycast = data.groundChechRaycast;
-		POSTDESERIALIZE_PTR(groundChechRaycast);
-		data.groundChechRaycast = groundChechRaycast;
+		auto groundCheck = data.groundCheck;
+		POSTDESERIALIZE_PTR(groundCheck);
+		data.groundCheck = groundCheck;
 		
 		{
 			auto attachLowCamera0 = data.attachLowCamera0;

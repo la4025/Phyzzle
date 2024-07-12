@@ -123,7 +123,7 @@
     <ClCompile Include="LauncherPlatform.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
-    <ClCompile Include="JumpCheck.cpp">
+    <ClCompile Include="GroundCheck.cpp">
       <Filter>KH\PLAYER\player</Filter>
     </ClCompile>
     <ClCompile Include="PauseGame.cpp">
@@ -290,7 +290,7 @@
     <ClInclude Include="LauncherPlatform.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
-    <ClInclude Include="JumpCheck.h">
+    <ClInclude Include="GroundCheck.h">
       <Filter>KH\PLAYER\player</Filter>
     </ClInclude>
     <ClInclude Include="PauseGame.h">

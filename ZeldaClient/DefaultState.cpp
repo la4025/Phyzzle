@@ -8,8 +8,6 @@
 
 #include "DefaultState.h"
 
-#include "Holder.h"
-
 namespace Phyzzle
 {
 	DefaultState::~DefaultState()
@@ -43,7 +41,7 @@ namespace Phyzzle
 
 		auto direction = player->data.playerRigidbody->GetLinearVelocity();
 		direction.y() = 0.f;
-		if (direction.norm() >= 1e-4)
+		if (direction.norm() >= 1e-2)
 		{
 			LookToWorldDirection(direction);
 		}
@@ -52,16 +50,6 @@ namespace Phyzzle
 	void DefaultState::Stick_R()
 	{
 
-	}
-
-	void DefaultState::Click_DLeft()
-	{
-		ChangeState(false);
-	}
-
-	void DefaultState::Click_DRight()
-	{
-		ChangeState(true);
 	}
 
 	void DefaultState::Click_A()
@@ -73,7 +61,7 @@ namespace Phyzzle
 	{
 		if (player->data.isGrounded)
 		{
-			player->ChangeAbilityState(player->data.state);
+			player->ChangeAbilityState(Player::AbilityState::ATTACH_SELECT);
 		}
 	}
 
@@ -122,50 +110,5 @@ namespace Phyzzle
 	void DefaultState::LookToLocalDirection(const Eigen::Vector3f& _to) const
 	{
 		player->LookInLocalDirection(_to);
-	}
-
-	// 현재 능력을 변경함
-	void DefaultState::ChangeState(bool _value) const
-	{
-		Player::AbilityState newState = Player::AbilityState::DEFAULT;
-
-		const int size = player->stateChange.size() + 1;
-
-		if (_value)
-		{
-			newState =
-				static_cast<Player::AbilityState>(
-					(player->data.state + 1)
-					);
-
-			newState = 
-				static_cast<Player::AbilityState>(
-					max(newState % size, 1)
-					);
-
-			if (newState == Player::AbilityState::DEFAULT)
-			{
-				newState = static_cast<Player::AbilityState>(
-					newState + 1
-					);
-			}
-		}
-		else
-		{
-
-			newState =
-				static_cast<Player::AbilityState>(
-					player->data.state - 1
-					);
-
-			if (newState == Player::AbilityState::DEFAULT)
-			{
-				newState = static_cast<Player::AbilityState>(
-					size - 1
-					);
-			}
-		}
-
-		player->data.state = newState;
 	}
 }

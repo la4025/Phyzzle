@@ -201,7 +201,8 @@ namespace Phyzzle
 		PlayerMove(player->data.holdSpeed);
 
 		// 오브젝트 방향으로 캐릭터를 회전 시킴
-		Eigen::Vector3f direction = selectBody->GetPosition() - player->GetGameObject()->GetTransform()->GetWorldPosition();
+		Eigen::Vector3f target = GetWorldTargetPosition();
+		Eigen::Vector3f direction = target - player->GetGameObject()->GetTransform()->GetWorldPosition();
 		direction.y() = 0.f;
 		LookToLocalDirection(direction);
 
@@ -275,7 +276,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateSpringAlongZ(2.f);
+			TranslateSpringAlongZ(10.f);
 		}
 		else if (justRotate)
 		{
@@ -360,7 +361,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateSpringAlongZ(-2.f);
+			TranslateSpringAlongZ(-10.f);
 		}
 		else if (justRotate)
 		{
@@ -918,7 +919,8 @@ namespace Phyzzle
 
 	void AttachHoldState::ApplyObjectVelocity() const
 	{
-		selectBody->SetLinearVelocity(targetVelocity + springL);
+		// selectBody->SetLinearVelocity(targetVelocity + springL);
+		// selectBody->AddForce(targetVelocity + springL, ZonaiPhysics::ForceType::Force);
 		selectBody->SetAngularVelocity(targetAngularVelocity + springR);
 	}
 
@@ -928,96 +930,64 @@ namespace Phyzzle
 		targetAngularVelocity = Eigen::Vector3f::Zero();
 	}
 
-	//void AttachHoldState::CalculateSpringForces()
-	//{
-	//	constexpr float zeta = 0.5f;												// Damping ratio
-	//	constexpr float zeta0 = 0.1f;												// Damping ratio
-	//	constexpr float omega = 2.0f * std::numbers::pi_v<float> * 5.0f;			// Angular frequency (5 Hz)
-	//	const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();	// Time step
-	//
-	//	{
-	//		if (attachble)
-	//		{
-	//			using namespace Eigen;
-	//
-	//			const Vector3f pos = player->data.modelCore->GetWorldPosition();
-	//			const Quaternionf rot = player->data.modelCore->GetWorldRotation();
-	//			Affine3f transform = Affine3f::Identity();
-	//			transform.translate(pos);
-	//			transform.rotate(rot); 
-	//			Affine3f invTrans = transform.inverse();
-	//
-	//			ZonaiPhysics::ZnBound3 bound = AttachSystem::Instance()->CalculateBoundingBox(attachble, invTrans.matrix());
-	//			
-	//			if (bound.minimum.z() < 0.5f)
-	//			{
-	//				float distance = 0.5f - bound.minimum.z();
-	//
-	//				targetPosition.z() += distance;
-	//			}
-	//		}
-	//	}
-	//
-	//	{
-	//		Eigen::Vector3f currPos = selectBody->GetPosition();
-	//		currPos.y() = 0.f;				// stick R 입력으로 오브젝트를 움직일 때는 스프링이 아니므로..
-	//
-	//		Eigen::Vector3f playerPos = player->data.modelCore->GetWorldPosition();
-	//		playerPos.y() = 0.f;
-	//		Eigen::Vector3f zPos = player->data.modelCore->GetFront() * targetPosition.z();
-	//		zPos.y() = 0.f;
-	//		const Eigen::Vector3f targetP = playerPos + zPos;
-	//
-	//		posSpring.Update(
-	//			currPos,
-	//			springL,
-	//			targetP,
-	//			zeta,
-	//			omega,
-	//			timeStep
-	//		);
-	//	}
-	//
-	//	{
-	//		Eigen::Quaternionf currRot = selectBody->GetRotation();
-	//		const Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
-	//		const Eigen::Quaternionf targetR = playerRot * targetRotation;
-	//
-	//		PurahEngine::GraphicsManager::GetInstance().DrawString(
-	//			L"현재 회전 : " +
-	//			std::to_wstring(currRot.w()) + L"\n" +
-	//			std::to_wstring(currRot.x()) + L"\n" +
-	//			std::to_wstring(currRot.y()) + L"\n" +
-	//			std::to_wstring(currRot.z()) + L"\n",
-	//			1200, 300,
-	//			200, 600, 15,
-	//			255, 255, 255, 255);
-	//
-	//		PurahEngine::GraphicsManager::GetInstance().DrawString(
-	//			L"타겟 회전 : " +
-	//			std::to_wstring(targetR.w()) + L"\n" +
-	//			std::to_wstring(targetR.x()) + L"\n" +
-	//			std::to_wstring(targetR.y()) + L"\n" +
-	//			std::to_wstring(targetR.z()) + L"\n",
-	//			1200, 500,
-	//			200, 600, 15,
-	//			255, 255, 255, 255);
-	//
-	//		using namespace Eigen;
-	//		// Vector3f r = selectBody->GetAngularVelocity();
-	//
-	//		quatSpring.Update(
-	//			currRot,
-	//			springR,
-	//			targetR.normalized(),
-	//			zeta0,
-	//			timeStep);
-	//
-	//		// selectBody->SetAngularVelocity(r);
-	//		selectBody->SetRotation(currRot);
-	//	}
-	//
-	//}
+	void AttachHoldState::SpringMassModel(const Eigen::Vector3f& worldTargetPosition)
+	{
+		using namespace Eigen;
+
+		constexpr float springConstant = 10.f;
+		constexpr float dampingFactor = 3.f;
+
+		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+		// 현재 오브젝트 위치
+		Eigen::Vector3f currentPosition = selectBody->GetPosition();
+
+		// 스프링 힘 계산 (후크의 법칙)
+		Eigen::Vector3f displacement = worldTargetPosition - currentPosition;
+		Eigen::Vector3f springForce = springConstant * displacement;
+
+		// Rigidbody의 속도 가져오기
+		Eigen::Vector3f objectVelocity = selectBody->GetLinearVelocity();
+
+		// 감쇠 힘 계산
+		Eigen::Vector3f dampingForce = -dampingFactor * objectVelocity;
+
+		// 총 힘 계산
+		Eigen::Vector3f totalForce = springForce + dampingForce;
+
+		// 오브젝트에 힘 적용
+		selectBody->AddForce(totalForce);
+	}
+
+	void AttachHoldState::UpdateTargetPosition()
+	{
+		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+		// 현재 오브젝트 위치
+		Eigen::Vector3f currentPosition = selectBody->GetPosition();
+
+		// 월드 좌표에서의 타겟 포지션을 가져옵니다.
+		Eigen::Vector3f worldTargetPosition = GetWorldTargetPosition();
+
+		// 타겟 포지션이 오브젝트를 향해 이동
+		Eigen::Vector3f directionToObject = (currentPosition - worldTargetPosition).normalized();
+		worldTargetPosition += directionToObject * targetSpeed * deltaTime;
+
+		Eigen::Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
+
+		targetPosition = playerRot.inverse() * (worldTargetPosition - playerPos);
+	}
+
+	Eigen::Vector3f AttachHoldState::GetWorldTargetPosition()
+	{
+		// 플레이어의 월드 위치와 회전을 가져옵니다.
+		Eigen::Vector3f playerPos = player->data.modelCore->GetWorldPosition();
+		Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
+
+		// 로컬 타겟 포지션을 월드 좌표로 변환합니다.
+		return playerPos + playerRot * targetPosition;
+	}
 
 	void AttachHoldState::CalculateSpringForces()
 	{
@@ -1027,14 +997,14 @@ namespace Phyzzle
 
 	void AttachHoldState::CalculateSpringPosition()
 	{
-		constexpr float zeta = 0.5f;
-		constexpr float omega = 2.0f * std::numbers::pi_v<float> *5.0f;
-		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
+		using namespace Eigen;
+		
+		// constexpr float zeta = 0.5f;
+		// constexpr float omega = 2.0f * std::numbers::pi_v<float> *5.0f;
+		// const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		if (attachble)
 		{
-			using namespace Eigen;
-
 			const Vector3f pos = player->data.modelCore->GetWorldPosition();
 			const Quaternionf rot = player->data.modelCore->GetWorldRotation();
 			Affine3f transform = Affine3f::Identity();
@@ -1044,23 +1014,20 @@ namespace Phyzzle
 
 			ZonaiPhysics::ZnBound3 bound = AttachSystem::Instance()->CalculateBoundingBox(attachble, invTrans.matrix());
 
-			if (bound.minimum.z() < 0.5f)
+			if (bound.minimum.z() < 1.f)
 			{
-				float distance = 0.5f - bound.minimum.z();
+				float distance = 1.f - bound.minimum.z();
 				targetPosition.z() += distance;
 			}
 		}
 
-		Eigen::Vector3f currPos = selectBody->GetPosition();
-		currPos.y() = 0.f;
+		// 월드 좌표에서의 타겟 포지션을 계산합니다.
+		Eigen::Vector3f worldTargetPosition = GetWorldTargetPosition();
 
-		Eigen::Vector3f playerPos = player->data.modelCore->GetWorldPosition();
-		playerPos.y() = 0.f;
-		Eigen::Vector3f zPos = player->data.modelCore->GetFront() * targetPosition.z();
-		zPos.y() = 0.f;
-		const Eigen::Vector3f targetP = playerPos + zPos;
-
-		posSpring.Update(currPos, springL, targetP, zeta, omega, timeStep);
+		// 스프링 질량 모델 힘 적용 호출
+		// SpringMassModel(worldTargetPosition);
+		// 타겟 포지션 업데이트 호출
+		// UpdateTargetPosition();
 	}
 
 	void AttachHoldState::CalculateSpringRotation()
@@ -1068,29 +1035,26 @@ namespace Phyzzle
 		constexpr float zeta0 = 0.1f;
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		Eigen::Quaternionf currRot = selectBody->GetRotation();
-		const Eigen::Quaternionf playerRot = player->data.modelCore->GetWorldRotation();
-		const Eigen::Quaternionf targetR = playerRot * targetRotation;
+		Eigen::Vector3f currPos = selectBody->GetPosition();
+		Eigen::Vector3f targetP = GetWorldTargetPosition();
 
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"현재 회전 : " +
-			std::to_wstring(currRot.w()) + L"\n" +
-			std::to_wstring(currRot.x()) + L"\n" +
-			std::to_wstring(currRot.y()) + L"\n" +
-			std::to_wstring(currRot.z()) + L"\n",
+			L"현재 위치 : " +
+			std::to_wstring(currPos.x()) + L"\n" +
+			std::to_wstring(currPos.y()) + L"\n" +
+			std::to_wstring(currPos.z()) + L"\n",
 			1200, 300, 200, 600, 15, 255, 255, 255, 255);
 
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"타겟 회전 : " +
-			std::to_wstring(targetR.w()) + L"\n" +
-			std::to_wstring(targetR.x()) + L"\n" +
-			std::to_wstring(targetR.y()) + L"\n" +
-			std::to_wstring(targetR.z()) + L"\n",
+			L"목표 위치 : " +
+			std::to_wstring(targetP.x()) + L"\n" +
+			std::to_wstring(targetP.y()) + L"\n" +
+			std::to_wstring(targetP.z()) + L"\n",
 			1200, 500, 200, 600, 15, 255, 255, 255, 255);
 
-		quatSpring.Update(currRot, springR, targetR.normalized(), zeta0, timeStep);
+		// quatSpring.Update(currPos, springR, targetR.normalized(), zeta0, timeStep);
 
-		selectBody->SetRotation(currRot);
+		// selectBody->SetRotation(currPos);
 	}
 
 	void AttachHoldState::TranslateSpringAlongY(float _distance)
@@ -1100,7 +1064,15 @@ namespace Phyzzle
 
 	void AttachHoldState::TranslateSpringAlongZ(float _distance)
 	{
-		targetPosition.z() += _distance;
+		using namespace Eigen;
+
+		// targetPosition.z() += _distance;
+
+		Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
+		Vector3f objectPosition = selectBody->GetPosition();
+		Vector3f direction = (objectPosition - playerPosition).normalized();
+
+		selectBody->AddForce(direction * _distance, ZonaiPhysics::Velocity_Change);
 	}
 
 	void AttachHoldState::TranslateObject(const Eigen::Vector3f& _direction, float power)

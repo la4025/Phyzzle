@@ -15,6 +15,7 @@ namespace Phyzzle
 	class PzObject;
 	class Holder;
 	class IState;
+	class GroundCheck;
 
 	class Player final : public PurahEngine::Component
 	{
@@ -101,7 +102,7 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
 			PurahEngine::GameObject* crossHead;
-			PurahEngine::Transform* groundChechRaycast;
+			Phyzzle::GroundCheck* groundCheck;
 
 			// UI
 			PurahEngine::GameObject* rotationArrow;

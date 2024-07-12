@@ -110,6 +110,8 @@ namespace Phyzzle
 		Eigen::Vector3f targetPosition = Eigen::Vector3f::Zero();			// 
 		Eigen::Quaternionf targetRotation = Eigen::Quaternionf::Identity();
 
+		float targetSpeed = 1.f;
+
 		PurahEngine::RigidBody* selectBody;
 		PzObject* attachble;
 
@@ -130,6 +132,11 @@ namespace Phyzzle
 		void ApplyObjectVelocity() const;						// 입력을 오브젝트에 적용시킴
 		void ResetObjectVelocity();								// 입력을 초기화 시킴
 
+		void SpringMassModel(const Eigen::Vector3f& worldTargetPosition);
+		void UpdateTargetPosition();
+
+
+		Eigen::Vector3f GetWorldTargetPosition();
 		void CalculateSpringForces();
 		void CalculateSpringPosition();
 		void CalculateSpringRotation();
