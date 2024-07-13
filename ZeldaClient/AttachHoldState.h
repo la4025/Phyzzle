@@ -135,8 +135,9 @@ namespace Phyzzle
 		void SpringMassModel(const Eigen::Vector3f& worldTargetPosition);
 		void UpdateTargetPosition();
 
-
 		Eigen::Vector3f GetWorldTargetPosition();
+		Eigen::Quaternionf GetWorldTargetQuaternion();
+
 		void CalculateSpringForces();
 		void CalculateSpringPosition();
 		void CalculateSpringRotation();
@@ -144,23 +145,23 @@ namespace Phyzzle
 		void TranslateSpringAlongY(float _distance);									// 스프링 이동
 		void TranslateSpringAlongZ(float _distance);									// 스프링 이동
 
-		void TranslateObject(const Eigen::Vector3f& _direction, float power);			// 오브젝트 이동
 		void TranslateObjectAlongX(float _distance);									// 오브젝트 이동
 		void TranslateObjectAlongY(float _distance);									// 오브젝트 이동
 		void TranslateObjectAlongZ(float _distance);									// 오브젝트 이동
+		void TranslateObject(const Eigen::Vector3f& _direction, float power);			// 오브젝트 이동
 
-		void RotateWithSpring(const Eigen::Vector3f& _axis, float _angle);				// 스프링 이동
 		void RotateSpringAlongX(float _angle);											// 스프링 회전
 		void RotateSpringAlongY(float _angle);											// 스프링 회전
+		void RotateWithSpring(const Eigen::Vector3f& _axis, float _angle);				// 스프링 이동
 
 		bool TryAttach() const;									// 부착
 		bool TryDettach() const;									// 부착
 
-		void Put() const;
-
 		void EnableOutline(bool) const;
 
 		void Snap();
+		void Put() const;
+
 		Eigen::Quaternionf FindAxis(const Eigen::Quaternionf& _direction);
 
 		void VariableSet();										// 변수 저장
