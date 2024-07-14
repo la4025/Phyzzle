@@ -6,12 +6,13 @@ namespace Phyzzle
 	class Spring
 	{
 	public:
+		virtual ~Spring() = default;
 	};
 
 	class PositionSpring : public Spring
 	{
 	public:
-		void Update(
+		void UpdateVelocity(
 			const Eigen::Vector3f& _s, Eigen::Vector3f& _v, const Eigen::Vector3f& _e,
 			float _zeta, float _omega, float _dt)
 		{
@@ -28,15 +29,17 @@ namespace Phyzzle
 
 	class QuaternionSpring : public Spring
 	{
-		float halflife_to_damping(float halflife, float eps = 1e-5f)
+	private:
+		static constexpr float EPSILON = 1e-5f;
+
+		float halflife_to_damping(float halflife, float eps = EPSILON) const
 		{
 			return (4.0f * 0.69314718056f) / (halflife + eps);
 		}
 
-		Eigen::Quaternionf quat_exp(Eigen::Vector3f v, float eps = 1e-8f)
+		Eigen::Quaternionf quat_exp(const Eigen::Vector3f& v, float eps = EPSILON) const
 		{
 			const float halfangle = v.norm();
-
 			if (halfangle < eps)
 			{
 				return Eigen::Quaternionf(1.0f, v.x(), v.y(), v.z()).normalized();
@@ -49,10 +52,9 @@ namespace Phyzzle
 			}
 		}
 
-		Eigen::Vector3f quat_log(Eigen::Quaternionf q, float eps = 1e-8f)
+		Eigen::Vector3f quat_log(const Eigen::Quaternionf& q, float eps = EPSILON) const
 		{
 			const float length = q.norm();
-
 			if (length < eps)
 			{
 				return Eigen::Vector3f(q.x(), q.y(), q.z());
@@ -64,32 +66,32 @@ namespace Phyzzle
 			}
 		}
 
-		Eigen::Vector3f quat_log_approx(Eigen::Quaternionf q)
+		Eigen::Vector3f quat_log_approx(const Eigen::Quaternionf& q) const
 		{
 			return Eigen::Vector3f(q.x(), q.y(), q.z());
 		}
 
-		Eigen::Quaternionf quat_from_scaled_angle_axis(Eigen::Vector3f v, float eps = 1e-8f)
+		Eigen::Quaternionf quat_from_scaled_angle_axis(const Eigen::Vector3f& v, float eps = EPSILON) const
 		{
 			return quat_exp(v / 2.0f, eps);
 		}
 
-		Eigen::Vector3f quat_to_scaled_angle_axis(Eigen::Quaternionf q, float eps = 1e-8f)
+		Eigen::Vector3f quat_to_scaled_angle_axis(const Eigen::Quaternionf& q, float eps = EPSILON) const
 		{
 			return 2.0f * quat_log(q, eps);
 		}
 
-		float fast_negexp(float x)
+		float fast_negexp(float x) const
 		{
 			return 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
 		}
 
 	public:
-		void Update(
-			Eigen::Quaternionf& x,
+		void UpdateVelocity(
+			const Eigen::Quaternionf& x,
 			Eigen::Vector3f& v,
 			const Eigen::Quaternionf& x_goal,
-			const float halflife,
+			float halflife,
 			float dt)
 		{
 			Eigen::Quaternionf goal = x_goal;
@@ -108,7 +110,6 @@ namespace Phyzzle
 
 			const float eydt = fast_negexp(y * dt);
 
-			x = quat_from_scaled_angle_axis(eydt * (j0 + j1 * dt)) * goal;
 			v = eydt * (v - j1 * y * dt);
 		}
 	};

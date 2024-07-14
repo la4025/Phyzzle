@@ -622,16 +622,31 @@ namespace Phyzzle
 		const Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
-		// 속도 벡터를 계산
-		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
-		Vector3f targetVelocity = moveSpeed * movementDirection;
-		Vector3f additionalVelocity = targetVelocity - currentVelocity;
-		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
+		//if (data.isGrounded)
+		//{
+			// 속도 벡터를 계산
+			Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
+			float scalar = currentVelocity.norm();
+			Vector3f direction = currentVelocity.normalized();
+			if (!direction.isZero())
+			{
+				scalar = std::clamp(scalar, 0.f, _moveSpeed);
+				currentVelocity = direction * scalar;
+			}
 
-		// 속도를 적용시킴
-		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+			Vector3f targetVelocity = moveSpeed * movementDirection;
+			Vector3f additionalVelocity = targetVelocity - currentVelocity;
+			additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
 
-		return currInput.Lstick.Size >= 1e-6;
+			// 속도를 적용시킴
+			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+			
+			return currInput.Lstick.Size >= 1e-6;
+		//}
+		//else
+		//{
+		//	return false;
+		//}
 	}
 #pragma endregion Player
 
@@ -1039,12 +1054,16 @@ namespace Phyzzle
 	void Player::RotateCameraArm()
 	{
 		PurahEngine::TimeController& time = PurahEngine::TimeController::GetInstance();
-		const float deltaTime = time.GetDeltaTime();
 
-		const float yawAngle = currInput.Rstick.X * data.sensitivity * deltaTime * currInput.Rstick.Size;
+		const float deltaTime = time.GetDeltaTime();
+		const float angle = data.sensitivity;
+
+		const float xFactor = currInput.Rstick.X * currInput.Rstick.Size;
+		const float yawAngle = xFactor * angle * deltaTime;
 		RotateCameraArmYaw(yawAngle);
 
-		const float pitchAngle = -currInput.Rstick.Y * data.sensitivity * deltaTime * currInput.Rstick.Size;
+		const float yFactor = -currInput.Rstick.Y * currInput.Rstick.Size;
+		const float pitchAngle = yFactor * angle * deltaTime;
 		RotateCameraArmPitch(pitchAngle);
 	}
 

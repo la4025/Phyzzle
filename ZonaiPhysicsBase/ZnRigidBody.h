@@ -117,5 +117,6 @@ namespace ZonaiPhysics
 
 		// 주어진 축에
 		virtual ZnBound3		GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot) = 0;
+		virtual ZnBound3		ComputeBoundingBoxAtTransform(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot) = 0;
 	};
 }

@@ -82,18 +82,32 @@ namespace Phyzzle
 	{
 		if (player->TryPlayerMove(player->data.moveSpeed))
 		{
-			if (player->currInput.Lstick.Size > 0.75f)
+			if (player->data.isGrounded)
 			{
-				player->ChangePlayerAnimationState(Player::RUN);
+				if (player->currInput.Lstick.Size > 0.75f)
+				{
+					player->ChangePlayerAnimationState(Player::RUN);
+				}
+				else
+				{
+					player->ChangePlayerAnimationState(Player::WALK);
+				}
 			}
 			else
 			{
-				player->ChangePlayerAnimationState(Player::WALK);
+				player->ChangePlayerAnimationState(Player::JUMPING);
 			}
 		}
 		else
 		{
-			player->ChangePlayerAnimationState(Player::IDLE);
+			if (player->data.isGrounded)
+			{
+				player->ChangePlayerAnimationState(Player::IDLE);
+			}
+			else
+			{
+				player->ChangePlayerAnimationState(Player::JUMPING);
+			}
 		}
 	}
 

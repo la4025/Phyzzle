@@ -444,7 +444,40 @@ namespace Phyzzle
 		_outQ = localT.rotation();
 	}
 
-	ZonaiPhysics::ZnBound3 AttachSystem::CalculateBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat)
+	ZonaiPhysics::ZnBound3 AttachSystem::ComputeBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat)
+	{
+		using namespace Eigen;
+
+		// 메트릭스에서 포지션이랑 로테이션을 구함
+		Transform<float, 3, Eigen::Affine> transform{ _mat };
+		const Vector3f pos{ transform.translation() };
+		const Quaternionf rot{ transform.rotation() };
+
+		const IslandID id = _base->GetIslandID();
+		AttachIsland island;
+		if (!HasAttachIsland(id, island))
+			island.emplace_back(_base);
+
+		Vector3f globalMinBounds(FLT_MAX, FLT_MAX, FLT_MAX);
+		Vector3f globalMaxBounds(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+		for (auto& obj : island)
+		{
+			PurahEngine::RigidBody* const body = obj->GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+
+			if (body)
+			{
+				ZonaiPhysics::ZnBound3 bound = body->GetBoundingBox(pos, rot);
+
+				globalMinBounds = globalMinBounds.cwiseMin(bound.minimum);
+				globalMaxBounds = globalMaxBounds.cwiseMax(bound.maximum);
+			}
+		}
+
+		return ZonaiPhysics::ZnBound3(globalMinBounds, globalMaxBounds);
+	}
+
+	ZonaiPhysics::ZnBound3 AttachSystem::ComputeBoundingBoxAtTransform(PzObject* const _base, const Eigen::Matrix4f& _mat)
 	{
 		using namespace Eigen;
 
@@ -467,7 +500,7 @@ namespace Phyzzle
 
 			if (body)
 			{
-				ZonaiPhysics::ZnBound3 bound = body->GetBoundingBox(pos, rot);
+				ZonaiPhysics::ZnBound3 bound = body->ComputeBoundingBoxAtTransform(pos, rot);
 
 				globalMinBounds = globalMinBounds.cwiseMin(bound.minimum);
 				globalMaxBounds = globalMaxBounds.cwiseMax(bound.maximum);

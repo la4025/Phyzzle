@@ -88,7 +88,8 @@ namespace Phyzzle
 		/// <param name="_base">attachable pointer</param>
 		/// <param name="_mat">world matrix</param>
 		/// <returns></returns>
-		ZonaiPhysics::ZnBound3		CalculateBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat);
+		ZonaiPhysics::ZnBound3		ComputeBoundingBox(PzObject* const _base, const Eigen::Matrix4f& _mat);
+		ZonaiPhysics::ZnBound3		ComputeBoundingBoxAtTransform(PzObject* const _base, const Eigen::Matrix4f& _mat);
 	};
 }
 

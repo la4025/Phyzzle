@@ -134,6 +134,11 @@ namespace PurahEngine
 			const Eigen::Quaternionf& _rot = Eigen::Quaternionf::Identity()
 		);
 
+		ZonaiPhysics::ZnBound3 ComputeBoundingBoxAtTransform(
+			const Eigen::Vector3f& _pos = Eigen::Vector3f::Zero(),
+			const Eigen::Quaternionf& _rot = Eigen::Quaternionf::Identity()
+		);
+
 	public:
 		void SimulateResult();
 

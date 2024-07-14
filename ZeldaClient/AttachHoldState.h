@@ -18,30 +18,25 @@ namespace Phyzzle
 		~AttachHoldState() override;
 
 #pragma region Initialize
-		void InitializeAxis(
-			std::vector<Eigen::Quaternionf>& axis, 
-			float increment
-		);
+		void InitializeAxis(std::vector<Eigen::Quaternionf>& axis, float increment);
 
 		void InitializeAxisHelper(
 			std::vector<Eigen::Quaternionf>& axis, 
-			float angle, 
-			const Eigen::Vector3f& vector
-		);
+			float angle, const Eigen::Vector3f& vector);
 		
 		void InitializeRotations(
 			const std::vector<Eigen::Quaternionf>& input, 
 			std::vector<Eigen::Quaternionf>& output, 
 			float angle, const Eigen::Vector3f& axis, 
-			RotateInfo type
-		);
+			RotateInfo type);
 
 		void InitializeRotations(
 			const std::vector<Eigen::Quaternionf>& input,
-			float angle, 
-			const Eigen::Vector3f& axis,
-			RotateInfo type
-		);
+			float angle, const Eigen::Vector3f& axis,
+			RotateInfo type);
+
+		void VariableSet();										// 변수 저장
+		void VariableReset();									// 변수 초기화
 #pragma endregion Initialize
 
 #pragma region StateEvent
@@ -96,11 +91,6 @@ namespace Phyzzle
 		const float rotateAngle = 0.25f * std::numbers::pi_v<float>;
 
 	private:
-		float diffWidth = -0.1f;
-		float diffHeight = -0.1f;
-
-		Eigen::Vector3f playerVelocity = Eigen::Vector3f::Zero();
-
 		Eigen::Vector3f targetVelocity = Eigen::Vector3f::Zero();			// 이번 프레임에 생긴 종합 속도
 		Eigen::Vector3f targetAngularVelocity = Eigen::Vector3f::Zero();	// 이번 프레임에 생긴 종합 각속도
 
@@ -110,20 +100,31 @@ namespace Phyzzle
 		Eigen::Vector3f targetPosition = Eigen::Vector3f::Zero();			// 
 		Eigen::Quaternionf targetRotation = Eigen::Quaternionf::Identity();
 
-		float targetSpeed = 1.f;
+		float targetYSpeed = 4.f;
+		float targetPositionStepZ = 1.f;
+		float minTargetPositionY = -4.f;
+		float maxTargetPositionY = 10.f;
+		float minTargetPositionZ = 1.f;
+		float maxTargetPositionZ = 10.f;
+		float positionOffset = 1.2f;
+
+		float maxLinearVelocity = 50.f;
+		float maxAngularVelocity = 60.f;
 
 		PurahEngine::RigidBody* selectBody;
 		PzObject* attachble;
 
 	private:
 		void PlayerMove(float _speed) const;					// 이동
+
+#pragma region Camera
 		void UpdateCamera();									// 카메라 업데이트
 		void UpdateHoldingCameraPosition(Eigen::Vector3f& _local, Eigen::Vector3f& _world) const;						// 카메라 위치 업데이트
 		void UpdateHoldingCameraRotation() const;							// 카메라 회전 업데이트
-
 		void CameraReset() const;								// 카메라 회전
-		void Cancel() const;										// Default 모드로 돌아감
+#pragma endregion Camera
 
+		void Cancel() const;										// Default 모드로 돌아감
 		bool TrySelect();										// 선택
 
 		void LookToWorldDirection(const Eigen::Vector3f& _to);	// 플레이어가 to 방향으로 회전
@@ -132,11 +133,13 @@ namespace Phyzzle
 		void ApplyObjectVelocity() const;						// 입력을 오브젝트에 적용시킴
 		void ResetObjectVelocity();								// 입력을 초기화 시킴
 
-		void SpringMassModel(const Eigen::Vector3f& worldTargetPosition);
-		void UpdateTargetPosition();
+		// void SpringMassModel(const Eigen::Vector3f& worldTargetPosition);
+		// void UpdateTargetPosition();
 
 		Eigen::Vector3f GetWorldTargetPosition();
 		Eigen::Quaternionf GetWorldTargetQuaternion();
+
+		void UpdateTargetPosition();
 
 		void CalculateSpringForces();
 		void CalculateSpringPosition();
@@ -163,9 +166,6 @@ namespace Phyzzle
 		void Put() const;
 
 		Eigen::Quaternionf FindAxis(const Eigen::Quaternionf& _direction);
-
-		void VariableSet();										// 변수 저장
-		void VariableReset();									// 변수 초기화
 
 		bool TryTranslate(float _distance);
 #pragma endregion Content
