@@ -495,7 +495,7 @@ namespace Phyzzle
 		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
 		float slope = std::acosf(cosTheta);
 
-		return slope <= data.slopeLimit;
+		return slope <= (data.slopeLimit * (std::numbers::pi_v<float> / 180.f));
 	}
 
 	bool Player::GroundCheck()
@@ -504,7 +504,7 @@ namespace Phyzzle
 
 		Vector3f start = data.playerRigidbody->GetPosition() - Vector3f::UnitY() * 0.025f;
 		Vector3f to = -Vector3f::UnitY();
-		float dis = 0.1f;
+		float dis = 0.5f;
 		int layers = data.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
@@ -562,7 +562,7 @@ namespace Phyzzle
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
 		}
 
-		return true;
+		return data.isGrounded;
 	}
 
 	void Player::JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
