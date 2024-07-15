@@ -27,9 +27,6 @@ namespace Phyzzle
 		void Stick_L() override;
 		void Stick_R() override;
 
-		void Click_DLeft() override;
-		void Click_DRight() override;
-
 		void Click_A() override;
 
 		void Click_LB() override;
@@ -41,6 +38,5 @@ namespace Phyzzle
 		void Around() const;
 		void LookToWorldDirection(const Eigen::Vector3f& _to) const;
 		void LookToLocalDirection(const Eigen::Vector3f& _to) const;
-		void ChangeState(bool _value) const;
 	};
 }

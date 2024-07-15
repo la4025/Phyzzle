@@ -219,4 +219,9 @@ namespace ZonaiPhysics
 		return RigidBodyHelper::GetBoundingBox(pxBody, _pos, _rot);
 	}
 
+	ZonaiPhysics::ZnBound3 RigidBody::ComputeBoundingBoxAtTransform(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
+	{
+		return RigidBodyHelper::ComputeBoundingBoxAtTransform(pxBody, _pos, _rot);
+	}
+
 } // namespace ZonaiPhysics

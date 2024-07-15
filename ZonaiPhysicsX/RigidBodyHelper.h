@@ -86,6 +86,7 @@ namespace ZonaiPhysics
 		static void				ClearTorque(void*);
 
 		static ZnBound3			GetBoundingBox(void* _pxBody, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
+		static ZnBound3			ComputeBoundingBoxAtTransform(void* _pxBody, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
 	};
 }
 
