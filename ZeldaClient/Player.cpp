@@ -209,11 +209,7 @@ namespace Phyzzle
 			stateSystem[currState]->StateCancel();
 		}
 
-		if (data.stopUpdate)
-		{
-			animData.animationSpeed = 0.f;
-		}
-		else
+		if (!data.stopUpdate)
 		{
 			HandleInput();
 			UpdateAbilityState();
