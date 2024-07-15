@@ -6,6 +6,7 @@ namespace ZonaiPhysics
 	{
 		eError,
 		eTriggerEnter,
+		eTriggerStay,
 		eTriggerExit,
 		eCollisionEnter,
 		eCollisionStay,

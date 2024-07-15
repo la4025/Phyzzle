@@ -49,10 +49,10 @@ struct PxForceMode
 {
 	enum Enum
 	{
-		eFORCE,				//!< parameter has unit of mass * length / time^2, i.e., a force
-		eIMPULSE,			//!< parameter has unit of mass * length / time, i.e., force * time
-		eVELOCITY_CHANGE,	//!< parameter has unit of length / time, i.e., the effect is mass independent: a velocity change.
-		eACCELERATION		//!< parameter has unit of length/ time^2, i.e., an acceleration. It gets treated just like a force except the mass is not divided out before integration.
+		eFORCE,             //!< 매개변수의 단위는 질량 * 길이 / 시간^2, 즉, 힘의 단위를 가짐
+		eIMPULSE,           //!< 매개변수의 단위는 질량 * 길이 / 시간, 즉, 힘 * 시간의 단위를 가짐
+		eVELOCITY_CHANGE,   //!< 매개변수의 단위는 길이 / 시간, 즉, 질량과 무관하게 속도 변화를 의미함
+		eACCELERATION       //!< 매개변수의 단위는 길이 / 시간^2, 즉, 가속도를 의미함. 이는 힘처럼 취급되지만 통합 전에 질량이 나누어지지 않음
 	};
 };
 

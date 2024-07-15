@@ -12,8 +12,9 @@ namespace ZonaiPhysics
 	class EventCallback : public physx::PxSimulationEventCallback
 	{
 		static ZnSimulationCallback* callback;
-		static std::vector<std::pair<CollisionEventBuffer, eCallback>> collisionBuffer;
-		static std::vector<std::pair<TriggerEventBuffer, eCallback>> triggerBuffer;
+		static std::vector<CollisionEventBuffer> collisionBuffer;
+		static std::vector<TriggerEventBuffer> currTriggerBuffer;
+		static std::vector<TriggerEventBuffer> prevTriggerBuffer;
 
 	public:
 		void setInstance(ZnSimulationCallback*);

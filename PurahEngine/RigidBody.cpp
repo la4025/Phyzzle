@@ -414,6 +414,11 @@ namespace PurahEngine
 		return body->GetBoundingBox(_pos, _rot);
 	}
 
+	ZonaiPhysics::ZnBound3 RigidBody::ComputeBoundingBoxAtTransform(const Eigen::Vector3f& _pos /*= Eigen::Vector3f::Zero()*/, const Eigen::Quaternionf& _rot /*= Eigen::Quaternionf::Identity() */)
+	{
+		return body->ComputeBoundingBoxAtTransform(_pos, _rot);
+	}
+
 	void RigidBody::SimulateResult()
 	{
 		auto pos = body->GetPosition();

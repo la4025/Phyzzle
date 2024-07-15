@@ -14,8 +14,9 @@
 namespace ZonaiPhysics
 {
 	ZnSimulationCallback* EventCallback::callback = nullptr;
-	std::vector<std::pair<CollisionEventBuffer, eCallback>> EventCallback::collisionBuffer{};
-	std::vector<std::pair<TriggerEventBuffer, eCallback>> EventCallback::triggerBuffer{};
+	std::vector<CollisionEventBuffer> EventCallback::collisionBuffer{};
+	std::vector<TriggerEventBuffer> EventCallback::currTriggerBuffer{};
+	std::vector<TriggerEventBuffer> EventCallback::prevTriggerBuffer{};
 
 	void EventCallback::setInstance(ZnSimulationCallback* _instance)
 	{
@@ -27,12 +28,13 @@ namespace ZonaiPhysics
 	void EventCallback::SimulationEventCallback()
 	{
 		// collision event
-		for (auto& [buffer, event] : collisionBuffer)
+		for (auto& buffer : collisionBuffer)
 		{
 			auto& thisCollider = buffer.col0;
 			auto& otherCollider = buffer.col1;
 			auto& thisCollision = buffer.collisionData;
 			auto otherCollision = buffer.collisionData.Swap();
+			auto event = buffer.event;
 
 			switch (event)
 			{
@@ -56,15 +58,19 @@ namespace ZonaiPhysics
 		collisionBuffer.clear();
 
 		// trigger event
-		for (auto& [buffer, event] : triggerBuffer)
+		for (auto& buffer : currTriggerBuffer)
 		{
 			auto& thisCollider = buffer.col0;
 			auto& otherCollider = buffer.col1;
+			auto event = buffer.event;
 
 			switch (event)
 			{
 			case eCallback::eTriggerEnter:
 				callback->OnTriggerEnter(thisCollider, otherCollider);
+				break;
+			case eCallback::eTriggerStay:
+				callback->OnTriggerStay(thisCollider, otherCollider);
 				break;
 			case eCallback::eTriggerExit:
 				callback->OnTriggerExit(thisCollider, otherCollider);
@@ -74,7 +80,9 @@ namespace ZonaiPhysics
 			}
 		}
 
-		triggerBuffer.clear();
+		// 현재 프레임의 트리거 상태를 이전 프레임의 상태로 업데이트
+		prevTriggerBuffer = std::move(currTriggerBuffer);
+		currTriggerBuffer.clear();
 	}
 
 	void EventCallback::onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count)
@@ -191,16 +199,14 @@ namespace ZonaiPhysics
 
 			collision.impulses = totalImpulse;
 
-			CollisionEventBuffer buffer(thisCollider, otherCollider, collision);
-
 			if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-				collisionBuffer.emplace_back( buffer, eCallback::eCollisionEnter);
+				collisionBuffer.emplace_back(thisCollider, otherCollider, collision, eCallback::eCollisionEnter);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
-				collisionBuffer.emplace_back( buffer, eCallback::eCollisionStay);
+				collisionBuffer.emplace_back(thisCollider, otherCollider, collision, eCallback::eCollisionStay);
 
 			else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
-				collisionBuffer.emplace_back( buffer, eCallback::eCollisionExit);
+				collisionBuffer.emplace_back(thisCollider, otherCollider, collision, eCallback::eCollisionExit);
 
 			else
 				assert(false);
@@ -221,13 +227,21 @@ namespace ZonaiPhysics
 			ZnCollider* const trigger = GetCollider(tp.triggerShape);
 			ZnCollider* const other = GetCollider(tp.otherShape);
 
-			TriggerEventBuffer buffer(trigger, other);
-
 			if (tp.status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-				triggerBuffer.emplace_back(buffer, eCallback::eTriggerEnter);
-
+			{
+				currTriggerBuffer.emplace_back(trigger, other, eCallback::eTriggerEnter);
+			}
 			else if (tp.status & PxPairFlag::eNOTIFY_TOUCH_LOST)
-				triggerBuffer.emplace_back(buffer, eCallback::eTriggerExit);
+			{
+				currTriggerBuffer.emplace_back(trigger, other, eCallback::eTriggerExit);
+			}
+
+			// 현재 프레임에서의 트리거 상태를 이전 프레임과 비교하여 eTriggerStay 이벤트 처리
+			auto it = std::find(prevTriggerBuffer.begin(), prevTriggerBuffer.end(), TriggerEventBuffer{ trigger, other });
+			if (it != prevTriggerBuffer.end() && !(tp.status & PxPairFlag::eNOTIFY_TOUCH_LOST))
+			{
+				currTriggerBuffer.emplace_back(trigger, other, eCallback::eTriggerStay);
+			}
 		}
 	}
 

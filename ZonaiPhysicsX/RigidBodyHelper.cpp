@@ -396,4 +396,40 @@ namespace ZonaiPhysics
 		// 최종 경계 상자 반환
 		return ZnBound3(globalMinBounds, globalMaxBounds);
 	}
+
+	ZnBound3 RigidBodyHelper::ComputeBoundingBoxAtTransform(void* _pxBody, const Eigen::Vector3f& _targetPos, const Eigen::Quaternionf& _targetRot)
+	{
+		using namespace physx;
+		using namespace Eigen;
+
+		PxTransform baseTransform(EigenToPhysx(_targetPos), EigenToPhysx(_targetRot));
+
+		PxRigidDynamic* const pxRigidBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
+
+		PxU32 shapeCount = pxRigidBody->getNbShapes();
+		std::vector<PxShape*> shapes(shapeCount);
+		pxRigidBody->getShapes(shapes.data(), shapeCount);
+
+		Vector3f globalMinBounds(FLT_MAX, FLT_MAX, FLT_MAX);
+		Vector3f globalMaxBounds(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+		for (PxU32 i = 0; i < shapeCount; ++i)
+		{
+			PxShape* const shape = shapes[i];
+
+			const PxTransform localShapePose = shape->getLocalPose();
+			const PxTransform finalShapePose = baseTransform * localShapePose;
+
+			Vector3f shapeWorldPos = PhysxToEigen(finalShapePose.p);
+			Quaternionf shapeWorldRot = PhysxToEigen(finalShapePose.q);
+
+			Collider* collider = static_cast<Collider*>(shape->userData);
+			ZnBound3 shapeBound = collider->GetBoundingBox(shapeWorldPos, shapeWorldRot);
+
+			globalMinBounds = globalMinBounds.cwiseMin(shapeBound.minimum);
+			globalMaxBounds = globalMaxBounds.cwiseMax(shapeBound.maximum);
+		}
+
+		return ZnBound3(globalMinBounds, globalMaxBounds);
+	}
 }

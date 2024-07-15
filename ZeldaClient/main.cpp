@@ -10,6 +10,7 @@
 #include "AudioTest.h"
 
 #include "Player.h"
+#include "GroundCheck.h"
 #include "Controller.h"
 
 #include "LauncherPlatform.h"
@@ -79,7 +80,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Controller>("Controller");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Player>("Player");
-	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("Holder");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Holder>("GroundCheck");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PzObject>("PzObject");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Rewindable>("Rewindable");
 
