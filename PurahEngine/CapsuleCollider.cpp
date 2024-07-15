@@ -37,11 +37,11 @@ namespace PurahEngine
 
 		SetTrigger(isTrigger);
 		SetLayer(layer);
-		SetPositionOffset(positionOffset);
 		SetRotationOffset(rotationOffset);
+		SetPositionOffset(positionOffset);
 
-		znCollider->SetPosition(transform->GetWorldPosition());
 		znCollider->SetQuaternion(transform->GetWorldRotation());
+		znCollider->SetPosition(transform->GetWorldPosition());
 	}
 
 	void CapsuleCollider::SetSize(float _radius, float _halfHeight)

@@ -11,6 +11,11 @@ void Phyzzle::GroundCheck::OnTriggerEnter(const PurahEngine::Collider* _other)
 	count++;
 }
 
+void Phyzzle::GroundCheck::OnTriggerStay(const PurahEngine::Collider*)
+{
+
+}
+
 void Phyzzle::GroundCheck::OnTriggerExit(const PurahEngine::Collider* _other)
 {
 	count--;

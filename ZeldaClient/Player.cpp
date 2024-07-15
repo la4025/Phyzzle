@@ -216,8 +216,6 @@ namespace Phyzzle
 
 			animData.animationSpeed = currInput.Lstick.Size;
 		}
-
-		Vector3f pos = GetGameObject()->GetTransform()->GetWorldPosition();
 	}
 
 	void Player::LateUpdate()

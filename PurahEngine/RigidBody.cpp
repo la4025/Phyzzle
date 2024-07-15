@@ -47,9 +47,9 @@ namespace PurahEngine
 		if (!isKinematic)
 		{
 			this->WakeUp();
+			AddForce(force);
+			AddTorque(torque);
 		}
-		AddForce(force);
-		AddTorque(torque);
 	}
 
 	void RigidBody::Awake()

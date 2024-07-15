@@ -12,8 +12,8 @@ namespace Phyzzle
 	public:
 		bool IsGrounded();
 
-
 		void OnTriggerEnter(const PurahEngine::Collider*) override;
+		void OnTriggerStay(const PurahEngine::Collider*) override;
 		void OnTriggerExit(const PurahEngine::Collider*) override;
 
 		// Component을(를) 통해 상속됨
