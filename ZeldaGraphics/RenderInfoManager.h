@@ -26,7 +26,8 @@ public:
 	const std::multimap<unsigned int, RenderInfo*, std::greater<unsigned int>>& GetImageRenderInfo();
 	const std::multimap<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>, RenderInfo*, std::greater<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>>>& GetBillBoardParticleRenderInfo() const;
 
-	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetShadowRenderInfo() const;
+	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetDirectionalShadowRenderInfo() const;
+	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetPointShadowRenderInfo() const;
 	const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& GetFastOutLineRenderInfo() const;
 	const std::vector<RenderInfo*>& GetOutLineRenderInfo() const;
 
@@ -50,7 +51,8 @@ private:
 	std::multimap<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>, RenderInfo*, std::greater<std::pair<float, std::pair<unsigned int, std::pair<float, unsigned int>>>>> billBoardParticleRenderInfo;	// ID 9
 	
 	// Option RenderInfo
-	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> shadowRenderInfo;
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> directionalShadowRenderInfo;
+	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> pointShadowRenderInfo;
 	std::unordered_map<InstancingKey, std::vector<RenderInfo*>> fastOutLineRenderInfo;
 	std::vector<RenderInfo*> outLineRenderInfo;
 

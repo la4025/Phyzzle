@@ -40,18 +40,18 @@ namespace PurahEngine
 			// Animator가 없는 경우 DrawModel함수를 이용한다.
 			if (animator == nullptr)
 			{
-				renderer->DrawModel(worldTM, modelID, wireFrame, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
+				renderer->DrawModel(worldTM, modelID, wireFrame, dShadow, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
 			}
 			// Animator가 있는 경우 DrawAnimation, DrawChangingAnimation 함수를 이용한다.
 			else
 			{
 				if (isBlending)
 				{
-					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, wireFrame, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
+					renderer->DrawChangingAnimation(worldTM, modelID, animationName1, animationName2, time1, time2, ratio, wireFrame, dShadow, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
 				}
 				else
 				{
-					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, wireFrame, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
+					renderer->DrawAnimation(worldTM, modelID, animationName1, time1, wireFrame, dShadow, shadow, fastOutLine, outLine, { outLineR, outLineG, outLineB, outLineA });
 				}
 			}
 		}
@@ -60,6 +60,11 @@ namespace PurahEngine
 	void ModelRenderer::SetModelName(const std::wstring& modelName)
 	{
 		this->modelName = modelName;
+	}
+
+	void ModelRenderer::SetDShadow(bool value)
+	{
+		dShadow = value;
 	}
 
 	void ModelRenderer::SetShadow(bool value)
@@ -105,6 +110,7 @@ namespace PurahEngine
 		PREDESERIALIZE_BASE();
 
 		PREDESERIALIZE_WSTRING(modelName);
+		PREDESERIALIZE_VALUE(dShadow);
 		PREDESERIALIZE_VALUE(shadow);
 		PREDESERIALIZE_VALUE(wireFrame);
 		PREDESERIALIZE_VALUE(fastOutLine);

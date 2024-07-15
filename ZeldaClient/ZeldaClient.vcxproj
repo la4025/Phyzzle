@@ -155,9 +155,12 @@
     <ClCompile Include="Burnable.cpp" />
     <ClCompile Include="CameraEventDevice.cpp" />
     <ClCompile Include="DebugCameraSetting.cpp" />
+    <ClCompile Include="DirectionalLightSystem.cpp" />
     <ClCompile Include="JumpCheck.cpp" />
+    <ClCompile Include="LightSystem.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PauseGame.cpp" />
+    <ClCompile Include="PointLightSystem.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
@@ -209,9 +212,12 @@
     <ClInclude Include="CameraEventDevice.h" />
     <ClInclude Include="CoroutineSystem.h" />
     <ClInclude Include="DebugCameraSetting.h" />
+    <ClInclude Include="DirectionalLightSystem.h" />
     <ClInclude Include="JumpCheck.h" />
+    <ClInclude Include="LightSystem.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PauseGame.h" />
+    <ClInclude Include="PointLightSystem.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />

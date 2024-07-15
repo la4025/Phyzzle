@@ -11,7 +11,11 @@ namespace Phyzzle
 
 	PauseGame::~PauseGame()
 	{
-		TimeController::GetInstance().SetTimeScale(1.0f);
+		if (previousIsPause) // 이전 상태가 true일 때만 호출
+		{
+			TimeController::GetInstance().ResumeAll();
+			player->SetStopUpdate(false);
+		}
 	}
 
 	void PauseGame::Awake()

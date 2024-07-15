@@ -135,6 +135,15 @@
     <ClCompile Include="ANDGate.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
+    <ClCompile Include="LightSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLightSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -307,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="ANDGate.h">
       <Filter>Device\Electrical Device</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLightSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightSystem.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -211,6 +211,37 @@ namespace PurahEngine
 		specular = _specular;
 	}
 
+	Eigen::Vector3f Light::GetLightAmbient() const
+	{
+		return ambient;
+	}
+
+	Eigen::Vector3f Light::GetLightDiffuse() const
+	{
+		return diffuse;
+	}
+
+	Eigen::Vector3f Light::GetLightSpecular() const
+	{
+		return specular;
+	}
+
+	void Light::SetAttenuation(const Eigen::Vector3f& attenuation)
+	{
+		currentAtten0 += (attenuation.x() - atten0);
+		currentAtten1 += (attenuation.y() - atten1);
+		currentAtten2 += (attenuation.z() - atten2);
+
+		atten0 = attenuation.x();
+		atten1 = attenuation.y();
+		atten2 = attenuation.z();
+	}
+
+	Eigen::Vector3f Light::GetAttenuation() const
+	{
+		return Eigen::Vector3f{ atten0, atten1, atten2 };
+	}
+
 	bool Light::IsRootEnable()
 	{
 		return GetGameObject()->IsRootEnable();

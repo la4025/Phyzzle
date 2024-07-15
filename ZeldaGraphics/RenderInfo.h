@@ -29,7 +29,8 @@ namespace RenderInfoOption
 	constexpr static unsigned int None = 0x00000000u;
 	constexpr static unsigned int OutLine = 0x00000001u;
 	constexpr static unsigned int FastOutLine = 0x00000002u;
-	constexpr static unsigned int Shadow = 0x00000004;
+	constexpr static unsigned int DirectionalLightShadow = 0x00000004u;
+	constexpr static unsigned int PointLightShadow = 0x00000008u;
 };
 
 struct InstancingKey

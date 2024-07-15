@@ -19,6 +19,7 @@ namespace PurahEngine
 		void Render(IZeldaRenderer* renderer) override;
 
 		void SetModelName(const std::wstring& modelName);
+		void SetDShadow(bool value);
 		void SetShadow(bool value);
 
 		void SetFastOutLine(bool value);
@@ -38,7 +39,8 @@ namespace PurahEngine
 		Animator* animator;
 		
 		std::wstring modelName;
-		bool shadow;
+		bool dShadow;	// Directional Light Shadow
+		bool shadow;	// Point Light Shadow
 		bool wireFrame;
 		bool fastOutLine;
 		bool outLine;

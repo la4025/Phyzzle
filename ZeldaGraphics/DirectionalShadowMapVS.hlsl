@@ -39,6 +39,7 @@ VertexOut main(VertexIn input)
         mul(input.boneIndices[3] != 0xffffffffu, mul(mul(input.position, finalMatrix[3]), input.weight[3])) +
         mul(input.boneIndices[0] == 0xffffffffu, input.position);
     
+    //output.pos = float4(output.pos.xyz * 0.98, 1.0f); // 그림자가 깨끗하게 나오게 하기 위해, 크기를 살짝 줄여서 그린다.
     output.pos = mul(mul(mul(output.pos, worldMatrix), lightViewMatrix[0]), lightProjectionMatrix);
     output.clipPos = output.pos;
     

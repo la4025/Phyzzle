@@ -22,6 +22,7 @@ namespace PurahEngine
 		void SetMesh(MeshType type);
 		void SetWireFrame(bool value);
 		void SetColor(float r, float g, float b, float a);
+		void SetDShadow(bool value);
 		void SetShadow(bool value);
 
 		void SetOutLine(bool value);
@@ -38,7 +39,8 @@ namespace PurahEngine
 		std::wstring textureName;
 		MeshType meshType;
 		bool wireFrame;
-		bool shadow;
+		bool dShadow;	// Directional Light Shadow
+		bool shadow;	// Point Light Shadow
 		bool fastOutLine;
 		bool outLine;
 		float r;

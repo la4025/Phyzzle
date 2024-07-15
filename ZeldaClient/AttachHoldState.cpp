@@ -1187,10 +1187,12 @@ namespace Phyzzle
 		if (_value)
 		{
 			AttachSystem::Instance()->EnableOutline(attachble, &player->color0, &player->color1);
+			AttachSystem::Instance()->EnableDShadow(attachble);
 		}
 		else
 		{
 			AttachSystem::Instance()->DisableOutline(attachble);
+			AttachSystem::Instance()->DisableDShadow(attachble);
 		}
 	}
 

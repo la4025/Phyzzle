@@ -106,7 +106,7 @@ void CalculateLight(int lightIndex, float3 normal, float3 viewPos, float2 uv, ou
         
         
         // Shadow
-        if (length(diffuse.xyz) > 0.00001)
+        if (saturate(dot(-lightVec, normal)) > 0.00001)
         {
             // filterSize x filterSize 크기의 필터 사용
             const int filterSize = 1;

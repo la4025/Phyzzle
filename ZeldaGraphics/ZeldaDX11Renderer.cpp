@@ -281,6 +281,21 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 	if (FAILED(result)) return false;
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
+	defaultRasterDesc.AntialiasedLineEnable = false;
+	defaultRasterDesc.CullMode = D3D11_CULL_FRONT;
+	defaultRasterDesc.DepthBias = 0;
+	defaultRasterDesc.DepthBiasClamp = 0.0f;
+	defaultRasterDesc.DepthClipEnable = true;
+	defaultRasterDesc.FillMode = D3D11_FILL_SOLID;
+	defaultRasterDesc.FrontCounterClockwise = false;
+	defaultRasterDesc.MultisampleEnable = false;
+	defaultRasterDesc.ScissorEnable = false;
+	defaultRasterDesc.SlopeScaledDepthBias = 0.0f;
+	// Create the rasterizer state from the description we just filled out.
+	result = mDevice->CreateRasterizerState(&defaultRasterDesc, &directionalLightRasterState);
+	if (FAILED(result)) return false;
+
+	// Setup the raster description which will determine how and what polygons will be drawn.
 	lightRasterDesc.AntialiasedLineEnable = false;
 	lightRasterDesc.CullMode = D3D11_CULL_FRONT;
 	lightRasterDesc.DepthBias = 0;
@@ -518,6 +533,16 @@ bool ZeldaDX11Renderer::Initialize(unsigned int screenWidth, unsigned int screen
 		}
 	}
 
+	{
+		// 깊이 스텐실 스테이트 생성
+		D3D11_DEPTH_STENCIL_DESC directionalShadowDepthStencilDesc = {};
+		directionalShadowDepthStencilDesc.DepthEnable = TRUE;
+		directionalShadowDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		directionalShadowDepthStencilDesc.DepthFunc = D3D11_COMPARISON_GREATER;
+		directionalShadowDepthStencilDesc.StencilEnable = FALSE; // 스텐실 테스트를 비활성화합니다.
+
+		mDevice->CreateDepthStencilState(&directionalShadowDepthStencilDesc, &directionalShadowDepthStencilState);
+	}
 
 #pragma endregion Shadow Mapping
 
@@ -724,6 +749,11 @@ void ZeldaDX11Renderer::Finalize()
 		}
 	}
 
+	if (directionalShadowDepthStencilState)
+	{
+		directionalShadowDepthStencilState->Release();
+		directionalShadowDepthStencilState = nullptr;
+	}
 	if (alphaBlendState)
 	{
 		alphaBlendState->Release();
@@ -943,6 +973,11 @@ void ZeldaDX11Renderer::Finalize()
 	{
 		wireFrameRasterState->Release();
 		wireFrameRasterState = nullptr;
+	}
+	if (directionalLightRasterState)
+	{
+		directionalLightRasterState->Release();
+		directionalLightRasterState = nullptr;
 	}
 	if (pointLightRasterState)
 	{
@@ -1241,7 +1276,7 @@ void ZeldaDX11Renderer::EndDraw()
 	}
 }
 
-void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor)
+void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor)
 {
 	MeshID cubeID = ResourceManager::GetInstance().GetCubeID();
 
@@ -1254,9 +1289,10 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 
 	// Render Option
 	RenderOption renderOption = RenderInfoOption::None;
-	if (outLine)		renderOption |= RenderInfoOption::OutLine;
-	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
-	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
+	if (outLine)				renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)			renderOption |= RenderInfoOption::FastOutLine;
+	if (drawDirectionalShadow)	renderOption |= RenderInfoOption::DirectionalLightShadow;
+	if (drawPointShadow)		renderOption |= RenderInfoOption::PointLightShadow;
 
 	// Instancing Key
 	InstancingKey instancingKey;
@@ -1273,7 +1309,7 @@ void ZeldaDX11Renderer::DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID t
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
+void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	// Render Type
 	RenderType renderType = RenderType::Deferred_Model;
@@ -1284,9 +1320,10 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 
 	// Render Option
 	RenderOption renderOption = RenderInfoOption::None;
-	if (outLine)		renderOption |= RenderInfoOption::OutLine;
-	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
-	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
+	if (outLine)				renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)			renderOption |= RenderInfoOption::FastOutLine;
+	if (drawDirectionalShadow)	renderOption |= RenderInfoOption::DirectionalLightShadow;
+	if (drawPointShadow)		renderOption |= RenderInfoOption::PointLightShadow;
 
 	// Instancing Key
 	InstancingKey instancingKey;
@@ -1303,7 +1340,7 @@ void ZeldaDX11Renderer::DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID mo
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
+void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
@@ -1316,9 +1353,10 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 
 	// Render Option
 	RenderOption renderOption = RenderInfoOption::None;
-	if (outLine)		renderOption |= RenderInfoOption::OutLine;
-	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
-	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
+	if (outLine)				renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)			renderOption |= RenderInfoOption::FastOutLine;
+	if (drawDirectionalShadow)	renderOption |= RenderInfoOption::DirectionalLightShadow;
+	if (drawPointShadow)		renderOption |= RenderInfoOption::PointLightShadow;
 
 	// Instancing Key
 	InstancingKey instancingKey;
@@ -1335,7 +1373,7 @@ void ZeldaDX11Renderer::DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelI
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor)
+void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor)
 {
 	ZeldaModel* modelInstance = ResourceManager::GetInstance().GetModel(model);
 
@@ -1348,9 +1386,10 @@ void ZeldaDX11Renderer::DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix
 
 	// Render Option
 	RenderOption renderOption = RenderInfoOption::None;
-	if (outLine)		renderOption |= RenderInfoOption::OutLine;
-	if (fastOutLine)	renderOption |= RenderInfoOption::FastOutLine;
-	if (drawShadow)		renderOption |= RenderInfoOption::Shadow;
+	if (outLine)				renderOption |= RenderInfoOption::OutLine;
+	if (fastOutLine)			renderOption |= RenderInfoOption::FastOutLine;
+	if (drawDirectionalShadow)	renderOption |= RenderInfoOption::DirectionalLightShadow;
+	if (drawPointShadow)		renderOption |= RenderInfoOption::PointLightShadow;
 
 	// Instancing Key
 	InstancingKey instancingKey;
@@ -2568,7 +2607,7 @@ void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 		case LightType::Directional:
 		{
 			// Rasterizer State 설정 - (지금은 셰이더에서 bias처리를 하기 때문에 defaultRasterState를 사용한다)
-			mDeviceContext->RSSetState(defaultRasterState);
+			mDeviceContext->RSSetState(directionalLightRasterState);
 			// Shadow DepthStencilView 비우기
 			mDeviceContext->ClearDepthStencilView(shadowDepthStencilView[0], D3D11_CLEAR_DEPTH, 1.0f, 0);
 			// RenderTarget을 비우고 DepthStencilView를 설정
@@ -2577,7 +2616,7 @@ void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 			D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(ShadowMap::Size), static_cast<float>(ShadowMap::Size), 0.0f, 1.0f };
 			mDeviceContext->RSSetViewports(1, &viewport);
 
-			const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
+			const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetDirectionalShadowRenderInfo();
 
 			ZeldaCamera* currentcamera = ResourceManager::GetInstance().GetCamera(ZeldaCamera::GetMainCamera());
 			DirectX::XMMATRIX lightViewMatrix = light->GetViewMatrix(currentcamera);
@@ -2644,7 +2683,7 @@ void ZeldaDX11Renderer::CreateShadowMap(ZeldaLight* light)
 				D3D11_VIEWPORT viewport = { 0.0f, 0.0f, static_cast<float>(ShadowMap::Size), static_cast<float>(ShadowMap::Size), 0.0f, 1.0f };
 				mDeviceContext->RSSetViewports(1, &viewport);
 
-				const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetShadowRenderInfo();
+				const auto& shadowRenderInfo = RenderInfoManager::GetInstance().GetPointShadowRenderInfo();
 
 				for (auto& [key, value] : shadowRenderInfo)
 				{

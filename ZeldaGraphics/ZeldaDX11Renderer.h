@@ -118,10 +118,10 @@ public:
 	virtual void BeginDraw(float deltaTime) override;
 	virtual void EndDraw() override;
 
-	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor) override;
-	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
-	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
-	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
+	virtual void DrawCube(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color color, Color outLineColor) override;
+	virtual void DrawModel(const Eigen::Matrix4f& worldMatrix, ModelID model, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
+	virtual void DrawAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, std::wstring animationName, float animationTime, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
+	virtual void DrawChangingAnimation(const Eigen::Matrix4f& worldMatrix, ModelID model, const std::wstring& firstAnimationName, const std::wstring& secondAnimationName, float firstAnimationTime, float secondAnimationTime, float ratio, bool wireFrame, bool drawDirectionalShadow, bool drawPointShadow, bool fastOutLine, bool outLine, Color outLineColor) override;
 
 	virtual void DrawLight(LightID lightID) override;
 
@@ -213,6 +213,7 @@ private:
 
 	ID3D11RasterizerState* defaultRasterState = nullptr;
 	ID3D11RasterizerState* wireFrameRasterState = nullptr;
+	ID3D11RasterizerState* directionalLightRasterState = nullptr;
 	ID3D11RasterizerState* pointLightRasterState = nullptr;
 	ID3D11RasterizerState* cubeMapRasterState = nullptr;
 	ID3D11RasterizerState* shadowRasterState = nullptr;
@@ -234,6 +235,8 @@ private:
 	// Shadow Mapping
 	ID3D11DepthStencilView* shadowDepthStencilView[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	ID3D11ShaderResourceView* shadowShaderResource[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+
+	ID3D11DepthStencilState* directionalShadowDepthStencilState = nullptr;
 
 	ZeldaShader* deferredBlendingObjectShader = nullptr;
 	ZeldaShader* deferredObjectShader = nullptr;

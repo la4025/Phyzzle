@@ -35,7 +35,7 @@ namespace PurahEngine
 				}
 				case PurahEngine::MeshRenderer::MeshType::Cube:
 				{
-					renderer->DrawCube(worldTM, textureID, wireFrame, shadow, fastOutLine, outLine, { r, g, b, a }, { outLineR, outLineG, outLineB, outLineA });
+					renderer->DrawCube(worldTM, textureID, wireFrame, dShadow, shadow, fastOutLine, outLine, { r, g, b, a }, { outLineR, outLineG, outLineB, outLineA });
 
 					break;
 				}
@@ -68,6 +68,11 @@ namespace PurahEngine
 		this->g = g;
 		this->b = b;
 		this->a = a;
+	}
+
+	void MeshRenderer::SetDShadow(bool value)
+	{
+		dShadow = value;
 	}
 
 	void MeshRenderer::SetShadow(bool value)
@@ -104,6 +109,7 @@ namespace PurahEngine
 		PREDESERIALIZE_WSTRING(textureName);
 		PREDESERIALIZE_VALUE(meshType);
 		PREDESERIALIZE_VALUE(wireFrame);
+		PREDESERIALIZE_VALUE(dShadow);
 		PREDESERIALIZE_VALUE(shadow);
 		PREDESERIALIZE_VALUE(fastOutLine);
 		PREDESERIALIZE_VALUE(outLine);

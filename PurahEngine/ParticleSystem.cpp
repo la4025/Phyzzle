@@ -8,7 +8,7 @@ namespace PurahEngine
 	void ParticleSystem::Awake()
 	{
 		genRandom = std::mt19937(randomDevice());
-		positionDistribution = std::uniform_real_distribution<float>(-generatorRadius, generatorRadius);
+		positionDistribution = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 		lifeTimeDistribution = std::uniform_real_distribution<float>(0.0f, randomLifeTimeMax);
 		vibrationDistribution = std::uniform_real_distribution<float>(-vibrationSpeed, vibrationSpeed);
 
@@ -173,19 +173,19 @@ namespace PurahEngine
 
 		switch (generatorType)
 		{
-			case PurahEngine::ParticleSystem::GeneratorType::Point:
+			case ParticleSystem::GeneratorType::Point:
 			{
 				element->translation = Eigen::Matrix4f::Identity();
 				break;
 			}
-			case PurahEngine::ParticleSystem::GeneratorType::Circle:
+			case ParticleSystem::GeneratorType::Circle:
 			{
 				float x, y, z;
 				do
 				{
-					x = positionDistribution(genRandom);
+					x = generatorRadius * positionDistribution(genRandom);
 					y = 0.0f;
-					z = positionDistribution(genRandom);
+					z = generatorRadius * positionDistribution(genRandom);
 				} while (x * x + y * y + z * z <= generatorRadius * generatorRadius);
 				element->translation <<
 					1, 0, 0, x,
@@ -194,15 +194,29 @@ namespace PurahEngine
 					0, 0, 0, 1;
 				break;
 			}
-			case PurahEngine::ParticleSystem::GeneratorType::Sphere:
+			case ParticleSystem::GeneratorType::Sphere:
 			{
 				float x, y, z;
 				do
 				{
-					x = positionDistribution(genRandom);
-					y = positionDistribution(genRandom);
-					z = positionDistribution(genRandom);
+					x = generatorRadius * positionDistribution(genRandom);
+					y = generatorRadius * positionDistribution(genRandom);
+					z = generatorRadius * positionDistribution(genRandom);
 				} while (x * x + y * y + z * z <= generatorRadius * generatorRadius);
+				element->translation <<
+					1, 0, 0, x,
+					0, 1, 0, y,
+					0, 0, 1, z,
+					0, 0, 0, 1;
+				break;
+			}
+			case ParticleSystem::GeneratorType::Square:
+			{
+				float x, y, z;
+				x = generatorSizeX * positionDistribution(genRandom) / 2.0f;
+				y = 0.0f;
+				z = generatorSizeZ * positionDistribution(genRandom) / 2.0f;
+
 				element->translation <<
 					1, 0, 0, x,
 					0, 1, 0, y,
@@ -290,6 +304,9 @@ namespace PurahEngine
 		PREDESERIALIZE_VALUE(playWithStart);
 
 		PREDESERIALIZE_VALUE(generatorRadius);
+		PREDESERIALIZE_VALUE(generatorSizeX);
+		PREDESERIALIZE_VALUE(generatorSizeY);
+		PREDESERIALIZE_VALUE(generatorSizeZ);
 		PREDESERIALIZE_VALUE(generationCycle);
 		
 		PREDESERIALIZE_VECTOR3F(moveDirection);

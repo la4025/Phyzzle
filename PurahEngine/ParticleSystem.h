@@ -13,7 +13,8 @@ namespace PurahEngine
 		{
 			Point = 0,		// 한 점에서 생성
 			Circle = 1,		// 원 모양으로 생성
-			Sphere = 2		// 구 모양으로 생성
+			Sphere = 2,		// 구 모양으로 생성
+			Square = 3		// 사각형 모양으로 생성
 		};
 
 		enum class ElementType
@@ -46,7 +47,10 @@ namespace PurahEngine
 
 		bool playWithStart;
 
-		float generatorRadius;			// 생성 범위(반지름)
+		float generatorRadius;			// 생성 범위(반지름) - Circle, Sphere
+		float generatorSizeX;			// 생성 범위 - Square
+		float generatorSizeY;			// 생성 범위 - Square
+		float generatorSizeZ;			// 생성 범위 - Square
 		float generationCycle;			// 생성 주기
 
 		Eigen::Vector3f moveDirection;	// 이동(확산) 방향

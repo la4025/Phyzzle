@@ -58,8 +58,11 @@ namespace Phyzzle
 
 		void						SetOutlineColor(Eigen::Vector4f* const _color0, Eigen::Vector4f* const _color1, Eigen::Vector4f* const _color2);
 		void						ApplyOutlineSettings(PzObject* obj, bool value, Eigen::Vector4f* const color);
+		void						ApplyDShadowSettings(PzObject* obj, bool value);
 		void						EnableOutline(PzObject*, Eigen::Vector4f* const _targetColor, Eigen::Vector4f* const _subColor);
 		void						DisableOutline(PzObject*);
+		void						EnableDShadow(PzObject* _obj);
+		void						DisableDShadow(PzObject* _obj);
 
 		bool						TryAttach(PzObject* _base);
 		bool						Attach(PzObject* _base, PzObject* _other);

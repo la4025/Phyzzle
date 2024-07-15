@@ -29,6 +29,9 @@
 #include "ObjectGenerator.h"
 #include "RespawnTrigger.h"
 #include "RespawnSystem.h"
+#include "SubLightSystem.h"
+#include "DirectionalLightSystem.h"
+#include "PointLightSystem.h"
 
 #include "DebugCameraSetting.h"
 
@@ -95,7 +98,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectGenerator>("ObjectGenerator");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnTrigger>("RespawnTrigger");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::RespawnSystem>("RespawnSystem");
-
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::SubLightSystem>("SubLightSystem");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DirectionalLightSystem>("DirectionalLightSystem");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PointLightSystem>("PointLightSystem");
+	
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::DebugCameraSetting>("DebugCameraSetting");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PauseGame>("PauseGame");
 

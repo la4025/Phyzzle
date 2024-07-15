@@ -18,7 +18,8 @@ void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 	imageRenderInfo.clear();
 	billBoardParticleRenderInfo.clear();
 
-	shadowRenderInfo.clear();
+	directionalShadowRenderInfo.clear();
+	pointShadowRenderInfo.clear();
 	fastOutLineRenderInfo.clear();
 	outLineRenderInfo.clear();
 
@@ -49,9 +50,14 @@ void RenderInfoManager::SortRenderInfo(DirectX::XMMATRIX viewMatrix)
 					SortRenderInfo(&renderInfo, fastOutLineRenderInfo);
 				}
 
-				if ((renderOption & RenderInfoOption::Shadow) > 0u)
+				if ((renderOption & RenderInfoOption::DirectionalLightShadow) > 0u)
 				{
-					SortRenderInfo(&renderInfo, shadowRenderInfo);
+					SortRenderInfo(&renderInfo, directionalShadowRenderInfo);
+				}
+
+				if ((renderOption & RenderInfoOption::PointLightShadow) > 0u)
+				{
+					SortRenderInfo(&renderInfo, pointShadowRenderInfo);
 				}
 
 				break;
@@ -246,9 +252,14 @@ const std::multimap<std::pair<float, std::pair<unsigned int, std::pair<float, un
 	return billBoardParticleRenderInfo;
 }
 
-const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetShadowRenderInfo() const
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetDirectionalShadowRenderInfo() const
 {
-	return shadowRenderInfo;
+	return directionalShadowRenderInfo;
+}
+
+const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetPointShadowRenderInfo() const
+{
+	return pointShadowRenderInfo;
 }
 
 const std::unordered_map<InstancingKey, std::vector<RenderInfo*>>& RenderInfoManager::GetFastOutLineRenderInfo() const

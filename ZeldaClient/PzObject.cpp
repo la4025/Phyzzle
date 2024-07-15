@@ -28,10 +28,6 @@ namespace Phyzzle
 			{
 				AttachSystem::Instance()->EnableOutline(attachable, &(AttachSystem::Instance()->color2), nullptr);
 			}
-			else if (exit)
-			{
-				AttachSystem::Instance()->DisableOutline(attachable);
-			}
 		}
 
 		preState = select;

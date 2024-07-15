@@ -24,6 +24,13 @@ namespace PurahEngine
 		void SetLightDiffuse(const Eigen::Vector3f&);
 		void SetLightSpecular(const Eigen::Vector3f&);
 
+		Eigen::Vector3f GetLightAmbient() const;
+		Eigen::Vector3f GetLightDiffuse() const;
+		Eigen::Vector3f GetLightSpecular() const;
+
+		void SetAttenuation(const Eigen::Vector3f& attenuation);
+		Eigen::Vector3f GetAttenuation() const;
+
 		// IRenderer을(를) 통해 상속됨
 		bool IsRootEnable() override;
 		void Render(IZeldaRenderer* renderer) override;

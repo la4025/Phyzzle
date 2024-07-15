@@ -169,6 +169,38 @@ namespace Phyzzle
 		}
 	}
 
+	void AttachSystem::ApplyDShadowSettings(PzObject* obj, bool value)
+	{
+		auto children = obj->GetGameObject()->GetTransform()->GetChildren();
+
+		auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+		if (model)
+		{
+			model->SetDShadow(value);
+		}
+
+		auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+		if (mesh)
+		{
+			mesh->SetDShadow(value);
+		}
+
+		for (auto& child : children)
+		{
+			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+			if (model)
+			{
+				model->SetDShadow(value);
+			}
+
+			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+			if (mesh)
+			{
+				mesh->SetDShadow(value);
+			}
+		}
+	}
+
 	void AttachSystem::EnableOutline(
 		PzObject* _obj, 
 		Eigen::Vector4f* const _targetColor,
@@ -208,6 +240,38 @@ namespace Phyzzle
 		}
 
 		ApplyOutlineSettings(_obj, false, nullptr);
+	}
+
+	void AttachSystem::EnableDShadow(PzObject* _obj)
+	{
+		const IslandID objID = _obj->GetIslandID();
+		AttachIsland island;
+
+		if (!HasAttachIsland(objID, island))
+			island.emplace_back(_obj);
+
+		for (auto& obj : island)
+		{
+			ApplyDShadowSettings(obj, true);
+		}
+
+		ApplyDShadowSettings(_obj, true);
+	}
+
+	void AttachSystem::DisableDShadow(PzObject* _obj)
+	{
+		const IslandID objID = _obj->GetIslandID();
+		AttachIsland island;
+
+		if (!HasAttachIsland(objID, island))
+			island.emplace_back(_obj);
+
+		for (auto& obj : island)
+		{
+			ApplyDShadowSettings(obj, false);
+		}
+
+		ApplyDShadowSettings(_obj, false);
 	}
 
 	// ¹°Ã¼ ºÎÂø
