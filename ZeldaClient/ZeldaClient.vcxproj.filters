@@ -129,6 +129,12 @@
     <ClCompile Include="PauseGame.cpp">
       <Filter>DH\Pause</Filter>
     </ClCompile>
+    <ClCompile Include="SubLightSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ANDGate.cpp">
+      <Filter>Device\Electrical Device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
@@ -295,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="PauseGame.h">
       <Filter>DH\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="SubLightSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ANDGate.h">
+      <Filter>Device\Electrical Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
