@@ -47,7 +47,7 @@ namespace Phyzzle
 	private:
 		void PlayerMove(float _speed) const;
 		void CameraUpdate() const;
-		void Cancel() const;
+		void Cancel();
 
 		void Jump() const;
 

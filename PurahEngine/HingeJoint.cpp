@@ -51,7 +51,7 @@ namespace PurahEngine
 		SetDriveVelocity(velocity);
 		SetDriveFreespin(freeSpin);
 
-		JointT::OnDataLoadComplete();
+		JointT::PostInitialize();
 	}
 
 	float HingeJoint::GetAngle() const

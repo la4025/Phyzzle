@@ -94,22 +94,11 @@ namespace Phyzzle
 		Eigen::Vector3f targetVelocity = Eigen::Vector3f::Zero();			// 이번 프레임에 생긴 종합 속도
 		Eigen::Vector3f targetAngularVelocity = Eigen::Vector3f::Zero();	// 이번 프레임에 생긴 종합 각속도
 
-		Eigen::Vector3f springL = Eigen::Vector3f::Zero();					// 스프링으로 인해 생기는 속도
-		Eigen::Vector3f springR = Eigen::Vector3f::Zero();					// 스프링으로 인해 생기는 각속도
+		Eigen::Vector3f linearSpringForce = Eigen::Vector3f::Zero();					// 스프링으로 인해 생기는 속도
+		Eigen::Vector3f angularSpringForce = Eigen::Vector3f::Zero();					// 스프링으로 인해 생기는 각속도
 
 		Eigen::Vector3f targetPosition = Eigen::Vector3f::Zero();			// 
 		Eigen::Quaternionf targetRotation = Eigen::Quaternionf::Identity();
-
-		float targetYSpeed = 4.f;
-		float targetPositionStepZ = 1.f;
-		float minTargetPositionY = -4.f;
-		float maxTargetPositionY = 10.f;
-		float minTargetPositionZ = 1.f;
-		float maxTargetPositionZ = 10.f;
-		float positionOffset = 1.2f;
-
-		float maxLinearVelocity = 50.f;
-		float maxAngularVelocity = 60.f;
 
 		PurahEngine::RigidBody* selectBody;
 		PzObject* attachble;

@@ -71,15 +71,9 @@ namespace ZonaiPhysics
 		// 충돌 한 것 중에 하나라도 트리거가 있으면
 		if (physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1))
 		{
-			if (maskTest0)
-			{
-				// Notify trigger if masks specify it
-				// 마스크가 그렇게 지정하면 트리거에 알림.
-				pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-				pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
-			}
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
 			pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
-			// pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
 
 			return physx::PxFilterFlag::eDEFAULT;
 		}
@@ -88,41 +82,20 @@ namespace ZonaiPhysics
 		// 키네마틱 액터에 대한 이벤트를 전송하되, 접촉을 해결하지 마세요.
 		if (physx::PxFilterObjectIsKinematic(attributes0) && physx::PxFilterObjectIsKinematic(attributes1))
 		{
-			//pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-			//pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-			//pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
-
-			//pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
-			//pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
-
-			//pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-
 			return physx::PxFilterFlag::eSUPPRESS;
-
-			// return physx::PxFilterFlag::eKILL;
 		}
 
 		// Trigger the contact callback for pairs (A,B) where the filtermask of A contains the ID of B and vice versa
 		// A의 필터마스크가 B의 ID를 포함하고 B의 필터마스크가 A의 ID를 포함하는 쌍 (A, B)에 대한 contact 콜백을 트리거합니다.
-		//if (maskTest0)
-		//{
-			pairFlags |= physx::PxPairFlag::eSOLVE_CONTACT;
+		pairFlags |= physx::PxPairFlag::eSOLVE_CONTACT;
+		pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+		pairFlags |= physx::PxPairFlag::ePRE_SOLVER_VELOCITY;
+		pairFlags |= physx::PxPairFlag::ePOST_SOLVER_VELOCITY;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
-			pairFlags |= physx::PxPairFlag::eDETECT_DISCRETE_CONTACT;
-			// pairFlags |= physx::PxPairFlag::eDETECT_CCD_CONTACT;
-			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
-
-			pairFlags |= physx::PxPairFlag::ePRE_SOLVER_VELOCITY;
-			pairFlags |= physx::PxPairFlag::ePOST_SOLVER_VELOCITY;
-
-			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-
-			return physx::PxFilterFlag::eDEFAULT;
-		//}
-
-		// Ignore pair (no collisions nor events)
-		// return physx::PxFilterFlag::eKILL;
+		return physx::PxFilterFlag::eDEFAULT;
 	}
 }

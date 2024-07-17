@@ -51,6 +51,7 @@ namespace ZonaiPhysics
 		float				GetInvMass() const override;
 
 		Eigen::Vector3f		GetInertiaTensor() const override;
+		void				SetInertiaTensor(const Eigen::Vector3f& tensor) override;
 
 		float				GetLinearDamping() const override;
 		void				SetLinearDamping(float) override;
@@ -73,10 +74,10 @@ namespace ZonaiPhysics
 		void				SetMaxAngularVelocity(const float&) override;
 
 		Eigen::Vector3f		GetPosition() const override;
-		void				SetPosition(const Eigen::Vector3f&) override;
+		void				SetPosition(const Eigen::Vector3f&, bool _wakeup) override;
 
 		Eigen::Quaternionf	GetQuaternion() const override;
-		void				SetQuaternion(const Eigen::Quaternionf&) override;
+		void				SetQuaternion(const Eigen::Quaternionf&, bool _wakeup) override;
 
 		void				AddForce(const Eigen::Vector3f&, ForceType) override;
 		void				ClearForce() override;

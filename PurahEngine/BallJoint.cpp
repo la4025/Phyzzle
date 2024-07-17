@@ -58,7 +58,7 @@ namespace PurahEngine
 			SetBounciness(setBounce);
 		}
 
-		JointT::OnDataLoadComplete();
+		JointT::PostInitialize();
 	}
 
 	void BallJoint::GetLimitAngle(float& _outY, float& _outZ) const

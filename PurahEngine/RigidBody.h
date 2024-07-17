@@ -63,6 +63,10 @@ namespace PurahEngine
 		void		SetMass(float) noexcept;
 		void		SetDensity(float);
 
+
+		Eigen::Vector3f	GetInertiaTensor() const;
+		void			SetInertiaTensor(const Eigen::Vector3f& tensor);
+
 		/**
 		선형 감쇠 계수
 

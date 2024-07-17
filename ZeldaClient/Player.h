@@ -52,103 +52,12 @@ namespace Phyzzle
 
 	private:
 #pragma region Struct
-		struct AnimationData
-		{
-			std::wstring idleAnimation;
-			std::wstring walkingAnimation;
-			std::wstring runningAnimation;
-			std::wstring jumpAnimation;
-			std::wstring jumpingAnimation;
-			std::wstring landingAnimation;
+		struct PlayerData;
+		struct AbilityData;
+		struct StickData;
+		struct PlayerInput;
 
-			std::wstring holdIdleAnimation;
-			std::wstring holdFrontAnimation;
-			std::wstring holdBackAnimation;
-			std::wstring holdRightAnimation;
-			std::wstring holdLeftAnimation;
-
-			float animationSpeed;
-		};
-
-		struct PlayerData
-		{
-			bool debugMode = false;
-			bool stopUpdate = false;
-
-#pragma region Player Variable
-			float height = 1.f;
-			float radius = 0.5f;
-
-			float moveSpeed = 10.f;				// 기본 속도
-			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
-			float sensitivity = 90.f;			// 카메라 회전 속도
-			float jumpPower = 10.f;				// 점프 힘
-			bool isGrounded = false;
-			bool jumping = false;
-			float slopeLimit = 36.f;			// 경사 각도
-			float stepOffset = 0.1f;			// 이동 시 허용 단차
-			float slideFriction = 0.3f;
-#pragma endregion Player Variable
-
-			float cameraLerpTime = 0.5f;			// 보간 시간
-			float cameraLerpTime0 = 1.0f;
-
-			Eigen::Vector3f lastGroundNormal;
-
-#pragma region Player Component
-			PurahEngine::RigidBody* playerRigidbody;
-			PurahEngine::Transform* modelCore;
-			PurahEngine::Transform* cameraArm;
-			PurahEngine::Transform* cameraCore;
-			PurahEngine::Animator* animator;
-			PurahEngine::GameObject* crossHead;
-			Phyzzle::GroundCheck* groundCheck;
-
-			// UI
-			PurahEngine::GameObject* rotationArrow;
-			PurahEngine::GameObject* attachSelectUI;
-			PurahEngine::GameObject* attachHoldUI;
-			PurahEngine::GameObject* attachHoldCollisionUI;
-#pragma endregion Player Component
-
-#pragma region Camera
-			PurahEngine::Transform* attachLowCamera0;
-			PurahEngine::Transform* attachLowCamera1;
-			PurahEngine::Transform* attachDefaultCamera0;
-			PurahEngine::Transform* attachDefaultCamera1;
-			PurahEngine::Transform* attachHighCamera0;
-			PurahEngine::Transform* attachHighCamera1;
-#pragma endregion Camera
-
-			Eigen::Vector3f		coreDefaultPosition;
-			Eigen::Quaternionf	coreDefaultRotation;
-
-			Eigen::Vector3f		coreSelectPosition;
-
-			Eigen::Vector3f		armDefaultPosition;
-			Eigen::Quaternionf	armDefaultRotation;
-
-			Eigen::Vector3f coreTargetPosition;
-			Eigen::Quaternionf	coreTargetRotation;
-
-			Eigen::Vector3f armTargetPosition;
-			Eigen::Quaternionf	armTargetRotation;
-
-			float xAngle = 0.f;					// 현재 앵글
-			const float limitHighAngle = 80.f;	// 하이 앵글
-			const float limitLowAngle = -70.f;	// 로우 앵글
-
-			unsigned int cameraCollisionLayers = 0;
-			float cameraCollisionRadius = 5.f;
-			unsigned int attachRaycastLayers = 0;
-			float attachRaycastDistance = 40.f;
-
-			AbilityState state = ATTACH_SELECT;
-
-			PzObject* holdObject;
-			PurahEngine::RigidBody* holdObjectBody;
-		};
-
+#pragma region Input
 		struct StickData
 		{
 			float X;
@@ -177,6 +86,116 @@ namespace Phyzzle
 
 				return *this;
 			}
+		};
+#pragma endregion Input
+
+#pragma region Camera
+		struct CameraData
+		{
+			PurahEngine::Transform* attachLowCamera0;
+			PurahEngine::Transform* attachLowCamera1;
+			PurahEngine::Transform* attachDefaultCamera0;
+			PurahEngine::Transform* attachDefaultCamera1;
+			PurahEngine::Transform* attachHighCamera0;
+			PurahEngine::Transform* attachHighCamera1;
+
+			float cameraLerpTime = 0.5f;			// 보간 시간
+			float cameraLerpTime0 = 1.0f;
+
+			Eigen::Vector3f		coreDefaultPosition;
+			Eigen::Quaternionf	coreDefaultRotation;
+
+			Eigen::Vector3f		coreSelectPosition;
+
+			Eigen::Vector3f		armDefaultPosition;
+			Eigen::Quaternionf	armDefaultRotation;
+
+			Eigen::Vector3f coreTargetPosition;
+			Eigen::Quaternionf	coreTargetRotation;
+
+			Eigen::Vector3f armTargetPosition;
+			Eigen::Quaternionf	armTargetRotation;
+
+			float xAngle = 0.f;					// 현재 앵글
+			const float limitHighAngle = 80.f;	// 하이 앵글
+			const float limitLowAngle = -70.f;	// 로우 앵글
+
+			unsigned int cameraCollisionLayers = 0;
+			float cameraCollisionRadius = 5.f;
+		};
+#pragma endregion Camera
+
+#pragma region Player
+		struct PlayerData
+		{
+			bool debugMode = false;
+			bool stopUpdate = false;
+
+#pragma region Player Variable
+			float height = 1.f;
+			float radius = 0.5f;
+
+			float moveSpeed = 10.f;				// 기본 속도
+			float holdSpeed = 5.f;				// 어태치로 물건 들고 있을 때 움직이는 속도
+			float sensitivity = 90.f;			// 카메라 회전 속도
+			float jumpPower = 10.f;				// 점프 힘
+			float jumpCooldown = 0.1f;
+			
+			bool canJump = true;
+			bool isGrounded = false;
+			bool isStandableSlope = true;
+			float slopeLimit = 36.f;			// 경사 각도
+			float slideFriction = 0.3f;
+#pragma endregion Player Variable
+
+			Eigen::Vector3f lastGroundNormal;
+
+#pragma region Player Component
+			PurahEngine::RigidBody* playerRigidbody;
+			PurahEngine::Transform* modelCore;
+			PurahEngine::Transform* cameraArm;
+			PurahEngine::Transform* cameraCore;
+			PurahEngine::Animator* animator;
+			PurahEngine::GameObject* crossHead;
+			Phyzzle::GroundCheck* groundCheck;
+
+			// UI
+			PurahEngine::GameObject* rotationArrow;
+			PurahEngine::GameObject* attachSelectUI;
+			PurahEngine::GameObject* attachHoldUI;
+			PurahEngine::GameObject* attachHoldCollisionUI;
+#pragma endregion Player Component
+
+			unsigned int attachRaycastLayers = 0;
+			float attachRaycastDistance = 40.f;
+
+			AbilityState state = ATTACH_SELECT;
+
+			PzObject* holdObject;
+			PurahEngine::RigidBody* holdObjectBody;
+		};
+
+		struct AbilityData
+		{
+			float targetPositionYSpeed = 4.f;
+			float targetPositionZStep = 1.f;
+
+			float minTargetPositionY = -4.f;
+			float maxTargetPositionY = 10.f;
+			float minTargetPositionZ = 1.f;
+			float maxTargetPositionZ = 10.f;
+			float targetPositionOffset = 1.5f;
+
+			float linearSpringDamping = 3.f;		// 0 <= x <= 1
+			float linearSpringFrequency = 100.f;	// 1.f rad/s ~ 10.f rad/s
+			float linearMaxVelocity = 80.f;
+
+			float angularSpringDamping = 2.f;
+			float angularSpringFrequency = 80.f;
+			float angularMaxVelocity = 100.f;
+
+			float holdRotateAngle = 90.f;
+			float arcRatio = 1.5f;
 		};
 
 		struct PlayerInput
@@ -215,6 +234,28 @@ namespace Phyzzle
 				return *this;
 			}
 		};
+#pragma endregion Player
+
+#pragma region Animation
+		struct AnimationData
+		{
+			std::wstring idleAnimation;
+			std::wstring walkingAnimation;
+			std::wstring runningAnimation;
+			std::wstring jumpAnimation;
+			std::wstring jumpingAnimation;
+			std::wstring landingAnimation;
+
+			std::wstring holdIdleAnimation;
+			std::wstring holdFrontAnimation;
+			std::wstring holdBackAnimation;
+			std::wstring holdRightAnimation;
+			std::wstring holdLeftAnimation;
+
+			float animationSpeed;
+		};
+#pragma endregion Animation
+
 #pragma endregion Struct
 
 #pragma region Initialize
@@ -280,13 +321,12 @@ namespace Phyzzle
 #pragma endregion Input
 
 #pragma region Player
-		bool SlopeCheck(const Eigen::Vector3f& normal) const;
-		bool GroundCheck();
+		bool SlopeCheck();
 		bool SweepTest(
 			const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers);
 
 		bool TryJump();
-		void JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider);
+		void JumpCheck();
 		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
 
 		bool CanMove(const Eigen::Vector3f& direction, float distance, float stepOffset);
@@ -429,6 +469,8 @@ namespace Phyzzle
 		PlayerInput prevInput;
 
 		PlayerData data;
+		AbilityData abilData;
+		CameraData camData;
 		AnimationData animData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 

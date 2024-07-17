@@ -140,8 +140,8 @@ namespace Phyzzle
 		targetVelocity = Eigen::Vector3f::Zero();
 		targetAngularVelocity = Eigen::Vector3f::Zero();
 
-		springL = Eigen::Vector3f::Zero();
-		springR = Eigen::Vector3f::Zero();
+		linearSpringForce = Eigen::Vector3f::Zero();
+		angularSpringForce = Eigen::Vector3f::Zero();
 
 		targetPosition = Eigen::Vector3f::Zero();
 		targetRotation = Eigen::Quaternionf::Identity();
@@ -161,13 +161,13 @@ namespace Phyzzle
 			Vector3f corePos = player->data.cameraCore->GetWorldPosition();
 			Quaternionf coreRot = player->data.cameraCore->GetWorldRotation();
 
-			player->data.cameraArm->SetLocalPosition(player->data.armDefaultPosition);
-			player->data.armTargetPosition = player->data.armDefaultPosition;
+			player->data.cameraArm->SetLocalPosition(player->camData.armDefaultPosition);
+			player->camData.armTargetPosition = player->camData.armDefaultPosition;
 			
 			auto rot = player->data.modelCore->GetLocalRotation();
 			player->data.cameraArm->SetLocalRotation(rot);
-			player->data.armTargetRotation = rot;
-			player->data.xAngle = 0.f;
+			player->camData.armTargetRotation = rot;
+			player->camData.xAngle = 0.f;
 
 			player->data.cameraCore->SetWorldRotation(coreRot);
 			player->data.cameraCore->SetWorldPosition(corePos);
@@ -178,8 +178,8 @@ namespace Phyzzle
 	{
 		{
 			using namespace Eigen;
-			player->SetCameraCoreLocalTargetPosition(player->data.coreDefaultPosition);
-			player->SetCameraCoreLocalTargetRotation(player->data.coreDefaultRotation);
+			player->SetCameraCoreLocalTargetPosition(player->camData.coreDefaultPosition);
+			player->SetCameraCoreLocalTargetRotation(player->camData.coreDefaultRotation);
 		}
 
 		EnableOutline(false);
@@ -314,7 +314,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateSpringAlongZ(targetPositionStepZ);
+			TranslateSpringAlongZ(player->abilData.targetPositionZStep);
 		}
 		else if (justRotate)
 		{
@@ -399,7 +399,7 @@ namespace Phyzzle
 
 		if (justTranslate)
 		{
-			TranslateSpringAlongZ(-targetPositionStepZ);
+			TranslateSpringAlongZ(-player->abilData.targetPositionZStep);
 		}
 		else if (justRotate)
 		{
@@ -802,20 +802,20 @@ namespace Phyzzle
 
 		Vector3f lowCamPos[2] = 
 		{
-			player->data.attachLowCamera0->GetLocalPosition(),
-			player->data.attachLowCamera1->GetLocalPosition()
+			player->camData.attachLowCamera0->GetLocalPosition(),
+			player->camData.attachLowCamera1->GetLocalPosition()
 		};
 
 		Vector3f defaultCamPos[2] =
 		{
-			player->data.attachDefaultCamera0->GetLocalPosition(),
-			player->data.attachDefaultCamera1->GetLocalPosition()
+			player->camData.attachDefaultCamera0->GetLocalPosition(),
+			player->camData.attachDefaultCamera1->GetLocalPosition()
 		};
 
 		Vector3f highCamPos[2] =
 		{
-			player->data.attachHighCamera0->GetLocalPosition(),
-			player->data.attachHighCamera1->GetLocalPosition()
+			player->camData.attachHighCamera0->GetLocalPosition(),
+			player->camData.attachHighCamera1->GetLocalPosition()
 		};
 
 		Vector3f objPos = selectBody->GetPosition();
@@ -863,20 +863,20 @@ namespace Phyzzle
 
 		Quaternionf lowCamRot[2] =
 		{
-			player->data.attachLowCamera0->GetLocalRotation(),
-			player->data.attachLowCamera1->GetLocalRotation()
+			player->camData.attachLowCamera0->GetLocalRotation(),
+			player->camData.attachLowCamera1->GetLocalRotation()
 		};
 
 		Quaternionf defaultCamRot[2] =
 		{
-			player->data.attachDefaultCamera0->GetLocalRotation(),
-			player->data.attachDefaultCamera1->GetLocalRotation()
+			player->camData.attachDefaultCamera0->GetLocalRotation(),
+			player->camData.attachDefaultCamera1->GetLocalRotation()
 		};
 
 		Quaternionf highCamRot[2] =
 		{
-			player->data.attachHighCamera0->GetLocalRotation(),
-			player->data.attachHighCamera1->GetLocalRotation()
+			player->camData.attachHighCamera0->GetLocalRotation(),
+			player->camData.attachHighCamera1->GetLocalRotation()
 		};
 
 		Vector3f objPos = selectBody->GetPosition();
@@ -967,16 +967,19 @@ namespace Phyzzle
 		constexpr float dampingFactor = 3.f;
 
 		Vector3f currentLinearVelocity = selectBody->GetLinearVelocity();
+		// Vector3f dampingForce = Vector3f::Zero();
 		Vector3f dampingForce = -dampingFactor * currentLinearVelocity;
-		Vector3f targetLinearVelocity = targetVelocity + springL;
-		Vector3f additionalLinearVelocity = targetLinearVelocity + dampingForce;
-		selectBody->AddForce(additionalLinearVelocity, ZonaiPhysics::Force);
+		Vector3f targetLinearVelocity = targetVelocity + linearSpringForce;
+		Vector3f additionalLinearVelocity = targetLinearVelocity - currentLinearVelocity;
+		additionalLinearVelocity = additionalLinearVelocity + dampingForce;
+		selectBody->AddForce(additionalLinearVelocity, ZonaiPhysics::Velocity_Change);
 
 		Vector3f currentAngularVelocity = selectBody->GetAngularVelocity();
+		// Vector3f dampingTorque = Vector3f::Zero();
 		Vector3f dampingTorque = -dampingFactor * currentAngularVelocity;
-		Vector3f targetAngularVelocity0 = targetAngularVelocity + springR;
+		Vector3f targetAngularVelocity0 = targetAngularVelocity + angularSpringForce;
 		Vector3f additionalAngularVelocity = targetAngularVelocity0 + dampingTorque;
-		selectBody->AddTorque(additionalAngularVelocity, ZonaiPhysics::Force);
+		selectBody->AddTorque(additionalAngularVelocity, ZonaiPhysics::Velocity_Change);
 	}
 
 	void AttachHoldState::ResetObjectVelocity()
@@ -1066,30 +1069,30 @@ namespace Phyzzle
 			ZonaiPhysics::ZnBound3 bound = AttachSystem::Instance()->ComputeBoundingBoxAtTransform(attachble, targetTransform.matrix());
 
 			// 바운딩 박스의 최소 z 값이 1.0보다 작으면 targetPosition.z를 업데이트
-			if (bound.minimum.z() < minTargetPositionZ)
+			if (bound.minimum.z() < player->abilData.minTargetPositionZ)
 			{
-				float distance = minTargetPositionZ - bound.minimum.z();
+				float distance = player->abilData.minTargetPositionZ - bound.minimum.z();
 				targetPosition.z() += distance;
 			}
 
 			// targetPosition.z가 max를 넘으면 조정
-			if (targetPosition.z() > maxTargetPositionZ)
+			if (targetPosition.z() > player->abilData.maxTargetPositionZ)
 			{
-				float distance = maxTargetPositionZ - targetPosition.z();
+				float distance = player->abilData.maxTargetPositionZ - targetPosition.z();
 				targetPosition.z() += distance;
 			}
 
 			// targetPosition.y가 min를 넘으면 조정
-			if (targetPosition.y() < minTargetPositionY)
+			if (targetPosition.y() < player->abilData.minTargetPositionY)
 			{
-				float distance = minTargetPositionY - targetPosition.y();
+				float distance = player->abilData.minTargetPositionY - targetPosition.y();
 				targetPosition.y() += distance;
 			}
 
 			// targetPosition.y가 max를 넘으면 조정
-			if (targetPosition.y() > maxTargetPositionY)
+			if (targetPosition.y() > player->abilData.maxTargetPositionY)
 			{
-				float distance = maxTargetPositionY - targetPosition.y();
+				float distance = player->abilData.maxTargetPositionY - targetPosition.y();
 				targetPosition.y() += distance;
 			}
 		}
@@ -1105,34 +1108,42 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 		
-		constexpr float zeta = 0.5f;
-		constexpr float omega = 0.5f * std::numbers::pi_v<float> * 5.0f;
+		const float zeta = player->abilData.linearSpringDamping;
+		const float omega = player->abilData.linearSpringFrequency;
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		UpdateTargetPosition();
 
 		Eigen::Vector3f currPos = selectBody->GetPosition();
-		// currPos.y() = 0.f;
 		Eigen::Vector3f worldTargetPosition = GetWorldTargetPosition();
-		// worldTargetPosition.y() = 0.f;
 
-		posSpring.UpdateVelocity(currPos, springL, worldTargetPosition, zeta, omega, timeStep);
-		if (springL.norm() > maxLinearVelocity)
+		//float distanceToTarget = (worldTargetPosition - currPos).norm();
+		//float adjustedZeta = zeta + distanceToTarget; // 목표 위치에 가까워질수록 스프링 상수 증가
+
+		posSpring.UpdateVelocity(currPos, linearSpringForce, worldTargetPosition, zeta, omega, timeStep);
+
+		//{
+		//	linearSpringForce = (worldTargetPosition - currPos) / 0.01f;
+		//}
+
+		if (linearSpringForce.norm() > player->abilData.linearMaxVelocity)
 		{
-			springL = springL.normalized() * maxLinearVelocity;
-
-			// 여기서 max Velocity를 넘는 경우엔
-			// 타겟 포지션을 다시 계산하는건 어떨까?
+			linearSpringForce = linearSpringForce.normalized() * player->abilData.linearMaxVelocity;
 		}
 	}
 
 	void AttachHoldState::CalculateSpringRotation()
 	{
-		constexpr float zeta0 = 0.05f;
+		// constexpr float zeta0 = 0.05f;
+		const float zeta = player->abilData.angularSpringDamping;
+		const float omega = player->abilData.angularSpringFrequency;
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		Eigen::Quaternionf currRot = selectBody->GetRotation();
 		Eigen::Quaternionf targetRot = GetWorldTargetQuaternion();
+
+		//float angleToTarget = currRot.angularDistance(targetRot);
+		//float adjustedZeta = zeta + angleToTarget; // 목표 회전에 가까워질수록 스프링 상수 증가
 
 		if (player->data.debugMode)
 		{
@@ -1151,10 +1162,32 @@ namespace Phyzzle
 				1200, 500, 200, 600, 15, 255, 255, 255, 255);
 		}
 
-		quatSpring.UpdateVelocity(currRot, springR, targetRot.normalized(), zeta0, timeStep);
-		if (springR.norm() > maxAngularVelocity)
+		//{
+		//	// Adjust the target angle to the shortest path
+		//	Eigen::Quaternionf goal = targetRot;
+		//	Eigen::Quaternionf minusGoal = { -targetRot.w(), -targetRot.x(), -targetRot.y(), -targetRot.z() };
+
+		//	float xDot = currRot.dot(goal);
+		//	float minusDot = currRot.dot(minusGoal);
+
+		//	if (xDot < minusDot)
+		//		goal = minusGoal;
+
+		//	// Compute the relative quaternion from current to target
+		//	Eigen::Quaternionf q_rel = goal * currRot.conjugate();
+		//	q_rel.normalize();
+
+		//	// Extract the vector part of the relative quaternion (imaginary part)
+		//	Eigen::Vector3f relative_angle_axis = q_rel.vec();
+		//	
+		//	angularSpringForce = relative_angle_axis / 0.01f;
+		//}
+
+		quatSpring.UpdateVelocity(currRot, angularSpringForce, targetRot.normalized(), zeta, omega, timeStep);
+
+		if (angularSpringForce.norm() > player->abilData.angularMaxVelocity)
 		{
-			springR = springR.normalized() * maxAngularVelocity;
+			angularSpringForce = angularSpringForce.normalized() * player->abilData.angularMaxVelocity;
 		}
 	}
 
@@ -1175,14 +1208,14 @@ namespace Phyzzle
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		// 최대 회전 각도
-		const float angleAtRadiusOne = player->data.sensitivity;
+		const float angleAtRadiusOne = player->abilData.holdRotateAngle;
 
 		// 반지름이 1일 때의 호의 길이 계산
 		const float arcLength = 1.0f * angleAtRadiusOne;
 
 		// targetPosition.z의 길이로 회전 각도 계산
 		const float targetRadius = targetPosition.z();
-		const float angle = arcLength / targetRadius;
+		const float angle = (arcLength / targetRadius) * player->abilData.arcRatio;
 		const float finalAngle = angle * _factor * timeStep;
 
 		const Eigen::Vector3f axis = Eigen::Vector3f::UnitY();
@@ -1195,13 +1228,9 @@ namespace Phyzzle
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const float distance = (newTargetPosition - objectPosition).norm();
-		if (distance <= positionOffset)
+		if (distance <= player->abilData.targetPositionOffset)
 		{
 			player->data.modelCore->SetWorldRotation(playerRotation);
-		}
-		else
-		{
-
 		}
 	}
 
@@ -1210,7 +1239,7 @@ namespace Phyzzle
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
 		Eigen::Vector3f newTargetPosition = targetPosition;
-		newTargetPosition.y() += (targetYSpeed * _factor * timeStep);
+		newTargetPosition.y() += (player->abilData.targetPositionYSpeed * _factor * timeStep);
 
 		// 플레이어의 월드 위치와 회전
 		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
@@ -1219,13 +1248,9 @@ namespace Phyzzle
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const float distance = (worldTargetPosition - objectPosition).norm();
-		if (distance <= positionOffset)
+		if (distance <= player->abilData.targetPositionOffset)
 		{
 			targetPosition = newTargetPosition;
-		}
-		else
-		{
-
 		}
 	}
 
@@ -1381,30 +1406,51 @@ namespace Phyzzle
 #pragma region Debug
 	void AttachHoldState::SearchDebugDraw()
 	{
+		//PurahEngine::GraphicsManager::GetInstance().DrawString(
+		//	L"player to object : " +
+		//	std::to_wstring(debugVector0.x()) + L" " +
+		//	std::to_wstring(debugVector0.y()) + L" " +
+		//	std::to_wstring(debugVector0.z()) + L" ",
+		//	1200, 100,
+		//	200, 600, 15,
+		//	255, 255, 255, 255);
+
+		//PurahEngine::GraphicsManager::GetInstance().DrawString(
+		//	L"world direction : " +
+		//	std::to_wstring(debugVector1.x()) + L" " +
+		//	std::to_wstring(debugVector1.y()) + L" " +
+		//	std::to_wstring(debugVector1.z()) + L" ",
+		//	1200, 200,
+		//	200, 600, 15,
+		//	255, 255, 255, 255);
+
+		//PurahEngine::GraphicsManager::GetInstance().DrawString(
+		//	L"local direction : " +
+		//	std::to_wstring(debugVector2.x()) + L" " +
+		//	std::to_wstring(debugVector2.y()) + L" " +
+		//	std::to_wstring(debugVector2.z()) + L" ",
+		//	1200, 300,
+		//	200, 600, 15,
+		//	255, 255, 255, 255);
+
+		using namespace Eigen;
+
+		Vector3f linearVelo = selectBody->GetLinearVelocity();
+		float velo = linearVelo.norm();
+		Vector3f angularVelo = selectBody->GetAngularVelocity();
+		float aVelo = angularVelo.norm();
+
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"player to object : " +
-			std::to_wstring(debugVector0.x()) + L" " +
-			std::to_wstring(debugVector0.y()) + L" " +
-			std::to_wstring(debugVector0.z()) + L" ",
+			L"object velocity : " +
+			std::to_wstring(velo),
 			1200, 100,
 			200, 600, 15,
 			255, 255, 255, 255);
 
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"world direction : " +
-			std::to_wstring(debugVector1.x()) + L" " +
-			std::to_wstring(debugVector1.y()) + L" " +
-			std::to_wstring(debugVector1.z()) + L" ",
+			L"object angularVelocity : " +
+			std::to_wstring(aVelo),
 			1200, 200,
-			200, 600, 15,
-			255, 255, 255, 255);
-
-		PurahEngine::GraphicsManager::GetInstance().DrawString(
-			L"local direction : " +
-			std::to_wstring(debugVector2.x()) + L" " +
-			std::to_wstring(debugVector2.y()) + L" " +
-			std::to_wstring(debugVector2.z()) + L" ",
-			1200, 300,
 			200, 600, 15,
 			255, 255, 255, 255);
 	}

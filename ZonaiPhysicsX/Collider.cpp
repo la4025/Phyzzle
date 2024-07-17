@@ -73,11 +73,11 @@ namespace ZonaiPhysics
 		return znBody->GetPosition();
 	}
 
-	void Collider::SetPosition(const Eigen::Vector3f& _position)
+	void Collider::SetPosition(const Eigen::Vector3f& _position, bool _wakeup)
 	{
 		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
-		znBody->SetPosition(_position);
+		znBody->SetPosition(_position, _wakeup);
 	}
 
 	Eigen::Vector3f Collider::GetLocalPosition() const
@@ -105,11 +105,11 @@ namespace ZonaiPhysics
 		return znBody->GetQuaternion();
 	}
 
-	void Collider::SetQuaternion(const Eigen::Quaternionf& _quaternion)
+	void Collider::SetQuaternion(const Eigen::Quaternionf& _quaternion, bool _wakeup)
 	{
 		NULL_POINTER_REFERENCE(znBody, ZnCollider)
 
-		znBody->SetQuaternion(_quaternion);
+		znBody->SetQuaternion(_quaternion, _wakeup);
 	}
 
 	Eigen::Quaternionf Collider::GetLocalQuaternion() const
@@ -143,6 +143,16 @@ namespace ZonaiPhysics
 	ZnBound3 Collider::GetBoundingBox(const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot)
 	{
 		return ColliderHelper::GetBoundingBox(pxShape, _pos, _rot);
+	}
+
+	void Collider::SetMaterial(const ZnMaterialID& _id)
+	{
+		ColliderHelper::SetMaterial(pxShape, _id);
+	}
+
+	void Collider::SetMaterials(ZnMaterialID* _pointer, int size)
+	{
+		ColliderHelper::SetMaterials(pxShape, _pointer, size);
 	}
 
 	void Collider::UpdateInertiaTensor() const

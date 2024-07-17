@@ -275,117 +275,119 @@ public:
 /************************************************************************************************/
 
 	/**
-	\brief Assigns material(s) to the shape. Will remove existing materials from the shape.
-	
-	<b>Sleeping:</b> Does <b>NOT</b> wake the associated actor up automatically.
+	\brief 형상에 재질을 할당합니다. 기존 재질은 형상에서 제거됩니다.
 
-	\param[in] materials List of material pointers to assign to the shape. See #PxMaterial
-	\param[in] materialCount The number of materials provided.
+	<b>슬립:</b> 관련된 액터를 자동으로 깨우지 <b>않습니다.</b>
 
-	@see PxPhysics.createMaterial() getMaterials() 
+	\param[in] materials 형상에 할당할 재질 포인터 목록입니다. #PxMaterial을 참조하세요.
+	\param[in] materialCount 제공된 재질의 수입니다.
+
+	@see PxPhysics.createMaterial() getMaterials()
 	*/
 	virtual		void	setMaterials(PxMaterial*const* materials, PxU16 materialCount) = 0;
 
 	/**
-	\brief Assigns FEM soft body material(s) to the shape. Will remove existing materials from the shape.
+	\brief 형상에 FEM 소프트 바디 재질을 할당합니다. 기존 재질은 형상에서 제거됩니다.
 
-	<b>Sleeping:</b> Does <b>NOT</b> wake the associated actor up automatically.
+	<b>슬립:</b> 관련된 액터를 자동으로 깨우지 <b>않습니다.</b>
 
-	\param[in] materials List of material pointers to assign to the shape. See #PxFEMSoftBodyMaterial
-	\param[in] materialCount The number of materials provided.
+	\param[in] materials 형상에 할당할 재질 포인터 목록입니다. #PxFEMSoftBodyMaterial을 참조하세요.
+	\param[in] materialCount 제공된 재질의 수입니다.
 
-	@see PxPhysics.createFEMSoftBodyMaterial() getSoftBodyMaterials() 
+	@see PxPhysics.createFEMSoftBodyMaterial() getSoftBodyMaterials()
 	*/
 	virtual		void	setSoftBodyMaterials(PxFEMSoftBodyMaterial*const* materials, PxU16 materialCount) = 0;
 
 	/**
-	\brief Assigns FEM cloth material(s) to the shape. Will remove existing materials from the shape.
-	\warning Feature under development, only for internal usage.
+	\brief 형상에 FEM 천 재질을 할당합니다. 기존 재질은 형상에서 제거됩니다.
+	\warning 개발 중인 기능으로, 내부 용도로만 사용됩니다.
 
-	<b>Sleeping:</b> Does <b>NOT</b> wake the associated actor up automatically.
+	<b>슬립:</b> 관련된 액터를 자동으로 깨우지 <b>않습니다.</b>
 
-	\param[in] materials List of material pointers to assign to the shape. See #PxFEMClothMaterial
-	\param[in] materialCount The number of materials provided.
+	\param[in] materials 형상에 할당할 재질 포인터 목록입니다. #PxFEMClothMaterial을 참조하세요.
+	\param[in] materialCount 제공된 재질의 수입니다.
 
-	@see PxPhysics.createFEMClothMaterial() getClothMaterials() 
+	@see PxPhysics.createFEMClothMaterial() getClothMaterials()
 	*/
 	virtual		void	setClothMaterials(PxFEMClothMaterial*const* materials, PxU16 materialCount) = 0;
 
 	/**
-	\brief Returns the number of materials assigned to the shape.
+	\brief 형상에 할당된 재질의 수를 반환합니다.
 
-	You can use #getMaterials() to retrieve the material pointers.
+	재질 포인터는 #getMaterials()를 사용하여 검색할 수 있습니다.
 
-	\return Number of materials associated with this shape.
+	\return 이 형상에 연관된 재질의 수입니다.
 
 	@see PxMaterial getMaterials()
 	*/
 	virtual		PxU16	getNbMaterials()		const	= 0;
 
 	/**
-	\brief Retrieve all the material pointers associated with the shape.
+	\brief 형상에 할당된 모든 재질 포인터를 검색합니다.
 
-	You can retrieve the number of material pointers by calling #getNbMaterials()
+	재질 포인터의 수는 #getNbMaterials()를 호출하여 검색할 수 있습니다.
 
-	Note: The returned data may contain invalid pointers if you release materials using #PxMaterial::release().
+	참고: 반환된 데이터에는 #PxMaterial::release()를 사용하여 재질을 해제한 경우 잘못된 포인터가 포함될 수 있습니다.
 
-	\param[out] userBuffer The buffer to store the material pointers.
-	\param[in] bufferSize Size of provided user buffer.
-	\param[in] startIndex Index of first material pointer to be retrieved
-	\return Number of material pointers written to the buffer.
+	\param[out] userBuffer 재질 포인터를 저장할 버퍼입니다.
+	\param[in] bufferSize 제공된 사용자 버퍼의 크기입니다.
+	\param[in] startIndex 검색할 첫 번째 재질 포인터의 인덱스입니다.
+	\return 버퍼에 기록된 재질 포인터의 수입니다.
 
 	@see PxMaterial getNbMaterials() PxMaterial::release()
 	*/
 	virtual		PxU32	getMaterials(PxMaterial** userBuffer, PxU32 bufferSize, PxU32 startIndex=0) const = 0;
 
 	/**
-	\brief Retrieve all the FEM soft body material pointers associated with the shape.
+	\brief 형상에 할당된 모든 FEM 소프트 바디 재질 포인터를 검색합니다.
 
-	You can retrieve the number of material pointers by calling #getNbMaterials()
+	재질 포인터의 수는 #getNbMaterials()를 호출하여 검색할 수 있습니다.
 
-	Note: The returned data may contain invalid pointers if you release materials using #PxMaterial::release().
+	참고: 반환된 데이터에는 #PxMaterial::release()를 사용하여 재질을 해제한 경우 잘못된 포인터가 포함될 수 있습니다.
 
-	\param[out] userBuffer The buffer to store the material pointers.
-	\param[in] bufferSize Size of provided user buffer.
-	\param[in] startIndex Index of first material pointer to be retrieved
-	\return Number of material pointers written to the buffer.
+	\param[out] userBuffer 재질 포인터를 저장할 버퍼입니다.
+	\param[in] bufferSize 제공된 사용자 버퍼의 크기입니다.
+	\param[in] startIndex 검색할 첫 번째 재질 포인터의 인덱스입니다.
+	\return 버퍼에 기록된 재질 포인터의 수입니다.
 
 	@see PxFEMSoftBodyMaterial getNbMaterials() PxMaterial::release()
 	*/
 	virtual		PxU32	getSoftBodyMaterials(PxFEMSoftBodyMaterial** userBuffer, PxU32 bufferSize, PxU32 startIndex = 0) const = 0;
 
 	/**
-	\brief Retrieve all the FEM cloth material pointers associated with the shape.
-	\warning Feature under development, only for internal usage.
+	\brief 형상에 할당된 모든 FEM 천 재질 포인터를 검색합니다.
+	\warning 개발 중인 기능으로, 내부 용도로만 사용됩니다.
 
-	You can retrieve the number of material pointers by calling #getNbMaterials()
+	재질 포인터의 수는 #getNbMaterials()를 호출하여 검색할 수 있습니다.
 
-	Note: The returned data may contain invalid pointers if you release materials using #PxMaterial::release().
+	참고: 반환된 데이터에는 #PxMaterial::release()를 사용하여 재질을 해제한 경우 잘못된 포인터가 포함될 수 있습니다.
 
-	\param[out] userBuffer The buffer to store the material pointers.
-	\param[in] bufferSize Size of provided user buffer.
-	\param[in] startIndex Index of first material pointer to be retrieved
-	\return Number of material pointers written to the buffer.
+	\param[out] userBuffer 재질 포인터를 저장할 버퍼입니다.
+	\param[in] bufferSize 제공된 사용자 버퍼의 크기입니다.
+	\param[in] startIndex 검색할 첫 번째 재질 포인터의 인덱스입니다.
+	\return 버퍼에 기록된 재질 포인터의 수입니다.
 
 	@see PxFEMClothMaterial getNbMaterials() PxMaterial::release()
 	*/
 	virtual		PxU32	getClothMaterials(PxFEMClothMaterial** userBuffer, PxU32 bufferSize, PxU32 startIndex = 0) const = 0;
 
 	/**
-	\brief Retrieve material from given triangle index.
+	\brief 주어진 삼각형 인덱스에서 재질을 검색합니다.
 
-	The input index is the internal triangle index as used inside the SDK. This is the index
-	returned to users by various SDK functions such as raycasts.
+	입력 인덱스는 SDK 내에서 사용되는 내부 삼각형 인덱스입니다.
+	이는 레이캐스트와 같은 다양한 SDK 함수에 의해 사용자에게 반환되는 인덱스입니다.
+
+	이 함수는 삼각형 메쉬 또는 높이 필드에만 유용하며, 삼각형별로 재질이 있습니다.
+	다른 형상이나 SDF 삼각형 메쉬의 경우, 이 함수는 인덱스와 상관없이 형상과 연관된 단일 재질을 반환합니다.
+
+	\param[in] faceIndex 재질을 검색하려는 내부 삼각형 인덱스입니다.
+	\return 입력된 삼각형의 재질
+
+	\note faceIndex 값이 0xFFFFffff인 경우 메쉬 및 높이 필드 형상에 대해
+					이 함수는 경고를 발생시키고 NULL을 반환합니다.
 	
-	This function is only useful for triangle meshes or heightfields, which have per-triangle
-	materials. For other shapes or SDF triangle meshes, the function returns the single material
-	associated with the	shape, regardless of the index.
-
-	\param[in] faceIndex The internal triangle index whose material you want to retrieve.
-	\return Material from input triangle
-
-	\note If faceIndex value of 0xFFFFffff is passed as an input for mesh and heightfield shapes, this function will issue a warning and return NULL.
-	\note Scene queries set the value of PxQueryHit::faceIndex to 0xFFFFffff whenever it is undefined or does not apply.
+	\note	장면 쿼리는 PxQueryHit::faceIndex의 값을 정의되지 않았거나
+			적용되지 않는 경우 0xFFFFffff로 설정합니다.
 
 	@see PxMaterial getNbMaterials() PxMaterial::release()
 	*/
