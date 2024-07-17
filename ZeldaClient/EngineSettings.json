@@ -334,7 +334,7 @@
       "staticFriction": 0.0,
       "dynamicFriction": 0.0,
       "restitution": 0.2,
-      "eFriction": 1,
+      "eFriction": 0,
       "eRestitution": 1
     },
     {

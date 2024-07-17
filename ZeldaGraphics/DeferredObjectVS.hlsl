@@ -52,6 +52,9 @@ PixelInputType main(VertexInputType input)
         mul(input.boneIndices[3] != 0xffffffffu, mul(mul(input.normal, (float3x3) finalMatrix[3]), input.weight[3])) +
         mul(input.boneIndices[0] == 0xffffffffu, input.normal);
     
+    // Animation Matrix와 계산 후, w값이 1이 아닌 버텍스에 대한 처리 (w가 0이 아닌것을 전제로 한다.)
+    //output.position = output.position / output.position.w;
+    
 	// 월드, 뷰, 프로젝션 행렬들을 이용해 정점의 위치를 계산한다.
     output.position = mul(output.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);

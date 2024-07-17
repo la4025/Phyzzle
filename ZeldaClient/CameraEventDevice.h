@@ -11,6 +11,8 @@ namespace Phyzzle
 	class CameraEventDevice final : public ElectricalDevice
 	{
 	public:
+		virtual ~CameraEventDevice();
+
 		void Awake() override;
 
 		void Update() override;

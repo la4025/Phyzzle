@@ -135,10 +135,10 @@
     <ClCompile Include="ANDGate.cpp">
       <Filter>Device\Electrical Device</Filter>
     </ClCompile>
-    <ClCompile Include="LightSystem.cpp">
+    <ClCompile Include="DirectionalLightSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLightSystem.cpp">
+    <ClCompile Include="LightSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="PointLightSystem.cpp">
@@ -317,10 +317,10 @@
     <ClInclude Include="ANDGate.h">
       <Filter>Device\Electrical Device</Filter>
     </ClInclude>
-    <ClInclude Include="LightSystem.h">
+    <ClInclude Include="DirectionalLightSystem.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLightSystem.h">
+    <ClInclude Include="LightSystem.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="PointLightSystem.h">

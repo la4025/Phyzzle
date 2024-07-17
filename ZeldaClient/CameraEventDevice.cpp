@@ -4,6 +4,15 @@
 
 namespace Phyzzle
 {
+	CameraEventDevice::~CameraEventDevice()
+	{
+		if (running)
+		{
+			PurahEngine::TimeController::GetInstance().ResumeAll();
+			player->SetStopUpdate(false);
+		}
+	}
+
 	void CameraEventDevice::Awake()
 	{
 		running = false;
