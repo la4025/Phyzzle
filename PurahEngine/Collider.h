@@ -42,6 +42,10 @@ namespace PurahEngine
         void SetTrigger(bool _value) const;
         void SetLayer(uint32_t _value) const;
 
+        std::wstring GetMaterial();
+        void SetMaterial(const std::wstring&);
+        void SetMaterials(std::wstring*, int);
+
     public:
         virtual void PreStep();
 

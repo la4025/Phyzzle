@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #pragma warning (pop)
 
+#include "ZnResourceID.h"
 #include "ZnCollider.h"
 
 namespace physx
@@ -40,7 +41,7 @@ namespace ZonaiPhysics
 		위치
 		*/
 		Eigen::Vector3f				GetPosition() const final;
-		void						SetPosition(const Eigen::Vector3f& _position) final;
+		void						SetPosition(const Eigen::Vector3f& _position, bool _wakeup) final;
 		Eigen::Vector3f				GetLocalPosition() const final;
 		void						SetLocalPosition(const Eigen::Vector3f& _position) final;
 
@@ -48,7 +49,7 @@ namespace ZonaiPhysics
 		회전
 		*/
 		Eigen::Quaternionf			GetQuaternion() const final;
-		void						SetQuaternion(const Eigen::Quaternionf& _quaternion) final;
+		void						SetQuaternion(const Eigen::Quaternionf& _quaternion, bool _wakeup) final;
 		Eigen::Quaternionf			GetLocalQuaternion() const override;
 		void						SetLocalQuaternion(const Eigen::Quaternionf& _quaternion) override;
 
@@ -61,7 +62,8 @@ namespace ZonaiPhysics
 		ZnBound3					GetBoundingBox(const Eigen::Vector3f&, const Eigen::Quaternionf&) final;
 
 	public:
-
+		void						SetMaterial(const ZnMaterialID& _id);
+		void						SetMaterials(ZnMaterialID* _pointer, int size);
 		void						UpdateInertiaTensor() const;
 
 	protected:

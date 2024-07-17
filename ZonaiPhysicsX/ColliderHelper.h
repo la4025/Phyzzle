@@ -5,6 +5,8 @@
 #include <Eigen/Dense>
 #pragma warning (pop)
 
+#include "ZnResourceID.h"
+
 namespace ZonaiPhysics
 {
 	struct ZnBound3;
@@ -33,5 +35,8 @@ namespace ZonaiPhysics
 		static void					SetGlobalQuaternion(void* _shape, const Eigen::Quaternionf& _quat);
 
 		static ZnBound3				GetBoundingBox(void* _shape, const Eigen::Vector3f& _pos, const Eigen::Quaternionf& _rot);
+	
+		static void					SetMaterial(void* _shape, const ZnMaterialID& _id);
+		static void					SetMaterials(void* _shape, ZnMaterialID* _pointer, int size);
 	};
 }

@@ -43,8 +43,8 @@ namespace PurahEngine
 		SetLayer(layer);
 		SetPositionOffset(positionOffset);
 
-		znCollider->SetPosition(transform->GetWorldPosition());
 		znCollider->SetQuaternion(transform->GetWorldRotation());
+		znCollider->SetPosition(transform->GetWorldPosition());
 	}
 
 	void MeshCollider::PreDeserialize(const json& jsonData)

@@ -36,8 +36,8 @@ namespace PurahEngine
 
 		SetTrigger(isTrigger);
 		SetLayer(layer);
-		SetPositionOffset(positionOffset);
 		SetRotationOffset(rotationOffset);
+		SetPositionOffset(positionOffset);
 
 		znCollider->SetPosition(transform->GetWorldPosition());
 		znCollider->SetQuaternion(transform->GetWorldRotation());

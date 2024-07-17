@@ -47,7 +47,7 @@ namespace PurahEngine
         SetMaxDistance(maxDistance);
         SetTolerance(Tolerance);
 
-        JointT::OnDataLoadComplete();
+        JointT::PostInitialize();
 	}
 
     float DistanceJoint::GetDistance() const

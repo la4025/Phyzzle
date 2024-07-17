@@ -47,9 +47,9 @@ namespace PurahEngine
 		if (!isKinematic)
 		{
 			this->WakeUp();
+			AddForce(force);
+			AddTorque(torque);
 		}
-		AddForce(force);
-		AddTorque(torque);
 	}
 
 	void RigidBody::Awake()
@@ -223,6 +223,16 @@ namespace PurahEngine
 		{
 			body->SetDensity(density);
 		}
+	}
+
+	Eigen::Vector3f RigidBody::GetInertiaTensor() const
+	{
+		return body->GetInertiaTensor();
+	}
+
+	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& tensor)
+	{
+		body->SetInertiaTensor(tensor);
 	}
 
 	float RigidBody::GetLinearDamping() const noexcept

@@ -94,7 +94,10 @@ namespace ZonaiPhysics
 
 			const auto joint = static_cast<ZnJoint*>(constrain.constraint->userData);
 
-			callback->OnConstraintBreak(joint);
+			if (joint)
+			{
+				callback->OnConstraintBreak(joint);
+			}
 		}
 	}
 

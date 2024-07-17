@@ -109,7 +109,9 @@ namespace PurahEngine
 
 		ZonaiPhysics::ZnMaterialID		GetMaterialID(const std::wstring& _name);
 		ZonaiPhysics::ZnConvexID		GetConvexID(const std::wstring& _name);
-		ZonaiPhysics::ZnMeshID			GetMeshID(const std::wstring& _name);
+		ZonaiPhysics::ZnMeshID			GetMeshID(const std::wstring& _name); 
+
+		void							SetColliderMaterial(ZonaiPhysics::ZnCollider* _collider, std::wstring* _materials, int _size);
 
 	public:
 		ZonaiPhysics::ZnBoxController*			CreateBoxController(void* _gameObject) const;

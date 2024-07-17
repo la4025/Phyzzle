@@ -389,6 +389,24 @@ namespace PurahEngine
 		return meshNameTable[_name];
 	}
 
+	void PhysicsSystem::SetColliderMaterial(ZonaiPhysics::ZnCollider* _collider, std::wstring* _materials, int _size)
+	{
+		std::vector<ZonaiPhysics::ZnMaterialID> materials;
+
+		for (int i = 0; i < _size; i++)
+		{
+			std::wstring materialName = _materials[i];
+
+			if (materialName.empty() || !materialNameTable.contains(materialName))
+				continue;
+
+			ZonaiPhysics::ZnMaterialID id = materialNameTable[materialName];
+			materials.emplace_back(id);
+		}
+
+		physics->SetColliderMaterial(_collider, materials.front());
+	}
+
 	ZonaiPhysics::ZnBoxController* PhysicsSystem::CreateBoxController(void* _gameObject) const
 	{
 		return nullptr;

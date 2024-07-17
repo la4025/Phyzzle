@@ -62,6 +62,7 @@ namespace ZonaiPhysics
 		virtual float			GetInvMass() const = 0;
 
 		virtual Eigen::Vector3f	GetInertiaTensor() const = 0;
+		virtual void			SetInertiaTensor(const Eigen::Vector3f& tensor) = 0;
 
 		/**
 		선형 감쇠 계수

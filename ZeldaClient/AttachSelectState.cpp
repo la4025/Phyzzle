@@ -14,7 +14,7 @@ namespace Phyzzle
 		{
 			using namespace Eigen;
 
-			auto p = player->data.coreDefaultPosition;
+			auto p = player->camData.coreDefaultPosition;
 			p.x() += 0.5f;
 			p.y() += 0.5f;
 
@@ -28,7 +28,7 @@ namespace Phyzzle
 	void AttachSelectState::StateExit()
 	{
 		{
-			player->SetCameraCoreLocalTargetPosition(player->data.coreDefaultPosition);
+			player->SetCameraCoreLocalTargetPosition(player->camData.coreDefaultPosition);
 		}
 
 		select = false;
@@ -143,9 +143,10 @@ namespace Phyzzle
 		player->UpdateSelectCamera();
 	}
 
-	void AttachSelectState::Cancel() const
+	void AttachSelectState::Cancel()
 	{
 		EnableOutline(false);
+		CrossHeadRender(false);
 		player->ChangeAbilityState(Player::AbilityState::DEFAULT);
 	}
 

@@ -98,30 +98,32 @@ public:
 	virtual		PxTransform 	getGlobalPose()		const = 0;
 
 	/**
-	\brief Method for setting an actor's pose in the world.
+	\brief 물체의 자세를 월드 공간에 설정하는 메서드입니다.
 
-	This method instantaneously changes the actor space to world space transformation.
+	이 메서드는 물체 공간에서 월드 공간으로의 변환을 즉시 변경합니다.
 
-	This method is mainly for dynamic rigid bodies (see #PxRigidDynamic). Calling this method on static actors is
-	likely to result in a performance penalty, since internal optimization structures for static actors may need to be
-	recomputed. In addition, moving static actors will not interact correctly with dynamic actors or joints.
+	이 메서드는 주로 동적 강체(참조 #PxRigidDynamic)를 위해 사용됩니다. 정적 물체에 이 메서드를 호출하면
+	내부 최적화 구조를 재계산해야 하므로 성능 저하가 발생할 수 있습니다.
+	또한, 정적 물체를 이동시키면 동적 물체나 조인트와 올바르게 상호작용하지 않을 수 있습니다.
 
-	To directly control an actor's position and have it correctly interact with dynamic bodies and joints, create a dynamic
-	body with the PxRigidBodyFlag::eKINEMATIC flag, then use the setKinematicTarget() commands to define its path.
+	물체의 위치를 직접 제어하고 동적 물체 및 조인트와 올바르게 상호작용하도록 하려면,
+	PxRigidBodyFlag::eKINEMATIC 플래그가 설정된 동적 물체를 생성한 후 setKinematicTarget() 명령을 사용하여 경로를 정의하십시오.
 
-	Even when moving dynamic actors, exercise restraint in making use of this method. Where possible, avoid:
+	동적 물체를 이동할 때도 이 메서드를 사용하는 것을 자제하십시오. 가능한 한 다음을 피하십시오:
 
-	\li moving actors into other actors, thus causing overlap (an invalid physical state)
+	\li 다른 물체와 겹치도록 물체를 이동시키는 것 (유효하지 않은 물리 상태)
 
-	\li moving an actor that is connected by a joint to another away from the other (thus causing joint error)
+	\li 조인트로 연결된 물체를 다른 물체로부터 멀리 이동시키는 것 (조인트 오류 발생)
 
-	\note It is not allowed to use this method if the actor is part of a #PxPruningStructure that has not been
-	added to a scene yet.
+	\note 물체가 아직 장면에 추가되지 않은 #PxPruningStructure의 일부인 경우 이 메서드를 사용하는 것은 허용되지 않습니다.
 
-	<b>Sleeping:</b> This call wakes dynamic actors if they are sleeping and the autowake parameter is true (default).
+	<b>수면 상태:</b> 이 호출은 동적 물체가 수면 상태인 경우 autowake 매개변수가 true(기본값)일 때 깨어나게 합니다.
 
-	\param[in] pose Transformation from the actors local frame to the global frame. <b>Range:</b> rigid body transform.
-	\param[in] autowake whether to wake the object if it is dynamic. This parameter has no effect for static or kinematic actors. If true and the current wake counter value is smaller than #PxSceneDesc::wakeCounterResetValue it will get increased to the reset value.
+	\param[in] pose		물체의 로컬 프레임에서 글로벌 프레임으로의 변환입니다. <b>범위:</b> 강체 변환.
+	\param[in] autowake 물체가 동적일 경우 깨어나게 할지 여부를 설정합니다.
+						이 매개변수는 정적 또는 키네마틱 물체에는 영향을 주지 않습니다.
+						true이고 현재 깨우기 카운터 값이 #PxSceneDesc::wakeCounterResetValue보다
+						작으면 해당 값을 재설정 값으로 증가시킵니다.
 
 	@see getGlobalPose()
 	*/
