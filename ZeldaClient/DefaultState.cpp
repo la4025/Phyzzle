@@ -69,7 +69,7 @@ namespace Phyzzle
 	{
 		if (player->TryJump())
 		{
-			player->ChangePlayerAnimationState(Player::JUMP);
+			player->ChangePlayerAnimationState(Player::JUMPING);
 		}
 	}
 

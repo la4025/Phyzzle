@@ -39,7 +39,7 @@ namespace PurahEngine
 		PhysicsSystem::GetInstance().joints.push_back(this);
 		joint->SetUserData(this);
 
-		JointT::OnDataLoadComplete();
+		JointT::PostInitialize();
 	}
 
 	void FixedJoint::PreSerialize(json& jsonData) const

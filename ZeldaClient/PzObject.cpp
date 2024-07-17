@@ -13,6 +13,10 @@ namespace Phyzzle
 	{
 		body = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
 
+		auto list = GetGameObject()->GetComponents<PurahEngine::Collider>();
+		for (auto& col : list)
+			colliders.emplace_back(col);
+
 		assert(body != nullptr);
 	}
 
@@ -47,6 +51,11 @@ namespace Phyzzle
 		isKinematic = body->IsKinematic();
 		hasGravity = body->HasGravity();
 		originMass = body->GetMass();
+		tensor = body->GetInertiaTensor();
+
+		for (auto& e : materials)
+		{
+		}
 
 		assert(originMass > 0.01f);
 	}
@@ -61,6 +70,7 @@ namespace Phyzzle
 		body->SetKinematic(false);
 		body->UseGravity(false);
 		body->SetMass(1.f);
+		body->SetInertiaTensor(Eigen::Vector3f(100.f, 100.f, 100.f));
 
 		select = true;
 	}
@@ -75,10 +85,12 @@ namespace Phyzzle
 		body->SetKinematic(isKinematic);
 		body->UseGravity(hasGravity);
 		body->SetMass(originMass);
+		body->SetInertiaTensor(tensor);
 
 		isKinematic = false;
 		hasGravity = false;
 		originMass = -1.f;
+		tensor = Eigen::Vector3f::Zero();
 
 		select = false;
 	}

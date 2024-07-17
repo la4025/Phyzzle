@@ -74,6 +74,9 @@ namespace ZonaiPhysics
 		void					SetCollisionLayer(uint32_t _layer, uint32_t _collision, bool _value) override;
 		void					SetCollisionLayerData(uint32_t _layer, const std::initializer_list<uint32_t>& _data) override;
 
+		void					SetColliderMaterial(ZonaiPhysics::ZnCollider*, const ZonaiPhysics::ZnMaterialID& _id);
+		void					SetColliderMaterials(ZonaiPhysics::ZnCollider*, ZonaiPhysics::ZnMaterialID*, int);
+
 	public:
 		ZnCapsuleController* CreateCapsuleController(
 			void* _userScene,

@@ -175,7 +175,7 @@ int snippetMain(int, const char* const*)
 
 	Eigen::Vector3f axis(1.0f, 1.0f, 1.0f);
 	axis.normalize(); // Normalize the axis
-	const float angle = physx::PxPi / 4.f; // Angle in radians
+	const float angle = physx::PxPi / 2.f; // Angle in radians
 
 	const auto joint = physicsEngine->CreateSpringFlexJoint(
 		rigid2, { {0.f, -0.f, 0.f} },

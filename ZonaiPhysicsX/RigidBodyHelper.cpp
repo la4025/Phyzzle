@@ -285,14 +285,14 @@ namespace ZonaiPhysics
 		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getGlobalPose().p);
 	}
 
-	void RigidBodyHelper::SetPosition(void* _pxBody, const Eigen::Vector3f& _pos)
+	void RigidBodyHelper::SetPosition(void* _pxBody, const Eigen::Vector3f& _pos, bool _wakeup)
 	{
 		assert(_pxBody != nullptr);
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		physx::PxTransform t = pxBody->getGlobalPose();
 		t.p = EigenToPhysx(_pos);
-		pxBody->setGlobalPose(t, false);
+		pxBody->setGlobalPose(t, _wakeup);
 	}
 
 	Eigen::Quaternionf RigidBodyHelper::GetQuaternion(void* _pxBody)
@@ -302,14 +302,14 @@ namespace ZonaiPhysics
 		return PhysxToEigen(static_cast<physx::PxRigidDynamic*>(_pxBody)->getGlobalPose().q);
 	}
 
-	void RigidBodyHelper::SetQuaternion(void* _pxBody, const Eigen::Quaternionf& _quat)
+	void RigidBodyHelper::SetQuaternion(void* _pxBody, const Eigen::Quaternionf& _quat, bool _wakeup)
 	{
 		assert(_pxBody != nullptr);
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		physx::PxTransform t = pxBody->getGlobalPose();
 		t.q = EigenToPhysx(_quat);
-		pxBody->setGlobalPose(t, false);
+		pxBody->setGlobalPose(t, _wakeup);
 	}
 
 	void RigidBodyHelper::SetForceAndTorque(void* _pxBody, const Eigen::Vector3f& _force,

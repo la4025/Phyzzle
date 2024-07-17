@@ -167,10 +167,32 @@ namespace PurahEngine
         // }
     }
 
+	std::wstring Collider::GetMaterial()
+	{
+        return physicsMaterial;
+	}
+
+	void Collider::SetMaterial(const std::wstring& _material)
+	{
+		physicsMaterial = _material;
+
+        if (awake)
+        {
+            std::vector<std::wstring> materials;
+            materials.emplace_back(_material);
+            PhysicsSystem::GetInstance().SetColliderMaterial(znCollider, &materials.front(), materials.size());
+        }
+	}
+	
+    void Collider::SetMaterials(std::wstring* _materials, int _size)
+	{
+
+	}
+
 	void Collider::PreStep()
     {
-        znCollider->SetPosition(transform->GetWorldPosition());
-        znCollider->SetQuaternion(transform->GetWorldRotation());
+        znCollider->SetPosition(transform->GetWorldPosition(), true);
+        znCollider->SetQuaternion(transform->GetWorldRotation(), true);
     }
 
     void Collider::PreDeserialize(const json& jsonData)

@@ -1,6 +1,7 @@
 #pragma once
 #include "PurahEngine.h"
 #include <vector>
+#include <string>
 #include "IslandID.h"
 
 namespace Phyzzle
@@ -36,7 +37,10 @@ namespace Phyzzle
 		friend class AttachSystem;
 		PzObject* attachable;
 		PurahEngine::RigidBody* body;
+		std::vector<PurahEngine::Collider*> colliders;
 		Eigen::Vector3f worldAnchor = Eigen::Vector3f::Zero();
+		Eigen::Vector3f tensor = Eigen::Vector3f::Zero();
+		std::vector<std::wstring> materials;
 
 		IslandID islandID;							// IslandID
 		std::vector<PzObject*> connectedObjects;	// 泅 按眉客 楷搬等 按眉甸

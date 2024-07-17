@@ -188,6 +188,20 @@ namespace ZonaiPhysics
 		ZnLayer::SetCollisionData(_layer, _data);
 	}
 
+	void ZnPhysicsX::SetColliderMaterial(ZonaiPhysics::ZnCollider* _col, const ZonaiPhysics::ZnMaterialID& _id)
+	{
+		Collider* col = static_cast<Collider*>(_col);
+
+		col->SetMaterial(_id);
+	}
+
+	void ZnPhysicsX::SetColliderMaterials(ZonaiPhysics::ZnCollider* _col, ZonaiPhysics::ZnMaterialID* _idList, int _size)
+	{
+		Collider* col = static_cast<Collider*>(_col);
+
+		col->SetMaterials(_idList, _size);
+	}
+
 	ZonaiPhysics::ZnCapsuleController* ZnPhysicsX::CreateCapsuleController(
 		void* _userScene,
 		float _radius, float _height, const ZnControllerDecs& _desc, float _density, const ZnMaterialID& _material)

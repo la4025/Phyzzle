@@ -133,43 +133,43 @@ public:
 */
 
 	/**
-	\brief Returns true if this body is sleeping.
+	\brief 이 물체가 수면 상태인지 여부를 반환합니다.
 
-	When an actor does not move for a period of time, it is no longer simulated in order to save time. This state
-	is called sleeping. However, because the object automatically wakes up when it is either touched by an awake object,
-	or one of its properties is changed by the user, the entire sleep mechanism should be transparent to the user.
+	물체가 일정 시간 동안 움직이지 않으면 시뮬레이션에서 제외되어 시간을 절약합니다. 이 상태를 수면 상태라고 합니다.
+	그러나 물체가 깨어있는 물체에 의해 접촉되거나 사용자가 속성 중 하나를 변경하면 자동으로 깨어나기 때문에,
+	전체 수면 메커니즘은 사용자에게 투명해야 합니다.
 
-	In general, a dynamic rigid actor is guaranteed to be awake if at least one of the following holds:
+	일반적으로, 동적 강체 물체는 다음 조건 중 하나 이상이 충족되면 깨어있는 상태임이 보장됩니다:
 
-	\li The wake counter is positive (see #setWakeCounter()).
-	\li The linear or angular velocity is non-zero.
-	\li A non-zero force or torque has been applied.
+	\li 깨우기 카운터가 양수입니다 (참조 #setWakeCounter()).
+	\li 선형 또는 각속도가 0이 아닙니다.
+	\li 0이 아닌 힘이나 토크가 적용되었습니다.
 
-	If a dynamic rigid actor is sleeping, the following state is guaranteed:
+	동적 강체 물체가 수면 상태인 경우, 다음 상태가 보장됩니다:
 
-	\li The wake counter is zero.
-	\li The linear and angular velocity is zero.
-	\li There is no force update pending.
+	\li 깨우기 카운터가 0입니다.
+	\li 선형 및 각속도가 0입니다.
+	\li 대기 중인 힘 업데이트가 없습니다.
 
-	When an actor gets inserted into a scene, it will be considered asleep if all the points above hold, else it will be treated as awake.
-	
-	If an actor is asleep after the call to PxScene::fetchResults() returns, it is guaranteed that the pose of the actor 
-	was not changed. You can use this information to avoid updating the transforms of associated objects.
+	물체가 장면에 삽입되면 위의 모든 조건이 충족되면 수면 상태로 간주되고, 그렇지 않으면 깨어있는 상태로 처리됩니다.
 
-	\note A kinematic actor is asleep unless a target pose has been set (in which case it will stay awake until two consecutive 
-	simulation steps without a target pose being set have passed). The wake counter will get set to zero or to the reset value 
-	#PxSceneDesc::wakeCounterResetValue in the case where a target pose has been set to be consistent with the definitions above.
+	PxScene::fetchResults() 호출 후 물체가 수면 상태인 경우, 물체의 자세가 변경되지 않았음을 보장합니다.
+	이 정보를 사용하여 관련 객체의 변환을 업데이트하지 않을 수 있습니다.
 
-	\note It is invalid to use this method if the actor has not been added to a scene already.
+	\note 목표 자세가 설정되지 않은 경우, 키네마틱 물체는 수면 상태입니다 
+	(목표 자세가 설정되지 않은 경우 두 번의 연속 시뮬레이션 단계가 지나갈 때까지 깨어있는 상태로 유지됩니다). 
+	목표 자세가 설정된 경우, 깨우기 카운터는 0 또는 재설정 값 #PxSceneDesc::wakeCounterResetValue로 설정되어
+	위의 정의와 일관성을 유지합니다.
 
-	\note It is not allowed to use this method while the simulation is running.
+	\note 물체가 아직 장면에 추가되지 않은 경우 이 메서드를 사용하는 것은 유효하지 않습니다.
 
-	\return True if the actor is sleeping.
+	\note 시뮬레이션이 실행 중인 동안 이 메서드를 사용하는 것은 허용되지 않습니다.
 
-	@see isSleeping() wakeUp() putToSleep()  getSleepThreshold()
+	\return 물체가 수면 상태인 경우 True를 반환합니다.
+
+	@see isSleeping() wakeUp() putToSleep() getSleepThreshold()
 	*/
 	virtual		bool				isSleeping() const = 0;
-
 
     /**
 	\brief Sets the mass-normalized kinetic energy threshold below which an actor may go to sleep.
@@ -262,24 +262,24 @@ public:
 	virtual		PxVec3			getLinearVelocity()		const = 0;
 
 	/**
-	\brief Sets the linear velocity of the actor.
+	\brief 물체의 선형 속도를 설정합니다.
 
-	Note that if you continuously set the velocity of an actor yourself,
-	forces such as gravity or friction will not be able to manifest themselves, because forces directly
-	influence only the velocity/momentum of an actor.
+	물체의 속도를 계속해서 직접 설정할 경우, 중력이나 마찰과 같은 힘이 나타나지 않을 수 있습니다.
+	이는 힘이 물체의 속도/운동량에 직접적으로 영향을 미치기 때문입니다.
 
-	<b>Default:</b> (0.0, 0.0, 0.0)
+	<b>기본값:</b> (0.0, 0.0, 0.0)
 
-	<b>Sleeping:</b> This call wakes the actor if it is sleeping, and the autowake parameter is true (default) or the
-	new velocity is non-zero.
+	<b>수면 상태:</b>	이 호출은 물체가 수면 상태인 경우, autowake 매개변수가 true(기본값)이거나
+						새로운 속도가 0이 아닌 경우 물체를 깨웁니다.
 
-	\note It is invalid to use this method if PxActorFlag::eDISABLE_SIMULATION is set.
+	\note PxActorFlag::eDISABLE_SIMULATION이 설정된 경우 이 메서드를 사용하는 것은 유효하지 않습니다.
 
-	\note The linear velocity is applied with respect to the rigid dynamic's center of mass and not the actor frame origin.
+	\note 선형 속도는 물체 프레임 원점이 아닌 강체 동역학의 질량 중심에 대해 적용됩니다.
 
-	\param[in] linVel New linear velocity of actor. <b>Range:</b> velocity vector
-	\param[in] autowake Whether to wake the object up if it is asleep. If true and the current wake counter value is
-	smaller than #PxSceneDesc::wakeCounterResetValue it will get increased to the reset value.
+	\param[in] linVel	새로운 물체의 선형 속도입니다. <b>범위:</b> 속도 벡터
+	\param[in] autowake 물체가 수면 상태인 경우 깨울지 여부를 설정합니다. true인 경우,
+						현재 깨우기 카운터 값이 #PxSceneDesc::wakeCounterResetValue보다 작으면
+						해당 값을 재설정 값으로 증가시킵니다.
 
 	@see getLinearVelocity() setAngularVelocity()
 	*/
@@ -298,21 +298,22 @@ public:
 	virtual		PxVec3			getAngularVelocity()	const = 0;
 
 	/**
-	\brief Sets the angular velocity of the actor.
+	\brief 물체의 각속도를 설정합니다.
 
-	Note that if you continuously set the angular velocity of an actor yourself,
-	forces such as friction will not be able to rotate the actor, because forces directly influence only the velocity/momentum.
+	물체의 각속도를 계속해서 직접 설정할 경우, 마찰과 같은 힘이 물체를 회전시키지 못할 수 있습니다.
+	이는 힘이 물체의 속도/운동량에만 직접적으로 영향을 미치기 때문입니다.
 
-	<b>Default:</b> (0.0, 0.0, 0.0)
+	<b>기본값:</b> (0.0, 0.0, 0.0)
 
-	<b>Sleeping:</b> This call wakes the actor if it is sleeping, and the autowake parameter is true (default) or the
-	new velocity is non-zero.
+	<b>수면 상태:</b> 이 호출은 물체가 수면 상태인 경우,
+	autowake 매개변수가 true(기본값)이거나 새로운 속도가 0이 아닌 경우 물체를 깨웁니다.
 
-	\note It is invalid to use this method if PxActorFlag::eDISABLE_SIMULATION is set.
+	\note PxActorFlag::eDISABLE_SIMULATION이 설정된 경우 이 메서드를 사용하는 것은 유효하지 않습니다.
 
-	\param[in] angVel New angular velocity of actor. <b>Range:</b> angular velocity vector
-	\param[in] autowake Whether to wake the object up if it is asleep. If true and the current wake counter value is
-	smaller than #PxSceneDesc::wakeCounterResetValue it will get increased to the reset value.
+	\param[in] angVel	새로운 물체의 각속도입니다. <b>범위:</b> 각속도 벡터
+	\param[in] autowake 물체가 수면 상태인 경우 깨울지 여부를 설정합니다.
+						true인 경우, 현재 깨우기 카운터 값이 #PxSceneDesc::wakeCounterResetValue보다 작으면
+						해당 값을 재설정 값으로 증가시킵니다.
 
 	@see getAngularVelocity() setLinearVelocity()
 	*/
@@ -385,21 +386,19 @@ public:
 
 /************************************************************************************************/
 
-    /**
-	\brief Sets the solver iteration counts for the body. 
-	
-	The solver iteration count determines how accurately joints and contacts are resolved. 
-	If you are having trouble with jointed bodies oscillating and behaving erratically, then
-	setting a higher position iteration count may improve their stability.
+	/**
+	\brief 물체에 대한 솔버 반복 횟수를 설정합니다.
 
-	If intersecting bodies are being depenetrated too violently, increase the number of velocity 
-	iterations. More velocity iterations will drive the relative exit velocity of the intersecting 
-	objects closer to the correct value given the restitution.
+	솔버 반복 횟수는 조인트와 접촉이 얼마나 정확하게 해결되는지를 결정합니다.
+	조인트가 연결된 물체가 진동하거나 불규칙하게 동작하는 경우, 위치 반복 횟수를 높이면 안정성을 개선할 수 있습니다.
 
-	<b>Default:</b> 4 position iterations, 1 velocity iteration
+	교차하는 물체가 너무 강하게 분리되는 경우, 속도 반복 횟수를 늘리십시오.
+	속도 반복 횟수가 많을수록 교차하는 물체의 상대적 이탈 속도가 복원력에 따라 올바른 값에 더 가까워집니다.
 
-	\param[in] minPositionIters Number of position iterations the solver should perform for this body. <b>Range:</b> [1,255]
-	\param[in] minVelocityIters Number of velocity iterations the solver should perform for this body. <b>Range:</b> [0,255]
+	<b>기본값:</b> 위치 반복 4회, 속도 반복 1회
+
+	\param[in] minPositionIters 이 물체에 대해 솔버가 수행해야 하는 위치 반복 횟수입니다. <b>범위:</b> [1,255]
+	\param[in] minVelocityIters 이 물체에 대해 솔버가 수행해야 하는 속도 반복 횟수입니다. <b>범위:</b> [0,255]
 
 	@see getSolverIterationCounts()
 	*/

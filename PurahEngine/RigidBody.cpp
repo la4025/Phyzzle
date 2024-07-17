@@ -225,6 +225,16 @@ namespace PurahEngine
 		}
 	}
 
+	Eigen::Vector3f RigidBody::GetInertiaTensor() const
+	{
+		return body->GetInertiaTensor();
+	}
+
+	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& tensor)
+	{
+		body->SetInertiaTensor(tensor);
+	}
+
 	float RigidBody::GetLinearDamping() const noexcept
 	{
 		if (awake)

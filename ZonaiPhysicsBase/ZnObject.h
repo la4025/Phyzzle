@@ -18,13 +18,13 @@ namespace ZonaiPhysics
 		위치
 		*/
 		virtual Eigen::Vector3f	GetPosition() const = 0;
-		virtual void		SetPosition(const Eigen::Vector3f& _position) = 0;
+		virtual void		SetPosition(const Eigen::Vector3f& _position, bool _wakeup = false) = 0;
 
 		/**
 		회전
 		*/
 		virtual Eigen::Quaternionf	GetQuaternion() const = 0;
-		virtual void		 SetQuaternion(const Eigen::Quaternionf& _quaternion) = 0;
+		virtual void		 SetQuaternion(const Eigen::Quaternionf& _quaternion, bool _wakeup = false) = 0;
 
 		/**
 		유저 데이터

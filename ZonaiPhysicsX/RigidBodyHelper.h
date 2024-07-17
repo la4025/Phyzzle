@@ -71,10 +71,10 @@ namespace ZonaiPhysics
 		static void				SetMaxAngularVelocity(void*, const float&);
 
 		static Eigen::Vector3f	GetPosition(void*);
-		static void				SetPosition(void*, const Eigen::Vector3f&);
+		static void				SetPosition(void*, const Eigen::Vector3f&, bool _wakeup);
 
 		static Eigen::Quaternionf	GetQuaternion(void*);
-		static void				SetQuaternion(void*, const Eigen::Quaternionf&);
+		static void				SetQuaternion(void*, const Eigen::Quaternionf&, bool _wakeup);
 
 		// Èû
 		static void				SetForceAndTorque(void*, const Eigen::Vector3f& _force, const Eigen::Vector3f& _torque, ForceType _type);

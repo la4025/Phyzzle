@@ -10,6 +10,7 @@
 #include "PzObject.h"
 #include "Rewindable.h"
 #include "AttachSystem.h"
+#include "GroundCheck.h"
 
 #include "Player.h"
 
@@ -34,20 +35,20 @@ namespace Phyzzle
 
 	void Player::InitializeDefaultPositions()
 	{
-		data.armDefaultPosition = data.cameraArm->GetLocalPosition();
-		data.armDefaultRotation = data.cameraArm->GetLocalRotation();
+		camData.armDefaultPosition = data.cameraArm->GetLocalPosition();
+		camData.armDefaultRotation = data.cameraArm->GetLocalRotation();
 
-		data.coreDefaultPosition = data.cameraCore->GetLocalPosition();
-		data.coreDefaultRotation = data.cameraCore->GetLocalRotation();
+		camData.coreDefaultPosition = data.cameraCore->GetLocalPosition();
+		camData.coreDefaultRotation = data.cameraCore->GetLocalRotation();
 
-		data.coreTargetRotation = Eigen::Quaternionf::Identity();
+		camData.coreTargetRotation = Eigen::Quaternionf::Identity();
 
-		data.coreSelectPosition = data.coreDefaultPosition + Eigen::Vector3f{0.5f, 0.5f, 0.f};
+		camData.coreSelectPosition = camData.coreDefaultPosition + Eigen::Vector3f{0.5f, 0.5f, 0.f};
 
 		highPosition = Eigen::Vector3f(0.f, 0.f, -10.f);
 		lowPosition = Eigen::Vector3f(0.f, 0.f, -2.f);
-		differenceHigh = highPosition - data.coreDefaultPosition;
-		differenceLow = lowPosition - data.coreDefaultPosition;
+		differenceHigh = highPosition - camData.coreDefaultPosition;
+		differenceLow = lowPosition - camData.coreDefaultPosition;
 	}
 
 	void Player::InitializeLerpFunctions()
@@ -202,12 +203,18 @@ namespace Phyzzle
 
 		prevState = currState;
 		prevPlayerState = currPlayerState;
-		data.isGrounded = GroundCheck();
+		data.isGrounded = data.groundCheck->IsGrounded();
+		// data.playerRigidbody->UseGravity(!data.isGrounded);
 
 		if (!data.isGrounded)
 		{
 			stateSystem[currState]->StateCancel();
 		}
+		else
+		{
+			SlopeCheck();
+		}
+
 
 		if (!data.stopUpdate)
 		{
@@ -241,6 +248,7 @@ namespace Phyzzle
 	}
 #pragma endregion Event
 
+#pragma optimize("", off)
 	void Player::SetStopUpdate(bool _value)
 	{
 		if (_value)
@@ -266,6 +274,7 @@ namespace Phyzzle
 			}
 		}
 	}
+#pragma optimize("", on)
 
 #pragma region Update
 	void Player::UpdateAbilityState()
@@ -295,7 +304,6 @@ namespace Phyzzle
 			stateSystem[currState]->PostStateStay();
 		}
 	}
-
 
 	void Player::UpdatePlayerAnimationState()
 	{
@@ -481,37 +489,28 @@ namespace Phyzzle
 #pragma endregion Input
 
 #pragma region Player
-	bool Player::SlopeCheck(const Eigen::Vector3f& normal) const
+	bool Player::SlopeCheck()
 	{
-		// up 벡터랑 노말과 각도가 혀용 범위 내인가?
-		const Eigen::Vector3f up{ 0.f, 1.f, 0.f };
-		float cosTheta = up.dot(normal);
+		using namespace Eigen;
+
+		if (!data.isGrounded)
+			return false;
+
+		Vector3f start = GetGameObject()->GetTransform()->GetWorldPosition();
+		Vector3f to = Vector3f(0.f, -1.f, 0.f);
+		ZonaiPhysics::ZnQueryInfo info;
+
+		bool hit = PurahEngine::Physics::Raycast(start, to, 1.f, camData.cameraCollisionLayers, info);
+
+		if (!hit)
+			return false;
+
+		const Vector3f up = Vector3f::UnitY();
+		float cosTheta = up.dot(info.normal);
 		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
 		float slope = std::acosf(cosTheta);
 
 		return slope <= (data.slopeLimit * (std::numbers::pi_v<float> / 180.f));
-	}
-
-	bool Player::GroundCheck()
-	{
-		using namespace Eigen;
-
-		Vector3f start = data.playerRigidbody->GetPosition() - Vector3f::UnitY() * 0.025f;
-		Vector3f to = -Vector3f::UnitY();
-		float dis = 0.5f;
-		int layers = data.cameraCollisionLayers;
-		ZonaiPhysics::ZnQueryInfo info;
-
-		bool hit = PurahEngine::Physics::Raycast(start, to, dis, layers, info);
-
-		if (hit)
-		{
-			data.lastGroundNormal = info.normal;
-			hit = SlopeCheck(info.normal);
-		}
-
-		data.playerRigidbody->UseGravity(!hit);
-		return hit;
 	}
 
 	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
@@ -539,8 +538,6 @@ namespace Phyzzle
 		{
 			// 스윕이 충돌한 위치와 플레이어 위치랑 비교함
 			info.position;
-
-			// 
 		}
 
 		return true;
@@ -550,41 +547,24 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (data.isGrounded)
+		bool jumpable = data.isStandableSlope && data.isGrounded;
+
+		if (jumpable)
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
+			
+			return true;
 		}
 
-		return data.isGrounded;
+		return false;
 	}
 
-	void Player::JumpCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	void Player::JumpCheck()
 	{
-		for (size_t i = 0; i < zn_collision.contactCount; i++)
-		{
-			Eigen::Vector3f velo = data.playerRigidbody->GetLinearVelocity();
-			velo.x() = 0.f;
-			velo.z() = 0.f;
-			if (velo.squaredNorm() > 0.f)
-			{
-				velo.normalize();
-			}
-			auto normal = zn_collision.contacts[i].normal;
+		using namespace Eigen;
 
-			// 플레이어 속도랑 충돌 노말 방향이랑 다른 방향인지 체크
-			if (!IsOppositeDirection(velo, normal))
-			{
-				return;
-			}
-
-			// up 벡터랑 노말과 각도가 
-			if (SlopeCheck(normal))
-			{
-				data.jumping = false;
-				return;
-			}
-		}
+		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 	}
 
 	bool Player::IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const
@@ -600,7 +580,7 @@ namespace Phyzzle
 
 		// 이동 경로에 장애물이 있는지 확인하기 위해 SweepTest를 수행합니다.
 		Vector3f movement = direction * distance;
-		return !SweepTest(movement, 0.01f, stepOffset, data.cameraCollisionLayers);
+		return !SweepTest(movement, 0.01f, stepOffset, camData.cameraCollisionLayers);
 	}
 
 	bool Player::TryPlayerMove(float _moveSpeed)
@@ -616,31 +596,25 @@ namespace Phyzzle
 		const Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
-		//if (data.isGrounded)
+		// 속도 벡터를 계산
+		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
+		currentVelocity.y() = 0.f;
+		//float scalar = currentVelocity.norm();
+		//Vector3f direction = currentVelocity.normalized();
+		//if (!direction.isZero())
 		//{
-			// 속도 벡터를 계산
-			Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
-			float scalar = currentVelocity.norm();
-			Vector3f direction = currentVelocity.normalized();
-			if (!direction.isZero())
-			{
-				scalar = std::clamp(scalar, 0.f, _moveSpeed);
-				currentVelocity = direction * scalar;
-			}
+		//	scalar = std::clamp(scalar, 0.f, _moveSpeed);
+		//	currentVelocity = direction * scalar;
+		//}
 
-			Vector3f targetVelocity = moveSpeed * movementDirection;
-			Vector3f additionalVelocity = targetVelocity - currentVelocity;
-			additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
+		Vector3f targetVelocity = moveSpeed * movementDirection;
+		Vector3f additionalVelocity = targetVelocity - currentVelocity;
+		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
 
-			// 속도를 적용시킴
-			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+		// 속도를 적용시킴
+		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
 			
-			return currInput.Lstick.Size >= 1e-6;
-		//}
-		//else
-		//{
-		//	return false;
-		//}
+		return currInput.Lstick.Size >= 1e-6;
 	}
 #pragma endregion Player
 
@@ -665,10 +639,18 @@ namespace Phyzzle
 			return;
 
 		// 로컬 Z와 Local Direction 사이의 쿼터니언을 구함.
-		const Eigen::Quaternionf targetRotation = Eigen::Quaternionf::FromTwoVectors(Eigen::Vector3f::UnitZ(), _localDirection);
+		const Eigen::Vector3f worldUp = Eigen::Vector3f::UnitY();
+		const Eigen::Vector3f forward = _localDirection.normalized();
+		const Eigen::Vector3f right = worldUp.cross(forward).normalized();
+		const Eigen::Vector3f up = forward.cross(right).normalized();
+
+		Eigen::Matrix3f rotation;
+		rotation.col(0) = right;
+		rotation.col(1) = up;
+		rotation.col(2) = forward;
 
 		// Model을 회전시킴
-		data.modelCore->SetLocalRotation(targetRotation);
+		data.modelCore->SetLocalRotation(Eigen::Quaternionf(rotation));
 	}
 
 #pragma region Camera
@@ -729,17 +711,17 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		const float ease = data.xAngle >= 0.f ? data.xAngle / data.limitHighAngle : data.xAngle / data.limitLowAngle;
-		auto easingFunc = data.xAngle >= 0.f ?
+		const float ease = camData.xAngle >= 0.f ? camData.xAngle / camData.limitHighAngle : camData.xAngle / camData.limitLowAngle;
+		auto easingFunc = camData.xAngle >= 0.f ?
 			[](float x) { return 1.0f - (1.0f - x) * (1.0f - x); } :
 			[](float x) { return 1.0f - std::pow(1.0f - x, 5.0f); };
 
-		const Vector3f& diff = data.xAngle >= 0.f ? differenceHigh : differenceLow;
+		const Vector3f& diff = camData.xAngle >= 0.f ? differenceHigh : differenceLow;
 
 		Vector3f offset = _isSelect ? Vector3f{ 0.5f, 0.5f, 0.f } : Vector3f::Zero();
-		Vector3f pos = data.coreDefaultPosition + offset;
+		Vector3f pos = camData.coreDefaultPosition + offset;
 		// Vector3f pos = data.coreTargetPosition;
-		pos.z() = data.coreDefaultPosition.z() + diff.z() * easingFunc(ease);
+		pos.z() = camData.coreDefaultPosition.z() + diff.z() * easingFunc(ease);
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
 		world.translate(pos);
@@ -755,15 +737,11 @@ namespace Phyzzle
 		static float prevDistance = FLT_MAX;
 		static bool prevHit = false;
 
-		float radius = data.cameraCollisionRadius;
+		float radius = camData.cameraCollisionRadius;
 		const Vector3f coreLocalPos = localIn;
 		const Vector3f coreWorldPos = worldIn;
 
-		// const Vector3f coreLocalDir = data.cameraCore->GetLocalRotation() * Vector3f::UnitZ();
-		// const Vector3f localStart = CalculateCameraFocusPosition(coreLocalPos, coreLocalDir);
-
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
-		// world.translate(localStart);
 		const Vector3f worldStart = world.translation();
 
 		Vector3f worldDir = coreWorldPos - worldStart;
@@ -775,7 +753,7 @@ namespace Phyzzle
 			worldDir = data.cameraCore->GetWorldRotation() * -Vector3f::UnitZ();
 		}
 
-		unsigned int layers = data.cameraCollisionLayers;
+		unsigned int layers = camData.cameraCollisionLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
 		bool hit = PurahEngine::Physics::Spherecast(
@@ -785,11 +763,6 @@ namespace Phyzzle
 			layers, 
 			info
 		);
-
-		//if (!hit)
-		//{
-		//	return hit;
-		//}
 
 		if (hit)
 		{
@@ -802,7 +775,7 @@ namespace Phyzzle
 				data.cameraCore->SetLocalPosition(localPos);
 			}
 
-			data.coreTargetPosition = localPos;
+			camData.coreTargetPosition = localPos;
 
 			localIn = localPos;
 			worldIn = position;
@@ -820,14 +793,14 @@ namespace Phyzzle
 
 		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 		Vector3f currPos = data.cameraCore->GetLocalPosition();
-		Vector3f target = data.coreTargetPosition;
+		Vector3f target = camData.coreTargetPosition;
 		Vector3f diff = target - currPos;
 		float dis = diff.norm();
 
 		Vector3f pos = Vector3f::Zero();
 		if (dis > 1e-6)
 		{
-			float inv = dt / data.cameraLerpTime;
+			float inv = dt / camData.cameraLerpTime;
 			// float inv = 0.001f / data.cameraLerpTime;
 			inv = std::clamp(inv, 0.f, 1.f);
 			pos = lerp(currPos, target, inv);
@@ -848,7 +821,7 @@ namespace Phyzzle
 		Quaternionf currRot = data.cameraCore->GetLocalRotation();
 		Quaternionf currRotM = Quaternionf(-currRot.w(), -currRot.x(), -currRot.y(), -currRot.z());
 		Quaternionf curr = currRot;
-		Quaternionf target = data.coreTargetRotation;
+		Quaternionf target = camData.coreTargetRotation;
 
 		float costheta0 = currRot.dot(target);
 		float costheta1 = currRotM.dot(target);
@@ -858,7 +831,7 @@ namespace Phyzzle
 			curr = currRotM;
 		}
 
-		float inv = dt / data.cameraLerpTime;
+		float inv = dt / camData.cameraLerpTime;
 		// float inv = 0.001f / data.cameraLerpTime;
 		inv = std::clamp(inv, 0.f, 1.f);
 		Quaternionf newRot = curr.slerp(inv, target);
@@ -895,12 +868,12 @@ namespace Phyzzle
 
 	void Player::SetCameraCoreLocalTargetPosition(const Eigen::Vector3f& _localPosision)
 	{
-		data.coreTargetPosition = _localPosision;
+		camData.coreTargetPosition = _localPosision;
 	}
 
 	void Player::SetCameraCoreLocalTargetRotation(const Eigen::Quaternionf& _localRotation)
 	{
-		data.coreTargetRotation = _localRotation;
+		camData.coreTargetRotation = _localRotation;
 	}
 
 	void Player::SetCameraCoreWorldTargetPosition(const Eigen::Vector3f& _worldPosision)
@@ -910,7 +883,7 @@ namespace Phyzzle
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
 		Vector3f localPos = world.inverse() * _worldPosision;
 		
-		data.coreTargetPosition = localPos;
+		camData.coreTargetPosition = localPos;
 	}
 
 	void Player::SetCameraCoreWorldTargetRotation(const Eigen::Quaternionf& _worldRotation)
@@ -920,7 +893,7 @@ namespace Phyzzle
 		Quaternion world{ data.cameraArm->GetWorldRotation() };
 		Quaternionf localRot = world.inverse() * _worldRotation;
 
-		data.coreTargetRotation = localRot;
+		camData.coreTargetRotation = localRot;
 	}
 
 	Eigen::Vector3f Player::CalculateCameraFocusPosition(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction)
@@ -990,8 +963,8 @@ namespace Phyzzle
 		Vector3f corePos = data.cameraCore->GetWorldPosition();
 		Quaternionf coreRot = data.cameraCore->GetWorldRotation();
 
-		data.xAngle = 0.f;
-		data.cameraArm->SetLocalPosition(data.armDefaultPosition);
+		camData.xAngle = 0.f;
+		data.cameraArm->SetLocalPosition(camData.armDefaultPosition);
 		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
 
 		data.cameraCore->SetWorldRotation(coreRot);
@@ -1000,8 +973,8 @@ namespace Phyzzle
 
 	void Player::ResetCameraCoreTarget()
 	{
-		SetCameraCoreLocalTargetPosition(data.coreDefaultPosition);
-		SetCameraCoreLocalTargetRotation(data.coreDefaultRotation);
+		SetCameraCoreLocalTargetPosition(camData.coreDefaultPosition);
+		SetCameraCoreLocalTargetRotation(camData.coreDefaultRotation);
 	}
 
 	void Player::ResetCamera()
@@ -1012,15 +985,15 @@ namespace Phyzzle
 
 	void Player::ResetCameraArm()
 	{
-		data.xAngle = 0.f;
-		data.cameraArm->SetLocalPosition(data.armDefaultPosition);
+		camData.xAngle = 0.f;
+		data.cameraArm->SetLocalPosition(camData.armDefaultPosition);
 		data.cameraArm->SetLocalRotation(data.modelCore->GetLocalRotation());
 	}
 
 	void Player::ResetCameraCore()
 	{
-		data.cameraCore->SetLocalPosition(data.coreDefaultPosition);
-		data.cameraCore->SetLocalRotation(data.coreDefaultRotation);
+		data.cameraCore->SetLocalPosition(camData.coreDefaultPosition);
+		data.cameraCore->SetLocalRotation(camData.coreDefaultRotation);
 	}
 
 	void Player::SetCameraArmFoward(const Eigen::Vector3f& _direction)
@@ -1042,7 +1015,7 @@ namespace Phyzzle
 		float cosTheta = _direction.dot(up);
 		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
 		float theta = std::acosf(cosTheta);
-		data.xAngle = theta * (180.f / std::numbers::pi_v<float>);
+		camData.xAngle = theta * (180.f / std::numbers::pi_v<float>);
 	}
 
 	void Player::RotateCameraArm()
@@ -1069,17 +1042,17 @@ namespace Phyzzle
 	void Player::RotateCameraArmPitch(float pitchAngle)
 	{
 		float deltaAngle = pitchAngle;
-		data.xAngle += pitchAngle;
+		camData.xAngle += pitchAngle;
 
-		if (data.xAngle > data.limitHighAngle)
+		if (camData.xAngle > camData.limitHighAngle)
 		{
-			deltaAngle -= (data.xAngle - data.limitHighAngle);
-			data.xAngle = data.limitHighAngle;
+			deltaAngle -= (camData.xAngle - camData.limitHighAngle);
+			camData.xAngle = camData.limitHighAngle;
 		}
-		else if (data.xAngle < data.limitLowAngle)
+		else if (camData.xAngle < camData.limitLowAngle)
 		{
-			deltaAngle -= (data.xAngle - data.limitLowAngle);
-			data.xAngle = data.limitLowAngle;
+			deltaAngle -= (camData.xAngle - camData.limitLowAngle);
+			camData.xAngle = camData.limitLowAngle;
 		}
 
 		const Eigen::Vector3f cameraRight = data.cameraArm->GetWorldRotation() * Eigen::Vector3f::UnitX();
@@ -1151,8 +1124,11 @@ namespace Phyzzle
 			if (_outRewindable)
 				*_outRewindable = obj->GetComponent<Rewindable>();
 
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
+			if (data.debugMode)
+			{
+				PurahEngine::GraphicsManager::GetInstance().DrawString(
+					shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
+			}
 		}
 
 		return block;
@@ -1166,10 +1142,15 @@ namespace Phyzzle
 	{
 		PREDESERIALIZE_BASE();
 
+		// Player
 		{
 			auto moveSpeed = data.moveSpeed;
 			PREDESERIALIZE_VALUE(moveSpeed);
 			data.moveSpeed = moveSpeed;
+
+			auto holdSpeed = data.holdSpeed;
+			PREDESERIALIZE_VALUE(holdSpeed);
+			data.holdSpeed = holdSpeed;
 
 			auto sensitivity = data.sensitivity;
 			PREDESERIALIZE_VALUE(sensitivity);
@@ -1178,8 +1159,76 @@ namespace Phyzzle
 			auto jumpPower = data.jumpPower;
 			PREDESERIALIZE_VALUE(jumpPower);
 			data.jumpPower = jumpPower;
+
+			auto slopeLimit = data.slopeLimit;
+			PREDESERIALIZE_VALUE(slopeLimit);
+			data.slopeLimit = slopeLimit;
 		}
 
+		// Ability
+		{
+			auto targetPositionYSpeed = abilData.targetPositionYSpeed;
+			PREDESERIALIZE_VALUE(targetPositionYSpeed);
+			abilData.targetPositionYSpeed = targetPositionYSpeed;
+
+			auto targetPositionZStep = abilData.targetPositionZStep;
+			PREDESERIALIZE_VALUE(targetPositionZStep);
+			abilData.targetPositionZStep = targetPositionZStep;
+
+			auto minTargetPositionY = abilData.minTargetPositionY;
+			PREDESERIALIZE_VALUE(minTargetPositionY);
+			abilData.minTargetPositionY = minTargetPositionY;
+
+			auto maxTargetPositionY = abilData.maxTargetPositionY;
+			PREDESERIALIZE_VALUE(maxTargetPositionY);
+			abilData.maxTargetPositionY = maxTargetPositionY;
+
+			auto minTargetPositionZ = abilData.minTargetPositionZ;
+			PREDESERIALIZE_VALUE(minTargetPositionZ);
+			abilData.minTargetPositionZ = minTargetPositionZ;
+
+			auto maxTargetPositionZ = abilData.maxTargetPositionZ;
+			PREDESERIALIZE_VALUE(maxTargetPositionZ);
+			abilData.maxTargetPositionZ = maxTargetPositionZ;
+
+			auto targetPositionOffset = abilData.targetPositionOffset;
+			PREDESERIALIZE_VALUE(targetPositionOffset);
+			abilData.targetPositionOffset = targetPositionOffset;
+
+			auto linearSpringDamping = abilData.linearSpringDamping;
+			PREDESERIALIZE_VALUE(linearSpringDamping);
+			abilData.linearSpringDamping = linearSpringDamping;
+
+			auto linearSpringFrequency = abilData.linearSpringFrequency;
+			PREDESERIALIZE_VALUE(linearSpringFrequency);
+			abilData.linearSpringFrequency = linearSpringFrequency;
+
+			auto linearMaxVelocity = abilData.linearMaxVelocity;
+			PREDESERIALIZE_VALUE(linearMaxVelocity);
+			abilData.linearMaxVelocity = linearMaxVelocity;
+
+			auto angularSpringDamping = abilData.angularSpringDamping;
+			PREDESERIALIZE_VALUE(angularSpringDamping);
+			abilData.angularSpringDamping = angularSpringDamping;
+
+			auto angularSpringFrequency = abilData.angularSpringFrequency;
+			PREDESERIALIZE_VALUE(angularSpringFrequency);
+			abilData.angularSpringFrequency = angularSpringFrequency;
+
+			auto angularMaxVelocity = abilData.angularMaxVelocity;
+			PREDESERIALIZE_VALUE(angularMaxVelocity);
+			abilData.angularMaxVelocity = angularMaxVelocity;
+
+			auto holdRotateAngle = abilData.holdRotateAngle;
+			PREDESERIALIZE_VALUE(holdRotateAngle);
+			abilData.holdRotateAngle = holdRotateAngle;
+
+			auto arcRatio = abilData.arcRatio;
+			PREDESERIALIZE_VALUE(arcRatio);
+			abilData.arcRatio = arcRatio;
+		}
+
+		// Outline
 		{
 			Eigen::Vector4f outlineColor0;
 			PREDESERIALIZE_VECTOR4F(outlineColor0);
@@ -1194,14 +1243,15 @@ namespace Phyzzle
 			color2 = outlineColor2;
 		}
 
+		// Layer
 		{
-			int cameraCollisionLayers = data.cameraCollisionLayers;
+			int cameraCollisionLayers = camData.cameraCollisionLayers;
 			PREDESERIALIZE_VALUE(cameraCollisionLayers);
-			data.cameraCollisionLayers = cameraCollisionLayers;
+			camData.cameraCollisionLayers = cameraCollisionLayers;
 
-			float cameraCollisionRadius = data.cameraCollisionRadius;
+			float cameraCollisionRadius = camData.cameraCollisionRadius;
 			PREDESERIALIZE_VALUE(cameraCollisionRadius);
-			data.cameraCollisionRadius = cameraCollisionRadius;
+			camData.cameraCollisionRadius = cameraCollisionRadius;
 
 			auto attachRaycastLayers = data.attachRaycastLayers;
 			PREDESERIALIZE_VALUE(attachRaycastLayers);
@@ -1212,6 +1262,7 @@ namespace Phyzzle
 			data.attachRaycastDistance = attachRaycastDistance;
 		}
 
+		// Animation
 		{
 			auto idleAnimation = animData.idleAnimation;
 			PREDESERIALIZE_WSTRING(idleAnimation);
@@ -1288,36 +1339,36 @@ namespace Phyzzle
 			auto crossHead = data.crossHead;
 			POSTDESERIALIZE_PTR(crossHead);
 			data.crossHead = crossHead;
-		}
 
-		auto groundCheck = data.groundCheck;
-		POSTDESERIALIZE_PTR(groundCheck);
-		data.groundCheck = groundCheck;
+			auto groundCheck = data.groundCheck;
+			POSTDESERIALIZE_PTR(groundCheck);
+			data.groundCheck = groundCheck;
+		}
 		
 		{
-			auto attachLowCamera0 = data.attachLowCamera0;
+			auto attachLowCamera0 = camData.attachLowCamera0;
 			POSTDESERIALIZE_PTR(attachLowCamera0);
-			data.attachLowCamera0 = attachLowCamera0;
+			camData.attachLowCamera0 = attachLowCamera0;
 
-			auto attachLowCamera1 = data.attachLowCamera1;
+			auto attachLowCamera1 = camData.attachLowCamera1;
 			POSTDESERIALIZE_PTR(attachLowCamera1);
-			data.attachLowCamera1 = attachLowCamera1;
+			camData.attachLowCamera1 = attachLowCamera1;
 
-			auto attachDefaultCamera0 = data.attachDefaultCamera0;
+			auto attachDefaultCamera0 = camData.attachDefaultCamera0;
 			POSTDESERIALIZE_PTR(attachDefaultCamera0);
-			data.attachDefaultCamera0 = attachDefaultCamera0;
+			camData.attachDefaultCamera0 = attachDefaultCamera0;
 
-			auto attachDefaultCamera1 = data.attachDefaultCamera1;
+			auto attachDefaultCamera1 = camData.attachDefaultCamera1;
 			POSTDESERIALIZE_PTR(attachDefaultCamera1);
-			data.attachDefaultCamera1 = attachDefaultCamera1;
+			camData.attachDefaultCamera1 = attachDefaultCamera1;
 
-			auto attachHighCamera0 = data.attachHighCamera0;
+			auto attachHighCamera0 = camData.attachHighCamera0;
 			POSTDESERIALIZE_PTR(attachHighCamera0);
-			data.attachHighCamera0 = attachHighCamera0;
+			camData.attachHighCamera0 = attachHighCamera0;
 
-			auto attachHighCamera1 = data.attachHighCamera1;
+			auto attachHighCamera1 = camData.attachHighCamera1;
 			POSTDESERIALIZE_PTR(attachHighCamera1);
-			data.attachHighCamera1 = attachHighCamera1;
+			camData.attachHighCamera1 = attachHighCamera1;
 		}
 	}
 #pragma endregion 직렬화

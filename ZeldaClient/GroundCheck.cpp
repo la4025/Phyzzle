@@ -1,5 +1,9 @@
 #include "GroundCheck.h"
 
+void Phyzzle::GroundCheck::Start()
+{
+}
+
 bool Phyzzle::GroundCheck::IsGrounded()
 {
 	return isGrounded;
@@ -30,6 +34,7 @@ void Phyzzle::GroundCheck::PreSerialize(json& jsonData) const
 
 void Phyzzle::GroundCheck::PreDeserialize(const json& jsonData)
 {
+	PREDESERIALIZE_BASE();
 }
 
 void Phyzzle::GroundCheck::PostSerialize(json& jsonData) const
@@ -38,4 +43,6 @@ void Phyzzle::GroundCheck::PostSerialize(json& jsonData) const
 
 void Phyzzle::GroundCheck::PostDeserialize(const json& jsonData)
 {
+	POSTDESERIALIZE_PTR(triggerCollider);
 }
+

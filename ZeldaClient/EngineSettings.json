@@ -29,7 +29,7 @@
     "Trigger_Give",
     "Deco",
     "PlayerTrigger",
-    "testLayer"
+    "GroundCheck"
   ],
   "collisionSetting": [
     [
@@ -48,7 +48,7 @@
       false,
       false,
       false,
-      false
+      true
     ],
     [
       false,
@@ -156,7 +156,7 @@
       true,
       true,
       false,
-      false
+      true
     ],
     [
       false,
@@ -228,7 +228,61 @@
       true,
       false,
       true,
-      false
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true
     ],
     [
       false,
@@ -249,42 +303,9 @@
       false
     ],
     [
-      false,
-      false,
-      false,
       true,
       false,
       false,
-      true,
-      true,
-      true,
-      false,
-      true,
-      true,
-      false,
-      false,
-      true,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      true,
-      true,
-      true,
-      false,
-      false,
-      false,
-      false,
-      true,
-      false,
-      false
-    ],
-    [
       false,
       false,
       false,
@@ -292,31 +313,10 @@
       false,
       false,
       false,
-      false,
-      false,
-      false,
       true,
-      false,
       true,
-      false,
-      false,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
+      true,
+      true,
       false,
       false
     ]
@@ -333,8 +333,8 @@
       "name": "PlayerBody",
       "staticFriction": 0.0,
       "dynamicFriction": 0.0,
-      "restitution": 0.2,
-      "eFriction": 0,
+      "restitution": 0.0,
+      "eFriction": 1,
       "eRestitution": 1
     },
     {
@@ -347,10 +347,10 @@
     },
     {
       "name": "Wall",
-      "staticFriction": 1.0,
-      "dynamicFriction": 1.0,
-      "restitution": 0.05,
-      "eFriction": 3,
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
+      "restitution": 0.7,
+      "eFriction": 0,
       "eRestitution": 0
     },
     {
@@ -383,6 +383,14 @@
       "dynamicFriction": 1.0,
       "restitution": 0.0,
       "eFriction": 1,
+      "eRestitution": 0
+    },
+    {
+      "name": "object0",
+      "staticFriction": 0.0,
+      "dynamicFriction": 0.0,
+      "restitution": 1.0,
+      "eFriction": 0,
       "eRestitution": 0
     }
   ]

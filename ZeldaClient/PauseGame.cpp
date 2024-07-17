@@ -29,6 +29,11 @@ namespace Phyzzle
 		for (auto& [targetGameObject, state] : onOffEventList)
 		{
 			bool targetState = targetGameObject->GetEnable();
+			auto& input = InputManager::Getinstance();
+			bool shift = input.IsKeyPressed(eKey::eKEY_SHIFT) || input.IsKeyDown(eKey::eKEY_SHIFT);
+			if (shift)
+				continue;
+			
 			if (UnifiedInputManager::Getinstance().GetKeyDown(eUnfInput::UI_MENU))
 			{
 				targetGameObject->SetEnable(!targetState);

@@ -13,7 +13,9 @@ namespace Phyzzle
 	{
 	public:
 		void UpdateVelocity(
-			const Eigen::Vector3f& _s, Eigen::Vector3f& _v, const Eigen::Vector3f& _e,
+			const Eigen::Vector3f& _s, 
+			Eigen::Vector3f& _v, 
+			const Eigen::Vector3f& _e,
 			float _zeta, float _omega, float _dt)
 		{
 			const float f = 1.f + 2.f * _dt * _zeta * _omega;
@@ -87,30 +89,65 @@ namespace Phyzzle
 		}
 
 	public:
-		void UpdateVelocity(
-			const Eigen::Quaternionf& x,
-			Eigen::Vector3f& v,
-			const Eigen::Quaternionf& x_goal,
-			float halflife,
-			float dt)
-		{
-			Eigen::Quaternionf goal = x_goal;
-			Eigen::Quaternionf minusGoal = { -x_goal.w(), -x_goal.x() , -x_goal.y() , -x_goal.z() };
+		// void UpdateVelocity(
+		// 	const Eigen::Quaternionf& x,
+		// 	Eigen::Vector3f& v,
+		// 	const Eigen::Quaternionf& x_goal,
+		// 	float halflife,
+		// 	float dt)
+		// {
+		// 	Eigen::Quaternionf goal = x_goal;
+		// 	Eigen::Quaternionf minusGoal = { -x_goal.w(), -x_goal.x() , -x_goal.y() , -x_goal.z() };
+		// 
+		// 	float xDot = x.dot(x_goal);
+		// 	float minusDot = x.dot(minusGoal);
+		// 
+		// 	if (xDot < minusDot)
+		// 		goal = minusGoal;
+		// 
+		// 	const float y = halflife_to_damping(halflife) / 2.0f;
+		// 
+		// 	const Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * goal.inverse());
+		// 	const Eigen::Vector3f j1 = v + j0 * y;
+		// 
+		// 	const float eydt = fast_negexp(y * dt);
+		// 
+		// 	v = eydt * (v - j1 * y * dt);
+		// }
 
-			float xDot = x.dot(x_goal);
-			float minusDot = x.dot(minusGoal);
+		void UpdateVelocity(
+			const Eigen::Quaternionf& current_angle,
+			Eigen::Vector3f& angular_velocity,
+			const Eigen::Quaternionf& target_angle,
+			float zeta, float omega, float dt)
+		{
+			// Adjust the target angle to the shortest path
+			Eigen::Quaternionf goal = target_angle;
+			Eigen::Quaternionf minusGoal = { -target_angle.w(), -target_angle.x(), -target_angle.y(), -target_angle.z() };
+
+			float xDot = current_angle.dot(goal);
+			float minusDot = current_angle.dot(minusGoal);
 
 			if (xDot < minusDot)
 				goal = minusGoal;
 
-			const float y = halflife_to_damping(halflife) / 2.0f;
+			// Compute the relative quaternion from current to target
+			Eigen::Quaternionf q_rel = goal * current_angle.conjugate();
+			q_rel.normalize();
 
-			const Eigen::Vector3f j0 = quat_to_scaled_angle_axis(x * goal.inverse());
-			const Eigen::Vector3f j1 = v + j0 * y;
+			// Extract the vector part of the relative quaternion (imaginary part)
+			Eigen::Vector3f relative_angle_axis = q_rel.vec();
 
-			const float eydt = fast_negexp(y * dt);
+			// Damping and spring forces
+			const float f = 1.f + 2.f * dt * zeta * omega;
+			const float oo = omega * omega;
+			const float hoo = dt * oo;
+			const float hhoo = dt * hoo;
+			const float detInv = 1.f / (f + hhoo);
+			const Eigen::Vector3f detV = angular_velocity + hoo * relative_angle_axis;
 
-			v = eydt * (v - j1 * y * dt);
+			// Update angular velocity
+			angular_velocity = detV * detInv;
 		}
 	};
 }

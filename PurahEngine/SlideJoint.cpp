@@ -85,7 +85,7 @@ namespace PurahEngine
 		SetBounciness(bounciness);
 		//}
 
-		JointT::OnDataLoadComplete();
+		JointT::PostInitialize();
 	}
 
 	float SlideJoint::GetPosition() const

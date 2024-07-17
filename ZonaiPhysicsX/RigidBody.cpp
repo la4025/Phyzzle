@@ -114,6 +114,11 @@ namespace ZonaiPhysics
 		return RigidBodyHelper::GetInertiaTensor(pxBody);
 	}
 
+	void RigidBody::SetInertiaTensor(const Eigen::Vector3f& tensor)
+	{
+		RigidBodyHelper::SetInertiaTensor(pxBody, tensor);
+	}
+
 	float RigidBody::GetLinearDamping() const
 	{
 		return RigidBodyHelper::GetLinearDamping(pxBody);
@@ -179,9 +184,9 @@ namespace ZonaiPhysics
 		return RigidBodyHelper::GetPosition(pxBody);
 	}
 
-	void RigidBody::SetPosition(const Eigen::Vector3f& _position)
+	void RigidBody::SetPosition(const Eigen::Vector3f& _position, bool _wakeup)
 	{
-		RigidBodyHelper::SetPosition(pxBody, _position);
+		RigidBodyHelper::SetPosition(pxBody, _position, _wakeup);
 	}
 
 	Eigen::Quaternionf RigidBody::GetQuaternion() const
@@ -189,9 +194,9 @@ namespace ZonaiPhysics
 		return RigidBodyHelper::GetQuaternion(pxBody);
 	}
 
-	void RigidBody::SetQuaternion(const Eigen::Quaternionf& _quaternion)
+	void RigidBody::SetQuaternion(const Eigen::Quaternionf& _quaternion, bool _wakeup)
 	{
-		RigidBodyHelper::SetQuaternion(pxBody, _quaternion);
+		RigidBodyHelper::SetQuaternion(pxBody, _quaternion, _wakeup);
 	}
 
 	void RigidBody::AddForce(const Eigen::Vector3f& _force, ForceType _type)

@@ -5,6 +5,8 @@
 #include "ZnBound3.h"
 #include "ZnTransform.h"
 
+#include "ResourceManager.h"
+
 #include "ColliderHelper.h"
 
 namespace ZonaiPhysics
@@ -166,5 +168,32 @@ namespace ZonaiPhysics
 
 		// PhysX 형식의 경계 상자를 Eigen 형식으로 변환하여 반환합니다.
 		return ZnBound3(PhysxToEigen(aabb.minimum), PhysxToEigen(aabb.maximum));
+	}
+
+	void ColliderHelper::SetMaterial(void* _shape, const ZnMaterialID& _id)
+	{
+		assert(_shape != nullptr);
+
+		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+		
+		physx::PxMaterial* material = ResourceManager::GetPxMaterial(_id);
+
+		_pxShape->setMaterials(&material, 1);
+	}
+
+	void ColliderHelper::SetMaterials(void* _shape, ZnMaterialID* _pointer, int size)
+	{
+		assert(_shape != nullptr);
+
+		const auto _pxShape = static_cast<physx::PxShape*>(_shape);
+		std::vector<physx::PxMaterial*> materials;
+
+		for (int i = 0; i < size; i++)
+		{
+			physx::PxMaterial* material = ResourceManager::GetPxMaterial(_pointer[i]);
+			materials.emplace_back(material);
+		}
+
+		_pxShape->setMaterials(&materials.front(), materials.size());
 	}
 }
