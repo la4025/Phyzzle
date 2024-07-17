@@ -6,41 +6,26 @@
 
 namespace Phyzzle
 {
-	class DoorParts : public ElectricalDevice
+	class ObjectController final : public ElectricalDevice
 	{
-	private:
-		enum class State : int
-		{
-			Open,
-			Close
-		};
-
 	public:
 		void Awake() override;
-
-		void Update() override;
 
 		void PowerOn() override;
 		void PowerOff() override;
 
 	private:
-		void MoveToTarget(const Eigen::Vector3f& target);
+		void TargetOn();
+		void TargetOff();
 
 	private:
-		bool useRigidbody;
-		Eigen::Vector3f movePos;
-		float speed;
+		bool inverse;
+		std::vector<PurahEngine::GameObject*> targetObjectList;
 
 	private:
-		PurahEngine::RigidBody* rigidbody;
-		Eigen::Vector3f targetPos;
-		Eigen::Vector3f originPos;
 		int powerCounter;
-		State state;
 
-		bool done;
-
-	public:
+	private:
 		void PreSerialize(json& jsonData) const override;
 		void PreDeserialize(const json& jsonData) override;
 		void PostSerialize(json& jsonData) const override;

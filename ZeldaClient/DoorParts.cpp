@@ -13,6 +13,11 @@ namespace Phyzzle
 		done = false;
 
 		state = State::Close;
+
+		if (useRigidbody)
+		{
+			rigidbody = GetGameObject()->GetComponent<PurahEngine::RigidBody>();
+		}
 	}
 
 	void DoorParts::Update()
@@ -61,29 +66,39 @@ namespace Phyzzle
 
 	void DoorParts::MoveToTarget(const Eigen::Vector3f& target)
 	{
-		if (done)
-		{
-			return;
-		}
-
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		Eigen::Vector3f currentPosition = GetGameObject()->GetTransform()->GetLocalPosition();
-
-		Eigen::Vector3f moveVec = target - currentPosition;
-		float remainingSize = moveVec.norm();
-		Eigen::Vector3f moveVecNormal = moveVec.normalized();
-
-		float moveSize = movePos.norm();
-
-		if (remainingSize > moveSize * speed * deltaTime)
+		if (useRigidbody)
 		{
-			GetGameObject()->GetTransform()->SetLocalPosition(currentPosition + (moveVec * moveSize * speed * deltaTime));
+			Eigen::Vector3f currentPosition = GetGameObject()->GetTransform()->GetLocalPosition();
+			Eigen::Vector3f moveVec = (target - currentPosition).normalized();
+
+			rigidbody->AddForce(moveVec * speed * deltaTime, ZonaiPhysics::Velocity_Change);
 		}
 		else
 		{
-			GetGameObject()->GetTransform()->SetLocalPosition(target);
-			done = true;
+			if (done)
+			{
+				return;
+			}
+
+			Eigen::Vector3f currentPosition = GetGameObject()->GetTransform()->GetLocalPosition();
+
+			Eigen::Vector3f moveVec = target - currentPosition;
+			float remainingSize = moveVec.norm();
+			Eigen::Vector3f moveVecNormal = moveVec.normalized();
+
+			float moveSize = movePos.norm();
+
+			if (remainingSize > moveSize * speed * deltaTime)
+			{
+				GetGameObject()->GetTransform()->SetLocalPosition(currentPosition + (moveVec * moveSize * speed * deltaTime));
+			}
+			else
+			{
+				GetGameObject()->GetTransform()->SetLocalPosition(target);
+				done = true;
+			}
 		}
 	}
 
@@ -94,6 +109,7 @@ namespace Phyzzle
 	void DoorParts::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(useRigidbody);
 		PREDESERIALIZE_VECTOR3F(movePos);
 		PREDESERIALIZE_VALUE(speed);
 	}

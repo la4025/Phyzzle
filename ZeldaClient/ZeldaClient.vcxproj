@@ -158,9 +158,11 @@
     <ClCompile Include="DirectionalLightSystem.cpp" />
     <ClCompile Include="GroundCheck.cpp" />
     <ClCompile Include="LightSystem.cpp" />
+    <ClCompile Include="ObjectController.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="PointLightSystem.cpp" />
+    <ClCompile Include="PowerController.cpp" />
     <ClCompile Include="PzObject.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="IslandID.cpp" />
@@ -215,9 +217,11 @@
     <ClInclude Include="DirectionalLightSystem.h" />
     <ClInclude Include="GroundCheck.h" />
     <ClInclude Include="LightSystem.h" />
+    <ClInclude Include="ObjectController.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PauseGame.h" />
     <ClInclude Include="PointLightSystem.h" />
+    <ClInclude Include="PowerController.h" />
     <ClInclude Include="PzObject.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="IslandID.h" />

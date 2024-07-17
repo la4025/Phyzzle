@@ -5,6 +5,7 @@ namespace Phyzzle
 	void ANDGate::Awake()
 	{
 		powerCounter = 0;
+		isPowerOn = false;
 	}
 
 	void ANDGate::PowerOn()

@@ -25,6 +25,8 @@
 #include "CameraEventDevice.h"
 #include "ShockDetector.h"
 #include "ANDGate.h"
+#include "PowerController.h"
+#include "ObjectController.h"
 
 #include "Burnable.h"
 #include "ObjectGenerator.h"
@@ -94,6 +96,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::CameraEventDevice>("CameraEventDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ShockDetector>("ShockDetector");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ANDGate>("ANDGate");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PowerController>("PowerController");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectController>("ObjectController");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Burnable>("Burnable");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ObjectGenerator>("ObjectGenerator");
