@@ -41,12 +41,12 @@ namespace Phyzzle
 
 		enum AbilityState
 		{
-			ATTACH_HOLD		= -1,	// 물건을 든 상태
+			ATTACH_HOLD = -1,	// 물건을 든 상태
 
-			DEFAULT			= 0,	// 기본 상태
-			ATTACH_SELECT	= 1,	// 물건을 부착하려는 상태
-			REWIND_SELECT	= 2,	// 물건을 되돌리려는 상태
-			LOCK_SELECT		= 3
+			DEFAULT = 0,	// 기본 상태
+			ATTACH_SELECT = 1,	// 물건을 부착하려는 상태
+			REWIND_SELECT = 2,	// 물건을 되돌리려는 상태
+			LOCK_SELECT = 3
 		};
 #pragma endregion Enum
 
@@ -183,7 +183,7 @@ namespace Phyzzle
 		{
 			StickData Lstick;
 			StickData Rstick;
-			
+
 			float LTrigger;
 			float RTrigger;
 
@@ -191,10 +191,10 @@ namespace Phyzzle
 			{
 				if (this != &_other)
 				{
-			
+
 					Lstick = _other.Lstick;
 					Rstick = _other.Rstick;
-					
+
 					LTrigger = _other.LTrigger;
 					RTrigger = _other.RTrigger;
 				}
@@ -271,7 +271,7 @@ namespace Phyzzle
 		void HandleTriggerInput();
 		void HandleButtonInput();
 		void HandleButton(PurahEngine::ePad button, void (IState::* clickFunc)(), void (IState::* pressingFunc)(), void (IState::* upFunc)());
-		
+
 		void HandleKeyboardInput();
 		void HandleMovementInput();
 		void HandleCameraRotationInput();
@@ -321,7 +321,7 @@ namespace Phyzzle
 		void UpdateCameraPositionLerp();
 		void UpdateCameraRotationLerp();
 		void UpdateCameraLerp();
-		
+
 		void CharacterDisable();
 
 		/// <summary>
@@ -332,7 +332,7 @@ namespace Phyzzle
 		/// <param name="_worldPosision">코어의 로컬 좌표</param>
 		void SetCameraCoreLocalTargetPosition(const Eigen::Vector3f& _localPosision);
 		void SetCameraCoreLocalTargetRotation(const Eigen::Quaternionf& _localRotation);
-		
+
 		/// <summary>
 		/// 카메라 코어의 목표 월드 좌표를 설정함
 		/// 
@@ -349,7 +349,7 @@ namespace Phyzzle
 		/// <param name="direction">카메라 코어의 로컬 방향 벡터</param>
 		/// <returns>카메라 코어의 로컬 XY, XZ 평면의 한 점</returns>
 		Eigen::Vector3f CalculateCameraFocusPosition(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction);
-		
+
 		/// <summary>
 		/// 카메라 코어가 보고 있는 로컬 XY 평면의 좌표를 계산하는 함수
 		/// </summary>
@@ -358,7 +358,7 @@ namespace Phyzzle
 		/// <param name="out">계산된 로컬 XY 평면의 좌표</param>
 		/// <returns>XY 평면과 평행하면 false</returns>
 		bool IntersectXYPlane(const Eigen::Vector3f& cameraPos, const Eigen::Vector3f direction, Eigen::Vector3f& out);
-		
+
 		/// <summary>
 		/// 카메라 코어가 보고 있는 로컬 XZ 평면의 좌표를 계산하는 함수
 		/// </summary>
@@ -376,7 +376,7 @@ namespace Phyzzle
 		void ResetCamera();							// 카메라 위치 초기화
 		void ResetCameraArm();						// 카메라 암 위치 초기화
 		void ResetCameraCore();						// 카메라 코어 위치 초기화
-		
+
 		void SetCameraArmFoward(const Eigen::Vector3f& _direction);
 		void RotateCameraArm();							// 카메라 암 회전
 		void RotateCameraArmYaw(float yawAngle);		// 카메라 암 yaw 회전
@@ -397,6 +397,13 @@ namespace Phyzzle
 		void PostDeserialize(const json& jsonData) override;
 #pragma endregion 직렬화
 
+#pragma region 플레이어SFX
+	public:
+		void PlayFootStep();
+		void PlayJumping();
+		void PlayLanding();
+#pragma endregion 플레이어SFX
+
 	private:
 		friend class IState;
 		friend class DefaultState;
@@ -410,7 +417,7 @@ namespace Phyzzle
 		std::map<PlayerState, std::wstring> animationString;
 		std::map<PlayerState, std::function<void()>> animationState;
 		std::map<PlayerState, std::function<void(float)>> animationSpeedController;
-		
+
 		AbilityState prevState = DEFAULT;
 		AbilityState currState = DEFAULT;
 

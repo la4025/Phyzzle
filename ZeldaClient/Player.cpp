@@ -1322,6 +1322,22 @@ namespace Phyzzle
 			data.attachHighCamera1 = attachHighCamera1;
 		}
 	}
-
 #pragma endregion 직렬화
+
+#pragma region 플레이어SFX
+	void Player::PlayFootStep()
+	{
+		GetGameObject()->GetComponent<PurahEngine::AudioSource>()->PlayAudio(L"footstep.mp3");
+	}
+
+	void Player::PlayJumping()
+	{
+		GetGameObject()->GetComponent<PurahEngine::AudioSource>()->PlayAudio(L"jumping.wav");
+	}
+
+	void Player::PlayLanding()
+	{
+		GetGameObject()->GetComponent<PurahEngine::AudioSource>()->PlayAudio(L"landing.wav");
+	}
+#pragma endregion 플레이어SFX
 }
