@@ -176,7 +176,7 @@ namespace PurahEngine
 	{
 		physicsMaterial = _material;
 
-        if (awake)
+        if (!awake)
         {
             std::vector<std::wstring> materials;
             materials.emplace_back(_material);
