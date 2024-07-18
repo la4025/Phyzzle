@@ -53,9 +53,8 @@ namespace Phyzzle
 		originMass = body->GetMass();
 		tensor = body->GetInertiaTensor();
 
-		for (auto& e : materials)
-		{
-		}
+		for (auto& col : colliders)
+			materials.emplace_back(col->GetMaterial());
 
 		assert(originMass > 0.01f);
 	}
@@ -72,6 +71,9 @@ namespace Phyzzle
 		body->SetMass(1.f);
 		body->SetInertiaTensor(Eigen::Vector3f(100.f, 100.f, 100.f));
 
+		for (auto& col : colliders)
+			col->SetMaterial(L"SelectedObject");
+
 		select = true;
 	}
 
@@ -86,6 +88,11 @@ namespace Phyzzle
 		body->UseGravity(hasGravity);
 		body->SetMass(originMass);
 		body->SetInertiaTensor(tensor);
+
+		for (size_t i = 0; i < colliders.size(); i++)
+			colliders[i]->SetMaterial(materials[i]);
+
+		materials.clear();
 
 		isKinematic = false;
 		hasGravity = false;

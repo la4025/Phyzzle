@@ -236,17 +236,17 @@ namespace ZonaiPhysics
 
 	physx::PxShape* ZnFactoryX::CreateBoxShape(const Eigen::Vector3f& _extend, const physx::PxMaterial* _material)
 	{
-		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material);
+		return pxFactory->createShape(physx::PxBoxGeometry(_extend.x(), _extend.y(), _extend.z()), *_material, true);
 	}
 
 	physx::PxShape* ZnFactoryX::CreateSphereShape(float _radius, const physx::PxMaterial* _material)
 	{
-		return pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material);
+		return pxFactory->createShape(physx::PxSphereGeometry(_radius), *_material, true);
 	}
 
 	physx::PxShape* ZnFactoryX::CreateCapsuleShape(float _radius, float _height, const physx::PxMaterial* _material)
 	{
-		physx::PxShape* shape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material);
+		physx::PxShape* shape = pxFactory->createShape(physx::PxCapsuleGeometry(_radius, _height), *_material, true);
 
 		const physx::PxQuat rotation(physx::PxPi / 2.f, physx::PxVec3(0.f, 0.f, 1.f));
 		shape->setLocalPose(physx::PxTransform(rotation));
@@ -259,7 +259,7 @@ namespace ZonaiPhysics
 	{
 		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
 		physx::PxTriangleMeshGeometry geom(_mesh, scale);
-		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material);
+		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material, true);
 
 		return pxShape;
 	}
@@ -269,7 +269,7 @@ namespace ZonaiPhysics
 	{
 		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
 		physx::PxConvexMeshGeometry geom(_mesh, scale);
-		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material);
+		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material, true);
 		
 		return pxShape;
 	}
