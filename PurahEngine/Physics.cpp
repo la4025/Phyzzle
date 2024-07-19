@@ -150,6 +150,16 @@ namespace PurahEngine
 		return PhysicsSystem::GetInstance().Capsulecast(radius, height, desc, _info);
 	}
 
+	bool Physics::SphereOverlap(float _radius, const Eigen::Vector3f& _pos, const Eigen::Quaternionf _rot, unsigned int _layers, ZonaiPhysics::ZnQueryInfo& _info)
+	{
+		ZonaiPhysics::ZnQueryDesc desc;
+		desc.position = _pos;
+		desc.rotation = _rot;
+		desc.queryLayer = _layers;
+
+		return PhysicsSystem::GetInstance().SphereOverlap(_radius, desc, _info);
+	}
+
 	int Physics::GetLayerID(const std::wstring& _name)
 	{
 		return EngineSetting::GetInstance().LayertoLayerID(_name);

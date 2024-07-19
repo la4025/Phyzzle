@@ -568,6 +568,11 @@ namespace PurahEngine
 		return physics->Capsulecast(_radius, _height, _desc, _out);
 	}
 
+	bool PhysicsSystem::SphereOverlap(float _radius, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out)
+	{
+		return physics->SphereOverlap(_radius, _desc, _out);
+	}
+
 	PurahEngine::PhysicsSystem& PurahEngine::PhysicsSystem::GetInstance()
 	{
 		static PhysicsSystem instance;
