@@ -229,7 +229,7 @@ namespace Phyzzle
 		// 카메라 업데이트
 		UpdateCamera();
 	}
-
+		
 	void AttachHoldState::StateCancel()
 	{
 		EnableOutline(false);

@@ -201,8 +201,6 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		prevState = currState;
-		prevPlayerState = currPlayerState;
 		data.isGrounded = data.groundCheck->IsGrounded();
 		// data.playerRigidbody->UseGravity(!data.isGrounded);
 
@@ -216,27 +214,39 @@ namespace Phyzzle
 		}
 
 
+		data.stateChange = UpdateAbilitChangeyState();
+
 		if (!data.stopUpdate)
 		{
 			HandleInput();
-			UpdateAbilityState();
+
+			if (!data.stateChange)
+				UpdateAbilityStayState();
 
 			animData.animationSpeed = currInput.Lstick.Size;
 		}
+
 	}
 
 	void Player::LateUpdate()
 	{
-		UpdatePlayerAnimationState();
-		PostUpdateAbilityState();
+		if (!data.stopUpdate)
+		{
+			UpdatePlayerAnimationState();
 
+			if (!data.stateChange)
+				PostUpdateAbilityState();
+		}
+		
 		UpdateCameraLerp();
 		CharacterDisable();
 
 		if (data.debugMode)
-		{
 			DebugDraw();
-		}
+
+		prevState = currState;
+		currState = nextState;
+		prevPlayerState = currPlayerState;
 	}
 
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
@@ -277,21 +287,27 @@ namespace Phyzzle
 #pragma optimize("", on)
 
 #pragma region Update
-	void Player::UpdateAbilityState()
+	bool Player::UpdateAbilitChangeyState()
+	{
+		if (prevState == currState)
+			return false;
+
+		if (stateSystem.contains(prevState))
+			stateSystem[prevState]->StateExit();
+
+		if (stateSystem.contains(currState))
+			stateSystem[currState]->StateEnter();
+
+		return true;
+	}
+
+	void Player::UpdateAbilityStayState()
 	{
 		if (prevState != currState)
-		{
-			if (stateSystem.contains(prevState))
-				stateSystem[prevState]->StateExit();
-
-			if (stateSystem.contains(currState))
-				stateSystem[currState]->StateEnter();
-		}
-		else
-		{
-			if (stateSystem.contains(currState))
-				stateSystem[currState]->StateStay();
-		}
+			return;
+		
+		if (stateSystem.contains(currState))
+			stateSystem[currState]->StateStay();
 	}
 
 	void Player::PostUpdateAbilityState()
@@ -300,9 +316,7 @@ namespace Phyzzle
 			return;
 
 		if (stateSystem.contains(currState))
-		{
 			stateSystem[currState]->PostStateStay();
-		}
 	}
 
 	void Player::UpdatePlayerAnimationState()
@@ -322,7 +336,7 @@ namespace Phyzzle
 
 	void Player::ChangeAbilityState(AbilityState _state)
 	{
-		currState = _state;
+		nextState = _state;
 	}
 
 	void Player::ChangePlayerAnimationState(PlayerState _state)
@@ -614,6 +628,11 @@ namespace Phyzzle
 		// 속도를 적용시킴
 		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
 			
+		if (!data.isGrounded)
+		{
+			// 이때 따로 처리
+		}
+
 		return currInput.Lstick.Size >= 1e-6;
 	}
 #pragma endregion Player
