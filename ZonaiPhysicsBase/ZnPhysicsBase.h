@@ -154,5 +154,7 @@ namespace ZonaiPhysics
 		virtual bool				Boxcast(const Eigen::Vector3f& _extend, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
 		virtual bool				Spherecast(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
 		virtual bool				Capsulecast(float _radius, float _height, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
-	};
+	
+		virtual bool				SphereOverlap(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out) = 0;
+};
 }

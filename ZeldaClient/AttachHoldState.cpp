@@ -229,7 +229,7 @@ namespace Phyzzle
 		// 카메라 업데이트
 		UpdateCamera();
 	}
-
+		
 	void AttachHoldState::StateCancel()
 	{
 		EnableOutline(false);
@@ -243,8 +243,8 @@ namespace Phyzzle
 	void AttachHoldState::Stick_L()
 	{
 		PlayerMove(player->data.holdSpeed);
+		// 타겟 위치와 오브젝트의 위치를 확이하고 offset보다 차이나면 플레이어가 해당 방향으로는 못움직이게 함
 
-		// 플레이어 이동 방향과 같은 방향으로 힘을 줌
 		Eigen::Vector3f playerLinearVelocity = player->data.playerRigidbody->GetLinearVelocity();
 		TranslateObject(playerLinearVelocity, 1.f);
 	}
@@ -257,7 +257,9 @@ namespace Phyzzle
 		// 키 입력이 없으면 힘 안줌
 		if (player->currInput.Rstick.Size)
 		{
-			TranslateObjectAlongX(player->currInput.Rstick.X * player->currInput.Rstick.Size);
+			// 타겟 위치와 오브젝트의 위치를 확인하고 offset보다 차이나면 해당 방향으로는 못움직이게 함.
+
+			TranslateObjectAlongXZ(player->currInput.Rstick.X * player->currInput.Rstick.Size);
 			TranslateObjectAlongY(player->currInput.Rstick.Y * player->currInput.Rstick.Size);
 		}
 	}
@@ -1166,17 +1168,17 @@ namespace Phyzzle
 		//	// Adjust the target angle to the shortest path
 		//	Eigen::Quaternionf goal = targetRot;
 		//	Eigen::Quaternionf minusGoal = { -targetRot.w(), -targetRot.x(), -targetRot.y(), -targetRot.z() };
-
+		// 
 		//	float xDot = currRot.dot(goal);
 		//	float minusDot = currRot.dot(minusGoal);
-
+		// 
 		//	if (xDot < minusDot)
 		//		goal = minusGoal;
-
+		// 
 		//	// Compute the relative quaternion from current to target
 		//	Eigen::Quaternionf q_rel = goal * currRot.conjugate();
 		//	q_rel.normalize();
-
+		// 
 		//	// Extract the vector part of the relative quaternion (imaginary part)
 		//	Eigen::Vector3f relative_angle_axis = q_rel.vec();
 		//	
@@ -1191,10 +1193,10 @@ namespace Phyzzle
 		}
 	}
 
-	void AttachHoldState::TranslateSpringAlongY(float _distance)
-	{
-		targetPosition.y() += _distance;
-	}
+	//void AttachHoldState::TranslateSpringAlongY(float _distance)
+	//{
+	//	targetPosition.y() += _distance;
+	//}
 
 	void AttachHoldState::TranslateSpringAlongZ(float _distance)
 	{
@@ -1203,7 +1205,7 @@ namespace Phyzzle
 		targetPosition.z() += _distance;
 	}
 
-	void AttachHoldState::TranslateObjectAlongX(float _factor)
+	void AttachHoldState::TranslateObjectAlongXZ(float _factor)
 	{
 		const float timeStep = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
@@ -1223,15 +1225,33 @@ namespace Phyzzle
 		// 플레이어의 월드 위치와 회전
 		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
 		Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
-		playerRotation = Eigen::AngleAxisf(finalAngle * (std::numbers::pi / 180.f), axis) * playerRotation;
-		const Eigen::Vector3f newTargetPosition = playerPosition + playerRotation * targetPosition;
+		Eigen::Quaternionf newPlayerRotation = Eigen::AngleAxisf(finalAngle * (std::numbers::pi / 180.f), axis) * playerRotation;
+		Eigen::Vector3f newWorldTargetPosition = playerPosition + newPlayerRotation * targetPosition;
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
-		const float distance = (newTargetPosition - objectPosition).norm();
-		if (distance <= player->abilData.targetPositionOffset)
+		Eigen::Vector3f direction = newWorldTargetPosition - objectPosition;
+		direction.y() = 0.f;
+		float distance = direction.norm();
+		direction.normalize();
+
+		if (distance > player->abilData.targetPositionOffset)
 		{
-			player->data.modelCore->SetWorldRotation(playerRotation);
+			// distance가 targetPositionOffset보다 크다면, targetPositionOffset 정도까지만 회전
+			Eigen::Vector3f offsetWorldTargetPosition = objectPosition + direction * player->abilData.targetPositionOffset;
+			Eigen::Vector3f playerToTarget = offsetWorldTargetPosition - playerPosition;
+			playerToTarget.y() = 0.f;
+			playerToTarget.normalize();
+
+			Eigen::Matrix3f newRotation = Eigen::Matrix3f::Identity();
+			newRotation.col(0) = Eigen::Vector3f::UnitY().cross(playerToTarget).normalized();
+			newRotation.col(1) = Eigen::Vector3f::UnitY();
+			newRotation.col(2) = playerToTarget;
+
+			newPlayerRotation = Eigen::Quaternionf(newRotation);
 		}
+
+		// 모델의 회전을 업데이트
+		player->data.modelCore->SetWorldRotation(newPlayerRotation);
 	}
 
 	void AttachHoldState::TranslateObjectAlongY(float _factor)
@@ -1244,26 +1264,37 @@ namespace Phyzzle
 		// 플레이어의 월드 위치와 회전
 		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
 		const Eigen::Quaternionf playerRotation = player->data.modelCore->GetWorldRotation();
-		const Eigen::Vector3f worldTargetPosition = playerPosition + playerRotation * newTargetPosition;
+		Eigen::Vector3f worldTargetPosition = playerPosition + playerRotation * newTargetPosition;
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
-		const float distance = (worldTargetPosition - objectPosition).norm();
-		if (distance <= player->abilData.targetPositionOffset)
+		Eigen::Vector3f direction = worldTargetPosition - objectPosition;
+		direction.x() = direction.z() = 0.f;
+		float distance = direction.norm();
+		direction.normalize();
+
+		if (distance > player->abilData.targetPositionOffset)
+		{
+			worldTargetPosition = objectPosition + direction * player->abilData.targetPositionOffset;
+			Eigen::Vector3f localTargetPosition = playerRotation.inverse() * (worldTargetPosition - playerPosition);
+			localTargetPosition.x() = 0.f;
+			targetPosition = localTargetPosition;
+		}
+		else
 		{
 			targetPosition = newTargetPosition;
 		}
 	}
 
-	void AttachHoldState::TranslateObjectAlongZ(float _distance)
-	{
-		const auto playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
-		const auto objPos = selectBody->GetPosition();
-		Eigen::Vector3f forward = objPos - playerPos;
-		forward.y() = 0.f;
-		forward.normalize();
-
-		TranslateObject(forward, _distance);
-	}
+	//void AttachHoldState::TranslateObjectAlongZ(float _distance)
+	//{
+	//	const auto playerPos = player->GetGameObject()->GetTransform()->GetWorldPosition();
+	//	const auto objPos = selectBody->GetPosition();
+	//	Eigen::Vector3f forward = objPos - playerPos;
+	//	forward.y() = 0.f;
+	//	forward.normalize();
+	// 
+	//	TranslateObject(forward, _distance);
+	//}
 
 	// 타겟 속력을 업데이트가 아닌
 	void AttachHoldState::TranslateObject(const Eigen::Vector3f& _direction, float power)
