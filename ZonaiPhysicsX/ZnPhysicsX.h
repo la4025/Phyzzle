@@ -175,6 +175,10 @@ namespace ZonaiPhysics
 			float _radius, float _height, 
 			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
 
+		bool				SphereOverlap(
+			float _radius,
+			const ZnQueryDesc& _desc, ZnQueryInfo& _out) override;
+
 		void ReleaseRigidBody(ZnRigidBody*, void* _userData, void* _userScene = nullptr) override;
 		void ReleaseCollider(ZnCollider*, void* _userData, void* _userScene = nullptr) override;
 		void ReleaseJoint(ZnJoint*, void* _userData, void* _userScene = nullptr) override;

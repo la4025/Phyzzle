@@ -97,7 +97,9 @@ namespace ZonaiPhysics
 	{
 		assert(_pxBody != nullptr);
 
-		physx::PxRigidBodyExt::updateMassAndInertia(*static_cast<physx::PxRigidDynamic*>(_pxBody), 1.f);
+		const auto body = static_cast<physx::PxRigidDynamic*>(_pxBody);
+		
+		physx::PxRigidBodyExt::updateMassAndInertia(*body, 1.f);
 	}
 
 	void RigidBodyHelper::Disable(void* _pxBody, bool _value)
@@ -160,8 +162,7 @@ namespace ZonaiPhysics
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
 		pxBody->setMass(_mass);
-		// const auto pos = pxBody->getCMassLocalPose();
-		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass, nullptr);
+		physx::PxRigidBodyExt::setMassAndUpdateInertia(*pxBody, _mass);
 	}
 
 	void RigidBodyHelper::SetDensity(void* _pxBody, float _density)
@@ -169,8 +170,7 @@ namespace ZonaiPhysics
 		assert(_pxBody != nullptr);
 
 		const auto pxBody = static_cast<physx::PxRigidDynamic*>(_pxBody);
-		const auto pos = pxBody->getCMassLocalPose();
-		physx::PxRigidBodyExt::updateMassAndInertia(*pxBody, _density, &pos.p);
+		physx::PxRigidBodyExt::updateMassAndInertia(*pxBody, _density);
 	}
 
 	float RigidBodyHelper::GetInvMass(void* _pxBody)
