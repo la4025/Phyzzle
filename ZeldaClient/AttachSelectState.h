@@ -42,6 +42,7 @@ namespace Phyzzle
 	private:
 		bool select = false;
 		PurahEngine::RigidBody* seleteBody = nullptr;
+		std::vector<PzObject*> aroundObject;
 		PzObject* selectObject = nullptr;
 
 	private:
@@ -55,6 +56,8 @@ namespace Phyzzle
 		void LookToLocalDirection(const Eigen::Vector3f& _to);
 
 		bool Search();
+		bool SearchAround();
+		void AroundObjectEnableOutline(bool);
 		void EnableOutline(bool) const;
 		void CrossHeadRender(bool _value);
 #pragma endregion Content

@@ -168,9 +168,6 @@ namespace Phyzzle
 			PurahEngine::GameObject* attachHoldCollisionUI;
 #pragma endregion Player Component
 
-			unsigned int attachRaycastLayers = 0;
-			float attachRaycastDistance = 40.f;
-
 			AbilityState state = ATTACH_SELECT;
 
 			PzObject* holdObject;
@@ -179,6 +176,13 @@ namespace Phyzzle
 
 		struct AbilityData
 		{
+#pragma region Select
+			int searchAroundbufferSize = 64;
+			unsigned int attachRaycastLayers = 0;
+			float attachRaycastDistance = 40.f;
+#pragma endregion Select
+
+#pragma region Hold
 			float targetPositionYSpeed = 4.f;
 			float targetPositionZStep = 1.f;
 
@@ -198,6 +202,7 @@ namespace Phyzzle
 
 			float holdRotateAngle = 90.f;
 			float arcRatio = 1.5f;
+#pragma endregion Hold
 		};
 
 		struct PlayerInput
@@ -429,9 +434,6 @@ namespace Phyzzle
 		void CameraLookAt(const Eigen::Vector3f& _position);
 #pragma endregion Camera
 
-		bool RaycastFromCamera(
-			float _distance, PurahEngine::RigidBody** _outBody, PzObject** _outAttachable, Rewindable** _outRewindable);
-
 	public:
 #pragma region Á÷·ÄÈ­
 		void PreSerialize(json& jsonData) const override;
@@ -481,6 +483,7 @@ namespace Phyzzle
 		Eigen::Vector4f color0;
 		Eigen::Vector4f color1;
 		Eigen::Vector4f color2;
+		Eigen::Vector4f color3;
 
 	private:
 		int stopCount;

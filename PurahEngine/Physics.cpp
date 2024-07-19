@@ -155,6 +155,7 @@ namespace PurahEngine
 		ZonaiPhysics::ZnQueryDesc desc;
 		desc.position = _pos;
 		desc.rotation = _rot;
+		desc.distance = _radius;
 		desc.queryLayer = _layers;
 
 		return PhysicsSystem::GetInstance().SphereOverlap(_radius, desc, _info);

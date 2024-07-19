@@ -1137,52 +1137,6 @@ namespace Phyzzle
 	}
 #pragma endregion Camera
 
-	bool Player::RaycastFromCamera(
-		float _distance, 
-		PurahEngine::RigidBody** _outBody,
-		PzObject** _outPzObject,
-		Rewindable** _outRewindable
-	)
-	{
-		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
-		Eigen::Matrix3f rotate = data.cameraCore->GetWorldRotation().toRotationMatrix();
-		Eigen::Vector3f to = rotate * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnQueryInfo info;
-
-		unsigned int layers = data.attachRaycastLayers;
-
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
-
-		if (block)
-		{
-			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
-
-			if (!shape)
-				return false;
-
-			const PurahEngine::GameObject* obj = shape->GetGameObject();
-			PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
-
-			if (!body)
-				return false;
-
-			if (_outBody)
-				*_outBody = body;
-			if (_outPzObject)
-				*_outPzObject = obj->GetComponent<PzObject>();
-			if (_outRewindable)
-				*_outRewindable = obj->GetComponent<Rewindable>();
-
-			if (data.debugMode)
-			{
-				PurahEngine::GraphicsManager::GetInstance().DrawString(
-					shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
-			}
-		}
-
-		return block;
-	}
-
 #pragma region Á÷·ÄÈ­
 	void Player::PreSerialize(json& jsonData) const
 	{}
@@ -1216,6 +1170,18 @@ namespace Phyzzle
 
 		// Ability
 		{
+			auto searchAroundbufferSize = abilData.searchAroundbufferSize;
+			PREDESERIALIZE_VALUE(searchAroundbufferSize);
+			abilData.searchAroundbufferSize = searchAroundbufferSize;
+
+			auto attachRaycastLayers = abilData.attachRaycastLayers;
+			PREDESERIALIZE_VALUE(attachRaycastLayers);
+			abilData.attachRaycastLayers = attachRaycastLayers;
+
+			float attachRaycastDistance = abilData.attachRaycastDistance;
+			PREDESERIALIZE_VALUE(attachRaycastDistance);
+			abilData.attachRaycastDistance = attachRaycastDistance;
+
 			auto targetPositionYSpeed = abilData.targetPositionYSpeed;
 			PREDESERIALIZE_VALUE(targetPositionYSpeed);
 			abilData.targetPositionYSpeed = targetPositionYSpeed;
@@ -1290,9 +1256,13 @@ namespace Phyzzle
 			Eigen::Vector4f outlineColor2;
 			PREDESERIALIZE_VECTOR4F(outlineColor2);
 			color2 = outlineColor2;
+
+			Eigen::Vector4f outlineColor3;
+			PREDESERIALIZE_VECTOR4F(outlineColor3);
+			color3 = outlineColor3;
 		}
 
-		// Layer
+		// Camera
 		{
 			int cameraCollisionLayers = camData.cameraCollisionLayers;
 			PREDESERIALIZE_VALUE(cameraCollisionLayers);
@@ -1301,14 +1271,6 @@ namespace Phyzzle
 			float cameraCollisionRadius = camData.cameraCollisionRadius;
 			PREDESERIALIZE_VALUE(cameraCollisionRadius);
 			camData.cameraCollisionRadius = cameraCollisionRadius;
-
-			auto attachRaycastLayers = data.attachRaycastLayers;
-			PREDESERIALIZE_VALUE(attachRaycastLayers);
-			data.attachRaycastLayers = attachRaycastLayers;
-
-			float attachRaycastDistance = data.attachRaycastDistance;
-			PREDESERIALIZE_VALUE(attachRaycastDistance);
-			data.attachRaycastDistance = attachRaycastDistance;
 		}
 
 		// Animation
