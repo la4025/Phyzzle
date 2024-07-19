@@ -22,15 +22,19 @@ namespace Phyzzle
 
 	void PzObject::Update()
 	{
+		bool enter = !preState && select;
+		bool stay = preState && select;
+		bool exit = preState && !select;
+
 		if (attachable)
 		{
-			bool enter = !preState && select;
-			bool stay = preState && select;
-			bool exit = preState && !select;
-
 			if (enter || stay)
 			{
 				AttachSystem::Instance()->EnableOutline(attachable, &(AttachSystem::Instance()->color2), nullptr);
+			}
+			if (exit)
+			{
+				AttachSystem::Instance()->DisableOutline(attachable);
 			}
 		}
 
