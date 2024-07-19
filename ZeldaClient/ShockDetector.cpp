@@ -12,6 +12,23 @@ namespace Phyzzle
 
 	void ShockDetector::Update()
 	{
+		static bool debug = false;
+		static float debugShock = 0.0f;
+
+		if (debugShock < shock) debugShock = shock;
+
+		if (PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL) &&
+			PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z))
+		{
+			debug = !debug;
+			debugShock = 0.0f;
+		}
+
+		if (debug)
+		{
+			PurahEngine::GraphicsManager::GetInstance().DrawString(std::to_wstring(debugShock), 50, 500, 200, 300, 30, 1, 1, 1, 1);
+		}
+
 		if (activationShock < shock)
 		{
 			shock = 0.0f;

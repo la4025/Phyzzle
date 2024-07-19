@@ -84,6 +84,12 @@ namespace Phyzzle
 				break;
 			}
 		}
+
+		// 속도 제거
+		PurahEngine::RigidBody* targetRigid = targetObject->GetComponent<PurahEngine::RigidBody>();
+
+		targetRigid->SetLinearVelocity(Eigen::Vector3f::Zero());
+		targetRigid->SetAngularVelocity(Eigen::Vector3f::Zero());
 	}
 
 	void RespawnSystem::OnLevel(int level)
