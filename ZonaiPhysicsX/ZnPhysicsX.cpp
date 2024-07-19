@@ -607,7 +607,7 @@ namespace ZonaiPhysics
 
 	bool ZnPhysicsX::SphereOverlap(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		return ZnWorld::Spherecast(_radius, _desc, _out);
+		return ZnWorld::SphereOverLap(_radius, _desc, _out);
 	}
 
 	void ZnPhysicsX::ReleaseRigidBody(ZnRigidBody* _body, void* _userData, void* _userScene)

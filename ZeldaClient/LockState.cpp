@@ -51,7 +51,9 @@ namespace Phyzzle
 	bool LockState::Aim()
 	{
 		const float distance = 40.f;
-		const bool hit = player->RaycastFromCamera(distance, &result, &pzObject, nullptr);
+		// const bool hit = player->RaycastFromCamera(distance, &result, &pzObject, nullptr);
+		bool hit = false;
+
 
 		if (!hit)
 			return false;

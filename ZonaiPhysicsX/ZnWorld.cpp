@@ -307,43 +307,40 @@ namespace ZonaiPhysics
 		using namespace physx;
 
 		const PxTransform transform(EigenToPhysx(_desc.position), EigenToPhysx(_desc.rotation));
-		PxOverlapBuffer buffer;
+		PxU32 bufferSize = _out.shapes.size();
+		PxOverlapHit* buffer = new PxOverlapHit[bufferSize];
 
 		PxQueryFilterData filter = PxQueryFilterData();
 		filter.flags |= PxQueryFlag::ePREFILTER;
 		filter.flags |= PxQueryFlag::eDYNAMIC;
-		// filter.flags |= PxQueryFlag::eSTATIC;
 		filter.data.setToDefault();
 		filter.data.word1 = static_cast<physx::PxU32>(_desc.queryLayer);
 
-		PxQueryFilterCallback* callback = &queryFilter;
-		const PxQueryCache* cache = nullptr;
-		const PxGeometryQueryFlags flag = physx::PxGeometryQueryFlag::eDEFAULT;
-
-		if (bool block = currScene->overlap(
-			_geom,
-			transform,
-			buffer, filter,
-			callback, cache, flag))
+		if (PxSceneQueryExt::overlapMultiple(*currScene, _geom, transform, buffer, bufferSize, filter))
 		{
-			PxU32 touches = buffer.getNbTouches();
-			const PxOverlapHit* hitBuffer = buffer.getTouches();
+			// PxU32 touches = buffer.getNbTouches();
+			// const PxOverlapHit* hitBuffer = buffer.getTouches();
+			PxU32 touches = bufferSize;
+			// const PxOverlapHit* hitBuffer = hit;
 
-			_out.actors.clear();
-			_out.shapes.clear();
-			_out.actors.resize(touches);
-			_out.shapes.resize(touches);
+			// _out.actors.resize(touches);
+			// _out.shapes.resize(touches);
 
 			for (PxU32 i = 0; i < touches; i++)
 			{
-				const auto& hit = hitBuffer[i];
+				const PxOverlapHit hit = buffer[i];
 
-				_out.actors[i] = hit.actor ? static_cast<RigidBody*>(hit.actor->userData)->GetUserData() : nullptr;
-				_out.shapes[i] = hit.shape ? static_cast<Collider*>(hit.shape->userData)->GetUserData() : nullptr;
+				if (hit.actor)
+					_out.actors[i] = static_cast<RigidBody*>(hit.actor->userData)->GetUserData();
+
+				if (hit.shape)
+					_out.shapes[i] = static_cast<Collider*>(hit.shape->userData)->GetUserData();
 			}
 
 			return true;
 		}
+
+		delete[] buffer;
 
 		return false;
 	}
