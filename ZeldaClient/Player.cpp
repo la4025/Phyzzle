@@ -764,24 +764,54 @@ namespace Phyzzle
 			info
 		);
 
-		if (hit)
-		{
-			Vector3f position = worldStart + worldDir * info.distance;
-			Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
-			Vector3f localPos = worldT.inverse() * position;
+		float targetDistance = dis;
 
-			if ((info.distance < prevDistance) && (!prevHit && hit))
+		if (hit)
+			targetDistance = info.distance;
+
+#define EPSILON 1e-2
+
+		// 보간을 안하는 경우
+		if (hit && (targetDistance <= prevDistance))
+		{
+			// 충돌 했지만 이전 보다 가까운 경우
+			prevDistance = targetDistance;
+
+			Vector3f newPosition = worldStart + worldDir * prevDistance;
+			Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
+			Vector3f localPos = worldT.inverse() * newPosition;
+
+			// 보간을 안하는 경우 타겟포지션과 카메라 포지션을 같게함
+			data.cameraCore->SetLocalPosition(localPos);
+			camData.coreTargetPosition = localPos;
+
+			localIn = localPos;
+			worldIn = newPosition;
+		}
+		// 보간을 하는 경우
+		else
+		{
+			if (hit && (targetDistance > prevDistance))
 			{
-				data.cameraCore->SetLocalPosition(localPos);
+				// 충돌 했지만 이전보다 먼 경우
+				prevDistance = min(prevDistance + 0.2f, targetDistance);
 			}
+			else if (!hit)
+			{
+				// 충돌 하지 않은 경우
+				prevDistance = min(prevDistance + 0.2f, dis);
+			}
+
+			Vector3f newPosition = worldStart + worldDir * prevDistance;
+			Affine3f worldT{ data.cameraArm->GetWorldMatrix() };
+			Vector3f localPos = worldT.inverse() * newPosition;
 
 			camData.coreTargetPosition = localPos;
 
 			localIn = localPos;
-			worldIn = position;
+			worldIn = newPosition;
 		}
-	
-		prevDistance = hit ? info.distance : FLT_MAX;
+
 		prevHit = hit;
 
 		return hit;
