@@ -327,15 +327,16 @@ namespace ZonaiPhysics
 			callback, cache, flag))
 		{
 			PxU32 touches = buffer.getNbTouches();
+			const PxOverlapHit* hitBuffer = buffer.getTouches();
 
 			_out.actors.clear();
 			_out.shapes.clear();
 			_out.actors.resize(touches);
 			_out.shapes.resize(touches);
 
-			for (PxU32 i = 0; i < buffer.getNbTouches(); i++)
+			for (PxU32 i = 0; i < touches; i++)
 			{
-				const auto& hit = buffer.getTouches()[i];
+				const auto& hit = hitBuffer[i];
 
 				_out.actors[i] = hit.actor ? static_cast<RigidBody*>(hit.actor->userData)->GetUserData() : nullptr;
 				_out.shapes[i] = hit.shape ? static_cast<Collider*>(hit.shape->userData)->GetUserData() : nullptr;

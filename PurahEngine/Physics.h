@@ -67,6 +67,12 @@ namespace PurahEngine
 			ZonaiPhysics::ZnQueryInfo& _info
 		);
 
+		static bool SphereOverlap(float _radius,
+			const Eigen::Vector3f& _pos, const Eigen::Quaternionf _rot,
+			unsigned int _layers,
+			ZonaiPhysics::ZnQueryInfo& _info
+		);
+
 		static int GetLayerID(const std::wstring& _name);
 
 		static Eigen::Vector3f GetGravity();

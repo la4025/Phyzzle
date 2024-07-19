@@ -180,6 +180,8 @@ namespace PurahEngine
 		bool Boxcast(const Eigen::Vector3f _extend, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
 		bool Spherecast(float _radius, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
 		bool Capsulecast(float _radius, float _height, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
+		
+		bool SphereOverlap(float _radius, const ZonaiPhysics::ZnQueryDesc& _desc, ZonaiPhysics::ZnQueryInfo& _out);
 
 	public:
 		static PhysicsSystem& GetInstance();
