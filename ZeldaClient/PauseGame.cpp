@@ -14,7 +14,6 @@ namespace Phyzzle
 		if (previousIsPause) // 이전 상태가 true일 때만 호출
 		{
 			TimeController::GetInstance().ResumeAll();
-			player->SetStopUpdate(false);
 		}
 	}
 
