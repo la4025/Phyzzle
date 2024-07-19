@@ -134,12 +134,12 @@ namespace Phyzzle
 		void CalculateSpringPosition();
 		void CalculateSpringRotation();
 
-		void TranslateSpringAlongY(float _distance);									// 스프링 이동
+		// void TranslateSpringAlongY(float _distance);									// 스프링 이동
 		void TranslateSpringAlongZ(float _distance);									// 스프링 이동
 
-		void TranslateObjectAlongX(float _distance);									// 오브젝트 이동
+		void TranslateObjectAlongXZ(float _distance);									// 오브젝트 이동
 		void TranslateObjectAlongY(float _distance);									// 오브젝트 이동
-		void TranslateObjectAlongZ(float _distance);									// 오브젝트 이동
+		// void TranslateObjectAlongZ(float _distance);									// 오브젝트 이동
 		void TranslateObject(const Eigen::Vector3f& _direction, float power);			// 오브젝트 이동
 
 		void RotateSpringAlongX(float _angle);											// 스프링 회전

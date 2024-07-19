@@ -64,7 +64,7 @@ namespace Phyzzle
 
 		body->SetKinematic(false);
 		body->UseGravity(false);
-		body->SetMass(1.f);
+		body->SetMass(0.1f);
 		body->SetInertiaTensor(Eigen::Vector3f(100.f, 100.f, 100.f));
 
 		for (auto& col : colliders)
