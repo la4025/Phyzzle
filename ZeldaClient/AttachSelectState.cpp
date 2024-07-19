@@ -228,7 +228,7 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		float radius = player->abilData.attachRaycastDistance;
+		float radius = player->abilData.searchAroundDistance;
 		Eigen::Affine3f parentMatrix(player->data.cameraArm->GetWorldMatrix());
 		Eigen::Vector3f corePosition = player->data.cameraCore->GetLocalPosition();
 		corePosition.z() = 0.f;
@@ -251,11 +251,20 @@ namespace Phyzzle
 					continue;
 
 				const PurahEngine::GameObject* obj = collider->GetGameObject();
+				PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
+
+				if (!body)
+					continue;
+
+				if (body->IsKinematic())
+					continue;
 
 				PzObject* pzObject = obj->GetComponent<PzObject>();
 
-				if (pzObject)
-					aroundObject.emplace_back(pzObject);
+				if (!pzObject)
+					continue;
+
+				aroundObject.emplace_back(pzObject);
 			}
 		}
 

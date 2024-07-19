@@ -32,7 +32,7 @@ namespace Phyzzle
 			{
 				AttachSystem::Instance()->EnableOutline(attachable, &(AttachSystem::Instance()->color2), nullptr);
 			}
-			if (exit)
+			else if (exit)
 			{
 				AttachSystem::Instance()->DisableOutline(attachable);
 			}
