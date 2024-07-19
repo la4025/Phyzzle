@@ -128,6 +128,8 @@ namespace Phyzzle
 #pragma region Player
 		struct PlayerData
 		{
+			bool stateChange = true;
+
 			bool debugMode = false;
 			bool stopUpdate = false;
 
@@ -294,7 +296,8 @@ namespace Phyzzle
 
 	private:
 #pragma region Update
-		void UpdateAbilityState();
+		bool UpdateAbilitChangeyState();
+		void UpdateAbilityStayState();
 		void PostUpdateAbilityState();
 		void UpdatePlayerAnimationState();
 #pragma endregion Update
@@ -460,6 +463,7 @@ namespace Phyzzle
 
 		AbilityState prevState = DEFAULT;
 		AbilityState currState = DEFAULT;
+		AbilityState nextState = DEFAULT;
 
 		PlayerState prevPlayerState = IDLE;
 		PlayerState currPlayerState = IDLE;
