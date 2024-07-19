@@ -358,6 +358,7 @@ namespace Phyzzle
 
 			CreateIsland(island);
 
+			DisableDShadow(island.front());
 			DisableOutline(island.front());
 		}
 
