@@ -70,6 +70,8 @@ namespace Phyzzle
 		if (player->TryJump())
 		{
 			player->ChangePlayerAnimationState(Player::JUMPING);
+
+			player->PlayJumping();
 		}
 	}
 
@@ -92,6 +94,8 @@ namespace Phyzzle
 				{
 					player->ChangePlayerAnimationState(Player::WALK);
 				}
+				
+				player->PlayFootStep();
 			}
 			else
 			{

@@ -627,7 +627,7 @@ namespace Phyzzle
 
 		// 속도를 적용시킴
 		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
-			
+
 		if (!data.isGrounded)
 		{
 			// 이때 따로 처리
