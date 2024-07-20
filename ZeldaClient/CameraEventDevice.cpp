@@ -9,6 +9,13 @@ namespace Phyzzle
 		if (running)
 		{
 			PurahEngine::TimeController::GetInstance().ResumeAll();
+		}
+	}
+
+	void CameraEventDevice::OnDestroy()
+	{
+		if (running)
+		{
 			player->SetStopUpdate(false);
 		}
 	}

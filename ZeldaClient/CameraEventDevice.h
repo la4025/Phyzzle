@@ -12,6 +12,7 @@ namespace Phyzzle
 	{
 	public:
 		virtual ~CameraEventDevice();
+		void OnDestroy() override;
 
 		void Awake() override;
 

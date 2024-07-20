@@ -16,7 +16,8 @@ namespace Phyzzle
 			OnlyPowerOff = 2,
 			ToggleCounter = 3,
 			PowerOnBuffer = 4,	// PowerOn이 된 후, PowerOff가 되는 시간 지연
-			PowerOffBuffer = 5	// PowerOff가 된 후, PowerOn이 되는 시간 지연
+			PowerOffBuffer = 5,	// PowerOff가 된 후, PowerOn이 되는 시간 지연
+			PowerOnFilter = 6	// PowerOn 상태가 유지되어도 일정시간만 PowerOn 상태를 유지한다.
 		};
 
 	public:

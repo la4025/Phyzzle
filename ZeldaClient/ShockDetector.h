@@ -3,6 +3,7 @@
 #include "PurahEngine.h"
 
 #include <vector>
+#include <list>
 
 namespace Phyzzle
 {
@@ -10,9 +11,17 @@ namespace Phyzzle
 
 	class ShockDetector final : public PurahEngine::Component
 	{
+	private:
+		static std::list<ShockDetector*> objectList;
+
+	public:
+		ShockDetector();
+		virtual ~ShockDetector();
+
 	public:
 		void Awake() override;
 		void Update() override;
+		void LateUpdate() override;
 
 		// 충돌체가 충돌했을 때 호출
 		virtual void OnCollisionEnter(const ZonaiPhysics::ZnCollision& collision, const PurahEngine::Collider* other) override;
@@ -29,6 +38,8 @@ namespace Phyzzle
 	private:
 		bool isPowerOn;
 		float shock;
+
+		bool isMainObject = false;
 
 	private:
 		void PreSerialize(json& jsonData) const override;
