@@ -138,14 +138,12 @@ namespace PurahEngine
 		ZonaiPhysics::ZnCollider*		CreateConvexCollider(
 			void* _gameObject,
 			const std::wstring& _path,
-			const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _scale,
 			const std::wstring&);
 
 		ZonaiPhysics::ZnCollider*		CreateMeshCollider(
 			void* _gameObject,
 			const std::wstring& _path,
-			const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _scale,
 			const std::wstring&);
 

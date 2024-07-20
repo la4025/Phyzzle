@@ -24,7 +24,6 @@ namespace PurahEngine
 		this->znCollider = physics.CreateMeshCollider(
 			this->GetGameObject(),
 			modelName,
-			rot * rotationOffset,
 			{ scale.x() * scaleOffset.x(), scale.y() * scaleOffset.y(), scale.z() * scaleOffset.z() },
 			physicsMaterial
 		);
@@ -41,6 +40,7 @@ namespace PurahEngine
 
 		SetTrigger(isTrigger);
 		SetLayer(layer);
+		SetRotationOffset(rotationOffset);
 		SetPositionOffset(positionOffset);
 
 		znCollider->SetQuaternion(transform->GetWorldRotation());
