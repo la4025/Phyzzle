@@ -121,7 +121,6 @@ namespace ZonaiPhysics
 		ZnCollider* CreateMeshCollider(
 			void* _userData, 
 			const ZnMeshID& _path,
-			const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _scale,
 			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;
@@ -129,7 +128,6 @@ namespace ZonaiPhysics
 		ZnCollider* CreateConvexCollider(
 			void* _userData, 
 			const ZnConvexID& _path,
-			const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f& _scale,
 			const ZnMaterialID& _material,
 			void* userScene = nullptr) override;

@@ -117,7 +117,6 @@ namespace ZonaiPhysics
 		virtual ZnCollider*			CreateMeshCollider(
 			void* _userData, 
 			const ZnMeshID&,
-			const Eigen::Quaternionf& _rot,
 			const Eigen::Vector3f&,
 			const ZnMaterialID&, 
 			void* userScene = nullptr) = 0;
@@ -125,7 +124,6 @@ namespace ZonaiPhysics
 		virtual ZnCollider*			CreateConvexCollider(
 			void* _userData, 
 			const ZnConvexID&,
-			const Eigen::Quaternionf&,
 			const Eigen::Vector3f&,
 			const ZnMaterialID&, 
 			void* userScene = nullptr) = 0;

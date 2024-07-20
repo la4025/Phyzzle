@@ -255,9 +255,9 @@ namespace ZonaiPhysics
 	}
 
 	physx::PxShape* ZnFactoryX::CreateTriagleMeshShape(physx::PxTriangleMesh* _mesh, const Eigen::Vector3f& _scale,
-		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
+		const physx::PxMaterial* _material)
 	{
-		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(Quaternionf::Identity()));
 		physx::PxTriangleMeshGeometry geom(_mesh, scale);
 		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material, true);
 
@@ -265,9 +265,9 @@ namespace ZonaiPhysics
 	}
 
 	physx::PxShape* ZnFactoryX::CreateConvexMeshShape(physx::PxConvexMesh* _mesh, const Eigen::Vector3f& _scale,
-		const Eigen::Quaternionf& _rotation, const physx::PxMaterial* _material)
+		const physx::PxMaterial* _material)
 	{
-		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(_rotation));
+		physx::PxMeshScale scale(EigenToPhysx(_scale), EigenToPhysx(Quaternionf::Identity()));
 		physx::PxConvexMeshGeometry geom(_mesh, scale);
 		physx::PxShape* pxShape = pxFactory->createShape(geom, *_material, true);
 		

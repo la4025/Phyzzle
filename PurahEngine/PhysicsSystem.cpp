@@ -455,7 +455,6 @@ namespace PurahEngine
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateConvexCollider(
 		void* _gameObject, 
 		const std::wstring& _path, 
-		const Eigen::Quaternionf& _rot, 
 		const Eigen::Vector3f& _scale, 
 		const std::wstring& _materialName)
 	{
@@ -468,13 +467,12 @@ namespace PurahEngine
 			NULL_POINTER_REFERENCE(convexID, PhysicsSystem, Convex Collider Load Error)
 		}
 
-		return physics->CreateConvexCollider(_gameObject, convexID, _rot, _scale, materialID);
+		return physics->CreateConvexCollider(_gameObject, convexID, _scale, materialID);
 	}
 
 	ZonaiPhysics::ZnCollider* PhysicsSystem::CreateMeshCollider(
 		void* _gameObject, 
 		const std::wstring& _path, 
-		const Eigen::Quaternionf& _rot, 
 		const Eigen::Vector3f& _scale, 
 		const std::wstring& _materialName)
 	{
@@ -487,7 +485,7 @@ namespace PurahEngine
 			NULL_POINTER_REFERENCE(meshid, PhysicsSystem, MeshCollider Load Error)
 		}
 
-		return physics->CreateMeshCollider(_gameObject, meshid, _rot, _scale, materialID);
+		return physics->CreateMeshCollider(_gameObject, meshid, _scale, materialID);
 	}
 
 	ZonaiPhysics::ZnFixedJoint* PhysicsSystem::CreateFixedJoint(
