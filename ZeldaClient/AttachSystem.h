@@ -64,6 +64,7 @@ namespace Phyzzle
 		void						EnableDShadow(PzObject* _obj);
 		void						DisableDShadow(PzObject* _obj);
 
+		bool						IsTouching(PzObject* _base);
 		bool						TryAttach(PzObject* _base);
 		bool						Attach(PzObject* _base, PzObject* _other);
 		bool						Dettach(PzObject* _base);
