@@ -79,10 +79,10 @@ public:
 	virtual void DrawLight(LightID lightID) abstract;
 
 	// sprite를 원본 크기 그대로 position 위치에 그린다.
-	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer) abstract;
+	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, Color color, unsigned int layer) abstract;
 
 	// sprite를 size크기로 position 위치에 그린다. (size를 (0, 0)으로 설정하면 원본 크기로 그려진다.)
-	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) abstract;
+	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, Color color, unsigned int layer) abstract;
 
 	/// <summary>
 	/// 빌보드를 사용한 파티클을 그린다.
@@ -114,7 +114,7 @@ public:
 	/// <param name="worldMatrix">: 월드 변환 행렬 </param>
 	/// <param name="texture">: 사용할 이미지 </param>
 	/// <param name="keepOriginSize">: 1x1크기의 정사각형 대신 원래 이미지의 크기(픽셀 수 / 100)를 사용한다. </param>
-	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) abstract;
+	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, Color color, bool keepOriginSize) abstract;
 
 	// 큐브맵을 그린다. 마지막으로 그린 단 하나만 그려진다.
 	virtual void DrawCubeMap(TextureID texture) abstract;

@@ -125,14 +125,14 @@ public:
 
 	virtual void DrawLight(LightID lightID) override;
 
-	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer) override;
-	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer) override;
+	virtual void DrawImage(const Eigen::Vector2f& position, TextureID texture, Color color, unsigned int layer) override;
+	virtual void DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, Color color, unsigned int layer) override;
 
 	virtual void DrawBillBoardParticle(const Eigen::Matrix4f& worldMatrix, const std::vector<Eigen::Matrix4f>& particleMatrix, unsigned int layer, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, const std::vector<Color>& colors) override;
 
 	virtual void DrawBillBoard(const Eigen::Matrix4f& worldMatrix, TextureID texture, float ccwRadianAngle, bool keepOriginSize, bool useAlphaTexture, Color color) override;
 
-	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize) override;
+	virtual void DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, Color color, bool keepOriginSize) override;
 
 	virtual void DrawCubeMap(TextureID texture) override;
 

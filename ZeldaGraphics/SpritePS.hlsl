@@ -17,5 +17,10 @@ float4 main(PixelInputType input) : SV_TARGET
         textureColor = pow(textureColor, 1.0f / 2.2f);
     }
     
+    textureColor.r = saturate(textureColor.r * baseColor.r);
+    textureColor.g = saturate(textureColor.g * baseColor.g);
+    textureColor.b = saturate(textureColor.b * baseColor.b);
+    textureColor.a = saturate(textureColor.a * baseColor.a);
+    
     return textureColor;
 }
