@@ -135,6 +135,7 @@ namespace Phyzzle
 
 #pragma region Player Variable
 			float impulseLimit = 50.f;
+			float maxLinearVelocityY = 30.f;
 			bool damaged = false;
 
 			float height = 1.f;
@@ -146,7 +147,7 @@ namespace Phyzzle
 			float jumpPower = 10.f;				// 점프 힘
 			float jumpCooldown = 0.1f;
 			
-			bool canJump = true;
+			float damagedTime = 0.2f;
 			bool isGrounded = false;
 			bool isStandableSlope = true;
 			Eigen::Vector3f lastGroundNormal;
@@ -154,7 +155,6 @@ namespace Phyzzle
 			float slopeLimit = 36.f;			// 경사 각도
 			float slideFriction = 0.3f;
 #pragma endregion Player Variable
-
 
 #pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
@@ -298,6 +298,7 @@ namespace Phyzzle
 	public:
 #pragma region Event
 		void Start() override;
+		void FixedUpdate() override;
 		void Update() override;
 		void LateUpdate() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
@@ -338,14 +339,8 @@ namespace Phyzzle
 
 #pragma region Player
 		bool SlopeCheck();
-		bool SweepTest(
-			const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers);
-
 		bool TryJump();
-		void JumpCheck();
-		bool IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const;
-
-		bool CanMove(const Eigen::Vector3f& direction, float distance, float stepOffset);
+		bool CanMove();
 		bool TryPlayerMove(float _moveSpeed);
 #pragma endregion Player
 
