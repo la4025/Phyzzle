@@ -78,6 +78,8 @@ namespace Phyzzle
 		bool						HasAttachIsland(const IslandID& _id, AttachIsland& _island);
 		void						RebuildIsland(PzObject* _base, PzObject* _other);
 
+		uint32_t					GetCountInIsland(PzObject* _obj);
+
 		void						CalculateLocalAnchor(
 										const Eigen::Vector3f& _anchorP, 
 										const Eigen::Quaternionf& _anchorQ,

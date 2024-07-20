@@ -3120,7 +3120,8 @@
           -1442,
           -1784,
           -1790,
-          -1798
+          -1798,
+          -17744
         ]
       },
       "components": [
@@ -3237,7 +3238,14 @@
           "holdFrontAnimation": "Idle|Skill_Forward",
           "holdBackAnimation": "Idle|Skill_Backward",
           "holdRightAnimation": "Idle|Skill_Right",
-          "holdLeftAnimation": "Idle|Skill_Left"
+          "holdLeftAnimation": "Idle|Skill_Left",
+          "__ID__Attach_Default": -17948,
+          "__ID__Attach_Hold_NoneStick": -18006,
+          "__ID__Attach_Hold_Stick": -18086,
+          "__ID__Rotation_NoneStick": -18540,
+          "__ID__Rotation_Stick": -18576,
+          "__ID__Catch_B": -18522,
+          "__ID__Stick_B": -18624
         },
         {
           "__Base__instanceID": -1372,
@@ -6558,7 +6566,9 @@
         "__ID__parentTransform": [
           -1360
         ],
-        "__ID__children": []
+        "__ID__children": [
+          -26208
+        ]
       },
       "components": [
         {
@@ -6592,20 +6602,1207 @@
           "__Base__instanceID": -1804,
           "__Base__Component": "GroundCheck",
           "__ID__triggerCollider": -1802
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -26206,
+      "name": "GameObject",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -26208,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
         },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1798
+        ],
+        "__ID__children": []
+      },
+      "components": [
         {
-          "__Base__instanceID": -1806,
+          "__Base__instanceID": -26560,
           "__Base__Component": "ModelRenderer",
           "modelName": "Primitive/Cylinder.fbx",
           "dShadow": false,
           "shadow": false,
-          "wireFrame": false,
+          "wireFrame": true,
           "fastOutLine": false,
           "outLine": false,
           "outLineR": 1.0,
           "outLineG": 0.921568632,
           "outLineB": 0.0156862754,
           "outLineA": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -17742,
+      "name": "UI",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -17744,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -1360
+        ],
+        "__ID__children": [
+          -17950,
+          -18008,
+          -18088,
+          -18524,
+          -18542,
+          -18578,
+          -18626
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -17948,
+      "name": "Attach_Default",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -17950,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": [
+          -17956
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": -17952,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -17954,
+      "name": "Stop_A",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -17956,
+        "position": {
+          "x": 882.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17950
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -17958,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stop_A.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -17960,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 882.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 156.0,
+            "y": 64.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18006,
+      "name": "Attach_Hold_NoneStick",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18008,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": [
+          -18014,
+          -18026,
+          -18038
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18010,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18012,
+      "name": "Stop_A",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18014,
+        "position": {
+          "x": 1114.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18008
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18016,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stop_A.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18018,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1114.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 156.0,
+            "y": 64.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18024,
+      "name": "Rota_Mode",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18026,
+        "position": {
+          "x": 836.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18008
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18028,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Mode.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18030,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 836.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 248.0,
+            "y": 60.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18036,
+      "name": "Obj_Move",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18038,
+        "position": {
+          "x": 622.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18008
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18040,
+          "__Base__Component": "Image",
+          "textureName": "UI/Obj_Move.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18042,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 622.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18086,
+      "name": "Attach_Hold_Stick",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18088,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": [
+          -18094,
+          -18106,
+          -18118,
+          -18130
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18090,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18092,
+      "name": "Stop_A",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18094,
+        "position": {
+          "x": 1167.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18088
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18096,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stop_A.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18098,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1167.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 156.0,
+            "y": 64.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18104,
+      "name": "Stick_Off_X",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18106,
+        "position": {
+          "x": 975.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18088
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18108,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stick_Off_X.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18110,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 975.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 162.0,
+            "y": 64.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18116,
+      "name": "Rota_Mode",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18118,
+        "position": {
+          "x": 697.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18088
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18120,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Mode.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18122,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 697.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 248.0,
+            "y": 60.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18128,
+      "name": "Obj_Move",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18130,
+        "position": {
+          "x": 483.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18088
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18132,
+          "__Base__Component": "Image",
+          "textureName": "UI/Obj_Move.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18134,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 483.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18522,
+      "name": "Catch_B",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18524,
+        "position": {
+          "x": 1100.0,
+          "y": -750.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18526,
+          "__Base__Component": "Image",
+          "textureName": "UI/Catch_B.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18528,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1100.0,
+            "y": 750.0
+          },
+          "size": {
+            "x": 233.0,
+            "y": 127.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18540,
+      "name": "Rotation_NoneStick",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18542,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": [
+          -18548,
+          -18560
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18544,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18546,
+      "name": "Rota_Vertical",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18548,
+        "position": {
+          "x": 761.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18542
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18550,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Vertical.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18552,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 761.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18558,
+      "name": "Rota_Horizental",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18560,
+        "position": {
+          "x": 975.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18542
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18562,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Horizental.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18564,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 975.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18576,
+      "name": "Rotation_Stick",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18578,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": [
+          -18584,
+          -18596,
+          -18608
+        ]
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18580,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18582,
+      "name": "Rota_Vertical",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18584,
+        "position": {
+          "x": 654.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18578
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18586,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Vertical.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18588,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 654.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18594,
+      "name": "Rota_Horizental",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18596,
+        "position": {
+          "x": 868.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18578
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18598,
+          "__Base__Component": "Image",
+          "textureName": "UI/Rota_Horizental.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18600,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 868.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 184.0,
+            "y": 52.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18606,
+      "name": "Stick_Off_X",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18608,
+        "position": {
+          "x": 1082.0,
+          "y": -1000.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -18578
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18610,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stick_Off_X.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18612,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1082.0,
+            "y": 1000.0
+          },
+          "size": {
+            "x": 162.0,
+            "y": 64.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": -18624,
+      "name": "Stick_B",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": -18626,
+        "position": {
+          "x": 1100.0,
+          "y": -750.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          -17744
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -18628,
+          "__Base__Component": "Image",
+          "textureName": "UI/Stick_B.png",
+          "layer": 0,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": -18630,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 1100.0,
+            "y": 750.0
+          },
+          "size": {
+            "x": 233.0,
+            "y": 127.0
+          }
         }
       ]
     },

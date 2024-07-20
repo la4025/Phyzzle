@@ -212,6 +212,17 @@ namespace Phyzzle
 #pragma endregion Hold
 		};
 
+		struct UIData
+		{
+			PurahEngine::GameObject* Attach_Default;
+			PurahEngine::GameObject* Attach_Hold_NoneStick;
+			PurahEngine::GameObject* Attach_Hold_Stick;
+			PurahEngine::GameObject* Rotation_NoneStick;
+			PurahEngine::GameObject* Rotation_Stick;
+			PurahEngine::GameObject* Catch_B;
+			PurahEngine::GameObject* Stick_B;
+		};
+
 		struct PlayerInput
 		{
 			StickData Lstick;
@@ -481,6 +492,7 @@ namespace Phyzzle
 		AbilityData abilData;
 		CameraData camData;
 		AnimationData animData;
+		UIData uiData;
 		std::function<Eigen::Vector3f(const Eigen::Vector3f, const Eigen::Vector3f, float)> lerp;
 
 		Eigen::Vector4f color0;

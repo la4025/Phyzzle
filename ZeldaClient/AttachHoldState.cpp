@@ -117,7 +117,6 @@ namespace Phyzzle
 			return;
 
 		AttachSystem::Instance()->SelectBody(attachble);
-		EnableOutline(true);
 
 		const Eigen::Vector3f objectPosition = selectBody->GetPosition();
 		const Eigen::Vector3f playerPosition = player->data.modelCore->GetWorldPosition();
@@ -129,7 +128,7 @@ namespace Phyzzle
 		targetPosition.z() = lookTo.norm();
 
 		info.info = None;
-
+		cancel = false;
 		Snap();
 	}
 
@@ -137,6 +136,7 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
+		cancel = false;
 		targetVelocity = Eigen::Vector3f::Zero();
 		targetAngularVelocity = Eigen::Vector3f::Zero();
 
@@ -182,28 +182,20 @@ namespace Phyzzle
 			player->SetCameraCoreLocalTargetRotation(player->camData.coreDefaultRotation);
 		}
 
+		AroundObjectEnableOutline(false);
 		EnableOutline(false);
+
+		UIDisable();
+
+		aroundObject.clear();
 		VariableReset();
 	}
 
 	void AttachHoldState::StateStay()
 	{
-		if (AttachSystem::Instance()->IsTouching(attachble))
-		{
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				L"충돌 중 \n",
-				1600, 100,
-				1000, 600, 15,
-				255, 255, 255, 255);
-		}
-		else
-		{
-			PurahEngine::GraphicsManager::GetInstance().DrawString(
-				L"충돌 안 함 \n",
-				1600, 100,
-				1000, 600, 15,
-				255, 255, 255, 255);
-		}
+		AroundObjectEnableOutline(false);
+		aroundObject.clear();
+		around = SearchAround();	// 주변 오브젝트 탐색
 
 		// 타겟 포지션을 계산
 		UpdateTargetPosition();
@@ -216,17 +208,30 @@ namespace Phyzzle
 
 		// 속력 리셋
 		ResetObjectVelocity();
-
-		if (player->data.debugMode)
-		{
-			SearchDebugDraw();
-		}
 	}
 
 	void AttachHoldState::PostStateStay()
 	{
-		// 카메라 업데이트
-		UpdateCamera();
+		if (!cancel)
+		{
+			if (AttachSystem::Instance()->IsTouching(attachble))
+				AttachTouchUIRender(true);
+			else
+				AttachTouchUIRender(false);
+
+			if (around)
+				AroundObjectEnableOutline(true);	// 주변 오브젝트 아웃라인
+
+			AttachRotateUIRender(roateMode);
+			DettachUIRender(!roateMode);
+			EnableOutline(true);		// 잡은 오브젝트 아웃라인
+
+			// 카메라 업데이트
+			UpdateCamera();
+		}
+
+		if (player->data.debugMode)
+			SearchDebugDraw();
 	}
 		
 	void AttachHoldState::StateCancel()
@@ -280,10 +285,13 @@ namespace Phyzzle
 	{
 		// 오브젝트를 이동시킬수 있는 상태라면
 		// 붙일 수 있어야함.
+		
 		if (TryAttach())
 		{
 			Put();
 			Cancel();
+			UIDisable();
+			cancel = true;
 		}
 	}
 
@@ -294,10 +302,13 @@ namespace Phyzzle
 		Cancel();
 	}
 
-	// 취소
+	// 탈거
 	void AttachHoldState::Click_Y()
 	{
-		TryDettach();
+		if (TryDettach())
+		{
+			UIDisable();
+		}
 	}
 
 	// 취소
@@ -1328,7 +1339,7 @@ namespace Phyzzle
 		return AttachSystem::Instance()->TryAttach(attachble);
 	}
 
-	bool AttachHoldState::TryDettach() const
+	bool AttachHoldState::TryDettach()
 	{
 		if (!attachble)
 			return false;
@@ -1350,6 +1361,68 @@ namespace Phyzzle
 		{
 			AttachSystem::Instance()->DisableOutline(attachble);
 			AttachSystem::Instance()->DisableDShadow(attachble);
+		}
+	}
+
+	bool AttachHoldState::SearchAround()
+	{
+		using namespace Eigen;
+
+		float radius = player->abilData.searchAroundDistance;
+		Eigen::Affine3f parentMatrix(player->data.cameraArm->GetWorldMatrix());
+		Eigen::Vector3f corePosition = player->data.cameraCore->GetLocalPosition();
+		corePosition.z() = 0.f;
+		Eigen::Vector3f position = parentMatrix * corePosition;
+		Quaternionf rotation = Quaternionf::Identity();
+		int layer = player->abilData.attachRaycastLayers;
+		ZonaiPhysics::ZnQueryInfo info;
+		info.actors.resize(player->abilData.searchAroundbufferSize);
+		info.shapes.resize(player->abilData.searchAroundbufferSize);
+
+		bool hit = PurahEngine::Physics::SphereOverlap(radius, position, rotation, layer, info);
+
+		if (hit)
+		{
+			for (int i = 0; i < info.shapes.size(); i++)
+			{
+				PurahEngine::Collider* collider = static_cast<PurahEngine::Collider*>(info.shapes[i]);
+
+				if (!collider)
+					continue;
+
+				const PurahEngine::GameObject* obj = collider->GetGameObject();
+				PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
+
+				if (!body)
+					continue;
+
+				if (body->IsKinematic())
+					continue;
+
+				PzObject* pzObject = obj->GetComponent<PzObject>();
+
+				if (!pzObject)
+					continue;
+
+				aroundObject.emplace_back(pzObject);
+			}
+		}
+
+		return hit;
+	}
+
+	void AttachHoldState::AroundObjectEnableOutline(bool _value)
+	{
+		for (auto& obj : aroundObject)
+		{
+			if (_value)
+			{
+				AttachSystem::Instance()->EnableOutline(obj, &player->color3);
+			}
+			else
+			{
+				AttachSystem::Instance()->DisableOutline(obj);
+			}
 		}
 	}
 
@@ -1433,6 +1506,50 @@ namespace Phyzzle
 
 		return true;
 	}
+
+	void AttachHoldState::AttachTouchUIRender(bool _value)
+	{
+		player->uiData.Stick_B->SetEnable(_value);
+	}
+
+	void AttachHoldState::AttachRotateUIRender(bool _value)
+	{
+		int count = AttachSystem::Instance()->GetCountInIsland(attachble);
+
+		if (count == 1)
+		{
+			player->uiData.Rotation_NoneStick->SetEnable(_value);
+		}
+		else
+		{
+			player->uiData.Rotation_Stick->SetEnable(_value);
+		}
+	}
+
+	void AttachHoldState::DettachUIRender(bool _value)
+	{
+		int count = AttachSystem::Instance()->GetCountInIsland(attachble);
+
+		if (count == 1)
+		{
+			player->uiData.Attach_Hold_NoneStick->SetEnable(_value);
+		}
+		else
+		{
+			player->uiData.Attach_Hold_Stick->SetEnable(_value);
+		}
+
+	}
+
+	void AttachHoldState::UIDisable()
+	{
+		player->uiData.Attach_Hold_NoneStick->SetEnable(false);
+		player->uiData.Attach_Hold_Stick->SetEnable(false);
+		player->uiData.Rotation_NoneStick->SetEnable(false);
+		player->uiData.Rotation_Stick->SetEnable(false);
+		player->uiData.Stick_B->SetEnable(false);
+	}
+
 #pragma endregion Content
 
 #pragma region Debug

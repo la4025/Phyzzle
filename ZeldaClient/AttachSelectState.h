@@ -40,6 +40,10 @@ namespace Phyzzle
 
 #pragma region Content
 	private:
+		int searchUIRenderCount = 0;
+		int searchCatchUIRenderCount = 0;
+
+		bool around = false;
 		bool select = false;
 		PurahEngine::RigidBody* seleteBody = nullptr;
 		std::vector<PzObject*> aroundObject;
@@ -60,6 +64,9 @@ namespace Phyzzle
 		void AroundObjectEnableOutline(bool);
 		void EnableOutline(bool) const;
 		void CrossHeadRender(bool _value);
+
+		void SearchUIRender(bool _value);
+		void SearchCatchUIRender(bool _value);
 #pragma endregion Content
 		
 	private:

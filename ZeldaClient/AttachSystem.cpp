@@ -536,6 +536,18 @@ namespace Phyzzle
 		CreateIsland(island0);
 	}
 
+	uint32_t AttachSystem::GetCountInIsland(PzObject* _obj)
+	{
+		const IslandID id = _obj->GetIslandID();
+
+		AttachIsland island;
+
+		if (!HasAttachIsland(id, island))
+			island.push_back(_obj);
+
+		return island.size();
+	}
+
 	void AttachSystem::CalculateLocalAnchor(
 		const Eigen::Vector3f& _anchorP, const Eigen::Quaternionf& _anchorQ,
 		const PzObject* _base,

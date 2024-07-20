@@ -1382,6 +1382,36 @@ namespace Phyzzle
 			POSTDESERIALIZE_PTR(attachHighCamera1);
 			camData.attachHighCamera1 = attachHighCamera1;
 		}
+
+		{
+			auto Attach_Default = uiData.Attach_Default;
+			POSTDESERIALIZE_PTR(Attach_Default);
+			uiData.Attach_Default = Attach_Default;
+
+			auto Attach_Hold_NoneStick = uiData.Attach_Hold_NoneStick;
+			POSTDESERIALIZE_PTR(Attach_Hold_NoneStick);
+			uiData.Attach_Hold_NoneStick = Attach_Hold_NoneStick;
+
+			auto Attach_Hold_Stick = uiData.Attach_Hold_Stick;
+			POSTDESERIALIZE_PTR(Attach_Hold_Stick);
+			uiData.Attach_Hold_Stick = Attach_Hold_Stick;
+
+			auto Rotation_NoneStick = uiData.Rotation_NoneStick;
+			POSTDESERIALIZE_PTR(Rotation_NoneStick);
+			uiData.Rotation_NoneStick = Rotation_NoneStick;
+
+			auto Rotation_Stick = uiData.Rotation_Stick;
+			POSTDESERIALIZE_PTR(Rotation_Stick);
+			uiData.Rotation_Stick = Rotation_Stick;
+
+			auto Catch_B = uiData.Catch_B;
+			POSTDESERIALIZE_PTR(Catch_B);
+			uiData.Catch_B = Catch_B;
+
+			auto Stick_B = uiData.Stick_B;
+			POSTDESERIALIZE_PTR(Stick_B);
+			uiData.Stick_B = Stick_B;
+		}
 	}
 #pragma endregion Á÷·ÄÈ­
 
