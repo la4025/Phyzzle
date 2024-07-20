@@ -28,6 +28,9 @@ namespace Phyzzle
 		void DisableController() = delete;	// 키 조작을 비활성화한다.
 
 	private:
+		PurahEngine::Camera* SearchCamera(PurahEngine::GameObject* obj);
+
+	private:
 		bool worksOnlyOnce;									// 단 한번만 작동
 		float moveSpeed;									// 카메라의 이동속도
 		float startDelay;									// 카메라의 이동이 시작되기 전의 지연시간
@@ -42,7 +45,7 @@ namespace Phyzzle
 	private:
 		bool running;		// 카메라 이벤트 진행중
 		int powerCounter;
-		PurahEngine::Camera* originMainCamera; // 원래 메인 카메라 였던 카메라를 임시 저장
+		PurahEngine::Camera* originMainCamera = nullptr; // 원래 메인 카메라 였던 카메라를 임시 저장
 
 		float eventElapsed;		// 진행중인 이벤트의 누적 시간
 		int eventLevel;			// 진행중인 이벤트의 cameraPath에서의 번호
