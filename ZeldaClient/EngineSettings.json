@@ -11,7 +11,8 @@
     "Attachable",
     "Rewindable",
     "Trigger Object",
-    "Fire"
+    "Fire",
+    "Aiirable"
   ],
   "layer": [
     "Default",

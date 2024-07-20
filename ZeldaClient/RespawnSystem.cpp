@@ -49,7 +49,8 @@ namespace Phyzzle
 				}
 				else
 				{
-					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[minIdx]->GetWorldMatrix());
+					targetObject->GetTransform()->SetWorldRotation(respawnPoints[minIdx]->GetWorldRotation());
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[minIdx]->GetWorldPosition());
 				}
 
 				break;
@@ -62,7 +63,8 @@ namespace Phyzzle
 				}
 				else
 				{
-					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[maxLevel]->GetWorldMatrix());
+					targetObject->GetTransform()->SetWorldRotation(respawnPoints[maxLevel]->GetWorldRotation());
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[maxLevel]->GetWorldPosition());
 				}
 				break;
 			}
@@ -74,7 +76,8 @@ namespace Phyzzle
 				}
 				else
 				{
-					targetObject->GetTransform()->SetWorldMatrix(respawnPoints[lastLevel]->GetWorldMatrix());
+					targetObject->GetTransform()->SetWorldRotation(respawnPoints[lastLevel]->GetWorldRotation());
+					targetObject->GetTransform()->SetWorldPosition(respawnPoints[lastLevel]->GetWorldPosition());
 				}
 				break;
 			}

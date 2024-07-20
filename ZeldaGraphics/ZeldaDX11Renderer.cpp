@@ -1428,12 +1428,12 @@ void ZeldaDX11Renderer::DrawLight(LightID lightID)
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, TextureID texture, unsigned int layer)
+void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, TextureID texture, Color color, unsigned int layer)
 {
-	DrawImage(position, { 0.0f, 0.0f }, texture, layer);
+	DrawImage(position, { 0.0f, 0.0f }, texture, color, layer);
 }
 
-void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, unsigned int layer)
+void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, const Eigen::Vector2f& size, TextureID texture, Color color, unsigned int layer)
 {
 	// Render Type
 	RenderType renderType = RenderType::Image;
@@ -1447,6 +1447,7 @@ void ZeldaDX11Renderer::DrawImage(const Eigen::Vector2f& position, const Eigen::
 
 	// Instancing Value
 	InstancingValue instancingValue;
+	instancingValue.color = color;
 	instancingValue.position = { position.x(), position.y() };
 	instancingValue.size = { size.x(), size.y() };
 	instancingValue.layer = layer;
@@ -1571,7 +1572,7 @@ void ZeldaDX11Renderer::DrawBillBoard(const Eigen::Matrix4f& worldMatrix, Textur
 	RenderInfoManager::GetInstance().RegisterRenderInfo(renderType, renderOption, instancingKey, instancingValue);
 }
 
-void ZeldaDX11Renderer::DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, bool keepOriginSize)
+void ZeldaDX11Renderer::DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID texture, Color color, bool keepOriginSize)
 {
 	MeshID meshID = ResourceManager::GetInstance().GetSquareID();
 	ZeldaTexture* textureInstance = ResourceManager::GetInstance().GetTexture(texture);
@@ -1589,6 +1590,7 @@ void ZeldaDX11Renderer::DrawSprite(const Eigen::Matrix4f& worldMatrix, TextureID
 
 	// Instancing Value
 	InstancingValue instancingValue;
+	instancingValue.color = color;
 
 	if (keepOriginSize)
 	{
@@ -1845,6 +1847,11 @@ void ZeldaDX11Renderer::DrawSpriteRenderInfo()
 		matrixBuffer.cameraFar = currentcamera->GetFar();
 		matrixVsConstBuffer->SetData(matrixBuffer);
 
+		MaterialBufferType materialBufferType;
+		materialBufferType.useSRGB = textureInstance->UseSRGB();
+		materialBufferType.baseColor = DirectX::XMFLOAT4{ value->instancingValue.color.r, value->instancingValue.color.g, value->instancingValue.color.b, value->instancingValue.color.a };
+		materialConstBuffer->SetData(materialBufferType);
+
 		ConstantBufferManager::GetInstance().SetBuffer();
 
 		spriteShader->Render(mDeviceContext, meshInstance->GetIndexCount());
@@ -1999,7 +2006,14 @@ void ZeldaDX11Renderer::DrawBillBoardParticleRenderInfo()
 		if (((instanceCount % INSTANCING_MAX) + 1 == INSTANCING_MAX) || (std::next(iter) == renderInfo.end()) || (std::next(iter)->first.second.second.second != particleID))
 		{
 			MaterialBufferType materialBufferType;
-			materialBufferType.baseColor = DirectX::XMFLOAT4{ value->instancingValue.color.r, value->instancingValue.color.g, value->instancingValue.color.b, value->instancingValue.color.a };
+			if (value->instancingValue.useAlphaTexture)
+			{
+				materialBufferType.baseColor = DirectX::XMFLOAT4{ value->instancingValue.color.r, value->instancingValue.color.g, value->instancingValue.color.b, value->instancingValue.color.a };
+			}
+			else
+			{
+				materialBufferType.baseColor = DirectX::XMFLOAT4{ 1.0f, 1.0f, 1.0f, 1.0f };
+			}
 			materialBufferType.useSRGB = textureInstance->UseSRGB();
 			materialConstBuffer->SetData(materialBufferType);
 
@@ -2588,6 +2602,7 @@ void ZeldaDX11Renderer::DrawImageRenderInfo(RenderInfo* renderInfo)
 
 	MaterialBufferType materialBufferType;
 	materialBufferType.useSRGB = texture->UseSRGB();
+	materialBufferType.baseColor = DirectX::XMFLOAT4{ renderInfo->instancingValue.color.r, renderInfo->instancingValue.color.g, renderInfo->instancingValue.color.b, renderInfo->instancingValue.color.a };
 	materialConstBuffer->SetData(materialBufferType);
 
 	ConstantBufferManager::GetInstance().SetBuffer();

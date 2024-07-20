@@ -59,7 +59,6 @@ namespace Phyzzle
 		}
 
 		select = Search();
-
 		if (select)
 		{
 			EnableOutline(true);
@@ -91,7 +90,10 @@ namespace Phyzzle
 		PlayerMove(player->data.moveSpeed);
 		auto velocity = player->data.playerRigidbody->GetLinearVelocity();
 		velocity.y() = 0.f;
-		LookToWorldDirection(velocity);
+		if (velocity.norm() >= 1e-2)
+		{
+			LookToWorldDirection(velocity);
+		}
 	}
 
 	// 카메라 회전
