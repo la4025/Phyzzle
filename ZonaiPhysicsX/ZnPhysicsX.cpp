@@ -413,7 +413,6 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateMeshCollider(
 		void* _userData, 
 		const ZnMeshID& _id,
-		const Eigen::Quaternionf& _rot,
 		const Eigen::Vector3f& _scale,
 		const ZnMaterialID& _material, 
 		void* userScene)
@@ -446,7 +445,7 @@ namespace ZonaiPhysics
 
 		const auto rawShape = ResourceManager::GetPxMeshShape(_id);
 
-		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, _rot, material);
+		const auto shape = ZnFactoryX::CreateTriagleMeshShape(rawShape, _scale, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<MeshCollider>(znBody, shape);
 
 		if (collider)
@@ -464,7 +463,6 @@ namespace ZonaiPhysics
 	ZnCollider* ZnPhysicsX::CreateConvexCollider(
 		void* _userData, 
 		const ZnConvexID& _id,
-		const Eigen::Quaternionf& _rot,
 		const Eigen::Vector3f& _scale,
 		const ZnMaterialID& _material,
 		void* userScene)
@@ -497,7 +495,7 @@ namespace ZonaiPhysics
 
 		const auto rawShape = ResourceManager::GetPxConvexShape(_id);
 
-		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, _rot, material);
+		const auto shape = ZnFactoryX::CreateConvexMeshShape(rawShape, _scale, material);
 		const auto collider = ZnFactoryX::CreateZnCollider<ConvexCollider>(znBody, shape);
 		
 		if (collider)
@@ -607,7 +605,7 @@ namespace ZonaiPhysics
 
 	bool ZnPhysicsX::SphereOverlap(float _radius, const ZnQueryDesc& _desc, ZnQueryInfo& _out)
 	{
-		return ZnWorld::Spherecast(_radius, _desc, _out);
+		return ZnWorld::SphereOverLap(_radius, _desc, _out);
 	}
 
 	void ZnPhysicsX::ReleaseRigidBody(ZnRigidBody* _body, void* _userData, void* _userScene)

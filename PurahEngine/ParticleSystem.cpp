@@ -186,7 +186,7 @@ namespace PurahEngine
 					x = generatorRadius * positionDistribution(genRandom);
 					y = 0.0f;
 					z = generatorRadius * positionDistribution(genRandom);
-				} while (x * x + y * y + z * z <= generatorRadius * generatorRadius);
+				} while (x * x + y * y + z * z > generatorRadius * generatorRadius);
 				element->translation <<
 					1, 0, 0, x,
 					0, 1, 0, y,

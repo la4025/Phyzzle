@@ -134,6 +134,9 @@ namespace Phyzzle
 			bool stopUpdate = false;
 
 #pragma region Player Variable
+			float impulseLimit = 50.f;
+			bool damaged = false;
+
 			float height = 1.f;
 			float radius = 0.5f;
 
@@ -146,11 +149,12 @@ namespace Phyzzle
 			bool canJump = true;
 			bool isGrounded = false;
 			bool isStandableSlope = true;
+			Eigen::Vector3f lastGroundNormal;
+
 			float slopeLimit = 36.f;			// 경사 각도
 			float slideFriction = 0.3f;
 #pragma endregion Player Variable
 
-			Eigen::Vector3f lastGroundNormal;
 
 #pragma region Player Component
 			PurahEngine::RigidBody* playerRigidbody;
@@ -168,9 +172,6 @@ namespace Phyzzle
 			PurahEngine::GameObject* attachHoldCollisionUI;
 #pragma endregion Player Component
 
-			unsigned int attachRaycastLayers = 0;
-			float attachRaycastDistance = 40.f;
-
 			AbilityState state = ATTACH_SELECT;
 
 			PzObject* holdObject;
@@ -179,6 +180,16 @@ namespace Phyzzle
 
 		struct AbilityData
 		{
+#pragma region Select
+			int searchAroundbufferSize = 64;
+			float searchAroundDistance = 60.f;
+			unsigned int searchAroundLayers = 0;
+
+			unsigned int attachRaycastLayers = 0;
+			float attachRaycastDistance = 40.f;
+#pragma endregion Select
+
+#pragma region Hold
 			float targetPositionYSpeed = 4.f;
 			float targetPositionZStep = 1.f;
 
@@ -198,6 +209,7 @@ namespace Phyzzle
 
 			float holdRotateAngle = 90.f;
 			float arcRatio = 1.5f;
+#pragma endregion Hold
 		};
 
 		struct PlayerInput
@@ -290,6 +302,7 @@ namespace Phyzzle
 		void LateUpdate() override;
 		void OnCollisionEnter(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 		void OnCollisionStay(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
+		void OnCollisionExit(const ZonaiPhysics::ZnCollision&, const PurahEngine::Collider*) override;
 #pragma endregion Event
 
 		void SetStopUpdate(bool _value);
@@ -429,9 +442,6 @@ namespace Phyzzle
 		void CameraLookAt(const Eigen::Vector3f& _position);
 #pragma endregion Camera
 
-		bool RaycastFromCamera(
-			float _distance, PurahEngine::RigidBody** _outBody, PzObject** _outAttachable, Rewindable** _outRewindable);
-
 	public:
 #pragma region 직렬화
 		void PreSerialize(json& jsonData) const override;
@@ -481,6 +491,7 @@ namespace Phyzzle
 		Eigen::Vector4f color0;
 		Eigen::Vector4f color1;
 		Eigen::Vector4f color2;
+		Eigen::Vector4f color3;
 
 	private:
 		int stopCount;

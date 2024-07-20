@@ -15,7 +15,7 @@ namespace Phyzzle
 	// ID 생성
 	IslandID AttachSystem::CreateIslandID()
 	{
-		while (!removedIndex.empty())			
+		while (!removedIndex.empty())
 		{
 			auto result = removedIndex.front();
 			removedIndex.pop();
@@ -137,7 +137,6 @@ namespace Phyzzle
 		{
 			if (color)
 				model->SetOutLineColor(*color);
-			
 			model->SetOutLine(value);
 		}
 
@@ -149,60 +148,90 @@ namespace Phyzzle
 			mesh->SetOutLine(value);
 		}
 
-		for (auto& child : children)
-		{
-			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
-			if (model)
-			{
-				if (color)
-					model->SetOutLineColor(*color);
-				model->SetOutLine(value);
-			}
+		std::queue<PurahEngine::Transform*> queue;
+		PurahEngine::Transform* transform = obj->GetGameObject()->GetTransform();
+		queue.push(transform);
 
-			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
-			if (mesh)
+		while (!queue.empty())
+		{
+			PurahEngine::Transform* currentTransform = queue.front();
+			queue.pop();
+
+			auto children = currentTransform->GetChildren();
+			for (auto& child : children)
 			{
-				if (color)
-					mesh->SetOutLineColor(*color);
-				mesh->SetOutLine(value);
+				PurahEngine::GameObject* childGameObject = child->GetGameObject();
+
+				auto model = childGameObject->GetComponent<PurahEngine::ModelRenderer>();
+				if (model)
+				{
+					if (color)
+						model->SetOutLineColor(*color);
+					model->SetOutLine(value);
+				}
+
+				auto mesh = childGameObject->GetComponent<PurahEngine::MeshRenderer>();
+				if (mesh)
+				{
+					if (color)
+						mesh->SetOutLineColor(*color);
+					mesh->SetOutLine(value);
+				}
+
+				queue.push(child);
 			}
 		}
 	}
 
 	void AttachSystem::ApplyDShadowSettings(PzObject* obj, bool value)
 	{
-		auto children = obj->GetGameObject()->GetTransform()->GetChildren();
+		PurahEngine::GameObject* selectGameObject = obj->GetGameObject();
 
-		auto model = obj->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
+		auto model = selectGameObject->GetComponent<PurahEngine::ModelRenderer>();
 		if (model)
 		{
 			model->SetDShadow(value);
 		}
 
-		auto mesh = obj->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
+		auto mesh = selectGameObject->GetComponent<PurahEngine::MeshRenderer>();
 		if (mesh)
 		{
 			mesh->SetDShadow(value);
 		}
 
-		for (auto& child : children)
-		{
-			auto model = child->GetGameObject()->GetComponent<PurahEngine::ModelRenderer>();
-			if (model)
-			{
-				model->SetDShadow(value);
-			}
+		std::queue<PurahEngine::Transform*> queue;
+		PurahEngine::Transform* transform = obj->GetGameObject()->GetTransform();
+		queue.push(transform);
 
-			auto mesh = child->GetGameObject()->GetComponent<PurahEngine::MeshRenderer>();
-			if (mesh)
+		while (!queue.empty())
+		{
+			PurahEngine::Transform* currentTransform = queue.front();
+			queue.pop();
+
+			auto children = currentTransform->GetChildren();
+			for (auto& child : children)
 			{
-				mesh->SetDShadow(value);
+				PurahEngine::GameObject* childGameObject = child->GetGameObject();
+
+				auto model = childGameObject->GetComponent<PurahEngine::ModelRenderer>();
+				if (model)
+				{
+					model->SetDShadow(value);
+				}
+
+				auto mesh = childGameObject->GetComponent<PurahEngine::MeshRenderer>();
+				if (mesh)
+				{
+					mesh->SetDShadow(value);
+				}
+
+				queue.push(child);
 			}
 		}
 	}
 
 	void AttachSystem::EnableOutline(
-		PzObject* _obj, 
+		PzObject* _obj,
 		Eigen::Vector4f* const _targetColor,
 		Eigen::Vector4f* const _subColor)
 	{
@@ -330,7 +359,7 @@ namespace Phyzzle
 		{
 			DisconnectNode(_object, _other);
 			BreakJoint(_object, _other);
-		} 
+		}
 
 		// 연결됐었던 객체들 순회하면서 Island를 만들어줌.
 		for (auto& _other : temp)
@@ -358,6 +387,7 @@ namespace Phyzzle
 
 			CreateIsland(island);
 
+			DisableDShadow(island.front());
 			DisableOutline(island.front());
 		}
 
@@ -491,15 +521,15 @@ namespace Phyzzle
 		const PzObject* _base,
 		Eigen::Vector3f& _outP, Eigen::Quaternionf& _outQ)
 	{
-		const Eigen::Vector3f one = Eigen::Vector3f( 1.f, 1.f, 1.f );
+		const Eigen::Vector3f one = Eigen::Vector3f(1.f, 1.f, 1.f);
 
 		Eigen::Affine3f anchorMat = Eigen::Affine3f::Identity();
 		anchorMat.fromPositionOrientationScale(_anchorP, _anchorQ, one);
 
 		Eigen::Affine3f bodyMat = Eigen::Affine3f::Identity();
 		bodyMat.fromPositionOrientationScale(
-			_base->gameObject->GetTransform()->GetWorldPosition(), 
-			_base->gameObject->GetTransform()->GetWorldRotation(), 
+			_base->gameObject->GetTransform()->GetWorldPosition(),
+			_base->gameObject->GetTransform()->GetWorldRotation(),
 			one);
 
 		Eigen::Transform localT = bodyMat.inverse() * anchorMat;
@@ -549,7 +579,7 @@ namespace Phyzzle
 		Transform<float, 3, Eigen::Affine> transform{ _mat };
 		const Vector3f pos{ transform.translation() };
 		const Quaternionf rot{ transform.rotation() };
-		
+
 		const IslandID id = _base->GetIslandID();
 		AttachIsland island;
 		if (!HasAttachIsland(id, island))

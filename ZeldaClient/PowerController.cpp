@@ -13,7 +13,7 @@ namespace Phyzzle
 	{
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		if (type == Type::PowerOnBuffer && isPowerOn)
+		if (type == Type::PowerOnBuffer && isPowerOn && powerCounter == 0)
 		{
 			elapsedTime += deltaTime;
 
@@ -23,13 +23,23 @@ namespace Phyzzle
 			}
 		}
 
-		if (type == Type::PowerOffBuffer && !isPowerOn)
+		if (type == Type::PowerOffBuffer && !isPowerOn && powerCounter > 0)
 		{
 			elapsedTime += deltaTime;
 
 			if (delay <= elapsedTime)
 			{
 				TargetPowerOn();
+			}
+		}
+
+		if (type == Type::PowerOnFilter && isPowerOn)
+		{
+			elapsedTime += deltaTime;
+
+			if (delay <= elapsedTime)
+			{
+				TargetPowerOff();
 			}
 		}
 	}
@@ -50,8 +60,20 @@ namespace Phyzzle
 					TargetPowerOn();
 					break;
 				}
-				case Phyzzle::PowerController::Type::OnlyPowerOff:
+				case Phyzzle::PowerController::Type::PowerOnFilter:
+				{
+					if (powerCounter == 1)
+					{
+						TargetPowerOn();
+					}
+					break;
+				}
 				case Phyzzle::PowerController::Type::PowerOffBuffer:
+				{
+					elapsedTime = 0.0f;
+					break;
+				}
+				case Phyzzle::PowerController::Type::OnlyPowerOff:
 				{
 					// Do Nothing
 					break;
@@ -76,12 +98,17 @@ namespace Phyzzle
 				case Phyzzle::PowerController::Type::OnlyPowerOff:
 				case Phyzzle::PowerController::Type::ToggleCounter:
 				case Phyzzle::PowerController::Type::PowerOffBuffer:
+				case Phyzzle::PowerController::Type::PowerOnFilter:
 				{
 					TargetPowerOff();
 					break;
 				}
-				case Phyzzle::PowerController::Type::OnlyPowerOn:
 				case Phyzzle::PowerController::Type::PowerOnBuffer:
+				{
+					elapsedTime = 0.0f;
+					break;
+				}
+				case Phyzzle::PowerController::Type::OnlyPowerOn:
 				{
 					// Do Nothing
 					break;
@@ -97,6 +124,7 @@ namespace Phyzzle
 
 	void PowerController::TargetPowerOn()
 	{
+		// 켜져있을 때 눌러도 타이머가 갱신되는 방식
 		if (type == Type::PowerOnBuffer)
 		{
 			elapsedTime = 0.0f;
@@ -108,6 +136,12 @@ namespace Phyzzle
 		}
 
 		isPowerOn = true;
+
+		// 꺼져있을 때 누른것만 타이머가 갱신
+		if (type == Type::PowerOnFilter)
+		{
+			elapsedTime = 0.0f;
+		}
 
 		if (type == PowerController::Type::ToggleCounter)
 		{

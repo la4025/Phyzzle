@@ -27,10 +27,7 @@ namespace PurahEngine
 		this->znCollider = physics.CreateConvexCollider(
 			this->GetGameObject(),
 			modelName,
-			rot * rotationOffset,
-			//rot,
 			{ scale.x() * scaleOffset.x(), scale.y() * scaleOffset.y(), scale.z() * scaleOffset.z() },
-			// { scale.x() , scale.y(), scale.z() },
 			physicsMaterial
 		);
 
@@ -46,6 +43,7 @@ namespace PurahEngine
 
 		SetTrigger(isTrigger);
 		SetLayer(layer);
+		SetRotationOffset(rotationOffset);
 		SetPositionOffset(positionOffset);
 
 		znCollider->SetPosition(transform->GetWorldPosition());

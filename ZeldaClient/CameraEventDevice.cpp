@@ -9,6 +9,13 @@ namespace Phyzzle
 		if (running)
 		{
 			PurahEngine::TimeController::GetInstance().ResumeAll();
+		}
+	}
+
+	void CameraEventDevice::OnDestroy()
+	{
+		if (running)
+		{
 			player->SetStopUpdate(false);
 		}
 	}
@@ -17,7 +24,7 @@ namespace Phyzzle
 	{
 		running = false;
 		powerCounter = 0;
-		originMainCamera = nullptr;
+		originMainCamera = SearchCamera(player->GetGameObject());
 		workOnce = false;
 		pauseLevel = 0;
 	}
@@ -96,7 +103,11 @@ namespace Phyzzle
 				{
 					if (delay < eventElapsed)
 					{
-						originMainCamera->SetMainCamera();
+						// 현재 카메라가 TargetCamera인 경우에만 원래 카메라로 변경한다.
+						if (PurahEngine::SceneManager::GetInstance().GetMainCamera() == targetCamera)
+						{
+							originMainCamera->SetMainCamera();
+						}
 						running = false;
 						eventLevel += 1;
 
@@ -165,7 +176,6 @@ namespace Phyzzle
 			}
 
 			// 메인 카메라 교체
-			originMainCamera = PurahEngine::SceneManager::GetInstance().GetMainCamera();
 			targetCamera->SetMainCamera();
 		}
 		else
@@ -175,6 +185,31 @@ namespace Phyzzle
 				targetDeviceList[i]->PowerOn();
 			}
 		}
+	}
+
+	PurahEngine::Camera* CameraEventDevice::SearchCamera(PurahEngine::GameObject* obj)
+	{
+		PurahEngine::Camera* camera = obj->GetComponent<PurahEngine::Camera>();
+		
+		if (camera != nullptr)
+		{
+			return camera;
+		}
+
+		PurahEngine::Transform* trs = obj->GetTransform();
+		std::vector<PurahEngine::Transform*> children = trs->GetChildren();
+
+		for (PurahEngine::Transform* child : children)
+		{
+			PurahEngine::GameObject* cObj = child->GetGameObject();
+			camera = SearchCamera(cObj);
+			if (camera != nullptr)
+			{
+				return camera;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void CameraEventDevice::PreSerialize(json& jsonData) const

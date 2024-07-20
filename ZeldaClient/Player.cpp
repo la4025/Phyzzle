@@ -43,7 +43,7 @@ namespace Phyzzle
 
 		camData.coreTargetRotation = Eigen::Quaternionf::Identity();
 
-		camData.coreSelectPosition = camData.coreDefaultPosition + Eigen::Vector3f{0.5f, 0.5f, 0.f};
+		camData.coreSelectPosition = camData.coreDefaultPosition + Eigen::Vector3f{ 0.5f, 0.5f, 0.f };
 
 		highPosition = Eigen::Vector3f(0.f, 0.f, -10.f);
 		lowPosition = Eigen::Vector3f(0.f, 0.f, -2.f);
@@ -98,11 +98,11 @@ namespace Phyzzle
 
 		{
 			// 애니메이션 상태 및 속도 컨트롤러 맵 초기화
-			for (const auto& [type, animation] : animationString) 
+			for (const auto& [type, animation] : animationString)
 			{
 				AddAnimationState(animationState, type, animation, data.animator);
-				
-				if (type == WALK || type == RUN || type >= ABILITY_FRONT) 
+
+				if (type == WALK || type == RUN || type >= ABILITY_FRONT)
 				{
 					AddAnimationSpeedController(animationSpeedController, type, animation, data.animator);
 				}
@@ -112,11 +112,11 @@ namespace Phyzzle
 
 	// 공통된 애니메이션 상태 추가 함수
 	void Player::AddAnimationState(
-		std::map<PlayerState, std::function<void()>>& stateMap, 
-		PlayerState type, const std::wstring& animation, 
+		std::map<PlayerState, std::function<void()>>& stateMap,
+		PlayerState type, const std::wstring& animation,
 		PurahEngine::Animator* animator)
 	{
-		stateMap[type] = [animation, animator]() 
+		stateMap[type] = [animation, animator]()
 			{
 				animator->Play(animation);
 			};
@@ -124,11 +124,11 @@ namespace Phyzzle
 
 	// 공통된 애니메이션 속도 컨트롤러 추가 함수
 	void Player::AddAnimationSpeedController(
-		std::map<PlayerState, std::function<void(float)>>& speedMap, 
-		PlayerState type, const std::wstring& animation, 
+		std::map<PlayerState, std::function<void(float)>>& speedMap,
+		PlayerState type, const std::wstring& animation,
 		PurahEngine::Animator* animator)
 	{
-		speedMap[type] = [animation, animator](float speed) 
+		speedMap[type] = [animation, animator](float speed)
 			{
 				animator->SetPlaySpeed(animation, speed);
 			};
@@ -144,12 +144,12 @@ namespace Phyzzle
 
 		Vector3f currvelo = data.playerRigidbody->GetLinearVelocity();
 		float spd = currvelo.norm();
-		
+
 		PurahEngine::GraphicsManager::GetInstance().DrawString(
 			L"Player Current Speed : " + std::to_wstring(spd),
-			400, 100, 
-			100, 100, 
-			15, 
+			400, 100,
+			100, 100,
+			15,
 			255, 255, 255, 255
 		);
 
@@ -201,20 +201,13 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		data.isGrounded = data.groundCheck->IsGrounded();
-		// data.playerRigidbody->UseGravity(!data.isGrounded);
+		data.isGrounded = data.groundCheck->IsGrounded();	// 밟고있는 것 체크
+		data.isStandableSlope = SlopeCheck();				// 밟고있는 것 기울기 체크
 
 		if (!data.isGrounded)
-		{
-			stateSystem[currState]->StateCancel();
-		}
-		else
-		{
-			SlopeCheck();
-		}
+			stateSystem[currState]->StateCancel();		// 땅이 아니면 능력 캔슬됨
 
-
-		data.stateChange = UpdateAbilitChangeyState();
+		data.stateChange = UpdateAbilitChangeyState();	// 플레이어 상태 변경 체크
 
 		if (!data.stopUpdate)
 		{
@@ -225,21 +218,20 @@ namespace Phyzzle
 
 			animData.animationSpeed = currInput.Lstick.Size;
 		}
-
 	}
 
 	void Player::LateUpdate()
 	{
 		if (!data.stopUpdate)
 		{
-			UpdatePlayerAnimationState();
+			UpdatePlayerAnimationState();			// 이벤트 중에는 애니메이션 업데이트를 안 함
 
 			if (!data.stateChange)
-				PostUpdateAbilityState();
+				PostUpdateAbilityState();			// 상태가 바뀐 직후엔 플레이어 업데이트를 안 함
 		}
-		
-		UpdateCameraLerp();
-		CharacterDisable();
+
+		UpdateCameraLerp();							// 카메라 보간
+		CharacterDisable();							// 카메라 위치에 따라서 캐릭터 비활성화
 
 		if (data.debugMode)
 			DebugDraw();
@@ -249,16 +241,38 @@ namespace Phyzzle
 		prevPlayerState = currPlayerState;
 	}
 
-	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
 	{
+		float impulseSize = zn_collision.impulses.norm();
+
+		if (impulseSize > data.impulseLimit)
+		{
+			data.playerRigidbody->AddForce(zn_collision.impulses, ZonaiPhysics::Impulse);
+			data.damaged = true;
+		}
 	}
 
-	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
 	{
+		float impulseSize = zn_collision.impulses.norm();
+
+		if (impulseSize > data.impulseLimit)
+		{
+			data.playerRigidbody->AddForce(zn_collision.impulses, ZonaiPhysics::Impulse);
+			data.damaged = true;
+		}
 	}
+
+	void Player::OnCollisionExit(const ZonaiPhysics::ZnCollision& zn_collision,
+		const PurahEngine::Collider* collider)
+	{
+		data.damaged = false;
+	}
+
 #pragma endregion Event
 
-#pragma optimize("", off)
 	void Player::SetStopUpdate(bool _value)
 	{
 		if (_value)
@@ -284,7 +298,6 @@ namespace Phyzzle
 			}
 		}
 	}
-#pragma optimize("", on)
 
 #pragma region Update
 	bool Player::UpdateAbilitChangeyState()
@@ -305,7 +318,7 @@ namespace Phyzzle
 	{
 		if (prevState != currState)
 			return;
-		
+
 		if (stateSystem.contains(currState))
 			stateSystem[currState]->StateStay();
 	}
@@ -512,19 +525,22 @@ namespace Phyzzle
 
 		Vector3f start = GetGameObject()->GetTransform()->GetWorldPosition();
 		Vector3f to = Vector3f(0.f, -1.f, 0.f);
+		float distance = 1.f;
 		ZonaiPhysics::ZnQueryInfo info;
 
-		bool hit = PurahEngine::Physics::Raycast(start, to, 1.f, camData.cameraCollisionLayers, info);
+		bool hit = PurahEngine::Physics::Raycast(start, to, distance, camData.cameraCollisionLayers, info);
 
 		if (!hit)
 			return false;
+
+		data.lastGroundNormal = info.normal;
 
 		const Vector3f up = Vector3f::UnitY();
 		float cosTheta = up.dot(info.normal);
 		cosTheta = std::clamp(cosTheta, -1.f, 1.f);
 		float slope = std::acosf(cosTheta);
 
-		return slope <= (data.slopeLimit * (std::numbers::pi_v<float> / 180.f));
+		return slope <= data.slopeLimit;
 	}
 
 	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
@@ -543,7 +559,7 @@ namespace Phyzzle
 		ZonaiPhysics::ZnQueryInfo info;			// 반환 값
 
 		bool hit = PurahEngine::Physics::Capsulecast(
-			radius, height, 
+			radius, height,
 			startPosition, Quaternionf::Identity(),
 			direction, distance,
 			collisionLayers, info);
@@ -567,7 +583,7 @@ namespace Phyzzle
 		{
 			Eigen::Vector3f power = Eigen::Vector3f::UnitY() * data.jumpPower;
 			data.playerRigidbody->AddForce(power, ZonaiPhysics::ForceType::Accelration);
-			
+
 			return true;
 		}
 
@@ -601,36 +617,43 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		// 카메라의 전방 벡터를 계산
+		if (data.damaged)
+			return false;
+
+		Vector3f additionalVelocity = Vector3f::Zero();
 		const Vector3f cameraFront = data.cameraArm->GetFront();
 		const Vector3f forward = Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
-		const Vector3f right = Vector3f::UnitY().cross(forward);
-
-		// 이동 방향 벡터를 계산
-		const Vector3f movementDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
+		Vector3f direction = Vector3f::Zero();
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
+
+		if (data.isStandableSlope)
+		{
+			Vector3f movementRight = data.lastGroundNormal.cross(forward).normalized();
+			Vector3f movementForward = movementRight.cross(data.lastGroundNormal).normalized();
+
+			// 이동 방향 벡터를 계산
+			direction = movementForward * currInput.Lstick.Y + movementRight * currInput.Lstick.X;
+		}
+		else
+		{
+			const Vector3f right = Vector3f::UnitY().cross(forward).normalized();
+			direction = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
+		}
 
 		// 속도 벡터를 계산
 		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
 		currentVelocity.y() = 0.f;
-		//float scalar = currentVelocity.norm();
-		//Vector3f direction = currentVelocity.normalized();
-		//if (!direction.isZero())
-		//{
-		//	scalar = std::clamp(scalar, 0.f, _moveSpeed);
-		//	currentVelocity = direction * scalar;
-		//}
-
-		Vector3f targetVelocity = moveSpeed * movementDirection;
-		Vector3f additionalVelocity = targetVelocity - currentVelocity;
+		Vector3f targetVelocity = moveSpeed * direction;
+		additionalVelocity = targetVelocity - currentVelocity;
 		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
 
-		// 속도를 적용시킴
-		data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
-
-		if (!data.isGrounded)
+		if (data.isGrounded)
 		{
-			// 이때 따로 처리
+			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
+		}
+		else
+		{
+			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
 		}
 
 		return currInput.Lstick.Size >= 1e-6;
@@ -694,7 +717,7 @@ namespace Phyzzle
 		Vector3f worldPosition = Vector3f::Zero();
 		// 각도에 따라 위치를 우선 제한함
 		CalculateDefaultCameraCorePosition(localPosition, worldPosition, false);
-		
+
 		// 오브젝트에 충돌하면 처리함
 		if (ResolveCameraCollision(localPosition, worldPosition))
 		{
@@ -776,10 +799,10 @@ namespace Phyzzle
 		ZonaiPhysics::ZnQueryInfo info;
 
 		bool hit = PurahEngine::Physics::Spherecast(
-			radius, 
-			worldStart, Quaternionf::Identity(), 
-			worldDir, dis, 
-			layers, 
+			radius,
+			worldStart, Quaternionf::Identity(),
+			worldDir, dis,
+			layers,
 			info
 		);
 
@@ -897,7 +920,7 @@ namespace Phyzzle
 	void Player::CharacterDisable()
 	{
 		using namespace Eigen;
-		
+
 		PurahEngine::Camera* mainCamera = PurahEngine::SceneManager::GetInstance().GetMainCamera();
 		Vector3f cameraPos = mainCamera->GetGameObject()->GetTransform()->GetWorldPosition();
 		Vector3f cameraArmPos = data.cameraArm->GetWorldPosition();
@@ -931,7 +954,7 @@ namespace Phyzzle
 
 		Affine3f world{ data.cameraArm->GetWorldMatrix() };
 		Vector3f localPos = world.inverse() * _worldPosision;
-		
+
 		camData.coreTargetPosition = localPos;
 	}
 
@@ -979,14 +1002,14 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (std::fabs(direction.z()) < 1e-6) 
+		if (std::fabs(direction.z()) < 1e-6)
 		{
 			return false;
 		}
 
 		float t = -cameraPos.z() / direction.z();
 		out = cameraPos + t * direction;
-		
+
 		return true;
 	}
 
@@ -994,7 +1017,7 @@ namespace Phyzzle
 	{
 		using namespace Eigen;
 
-		if (std::fabs(direction.y()) < 1e-6) 
+		if (std::fabs(direction.y()) < 1e-6)
 		{
 			return false;
 		}
@@ -1137,52 +1160,6 @@ namespace Phyzzle
 	}
 #pragma endregion Camera
 
-	bool Player::RaycastFromCamera(
-		float _distance, 
-		PurahEngine::RigidBody** _outBody,
-		PzObject** _outPzObject,
-		Rewindable** _outRewindable
-	)
-	{
-		const Eigen::Vector3f from = data.cameraCore->GetWorldPosition();
-		Eigen::Matrix3f rotate = data.cameraCore->GetWorldRotation().toRotationMatrix();
-		Eigen::Vector3f to = rotate * Eigen::Vector3f{ 0.f, 0.f, 1.f };
-		ZonaiPhysics::ZnQueryInfo info;
-
-		unsigned int layers = data.attachRaycastLayers;
-
-		const bool block = PurahEngine::Physics::Raycast(from, to, _distance, layers, info);
-
-		if (block)
-		{
-			const PurahEngine::Collider* shape = static_cast<PurahEngine::Collider*>(info.colliderData);
-
-			if (!shape)
-				return false;
-
-			const PurahEngine::GameObject* obj = shape->GetGameObject();
-			PurahEngine::RigidBody* body = obj->GetComponent<PurahEngine::RigidBody>();
-
-			if (!body)
-				return false;
-
-			if (_outBody)
-				*_outBody = body;
-			if (_outPzObject)
-				*_outPzObject = obj->GetComponent<PzObject>();
-			if (_outRewindable)
-				*_outRewindable = obj->GetComponent<Rewindable>();
-
-			if (data.debugMode)
-			{
-				PurahEngine::GraphicsManager::GetInstance().DrawString(
-					shape->GetGameObject()->GetName(), 800, 600, 100, 100, 30, 255, 255, 255, 255);
-			}
-		}
-
-		return block;
-	}
-
 #pragma region 직렬화
 	void Player::PreSerialize(json& jsonData) const
 	{}
@@ -1216,6 +1193,26 @@ namespace Phyzzle
 
 		// Ability
 		{
+			auto searchAroundbufferSize = abilData.searchAroundbufferSize;
+			PREDESERIALIZE_VALUE(searchAroundbufferSize);
+			abilData.searchAroundbufferSize = searchAroundbufferSize;
+
+			auto searchAroundDistance = abilData.searchAroundDistance;
+			PREDESERIALIZE_VALUE(searchAroundDistance);
+			abilData.searchAroundDistance = searchAroundDistance;
+
+			auto searchAroundLayers = abilData.searchAroundLayers;
+			PREDESERIALIZE_VALUE(searchAroundLayers);
+			abilData.searchAroundLayers = searchAroundLayers;
+
+			auto attachRaycastLayers = abilData.attachRaycastLayers;
+			PREDESERIALIZE_VALUE(attachRaycastLayers);
+			abilData.attachRaycastLayers = attachRaycastLayers;
+
+			float attachRaycastDistance = abilData.attachRaycastDistance;
+			PREDESERIALIZE_VALUE(attachRaycastDistance);
+			abilData.attachRaycastDistance = attachRaycastDistance;
+
 			auto targetPositionYSpeed = abilData.targetPositionYSpeed;
 			PREDESERIALIZE_VALUE(targetPositionYSpeed);
 			abilData.targetPositionYSpeed = targetPositionYSpeed;
@@ -1286,13 +1283,17 @@ namespace Phyzzle
 			Eigen::Vector4f outlineColor1;
 			PREDESERIALIZE_VECTOR4F(outlineColor1);
 			color1 = outlineColor1;
-			
+
 			Eigen::Vector4f outlineColor2;
 			PREDESERIALIZE_VECTOR4F(outlineColor2);
 			color2 = outlineColor2;
+
+			Eigen::Vector4f outlineColor3;
+			PREDESERIALIZE_VECTOR4F(outlineColor3);
+			color3 = outlineColor3;
 		}
 
-		// Layer
+		// Camera
 		{
 			int cameraCollisionLayers = camData.cameraCollisionLayers;
 			PREDESERIALIZE_VALUE(cameraCollisionLayers);
@@ -1301,14 +1302,6 @@ namespace Phyzzle
 			float cameraCollisionRadius = camData.cameraCollisionRadius;
 			PREDESERIALIZE_VALUE(cameraCollisionRadius);
 			camData.cameraCollisionRadius = cameraCollisionRadius;
-
-			auto attachRaycastLayers = data.attachRaycastLayers;
-			PREDESERIALIZE_VALUE(attachRaycastLayers);
-			data.attachRaycastLayers = attachRaycastLayers;
-
-			float attachRaycastDistance = data.attachRaycastDistance;
-			PREDESERIALIZE_VALUE(attachRaycastDistance);
-			data.attachRaycastDistance = attachRaycastDistance;
 		}
 
 		// Animation
@@ -1393,7 +1386,7 @@ namespace Phyzzle
 			POSTDESERIALIZE_PTR(groundCheck);
 			data.groundCheck = groundCheck;
 		}
-		
+
 		{
 			auto attachLowCamera0 = camData.attachLowCamera0;
 			POSTDESERIALIZE_PTR(attachLowCamera0);

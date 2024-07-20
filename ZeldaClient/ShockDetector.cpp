@@ -4,6 +4,24 @@
 
 namespace Phyzzle
 {
+	std::list<ShockDetector*> ShockDetector::objectList;
+
+	ShockDetector::ShockDetector()
+	{
+		objectList.push_back(this);
+	}
+
+	ShockDetector::~ShockDetector()
+	{
+		for (std::list<ShockDetector*>::iterator iter = objectList.begin(); iter != objectList.end(); iter++)
+		{
+			if (*iter == this)
+			{
+				iter = objectList.erase(iter);
+			}
+		}
+	}
+
 	void ShockDetector::Awake()
 	{
 		isPowerOn = false;
@@ -15,18 +33,28 @@ namespace Phyzzle
 		static bool debug = false;
 		static float debugShock = 0.0f;
 
-		if (debugShock < shock) debugShock = shock;
-
-		if (PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL) &&
-			PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z))
+		if (*objectList.begin() == this)
 		{
-			debug = !debug;
-			debugShock = 0.0f;
+			if (debugShock < shock) debugShock = shock;
+
+			if (PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_CONTROL) &&
+				PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z))
+			{
+				debug = !debug;
+				debugShock = 0.0f;
+			}
+
+			if (debug)
+			{
+				PurahEngine::GraphicsManager::GetInstance().DrawString(L"Activation : " + std::to_wstring(activationShock), 50, 400, 200, 300, 30, 1, 1, 1, 1);
+				PurahEngine::GraphicsManager::GetInstance().DrawString(L"Max Shock  : " + std::to_wstring(debugShock), 50, 500, 200, 300, 30, 1, 1, 1, 1);
+			}
+
+			isMainObject = true;
 		}
-
-		if (debug)
+		else
 		{
-			PurahEngine::GraphicsManager::GetInstance().DrawString(std::to_wstring(debugShock), 50, 500, 200, 300, 30, 1, 1, 1, 1);
+			isMainObject = false;
 		}
 
 		if (activationShock < shock)
@@ -35,6 +63,26 @@ namespace Phyzzle
 
 			TargetPowerOn();
 			TargetPowerOff();
+		}
+	}
+
+	void ShockDetector::LateUpdate()
+	{
+		if (isMainObject)
+		{
+			if (PurahEngine::InputManager::Getinstance().IsKeyPressed(PurahEngine::eKey::eKEY_SHIFT) &&
+				PurahEngine::InputManager::Getinstance().IsKeyDown(PurahEngine::eKey::eKEY_Z))
+			{
+				for (std::list<ShockDetector*>::iterator iter = objectList.begin(); iter != objectList.end(); iter++)
+				{
+					if (*iter == this)
+					{
+						iter = objectList.erase(iter);
+					}
+				}
+
+				objectList.push_back(this);
+			}
 		}
 	}
 
