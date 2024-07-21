@@ -318,13 +318,7 @@ namespace ZonaiPhysics
 
 		if (PxSceneQueryExt::overlapMultiple(*currScene, _geom, transform, buffer, bufferSize, filter))
 		{
-			// PxU32 touches = buffer.getNbTouches();
-			// const PxOverlapHit* hitBuffer = buffer.getTouches();
 			PxU32 touches = bufferSize;
-			// const PxOverlapHit* hitBuffer = hit;
-
-			// _out.actors.resize(touches);
-			// _out.shapes.resize(touches);
 
 			for (PxU32 i = 0; i < touches; i++)
 			{
@@ -337,11 +331,11 @@ namespace ZonaiPhysics
 					_out.shapes[i] = static_cast<Collider*>(hit.shape->userData)->GetUserData();
 			}
 
+			delete[] buffer;
 			return true;
 		}
 
 		delete[] buffer;
-
 		return false;
 	}
 

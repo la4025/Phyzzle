@@ -134,9 +134,9 @@ namespace Phyzzle
 			bool stopUpdate = false;
 
 #pragma region Player Variable
-			float impulseLimit = 50.f;
+			float impactThreshold = 50.f;
+			Eigen::Vector3f playerFlyingVelocity;
 			float maxLinearVelocityY = 30.f;
-			bool damaged = false;
 
 			float height = 1.f;
 			float radius = 0.5f;
@@ -147,10 +147,13 @@ namespace Phyzzle
 			float jumpPower = 10.f;				// 점프 힘
 			float jumpCooldown = 0.1f;
 			
-			float damagedTime = 0.2f;
 			bool isGrounded = false;
+			bool flying = false;
+			float flyingTime = 0.5f;
 			bool isStandableSlope = true;
 			Eigen::Vector3f lastGroundNormal;
+
+			Eigen::Vector3f onPlatformVelocity;
 
 			float slopeLimit = 36.f;			// 경사 각도
 			float slideFriction = 0.3f;
@@ -349,6 +352,12 @@ namespace Phyzzle
 #pragma endregion Input
 
 #pragma region Player
+		void PlayerOnMovingPlatform(const ZonaiPhysics::ZnCollision& zn_collision,
+			const PurahEngine::Collider* collider);
+		void PlayerImpulseCheck(const ZonaiPhysics::ZnCollision& zn_collision,
+			const PurahEngine::Collider* collider);
+		void ApplyImpulse();
+		void PlayerFlyingUpdate();
 		bool SlopeCheck();
 		bool TryJump();
 		bool CanMove();
@@ -504,19 +513,11 @@ namespace Phyzzle
 		int stopCount;
 
 	private:
-		/// 사라질 변수들
 		Eigen::Vector3f		highPosition;
 		Eigen::Vector3f		lowPosition;
 
 		Eigen::Vector3f		differenceHigh;
 		Eigen::Vector3f		differenceLow;
 	};
-
-	inline Eigen::Vector3f MulMatrixVector(const Eigen::Matrix4f& _mat, const Eigen::Vector3f& _vec)
-	{
-		Eigen::Vector4f temp = _mat * Eigen::Vector4f(_vec.x(), _vec.y(), _vec.z(), 1.f);
-
-		return { temp.x(), temp.y() , temp.z() };
-	}
 }
 
