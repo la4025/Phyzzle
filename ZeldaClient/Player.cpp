@@ -197,6 +197,11 @@ namespace Phyzzle
 		stopCount = 0;
 	}
 
+	void Player::FixedUpdate()
+	{
+
+	}
+
 	void Player::Update()
 	{
 		using namespace Eigen;
@@ -205,7 +210,9 @@ namespace Phyzzle
 		data.isStandableSlope = SlopeCheck();				// 밟고있는 것 기울기 체크
 
 		if (!data.isGrounded)
+		{
 			stateSystem[currState]->StateCancel();		// 땅이 아니면 능력 캔슬됨
+		}
 
 		data.stateChange = UpdateAbilitChangeyState();	// 플레이어 상태 변경 체크
 
@@ -244,31 +251,19 @@ namespace Phyzzle
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision,
 		const PurahEngine::Collider* collider)
 	{
-		float impulseSize = zn_collision.impulses.norm();
 
-		if (impulseSize > data.impulseLimit)
-		{
-			data.playerRigidbody->AddForce(zn_collision.impulses, ZonaiPhysics::Impulse);
-			data.damaged = true;
-		}
 	}
 
 	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision,
 		const PurahEngine::Collider* collider)
 	{
-		float impulseSize = zn_collision.impulses.norm();
 
-		if (impulseSize > data.impulseLimit)
-		{
-			data.playerRigidbody->AddForce(zn_collision.impulses, ZonaiPhysics::Impulse);
-			data.damaged = true;
-		}
 	}
 
 	void Player::OnCollisionExit(const ZonaiPhysics::ZnCollision& zn_collision,
 		const PurahEngine::Collider* collider)
 	{
-		data.damaged = false;
+		
 	}
 
 #pragma endregion Event
@@ -543,36 +538,6 @@ namespace Phyzzle
 		return slope <= data.slopeLimit;
 	}
 
-	bool Player::SweepTest(const Eigen::Vector3f& _movement, float minDist, float stepOffset, int collisionLayers)
-	{
-		using namespace Eigen;
-
-		// 플레이어 발 위치
-		Vector3f footPosition = GetGameObject()->GetTransform()->GetWorldPosition();
-		Vector3f startPosition = footPosition + Vector3f::UnitY();	// 스윕 시작
-		Vector3f direction = _movement.normalized();			// 스윕 방향
-		float distance = _movement.norm();						// 스윕 거리
-
-		const float radius = 0.5f;				// 스윕 모양
-		const float height = 1.f;
-
-		ZonaiPhysics::ZnQueryInfo info;			// 반환 값
-
-		bool hit = PurahEngine::Physics::Capsulecast(
-			radius, height,
-			startPosition, Quaternionf::Identity(),
-			direction, distance,
-			collisionLayers, info);
-
-		if (hit)
-		{
-			// 스윕이 충돌한 위치와 플레이어 위치랑 비교함
-			info.position;
-		}
-
-		return true;
-	}
-
 	bool Player::TryJump()
 	{
 		using namespace Eigen;
@@ -590,72 +555,77 @@ namespace Phyzzle
 		return false;
 	}
 
-	void Player::JumpCheck()
+	bool Player::CanMove()
 	{
 		using namespace Eigen;
 
-		float dt = PurahEngine::TimeController::GetInstance().GetDeltaTime();
-	}
+		if (!data.isGrounded)
+			return false;
 
-	bool Player::IsOppositeDirection(const Eigen::Vector3f& velo, const Eigen::Vector3f& normal) const
-	{
-		const float cosTheta0 = velo.dot(normal);
+		if (!data.isStandableSlope)
+			return false;
 
-		return cosTheta0 < 0;
-	}
-
-	bool Player::CanMove(const Eigen::Vector3f& direction, float distance, float stepOffset)
-	{
-		using namespace Eigen;
-
-		// 이동 경로에 장애물이 있는지 확인하기 위해 SweepTest를 수행합니다.
-		Vector3f movement = direction * distance;
-		return !SweepTest(movement, 0.01f, stepOffset, camData.cameraCollisionLayers);
+		if (data.damaged)
+			return false;
 	}
 
 	bool Player::TryPlayerMove(float _moveSpeed)
 	{
 		using namespace Eigen;
 
-		if (data.damaged)
-			return false;
-
-		Vector3f additionalVelocity = Vector3f::Zero();
+		// 이동 방향 벡터 계산
 		const Vector3f cameraFront = data.cameraArm->GetFront();
 		const Vector3f forward = Vector3f(cameraFront.x(), 0.f, cameraFront.z()).normalized();
+		const Vector3f right = Vector3f::UnitY().cross(forward).normalized();
+		Vector3f originDirection = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
 		Vector3f direction = Vector3f::Zero();
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
+		// 경사면 여부에 따라 이동 방향 벡터 계산
 		if (data.isStandableSlope)
 		{
 			Vector3f movementRight = data.lastGroundNormal.cross(forward).normalized();
 			Vector3f movementForward = movementRight.cross(data.lastGroundNormal).normalized();
-
-			// 이동 방향 벡터를 계산
 			direction = movementForward * currInput.Lstick.Y + movementRight * currInput.Lstick.X;
 		}
 		else
 		{
-			const Vector3f right = Vector3f::UnitY().cross(forward).normalized();
-			direction = forward * currInput.Lstick.Y + right * currInput.Lstick.X;
+			direction = originDirection;
 		}
 
-		// 속도 벡터를 계산
-		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
-		currentVelocity.y() = 0.f;
-		Vector3f targetVelocity = moveSpeed * direction;
-		additionalVelocity = targetVelocity - currentVelocity;
-		additionalVelocity.y() = 0.f; // 수직 방향 속도는 0으로 설정
+		// 목표 속도 벡터 계산
+		Vector3f targetVelocity = moveSpeed * direction.dot(originDirection) * direction;
 
+		// 현재 속도 벡터 계산 및 y축 속도 제한
+		Vector3f currentVelocity = data.playerRigidbody->GetLinearVelocity();
+		currentVelocity.y() = std::clamp(currentVelocity.y(), -data.maxLinearVelocityY, data.maxLinearVelocityY);
+		data.playerRigidbody->SetLinearVelocity(currentVelocity);
+		currentVelocity.y() = 0.f;
+
+		// 추가 속도 벡터 계산
+		Vector3f additionalVelocity = targetVelocity - currentVelocity;
+
+		// 지면에 있는 경우
 		if (data.isGrounded)
 		{
-			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
+			if (currInput.Lstick.Size < 1e-2)
+			{
+				additionalVelocity.y() = 0.f;
+				data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
+			}
+			else
+			{
+				additionalVelocity.y() = 0.f;
+				data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
+			}
 		}
+		// 공중에 있는 경우
 		else
 		{
-			data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+			data.playerRigidbody->AddForce(targetVelocity * data.playerRigidbody->GetMass(), ZonaiPhysics::Velocity_Change);
 		}
 
+		// 이동 여부 반환
 		return currInput.Lstick.Size >= 1e-6;
 	}
 #pragma endregion Player
@@ -1411,6 +1381,36 @@ namespace Phyzzle
 			auto attachHighCamera1 = camData.attachHighCamera1;
 			POSTDESERIALIZE_PTR(attachHighCamera1);
 			camData.attachHighCamera1 = attachHighCamera1;
+		}
+
+		{
+			auto Attach_Default = uiData.Attach_Default;
+			POSTDESERIALIZE_PTR(Attach_Default);
+			uiData.Attach_Default = Attach_Default;
+
+			auto Attach_Hold_NoneStick = uiData.Attach_Hold_NoneStick;
+			POSTDESERIALIZE_PTR(Attach_Hold_NoneStick);
+			uiData.Attach_Hold_NoneStick = Attach_Hold_NoneStick;
+
+			auto Attach_Hold_Stick = uiData.Attach_Hold_Stick;
+			POSTDESERIALIZE_PTR(Attach_Hold_Stick);
+			uiData.Attach_Hold_Stick = Attach_Hold_Stick;
+
+			auto Rotation_NoneStick = uiData.Rotation_NoneStick;
+			POSTDESERIALIZE_PTR(Rotation_NoneStick);
+			uiData.Rotation_NoneStick = Rotation_NoneStick;
+
+			auto Rotation_Stick = uiData.Rotation_Stick;
+			POSTDESERIALIZE_PTR(Rotation_Stick);
+			uiData.Rotation_Stick = Rotation_Stick;
+
+			auto Catch_B = uiData.Catch_B;
+			POSTDESERIALIZE_PTR(Catch_B);
+			uiData.Catch_B = Catch_B;
+
+			auto Stick_B = uiData.Stick_B;
+			POSTDESERIALIZE_PTR(Stick_B);
+			uiData.Stick_B = Stick_B;
 		}
 	}
 #pragma endregion 직렬화

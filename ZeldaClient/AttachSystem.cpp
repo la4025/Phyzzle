@@ -303,6 +303,26 @@ namespace Phyzzle
 		ApplyDShadowSettings(_obj, false);
 	}
 
+	bool AttachSystem::IsTouching(PzObject* _base)
+	{
+		// 선택한 오브젝트가 섬을 가지고 있는지 아닌지 체크
+		const IslandID obj0ID = _base->GetIslandID();
+		AttachIsland island0;
+
+		if (!HasAttachIsland(obj0ID, island0))
+			island0.emplace_back(_base);
+
+		for (const auto& e : island0)
+		{
+			if (e->attachable && _base != e->attachable)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// 물체 부착
 	bool AttachSystem::TryAttach(PzObject* _object)
 	{
@@ -514,6 +534,18 @@ namespace Phyzzle
 		RemoveIslandID(obj0ID);
 		RemoveIslandID(obj1ID);
 		CreateIsland(island0);
+	}
+
+	uint32_t AttachSystem::GetCountInIsland(PzObject* _obj)
+	{
+		const IslandID id = _obj->GetIslandID();
+
+		AttachIsland island;
+
+		if (!HasAttachIsland(id, island))
+			island.push_back(_obj);
+
+		return island.size();
 	}
 
 	void AttachSystem::CalculateLocalAnchor(

@@ -22,6 +22,11 @@ namespace Phyzzle
 
 	void PzObject::Update()
 	{
+
+	}
+
+	void PzObject::LateUpdate()
+	{
 		bool enter = !preState && select;
 		bool stay = preState && select;
 		bool exit = preState && !select;

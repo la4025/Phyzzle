@@ -13,6 +13,7 @@ namespace Phyzzle
 
 		void Start() override;
 		void Update() override;
+		void LateUpdate() override;
 
 	public:
 		bool isLocked();

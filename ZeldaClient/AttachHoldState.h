@@ -81,12 +81,15 @@ namespace Phyzzle
 
 #pragma region Content
 	private:
+		bool cancel = false;
+		bool around = false;
 		bool roateMode = false;
 		bool adjustmentMode = false;
 
+		std::vector<PzObject*> aroundObject;
+
 		PositionSpring posSpring;
 		QuaternionSpring quatSpring;
-		const float selectRange = 40.f;			// 울트라핸드 가능한 거리
 		const float pushingVelocity = 5.f;		// up, down 입력의
 		const float rotateAngle = 0.25f * std::numbers::pi_v<float>;
 
@@ -147,8 +150,10 @@ namespace Phyzzle
 		void RotateWithSpring(const Eigen::Vector3f& _axis, float _angle);				// 스프링 이동
 
 		bool TryAttach() const;									// 부착
-		bool TryDettach() const;									// 부착
+		bool TryDettach();									// 부착
 
+		bool SearchAround();
+		void AroundObjectEnableOutline(bool _value);
 		void EnableOutline(bool) const;
 
 		void Snap();
@@ -157,6 +162,12 @@ namespace Phyzzle
 		Eigen::Quaternionf FindAxis(const Eigen::Quaternionf& _direction);
 
 		bool TryTranslate(float _distance);
+
+		void AttachTouchUIRender(bool _value);
+		void AttachRotateUIRender(bool _value);
+		void DettachUIRender(bool _value);
+
+		void UIDisable();
 #pragma endregion Content
 
 	private:

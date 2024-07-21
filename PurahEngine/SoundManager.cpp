@@ -107,7 +107,7 @@ void PurahEngine::SoundManager::CreateSfxSound(std::wstring name, FMOD::Sound** 
 	// wstring을 string으로 변환하는 방법
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 	std::string str = converter.to_bytes(filePath);
-
+	
 	result = system->createSound(str.c_str(), FMOD_3D_LINEARSQUAREROLLOFF, 0, sound);
 	assert(result == FMOD_OK);
 }

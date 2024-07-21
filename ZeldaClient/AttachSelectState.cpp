@@ -23,6 +23,8 @@ namespace Phyzzle
 		}
 
 		CrossHeadRender(true);
+		SearchUIRender(true);
+		SearchCatchUIRender(true);
 	}
 
 	// 상태 나가기
@@ -41,6 +43,8 @@ namespace Phyzzle
 		aroundObject.clear();
 
 		CrossHeadRender(false);
+		SearchUIRender(false);
+		SearchCatchUIRender(false);
 	}
 
 	// Update
@@ -53,27 +57,22 @@ namespace Phyzzle
 		seleteBody = nullptr;
 		selectObject = nullptr;
 
-		if (SearchAround())
-		{
-			AroundObjectEnableOutline(true);
-		}
-
+		around = SearchAround();
 		select = Search();
-
-		if (select)
-		{
-			EnableOutline(true);
-		}
-		
-		if (player->data.debugMode)
-		{
-			SearchDebugDraw(select);
-		}
 	}
 
 	void AttachSelectState::PostStateStay()
 	{
+		if (around)
+			AroundObjectEnableOutline(true);
+
+		if (select)
+			EnableOutline(true);
+
 		CameraUpdate();
+
+		if (player->data.debugMode)
+			SearchDebugDraw(select);
 	}
 
 	void AttachSelectState::StateCancel()
@@ -91,7 +90,10 @@ namespace Phyzzle
 		PlayerMove(player->data.moveSpeed);
 		auto velocity = player->data.playerRigidbody->GetLinearVelocity();
 		velocity.y() = 0.f;
-		LookToWorldDirection(velocity);
+		if (velocity.norm() >= 1e-2)
+		{
+			LookToWorldDirection(velocity);
+		}
 	}
 
 	// 카메라 회전
@@ -305,6 +307,17 @@ namespace Phyzzle
 	{
 		player->data.crossHead->SetEnable(_value);
 	}
+
+	void AttachSelectState::SearchUIRender(bool _value)
+	{
+		player->uiData.Attach_Default->SetEnable(_value);
+	}
+
+	void AttachSelectState::SearchCatchUIRender(bool _value)
+	{
+		player->uiData.Catch_B->SetEnable(_value);
+	}
+
 #pragma endregion Content
 
 #pragma region Debug

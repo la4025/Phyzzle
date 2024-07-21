@@ -64,6 +64,7 @@ namespace Phyzzle
 		void						EnableDShadow(PzObject* _obj);
 		void						DisableDShadow(PzObject* _obj);
 
+		bool						IsTouching(PzObject* _base);
 		bool						TryAttach(PzObject* _base);
 		bool						Attach(PzObject* _base, PzObject* _other);
 		bool						Dettach(PzObject* _base);
@@ -76,6 +77,8 @@ namespace Phyzzle
 
 		bool						HasAttachIsland(const IslandID& _id, AttachIsland& _island);
 		void						RebuildIsland(PzObject* _base, PzObject* _other);
+
+		uint32_t					GetCountInIsland(PzObject* _obj);
 
 		void						CalculateLocalAnchor(
 										const Eigen::Vector3f& _anchorP, 
