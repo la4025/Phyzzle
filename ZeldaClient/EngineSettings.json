@@ -12,7 +12,8 @@
     "Rewindable",
     "Trigger Object",
     "Fire",
-    "Aiirable"
+    "Shooter",
+    "MovingGround"
   ],
   "layer": [
     "Default",
@@ -351,7 +352,7 @@
       true,
       true,
       false,
-      false,
+      true,
       true,
       false
     ],

@@ -236,7 +236,7 @@ namespace Phyzzle
 		corePosition.z() = 0.f;
 		Eigen::Vector3f position = parentMatrix * corePosition;
 		Quaternionf rotation = Quaternionf::Identity();
-		int layer = player->abilData.attachRaycastLayers;
+		int layer = player->abilData.searchAroundLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 		info.actors.resize(player->abilData.searchAroundbufferSize);
 		info.shapes.resize(player->abilData.searchAroundbufferSize);

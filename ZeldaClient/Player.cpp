@@ -208,6 +208,9 @@ namespace Phyzzle
 
 		data.isGrounded = data.groundCheck->IsGrounded();	// 밟고있는 것 체크
 		data.isStandableSlope = SlopeCheck();				// 밟고있는 것 기울기 체크
+		
+		ApplyImpulse();
+		PlayerFlyingUpdate();
 
 		if (!data.isGrounded)
 		{
@@ -251,13 +254,17 @@ namespace Phyzzle
 	void Player::OnCollisionEnter(const ZonaiPhysics::ZnCollision& zn_collision,
 		const PurahEngine::Collider* collider)
 	{
+		PlayerOnMovingPlatform(zn_collision, collider);
 
+		PlayerImpulseCheck(zn_collision, collider);
 	}
 
 	void Player::OnCollisionStay(const ZonaiPhysics::ZnCollision& zn_collision,
 		const PurahEngine::Collider* collider)
 	{
-
+		PlayerOnMovingPlatform(zn_collision, collider);
+		
+		PlayerImpulseCheck(zn_collision, collider);
 	}
 
 	void Player::OnCollisionExit(const ZonaiPhysics::ZnCollision& zn_collision,
@@ -508,9 +515,88 @@ namespace Phyzzle
 		if (rotate)
 			stateSystem[currState]->Click_RB();
 	}
+
 #pragma endregion Input
 
 #pragma region Player
+	void Player::PlayerOnMovingPlatform(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		if (collider->GetGameObject()->tag.IsContain(L"MovingGround"))
+		{
+			PurahEngine::GameObject* gameobj = collider->GetGameObject();
+
+			if (gameobj)
+			{
+				PurahEngine::RigidBody* groundBody = gameobj->GetComponent<PurahEngine::RigidBody>();
+
+				if (groundBody)
+				{
+					Eigen::Vector3f movingGroundVelocity = groundBody->GetLinearVelocity();
+					
+					for (int i = 0; i < zn_collision.contactCount; i++)
+					{
+						// 충돌 지점이 플레이어의 아래쪽인지 확인
+						if (zn_collision.contacts[i].point.y() < data.modelCore->GetWorldPosition().y() + 0.5f)
+						{
+							if (data.onPlatformVelocity.norm() < movingGroundVelocity.norm())
+							{
+								data.onPlatformVelocity = movingGroundVelocity;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void Player::PlayerImpulseCheck(const ZonaiPhysics::ZnCollision& zn_collision, const PurahEngine::Collider* collider)
+	{
+		// 충돌한 게임 오브젝트가 "슈터" 태그를 가지고 있는지 확인
+		if (collider->GetGameObject()->tag.IsContain(L"Shooter"))
+		{
+			PurahEngine::GameObject* shooterObj = collider->GetGameObject();
+			PurahEngine::RigidBody* shooterBody = shooterObj->GetComponent<PurahEngine::RigidBody>();
+
+			if (shooterBody)
+			{
+				if (zn_collision.impulses.norm() >= data.impactThreshold)
+				{
+					// 플레이어를 날려 보내기 위한 힘 계산
+					Eigen::Vector3f knockbackForce = zn_collision.impulses;
+
+					// 플레이어의 속도에 힘을 추가하여 날려 보냄
+					if (data.playerFlyingVelocity.norm() < knockbackForce.norm())
+					{
+						data.playerFlyingVelocity = knockbackForce;
+						data.flying = true;
+					}
+				}
+			}
+		}
+	}
+
+	void Player::ApplyImpulse()
+	{
+		data.playerRigidbody->AddForce(data.playerFlyingVelocity, ZonaiPhysics::Accelration);
+
+		data.playerFlyingVelocity = Eigen::Vector3f::Zero();
+	}
+
+	void Player::PlayerFlyingUpdate()
+	{
+		if (!data.flying)
+			return;
+		static float acc = 0.f;
+		acc += PurahEngine::TimeController::GetInstance().GetDeltaTime();
+
+		if (acc >= data.flyingTime)
+		{
+			data.flying = false;
+			acc = 0.f;
+		}
+	}
+
 	bool Player::SlopeCheck()
 	{
 		using namespace Eigen;
@@ -564,9 +650,6 @@ namespace Phyzzle
 
 		if (!data.isStandableSlope)
 			return false;
-
-		if (data.damaged)
-			return false;
 	}
 
 	bool Player::TryPlayerMove(float _moveSpeed)
@@ -582,7 +665,7 @@ namespace Phyzzle
 		const float moveSpeed = _moveSpeed * currInput.Lstick.Size;
 
 		// 경사면 여부에 따라 이동 방향 벡터 계산
-		if (data.isStandableSlope)
+		if (!data.flying && data.isStandableSlope)
 		{
 			Vector3f movementRight = data.lastGroundNormal.cross(forward).normalized();
 			Vector3f movementForward = movementRight.cross(data.lastGroundNormal).normalized();
@@ -605,25 +688,29 @@ namespace Phyzzle
 		// 추가 속도 벡터 계산
 		Vector3f additionalVelocity = targetVelocity - currentVelocity;
 
-		// 지면에 있는 경우
-		if (data.isGrounded)
+		// 날고 있는 경우
+		if (data.flying)
 		{
-			if (currInput.Lstick.Size < 1e-2)
-			{
-				additionalVelocity.y() = 0.f;
-				data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
-			}
-			else
-			{
-				additionalVelocity.y() = 0.f;
-				data.playerRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Accelration);
-			}
+			// 비행 중 추가 속도 벡터 계산 및 적용
+			data.playerRigidbody->AddForce(targetVelocity, ZonaiPhysics::Force);
+		}
+		// 지면에 있는 경우
+		else if (data.isGrounded)
+		{
+			// 지면에 있는 경우 추가 속도 벡터 계산
+			additionalVelocity.y() = 0.f;
+
+			// 지면에 있는 경우 힘을 추가하여 속도 조절
+			data.playerRigidbody->AddForce(additionalVelocity + data.onPlatformVelocity, ZonaiPhysics::ForceType::Accelration);
+
 		}
 		// 공중에 있는 경우
 		else
 		{
-			data.playerRigidbody->AddForce(targetVelocity * data.playerRigidbody->GetMass(), ZonaiPhysics::Velocity_Change);
+			data.playerRigidbody->AddForce(additionalVelocity * data.playerRigidbody->GetMass(), ZonaiPhysics::Force);
 		}
+
+		data.onPlatformVelocity = Vector3f::Zero();
 
 		// 이동 여부 반환
 		return currInput.Lstick.Size >= 1e-6;
