@@ -16,8 +16,17 @@ namespace PurahEngine
 		auto& instance = PhysicsSystem::GetInstance();
 
 		GetGameObject()->GetTransform()->SetRigidBody(nullptr);
-		instance.FreeObject(body, GetGameObject());
-		instance.bodies.erase(std::ranges::find(instance.bodies, this));
+		if (body)
+		{
+			instance.FreeObject(body, GetGameObject());
+			body = nullptr;
+		}
+
+		auto iter = std::ranges::find(instance.bodies, this);
+		if (iter != instance.bodies.end())
+		{
+			instance.bodies.erase(std::ranges::find(instance.bodies, this));
+		}
 	}
 
 	void RigidBody::Initialize()

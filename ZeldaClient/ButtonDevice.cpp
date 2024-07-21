@@ -23,12 +23,13 @@ namespace Phyzzle
 	{
 		float deltaTime = PurahEngine::TimeController::GetInstance().GetDeltaTime();
 
-		// Update isButtonDown
-		if ((originPos.y() - pushableObject->GetTransform()->GetLocalPosition().y()) >= activationDepth)
+		float dist = originPos.y() - pushableObject->GetTransform()->GetLocalPosition().y();
+
+		if (dist >= activationDepth)
 		{
 			isButtonDown = true;
 		}
-		else if ((originPos.y() - pushableObject->GetTransform()->GetLocalPosition().y()) <= deactivationDepth)
+		else if (dist <= deactivationDepth)
 		{
 			isButtonDown = false;
 		}
@@ -81,11 +82,21 @@ namespace Phyzzle
 				break;
 			}
 		}
+
+		// Eigen::Vector3f currentVelocity = pushableRigidbody->GetLinearVelocity();
+		Eigen::Vector3f targetVelocity = { 0.0f, releasedSpeed, 0.0f };
+		// Eigen::Vector3f additionalVelocity = targetVelocity - currentVelocity;
+
+		pushableRigidbody->AddForce(targetVelocity, ZonaiPhysics::Velocity_Change);
 	}
 
 	void ButtonDevice::FixedUpdate()
 	{
-		pushableRigidbody->AddForce({ 0.0f, releasedSpeed, 0.0f }, ZonaiPhysics::Velocity_Change);
+		//Eigen::Vector3f currentVelocity = pushableRigidbody->GetLinearVelocity();
+		//Eigen::Vector3f targetVelocity = { 0.0f, releasedSpeed, 0.0f };
+		//Eigen::Vector3f additionalVelocity = targetVelocity - currentVelocity;
+
+		//pushableRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
 	}
 
 	void ButtonDevice::TargetPowerOn()

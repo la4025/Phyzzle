@@ -13,6 +13,7 @@ namespace PurahEngine
 		if (znCollider)
 		{
 			physicsSystem.FreeObject(znCollider, this->GetGameObject());
+			znCollider = nullptr;
 		}
 	}
 
