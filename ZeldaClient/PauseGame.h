@@ -12,6 +12,7 @@ namespace Phyzzle
 		~PauseGame();
 
 	public:
+		void OnDestroy() override;
 		void Awake() override;
 		void Start() override;
 		void Update() override;

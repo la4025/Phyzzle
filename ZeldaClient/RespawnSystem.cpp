@@ -1,6 +1,8 @@
 #include "RespawnSystem.h"
 
 #include "RespawnTrigger.h"
+#include "AttachSystem.h"
+#include "PzObject.h"
 
 namespace Phyzzle
 {
@@ -22,6 +24,12 @@ namespace Phyzzle
 
 	void RespawnSystem::OnDeath()
 	{
+		PzObject* pzobj = FindPZObject(targetObject);
+		if (pzobj != nullptr)
+		{
+			AttachSystem::Instance()->Dettach(pzobj);
+		}
+
 		switch (mode)
 		{
 			case Mode::Nearest:
@@ -103,6 +111,31 @@ namespace Phyzzle
 		}
 		
 		lastLevel = level;
+	}
+
+	PzObject* RespawnSystem::FindPZObject(PurahEngine::GameObject* obj)
+	{
+		PzObject* pzobj = obj->GetComponent<PzObject>();
+
+		if (pzobj != nullptr)
+		{
+			return pzobj;
+		}
+
+		PurahEngine::Transform* trs = obj->GetTransform();
+		std::vector<PurahEngine::Transform*> children = trs->GetChildren();
+
+		for (auto& child : children)
+		{
+			pzobj = FindPZObject(child->GetGameObject());
+
+			if (pzobj != nullptr)
+			{
+				return pzobj;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void RespawnSystem::PreSerialize(json& jsonData) const
