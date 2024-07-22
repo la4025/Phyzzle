@@ -5,6 +5,7 @@
 namespace Phyzzle
 {
 	class RespawnTrigger;
+	class PzObject;
 
 	class RespawnSystem final : public PurahEngine::Component
 	{
@@ -21,6 +22,9 @@ namespace Phyzzle
 
 		void OnDeath();
 		void OnLevel(int level);
+
+	private:
+		PzObject* FindPZObject(PurahEngine::GameObject* obj);
 
 	private:
 		Mode mode;

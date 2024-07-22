@@ -69,7 +69,10 @@ namespace PurahEngine
 			{
 				mass = 1.f;
 			}
-			this->SetDensity(density);
+			if (!isKinematic)
+			{
+				this->SetDensity(density);
+			}
 		}
 		else
 		{
@@ -77,7 +80,11 @@ namespace PurahEngine
 			{
 				mass = 1.f;
 			}
-			this->SetMass(mass);
+
+			if (!isKinematic)
+			{
+				this->SetMass(mass);
+			}
 		}
 	}
 
