@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BoxController.h" />
+    <ClInclude Include="Bunny.h" />
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="CapsuleController.h" />
     <ClInclude Include="Collider.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="SpringFlexJoint.h" />
     <ClInclude Include="eCallback.h" />
     <ClInclude Include="EventCallbackBuffer.h" />
+    <ClInclude Include="ZnBVH.h" />
     <ClInclude Include="ZnConvexMeshData.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="DistanceJoint.h" />
@@ -81,6 +83,7 @@
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphericalJoint.cpp" />
     <ClCompile Include="CharacterController.cpp" />
+    <ClCompile Include="ZnBVH.cpp" />
     <ClCompile Include="ZnFactoryX.cpp" />
     <ClCompile Include="ZnLayer.cpp" />
     <ClCompile Include="ZnPhysicsX.cpp" />

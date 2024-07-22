@@ -89,6 +89,9 @@
     <ClCompile Include="D1SpringFlexJoint.cpp">
       <Filter>Object\Joint\Custom\D1</Filter>
     </ClCompile>
+    <ClCompile Include="ZnBVH.cpp">
+      <Filter>0. Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ZonaiPhysicsX.h" />
@@ -194,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="D1SpringFlexJoint.h">
       <Filter>Object\Joint\Custom\D1</Filter>
+    </ClInclude>
+    <ClInclude Include="Bunny.h">
+      <Filter>0. Core\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ZnBVH.h">
+      <Filter>0. Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
