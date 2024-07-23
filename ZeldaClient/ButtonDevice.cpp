@@ -84,10 +84,8 @@ namespace Phyzzle
 		}
 
 		// Eigen::Vector3f currentVelocity = pushableRigidbody->GetLinearVelocity();
-		Eigen::Vector3f targetVelocity = { 0.0f, releasedSpeed, 0.0f };
 		// Eigen::Vector3f additionalVelocity = targetVelocity - currentVelocity;
 
-		pushableRigidbody->AddForce(targetVelocity, ZonaiPhysics::Velocity_Change);
 	}
 
 	void ButtonDevice::FixedUpdate()
@@ -97,6 +95,9 @@ namespace Phyzzle
 		//Eigen::Vector3f additionalVelocity = targetVelocity - currentVelocity;
 
 		//pushableRigidbody->AddForce(additionalVelocity, ZonaiPhysics::Velocity_Change);
+
+		Eigen::Vector3f targetVelocity = { 0.0f, releasedSpeed, 0.0f };
+		pushableRigidbody->AddForce(targetVelocity, ZonaiPhysics::Velocity_Change);
 	}
 
 	void ButtonDevice::TargetPowerOn()

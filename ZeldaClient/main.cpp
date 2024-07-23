@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "GroundCheck.h"
 #include "Controller.h"
+#include "LinearMotor.h"
 
 #include "LauncherPlatform.h"
 
@@ -85,6 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::GroundCheck>("GroundCheck");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::PzObject>("PzObject");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::Rewindable>("Rewindable");
+	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::LinearMotor>("LinearMotor");
 
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::TriggerDevice>("TriggerDevice");
 	PurahEngine::ComponentFactory::GetInstance().RegisterComponent<Phyzzle::ButtonDevice>("ButtonDevice");
