@@ -198,7 +198,7 @@ namespace Phyzzle
 		Eigen::Matrix3f rotate = player->data.cameraCore->GetWorldRotation().toRotationMatrix();
 		Eigen::Vector3f to = rotate * Eigen::Vector3f{ 0.f, 0.f, 1.f };
 		float distance = player->abilData.attachRaycastDistance + std::fabs(player->data.cameraCore->GetLocalPosition().z());
-		unsigned int layers = player->abilData.attachRaycastLayers;
+		unsigned int layers = player->abilData.searchAroundLayers;
 		ZonaiPhysics::ZnQueryInfo info;
 
 		const bool block = PurahEngine::Physics::Raycast(from, to, distance, layers, info);
