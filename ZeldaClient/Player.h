@@ -165,7 +165,8 @@ namespace Phyzzle
 			PurahEngine::Transform* cameraArm;
 			PurahEngine::Transform* cameraCore;
 			PurahEngine::Animator* animator;
-			PurahEngine::GameObject* crossHead;
+			PurahEngine::GameObject* crossHead01;
+			PurahEngine::GameObject* crossHead02;
 			Phyzzle::GroundCheck* groundCheck;
 
 			// UI
