@@ -1447,9 +1447,13 @@ namespace Phyzzle
 			POSTDESERIALIZE_PTR(animator);
 			data.animator = animator;
 
-			auto crossHead = data.crossHead;
-			POSTDESERIALIZE_PTR(crossHead);
-			data.crossHead = crossHead;
+			auto crossHead01 = data.crossHead01;
+			POSTDESERIALIZE_PTR(crossHead01);
+			data.crossHead01 = crossHead01;
+
+			auto crossHead02 = data.crossHead02;
+			POSTDESERIALIZE_PTR(crossHead02);
+			data.crossHead02 = crossHead02;
 
 			auto groundCheck = data.groundCheck;
 			POSTDESERIALIZE_PTR(groundCheck);

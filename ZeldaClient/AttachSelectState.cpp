@@ -42,6 +42,7 @@ namespace Phyzzle
 		aroundObject.clear();
 
 		CrossHeadRender(false);
+		CrossHeadSelectRender(false);
 		SearchUIRender(false);
 		SearchCatchUIRender(false);
 	}
@@ -67,11 +68,13 @@ namespace Phyzzle
 
 		if (select)
 		{
+			CrossHeadSelectRender(true);
 			SearchCatchUIRender(true);
 			EnableOutline(true);
 		}
 		else
 		{
+			CrossHeadSelectRender(false);
 			SearchCatchUIRender(false);
 		}
 
@@ -311,7 +314,12 @@ namespace Phyzzle
 	
 	void AttachSelectState::CrossHeadRender(bool _value)
 	{
-		player->data.crossHead->SetEnable(_value);
+		player->data.crossHead01->SetEnable(_value);
+	}
+
+	void AttachSelectState::CrossHeadSelectRender(bool _value)
+	{
+		player->data.crossHead02->SetEnable(_value);
 	}
 
 	void AttachSelectState::SearchUIRender(bool _value)

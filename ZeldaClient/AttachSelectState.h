@@ -64,6 +64,7 @@ namespace Phyzzle
 		void AroundObjectEnableOutline(bool);
 		void EnableOutline(bool) const;
 		void CrossHeadRender(bool _value);
+		void CrossHeadSelectRender(bool _value);
 
 		void SearchUIRender(bool _value);
 		void SearchCatchUIRender(bool _value);
