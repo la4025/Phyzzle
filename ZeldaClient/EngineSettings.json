@@ -35,7 +35,8 @@
     "GroundCheck",
     "MovingGround",
     "AttachBlocker",
-    "AllTrigger"
+    "AllTrigger",
+    "MetalWall"
   ],
   "collisionSetting": [
     [
@@ -57,26 +58,6 @@
       true,
       false,
       false,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
       false,
       false
     ],
@@ -99,6 +80,29 @@
       false,
       false,
       false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
       false
     ],
     [
@@ -120,6 +124,7 @@
       false,
       true,
       false,
+      true,
       true
     ],
     [
@@ -141,26 +146,6 @@
       false,
       false,
       false,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
       false,
       false
     ],
@@ -168,38 +153,18 @@
       false,
       false,
       false,
-      true,
       false,
       false,
       false,
       false,
       false,
       false,
-      true,
-      false,
-      true,
-      true,
-      false,
-      true,
-      false,
-      false,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      true,
       false,
       false,
       false,
       false,
       false,
       false,
-      true,
-      false,
-      true,
-      true,
       false,
       false,
       false,
@@ -222,6 +187,51 @@
       true,
       true,
       false,
+      true,
+      false,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
       false,
       false,
       false,
@@ -246,6 +256,7 @@
       false,
       false,
       false,
+      false,
       false
     ],
     [
@@ -267,6 +278,7 @@
       true,
       true,
       false,
+      true,
       true
     ],
     [
@@ -288,6 +300,7 @@
       true,
       false,
       false,
+      true,
       true
     ],
     [
@@ -309,6 +322,7 @@
       true,
       true,
       false,
+      true,
       true
     ],
     [
@@ -330,6 +344,7 @@
       true,
       true,
       false,
+      true,
       true
     ],
     [
@@ -351,7 +366,8 @@
       false,
       false,
       false,
-      true
+      true,
+      false
     ],
     [
       true,
@@ -371,6 +387,7 @@
       false,
       true,
       true,
+      false,
       false,
       false
     ],
@@ -393,26 +410,6 @@
       true,
       true,
       false,
-      false
-    ],
-    [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
       false,
       false
     ],
@@ -420,6 +417,28 @@
       false,
       false,
       false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
       true,
       false,
       false,
@@ -435,7 +454,30 @@
       false,
       false,
       false,
-      true
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
     ]
   ],
   "preLoadModels": [],
@@ -514,9 +556,9 @@
     },
     {
       "name": "Ball",
-      "staticFriction": 0.5,
-      "dynamicFriction": 0.4,
-      "restitution": 0.0,
+      "staticFriction": 0.9,
+      "dynamicFriction": 0.8,
+      "restitution": 0.1,
       "eFriction": 0,
       "eRestitution": 2
     },
@@ -533,6 +575,46 @@
       "staticFriction": 0.5,
       "dynamicFriction": 0.4,
       "restitution": 0.2,
+      "eFriction": 0,
+      "eRestitution": 2
+    },
+    {
+      "name": "Jelly",
+      "staticFriction": 1.0,
+      "dynamicFriction": 1.0,
+      "restitution": 1.5,
+      "eFriction": 3,
+      "eRestitution": 3
+    },
+    {
+      "name": "Jelly_Big",
+      "staticFriction": 1.0,
+      "dynamicFriction": 1.0,
+      "restitution": 3.0,
+      "eFriction": 3,
+      "eRestitution": 3
+    },
+    {
+      "name": "NB_Wall",
+      "staticFriction": 0.5,
+      "dynamicFriction": 0.5,
+      "restitution": 0.1,
+      "eFriction": 0,
+      "eRestitution": 0
+    },
+    {
+      "name": "WoodBox",
+      "staticFriction": 0.7,
+      "dynamicFriction": 0.7,
+      "restitution": 0.2,
+      "eFriction": 0,
+      "eRestitution": 2
+    },
+    {
+      "name": "SteelWall",
+      "staticFriction": 0.3,
+      "dynamicFriction": 0.2,
+      "restitution": 0.1,
       "eFriction": 0,
       "eRestitution": 2
     }
