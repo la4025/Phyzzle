@@ -15,8 +15,17 @@ namespace PurahEngine
 	{
 		auto& instance = PhysicsSystem::GetInstance();
 
-		instance.FreeObject(joint, GetGameObject());
-		instance.joints.erase(std::ranges::find(instance.joints, this));
+		if (joint)
+		{
+			instance.FreeObject(joint, GetGameObject());
+			joint = nullptr;
+		}
+
+		auto iter = std::ranges::find(instance.joints, this);
+		if (iter != instance.joints.end())
+		{
+			instance.joints.erase(std::ranges::find(instance.joints, this));
+		}
 	}
 
 	void SlideJoint::PostInitialize()

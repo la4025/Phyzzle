@@ -274,8 +274,12 @@ namespace ZonaiPhysics
 		return pxShape;
 	}
 
+#include "Bunny.h"
+
 	physx::PxTriangleMesh* ZnFactoryX::CookTriagleMesh(FBXLoader::Model* _model)
 	{
+		using namespace physx;
+
 		std::vector<physx::PxVec3> vertices;
 		std::vector<physx::PxU32> indies;
 
@@ -301,7 +305,8 @@ namespace ZonaiPhysics
 		}
 
 		// 정점 정보
-		physx::PxTriangleMeshDesc meshDesc;
+		PxTriangleMeshDesc meshDesc;
+
 		meshDesc.points.count = (physx::PxU32)vertices.size();
 		meshDesc.points.stride = sizeof(Eigen::Vector3f);
 		meshDesc.points.data = &vertices.front();
@@ -310,14 +315,11 @@ namespace ZonaiPhysics
 		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
 		meshDesc.triangles.data = &indies.front();
 
-		//const physx::PxTolerancesScale scale;
-		//physx::PxCookingParams params(scale);
-		//params.midphaseDesc.setToDefault(physx::PxMeshMidPhase::eBVH34);
-		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-		//params.meshPreprocessParams |= physx::PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-		//physx::PxTriangleMesh* triangleMesh = PxCreateTriangleMesh(params, meshDesc);
-		
-		physx::PxCookingParams params(pxFactory->getTolerancesScale());
+		const PxTolerancesScale scale;
+		PxCookingParams params(scale);
+		params.midphaseDesc.setToDefault(PxMeshMidPhase::eBVH34);
+
+
 		physx::PxDefaultMemoryOutputStream writeBuffer;
 		physx::PxTriangleMeshCookingResult::Enum result;
 		const bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
@@ -326,8 +328,6 @@ namespace ZonaiPhysics
 			ZONAI_CAUTUON(ZonaiPhysics, Create Mesh Collider Error!)
 			return NULL;
 		}
-
-		// auto mesh = PxCreateTriangleMesh(params, meshDesc);
 
 		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		physx::PxTriangleMesh* triangleMesh = pxFactory->createTriangleMesh(readBuffer);

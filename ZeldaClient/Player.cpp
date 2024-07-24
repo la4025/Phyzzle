@@ -472,8 +472,14 @@ namespace Phyzzle
 		currInput.Lstick.Y = moveForward ? 1.0f : (moveBackward ? -1.0f : 0.0f);
 		currInput.Lstick.X = moveLeft ? -1.0f : (moveRight ? 1.0f : 0.0f);
 
-		float magnitude = std::sqrt(currInput.Lstick.X * currInput.Lstick.X + currInput.Lstick.Y * currInput.Lstick.Y);
-		currInput.Lstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+		float magnitude = currInput.Lstick.X * currInput.Lstick.X + currInput.Lstick.Y * currInput.Lstick.Y;
+		if (magnitude > 0.f)
+		{
+			magnitude = std::sqrt(magnitude);
+			currInput.Lstick.Y /= magnitude;
+			currInput.Lstick.X /= magnitude;
+		}
+		currInput.Lstick.Size = std::clamp(std::sqrt(magnitude), 0.0f, 1.0f);
 	}
 
 	void Player::HandleCameraRotationInput()
@@ -486,8 +492,14 @@ namespace Phyzzle
 		currInput.Rstick.Y = rotateUp ? 1.0f : (rotateDown ? -1.0f : 0.0f);
 		currInput.Rstick.X = rotateLeft ? -1.0f : (rotateRight ? 1.0f : 0.0f);
 
-		float magnitude = std::sqrt(currInput.Rstick.X * currInput.Rstick.X + currInput.Rstick.Y * currInput.Rstick.Y);
-		currInput.Rstick.Size = std::clamp(magnitude, 0.0f, 1.0f);
+		float magnitude = currInput.Rstick.X * currInput.Rstick.X + currInput.Rstick.Y * currInput.Rstick.Y;
+		if (magnitude > 0.f)
+		{
+			magnitude = std::sqrt(magnitude);
+			currInput.Rstick.Y /= magnitude;
+			currInput.Rstick.X /= magnitude;
+		}
+		currInput.Rstick.Size = std::clamp(std::sqrt(magnitude), 0.0f, 1.0f);
 	}
 
 	void Player::HandleActionInput()

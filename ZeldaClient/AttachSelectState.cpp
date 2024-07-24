@@ -24,7 +24,6 @@ namespace Phyzzle
 
 		CrossHeadRender(true);
 		SearchUIRender(true);
-		SearchCatchUIRender(true);
 	}
 
 	// 상태 나가기
@@ -67,7 +66,14 @@ namespace Phyzzle
 			AroundObjectEnableOutline(true);
 
 		if (select)
+		{
+			SearchCatchUIRender(true);
 			EnableOutline(true);
+		}
+		else
+		{
+			SearchCatchUIRender(false);
+		}
 
 		CameraUpdate();
 

@@ -158,6 +158,7 @@
     <ClCompile Include="DirectionalLightSystem.cpp" />
     <ClCompile Include="GroundCheck.cpp" />
     <ClCompile Include="LightSystem.cpp" />
+    <ClCompile Include="LinearMotor.cpp" />
     <ClCompile Include="ObjectController.cpp" />
     <ClCompile Include="ObjectGenerator.cpp" />
     <ClCompile Include="PauseGame.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="DirectionalLightSystem.h" />
     <ClInclude Include="GroundCheck.h" />
     <ClInclude Include="LightSystem.h" />
+    <ClInclude Include="LinearMotor.h" />
     <ClInclude Include="ObjectController.h" />
     <ClInclude Include="ObjectGenerator.h" />
     <ClInclude Include="PauseGame.h" />
