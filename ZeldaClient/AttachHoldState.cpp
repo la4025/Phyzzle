@@ -222,6 +222,7 @@ namespace Phyzzle
 			if (around)
 				AroundObjectEnableOutline(true);	// 주변 오브젝트 아웃라인
 
+			RotationArowRender(roateMode);
 			AttachRotateUIRender(roateMode);
 			DettachUIRender(!roateMode);
 			EnableOutline(true);		// 잡은 오브젝트 아웃라인
@@ -1539,6 +1540,11 @@ namespace Phyzzle
 			player->uiData.Attach_Hold_Stick->SetEnable(_value);
 		}
 
+	}
+
+	void AttachHoldState::RotationArowRender(bool _value)
+	{
+		player->data.rotationArow->SetEnable(_value);
 	}
 
 	void AttachHoldState::UIDisable()

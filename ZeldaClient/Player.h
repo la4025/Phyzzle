@@ -168,9 +168,9 @@ namespace Phyzzle
 			PurahEngine::GameObject* crossHead01;
 			PurahEngine::GameObject* crossHead02;
 			Phyzzle::GroundCheck* groundCheck;
+			PurahEngine::GameObject* rotationArow;
 
 			// UI
-			PurahEngine::GameObject* rotationArrow;
 			PurahEngine::GameObject* attachSelectUI;
 			PurahEngine::GameObject* attachHoldUI;
 			PurahEngine::GameObject* attachHoldCollisionUI;
