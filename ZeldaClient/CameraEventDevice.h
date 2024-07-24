@@ -31,6 +31,7 @@ namespace Phyzzle
 		PurahEngine::Camera* SearchCamera(PurahEngine::GameObject* obj);
 
 	private:
+		bool timeStopDuringEvent;							// 이벤트 중, 시간 정지
 		bool worksOnlyOnce;									// 단 한번만 작동
 		float moveSpeed;									// 카메라의 이동속도
 		float startDelay;									// 카메라의 이동이 시작되기 전의 지연시간

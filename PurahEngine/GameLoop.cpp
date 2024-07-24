@@ -211,6 +211,18 @@ void PurahEngine::GameLoop::run()
 		SceneManager::GetInstance().LoadScene(L"DataExportTestWorldObjectInfo.json");
 	}
 
+	if (InputManager::Getinstance().IsKeyPressed(eKey::eKEY_SHIFT))
+	{
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F1)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(0));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F2)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(1));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F3)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(2));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F4)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(3));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F5)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(4));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F6)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(5));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F7)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(6));
+		if (InputManager::Getinstance().IsKeyDown(eKey::eKEY_F8)) SceneManager::GetInstance().LoadScene(EngineSetting::GetInstance().GetScene(7));
+	}
+
 	SceneManager::GetInstance().LoadScene();
 	SceneManager::GetInstance().InitializationEvent();
 

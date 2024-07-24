@@ -1,5 +1,7 @@
 #include "GraphicsResourceManager.h"
 
+#include <fstream>
+
 namespace PurahEngine
 {
 	GraphicsResourceManager::GraphicsResourceManager(IZeldaRenderer* zeldaRenderer)
@@ -57,7 +59,33 @@ namespace PurahEngine
 		{
 			return iter->second;
 		}
-	}
+
+		// 모델링 파일 정보 수집용 코드
+		//static std::vector<std::wstring> modelList; // 모델 이름을 저장할 벡터
+
+		//auto iter = modelTable.find(modelName);
+
+		//// modelName이 modelTable에 존재하지 않음
+		//if (iter == modelTable.end())
+		//{
+		//	ModelID id = graphicsModule->CreateModel(modelName);
+		//	modelTable[modelName] = id;
+		//	modelList.push_back(modelName); // 모델 이름을 벡터에 추가
+
+		//	// 벡터 내용을 파일에 저장
+		//	std::ofstream outFile("ModelNames.txt");
+		//	for (const auto& name : modelList)
+		//	{
+		//		outFile << "\"" << std::string(name.begin(), name.end()) << "\",\n";
+		//	}
+
+		//	return id;
+		//}  
+		//else
+		 //{
+		//	r eturn iter->second;
+		//}  
+	}  
 
 	LightID GraphicsResourceManager::CreateDirectionalLight(const Eigen::Vector3f& ambient, const Eigen::Vector3f& diffuse, const Eigen::Vector3f& specular, const Eigen::Vector3f& shadowColor, const Eigen::Vector3f& direction)
 	{

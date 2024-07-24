@@ -6,7 +6,7 @@ namespace Phyzzle
 {
 	CameraEventDevice::~CameraEventDevice()
 	{
-		if (running)
+		if (running && timeStopDuringEvent)
 		{
 			PurahEngine::TimeController::GetInstance().ResumeAll();
 		}
@@ -14,9 +14,12 @@ namespace Phyzzle
 
 	void CameraEventDevice::OnDestroy()
 	{
-		if (running)
+		if (running && timeStopDuringEvent)
 		{
-			player->SetStopUpdate(false);
+			if (player != nullptr)
+			{
+				player->SetStopUpdate(false);
+			}
 		}
 	}
 
@@ -24,7 +27,14 @@ namespace Phyzzle
 	{
 		running = false;
 		powerCounter = 0;
-		originMainCamera = SearchCamera(player->GetGameObject());
+		if (player != nullptr)
+		{
+			originMainCamera = SearchCamera(player->GetGameObject());
+		}
+		else
+		{
+			originMainCamera = PurahEngine::SceneManager::GetInstance().GetMainCamera();
+		}
 		workOnce = false;
 		pauseLevel = 0;
 	}
@@ -90,9 +100,16 @@ namespace Phyzzle
 
 						eventElapsed -= powerDelay;
 						eventLevel += 1;
-						PurahEngine::TimeController::GetInstance().ResumeAll();
 						pauseLevel = 0;
-						player->SetStopUpdate(false);
+
+						if (timeStopDuringEvent)
+						{
+							PurahEngine::TimeController::GetInstance().ResumeAll();
+							if (player != nullptr)
+							{
+								player->SetStopUpdate(false);
+							}
+						}
 					}
 					else
 					{
@@ -164,8 +181,16 @@ namespace Phyzzle
 		if ((worksOnlyOnce && workOnce) == false)
 		{
 			running = true;
-			pauseLevel = PurahEngine::TimeController::GetInstance().PauseAll();
-			player->SetStopUpdate(true);
+			if (timeStopDuringEvent)
+			{
+				pauseLevel = PurahEngine::TimeController::GetInstance().PauseAll();
+
+				if (player != nullptr)
+				{
+					player->SetStopUpdate(true);
+				}
+			}
+
 			eventElapsed = 0.0f;
 			eventLevel = 0;
 			workOnce = true;
@@ -219,6 +244,7 @@ namespace Phyzzle
 	void CameraEventDevice::PreDeserialize(const json& jsonData)
 	{
 		PREDESERIALIZE_BASE();
+		PREDESERIALIZE_VALUE(timeStopDuringEvent);
 		PREDESERIALIZE_VALUE(worksOnlyOnce);
 		PREDESERIALIZE_VALUE(moveSpeed);
 		PREDESERIALIZE_VALUE(startDelay);
@@ -235,6 +261,14 @@ namespace Phyzzle
 		POSTDESERIALIZE_PTR(targetCamera);
 		POSTDESERIALIZE_VECTOR_PTR(cameraPath);
 		POSTDESERIALIZE_VECTOR_PTR(targetDeviceList);
-		POSTDESERIALIZE_PTR(player);
+
+		if (jsonData.contains("__ID__player"))
+		{
+			player = static_cast<decltype(player)>(PurahEngine::FileManager::GetInstance().GetAddress(jsonData["__ID__player"]));
+		}
+		else
+		{
+			player = nullptr;
+		}
 	}
 }
