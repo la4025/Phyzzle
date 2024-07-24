@@ -166,6 +166,7 @@ namespace Phyzzle
 		void AttachTouchUIRender(bool _value);
 		void AttachRotateUIRender(bool _value);
 		void DettachUIRender(bool _value);
+		void RotationArowRender(bool _value);
 
 		void UIDisable();
 #pragma endregion Content

@@ -1458,6 +1458,10 @@ namespace Phyzzle
 			auto groundCheck = data.groundCheck;
 			POSTDESERIALIZE_PTR(groundCheck);
 			data.groundCheck = groundCheck;
+
+			auto rotationArow = data.rotationArow;
+			POSTDESERIALIZE_PTR(rotationArow);
+			data.rotationArow = rotationArow;
 		}
 
 		{
