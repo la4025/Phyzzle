@@ -1,0 +1,487 @@
+{
+  "gameObjects": [
+    {
+      "__Base__instanceID": 36826,
+      "name": "Main Camera",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36832,
+        "position": {
+          "x": 0.0,
+          "y": 1.0,
+          "z": -10.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36834,
+          "__Base__Component": "Camera",
+          "mainCamera": true,
+          "cameraNear": 0.3,
+          "cameraFar": 1000.0,
+          "fieldOfView": 1.04719758
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36840,
+      "name": "Directional Light",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36844,
+        "position": {
+          "x": 0.0,
+          "y": 3.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.408217877,
+          "y": -0.234569684,
+          "z": 0.109381631,
+          "w": 0.8754261
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": 36872,
+      "name": "Power Supply",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36880,
+        "position": {
+          "x": -15.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36878,
+          "__Base__Component": "TriggerDevice",
+          "onlyPowerOn": true,
+          "containTags": [
+            "Trigger Object"
+          ],
+          "__ID__targetDeviceList": [
+            36884
+          ]
+        },
+        {
+          "__Base__instanceID": 36874,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": false,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotationOffset": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36898,
+      "name": "Power Supply Sub",
+      "active": true,
+      "tag": [
+        "Trigger Object"
+      ],
+      "transform": {
+        "__Base__instanceID": 36906,
+        "position": {
+          "x": -15.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36904,
+          "__Base__Component": "BoxCollider",
+          "cType": 0,
+          "disableQuery": false,
+          "disableSimulation": false,
+          "isTrigger": true,
+          "layer": 10,
+          "positionOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotationOffset": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "size": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "physicsMaterial": "IsTrigger"
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36888,
+      "name": "Canvas",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36896,
+        "position": {
+          "x": 960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": [
+          36838,
+          36866,
+          36854
+        ]
+      },
+      "components": []
+    },
+    {
+      "__Base__instanceID": -20114,
+      "name": "FadeIn",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36838,
+        "position": {
+          "x": -960.0,
+          "y": 540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          36896
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -20120,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 1920.0,
+            "y": 1080.0
+          }
+        },
+        {
+          "__Base__instanceID": -20122,
+          "__Base__Component": "Image",
+          "textureName": "Particle/white.png",
+          "layer": 200,
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 0.0,
+          "useEnableEvent": true,
+          "eventTime": 2.0,
+          "sr": 0.0,
+          "sg": 0.0,
+          "sb": 0.0,
+          "sa": 1.0
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36868,
+      "name": "FadeOut",
+      "active": false,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36866,
+        "position": {
+          "x": -960.0,
+          "y": -540.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          36896
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": -20128,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "x": 1920.0,
+            "y": 1080.0
+          }
+        },
+        {
+          "__Base__instanceID": -20130,
+          "__Base__Component": "Image",
+          "textureName": "Particle/white.png",
+          "layer": 100,
+          "r": 0.0,
+          "g": 0.0,
+          "b": 0.0,
+          "a": 1.0,
+          "useEnableEvent": true,
+          "eventTime": 2.0,
+          "sr": 0.0,
+          "sg": 0.0,
+          "sb": 0.0,
+          "sa": 0.0
+        },
+        {
+          "__Base__instanceID": 36870,
+          "__Base__Component": "ObjectController",
+          "inverse": false,
+          "__ID__targetObjectList": [
+            36868
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36852,
+      "name": "Next Scene Explain",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36854,
+        "position": {
+          "x": -480.0,
+          "y": 270.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [
+          36896
+        ],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36858,
+          "__Base__Component": "Image",
+          "textureName": "UI\\MapTitle/ST_7.png",
+          "layer": 1000,
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0,
+          "useEnableEvent": false,
+          "eventTime": 0.0,
+          "sr": 1.0,
+          "sg": 1.0,
+          "sb": 1.0,
+          "sa": 1.0
+        },
+        {
+          "__Base__instanceID": 36856,
+          "__Base__Component": "UI",
+          "position": {
+            "x": 480.0,
+            "y": 270.0
+          },
+          "size": {
+            "x": 960.0,
+            "y": 540.0
+          }
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36882,
+      "name": "Buffer",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36886,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36884,
+          "__Base__Component": "PowerController",
+          "type": 5,
+          "numOfToggles": 0,
+          "delay": 5.0,
+          "__ID__targetDeviceList": [
+            36870
+          ]
+        }
+      ]
+    },
+    {
+      "__Base__instanceID": 36846,
+      "name": "Next Scene",
+      "active": true,
+      "tag": [],
+      "transform": {
+        "__Base__instanceID": 36848,
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 1.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "__ID__parentTransform": [],
+        "__ID__children": []
+      },
+      "components": [
+        {
+          "__Base__instanceID": 36850,
+          "__Base__Component": "SceneLoadSupport",
+          "loadWithStart": true,
+          "loadWithTrigger": false,
+          "loadWithCollision": false,
+          "targetTags": [],
+          "targetScene": "Stage_2.pzscene",
+          "delay": 7.0
+        }
+      ]
+    }
+  ]
+}
